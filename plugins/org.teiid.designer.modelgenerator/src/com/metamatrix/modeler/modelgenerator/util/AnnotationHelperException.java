@@ -7,12 +7,12 @@
  */
 package com.metamatrix.modeler.modelgenerator.util;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * AnnotationHelperExceptoin
  */
-public class AnnotationHelperException extends MetaMatrixCoreException {
+public class AnnotationHelperException extends TeiidException {
 
     /**
      */

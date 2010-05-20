@@ -12,7 +12,7 @@ import com.metamatrix.modeler.internal.core.index.ModelWorkspaceIndexSelector;
 import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadata;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 public class WorkspaceExecutionUtil {
 

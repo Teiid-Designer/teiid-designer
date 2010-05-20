@@ -7,7 +7,7 @@
  */
 package com.metamatrix.core.log;
 
-import com.metamatrix.core.log.Logger;
+import org.teiid.logging.Logger;
 
 /**
  * 
@@ -19,7 +19,6 @@ public class NullLogger implements Logger {
      *
      * @see com.metamatrix.core.log.Logger#log(int, java.lang.String)
      */
-    @Override
     public void log( int arg0,
                      String arg1 ) {
     }
@@ -29,10 +28,33 @@ public class NullLogger implements Logger {
      *
      * @see com.metamatrix.core.log.Logger#log(int, java.lang.Throwable, java.lang.String)
      */
-    @Override
     public void log( int arg0,
                      Throwable arg1,
                      String arg2 ) {
     }
+
+	@Override
+	public boolean isEnabled(String arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void log(int arg0, String arg1, Object arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void log(int arg0, String arg1, Throwable arg2, Object arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

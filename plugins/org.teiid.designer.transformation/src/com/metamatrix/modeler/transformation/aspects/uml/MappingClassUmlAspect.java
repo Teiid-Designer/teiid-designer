@@ -12,7 +12,7 @@ import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.MappingClass;
@@ -72,7 +72,7 @@ public class MappingClassUmlAspect extends AbstractTransformationUmlAspect imple
                 result.append(mappingClass.getName() );        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(TransformationPlugin.Util.getString("MappingClassUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
+                throw new TeiidRuntimeException(TransformationPlugin.Util.getString("MappingClassUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
         }
         return result.toString();
     }

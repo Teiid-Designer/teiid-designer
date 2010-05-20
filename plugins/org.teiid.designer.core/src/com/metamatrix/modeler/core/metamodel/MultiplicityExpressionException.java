@@ -7,9 +7,9 @@
  */
 package com.metamatrix.modeler.core.metamodel;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
-public class MultiplicityExpressionException extends MetaMatrixCoreException {
+public class MultiplicityExpressionException extends TeiidException {
 
 
     /**

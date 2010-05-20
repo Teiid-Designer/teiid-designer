@@ -48,12 +48,12 @@ import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.model.SetCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.AbstractSetCriteria;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SetCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.AbstractSetCriteria;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.SetCriteria;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.query.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.UiUtil;
 

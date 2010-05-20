@@ -15,12 +15,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultsModel;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultsModel;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * This class used as mediator to run/execute any workspace execution related tasks.

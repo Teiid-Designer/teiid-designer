@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.modeler.core.resource.XResource;
 import com.metamatrix.modeler.core.resource.XResourceDelegate;
 

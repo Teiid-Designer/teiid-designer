@@ -13,15 +13,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-import com.metamatrix.query.sql.LanguageVisitor;
-import com.metamatrix.query.sql.lang.CompareCriteria;
-import com.metamatrix.query.sql.navigator.PreOrderNavigator;
-import com.metamatrix.query.sql.proc.AssignmentStatement;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.proc.Statement;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageVisitor;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 
 /** 

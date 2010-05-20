@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.FromClause;
-import com.metamatrix.query.sql.lang.JoinPredicate;
-import com.metamatrix.query.sql.lang.JoinType;
-import com.metamatrix.query.sql.lang.PredicateCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.JoinPredicate;
+import org.teiid.query.sql.lang.JoinType;
+import org.teiid.query.sql.lang.PredicateCriteria;
 
 /**
  * The <code>JoinPredicateDisplayNode</code> class is used to represent a JoinPredicate.

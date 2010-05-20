@@ -13,12 +13,12 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.common.types.DataTypeManager.DefaultDataTypes;
+import org.teiid.core.types.DataTypeManager.DefaultDataTypes;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.Constant;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>ConstantEditorModel</code> class is used as a model for the

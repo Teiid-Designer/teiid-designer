@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.webservice.WebServicePackage;

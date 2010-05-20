@@ -29,6 +29,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.core.runtime,
  org.teiid.designer.metamodels.diagram,
  org.teiid.designer.metamodels.transformation,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -32,14 +32,14 @@ import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.QueryCommand;
-import com.metamatrix.query.sql.lang.SetQuery;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * This validation rule applys aaditional validation checks for sql transformations whose targets are mapping classes. Checks

@@ -24,11 +24,11 @@ package com.metamatrix.modeler.internal.core.workspace;
 
 import java.io.File;
 import java.io.InputStream;
-import com.metamatrix.common.log.LogManager;
+import org.teiid.logging.LogManager;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.TeiidException;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 
 public class ModelFileUtil {
@@ -206,7 +206,7 @@ public class ModelFileUtil {
                     CACHE.setXmiHeaderToCache(resource, header);
                 }
                 return header;
-            } catch (MetaMatrixCoreException e) {
+            } catch (TeiidException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             } catch (IllegalArgumentException iae) {
                 // Swallowing this exception because we're doing all three checks that would produce it.
@@ -229,7 +229,7 @@ public class ModelFileUtil {
         if (resourceStream != null) {
             try {
                 return XMIHeaderReader.readHeader(resourceStream);
-            } catch (MetaMatrixCoreException e) {
+            } catch (TeiidException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             }
         }

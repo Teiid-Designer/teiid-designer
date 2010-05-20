@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Insert;
-import com.metamatrix.query.sql.lang.Option;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Insert;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * The <code>InsertDisplayNode</code> class is used to represent a INSERT command.

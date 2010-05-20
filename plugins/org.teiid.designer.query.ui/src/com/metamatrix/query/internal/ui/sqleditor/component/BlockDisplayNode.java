@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.Statement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.Statement;
 
 /**
  * The <code>BlockDisplayNode</code> class is used to represent a Block LanguageObject.

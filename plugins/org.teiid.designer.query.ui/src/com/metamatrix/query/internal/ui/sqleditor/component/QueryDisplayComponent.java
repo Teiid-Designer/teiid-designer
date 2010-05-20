@@ -17,23 +17,23 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.sql.LanguageObject;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.Select;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.MultipleElementSymbol;
-import com.metamatrix.query.sql.symbol.SelectSymbol;
-import com.metamatrix.query.sql.util.ElementSymbolOptimizer;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.MultipleElementSymbol;
+import org.teiid.query.sql.symbol.SelectSymbol;
+import org.teiid.query.sql.util.ElementSymbolOptimizer;
 import com.metamatrix.query.ui.UiConstants;
 
 /**
@@ -1156,7 +1156,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                     ElementSymbolOptimizer.optimizeElements(getCommand(),resolver);
                 } catch (QueryMetadataException e) {
                     e.printStackTrace();
-                } catch (MetaMatrixComponentException e) {
+                } catch (TeiidComponentException e) {
                     e.printStackTrace();
                 }
                 isOptimized=true;

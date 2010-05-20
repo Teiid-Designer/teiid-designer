@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.udf.UdfManager;
 
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.SqlAlias;
@@ -49,49 +49,49 @@ import com.metamatrix.modeler.transformation.aspects.sql.InputParameterSqlAspect
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.function.FunctionDescriptor;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionTree;
-import com.metamatrix.query.function.SystemFunctionManager;
-import com.metamatrix.query.function.UDFSource;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
-import com.metamatrix.query.metadata.TempMetadataID;
+import org.teiid.query.function.FunctionDescriptor;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.metadata.TempMetadataID;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.FromClause;
-import com.metamatrix.query.sql.lang.GroupBy;
-import com.metamatrix.query.sql.lang.OrderBy;
-import com.metamatrix.query.sql.lang.OrderByItem;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.QueryCommand;
-import com.metamatrix.query.sql.lang.SPParameter;
-import com.metamatrix.query.sql.lang.Select;
-import com.metamatrix.query.sql.lang.SetQuery;
-import com.metamatrix.query.sql.lang.StoredProcedure;
-import com.metamatrix.query.sql.lang.SubqueryFromClause;
-import com.metamatrix.query.sql.lang.UnaryFromClause;
-import com.metamatrix.query.sql.lang.SetQuery.Operation;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.CommandStatement;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.symbol.AliasSymbol;
-import com.metamatrix.query.sql.symbol.AllSymbol;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.ExpressionSymbol;
-import com.metamatrix.query.sql.symbol.Function;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.MultipleElementSymbol;
-import com.metamatrix.query.sql.symbol.Reference;
-import com.metamatrix.query.sql.symbol.SelectSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.sql.visitor.ElementCollectorVisitor;
-import com.metamatrix.query.sql.visitor.GroupCollectorVisitor;
-import com.metamatrix.query.sql.visitor.GroupsUsedByElementsVisitor;
-import com.metamatrix.query.sql.visitor.ReferenceCollectorVisitor;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.lang.OrderByItem;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.lang.SubqueryFromClause;
+import org.teiid.query.sql.lang.UnaryFromClause;
+import org.teiid.query.sql.lang.SetQuery.Operation;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.AllSymbol;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.MultipleElementSymbol;
+import org.teiid.query.sql.symbol.Reference;
+import org.teiid.query.sql.symbol.SelectSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
+import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 
 /**
  * TransformationSqlHelper This class is responsible for handling sql validation, changes, etc.
@@ -2299,7 +2299,7 @@ public class TransformationSqlHelper implements SqlConstants {
         // Defect 17972: The following call was done many times and opened/closed model files to peek at
         // the Header (isModelFile()) Dennis F. Suggested replacing with the above code
         // QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(grpObj);
-        // groupID = resolver.getGroupID(groupFullName);
+        // groupID = recom.metamatrixsolver.getGroupID(groupFullName);
         SqlAspect sqlAspect = AspectManager.getSqlAspect(grpObj);
         CoreArgCheck.isInstanceOf(SqlTableAspect.class, sqlAspect);
         groupID = new TableRecordImpl((SqlTableAspect)sqlAspect, grpObj);
@@ -2332,7 +2332,7 @@ public class TransformationSqlHelper implements SqlConstants {
             String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                  procFullName);
             TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                  procFullName);
             TransformationPlugin.Util.log(IStatus.WARNING, e, message);

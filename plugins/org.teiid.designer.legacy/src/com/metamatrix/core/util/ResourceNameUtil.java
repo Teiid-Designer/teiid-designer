@@ -8,7 +8,7 @@
 
 package com.metamatrix.core.util;
 
-import com.metamatrix.core.CorePlugin;
+import org.teiid.core.CorePlugin;
 
 /**
  * Utility class used for determining if proposed resource names are reserved names or not. This applies for *.vdb, *.xmi and *.xsd

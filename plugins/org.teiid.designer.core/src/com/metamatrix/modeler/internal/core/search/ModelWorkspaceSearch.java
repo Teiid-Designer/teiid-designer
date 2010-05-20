@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IQueryResult;
 import com.metamatrix.internal.core.index.Index;

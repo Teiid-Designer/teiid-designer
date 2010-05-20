@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.function.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.function.FunctionParameter;
 import com.metamatrix.metamodels.function.FunctionPlugin;
@@ -189,7 +189,7 @@ public class FunctionParameterAspect extends AbstractFunctionAspect implements U
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(FunctionPlugin.Util.getString("FunctionParameterAspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(FunctionPlugin.Util.getString("FunctionParameterAspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

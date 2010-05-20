@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Text;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.reconciler.datatype.DatatypeReconcilerDialog;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.table.TableSizeAdapter;
 

@@ -30,7 +30,7 @@ import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.transformation.metadata.ServerMetadataFactory;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 public class VDBMetadataFactory {
 	

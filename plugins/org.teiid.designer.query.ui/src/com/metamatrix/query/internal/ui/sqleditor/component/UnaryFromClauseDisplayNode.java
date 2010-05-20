@@ -8,7 +8,7 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.lang.UnaryFromClause;
+import org.teiid.query.sql.lang.UnaryFromClause;
 
 /**
  * The <code>UnaryFromClauseDisplayNode</code> class is used to represent a Unary From Clause.

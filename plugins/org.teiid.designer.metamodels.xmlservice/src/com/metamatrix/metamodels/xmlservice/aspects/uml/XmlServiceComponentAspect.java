@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
 import com.metamatrix.metamodels.xmlservice.XmlServiceMetamodelPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -84,7 +84,7 @@ public abstract class XmlServiceComponentAspect extends AbstractMetamodelAspect 
                 result.append(XmlServiceComponent.getName() );   
                 break;
             default :
-                throw new MetaMatrixRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlServiceComponentAspect.0") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlServiceComponentAspect.0") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

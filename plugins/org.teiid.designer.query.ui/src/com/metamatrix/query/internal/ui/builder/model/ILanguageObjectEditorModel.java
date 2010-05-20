@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>ILanguageObjectEditorModel</code> interface represents a model of an

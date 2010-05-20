@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.core.container;
 import java.util.Collection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.container.ObjectManager;
 import com.metamatrix.modeler.core.resource.XResource;

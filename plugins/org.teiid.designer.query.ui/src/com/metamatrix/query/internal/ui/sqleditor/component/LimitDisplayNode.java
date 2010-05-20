@@ -9,8 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Limit;
-import com.metamatrix.query.sql.symbol.Constant;
+import org.teiid.query.sql.lang.Limit;
+import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>LimitDisplayNode</code> class is used to represent a Query's LIMIT clause.

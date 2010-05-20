@@ -25,7 +25,7 @@ public class ConnectorTemplate extends Connector {
      */
     public ConnectorTemplate( String name,
                               ConnectorType type ) {
-        super(new PseudoConnectionFactory(name, type), type);
+        super(new PseudoTranslator(name, type), type);
         this.changedProperties = new Properties();
     }
 
@@ -33,7 +33,7 @@ public class ConnectorTemplate extends Connector {
      * @param connector the connector whose properties are used to create this template (never <code>null</code>)
      */
     public ConnectorTemplate( Connector connector ) {
-        super(new PseudoConnectionFactory(connector), connector.getType());
+        super(new PseudoTranslator(connector), connector.getType());
         this.changedProperties = new Properties();
     }
 
@@ -76,7 +76,7 @@ public class ConnectorTemplate extends Connector {
      * @param name the new name (may be <code>null</code>)
      */
     public void setName( String name ) {
-        ((PseudoConnectionFactory)getConnectionFactory()).setName(name);
+        ((PseudoTranslator)getTranslator()).setName(name);
     }
 
     /**

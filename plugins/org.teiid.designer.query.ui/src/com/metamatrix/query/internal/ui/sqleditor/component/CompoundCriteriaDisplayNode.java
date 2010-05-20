@@ -10,8 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.CompoundCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
 
 /**
  * The <code>CompoundCriteriaDisplayNode</code> class is used to represent CompoundCriteria.

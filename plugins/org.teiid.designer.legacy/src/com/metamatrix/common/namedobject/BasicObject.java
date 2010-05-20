@@ -25,7 +25,7 @@ package com.metamatrix.common.namedobject;
 import java.io.Serializable;
 import com.metamatrix.common.util.ErrorMessageKeys;
 import com.metamatrix.common.util.I18nUtil;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * This class represents the basic implementation of MetadataObject, which is the foundation for all classes that are used to
@@ -200,7 +200,7 @@ public abstract class BasicObject implements BaseObject, Serializable {
         try {
             return super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
     }
 

@@ -16,9 +16,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -39,19 +39,19 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.function.FunctionDescriptor;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.TempMetadataID;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.SetQuery;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.sql.visitor.FunctionCollectorVisitor;
+import org.teiid.query.function.FunctionDescriptor;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 
 /**
  * TransformationMappingHelper This class is responsible for handling mapping changes and source / target changes, in response to
@@ -522,7 +522,7 @@ public class TransformationMappingHelper implements SqlConstants {
                         String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                              groupName);
                         TransformationPlugin.Util.log(IStatus.WARNING, e, message);
-                    } catch (MetaMatrixComponentException e) {
+                    } catch (TeiidComponentException e) {
                         String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
                                                                              groupName);
                         TransformationPlugin.Util.log(IStatus.WARNING, e, message);
@@ -1477,7 +1477,7 @@ public class TransformationMappingHelper implements SqlConstants {
                 }
             } else if (typeObj instanceof Class) {
                 // check for the NullType
-                if (typeObj == com.metamatrix.common.types.NullType.class) {
+                if (typeObj == org.teiid.core.types.NullType.class) {
                     // convert the NullType constant to the String type
                     typeObj = String.class;
                 }

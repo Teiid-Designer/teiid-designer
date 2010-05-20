@@ -93,10 +93,11 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
 
         try {
             // ensureModelExistsInHiddenVdb();
-            this.admin.getAdminApi().assignConnectionFactoryToModel(getHiddenVdbName(),
+            this.admin.getAdminApi().assignToModel(getHiddenVdbName(),
                                                                     VDB_VERSION,
                                                                     modelName,
                                                                     sourceName,
+                                                                    "",
                                                                     jndiName);
 
             SourceBinding newBinding = new SourceBinding(modelName,
@@ -376,7 +377,7 @@ public class SourceBindingsManager implements IResourceChangeListener, IRefactor
                     this.admin.getAdminApi().deleteVDB(getHiddenVdbName(), VDB_VERSION);
                 } else {
                     // other models still have bindings just clear binding for this model on the server
-                    this.admin.getAdminApi().assignConnectionFactoryToModel(getHiddenVdbName(), VDB_VERSION, modelName, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                    this.admin.getAdminApi().assignToModel(getHiddenVdbName(), VDB_VERSION, modelName, "", "", ""); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 // clear local cache

@@ -26,11 +26,11 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import com.metamatrix.query.metadata.TempMetadataID;
-import com.metamatrix.query.sql.lang.StoredProcedure;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * BuilderTreeProvider is the modeler's content and label provider for the Criteria and

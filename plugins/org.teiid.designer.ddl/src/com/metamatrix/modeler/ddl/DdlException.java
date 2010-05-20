@@ -7,12 +7,12 @@
  */
 package com.metamatrix.modeler.ddl;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * DdlException
  */
-public class DdlException extends MetaMatrixCoreException {
+public class DdlException extends TeiidException {
 
     /**
      */

@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.modelgenerator.ui;
 
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalOptions;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;
 

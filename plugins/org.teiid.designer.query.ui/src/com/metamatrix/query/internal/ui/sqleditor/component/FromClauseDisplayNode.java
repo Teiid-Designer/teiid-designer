@@ -7,8 +7,8 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import com.metamatrix.query.sql.lang.FromClause;
-import com.metamatrix.query.sql.lang.Option;
+import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.Option;
 
 /**
  * The <code>FromClauseDisplayNode</code> class is used by

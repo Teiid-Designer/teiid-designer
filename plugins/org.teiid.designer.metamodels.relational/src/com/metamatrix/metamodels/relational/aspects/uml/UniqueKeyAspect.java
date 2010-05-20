@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.relational.PrimaryKey;
@@ -116,7 +116,7 @@ public abstract class UniqueKeyAspect extends RelationalEntityAspect implements 
                 result.append( super.getArrayAsString(getProperties(key, 0)) );
                 break;
             default :
-                throw new MetaMatrixRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

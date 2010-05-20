@@ -10,7 +10,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 
 public class SalesforceUIUtil implements FileUtils.Constants {
 

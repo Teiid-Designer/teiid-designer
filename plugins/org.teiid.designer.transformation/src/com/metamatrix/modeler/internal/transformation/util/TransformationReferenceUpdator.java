@@ -13,8 +13,8 @@ import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.modeler.core.refactor.ReferenceUpdator;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.PreOrderNavigator;
 
 /**
  * @since 4.2

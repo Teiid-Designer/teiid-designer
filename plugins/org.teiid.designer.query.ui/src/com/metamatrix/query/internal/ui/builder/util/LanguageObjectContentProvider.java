@@ -11,13 +11,13 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.ILanguageObjectInputProvider;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.CompoundCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.LogicalCriteria;
-import com.metamatrix.query.sql.lang.NotCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.LogicalCriteria;
+import org.teiid.query.sql.lang.NotCriteria;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 import com.metamatrix.query.ui.UiConstants;
 
 /**

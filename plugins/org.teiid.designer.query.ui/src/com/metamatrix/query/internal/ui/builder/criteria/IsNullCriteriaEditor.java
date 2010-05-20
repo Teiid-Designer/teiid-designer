@@ -15,9 +15,9 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.IsNullCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.IsNullCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.IsNullCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 public class IsNullCriteriaEditor extends AbstractPredicateCriteriaTypeEditor {
     private final static String PREFIX = I18nUtil.getPropertyPrefix(IsNullCriteriaEditor.class);

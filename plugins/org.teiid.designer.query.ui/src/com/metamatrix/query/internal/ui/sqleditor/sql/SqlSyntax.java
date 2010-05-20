@@ -16,12 +16,12 @@ import java.util.Set;
 
 import org.teiid.designer.udf.UdfManager;
 
-import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.query.function.FunctionForm;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionTree;
-import com.metamatrix.query.function.SystemFunctionManager;
-import com.metamatrix.query.function.UDFSource;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.query.function.FunctionForm;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
 import com.metamatrix.query.sql.ReservedWords;
 
 /**

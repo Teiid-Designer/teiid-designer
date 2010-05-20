@@ -8,8 +8,8 @@
 package com.metamatrix.modeler.transformation.ui.reconciler;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.common.types.NullType;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.types.NullType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.internal.transformation.util.RuntimeTypeConverter;
@@ -18,12 +18,12 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationMapping
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
-import com.metamatrix.query.sql.symbol.AggregateSymbol;
-import com.metamatrix.query.sql.symbol.AliasSymbol;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.ExpressionSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.AggregateSymbol;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Binding Business Object A Binding has the following properties: (1) Virtual Attribute - can be MetaObject or String(if creating

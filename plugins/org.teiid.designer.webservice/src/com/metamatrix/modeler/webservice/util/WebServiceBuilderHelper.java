@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -69,7 +69,7 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationMapping
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
-import com.metamatrix.query.sql.lang.Query;
+import org.teiid.query.sql.lang.Query;
 
 /**
  * Build XSD models from a set of Relational Entities.

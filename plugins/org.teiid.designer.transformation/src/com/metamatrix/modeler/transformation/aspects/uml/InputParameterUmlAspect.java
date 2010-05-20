@@ -10,7 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.InputParameter;
@@ -221,7 +221,7 @@ public class InputParameterUmlAspect extends AbstractTransformationUmlAspect imp
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(TransformationPlugin.Util.getString("InputParameterUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
+                throw new TeiidRuntimeException(TransformationPlugin.Util.getString("InputParameterUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
         }
         return result.toString();
     }

@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.BreakStatement;
+import org.teiid.query.sql.proc.BreakStatement;
 
 /**
  * The <code>BreakStatementDisplayNode</code> class is used to represent 

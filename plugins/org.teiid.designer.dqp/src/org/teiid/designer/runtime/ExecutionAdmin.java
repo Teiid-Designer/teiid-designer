@@ -19,7 +19,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectionFactory;
+import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.vdb.Vdb;
@@ -75,10 +75,10 @@ public class ExecutionAdmin {
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
-        ConnectionFactory connectionFactory = this.admin.addConnectionFactory(name, type.getName(), properties);
+        Translator translator = this.admin.addTranslator(name, type.getName(), properties);
         // TODO ask server guys if type needs to also be in properties
 
-        Connector connector = new Connector(connectionFactory, type);
+        Connector connector = new Connector(translator, type);
         this.connectorByNameMap.put(name, connector);
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
@@ -239,10 +239,10 @@ public class ExecutionAdmin {
         this.connectorTypeByNameMap = new HashMap<String, ConnectorType>();
 
         // populate connector type map
-        refreshConnectorTypes(this.admin.getConnectorNames());
+        refreshConnectorTypes(this.admin.getTranslatorTemplateNames());
 
         // populate connector map
-        refreshConnectors(this.admin.getConnectionFactories());
+        refreshConnectors(this.admin.getTranslators());
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
@@ -250,10 +250,10 @@ public class ExecutionAdmin {
         refreshSourceBindings();
     }
 
-    protected void refreshConnectors( Collection<ConnectionFactory> connectorBindings ) {
-        for (ConnectionFactory binding : connectorBindings) {
-            ConnectorType type = getConnectorType(binding.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
-            this.connectorByNameMap.put(binding.getName(), new Connector(binding, type));
+    protected void refreshConnectors( Collection<Translator> translators ) {
+        for (Translator translator : translators) {
+            ConnectorType type = getConnectorType(translator.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
+            this.connectorByNameMap.put(translator.getName(), new Connector(translator, type));
         }
     }
 
@@ -263,7 +263,7 @@ public class ExecutionAdmin {
             if (fixedRarName.endsWith(".rar")) {
                 fixedRarName = fixedRarName.substring(0, fixedRarName.length() - 4);
             }
-            Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(fixedRarName);
+            Collection<PropertyDefinition> propDefs = this.admin.getTranslatorTemplatePropertyDefinitions(fixedRarName);
             ConnectorType connectorType = new ConnectorType(fixedRarName, propDefs, this);
             this.connectorTypeByNameMap.put(fixedRarName, connectorType);
             //
@@ -280,7 +280,7 @@ public class ExecutionAdmin {
 
     public void removeConnector( Connector connector ) throws Exception {
         CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        this.admin.deleteConnectionFactory(connector.getName());
+        this.admin.deleteTranslator(connector.getName());
         this.connectorByNameMap.remove(connector.getName());
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
     }
@@ -331,7 +331,7 @@ public class ExecutionAdmin {
             } else if (oldValue.equals(value)) return;
 
             // set value
-            this.admin.setConnectionFactoryProperty(connector.getName(), propName, value);
+            this.admin.setTranslatorProperty(connector.getName(), propName, value);
 
             if (notify) {
                 this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));

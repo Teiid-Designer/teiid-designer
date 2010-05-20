@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import com.metamatrix.connector.metadata.internal.IObjectSource;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * Read a property file and deliver the results as an object source. 
@@ -62,7 +62,7 @@ public class PropertyFileObjectSource implements IObjectSource {
         	
             input = this.getClass().getClassLoader().getResourceAsStream(propertyFileName);
             if (input == null) {
-            	throw new MetaMatrixRuntimeException(propertyFileName+" file not found");
+            	throw new TeiidRuntimeException(propertyFileName+" file not found");
             }
             //input = new BufferedInputStream(new FileInputStream(propertyFileName));
             Properties properties = new Properties();
@@ -76,9 +76,9 @@ public class PropertyFileObjectSource implements IObjectSource {
             }
             return results;
         } catch (FileNotFoundException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         } catch (IOException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         } finally {
             if (input != null) {
                 try {

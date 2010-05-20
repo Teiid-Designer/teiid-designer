@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.teiid.designer.udf.UdfModelEvent.Type;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.ModelType;
 import com.metamatrix.modeler.core.ModelEditor;
@@ -50,12 +50,12 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.Validator;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionTree;
-import com.metamatrix.query.function.SystemFunctionManager;
-import com.metamatrix.query.function.UDFSource;
-import com.metamatrix.query.function.metadata.FunctionMetadataReader;
-import com.metamatrix.query.function.metadata.FunctionMethod;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
+import org.teiid.query.function.metadata.FunctionMetadataReader;
+import org.teiid.query.function.metadata.FunctionMethod;
 
 public final class UdfManager implements IResourceChangeListener {
 

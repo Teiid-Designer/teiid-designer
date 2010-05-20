@@ -9,8 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.IsNullCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.IsNullCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>IsNullCriteriaDisplayNode</code> class is used to represent an IsNull Criteria.

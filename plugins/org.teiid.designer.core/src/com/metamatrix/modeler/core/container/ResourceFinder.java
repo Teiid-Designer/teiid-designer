@@ -12,8 +12,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDConstants;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.metamodels.core.ModelImport;
 
 /**

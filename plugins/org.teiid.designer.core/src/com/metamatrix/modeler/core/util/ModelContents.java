@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.id.IDGenerator;
+import org.teiid.core.id.IDGenerator;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.ISafeReturningOperation;
 import com.metamatrix.metamodels.core.Annotation;

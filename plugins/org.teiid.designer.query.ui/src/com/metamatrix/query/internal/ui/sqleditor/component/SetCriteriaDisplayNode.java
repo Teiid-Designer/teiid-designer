@@ -10,8 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.SetCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.SetCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>SetCriteriaDisplayNode</code> class is used to represent a Set Criteria.

@@ -9,14 +9,14 @@
 package org.teiid.designer.runtime;
 
 import java.util.Properties;
-import org.teiid.adminapi.ConnectionFactory;
+import org.teiid.adminapi.Translator;
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * The <code>PseudoConnectionFactory</code> class is an implementation of {@link ConnectionFactory} that keeps track of the
  * initial property values and allows its name to be changed.
  */
-public class PseudoConnectionFactory implements ConnectionFactory {
+public class PseudoTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +29,7 @@ public class PseudoConnectionFactory implements ConnectionFactory {
      * @param name the initial name (never <code>null</code>)
      * @param type the initial type (never <code>null</code>)
      */
-    public PseudoConnectionFactory( String name,
+    public PseudoTranslator( String name,
                                     ConnectorType type ) {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
@@ -42,7 +42,7 @@ public class PseudoConnectionFactory implements ConnectionFactory {
      * 
      * @param connector the existing connector whose initialProperties will be copied
      */
-    public PseudoConnectionFactory( Connector connector ) {
+    public PseudoTranslator( Connector connector ) {
         CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
         this.name = connector.getName();
         this.initialProperties = (Properties)connector.getProperties().clone();
@@ -56,18 +56,7 @@ public class PseudoConnectionFactory implements ConnectionFactory {
             }
         }
     }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.adminapi.ConnectionFactory#getJNDIName()
-     * @throws UnsupportedOperationException if called
-     */
-    @Override
-    public String getJNDIName() {
-        throw new UnsupportedOperationException();
-    }
-
+    
     /**
      * {@inheritDoc}
      * 
@@ -99,21 +88,45 @@ public class PseudoConnectionFactory implements ConnectionFactory {
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.adminapi.ConnectionFactory#getRARFileName()
-     * @throws UnsupportedOperationException if called
-     */
-    @Override
-    public String getRARFileName() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * @param name the new name of the connection factory (can be <code>null</code>)
      */
     public void setName( String name ) {
         this.name = name;
     }
+
+	@Override
+	public String getExecutionFactoryClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getMaxResultRows() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getTemplateName() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isExceptionOnMaxRows() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isImmutable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isXaCapable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

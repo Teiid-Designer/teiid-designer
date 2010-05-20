@@ -82,13 +82,13 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.ObjectIDFactory;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidException;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.ObjectIDFactory;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DebuggingStopwatch;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -3795,7 +3795,7 @@ public class ModelEditorImpl implements ModelEditor {
             if (resourceFile.exists()) {
                 try {
                     header = XMIHeaderReader.readHeader(resourceFile);
-                } catch (MetaMatrixCoreException e) {
+                } catch (TeiidException e) {
                     ModelerCore.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
                 }
             }
@@ -4969,7 +4969,7 @@ public class ModelEditorImpl implements ModelEditor {
         if (e.eIsProxy()) {
             resolvedEObject = EcoreUtil.resolve(e, getContainer());
             if (resolvedEObject.eIsProxy()) {
-                throw new MetaMatrixRuntimeException(
+                throw new TeiidRuntimeException(
                                                      ModelerCore.Util.getString("ModelEditorImpl.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
             }
         }

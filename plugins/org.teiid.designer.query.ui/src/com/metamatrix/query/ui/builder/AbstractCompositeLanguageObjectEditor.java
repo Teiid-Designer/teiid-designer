@@ -19,7 +19,7 @@ import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEdi
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>AbstractCompositeLanguageObjectEditor</code> manages a set of

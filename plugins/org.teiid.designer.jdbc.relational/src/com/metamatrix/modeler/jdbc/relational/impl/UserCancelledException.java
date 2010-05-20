@@ -7,13 +7,13 @@
  */
 package com.metamatrix.modeler.jdbc.relational.impl;
 
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.modeler.internal.jdbc.relational.ModelerJdbcRelationalConstants;
 
 /**
  * UserCancelledException
  */
-public class UserCancelledException extends MetaMatrixRuntimeException {
+public class UserCancelledException extends TeiidRuntimeException {
 
     /**
      */

@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;

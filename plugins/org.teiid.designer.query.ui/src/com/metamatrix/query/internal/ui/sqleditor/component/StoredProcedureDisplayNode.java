@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.SPParameter;
-import com.metamatrix.query.sql.lang.StoredProcedure;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>StoredProcedureDisplayNode</code> class is used to represent a StoredProcedure command.

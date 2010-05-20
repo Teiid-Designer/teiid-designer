@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.IPasteContributor;
 

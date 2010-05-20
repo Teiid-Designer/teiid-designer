@@ -14,7 +14,7 @@ import java.util.Comparator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.core.util.IPathComparator;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;

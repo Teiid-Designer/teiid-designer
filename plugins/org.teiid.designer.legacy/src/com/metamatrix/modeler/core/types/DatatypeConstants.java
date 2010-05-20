@@ -28,10 +28,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 
 /**
  * DatatypeConstants
@@ -114,7 +114,7 @@ public class DatatypeConstants {
         try {
             BUILTIN_DATATYPES_MODEL_UUID = UUID.stringToObject("6b862080-3019-1e20-921b-eeee28353879"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
         try {
             XML_SCHEMA_UUID_1999             = UUID.stringToObject("1da96d2e-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
@@ -127,7 +127,7 @@ public class DatatypeConstants {
             XML_MAGIC_SCHEMA_UUID_2001       = UUID.stringToObject("a8a3ee88-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
             XML_SCHEMA_INSTANCE_UUID_2001    = UUID.stringToObject("ac653e49-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
-        	throw new MetaMatrixRuntimeException(e);
+        	throw new TeiidRuntimeException(e);
         }
     }
 

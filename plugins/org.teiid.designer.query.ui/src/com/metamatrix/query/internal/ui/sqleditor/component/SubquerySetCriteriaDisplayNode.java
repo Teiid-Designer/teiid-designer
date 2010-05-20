@@ -9,9 +9,9 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SubquerySetCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>SubquerySetCriteriaDisplayNode</code> class is used 

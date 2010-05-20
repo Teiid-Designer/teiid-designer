@@ -54,10 +54,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryParserException;
-import com.metamatrix.api.exception.query.QueryResolverException;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryParserException;
+import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.core.id.UUID;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.internal.mapping.factory.TreeMappingAdapter;
@@ -78,13 +78,13 @@ import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.internal.ui.builder.CriteriaBuilder;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.resolver.util.ResolverVisitor;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.navigator.DeepPreOrderNavigator;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.resolver.util.ResolverVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -995,7 +995,7 @@ public class ChoicePanel extends SashForm
             ResolverVisitor.resolveLanguageObject(crit, metadata);
         } catch (QueryResolverException err) {
             // ignore
-        } catch (MetaMatrixComponentException err) {
+        } catch (TeiidComponentException err) {
             // ignore
         }
 

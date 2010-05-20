@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.core.query;
 
 import java.util.Collection;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Command;
 
 /** 
  * ValidationResult, utility containign the status of validating sql.

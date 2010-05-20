@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.index.IndexSelector;
 

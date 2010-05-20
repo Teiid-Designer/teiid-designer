@@ -31,12 +31,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
-import com.metamatrix.common.log.LogManager;
+import org.teiid.logging.LogManager;
 import com.metamatrix.common.vdb.VdbHeader;
 import com.metamatrix.common.vdb.VdbHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -258,7 +258,7 @@ public class ModelUtil {
     public static VdbHeader getVdbHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isVdbArchiveFile(resource)) try {
             return VdbHeaderReader.readHeader(resource);
-        } catch (final MetaMatrixCoreException e) {
+        } catch (final TeiidException e) {
             ModelerCore.Util.log(e);
         }
         return null;
@@ -326,7 +326,7 @@ public class ModelUtil {
                 // add to cache
                 if (cache != null) cache.setXmiHeaderToCache(resource, header);
                 return header;
-            } catch (final MetaMatrixCoreException e) {
+            } catch (final TeiidException e) {
                 LogManager.logWarning(RuntimeMetadataPlugin.PLUGIN_ID, e, e.getMessage());
             } catch (final IllegalArgumentException iae) {
                 // Swallowing this exception because we're doing all three checks that would produce it.
@@ -362,7 +362,7 @@ public class ModelUtil {
     public static XsdHeader getXsdHeader( final File resource ) {
         if (resource != null && resource.isFile() && resource.exists()) if (ModelFileUtil.isXsdFile(resource)) try {
             return XsdHeaderReader.readHeader(resource);
-        } catch (final MetaMatrixCoreException e) {
+        } catch (final TeiidException e) {
             ModelerCore.Util.log(e);
         }
         return null;

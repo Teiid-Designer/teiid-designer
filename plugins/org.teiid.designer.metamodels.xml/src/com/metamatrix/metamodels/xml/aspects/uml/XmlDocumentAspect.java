@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xml.XmlDocument;
@@ -99,7 +99,7 @@ public class XmlDocumentAspect extends AbstractMetamodelAspect implements UmlPac
                 result.append(xmlDoc.getName() );   
                 break;
             default :
-                throw new MetaMatrixRuntimeException(XmlDocumentPlugin.Util.getString("XmlDocumentAspect.Invalid_showMask_for_getSignature__2",showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(XmlDocumentPlugin.Util.getString("XmlDocumentAspect.Invalid_showMask_for_getSignature__2",showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

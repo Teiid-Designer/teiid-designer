@@ -23,7 +23,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.internal.core.xml.SAXBuilderHelper;
+import org.teiid.internal.core.xml.SAXBuilderHelper;
 import com.metamatrix.metamodels.wsdl.io.WsdlConstants.Xsd;
 
 /**

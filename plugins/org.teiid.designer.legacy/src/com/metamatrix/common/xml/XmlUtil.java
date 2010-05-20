@@ -24,7 +24,7 @@ package com.metamatrix.common.xml;
 
 import org.jdom.Verifier;
 
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.StringUtil;
 
 /**
  * Utility class for XML documents and related items.

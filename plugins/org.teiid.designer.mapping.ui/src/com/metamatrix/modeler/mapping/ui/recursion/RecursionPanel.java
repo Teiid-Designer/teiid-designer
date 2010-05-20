@@ -46,9 +46,9 @@ import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.internal.ui.builder.CriteriaBuilder;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.EditableIntegerSpinner;
 

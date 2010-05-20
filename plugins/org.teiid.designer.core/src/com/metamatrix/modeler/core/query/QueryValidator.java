@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.core.query;
 
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 
 /** 

@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 import com.metamatrix.ui.internal.util.WidgetUtil;

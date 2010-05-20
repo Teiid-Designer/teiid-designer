@@ -10,7 +10,7 @@ package com.metamatrix.core.xslt;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.transform.stream.StreamSource;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * Style
@@ -21,7 +21,7 @@ public interface Style {
     
     public String getDescription();
 
-    public InputStream getInputStream() throws IOException, MetaMatrixCoreException;
+    public InputStream getInputStream() throws IOException, TeiidException;
 
-    public StreamSource getStreamSource() throws IOException, MetaMatrixCoreException;
+    public StreamSource getStreamSource() throws IOException, TeiidException;
 }

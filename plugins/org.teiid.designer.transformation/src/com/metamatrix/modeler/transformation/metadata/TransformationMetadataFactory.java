@@ -18,7 +18,7 @@ import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.internal.core.index.ModelResourceIndexSelector;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TransformationMetadataFactory

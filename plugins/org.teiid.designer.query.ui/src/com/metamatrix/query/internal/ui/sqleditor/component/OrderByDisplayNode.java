@@ -10,10 +10,10 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.OrderBy;
-import com.metamatrix.query.sql.symbol.AliasSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>OrderByDisplayNode</code> class is used to represent a Query's ORDERBY clause.

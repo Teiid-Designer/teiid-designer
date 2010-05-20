@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import com.metamatrix.core.id.IDGenerator;
+import org.teiid.core.id.IDGenerator;
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;
 
 /**

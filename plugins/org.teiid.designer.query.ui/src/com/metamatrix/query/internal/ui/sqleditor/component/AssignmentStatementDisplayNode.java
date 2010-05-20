@@ -9,9 +9,9 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.AssignmentStatement;
-import com.metamatrix.query.sql.proc.RaiseErrorStatement;
-import com.metamatrix.query.sql.symbol.Constant;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.RaiseErrorStatement;
+import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>AssignmentStatementDisplayNode</code> class is used to represent AssignmentStatements.

@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.proc.DeclareStatement;
 
 /**
  * The <code>DeclareStatementDisplayNode</code> class is used to represent 

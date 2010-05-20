@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -77,7 +77,7 @@ public class InputSetUmlAspect extends AbstractTransformationUmlAspect implement
             result.append(getName(inputSet));
                 break;
             default :
-                throw new MetaMatrixRuntimeException(TransformationPlugin.Util.getString("InputSetUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
+                throw new TeiidRuntimeException(TransformationPlugin.Util.getString("InputSetUmlAspect.Invalid_show_mask_for_getSignature") + showMask); //$NON-NLS-1$
         }
         return result.toString();
     }

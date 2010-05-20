@@ -9,7 +9,7 @@ package com.metamatrix.core.modeler.util;
 
 import java.io.File;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.FileUtils.Constants;
+import org.teiid.core.util.FileUtils.Constants;
 
 public final class FileUtil {
 

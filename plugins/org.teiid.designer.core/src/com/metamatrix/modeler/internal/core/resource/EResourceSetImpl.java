@@ -28,11 +28,11 @@ import org.eclipse.emf.edit.provider.IChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.TeiidException;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.DuplicateResourceException;
 import com.metamatrix.modeler.core.resource.EObjectHrefConverter;
@@ -384,7 +384,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
 
     /**
      * Check if the XMI version corresponding to the specified resource URI represents an older 1.x version of the XMI
-     * specification. If it does a MetaMatrixRuntimeException is thrown indicating that the resource must be converted to an
+     * specification. If it does a TeiidRuntimeException is thrown indicating that the resource must be converted to an
      * xmi:version="2.0" file
      * 
      * @param uri
@@ -395,7 +395,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
         if (header != null && header.getXmiVersion() != null && header.getXmiVersion().startsWith("1.")) { //$NON-NLS-1$
             Object[] params = new Object[] {uri};
             String msg = ModelerCore.Util.getString("EResourceSetImpl.Old_model_format_encountered", params); //$NON-NLS-1$
-            throw new MetaMatrixRuntimeException(msg);
+            throw new TeiidRuntimeException(msg);
         }
     }
 
@@ -422,7 +422,7 @@ public class EResourceSetImpl extends ResourceSetImpl implements EResourceSet {
             if (f.isFile() && f.exists()) {
                 try {
                     return XMIHeaderReader.readHeader(f);
-                } catch (MetaMatrixCoreException e) {
+                } catch (TeiidException e) {
                     ModelerCore.Util.log(e);
                 }
             }

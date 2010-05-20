@@ -6,7 +6,8 @@ Bundle-SymbolicName: org.teiid.designer.vdb;singleton:=true
 Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.teiid.designer.vdb.plugin.VdbPlugin
 Bundle-Vendor: %pluginProvider
-Require-Bundle: org.teiid.designer.legacy,
+Require-Bundle: teiid_embedded_query,
+ org.teiid.designer.legacy,
  org.teiid.designer.core,
  org.teiid.designer.metamodels.core,
  org.teiid.core.designer,

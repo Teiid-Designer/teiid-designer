@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -75,7 +75,7 @@ public class CoreXsltPlugin extends Plugin {
      * as the root of the fragment to be transformed; may be null if the whole document is to be transformed.
      * @param output the stream to which the transformed
      */
-    public static Source createSource(final Document sourceDoc) throws MetaMatrixCoreException {
+    public static Source createSource(final Document sourceDoc) throws TeiidException {
         CoreArgCheck.isNotNull(sourceDoc);
 
         /*
@@ -101,7 +101,7 @@ public class CoreXsltPlugin extends Plugin {
             return new StreamSource(transformSource);
         } catch ( Throwable e ) {
             final String msg = CoreXsltPlugin.Util.getString("CoreXsltPlugin.Error_loading_the_XSLT_transform"); //$NON-NLS-1$
-            throw new MetaMatrixCoreException(e,msg);
+            throw new TeiidException(e,msg);
         }
     }
 

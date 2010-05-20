@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.Stopwatch;

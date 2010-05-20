@@ -27,9 +27,9 @@ import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.query.internal.ui.sqleditor.SqlTextViewer;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
 import com.metamatrix.ui.UiConstants;
 
 /**

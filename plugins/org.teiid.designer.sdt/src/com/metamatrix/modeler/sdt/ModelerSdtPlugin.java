@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.xsd.XsdResourceFactory;
 import com.metamatrix.modeler.core.types.DatatypeConstants;

@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.log.Logger;
+import org.teiid.logging.Logger;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;

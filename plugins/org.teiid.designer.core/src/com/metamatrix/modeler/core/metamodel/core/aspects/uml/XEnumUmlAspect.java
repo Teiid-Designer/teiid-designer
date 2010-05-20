@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XEnum;
@@ -87,7 +87,7 @@ public class XEnumUmlAspect extends AbstractExtensionUmlAspect implements UmlCla
                 result.append(xenum.getName() );        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(ModelerCore.Util.getString("XEnumUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(ModelerCore.Util.getString("XEnumUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

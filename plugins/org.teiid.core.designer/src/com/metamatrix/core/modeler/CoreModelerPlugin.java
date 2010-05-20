@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.aspects.DeclarativeTransactionManager;
-import com.metamatrix.core.id.IDGenerator;
+import org.teiid.core.id.IDGenerator;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**

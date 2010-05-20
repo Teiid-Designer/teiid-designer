@@ -18,11 +18,11 @@ import com.metamatrix.query.internal.ui.builder.actions.NotCriteriaAction;
 import com.metamatrix.query.internal.ui.builder.actions.OrCriteriaAction;
 import com.metamatrix.query.internal.ui.builder.criteria.CriteriaEditor;
 import com.metamatrix.query.internal.ui.builder.model.CriteriaEditorModel;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.CompoundCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.NotCriteria;
-import com.metamatrix.query.sql.lang.PredicateCriteria;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.NotCriteria;
+import org.teiid.query.sql.lang.PredicateCriteria;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 
 /**

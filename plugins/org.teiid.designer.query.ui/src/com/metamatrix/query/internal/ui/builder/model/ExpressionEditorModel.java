@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>ExpressionEditorModel</code> is a composite model that contains the following models:

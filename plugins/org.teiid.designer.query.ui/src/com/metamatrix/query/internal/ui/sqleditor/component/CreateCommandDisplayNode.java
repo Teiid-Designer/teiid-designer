@@ -10,10 +10,12 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.common.types.DataTypeManager;
+
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.query.sql.lang.Create;
+import org.teiid.query.sql.symbol.ElementSymbol;
+
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Create;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>CreateCommandDisplayNode</code> class is used to represent a Create command.

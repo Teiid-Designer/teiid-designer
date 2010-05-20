@@ -18,7 +18,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;

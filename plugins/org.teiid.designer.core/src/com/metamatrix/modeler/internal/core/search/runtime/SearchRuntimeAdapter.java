@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelEditor;

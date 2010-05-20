@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>DisplayNode</code> class is the base class used by <code>QueryDisplayComponent</code> to represent all types of

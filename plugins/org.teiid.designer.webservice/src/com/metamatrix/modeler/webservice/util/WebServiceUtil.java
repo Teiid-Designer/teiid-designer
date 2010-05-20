@@ -35,12 +35,12 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.DocumentGenerator;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.proc.AssignmentStatement;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * @since 4.2
@@ -56,6 +56,8 @@ public class WebServiceUtil {
     public static final String INPUT_VARIABLE_UNQUALIFIED_PREFIX = "IN_"; //$NON-NLS-1$
     public static final String INPUT_VARIABLE_PREFIX = ProcedureReservedWords.VARIABLES + '.' + INPUT_VARIABLE_UNQUALIFIED_PREFIX;
 
+    // Special xpathvalue function
+    public static final String XPATHVALUE = "xpathvalue"; //$NON-NLS-1$
     // ===========================================================================================================================
     // Static Methods
 
@@ -207,7 +209,7 @@ public class WebServiceUtil {
             Expression expr = statement.getExpression();
             if (expr instanceof Function) {
                 Function function = (Function)expr;
-                if (FunctionLibrary.XPATHVALUE.equalsIgnoreCase(function.getName())) {
+                if (XPATHVALUE.equalsIgnoreCase(function.getName())) {
                     return function;
                 }
             }

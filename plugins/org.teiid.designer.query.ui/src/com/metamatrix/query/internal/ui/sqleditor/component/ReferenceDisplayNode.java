@@ -8,7 +8,7 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.symbol.Reference;
+import org.teiid.query.sql.symbol.Reference;
 
 /**
  * The <code>ReferenceDisplayNode</code> class is used to represent a Reference.

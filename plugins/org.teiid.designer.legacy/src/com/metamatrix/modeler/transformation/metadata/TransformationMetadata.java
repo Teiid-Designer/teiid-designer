@@ -34,19 +34,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.TeiidException;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.core.index.SimpleIndexUtil;
-import com.metamatrix.core.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
+import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.Assertion;
 import com.metamatrix.core.util.ModelType;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.StringUtil;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
@@ -67,14 +67,14 @@ import com.metamatrix.modeler.core.metadata.runtime.TransformationRecord;
 import com.metamatrix.modeler.core.metadata.runtime.VdbRecord;
 import com.metamatrix.modeler.core.util.ColumnRecordComparator;
 import com.metamatrix.modeler.internal.transformation.util.UuidUtil;
-import com.metamatrix.query.mapping.relational.QueryNode;
-import com.metamatrix.query.mapping.xml.MappingDocument;
-import com.metamatrix.query.mapping.xml.MappingLoader;
-import com.metamatrix.query.mapping.xml.MappingNode;
-import com.metamatrix.query.metadata.BasicQueryMetadata;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
-import com.metamatrix.query.metadata.SupportConstants;
-import com.metamatrix.query.sql.lang.SPParameter;
+import org.teiid.query.mapping.relational.QueryNode;
+import org.teiid.query.mapping.xml.MappingDocument;
+import org.teiid.query.mapping.xml.MappingLoader;
+import org.teiid.query.mapping.xml.MappingNode;
+import org.teiid.query.metadata.BasicQueryMetadata;
+import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.metadata.SupportConstants;
+import org.teiid.query.sql.lang.SPParameter;
 
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, models etc. index files for various metadata
@@ -125,7 +125,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementID(java.lang.String)
      */
     @Override
-    public Object getElementID( final String elementName ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getElementID( final String elementName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(elementName);
 
         // elementfull names always contain atlest 3 segments(modelname.groupName.elementName)
@@ -141,7 +141,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupID(java.lang.String)
      */
     @Override
-    public Object getGroupID( final String groupName ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getGroupID( final String groupName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(groupName);
 
         // groupfull names always contain atlest 2 segments(modelname.groupName)
@@ -158,7 +158,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getGroupsForPartialName( final String partialGroupName )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(partialGroupName);
 
         Collection tableRecords = null;
@@ -187,7 +187,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getModelID(java.lang.Object)
      */
     @Override
-    public Object getModelID( final Object groupOrElementID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getModelID( final Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
         MetadataRecord metadataRecord = (MetadataRecord)groupOrElementID;
 
@@ -213,7 +213,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public String getFullElementName( final String fullGroupName,
-                                      final String shortElementName ) throws MetaMatrixComponentException, QueryMetadataException {
+                                      final String shortElementName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(fullGroupName);
         ArgCheck.isNotEmpty(shortElementName);
 
@@ -262,7 +262,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupName(java.lang.String)
      */
     @Override
-    public String getGroupName( final String fullElementName ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getGroupName( final String fullElementName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(fullElementName);
 
         int index = fullElementName.lastIndexOf(DELIMITER_CHAR);
@@ -286,7 +286,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInGroupID(java.lang.Object)
      */
     @Override
-    public List getElementIDsInGroupID( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public List getElementIDsInGroupID( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -311,7 +311,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupIDForElementID(java.lang.Object)
      */
     @Override
-    public Object getGroupIDForElementID( final Object elementID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getGroupIDForElementID( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
         if (elementID instanceof ColumnRecord) {
             ColumnRecord columnRecord = (ColumnRecord)elementID;
             String tableUUID = columnRecord.getParentUUID();
@@ -330,7 +330,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(fullyQualifiedProcedureName);
 
         ProcedureRecord procRecord = null;
@@ -524,7 +524,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getVirtualPlan(java.lang.Object)
      */
     @Override
-    public QueryNode getVirtualPlan( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public QueryNode getVirtualPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -560,7 +560,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_virtual_plans_available_for_this_groupID__1") + groupName); //$NON-NLS-1$
             }
         }
@@ -572,7 +572,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getInsertPlan(java.lang.Object)
      */
     @Override
-    public String getInsertPlan( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getInsertPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -592,7 +592,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_insert_plans_available_for_this_groupID__2") + groupName); //$NON-NLS-1$
             }
         }
@@ -604,7 +604,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getUpdatePlan(java.lang.Object)
      */
     @Override
-    public String getUpdatePlan( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getUpdatePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -624,7 +624,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_update_plans_available_for_this_groupID__3") + groupName); //$NON-NLS-1$
             }
         }
@@ -637,7 +637,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getDeletePlan(java.lang.Object)
      */
     @Override
-    public String getDeletePlan( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getDeletePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -657,7 +657,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one result entry for a fully qualified name
             if (resultSize > 1) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.GroupID_ambiguous_there_are_multiple_delete_plans_available_for_this_groupID__4") + groupName); //$NON-NLS-1$
             }
         }
@@ -801,7 +801,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getIndexesInGroup(java.lang.Object)
      */
     @Override
-    public Collection getIndexesInGroup( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Collection getIndexesInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -834,7 +834,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getUniqueKeysInGroup(java.lang.Object)
      */
     @Override
-    public Collection getUniqueKeysInGroup( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Collection getUniqueKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -849,7 +849,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getForeignKeysInGroup(java.lang.Object)
      */
     @Override
-    public Collection getForeignKeysInGroup( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Collection getForeignKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -865,7 +865,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(ForeignKeyRecord.class, foreignKeyID);
         ForeignKeyRecord fkRecord = (ForeignKeyRecord)foreignKeyID;
 
@@ -878,7 +878,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Collection getAccessPatternsInGroup( final Object groupID )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -892,7 +892,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInIndex(java.lang.Object)
      */
     @Override
-    public List getElementIDsInIndex( final Object index ) throws MetaMatrixComponentException, QueryMetadataException {
+    public List getElementIDsInIndex( final Object index ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, index);
         ColumnSetRecord indexRecord = (ColumnSetRecord)index;
 
@@ -918,7 +918,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInKey(java.lang.Object)
      */
     @Override
-    public List getElementIDsInKey( final Object key ) throws MetaMatrixComponentException, QueryMetadataException {
+    public List getElementIDsInKey( final Object key ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, key);
         ColumnSetRecord keyRecord = (ColumnSetRecord)key;
 
@@ -950,7 +950,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public List getElementIDsInAccessPattern( final Object accessPattern )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnSetRecord.class, accessPattern);
         ColumnSetRecord accessRecord = (ColumnSetRecord)accessPattern;
 
@@ -1019,7 +1019,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public Object getMaterialization( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getMaterialization( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
@@ -1034,7 +1034,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.2
      */
     @Override
-    public Object getMaterializationStage( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Object getMaterializationStage( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
         if (tableRecord.isMaterialized()) {
@@ -1048,7 +1048,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getMappingNode(java.lang.Object)
      */
     @Override
-    public MappingNode getMappingNode( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public MappingNode getMappingNode( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -1069,7 +1069,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 }
                 // there should be only one for a fully qualified elementName
                 if (resultSize > 1) {
-                    throw new MetaMatrixComponentException(
+                    throw new TeiidComponentException(
                                                            RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
                 }
             }
@@ -1082,7 +1082,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 mappingDoc = reader.loadDocument(inputStream);
                 mappingDoc.setName(groupName);
             } catch (Exception e) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        e,
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_virtual_document_{0},_with_body__n{1}_1", groupName, mappingDoc)); //$NON-NLS-1$
             } finally {
@@ -1101,7 +1101,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getVirtualDatabaseName()
      */
     @Override
-    public String getVirtualDatabaseName() throws MetaMatrixComponentException, QueryMetadataException {
+    public String getVirtualDatabaseName() throws TeiidComponentException, QueryMetadataException {
         // Query the index files
         try {
             final VdbRecord vdbRecord = (VdbRecord)this.getRecordByType(null, IndexConstants.RECORD_TYPE.VDB_ARCHIVE);
@@ -1115,7 +1115,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getXMLTempGroups(java.lang.Object)
      */
     @Override
-    public Collection getXMLTempGroups( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public Collection getXMLTempGroups( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
         TableRecord tableRecord = (TableRecord)groupID;
 
@@ -1150,7 +1150,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getXMLSchemas(java.lang.Object)
      */
     @Override
-    public List getXMLSchemas( final Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public List getXMLSchemas( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
 
         if (!(getIndexSelector() instanceof CompositeIndexSelector || getIndexSelector() instanceof RuntimeIndexSelector)) {
             return Collections.EMPTY_LIST;
@@ -1175,7 +1175,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             }
             // there should be only one for a fully qualified elementName
             if (resultSize > 1) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Multiple_transformation_records_found_for_the_group___1") + groupName); //$NON-NLS-1$
             }
         }
@@ -1197,7 +1197,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         if (schemas == null || schemas.isEmpty()) {
             schemas = getIndexSelector().getFileContentsAsString(schemaPaths);
             if (schemas == null || schemas.isEmpty()) {
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_read_schemas_for_the_document/table____1") + groupName); //$NON-NLS-1$
             }
         }
@@ -1312,7 +1312,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     @Override
     public Properties getExtensionProperties( final Object metadataID )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
 
@@ -1345,7 +1345,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public byte[] getBinaryVDBResource( String resourcePath ) throws MetaMatrixComponentException, QueryMetadataException {
+    public byte[] getBinaryVDBResource( String resourcePath ) throws TeiidComponentException, QueryMetadataException {
         String content = this.getCharacterVDBResource(resourcePath);
         if (content != null) {
             return content.getBytes();
@@ -1358,7 +1358,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public String getCharacterVDBResource( String resourcePath ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getCharacterVDBResource( String resourcePath ) throws TeiidComponentException, QueryMetadataException {
         IndexSelector selector = this.getIndexSelector();
         // make sure the selector is initialized
         try {
@@ -1386,7 +1386,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 4.3
      */
     @Override
-    public String[] getVDBResourcePaths() throws MetaMatrixComponentException, QueryMetadataException {
+    public String[] getVDBResourcePaths() throws TeiidComponentException, QueryMetadataException {
         IndexSelector selector = this.getIndexSelector();
         // make sure the selector is initialized
         try {
@@ -1415,7 +1415,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledType( final Object elementID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getModeledType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getDatatypeID();
@@ -1428,7 +1428,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledBaseType( final Object elementID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getModeledBaseType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getBasetypeID();
@@ -1441,7 +1441,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @since 5.0
      */
     @Override
-    public String getModeledPrimitiveType( final Object elementID ) throws MetaMatrixComponentException, QueryMetadataException {
+    public String getModeledPrimitiveType( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
         DatatypeRecord record = getDatatypeRecord(elementID);
         if (record != null) {
             return record.getPrimitiveTypeID();
@@ -1454,7 +1454,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     // ==================================================================================
 
     protected DatatypeRecord getDatatypeRecord( final Object elementID )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (elementID instanceof ColumnRecord) {
             String uuid = ((ColumnRecord)elementID).getDatatypeUUID();
             if (!StringUtil.isEmpty(uuid)) {
@@ -1504,11 +1504,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @throws QueryMetadataException
      */
     protected Index[] getIndexes( final char recordType,
-                                  final IndexSelector selector ) throws MetaMatrixComponentException {
+                                  final IndexSelector selector ) throws TeiidComponentException {
         try {
             return selector.getIndexes();
         } catch (IOException e) {
-            throw new MetaMatrixComponentException(
+            throw new TeiidComponentException(
                                                    e,
                                                    RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }
@@ -1652,11 +1652,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param entityName String representing an entity, may be null(vdbs)
      * @param recordType The record type for the entity
      * @return A MetadataRecord object for a given entityName/UUID
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      * @throws QueryMetadataException
      */
     protected MetadataRecord getRecordByType( final String entityName,
-                                              final char recordType ) throws MetaMatrixComponentException, QueryMetadataException {
+                                              final char recordType ) throws TeiidComponentException, QueryMetadataException {
 
         // Query the index files
         final Collection results = findMetadataRecords(recordType, entityName, false);
@@ -1720,10 +1720,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param childRecordType the type of the child to seek uuids
      * @param uuids to filter just the objects we want
      * @return columnRecords
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     protected Collection findChildRecords( final MetadataRecord parentRecord,
-                                           final char childRecordType ) throws MetaMatrixComponentException {
+                                           final char childRecordType ) throws TeiidComponentException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1762,11 +1762,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param childRecordType the type of the child to seek uuids
      * @param uuids to filter just the objects we want
      * @return columnRecords
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     protected Collection findChildRecordsForColumns( final MetadataRecord parentRecord,
                                                      final char childRecordType,
-                                                     final List uuids ) throws MetaMatrixComponentException {
+                                                     final List uuids ) throws TeiidComponentException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1797,10 +1797,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @param parentRecord
      * @param childRecordType the type of the child to seek
      * @return records
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     protected Collection findChildRecordsWithoutFiltering( final MetadataRecord parentRecord,
-                                                           final char childRecordType ) throws MetaMatrixComponentException {
+                                                           final char childRecordType ) throws TeiidComponentException {
         IEntryResult[] results = queryIndexByParentPath(childRecordType, parentRecord.getFullName());
         Collection records = findMetadataRecords(results);
 
@@ -1843,7 +1843,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws MetaMatrixComponentException {
+                                              final boolean isPartialName ) throws TeiidComponentException {
 
         IEntryResult[] results = queryIndex(recordType, entityName, isPartialName);
         Collection records = findMetadataRecords(results);
@@ -1870,7 +1870,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      */
     protected IEntryResult[] queryIndex( final char recordType,
                                          final String entityName,
-                                         final boolean isPartialName ) throws MetaMatrixComponentException {
+                                         final boolean isPartialName ) throws TeiidComponentException {
 
         IEntryResult[] results = null;
         Index[] indexes = getIndexes(recordType, getIndexSelector());
@@ -1912,11 +1912,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     protected IEntryResult[] queryIndex( final Index[] indexes,
                                          final char[] pattern,
                                          boolean isPrefix,
-                                         boolean returnFirstMatch ) throws MetaMatrixComponentException {
+                                         boolean returnFirstMatch ) throws TeiidComponentException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch (MetaMatrixCoreException e) {
-            throw new MetaMatrixComponentException(e, e.getMessage());
+        } catch (TeiidException e) {
+            throw new TeiidComponentException(e, e.getMessage());
         }
     }
 
@@ -1932,11 +1932,11 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                                          final char[] pattern,
                                          boolean isPrefix,
                                          boolean isCaseSensitive,
-                                         boolean returnFirstMatch ) throws MetaMatrixComponentException {
+                                         boolean returnFirstMatch ) throws TeiidComponentException {
         try {
             return SimpleIndexUtil.queryIndex(null, indexes, pattern, isPrefix, isCaseSensitive, returnFirstMatch);
-        } catch (MetaMatrixCoreException e) {
-            throw new MetaMatrixComponentException(e, e.getMessage());
+        } catch (TeiidException e) {
+            throw new TeiidComponentException(e, e.getMessage());
         }
     }
 
@@ -1951,7 +1951,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     /**
      * Looks up procedure plan in the transformations index for a given procedure.
      */
-    private String getProcedurePlan( final String procedureName ) throws MetaMatrixComponentException, QueryMetadataException {
+    private String getProcedurePlan( final String procedureName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotEmpty(procedureName);
 
         // Query the index files
@@ -1964,7 +1964,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         }
         // there should be only one result entry for a fully qualified name
         if (resultSize > 1) {
-            throw new MetaMatrixComponentException(
+            throw new TeiidComponentException(
                                                    RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Procedure_ambiguous_there_are_multiple_procedure_plans_available_for_this_name___4") + procedureName); //$NON-NLS-1$
         }
 
@@ -1976,7 +1976,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * Helper method to get back an array of ColumnRecords given a list of UUIDs.
      */
     private ColumnRecord[] getColumnRecordsForUUIDs( final List uuids )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
 
         ColumnRecord[] columnRecords = new ColumnRecord[uuids.size()];
 
@@ -1998,7 +1998,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @throws QueryMetadataException
      */
     private IEntryResult[] queryIndexByParentPath( final char recordType,
-                                                   final String parentFullName ) throws MetaMatrixComponentException {
+                                                   final String parentFullName ) throws TeiidComponentException {
 
         // Query based on fully qualified name
         String prefixString = getParentPrefixPattern(recordType, parentFullName);

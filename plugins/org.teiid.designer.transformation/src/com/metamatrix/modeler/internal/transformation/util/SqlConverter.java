@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -33,10 +33,10 @@ import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.parser.QueryParser;
+import org.teiid.query.parser.QueryParser;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
 /**
  * SqlConverter

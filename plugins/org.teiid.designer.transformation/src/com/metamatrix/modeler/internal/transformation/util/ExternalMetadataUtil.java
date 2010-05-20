@@ -13,17 +13,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.lang.SPParameter;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * Utilities used to get external metadata.
@@ -36,7 +36,7 @@ public class ExternalMetadataUtil {
 
     public static List resolveElementsInGroup( GroupSymbol group,
                                                QueryMetadataInterface metadata )
-        throws QueryMetadataException, MetaMatrixComponentException {
+        throws QueryMetadataException, TeiidComponentException {
 
         String groupName = group.getName();
 
@@ -77,7 +77,7 @@ public class ExternalMetadataUtil {
 
     public static Map getProcedureExternalMetadata( GroupSymbol virtualGroup,
                                                     QueryMetadataInterface metadata )
-        throws QueryMetadataException, MetaMatrixComponentException {
+        throws QueryMetadataException, TeiidComponentException {
         Map externalMetadata = new HashMap();
 
         // Look up elements for the virtual group
@@ -113,7 +113,7 @@ public class ExternalMetadataUtil {
 
     public static Map getStoredProcedureExternalMetadata( GroupSymbol virtualProc,
                                                           QueryMetadataInterface metadata )
-        throws QueryMetadataException, MetaMatrixComponentException {
+        throws QueryMetadataException, TeiidComponentException {
 
         Map externalMetadata = new HashMap();
 
@@ -159,7 +159,7 @@ public class ExternalMetadataUtil {
     public static Map getStoredProcedureExternalMetadataForMappingClass( GroupSymbol virtualProc,
                                                                          GroupSymbol mappingClass,
                                                                          QueryMetadataInterface metadata )
-        throws QueryMetadataException, MetaMatrixComponentException {
+        throws QueryMetadataException, TeiidComponentException {
 
         Map externalMetadata = new HashMap();
 

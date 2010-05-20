@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingFactory;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.compare.AbstractEObjectMatcher;

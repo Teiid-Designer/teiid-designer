@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Select;
-import com.metamatrix.query.sql.symbol.SelectSymbol;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.symbol.SelectSymbol;
 
 /**
  * The <code>SelectDisplayNode</code> class is used to represent a Query's SELECT clause.

@@ -74,7 +74,7 @@ import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.io.FileUrl;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.wsdl.io.WsdlHelper;
 import com.metamatrix.modeler.core.ModelerCore;

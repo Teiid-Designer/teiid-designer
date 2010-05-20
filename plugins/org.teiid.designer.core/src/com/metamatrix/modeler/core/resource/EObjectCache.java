@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.core.resource;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.id.ObjectID;
 
 /**
  * EObjectCache - manager of maps containing EObject instances for models

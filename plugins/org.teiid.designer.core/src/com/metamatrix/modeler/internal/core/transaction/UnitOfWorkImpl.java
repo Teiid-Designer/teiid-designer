@@ -29,7 +29,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -99,7 +99,7 @@ public class UnitOfWorkImpl implements UnitOfWork {
             try {
                 this.container = ModelerCore.getModelContainer();
             } catch (CoreException err) {
-                throw new MetaMatrixRuntimeException(err);
+                throw new TeiidRuntimeException(err);
             }
         }
         this.filter = new TxnNotificationFilter(resources);

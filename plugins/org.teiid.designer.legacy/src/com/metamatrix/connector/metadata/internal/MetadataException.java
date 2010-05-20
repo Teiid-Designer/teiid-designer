@@ -22,9 +22,9 @@
 
 package com.metamatrix.connector.metadata.internal;
 
-import com.metamatrix.api.exception.MetaMatrixComponentException;
+import org.teiid.core.TeiidComponentException;
 
-public class MetadataException extends MetaMatrixComponentException {
+public class MetadataException extends TeiidComponentException {
 
 	/**
      */

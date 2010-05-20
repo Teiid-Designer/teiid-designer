@@ -23,7 +23,7 @@
 package com.metamatrix.common.vdb.runtime;
 
 import java.util.Map;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  */
@@ -39,7 +39,7 @@ public final class URIResource {
         } catch (Exception e) {
             // TODO: I18n stuff
             String msg = "URIResource.Resource_not_found"; //, new Object[] {URIResourceReader.RESOURCE_NAME}); //$NON-NLS-1$
-            throw new MetaMatrixRuntimeException(e, msg);
+            throw new TeiidRuntimeException(e, msg);
         }
     }
 

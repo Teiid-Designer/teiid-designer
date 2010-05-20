@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableItem;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.Label;
 import com.metamatrix.ui.table.TableSizeAdapter;

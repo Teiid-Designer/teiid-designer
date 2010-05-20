@@ -25,7 +25,7 @@ package com.metamatrix.connector.metadata;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 import com.metamatrix.modeler.core.metadata.runtime.VdbRecord;
 
 /**

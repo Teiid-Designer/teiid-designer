@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.MappingHelper;
 import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -36,7 +36,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlMappingRootCache

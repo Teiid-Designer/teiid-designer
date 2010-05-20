@@ -40,7 +40,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.BaseTable;
@@ -901,7 +901,7 @@ public class XsdSchemaBuilderImpl {
             final Object next = rootIT.next();
             if (!(next instanceof BaseTable) && !(next instanceof ProcedureResult) && !(next instanceof Procedure)) {
                 final String invalidRoot = XsdPlugin.Util.getString("XsdSchemaBuilderImpl.invalidRoot", next.getClass().getName()); //$NON-NLS-1$
-                throw new MetaMatrixRuntimeException(invalidRoot);
+                throw new TeiidRuntimeException(invalidRoot);
             }
         }
     }

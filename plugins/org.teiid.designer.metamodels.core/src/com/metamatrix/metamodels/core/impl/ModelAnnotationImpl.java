@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -666,20 +666,20 @@ public class ModelAnnotationImpl extends EObjectImpl implements ModelAnnotation 
      * Sets the namespace URI to the specified value. The {@link UriValidator} is used to validate the proposed value.
      * 
      * @param theNewNamespaceUri the proposed value
-     * @throws MetaMatrixRuntimeException if the proposed value is not valid
+     * @throws TeiidRuntimeException if the proposed value is not valid
      * @generated NOT
      */
-    public void setNamespaceUri( String theNewNamespaceUri ) throws MetaMatrixRuntimeException {
+    public void setNamespaceUri( String theNewNamespaceUri ) throws TeiidRuntimeException {
         try {
             IStatus status = UriValidator.validate(theNewNamespaceUri);
 
             if (status.getSeverity() == IStatus.ERROR) {
-                throw new MetaMatrixRuntimeException(status.getMessage());
+                throw new TeiidRuntimeException(status.getMessage());
             }
         } catch (RuntimeException theException) {
             String msg = CoreMetamodelPlugin.Util.getString("ModelAnnotationImpl.invalidNamespaceUriMsg", //$NON-NLS-1$
                                                             new Object[] {theNewNamespaceUri, theException.getLocalizedMessage()});
-            throw new MetaMatrixRuntimeException(theException, msg);
+            throw new TeiidRuntimeException(theException, msg);
         }
 
         setNamespaceUriGen(theNewNamespaceUri);

@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDLengthFacet;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -109,7 +109,7 @@ public class EnumeratedTypeAspect extends AbstractXsdEntityAspect
                 break;
             } default: {
                 String msg = Util.getString(I18nUtil.getPropertyPrefix(EnumeratedTypeAspect.class) + "invalidShowMask", new Integer(theShowMask)); //$NON-NLS-1$
-                throw new MetaMatrixRuntimeException(msg);
+                throw new TeiidRuntimeException(msg);
             }
         }
 

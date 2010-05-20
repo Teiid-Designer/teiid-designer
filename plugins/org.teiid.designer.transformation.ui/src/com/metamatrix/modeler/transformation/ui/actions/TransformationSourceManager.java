@@ -43,7 +43,7 @@ import com.metamatrix.modeler.transformation.ui.util.SqlAliasAccumulatorSource;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.query.internal.ui.tree.AddGroupSelectionValidator;
 import com.metamatrix.query.internal.ui.tree.QueryTreeSelectionDialog;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 import com.metamatrix.ui.internal.widget.accumulator.AccumulatorDialog;
 import com.metamatrix.ui.internal.widget.accumulator.IAccumulatorSource;

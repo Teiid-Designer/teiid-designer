@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.HasCriteria;
+import org.teiid.query.sql.proc.HasCriteria;
 
 /**
  * The <code>HasCriteriaDisplayNode</code> class is used to represent 

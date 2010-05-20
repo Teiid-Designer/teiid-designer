@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.visitor.GroupCollectorVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 
 
 /** This class, along with SqlIndexLocator provides actions and panels a way to narrow down the

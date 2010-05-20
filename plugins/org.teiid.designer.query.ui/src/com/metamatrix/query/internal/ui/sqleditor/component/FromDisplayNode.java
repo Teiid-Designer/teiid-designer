@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.FromClause;
 
 /**
  * The <code>FromDisplayNode</code> class is used to represent a Query's entire FROM clause.

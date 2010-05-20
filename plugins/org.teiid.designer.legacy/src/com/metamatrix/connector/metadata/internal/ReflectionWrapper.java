@@ -25,7 +25,7 @@ package com.metamatrix.connector.metadata.internal;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import com.metamatrix.connector.metadata.MetadataConnectorConstants;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * Wraps a target object to allow methods on the target object to be accessed via
@@ -53,15 +53,15 @@ public class ReflectionWrapper {
             try {
 				method = targetClass.getMethod(MetadataConnectorConstants.GET_METHOD_PREFIX + propertyName, new Class[0]);
 			} catch (NoSuchMethodException e1) {
-				throw new MetaMatrixRuntimeException(e1);
+				throw new TeiidRuntimeException(e1);
 			} 
         }
         try {
             return method.invoke(target, new Object[0]);
         } catch (IllegalAccessException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
     }
 
@@ -86,16 +86,16 @@ public class ReflectionWrapper {
         	try {
 				method = targetClass.getMethod(MetadataConnectorConstants.SET_METHOD_PREFIX + propertyName, types);
 			} catch (NoSuchMethodException e1) {
-				throw new MetaMatrixRuntimeException(e1);
+				throw new TeiidRuntimeException(e1);
 			}
         }
         try {
             // execute the method with arguments
             return method.invoke(target, propertyValues);
         } catch (IllegalAccessException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         } catch (InvocationTargetException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
     }    
 }

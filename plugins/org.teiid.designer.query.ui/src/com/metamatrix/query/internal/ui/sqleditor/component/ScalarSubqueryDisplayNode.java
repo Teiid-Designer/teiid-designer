@@ -8,8 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.ScalarSubquery;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.ScalarSubquery;
 
 /**
  * The <code>ScalarSubqueryDisplayNode</code> class is used to represent a ScalarSubquery.

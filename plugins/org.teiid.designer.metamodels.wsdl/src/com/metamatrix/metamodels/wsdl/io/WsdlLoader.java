@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.internal.core.xml.JdomHelper;
+import org.teiid.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;

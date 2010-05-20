@@ -16,16 +16,16 @@ import org.teiid.designer.udf.UdfManager;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.query.function.FunctionForm;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionTree;
-import com.metamatrix.query.function.SystemFunctionManager;
-import com.metamatrix.query.function.UDFSource;
+import org.teiid.query.function.FunctionForm;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * FunctionEditorModel

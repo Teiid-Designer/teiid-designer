@@ -12,7 +12,7 @@ import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.CorePlugin;
+import org.teiid.core.CorePlugin;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
 

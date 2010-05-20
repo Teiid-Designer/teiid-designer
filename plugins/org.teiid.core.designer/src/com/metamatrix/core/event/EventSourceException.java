@@ -8,13 +8,13 @@
 
 package com.metamatrix.core.event;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * Subclasses of this exception typically only need to implement whatever constructors they need.
  * <p>
  */
-public class EventSourceException extends MetaMatrixCoreException {
+public class EventSourceException extends TeiidException {
 
     /**
      */

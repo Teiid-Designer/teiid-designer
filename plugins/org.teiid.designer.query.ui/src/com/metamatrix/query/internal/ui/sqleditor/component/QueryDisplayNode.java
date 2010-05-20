@@ -10,14 +10,14 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.GroupBy;
-import com.metamatrix.query.sql.lang.Limit;
-import com.metamatrix.query.sql.lang.Option;
-import com.metamatrix.query.sql.lang.OrderBy;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.Select;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.lang.Limit;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.Select;
 
 /**
  * The <code>QueryDisplayNode</code> class is used to represent a SELECT Query.

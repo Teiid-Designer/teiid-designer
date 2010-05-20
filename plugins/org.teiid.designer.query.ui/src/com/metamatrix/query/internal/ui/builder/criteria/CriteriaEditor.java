@@ -26,7 +26,7 @@ import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEdi
 import com.metamatrix.query.internal.ui.builder.model.CriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Criteria;
 import com.metamatrix.query.ui.builder.AbstractCompositeLanguageObjectEditor;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 import com.metamatrix.ui.internal.util.WidgetFactory;

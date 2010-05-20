@@ -19,7 +19,7 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.VisibilityKind;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.uml2.Uml2MetamodelConstants;
@@ -273,7 +273,7 @@ public class Uml2AssociationUmlAspect extends AbstractUml2UmlAspect implements U
                 result.append(assoc.getName());
                 break;
             default:
-                throw new MetaMatrixRuntimeException("Invalid showMask for getSignature" + showMask); //$NON-NLS-1$
+                throw new TeiidRuntimeException("Invalid showMask for getSignature" + showMask); //$NON-NLS-1$
         }
         return result.toString();
     }

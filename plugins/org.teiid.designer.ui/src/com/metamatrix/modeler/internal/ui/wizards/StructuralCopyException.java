@@ -7,12 +7,12 @@
  */
 package com.metamatrix.modeler.internal.ui.wizards;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * StructuralCopyException
  */
-public class StructuralCopyException extends MetaMatrixCoreException {
+public class StructuralCopyException extends TeiidException {
 
     private static final long serialVersionUID = 1L;
 

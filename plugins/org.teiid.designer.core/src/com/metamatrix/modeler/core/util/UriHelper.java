@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.util;
 
 import java.io.File;
 import org.eclipse.emf.common.util.URI;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 
 

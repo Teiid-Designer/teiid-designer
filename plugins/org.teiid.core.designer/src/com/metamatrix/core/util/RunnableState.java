@@ -7,7 +7,7 @@
  */
 package com.metamatrix.core.util;
 
-import com.metamatrix.core.CorePlugin;
+import org.teiid.core.CorePlugin;
 
 /**
  * This class records the state for a component that can be started and stopped.

@@ -16,7 +16,7 @@ import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.ValueSpecification;
 import org.eclipse.uml2.uml.VisibilityKind;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -204,7 +204,7 @@ public class Uml2PropertyUmlAspect extends AbstractUml2NamedElementUmlAspect imp
                 // Properties
                 return (""); //$NON-NLS-1$
             default:
-                throw new MetaMatrixRuntimeException(Uml2Plugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(Uml2Plugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

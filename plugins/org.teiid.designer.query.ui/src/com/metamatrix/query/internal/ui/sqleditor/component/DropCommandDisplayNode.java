@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Drop;
+import org.teiid.query.sql.lang.Drop;
 
 /**
  * The <code>DropCommandDisplayNode</code> class is used to represent a Drop command.

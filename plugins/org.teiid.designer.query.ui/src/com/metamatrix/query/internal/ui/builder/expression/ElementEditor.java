@@ -26,8 +26,8 @@ import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.internal.ui.builder.util.ICriteriaStrategy;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * ElementEditor

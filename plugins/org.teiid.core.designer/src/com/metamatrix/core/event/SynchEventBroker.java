@@ -8,7 +8,7 @@
 package com.metamatrix.core.event;
 
 import java.util.EventObject;
-import com.metamatrix.core.CorePlugin;
+import org.teiid.core.CorePlugin;
 
 public class SynchEventBroker extends AbstractEventBroker {
 

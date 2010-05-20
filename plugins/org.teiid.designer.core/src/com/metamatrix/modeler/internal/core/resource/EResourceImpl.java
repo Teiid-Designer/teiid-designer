@@ -34,11 +34,11 @@ import org.eclipse.emf.ecore.xmi.XMLSave;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidException;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.Annotation;
@@ -554,7 +554,7 @@ public class EResourceImpl extends XMIResourceImpl
             if (f.isFile() && f.exists()) {
                 try {
                     header = XMIHeaderReader.readHeader(f);
-                } catch (MetaMatrixCoreException e) {
+                } catch (TeiidException e) {
                     ModelerCore.Util.log(e);
                 }
             }

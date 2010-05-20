@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import com.metamatrix.core.util.Assertion;
+import org.teiid.core.util.Assertion;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * CriteriaEditorModel

@@ -34,7 +34,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import com.metamatrix.common.xml.XMLReaderWriter;
 import com.metamatrix.common.xml.XMLReaderWriterImpl;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 
 /**
  */

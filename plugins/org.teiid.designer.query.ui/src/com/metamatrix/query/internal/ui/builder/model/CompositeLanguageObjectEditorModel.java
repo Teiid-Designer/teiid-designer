@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>CompositeLanguageObjectEditorModel</code> manages a collection of <code>ILanguageObjectEditorModel</code>s.

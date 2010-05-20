@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.VisibilityKind;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2MetamodelConstants;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
@@ -135,7 +135,7 @@ public class Uml2EnumerationLiteralUmlAspect extends AbstractUml2NamedElementUml
                 // Properties
                 return (""); //$NON-NLS-1$
             default:
-                throw new MetaMatrixRuntimeException(
+                throw new TeiidRuntimeException(
                                                      ModelerCore.Util.getString("Uml2EnumerationLiteralUmlAspect.Invalid_showMask_for_getSignature", showMask));//$NON-NLS-1$
         }
         return result.toString();

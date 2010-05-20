@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlTransformationResult

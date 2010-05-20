@@ -24,7 +24,7 @@ package com.metamatrix.common.xmi;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.StringUtil;
 
 //We also need to bring back our SAX handler "header reader" 
 //that reads a stream and extracts the model information 

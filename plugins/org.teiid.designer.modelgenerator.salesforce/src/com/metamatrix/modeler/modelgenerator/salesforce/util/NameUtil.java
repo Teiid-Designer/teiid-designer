@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.util;
 
-import com.metamatrix.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.ProcedureReservedWords;
 import com.metamatrix.query.sql.ReservedWords;
 
 public class NameUtil {

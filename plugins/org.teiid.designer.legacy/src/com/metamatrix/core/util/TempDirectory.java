@@ -24,7 +24,9 @@ package com.metamatrix.core.util;
 
 import java.io.File;
 import java.util.Random;
-import com.metamatrix.common.log.LogManager;
+
+import org.teiid.core.util.FileUtils;
+import org.teiid.logging.LogManager;
 import com.metamatrix.common.util.LogConstants;
 
 /**

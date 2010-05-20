@@ -22,8 +22,8 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.logging.LogManager;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.GroupID;
 import com.metamatrix.metadata.runtime.api.ModelID;
@@ -44,7 +44,7 @@ public class BasicGroupID extends BasicMetadataID implements GroupID {
         super(fullName, internalUniqueID);
         if(this.getNameComponents().size() < 2){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid GroupID \"",fullName,"\". Number of name components must be > 1."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BGID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BGID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BGID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BGID_0001) );
         }
     }
 
@@ -55,7 +55,7 @@ public class BasicGroupID extends BasicMetadataID implements GroupID {
         super(fullName);
         if(this.getNameComponents().size() < 2){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid GroupID \"",fullName,"\". Number of name components must be > 1."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BGID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BGID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BGID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BGID_0001) );
         }
     }
 /*

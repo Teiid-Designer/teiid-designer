@@ -39,8 +39,8 @@ import com.metamatrix.query.internal.ui.builder.actions.DeleteViewerObjectAction
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 import com.metamatrix.query.ui.sqleditor.SqlDisplayPanel;

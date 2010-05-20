@@ -10,7 +10,7 @@ package com.metamatrix.metamodels.relational.aspects.uml;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
@@ -235,7 +235,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

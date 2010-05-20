@@ -27,7 +27,7 @@ import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**

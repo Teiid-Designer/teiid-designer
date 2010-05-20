@@ -29,12 +29,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.index.IEntryResult;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 import com.metamatrix.core.util.CharOperation;
-import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.FileUtils;
+import org.teiid.core.util.StringUtil;
 import com.metamatrix.internal.core.index.BlocksIndexInput;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
@@ -92,7 +92,7 @@ public class SimpleIndexUtil {
      * @return results
      * @throws QueryMetadataException
      */
-    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final char fieldDelimiter) throws MetaMatrixCoreException {
+    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final char fieldDelimiter) throws TeiidException {
         final boolean isCaseSensitive  = false;
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
 
@@ -113,7 +113,7 @@ public class SimpleIndexUtil {
                 }
             }
         } catch(IOException e) {
-            throw new MetaMatrixCoreException(e); 
+            throw new TeiidException(e); 
         }
         
         // Remove any results that do not match after tokenizing the record
@@ -173,7 +173,7 @@ public class SimpleIndexUtil {
      * @return results
      * @throws MetamatrixCoreException
      */
-    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws MetaMatrixCoreException {
+    public static IEntryResult[] queryIndex(final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
         return queryIndex(null, indexes, pattern, isPrefix, true, returnFirstMatch);
     }
     
@@ -190,7 +190,7 @@ public class SimpleIndexUtil {
      * @return results
      * @throws MetamatrixCoreException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws MetaMatrixCoreException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean returnFirstMatch) throws TeiidException {
         return queryIndex(monitor, indexes, pattern, isPrefix, true, returnFirstMatch);        
     }
     
@@ -207,7 +207,7 @@ public class SimpleIndexUtil {
      * @return results
      * @throws MetamatrixCoreException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws MetaMatrixCoreException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final char[] pattern, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
         if ( monitor != null ) {
             monitor.beginTask( null, indexes.length );        
@@ -258,7 +258,7 @@ public class SimpleIndexUtil {
                 }                
             }
         } catch(IOException e) {
-            throw new MetaMatrixCoreException(e);
+            throw new TeiidException(e);
         }
 
         return queryResult.toArray(new IEntryResult[queryResult.size()]);
@@ -277,7 +277,7 @@ public class SimpleIndexUtil {
      * @return results
      * @throws MetamatrixCoreException
      */
-    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final Collection patterns, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws MetaMatrixCoreException {
+    public static IEntryResult[] queryIndex(ProgressMonitor monitor, final Index[] indexes, final Collection patterns, final boolean isPrefix, final boolean isCaseSensitive, final boolean returnFirstMatch) throws TeiidException {
         final List<IEntryResult> queryResult = new ArrayList<IEntryResult>();
         if ( monitor != null ) {
             monitor.beginTask( null, indexes.length );        
@@ -348,7 +348,7 @@ public class SimpleIndexUtil {
                 }
             }
         } catch(IOException e) {
-            throw new MetaMatrixCoreException(e);
+            throw new TeiidException(e);
         } finally {
             // close file input
             try {
@@ -468,7 +468,7 @@ public class SimpleIndexUtil {
 	 * @throws MetamatrixCoreException If there is an error looking up indexes
 	 * @since 4.2
 	 */
-    public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws MetaMatrixCoreException {
+    public static Index[] getIndexes(final String indexName, final IndexSelector selector) throws TeiidException {
 		ArgCheck.isNotEmpty(indexName);
         // The the index file name for the record type
         try {
@@ -485,7 +485,7 @@ public class SimpleIndexUtil {
             }
             return tmp.toArray(new Index[tmp.size()]);
         } catch(IOException e) {
-            throw new MetaMatrixCoreException(e);
+            throw new TeiidException(e);
         }
     }
 

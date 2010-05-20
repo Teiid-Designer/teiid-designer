@@ -13,15 +13,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.Symbol;
-import com.metamatrix.query.sql.visitor.AbstractSymbolMappingVisitor;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.visitor.AbstractSymbolMappingVisitor;
 
 /**
  * SqlSymbolUUIDMappingVisitor for mapping SQL UUIDs to fullnames.

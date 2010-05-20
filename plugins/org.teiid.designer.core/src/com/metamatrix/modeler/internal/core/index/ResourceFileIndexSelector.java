@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DateUtil;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;

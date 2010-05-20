@@ -8,11 +8,11 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionLibrary;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * The <code>FunctionDisplayNode</code> class is used to represent a Function.

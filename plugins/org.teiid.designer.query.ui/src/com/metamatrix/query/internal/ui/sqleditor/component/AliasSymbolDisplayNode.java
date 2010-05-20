@@ -9,8 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.symbol.AliasSymbol;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>AliasSymbolDisplayNode</code> class is used to represent AliasSymbols.

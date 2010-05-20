@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.CriteriaSelector;
+import org.teiid.query.sql.proc.CriteriaSelector;
 
 /**
  * The <code>CriteriaSelectorDisplayNode</code> class is used to represent 

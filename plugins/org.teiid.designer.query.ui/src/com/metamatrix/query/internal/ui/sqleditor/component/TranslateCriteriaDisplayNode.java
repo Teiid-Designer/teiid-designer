@@ -10,7 +10,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.proc.TranslateCriteria;
+import org.teiid.query.sql.proc.TranslateCriteria;
 
 /**
  * The <code>TranslateCriteriaDisplayNode</code> class is used to represent a TranslateCriteria.

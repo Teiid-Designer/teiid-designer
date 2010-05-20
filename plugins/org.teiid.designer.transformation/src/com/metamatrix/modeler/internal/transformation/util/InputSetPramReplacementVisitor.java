@@ -9,11 +9,11 @@ package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.core.id.UUID;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Reference;
-import com.metamatrix.query.sql.visitor.ExpressionMappingVisitor;
+import org.teiid.core.id.UUID;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Reference;
+import org.teiid.query.sql.visitor.ExpressionMappingVisitor;
 
 /**
  * <p>

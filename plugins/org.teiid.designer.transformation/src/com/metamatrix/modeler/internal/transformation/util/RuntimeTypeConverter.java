@@ -13,20 +13,20 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.udf.UdfManager;
 
-import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.common.types.NullType;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.types.NullType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.query.function.FunctionDescriptor;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.function.FunctionTree;
-import com.metamatrix.query.function.SystemFunctionManager;
-import com.metamatrix.query.function.UDFSource;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.function.FunctionDescriptor;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * The <code>RuntimeTypeConverter</code> class reconciles the runtime types of 2 lists. For type changes to {@link MetaObject}s,

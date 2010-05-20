@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import com.metamatrix.common.types.DataTypeManager;
+import org.teiid.core.types.DataTypeManager;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.DynamicCommand;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.lang.DynamicCommand;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>QueryDisplayNode</code> class is used to represent a SELECT Query.

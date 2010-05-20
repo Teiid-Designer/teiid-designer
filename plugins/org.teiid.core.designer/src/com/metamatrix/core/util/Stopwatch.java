@@ -23,8 +23,8 @@
 package com.metamatrix.core.util;
 
 import java.io.Serializable;
-import com.metamatrix.core.CorePlugin;
-import com.metamatrix.core.log.MessageLevel;
+import org.teiid.core.CorePlugin;
+import org.teiid.logging.MessageLevel;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 public class Stopwatch implements Serializable {

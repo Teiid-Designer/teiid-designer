@@ -22,11 +22,11 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.metadata.TempMetadataID;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * AttributeMappingHelper - static methods for keeping the target attribute mappings for

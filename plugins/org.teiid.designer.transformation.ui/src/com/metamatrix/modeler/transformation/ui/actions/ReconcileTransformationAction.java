@@ -33,8 +33,8 @@ import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEdit
 import com.metamatrix.modeler.transformation.ui.reconciler.ReconcilerDialog;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;

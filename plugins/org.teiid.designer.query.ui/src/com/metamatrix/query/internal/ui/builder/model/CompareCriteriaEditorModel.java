@@ -8,10 +8,10 @@
 package com.metamatrix.query.internal.ui.builder.model;
 
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeConstants;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.AbstractCompareCriteria;
-import com.metamatrix.query.sql.lang.CompareCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.AbstractCompareCriteria;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * CompareCriteriaEditorModel
@@ -57,7 +57,7 @@ public class CompareCriteriaEditorModel extends AbstractPredicateCriteriaTypeEdi
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent)
+     * @see org.teiid.query.internal.ui.builder.model.ILanguageObjectEditorModelListener#modelChanged(com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent)
      */
     public void modelChanged( LanguageObjectEditorModelEvent theEvent ) {
         String type = theEvent.getType();

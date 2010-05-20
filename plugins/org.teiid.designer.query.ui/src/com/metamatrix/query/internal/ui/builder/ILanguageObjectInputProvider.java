@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.builder;
 
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>ILanguageObjectInputProvider</code> interface is used by the {@link LanguageObjectContentProvider}

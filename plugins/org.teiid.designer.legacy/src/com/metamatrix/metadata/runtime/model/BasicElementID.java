@@ -22,8 +22,8 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.logging.LogManager;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.ElementID;
 import com.metamatrix.metadata.runtime.api.GroupID;
@@ -46,7 +46,7 @@ public class BasicElementID extends BasicMetadataID implements ElementID {
         super(fullName, internalUniqueID);
         if(this.getNameComponents().size() < 3){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid ElementID \"",fullName,"\". Number of name components must be > 2."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BEID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BEID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BEID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BEID_0001) );
         }
     }
 
@@ -57,7 +57,7 @@ public class BasicElementID extends BasicMetadataID implements ElementID {
         super(fullName);
         if(this.getNameComponents().size() < 3){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid ElementID \"",fullName,"\". Number of name components must be > 2."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BEID_0001);
+            throw new TeiidRuntimeException (ErrorMessageKeys.BEID_0001);
         }
     }
 
@@ -65,7 +65,7 @@ public class BasicElementID extends BasicMetadataID implements ElementID {
         super(parentName, name, internalUniqueID);
         if(this.getNameComponents().size() < 3){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid ElementID \"",this.getFullName(),"\". Number of name components must be > 2."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BEID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BEID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BEID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BEID_0001) );
         }
     }
 

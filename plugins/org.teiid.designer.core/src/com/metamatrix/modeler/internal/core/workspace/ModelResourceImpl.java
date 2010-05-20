@@ -37,7 +37,7 @@ import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.common.xmi.XMIHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -868,7 +868,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                 if (modelFile.exists()) {
                     this.xmiHeader = XMIHeaderReader.readHeader(modelFile);
                 }
-            } catch (MetaMatrixCoreException e) {
+            } catch (TeiidException e) {
                 // do nothing
             } catch (Throwable e) {
                 throw new ModelWorkspaceException(
@@ -887,7 +887,7 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                 if (modelFile.exists() && ModelFileUtil.isXsdFile(modelFile)) {
                     this.xsdHeader = XsdHeaderReader.readHeader(modelFile);
                 }
-            } catch (MetaMatrixCoreException e) {
+            } catch (TeiidException e) {
                 // do nothing
             } catch (Throwable e) {
                 throw new ModelWorkspaceException(

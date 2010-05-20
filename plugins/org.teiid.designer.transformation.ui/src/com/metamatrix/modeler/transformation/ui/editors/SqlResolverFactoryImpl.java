@@ -9,7 +9,7 @@ package com.metamatrix.modeler.transformation.ui.editors;
 
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 import com.metamatrix.query.ui.sqleditor.SqlResolverFactory;
 
 /**

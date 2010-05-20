@@ -10,7 +10,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.symbol.CaseExpression;
+import org.teiid.query.sql.symbol.CaseExpression;
 
 /**
  * CaseExpressionDisplayNode

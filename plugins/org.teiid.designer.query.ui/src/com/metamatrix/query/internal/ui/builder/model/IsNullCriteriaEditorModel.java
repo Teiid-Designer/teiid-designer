@@ -8,9 +8,9 @@
 package com.metamatrix.query.internal.ui.builder.model;
 
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.IsNullCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.IsNullCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * IsNullCriteriaEditorModel

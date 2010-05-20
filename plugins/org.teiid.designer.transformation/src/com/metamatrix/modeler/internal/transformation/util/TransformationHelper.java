@@ -28,9 +28,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingRoot;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.common.util.SqlUtil;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.util.SqlUtil;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -80,21 +80,21 @@ import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.QueryCommand;
-import com.metamatrix.query.sql.lang.SetQuery;
-import com.metamatrix.query.sql.lang.StoredProcedure;
-import com.metamatrix.query.sql.navigator.PreOrderNavigator;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.sql.util.UpdateProcedureGenerator;
-import com.metamatrix.query.sql.visitor.ElementCollectorVisitor;
-import com.metamatrix.query.validator.UpdateValidationVisitor;
-import com.metamatrix.query.validator.ValidatorReport;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.util.UpdateProcedureGenerator;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.validator.UpdateValidationVisitor;
+import org.teiid.query.validator.ValidatorReport;
 
 /**
  * TransformationHelper This class contains helper methods for getting "properties" from TransformationMappings
@@ -2804,7 +2804,7 @@ public class TransformationHelper implements SqlConstants {
     public static Map getExternalMetadataMap( final Command command,
                                               final SqlTransformationMappingRoot mappingRoot,
                                               final QueryMetadataInterface metadata )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (mappingRoot != null) {
             final Object targetGroup = mappingRoot.getTarget();
             // If the transformation has mappingClass target, use InputSet as External Metadata
@@ -2912,7 +2912,7 @@ public class TransformationHelper implements SqlConstants {
      */
     public static Map getExternalMetadataMapForTable( final Table targetGroup,
                                                       final QueryMetadataInterface metadata )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (targetGroup == null) {
             return Collections.EMPTY_MAP;
         }
@@ -2936,7 +2936,7 @@ public class TransformationHelper implements SqlConstants {
      */
     public static Map getExternalMetadataMapForUpdateProcedure( final Table targetGroup,
                                                                 final QueryMetadataInterface metadata )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (targetGroup != null) {
             String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
             String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
@@ -3073,7 +3073,7 @@ public class TransformationHelper implements SqlConstants {
      */
     public static Map getStoredProcedureExternalMetadataMap( final Procedure targetProcedure,
                                                              final QueryMetadataInterface metadata )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (targetProcedure != null) {
             String targetProcFullName = TransformationHelper.getSqlEObjectFullName(targetProcedure);
             GroupSymbol gSymbol = new GroupSymbol(targetProcFullName);
@@ -3092,7 +3092,7 @@ public class TransformationHelper implements SqlConstants {
      */
     public static Map getOperationExternalMetadataMap( final Operation targetOperation,
                                                        final QueryMetadataInterface metadata )
-        throws MetaMatrixComponentException, QueryMetadataException {
+        throws TeiidComponentException, QueryMetadataException {
         if (targetOperation != null) {
             String targetProcFullName = TransformationHelper.getSqlEObjectFullName(targetOperation);
             GroupSymbol gSymbol = new GroupSymbol(targetProcFullName);
@@ -3766,7 +3766,7 @@ public class TransformationHelper implements SqlConstants {
                                                                                  virtualTargetFullName,
                                                                                  selectCommand,
                                                                                  resolver);
-                    } catch (MetaMatrixComponentException e) {
+                    } catch (TeiidComponentException e) {
                         // Exception leaves generatedProc null
                         String message = "[TransformationHelper.getGeneratedProcedure()] INFO:  Couldnt generate procedure\n"; //$NON-NLS-1$
                         TransformationPlugin.Util.log(IStatus.INFO, message + e.getMessage());
@@ -3865,7 +3865,7 @@ public class TransformationHelper implements SqlConstants {
     private static Collection getUnionSourceAttributesForTargetAttr( Object targetAttr,
                                                                      SetQuery unionQry ) {
         List sourceAttributes = new ArrayList();
-        if (unionQry != null && unionQry.getOperation() == com.metamatrix.query.sql.lang.SetQuery.Operation.UNION
+        if (unionQry != null && unionQry.getOperation() == org.teiid.query.sql.lang.SetQuery.Operation.UNION
             && unionQry.isResolved()) {
             List projSymbolNames = TransformationSqlHelper.getProjectedSymbolNames(unionQry);
             // Find index of the symbol that matches the target attribute name

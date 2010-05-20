@@ -16,7 +16,7 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.Property;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.metamodels.uml2.util.Uml2Util;
@@ -113,7 +113,7 @@ public class Uml2ClassUmlAspect extends AbstractUml2NamedElementUmlAspect implem
             default :
                 final int params = showMask;
                 final String msg = Uml2Plugin.Util.getString("Uml2ClassUmlAspect.Invalid_showMask_for_getSignature_0_1",params); //$NON-NLS-1$
-                throw new MetaMatrixRuntimeException(msg);
+                throw new TeiidRuntimeException(msg);
         }
         return result.toString();
     }

@@ -30,7 +30,7 @@ import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.jdom.JDOMException;
 
-import com.metamatrix.internal.core.xml.JdomHelper;
+import org.teiid.internal.core.xml.JdomHelper;
 
 
 /** 

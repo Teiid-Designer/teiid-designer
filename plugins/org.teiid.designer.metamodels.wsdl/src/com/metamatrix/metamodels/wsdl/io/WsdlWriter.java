@@ -33,7 +33,7 @@ import org.jdom.output.XMLOutputter;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.internal.core.xml.JdomHelper;
+import org.teiid.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;
 import com.metamatrix.metamodels.wsdl.BindingInput;

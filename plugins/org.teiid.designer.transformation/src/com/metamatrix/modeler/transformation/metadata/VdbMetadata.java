@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -58,7 +58,7 @@ public class VdbMetadata extends ModelerMetadata {
     @Override
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws MetaMatrixComponentException {
+                                              final boolean isPartialName ) throws TeiidComponentException {
 
         Collection eObjects = new LinkedList();
 
@@ -149,13 +149,13 @@ public class VdbMetadata extends ModelerMetadata {
      */
     @Override
     protected Index[] getIndexes( final char recordType,
-                                  final IndexSelector selector ) throws MetaMatrixComponentException {
+                                  final IndexSelector selector ) throws TeiidComponentException {
         // The the index file name for the record type
         try {
             final String indexName = IndexUtil.getIndexFileNameForRecordType(recordType);
             return IndexUtil.getIndexes(indexName, selector);
         } catch (Exception e) {
-            throw new MetaMatrixComponentException(
+            throw new TeiidComponentException(
                                                    e,
                                                    TransformationPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1", selector)); //$NON-NLS-1$
         }

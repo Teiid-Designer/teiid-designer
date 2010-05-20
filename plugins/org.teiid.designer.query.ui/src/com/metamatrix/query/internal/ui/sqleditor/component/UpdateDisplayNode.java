@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.AbstractCompareCriteria;
-import com.metamatrix.query.sql.lang.CompareCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.Option;
-import com.metamatrix.query.sql.lang.SetClause;
-import com.metamatrix.query.sql.lang.Update;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.lang.AbstractCompareCriteria;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.lang.SetClause;
+import org.teiid.query.sql.lang.Update;
+import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  * The <code>UpdateDisplayNode</code> class is used to represent a UPDATE command.
  */

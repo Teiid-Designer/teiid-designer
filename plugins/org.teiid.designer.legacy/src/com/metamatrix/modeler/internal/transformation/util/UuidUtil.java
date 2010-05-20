@@ -22,9 +22,9 @@
 
 package com.metamatrix.modeler.internal.transformation.util;
 
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 
 public class UuidUtil {
 

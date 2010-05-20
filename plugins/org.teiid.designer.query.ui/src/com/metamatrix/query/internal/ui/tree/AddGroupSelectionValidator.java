@@ -10,10 +10,10 @@ package com.metamatrix.query.internal.ui.tree;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.Select;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.query.ui.UiConstants;
 
 

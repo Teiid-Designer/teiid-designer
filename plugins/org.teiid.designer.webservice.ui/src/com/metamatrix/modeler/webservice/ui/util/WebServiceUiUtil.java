@@ -26,7 +26,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
 import com.metamatrix.core.io.FileUrl;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
@@ -50,16 +50,16 @@ import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.sql.proc.AssignmentStatement;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.CommandStatement;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.proc.DeclareStatement;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.SystemClipboardUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -159,7 +159,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
 
         DeclareStatement statement = new DeclareStatement(new ElementSymbol(getQualifiedInputVariableName(node.getName())),
                                                           DatatypeConstants.RuntimeTypeNames.STRING);
-        statement.setValue(new Function(FunctionLibrary.XPATHVALUE, new Expression[] {new ElementSymbol(name),
+        statement.setValue(new Function(WebServiceUtil.XPATHVALUE, new Expression[] {new ElementSymbol(name),
             new Constant(WebServiceUtil.createXPath(node))}));
 
         return statement;

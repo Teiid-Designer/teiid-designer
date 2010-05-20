@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.xslt.Style;

@@ -34,8 +34,8 @@ import com.metamatrix.query.internal.ui.builder.model.FunctionEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * FunctionEditor

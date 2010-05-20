@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.webservice.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
@@ -98,7 +98,7 @@ public class OutputAspect extends WebServiceComponentAspect implements UmlClassi
                 result.append(name);        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(WebServiceMetamodelPlugin.Util.getString("OutputAspect.1") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(WebServiceMetamodelPlugin.Util.getString("OutputAspect.1") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

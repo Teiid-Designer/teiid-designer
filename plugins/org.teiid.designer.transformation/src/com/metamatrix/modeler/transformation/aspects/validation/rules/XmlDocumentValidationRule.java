@@ -77,16 +77,16 @@ import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.xml.PluginConstants;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.report.ReportItem;
-import com.metamatrix.query.resolver.util.ResolverVisitor;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.visitor.ElementCollectorVisitor;
-import com.metamatrix.query.validator.Validator;
-import com.metamatrix.query.validator.ValidatorReport;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.report.ReportItem;
+import org.teiid.query.resolver.util.ResolverVisitor;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.validator.Validator;
+import org.teiid.query.validator.ValidatorReport;
 
 /**
  * XmlDocumentValidationRule

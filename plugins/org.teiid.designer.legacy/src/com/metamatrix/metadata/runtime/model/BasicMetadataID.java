@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.metamatrix.common.namedobject.IDVerifier;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.util.StringUtil;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.ElementID;
 import com.metamatrix.metadata.runtime.api.KeyID;
@@ -103,11 +103,11 @@ public class BasicMetadataID implements MetadataID {
     protected BasicMetadataID( String fullName,
                                long internalUniqueID ) {
         if (fullName == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMDID_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMDID_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMDID_0001));
         }
         if (fullName.trim().length() == 0) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMDID_0002,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMDID_0002,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMDID_0002));
         }
         this.fullName = fullName;
@@ -120,11 +120,11 @@ public class BasicMetadataID implements MetadataID {
                                String name,
                                long internalUniqueID ) {
         if (name == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMDID_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMDID_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMDID_0001));
         }
         if (name.trim().length() == 0) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMDID_0002,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMDID_0002,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMDID_0002));
         }
         this.shortName = name;
@@ -282,7 +282,7 @@ public class BasicMetadataID implements MetadataID {
     public int compareTo( Object obj ) {
         BasicMetadataID that = (BasicMetadataID)obj; // May throw ClassCastException
         if (obj == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.GEN_0005,
+            throw new TeiidRuntimeException(ErrorMessageKeys.GEN_0005,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
         }
 
@@ -317,7 +317,7 @@ public class BasicMetadataID implements MetadataID {
     public int compareToByName( Object obj ) {
         BasicMetadataID that = (BasicMetadataID)obj; // May throw ClassCastException
         if (obj == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.GEN_0005,
+            throw new TeiidRuntimeException(ErrorMessageKeys.GEN_0005,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
         }
 

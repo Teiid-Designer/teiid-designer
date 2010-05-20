@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CommandStatement;
 
 /**
  * The <code>CommandStatementDisplayNode</code> class is used to represent 

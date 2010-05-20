@@ -22,8 +22,8 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.logging.LogManager;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.GroupID;
 import com.metamatrix.metadata.runtime.api.KeyID;
@@ -46,7 +46,7 @@ public class BasicKeyID extends BasicMetadataID implements KeyID {
         super(fullName, internalUniqueID);
         if(this.getNameComponents().size() < 3){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid KeyID \"",fullName,"\". Number of name components must be > 2."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BKID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BKID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BKID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BKID_0001) );
         }
     }
 
@@ -57,7 +57,7 @@ public class BasicKeyID extends BasicMetadataID implements KeyID {
         super(fullName);
         if(this.getNameComponents().size() < 3){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid KeyID \"",fullName,"\". Number of name components must be > 2."});
-            throw new MetaMatrixRuntimeException (ErrorMessageKeys.BKID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BKID_0001) );
+            throw new TeiidRuntimeException (ErrorMessageKeys.BKID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BKID_0001) );
         }
     }
 

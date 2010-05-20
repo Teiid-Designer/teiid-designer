@@ -22,7 +22,7 @@
 
 package com.metamatrix.common.vdb.runtime;
 
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 
 public class VDBKey {
 

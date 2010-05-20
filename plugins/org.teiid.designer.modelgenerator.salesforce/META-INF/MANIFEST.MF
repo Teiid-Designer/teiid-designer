@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.schema.tools,
  org.teiid.designer.compare,
  org.apache.commons.logging,
- org.teiid.designer.legacy
+ org.teiid.designer.legacy,
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
  com.metamatrix.modeler.modelgenerator.salesforce.connection,

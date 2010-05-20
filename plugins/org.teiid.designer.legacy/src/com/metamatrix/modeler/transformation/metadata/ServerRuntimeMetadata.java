@@ -22,7 +22,7 @@
 
 package com.metamatrix.modeler.transformation.metadata;
 
-import com.metamatrix.api.exception.MetaMatrixComponentException;
+import org.teiid.core.TeiidComponentException;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.SimpleIndexUtil;
 import com.metamatrix.internal.core.index.Index;
@@ -60,13 +60,13 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
      * @throws QueryMetadataException
      */
     @Override
-    protected Index[] getIndexes(final char recordType, final IndexSelector selector) throws MetaMatrixComponentException {
+    protected Index[] getIndexes(final char recordType, final IndexSelector selector) throws TeiidComponentException {
         // The the index file name for the record type
         try {
             final String indexName = SimpleIndexUtil.getIndexFileNameForRecordType(recordType);
             return SimpleIndexUtil.getIndexes(indexName, selector);            
         } catch(Exception e) {
-            throw new MetaMatrixComponentException(e, RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
+            throw new TeiidComponentException(e, RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Error_trying_to_obtain_index_file_using_IndexSelector_1",selector)); //$NON-NLS-1$
         }
     }
 
@@ -78,12 +78,12 @@ public class ServerRuntimeMetadata extends TransformationMetadata {
     protected IEntryResult[] queryIndex(final Index[] indexes,
                                         char[] pattern,
                                         boolean isPrefix,
-                                        boolean returnFirstMatch) throws MetaMatrixComponentException {
+                                        boolean returnFirstMatch) throws TeiidComponentException {
         try {
             return super.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch(MetaMatrixComponentException e) {
+        } catch(TeiidComponentException e) {
             if(!this.getIndexSelector().isValid()) {
-                throw new MetaMatrixComponentException(RuntimeMetadataPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
+                throw new TeiidComponentException(RuntimeMetadataPlugin.Util.getString("ServerRuntimeMetadata.invalid_selector")); //$NON-NLS-1$
             }
             throw e;
         }

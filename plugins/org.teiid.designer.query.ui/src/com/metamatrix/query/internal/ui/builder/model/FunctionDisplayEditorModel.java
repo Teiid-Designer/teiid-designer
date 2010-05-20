@@ -7,8 +7,8 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Function;
 
 /**
  * The <code>FunctionDisplayEditorModel</code> class is used as a model for the

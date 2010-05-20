@@ -37,10 +37,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import com.metamatrix.api.exception.MetaMatrixException;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.TeiidException;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.util.ArgCheck;
 
 public class VdbHeaderReader {
 
@@ -53,7 +52,7 @@ public class VdbHeaderReader {
     // P U B L I C M E T H O D S
     // ==================================================================================
 
-    public static VdbHeader readHeader( final File file ) throws MetaMatrixCoreException {
+    public static VdbHeader readHeader( final File file ) throws TeiidException {
         if (file != null && file.isFile() && file.exists() && file.length() > 0) {
             final String lowerCaseFileName = file.getName().toLowerCase();
 
@@ -73,7 +72,7 @@ public class VdbHeaderReader {
                     VdbHeaderReader reader = new VdbHeaderReader();
                     header = reader.read(iStream);
                 } catch (IOException e) {
-                    throw new MetaMatrixRuntimeException(e);
+                    throw new TeiidRuntimeException(e);
                 } finally {
                     if (iStream != null) {
                         try {
@@ -111,7 +110,7 @@ public class VdbHeaderReader {
      * @return the VdbHeader object representing the contents of this section
      * @throws MetaMatrixException if there is an error reading from the stream
      */
-    private VdbHeader read( InputStream istream ) throws MetaMatrixCoreException {
+    private VdbHeader read( InputStream istream ) throws TeiidException {
         if (istream == null) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_InputStream_reference_may_not_be_null._1"; //$NON-NLS-1$
@@ -138,7 +137,7 @@ public class VdbHeaderReader {
         } catch (Throwable e) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new MetaMatrixCoreException(e, msg);
+            throw new TeiidException(e, msg);
         }
         return ((TerminatingVdbHeaderContentHandler)handler).getVdbHeader();
     }
@@ -150,7 +149,7 @@ public class VdbHeaderReader {
      * @return the VdbHeader object representing the contents of this section
      * @throws MetaMatrixException if there is an error reading the file
      */
-    public VdbHeader read( File file ) throws MetaMatrixCoreException {
+    public VdbHeader read( File file ) throws TeiidException {
         if (file == null) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_file_reference_may_not_be_null_2"; //$NON-NLS-1$
@@ -184,7 +183,7 @@ public class VdbHeaderReader {
         } catch (FileNotFoundException e) {
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new MetaMatrixCoreException(e, msg);
+            throw new TeiidException(e, msg);
         } finally {
             if (bis != null) {
                 try {
@@ -268,7 +267,7 @@ public class VdbHeaderReader {
                 }
             }
         } catch (IOException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
         return null;
     }

@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>ElementSymbolDisplayNode</code> class is used to represent an ElemenSymbol.

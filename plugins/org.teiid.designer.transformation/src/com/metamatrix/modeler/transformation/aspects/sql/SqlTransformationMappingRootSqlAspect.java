@@ -40,9 +40,9 @@ import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.internal.transformation.util.InputSetPramReplacementVisitor;
 import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
 /**
  * SqlTransformationMappingRootSqlAspect

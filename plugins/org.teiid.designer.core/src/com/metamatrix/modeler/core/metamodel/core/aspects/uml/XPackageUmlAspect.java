@@ -9,7 +9,7 @@ package com.metamatrix.modeler.core.metamodel.core.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.CoreMetamodelPlugin;
 import com.metamatrix.metamodels.core.extension.XPackage;
@@ -73,7 +73,7 @@ public class XPackageUmlAspect extends AbstractExtensionUmlAspect implements Uml
                 result.append(xpkg.getName() );   
                 break;
             default :
-                throw new MetaMatrixRuntimeException(ModelerCore.Util.getString("XPackageUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(ModelerCore.Util.getString("XPackageUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

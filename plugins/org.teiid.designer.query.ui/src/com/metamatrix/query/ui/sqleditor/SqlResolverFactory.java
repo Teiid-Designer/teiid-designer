@@ -8,7 +8,7 @@
 package com.metamatrix.query.ui.sqleditor;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * SqlResolverFactory

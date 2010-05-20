@@ -8,9 +8,9 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SubqueryCompareCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.SubqueryCompareCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>CompareCriteriaDisplayNode</code> class is used to represent CompareCriteria.

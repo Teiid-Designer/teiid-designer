@@ -8,7 +8,7 @@
 package com.metamatrix.query.ui.sqleditor;
 
 import java.util.EventObject;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Command;
 
 /**
  * The <code>SqlEditorEvent</code> class notifies interested

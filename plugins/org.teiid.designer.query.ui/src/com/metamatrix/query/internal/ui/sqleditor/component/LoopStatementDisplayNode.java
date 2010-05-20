@@ -9,9 +9,9 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.LoopStatement;
 
 /**
  * The <code>LoopStatementDisplayNode</code> class is used to represent 

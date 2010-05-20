@@ -34,8 +34,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import com.metamatrix.api.exception.MetaMatrixException;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 public class XMIHeaderReader {
 
@@ -59,12 +58,12 @@ public class XMIHeaderReader {
         return false;
     }
 
-    public static XMIHeader readHeader( final File file ) throws MetaMatrixCoreException {
+    public static XMIHeader readHeader( final File file ) throws TeiidException {
         final XMIHeaderReader reader = new XMIHeaderReader();
         return reader.read(file);
     }
 
-    public static XMIHeader readHeader( final InputStream istream ) throws MetaMatrixCoreException {
+    public static XMIHeader readHeader( final InputStream istream ) throws TeiidException {
         final XMIHeaderReader reader = new XMIHeaderReader();
         return reader.read(istream);
     }
@@ -79,7 +78,7 @@ public class XMIHeaderReader {
      * @return the XMIHeader object representing the contents of this section
      * @throws MetaMatrixException if there is an error reading the file
      */
-    public XMIHeader read( final File file ) throws MetaMatrixCoreException {
+    public XMIHeader read( final File file ) throws TeiidException {
         if (file == null) {
             // TODO: ADD I18n ??
             final String msg = "XMIHeaderReader.The_file_reference_may_not_be_null_2"; //$NON-NLS-1$
@@ -111,7 +110,7 @@ public class XMIHeaderReader {
         } catch (final FileNotFoundException e) {
             // TODO: ADD I18n ??
             final String msg = "XMIHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new MetaMatrixCoreException(e, msg);
+            throw new TeiidException(e, msg);
         } finally {
             if (bis != null) try {
                 bis.close();
@@ -135,7 +134,7 @@ public class XMIHeaderReader {
      * @return the XMIHeader object representing the contents of this section
      * @throws MetaMatrixException if there is an error reading from the stream
      */
-    public XMIHeader read( final InputStream istream ) throws MetaMatrixCoreException {
+    public XMIHeader read( final InputStream istream ) throws TeiidException {
         if (istream == null) {
             // TODO: ADD I18n ??
             final String msg = "XMIHeaderReader.The_InputStream_reference_may_not_be_null._1"; //$NON-NLS-1$
@@ -162,7 +161,7 @@ public class XMIHeaderReader {
         } catch (final Throwable e) {
             // TODO: ADD I18n ??
             final String msg = "XMIHeaderReader.Error_in_parsing_file_1"; //$NON-NLS-1$
-            throw new MetaMatrixCoreException(e, msg);
+            throw new TeiidException(e, msg);
         }
         return ((TerminatingXMIHeaderContentHandler)handler).getXmiHeader();
     }

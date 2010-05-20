@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import java.util.Collection;
 import java.util.Collections;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlOutput;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
@@ -98,7 +98,7 @@ public class XmlOutputAspect extends XmlServiceComponentAspect implements UmlCla
                 result.append(name);        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlOutputAspect.1") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlOutputAspect.1") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

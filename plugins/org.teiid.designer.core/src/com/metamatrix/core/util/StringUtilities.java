@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * This class contains static utilities that return strings that are the result of manipulating other strings or objects.
@@ -152,7 +152,7 @@ public class StringUtilities {
                 line = reader.readLine();
             }
         } catch (final IOException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
     }

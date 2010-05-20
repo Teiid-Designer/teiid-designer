@@ -8,8 +8,8 @@
 package com.metamatrix.query.internal.ui.builder.util;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Command;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Command;
 
 /**
  * The <code>CriteriaStrategy</code> interface is used by the <code>SetCriteriaController</code>

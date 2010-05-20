@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-import com.metamatrix.core.CorePlugin;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.CorePlugin;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * This is a common place to put String utility methods.
@@ -1048,7 +1048,7 @@ public final class CoreStringUtil {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new MetaMatrixRuntimeException(e);
+            throw new TeiidRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
     }

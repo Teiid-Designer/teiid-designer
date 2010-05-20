@@ -25,7 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ExternalResourceDescriptor;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -7,8 +7,8 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>ElementEditorModel</code> class is used as a model for the

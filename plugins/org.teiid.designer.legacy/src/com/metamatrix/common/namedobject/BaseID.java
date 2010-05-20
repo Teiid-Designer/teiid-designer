@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import com.metamatrix.common.util.ErrorMessageKeys;
 import com.metamatrix.common.util.I18nUtil;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.StringUtil;
 
 /**
  * The BaseID class serves as the abstract base class for identifiers of objects. This class provides the method signatures common

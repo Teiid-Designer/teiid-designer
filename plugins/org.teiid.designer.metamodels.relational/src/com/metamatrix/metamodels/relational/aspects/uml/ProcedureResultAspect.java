@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.RelationalMetamodelConstants;
@@ -80,7 +80,7 @@ public class ProcedureResultAspect extends RelationalEntityAspect implements Uml
                 result.append(procResult.getName() );        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

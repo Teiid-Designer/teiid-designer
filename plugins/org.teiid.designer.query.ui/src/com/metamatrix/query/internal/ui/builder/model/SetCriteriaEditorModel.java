@@ -16,12 +16,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.internal.ui.builder.util.ICriteriaStrategy;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.AbstractSetCriteria;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.SetCriteria;
-import com.metamatrix.query.sql.lang.SubquerySetCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.AbstractSetCriteria;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.SetCriteria;
+import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * SetCriteriaEditorModel

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.GroupBy;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>GroupByDisplayNode</code> class is used to represent a Query's GROUPBY clause.

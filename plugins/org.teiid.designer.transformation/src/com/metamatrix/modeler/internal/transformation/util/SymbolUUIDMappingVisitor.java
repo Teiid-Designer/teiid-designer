@@ -12,14 +12,14 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
-import com.metamatrix.query.metadata.TempMetadataID;
-import com.metamatrix.query.sql.lang.SPParameter;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
-import com.metamatrix.query.sql.symbol.Symbol;
-import com.metamatrix.query.sql.visitor.AbstractSymbolMappingVisitor;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.visitor.AbstractSymbolMappingVisitor;
 
 /**
  * SymbolUUIDMappingVisitor for mapping fullnames to UUIDs and vice-versa.

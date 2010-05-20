@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Option;
+import org.teiid.query.sql.lang.Option;
 
 /**
  * The <code>OptionDisplayNode</code> class is used to represent a Query's OPTION clause.

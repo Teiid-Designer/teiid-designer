@@ -26,10 +26,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.QueryCommand;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

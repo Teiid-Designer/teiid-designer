@@ -43,9 +43,9 @@ import org.eclipse.emf.importer.rose.parser.RoseParser;
 import org.eclipse.emf.importer.rose.parser.Util;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -437,7 +437,7 @@ public final class RoseImporter implements FileUtils.Constants, IRoseConstants, 
             final RoseNode node = parser.getModelTree();
             if (node == null) {
                 final String msg = UTIL.getString("RoseImporter.no_nodes"); //$NON-NLS-1$
-                throw new MetaMatrixRuntimeException(msg);
+                throw new TeiidRuntimeException(msg);
             }
 
             String qualifier;

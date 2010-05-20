@@ -20,7 +20,7 @@ import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IQueryResult;
 import com.metamatrix.core.util.CharOperation;
-import com.metamatrix.core.util.LRUCache;
+import org.teiid.core.util.LRUCache;
 
 /**
  * This input is used for reading indexes saved using a BlocksIndexOutput.

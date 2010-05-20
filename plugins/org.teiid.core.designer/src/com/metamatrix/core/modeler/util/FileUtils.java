@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.core.util.ChecksumUtil;
@@ -295,7 +295,7 @@ public class FileUtils {
      * @throws MetaMatrixCoreException
      * @since 4.3
      */
-    public static void testDirectoryPermissions( final String dirPath ) throws MetaMatrixCoreException {
+    public static void testDirectoryPermissions( final String dirPath ) throws TeiidException {
 
         // try to create a file
         final File tmpFile = new File(dirPath + File.separatorChar + TEMP_FILE);
@@ -306,19 +306,19 @@ public class FileUtils {
         }
         if (!success) {
             final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_create_file_in", dirPath); //$NON-NLS-1$            
-            throw new MetaMatrixCoreException(msg);
+            throw new TeiidException(msg);
         }
 
         // test if file can be written to
         if (!tmpFile.canWrite()) {
             final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_write_file_in", dirPath); //$NON-NLS-1$            
-            throw new MetaMatrixCoreException(msg);
+            throw new TeiidException(msg);
         }
 
         // test if file can be read
         if (!tmpFile.canRead()) {
             final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_read_file_in", dirPath); //$NON-NLS-1$            
-            throw new MetaMatrixCoreException(msg);
+            throw new TeiidException(msg);
         }
 
         // test if file can be renamed
@@ -330,7 +330,7 @@ public class FileUtils {
         }
         if (!success) {
             final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_rename_file_in", dirPath); //$NON-NLS-1$            
-            throw new MetaMatrixCoreException(msg);
+            throw new TeiidException(msg);
         }
 
         // test if file can be deleted
@@ -341,7 +341,7 @@ public class FileUtils {
         }
         if (!success) {
             final String msg = CoreModelerPlugin.Util.getString("FileUtils.Unable_to_delete_file_in", dirPath); //$NON-NLS-1$            
-            throw new MetaMatrixCoreException(msg);
+            throw new TeiidException(msg);
         }
     }
 

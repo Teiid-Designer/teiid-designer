@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.Delete;
-import com.metamatrix.query.sql.lang.Option;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Delete;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * The <code>DeleteDisplayNode</code> class is used to represent a DELETE command.

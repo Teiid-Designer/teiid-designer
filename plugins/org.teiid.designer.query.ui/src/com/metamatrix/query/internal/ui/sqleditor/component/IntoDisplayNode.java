@@ -9,8 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Into;
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * IntoDisplayNode is used to represent an Into LanguageObject

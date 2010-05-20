@@ -22,7 +22,7 @@
 
 package com.metamatrix.connector.metadata.index;
 
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 
 
 /** 

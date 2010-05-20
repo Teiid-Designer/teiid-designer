@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>SymbolDisplayNode</code> class is used to represent a Symbol.

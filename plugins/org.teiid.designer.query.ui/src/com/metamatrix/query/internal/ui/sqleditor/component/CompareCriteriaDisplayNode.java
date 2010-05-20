@@ -8,8 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.lang.CompareCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * The <code>CompareCriteriaDisplayNode</code> class is used to represent CompareCriteria.

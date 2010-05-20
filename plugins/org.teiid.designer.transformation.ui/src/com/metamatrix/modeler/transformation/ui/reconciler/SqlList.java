@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 /**
  * Class that plays the role of the domain model in the TableViewerExample

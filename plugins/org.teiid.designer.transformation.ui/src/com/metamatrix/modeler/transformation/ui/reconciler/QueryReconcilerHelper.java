@@ -25,9 +25,9 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationMapping
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.QueryCommand;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
 
 /**
  * Reconciler Helper that the Reconciler Panel works with

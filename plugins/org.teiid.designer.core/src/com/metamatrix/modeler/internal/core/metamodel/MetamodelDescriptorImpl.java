@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EPackage;
 import org.osgi.framework.Bundle;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
@@ -533,7 +533,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
                         Field field = javaClass.getField("eINSTANCE"); //$NON-NLS-1$
                         ePackage = (EPackage)field.get(null);
                     } catch (Exception e) {
-                        throw new MetaMatrixRuntimeException(e);
+                        throw new TeiidRuntimeException(e);
                     }
                 } else {
                     try {
@@ -543,7 +543,7 @@ public class MetamodelDescriptorImpl implements MetamodelDescriptor {
                             ePackage = (EPackage)field.get(null);
                         }
                     } catch (Exception e) {
-                        throw new MetaMatrixRuntimeException(e);
+                        throw new TeiidRuntimeException(e);
                     }
                 }
 

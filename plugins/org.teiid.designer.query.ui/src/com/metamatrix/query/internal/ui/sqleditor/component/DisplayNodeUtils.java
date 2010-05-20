@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.visitor.CommandCollectorVisitor;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.UiPlugin;
 

@@ -7,12 +7,12 @@
  */
 package com.metamatrix.modeler.relationship;
 
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 
 /**
  * NavigationContextBuilderException
  */
-public class NavigationContextBuilderException extends MetaMatrixCoreException {
+public class NavigationContextBuilderException extends TeiidException {
 
     /**
      */

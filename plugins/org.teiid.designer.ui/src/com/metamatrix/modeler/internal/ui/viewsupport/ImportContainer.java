@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.ui.viewsupport;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.ui.UiConstants;
 

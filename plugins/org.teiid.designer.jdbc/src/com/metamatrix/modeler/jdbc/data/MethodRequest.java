@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.ReflectionHelper;
+import org.teiid.core.util.ReflectionHelper;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 

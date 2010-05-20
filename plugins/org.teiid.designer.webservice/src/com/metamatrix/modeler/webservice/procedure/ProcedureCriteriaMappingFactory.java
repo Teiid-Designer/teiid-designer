@@ -18,8 +18,8 @@ import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.internal.webservice.procedure.GenerateProcedureCriteriaMappingsVisitor;
 import com.metamatrix.modeler.internal.webservice.procedure.ProcedureCriteriaMappingImpl;
-import com.metamatrix.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 
 
 /**

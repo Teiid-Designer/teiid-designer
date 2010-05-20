@@ -9,9 +9,9 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.proc.Block;
-import com.metamatrix.query.sql.proc.WhileStatement;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.WhileStatement;
 
 /**
  * The <code>WhileStatementDisplayNode</code> class is used to represent 

@@ -15,8 +15,8 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.mapping.ui.PluginConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.query.internal.ui.builder.util.CriteriaStrategy;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /**

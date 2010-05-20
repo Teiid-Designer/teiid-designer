@@ -22,9 +22,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.core.id.ObjectID;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.core.id.ObjectID;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -173,7 +173,7 @@ public class ModelerMetadata extends TransformationMetadata {
     @Override
     protected Collection findMetadataRecords( final char recordType,
                                               final String entityName,
-                                              final boolean isPartialName ) throws MetaMatrixComponentException {
+                                              final boolean isPartialName ) throws TeiidComponentException {
 
         Collection eObjects = new ArrayList();
 
@@ -313,7 +313,7 @@ public class ModelerMetadata extends TransformationMetadata {
 
     protected Collection findSystemMetadataRecords( final char recordType,
                                                     final String entityName,
-                                                    final boolean isPartialName ) throws MetaMatrixComponentException {
+                                                    final boolean isPartialName ) throws TeiidComponentException {
         Collection eObjects = new ArrayList();
 
         List tokens = CoreStringUtil.getTokens(entityName, DELIMITER_STRING);
@@ -360,10 +360,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObjects The collection of EObject instances whose records are returned
      * @return The metadataRecords for the eObjects
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     protected Collection createMetadataRecords( final char recordType,
-                                                final Collection eObjects ) throws MetaMatrixComponentException {
+                                                final Collection eObjects ) throws TeiidComponentException {
         if (eObjects != null && !eObjects.isEmpty()) {
             Collection records = new ArrayList(eObjects.size());
             for (Iterator eObjIter = eObjects.iterator(); eObjIter.hasNext();) {
@@ -383,10 +383,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObject The EObject whose record is returned
      * @return The metadataRecord for the eObject
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     protected MetadataRecord createMetadataRecord( final char recordType,
-                                                   final EObject eObject ) throws MetaMatrixComponentException {
+                                                   final EObject eObject ) throws TeiidComponentException {
         MetadataRecord record = null;
         SqlAspect sqlAspect = AspectManager.getSqlAspect(eObject);
         if (!sqlAspect.isQueryable(eObject)) {
@@ -459,7 +459,7 @@ public class ModelerMetadata extends TransformationMetadata {
             case IndexConstants.RECORD_TYPE.JOIN_DESCRIPTOR:
                 return null;
             default:
-                throw new MetaMatrixComponentException(
+                throw new TeiidComponentException(
                                                        TransformationPlugin.Util.getString("TransformationMetadata.No_known_index_file_type_associated_with_the_recordType_1", new Character(recordType))); //$NON-NLS-1$
         }
 
@@ -509,7 +509,7 @@ public class ModelerMetadata extends TransformationMetadata {
      */
     @Override
     protected Collection findChildRecords( final MetadataRecord parentRecord,
-                                           final char childRecordType ) throws MetaMatrixComponentException {
+                                           final char childRecordType ) throws TeiidComponentException {
         CoreArgCheck.isNotNull(parentRecord);
         // find the eObject on the parent record
         EObject parentObj = (EObject)parentRecord.getEObject();
@@ -680,10 +680,10 @@ public class ModelerMetadata extends TransformationMetadata {
      * @param recordType The record type for the expected MetadataRecord
      * @param eObjects The collection of EObject whose record is returned
      * @return The metadataRecord for the eObject
-     * @throws MetaMatrixComponentException
+     * @throws TeiidComponentException
      */
     private Collection findMetadataRecords( final char recordType,
-                                            final Collection eObjects ) throws MetaMatrixComponentException {
+                                            final Collection eObjects ) throws TeiidComponentException {
         Collection records = new ArrayList(eObjects.size());
         for (Iterator eObjIter = eObjects.iterator(); eObjIter.hasNext();) {
             EObject eObj = (EObject)eObjIter.next();

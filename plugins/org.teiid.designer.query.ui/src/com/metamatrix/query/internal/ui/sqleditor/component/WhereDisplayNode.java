@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Criteria;
 
 /**
  * The <code>WhereDisplayNode</code> class is used to represent a Query's WHERE clause.

@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.builder.criteria;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 
 /**

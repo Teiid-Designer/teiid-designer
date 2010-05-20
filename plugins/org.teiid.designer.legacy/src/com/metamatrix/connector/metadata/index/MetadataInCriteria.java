@@ -25,7 +25,7 @@ package com.metamatrix.connector.metadata.index;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 
 
 /** 

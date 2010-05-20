@@ -7,7 +7,7 @@
  */
 package com.metamatrix.metamodels.webservice.aspects.uml;
 
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
@@ -179,7 +179,7 @@ public class InputAspect extends WebServiceComponentAspect implements
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(WebServiceMetamodelPlugin.Util.getString("InputAspect.1") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(WebServiceMetamodelPlugin.Util.getString("InputAspect.1") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

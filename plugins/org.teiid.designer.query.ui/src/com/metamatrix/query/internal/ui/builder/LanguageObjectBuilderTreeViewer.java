@@ -20,14 +20,14 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.internal.ui.builder.util.LanguageObjectContentProvider;
 import com.metamatrix.query.internal.ui.builder.util.LanguageObjectLabelProvider;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.CompoundCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.NotCriteria;
-import com.metamatrix.query.sql.lang.PredicateCriteria;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Expression;
-import com.metamatrix.query.sql.symbol.Function;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.NotCriteria;
+import org.teiid.query.sql.lang.PredicateCriteria;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
 import com.metamatrix.query.ui.UiConstants;
 
 public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILanguageObjectInputProvider, UiConstants {

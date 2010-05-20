@@ -10,7 +10,7 @@ package com.metamatrix.modeler.internal.relationship;
 //import org.eclipse.core.runtime.CoreException;
 //import org.eclipse.emf.ecore.EObject;
 
-import com.metamatrix.core.util.LRUCache;
+import org.teiid.core.util.LRUCache;
 import com.metamatrix.modeler.relationship.NavigationContext;
 import com.metamatrix.modeler.relationship.NavigationContextBuilder;
 import com.metamatrix.modeler.relationship.NavigationContextBuilderException;

@@ -9,15 +9,15 @@ package com.metamatrix.query.internal.ui.builder.util;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.CompoundCriteria;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.NotCriteria;
-import com.metamatrix.query.sql.lang.PredicateCriteria;
-import com.metamatrix.query.sql.symbol.Constant;
-import com.metamatrix.query.sql.symbol.Function;
-import com.metamatrix.query.sql.symbol.Reference;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.NotCriteria;
+import org.teiid.query.sql.lang.PredicateCriteria;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.Reference;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.UiPlugin;
 

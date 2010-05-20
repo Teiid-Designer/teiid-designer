@@ -9,7 +9,7 @@ package com.metamatrix.rose.internal.ui;
 
 import java.util.ResourceBundle;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**

@@ -24,7 +24,7 @@ package com.metamatrix.metadata.runtime.model;
 
 import java.io.Serializable;
 import java.util.Properties;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.MetadataID;
 import com.metamatrix.metadata.runtime.api.MetadataObject;
@@ -75,7 +75,7 @@ abstract public class BasicMetadataObject implements MetadataObject, Serializabl
      */
     protected BasicMetadataObject( BasicVirtualDatabaseID virtualDBID ) {
         if (virtualDBID == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMO_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMO_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMO_0001));
         }
         id = virtualDBID;
@@ -93,7 +93,7 @@ abstract public class BasicMetadataObject implements MetadataObject, Serializabl
     protected BasicMetadataObject( MetadataID metadataID,
                                    BasicVirtualDatabaseID virtualDBID ) {
         if (virtualDBID == null || metadataID == null) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMO_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMO_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMO_0001));
         }
         id = metadataID;
@@ -251,7 +251,7 @@ abstract public class BasicMetadataObject implements MetadataObject, Serializabl
         }
 
         // Otherwise not comparable ...
-        throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMO_0002,
+        throw new TeiidRuntimeException(ErrorMessageKeys.BMO_0002,
                                              RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMO_0002,
                                                                                   obj.getClass(),
                                                                                   this.getClass()));

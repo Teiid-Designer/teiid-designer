@@ -19,10 +19,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.udf.UdfManager;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.api.exception.query.QueryResolverException;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -49,18 +49,18 @@ import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFacade;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.metadata.VdbMetadata;
-import com.metamatrix.query.analysis.AnalysisRecord;
-import com.metamatrix.query.function.FunctionLibrary;
-import com.metamatrix.query.metadata.BasicQueryMetadataWrapper;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.report.ReportItem;
-import com.metamatrix.query.resolver.QueryResolver;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.proc.CreateUpdateProcedureCommand;
-import com.metamatrix.query.sql.visitor.ReferenceCollectorVisitor;
-import com.metamatrix.query.validator.Validator;
-import com.metamatrix.query.validator.ValidatorReport;
+import org.teiid.query.analysis.AnalysisRecord;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.metadata.BasicQueryMetadataWrapper;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.report.ReportItem;
+import org.teiid.query.resolver.QueryResolver;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
+import org.teiid.query.validator.Validator;
+import org.teiid.query.validator.ValidatorReport;
 
 /**
  * TransformationValidator Static methods for doing Validation on the transformation.
@@ -366,7 +366,7 @@ public class TransformationValidator implements QueryValidator {
         } catch (QueryMetadataException e) {
             IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             return new SqlTransformationResult(command, errorStatus);
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             return new SqlTransformationResult(command, errorStatus);
         }
@@ -399,7 +399,7 @@ public class TransformationValidator implements QueryValidator {
                 statusList = createStatusList(report);
             }
             // handle exception
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             // Add exception to the problems list
             statusList = new ArrayList(1);
             statusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
@@ -474,7 +474,7 @@ public class TransformationValidator implements QueryValidator {
                         // make sure the type is what we think it should be.
                         if (!(this.metadata instanceof VdbMetadata)
                             && ((this.metadata instanceof TransformationMetadataFacade) && !(((TransformationMetadataFacade)this.metadata).getDelegate() instanceof VdbMetadata))) {
-                            throw new MetaMatrixRuntimeException(
+                            throw new TeiidRuntimeException(
                                                                  TransformationPlugin.Util.getString("TransformationValidator.QMI_of_unexpected_type")); //$NON-NLS-1$
                         }
                     } else {
@@ -590,7 +590,7 @@ public class TransformationValidator implements QueryValidator {
             final QueryMetadataInterface metadata = getQueryMetadata();
             QueryResolver.resolveCommand(command, externalMetadata, metadata, AnalysisRecord.createNonRecordingRecord());
             // If unsuccessful, an exception is thrown
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         } catch (QueryResolverException e) {

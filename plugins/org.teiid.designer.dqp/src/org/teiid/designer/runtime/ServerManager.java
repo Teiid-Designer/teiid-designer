@@ -33,7 +33,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.Base64;
+import org.teiid.core.util.Base64;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
 
 /**

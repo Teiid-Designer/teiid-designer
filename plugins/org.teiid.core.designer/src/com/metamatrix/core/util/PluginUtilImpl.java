@@ -26,9 +26,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.BundleUtil;
+import org.teiid.core.BundleUtil;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.log.LogListener;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**

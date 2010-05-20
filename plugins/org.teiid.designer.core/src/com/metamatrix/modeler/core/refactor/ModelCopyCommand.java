@@ -40,7 +40,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.w3c.dom.Element;
-import com.metamatrix.core.id.IDGenerator;
+import org.teiid.core.id.IDGenerator;
 import com.metamatrix.core.plugin.PluginUtilities;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCore;

@@ -30,7 +30,7 @@ import org.eclipse.xsd.XSDPatternFacet;
 import org.eclipse.xsd.XSDTotalDigitsFacet;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.impl.XSDFacetImpl;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
@@ -254,7 +254,7 @@ public class XSDFacetAspect extends AbstractMetamodelAspect implements UmlProper
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(RelationalPlugin.Util.getString("Aspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

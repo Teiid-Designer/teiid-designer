@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.metamodels.function.ScalarFunction;
@@ -85,7 +85,7 @@ public class ScalarFunctionAspect extends AbstractFunctionAspect implements UmlC
                 result.append(sf.getName() );        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(FunctionPlugin.Util.getString("AbstractUmlClassifier.Invalid_showMask_for_getSignature____1",showMask) ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(FunctionPlugin.Util.getString("AbstractUmlClassifier.Invalid_showMask_for_getSignature____1",showMask) ); //$NON-NLS-1$
         }
         return result.toString();
     }

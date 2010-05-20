@@ -23,10 +23,10 @@ import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import com.metamatrix.core.MetaMatrixRuntimeException;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.xsd.XsdUtil;
@@ -746,7 +746,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         if (e.eIsProxy()) {
             resolvedEObject = EcoreUtil.resolve(e, getContainer());
             if (resolvedEObject.eIsProxy()) {
-                throw new MetaMatrixRuntimeException(
+                throw new TeiidRuntimeException(
                                                      ModelerSdtPlugin.Util.getString("WorkspaceDatatypeManager.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
             }
         }

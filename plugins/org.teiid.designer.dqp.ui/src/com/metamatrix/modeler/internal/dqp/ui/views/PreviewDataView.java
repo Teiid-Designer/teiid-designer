@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.jdbc.TeiidStatement;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.dqp.ui.actions.CopySqlResultsToClipboardAction;

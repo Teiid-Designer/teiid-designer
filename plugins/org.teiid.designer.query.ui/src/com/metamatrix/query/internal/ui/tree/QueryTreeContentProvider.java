@@ -13,17 +13,17 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Criteria;
-import com.metamatrix.query.sql.lang.From;
-import com.metamatrix.query.sql.lang.FromClause;
-import com.metamatrix.query.sql.lang.JoinPredicate;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.SetQuery;
-import com.metamatrix.query.sql.lang.SubqueryContainer;
-import com.metamatrix.query.sql.lang.SubqueryFromClause;
-import com.metamatrix.query.sql.lang.UnaryFromClause;
-import com.metamatrix.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.JoinPredicate;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SubqueryContainer;
+import org.teiid.query.sql.lang.SubqueryFromClause;
+import org.teiid.query.sql.lang.UnaryFromClause;
+import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 
 
 /** 

@@ -9,7 +9,7 @@ package org.teiid.designer.runtime;
 
 import org.teiid.adminapi.AdminFactory;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 
 /**
  *

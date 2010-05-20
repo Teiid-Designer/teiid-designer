@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -96,7 +96,7 @@ public class XClassUmlAspect extends AbstractExtensionUmlAspect implements UmlCl
                 result.append(xclass.getName() );        
                 break;
             default :
-                throw new MetaMatrixRuntimeException(ModelerCore.Util.getString("XClassUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(ModelerCore.Util.getString("XClassUmlAspect.Invalid_showMask_for_getSignature") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

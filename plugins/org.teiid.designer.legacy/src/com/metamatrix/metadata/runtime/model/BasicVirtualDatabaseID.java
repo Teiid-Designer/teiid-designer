@@ -22,7 +22,7 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.VirtualDatabaseID;
 import com.metamatrix.metadata.util.ErrorMessageKeys;
@@ -98,7 +98,7 @@ public class BasicVirtualDatabaseID extends BasicMetadataID implements VirtualDa
     public int compareTo(Object obj) {
         BasicVirtualDatabaseID that = (BasicVirtualDatabaseID) obj;     // May throw ClassCastException
         if ( obj == null ) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.GEN_0005, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
+            throw new TeiidRuntimeException(ErrorMessageKeys.GEN_0005, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
         }
 
         int diff = this.hashCode() - that.hashCode();
@@ -118,7 +118,7 @@ public class BasicVirtualDatabaseID extends BasicMetadataID implements VirtualDa
     public int compareToByName(Object obj) {
         BasicVirtualDatabaseID that = (BasicVirtualDatabaseID) obj;     // May throw ClassCastException
         if ( obj == null ) {
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.GEN_0005, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
+            throw new TeiidRuntimeException(ErrorMessageKeys.GEN_0005, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.GEN_0005));
         }
 
         return (this.getFullName() + version).compareToIgnoreCase( that.getFullName() + that.getVersion());

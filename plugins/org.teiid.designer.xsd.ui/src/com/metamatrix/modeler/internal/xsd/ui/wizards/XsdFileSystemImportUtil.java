@@ -44,7 +44,7 @@ import org.eclipse.xsd.XSDSchema;
 import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -192,7 +192,7 @@ public class XsdFileSystemImportUtil {
 
         try {
             header = XsdHeaderReader.readHeader(xsdFile);
-        } catch (MetaMatrixCoreException theException) {
+        } catch (TeiidException theException) {
             ModelerXsdUiConstants.Util.log(theException);
         }
 

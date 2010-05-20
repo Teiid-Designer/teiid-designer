@@ -22,8 +22,8 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.logging.LogManager;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.ModelID;
 import com.metamatrix.metadata.runtime.util.LogRuntimeMetadataConstants;
@@ -44,7 +44,7 @@ public class BasicModelID extends BasicMetadataID implements ModelID {
         super(fullName, internalUniqueID);
         if(this.getNameComponents().size() > 1){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid ModelID \"",fullName,"\". Number of name components must be > 0."});
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
         }
         this.version = version;
     }
@@ -56,7 +56,7 @@ public class BasicModelID extends BasicMetadataID implements ModelID {
         super(fullName);
         if(this.getNameComponents().size() > 1 ){
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA,new Object[]{"Invalid ModelID \"",fullName,"\". Number of name components must be > 0."});
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
         }
         this.version = version;
     }
@@ -119,7 +119,7 @@ public class BasicModelID extends BasicMetadataID implements ModelID {
     public BasicModelID(String fullName){
         super(fullName);
         if(this.getNameComponents().size() > 1 ){
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
+            throw new TeiidRuntimeException(ErrorMessageKeys.BMID_0001, RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BMID_0001, fullName) );
         }
         this.version = null;
     }

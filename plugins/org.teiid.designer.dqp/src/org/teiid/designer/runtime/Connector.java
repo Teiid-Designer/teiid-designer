@@ -13,20 +13,21 @@ import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
-import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.Translator;
+
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.core.util.StringUtilities;
 
 /**
  */
 public class Connector implements Comparable<Connector> {
 
-    private final ConnectionFactory binding;
+    private final Translator binding;
     private final ConnectorType type;
 
-    Connector( ConnectionFactory binding,
+    Connector( Translator binding,
                ConnectorType type ) {
         CoreArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class Connector implements Comparable<Connector> {
         return propertyNames;
     }
 
-    protected ConnectionFactory getConnectionFactory() {
+    protected Translator getTranslator() {
         return this.binding;
     }
 

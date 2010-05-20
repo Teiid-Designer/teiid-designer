@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import com.metamatrix.core.CorePlugin;
+import org.teiid.core.CorePlugin;
 
 public final class DateUtil {
 

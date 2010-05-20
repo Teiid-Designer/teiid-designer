@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  * The StreamPipe class provides the ability for an information consumer to read via an
@@ -45,7 +45,7 @@ public class StreamPipe {
         try {
 			this.ostream = new PipedOutputStream(istream);
 		} catch (IOException e) {
-			throw new MetaMatrixRuntimeException(e);
+			throw new TeiidRuntimeException(e);
 		}
     }
     

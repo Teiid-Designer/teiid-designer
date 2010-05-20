@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.common.types.DataTypeManager;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.id.UUID;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -33,9 +33,9 @@ import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.transformation.util.AttributeMappingHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 
 /** 

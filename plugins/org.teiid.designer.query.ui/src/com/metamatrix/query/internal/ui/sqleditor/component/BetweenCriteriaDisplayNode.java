@@ -9,7 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import com.metamatrix.query.sql.ReservedWords;
-import com.metamatrix.query.sql.lang.BetweenCriteria;
+import org.teiid.query.sql.lang.BetweenCriteria;
 
 /**
  * The <code>BetweenCriteriaDisplayNode</code> class is used to represent an

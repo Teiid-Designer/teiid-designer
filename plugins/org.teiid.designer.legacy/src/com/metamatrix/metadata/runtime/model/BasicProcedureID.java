@@ -22,8 +22,8 @@
 
 package com.metamatrix.metadata.runtime.model;
 
-import com.metamatrix.common.log.LogManager;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.logging.LogManager;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.api.ModelID;
 import com.metamatrix.metadata.runtime.api.ProcedureID;
@@ -45,7 +45,7 @@ public class BasicProcedureID extends BasicMetadataID implements ProcedureID {
         if (this.getNameComponents().size() < 2) {
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA, new Object[] {"Invalid ProcedureID \"",
                 fullName, "\". Number of name components must be > 1."});
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BPID_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BPID_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BPID_0001));
         }
     }
@@ -58,7 +58,7 @@ public class BasicProcedureID extends BasicMetadataID implements ProcedureID {
         if (this.getNameComponents().size() < 2) {
             LogManager.logDetail(LogRuntimeMetadataConstants.CTX_RUNTIME_METADATA, new Object[] {"Invalid ProcedureID \"",
                 fullName, "\". Number of name components must be > 1."});
-            throw new MetaMatrixRuntimeException(ErrorMessageKeys.BPID_0001,
+            throw new TeiidRuntimeException(ErrorMessageKeys.BPID_0001,
                                                  RuntimeMetadataPlugin.Util.getString(ErrorMessageKeys.BPID_0001));
         }
     }

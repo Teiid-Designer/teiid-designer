@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.builder.model;
 
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * AbstractPredicateCriteriaTypeEditorModel

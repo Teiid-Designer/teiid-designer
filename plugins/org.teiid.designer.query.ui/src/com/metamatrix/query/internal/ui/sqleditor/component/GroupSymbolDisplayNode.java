@@ -7,7 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import com.metamatrix.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * The <code>GroupSymbolDisplayNode</code> class is used to represent a GroupSymbol.
@@ -48,7 +48,7 @@ public class GroupSymbolDisplayNode extends DisplayNode {
     }
     
     /** 
-     * @see com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode#toDisplayString()
+     * @see org.teiid.query.internal.ui.sqleditor.component.DisplayNode#toDisplayString()
      * @since 5.0.1
      */
     @Override

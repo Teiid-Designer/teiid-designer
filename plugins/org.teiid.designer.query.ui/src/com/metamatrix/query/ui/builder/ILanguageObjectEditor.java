@@ -9,7 +9,7 @@ package com.metamatrix.query.ui.builder;
 
 import org.eclipse.swt.widgets.Control;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
-import com.metamatrix.query.sql.LanguageObject;
+import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>ILanguageObjectEditor</code> interface represents an editor capable of editing a

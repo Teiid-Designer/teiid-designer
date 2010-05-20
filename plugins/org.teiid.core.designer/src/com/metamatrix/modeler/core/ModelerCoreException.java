@@ -15,10 +15,10 @@ import java.io.Serializable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.EquivalenceUtil;
-import com.metamatrix.core.util.ExternalizeUtil;
+import org.teiid.core.util.EquivalenceUtil;
+import org.teiid.core.util.ExternalizeUtil;
 
 public class ModelerCoreException extends CoreException implements Externalizable {
     private static final String NO_MESSAGE = "No Error Message"; //$NON-NLS-1$
@@ -190,7 +190,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
         StackTraceElement[] stackTrace = (StackTraceElement[])in.readObject();
         setStackTrace(stackTrace);
 
-        nestedCoreException = (CoreException)ExternalizeUtil.readThrowable(in);
+        nestedCoreException = (CoreException)internalReadThrowable(in);
     }
 
     /**
@@ -200,7 +200,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
         writeIStatus(out, this.getStatus());
         out.writeObject(this.getStackTrace());
 
-        ExternalizeUtil.writeThrowable(out, nestedCoreException);
+        internalWriteThrowable(out, nestedCoreException);
     }
 
     /**
@@ -261,7 +261,7 @@ public class ModelerCoreException extends CoreException implements Externalizabl
      */
     public static void writeThrowable( ObjectOutput out,
                                        Throwable t ) throws IOException {
-        if (t == null || !(t instanceof CoreException) || (t instanceof MetaMatrixCoreException)) {
+        if (t == null || !(t instanceof CoreException) || (t instanceof TeiidException)) {
             out.writeBoolean(false);
             out.writeObject(t);
         } else {
@@ -429,5 +429,14 @@ public class ModelerCoreException extends CoreException implements Externalizabl
             out.writeBoolean(ok);
         }
     }
-
+    /*
+     * Serializing CoreException and subclasses.
+     */
+    private void internalWriteThrowable(ObjectOutput out, Throwable t) throws IOException {
+        out.writeObject(t);
+    }
+    
+    private Throwable internalReadThrowable(ObjectInput in) throws IOException, ClassNotFoundException {
+        return (Throwable)in.readObject();
+    }
 }

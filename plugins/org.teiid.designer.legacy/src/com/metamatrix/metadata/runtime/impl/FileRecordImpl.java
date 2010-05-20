@@ -24,9 +24,9 @@ package com.metamatrix.metadata.runtime.impl;
 
 import java.io.File;
 import java.io.InputStream;
-import com.metamatrix.core.util.EquivalenceUtil;
-import com.metamatrix.core.util.FileUtils;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.EquivalenceUtil;
+import org.teiid.core.util.FileUtils;
+import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.metadata.runtime.FileRecord;

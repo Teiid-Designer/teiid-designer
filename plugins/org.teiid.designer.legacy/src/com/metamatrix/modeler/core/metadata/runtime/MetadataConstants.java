@@ -22,7 +22,7 @@
 
 package com.metamatrix.modeler.core.metadata.runtime;
 
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.util.StringUtil;
 
 /**
  * MetadataConstants are all the constant values used to identify all the valid values for a multi-value attribute.

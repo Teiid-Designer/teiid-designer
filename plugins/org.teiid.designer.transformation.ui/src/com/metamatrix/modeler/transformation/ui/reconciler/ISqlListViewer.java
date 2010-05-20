@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.transformation.ui.reconciler;
 
-import com.metamatrix.query.sql.symbol.SingleElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 
 public interface ISqlListViewer {
     

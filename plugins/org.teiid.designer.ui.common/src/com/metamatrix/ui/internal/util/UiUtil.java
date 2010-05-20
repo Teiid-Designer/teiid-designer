@@ -43,7 +43,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
 

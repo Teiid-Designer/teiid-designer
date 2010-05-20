@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.function.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.function.FunctionPlugin;
 import com.metamatrix.metamodels.function.ReturnParameter;
@@ -174,7 +174,7 @@ public class ReturnParameterAspect extends AbstractFunctionAspect implements Uml
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(FunctionPlugin.Util.getString("ReturnParameterAspect.invalidShowMask", showMask)); //$NON-NLS-1$
+                throw new TeiidRuntimeException(FunctionPlugin.Util.getString("ReturnParameterAspect.invalidShowMask", showMask)); //$NON-NLS-1$
         }
         return result.toString();
     }

@@ -25,9 +25,9 @@ import com.metamatrix.query.internal.ui.builder.model.FunctionDisplayEditorModel
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.symbol.Function;
-import com.metamatrix.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.query.ui.UiPlugin;
 
 /**

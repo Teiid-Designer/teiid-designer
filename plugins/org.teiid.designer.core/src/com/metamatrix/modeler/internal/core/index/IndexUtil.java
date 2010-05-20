@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
-import com.metamatrix.api.exception.query.QueryMetadataException;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IIndex;
 import com.metamatrix.core.index.IIndexer;
@@ -246,7 +246,7 @@ public class IndexUtil {
                                              final char fieldDelimiter ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, fieldDelimiter);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -268,7 +268,7 @@ public class IndexUtil {
                                              final boolean returnFirstMatch ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.queryIndex(indexes, pattern, isPrefix, returnFirstMatch);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -296,7 +296,7 @@ public class IndexUtil {
                                               pattern,
                                               isPrefix,
                                               returnFirstMatch);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -326,7 +326,7 @@ public class IndexUtil {
                                               isPrefix,
                                               isCaseSensitive,
                                               returnFirstMatch);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new ModelerCoreException(e);
         }
     }
@@ -441,7 +441,7 @@ public class IndexUtil {
                                       final IndexSelector selector ) throws ModelerCoreException {
         try {
             return SimpleIndexUtil.getIndexes(indexName, selector);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new ModelerCoreException(e);
         }
     }

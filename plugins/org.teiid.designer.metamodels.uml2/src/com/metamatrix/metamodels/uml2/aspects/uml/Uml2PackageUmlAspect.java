@@ -8,7 +8,7 @@
 package com.metamatrix.metamodels.uml2.aspects.uml;
 
 import org.eclipse.uml2.uml.Package;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.uml2.Uml2Plugin;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
@@ -47,7 +47,7 @@ public class Uml2PackageUmlAspect extends AbstractUml2NamedElementUmlAspect impl
             default :
                 final int params = showMask;
                 final String msg = Uml2Plugin.Util.getString("Uml2PackageUmlAspect.Invalid_showMask_for_getSignature_0_1",params); //$NON-NLS-1$
-                throw new MetaMatrixRuntimeException(msg);
+                throw new TeiidRuntimeException(msg);
         }
         return result.toString();
     }

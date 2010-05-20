@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.SetQuery;
 
 
 /** This class provides the GroupSymbolFinder the knowledge to know where the cursor is at

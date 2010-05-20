@@ -8,7 +8,7 @@
 package com.metamatrix.modeler.mapping.ui.editor;
 
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.core.util.HashCodeUtil;
+import org.teiid.core.util.HashCodeUtil;
 
 /**
  * The <code>MappingExtent</code> class provides information about one XML document mapping reference. The mapping reference will

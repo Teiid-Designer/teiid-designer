@@ -22,7 +22,7 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
  * InputParameterSqlAspect

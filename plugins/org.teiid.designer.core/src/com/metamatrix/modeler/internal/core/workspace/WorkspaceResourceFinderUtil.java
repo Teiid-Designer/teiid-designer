@@ -34,8 +34,8 @@ import org.teiid.designer.core.xmi.XMIHeaderReader;
 import com.metamatrix.common.vdb.VdbModelInfo;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.id.UUID;
+import org.teiid.core.TeiidException;
+import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
@@ -875,7 +875,7 @@ public class WorkspaceResourceFinderUtil {
             if (resourceFile.exists()) try {
                 final XsdHeader header = XsdHeaderReader.readHeader(resourceFile);
                 if (header != null) return header.getTargetNamespaceURI();
-            } catch (final MetaMatrixCoreException e) {
+            } catch (final TeiidException e) {
                 ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
             }
         }

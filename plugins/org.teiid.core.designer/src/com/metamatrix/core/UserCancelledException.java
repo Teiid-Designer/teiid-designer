@@ -7,12 +7,14 @@
  */
 package com.metamatrix.core;
 
+import org.teiid.core.TeiidRuntimeException;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
  * UserCancelledException
  */
-public class UserCancelledException extends MetaMatrixRuntimeException {
+public class UserCancelledException extends TeiidRuntimeException {
 
     /**
      */

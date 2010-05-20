@@ -4,16 +4,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.ArgCheck;
-import com.metamatrix.core.util.Assertion;
-import com.metamatrix.core.util.ObjectConverterUtil;
-import com.metamatrix.core.util.StringUtil;
+import org.teiid.core.TeiidException;
+import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.Assertion;
+import org.teiid.core.util.ObjectConverterUtil;
+import org.teiid.core.util.StringUtil;
 
 public class MetadataSourceUtil {
 
     public static String getFileContentAsString( String path,
-                                                 MetadataSource iss ) throws MetaMatrixCoreException {
+                                                 MetadataSource iss ) throws TeiidException {
         File f = iss.getFile(path);
         if (f == null) {
             return null;
@@ -21,7 +21,7 @@ public class MetadataSourceUtil {
         try {
             return ObjectConverterUtil.convertFileToString(f);
         } catch (IOException e) {
-            throw new MetaMatrixCoreException(e, "MetadataSourceUtil.ioExceptionConvertingFileToString");
+            throw new TeiidException(e, "MetadataSourceUtil.ioExceptionConvertingFileToString");
         }
     }
 
@@ -34,7 +34,7 @@ public class MetadataSourceUtil {
     public static InputStream getFileContent( final String path,
                                               MetadataSource iss,
                                               final String[] tokens,
-                                              final String[] tokenReplacements ) throws MetaMatrixCoreException {
+                                              final String[] tokenReplacements ) throws TeiidException {
         ArgCheck.isNotNull(tokens);
         ArgCheck.isNotNull(tokenReplacements);
         Assertion.isEqual(tokens.length, tokenReplacements.length);

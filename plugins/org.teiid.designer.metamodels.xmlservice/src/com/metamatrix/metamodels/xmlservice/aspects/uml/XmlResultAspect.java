@@ -9,7 +9,7 @@ package com.metamatrix.metamodels.xmlservice.aspects.uml;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xmlservice.XmlResult;
 import com.metamatrix.metamodels.xmlservice.XmlServiceComponent;
@@ -194,7 +194,7 @@ public class XmlResultAspect extends XmlServiceComponentAspect implements UmlPro
                 //Properties
                 return (""); //$NON-NLS-1$
             default :
-                throw new MetaMatrixRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlServiceComponentAspect.0") + showMask ); //$NON-NLS-1$
+                throw new TeiidRuntimeException(XmlServiceMetamodelPlugin.Util.getString("XmlServiceComponentAspect.0") + showMask ); //$NON-NLS-1$
         }
         return result.toString();
     }

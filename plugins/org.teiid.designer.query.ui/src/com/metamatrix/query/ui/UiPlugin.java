@@ -11,7 +11,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.CoreConstants.Debug;
+import org.teiid.core.CoreConstants.Debug;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.query.ui.actions.QueryActionService;
 import com.metamatrix.ui.AbstractUiPlugin;

@@ -15,9 +15,9 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.model.CompareCriteriaEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelEvent;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.CompareCriteria;
-import com.metamatrix.query.sql.symbol.Expression;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * CompareCriteriaEditor

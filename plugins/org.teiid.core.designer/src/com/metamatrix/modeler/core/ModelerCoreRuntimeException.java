@@ -7,11 +7,11 @@
  */
 package com.metamatrix.modeler.core;
 
-import com.metamatrix.core.MetaMatrixRuntimeException;
+import org.teiid.core.TeiidRuntimeException;
 
 /**
  */
-public class ModelerCoreRuntimeException extends MetaMatrixRuntimeException {
+public class ModelerCoreRuntimeException extends TeiidRuntimeException {
     /**
      */
     private static final long serialVersionUID = 1L;

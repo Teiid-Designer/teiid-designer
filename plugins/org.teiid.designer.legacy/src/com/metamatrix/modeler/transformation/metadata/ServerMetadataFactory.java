@@ -22,9 +22,9 @@
 
 package com.metamatrix.modeler.transformation.metadata;
 
-import com.metamatrix.core.util.ArgCheck;
+import org.teiid.core.util.ArgCheck;
 import com.metamatrix.modeler.core.index.IndexSelector;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TransformationMetadataFactory

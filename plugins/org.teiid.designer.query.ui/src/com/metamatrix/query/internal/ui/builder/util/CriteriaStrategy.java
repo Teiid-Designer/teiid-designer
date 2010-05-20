@@ -11,11 +11,11 @@ import java.text.MessageFormat;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import com.metamatrix.api.exception.query.QueryParserException;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.sql.LanguageObject;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.symbol.ElementSymbol;
+import org.teiid.api.exception.query.QueryParserException;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import com.metamatrix.query.ui.UiConstants;
 
 /**
