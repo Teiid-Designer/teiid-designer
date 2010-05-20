@@ -25,7 +25,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.CoreConstants.Debug;
+import org.teiid.core.CoreConstants.Debug;
 import com.metamatrix.core.event.EventBroker;
 import com.metamatrix.core.event.SynchEventBroker;
 import com.metamatrix.core.util.PluginUtilImpl;
