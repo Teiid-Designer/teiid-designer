@@ -13,6 +13,7 @@ Require-Bundle: org.teiid.designer.legacy,
  org.eclipse.emf.ecore,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
+ org.eclipse.xsd,
  net.jcip.annotations
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
