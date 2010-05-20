@@ -14,7 +14,7 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.core.MetaMatrixCoreException;
+import org.teiid.core.TeiidException;
 import com.metamatrix.core.util.SmartTestSuite;
 
 /**
@@ -173,7 +173,7 @@ public class TestStyleFromResource extends TestCase {
         try {
             final StreamSource ssource = this.styleWithoutDescription.getStreamSource();
             assertNotNull(ssource);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
         	throw new RuntimeException(e);
@@ -184,7 +184,7 @@ public class TestStyleFromResource extends TestCase {
         try {
             final StreamSource ssource = this.styleWithDescription.getStreamSource();
             assertNotNull(ssource);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
         	throw new RuntimeException(e);
         } catch (IOException e) {
         	throw new RuntimeException(e);
@@ -196,7 +196,7 @@ public class TestStyleFromResource extends TestCase {
             final StreamSource ssource = this.styleWithBadPath.getStreamSource();
             fail("Should not have been able to get the StreamSource for a resource that doesn't exist"); //$NON-NLS-1$
             assertNotNull(ssource);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
         	throw new RuntimeException(e);
         } catch (IOException e) {
             // Expected !!!
@@ -208,7 +208,7 @@ public class TestStyleFromResource extends TestCase {
             final StreamSource ssource = this.styleWithUnreadableResource.getStreamSource();
             fail("Should not have been able to get the StreamSource for an unreadable resource"); //$NON-NLS-1$
             assertNotNull(ssource);
-        } catch (MetaMatrixCoreException e) {
+        } catch (TeiidException e) {
             // Expected !!!
         } catch (IOException e) {
         	throw new RuntimeException(e);

@@ -16,8 +16,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import com.metamatrix.core.MetaMatrixCoreException;
-import com.metamatrix.core.util.ExternalizeUtil;
+import org.teiid.core.util.ExternalizeUtil;
+
+import org.teiid.core.TeiidException;
 
 /**
  */
@@ -253,46 +254,5 @@ public class TestModelerCoreException extends TestCase {
         assertTrue(serialized instanceof ModelerCoreException.StatusImpl);
         assertTrue(serialized.equals(example));
 
-    }
-
-    /**
-     * Test ExternalizeUtil writeThrowable() and readThrowable() on CoreExceptions.
-     * 
-     * @throws Exception
-     */
-    public void testWriteThrowableCoreException() throws Exception {
-        Status status1 = new Status(IStatus.WARNING, "plugin1", 1, "message1", null); //$NON-NLS-1$//$NON-NLS-2$
-        ModelerCoreException t1 = new ModelerCoreException(status1);
-
-        ExternalizeUtil.writeThrowable(oout, t1);
-        oout.flush();
-        bin = new ByteArrayInputStream(bout.toByteArray());
-        oin = new ObjectInputStream(bin);
-
-        Throwable result1 = ExternalizeUtil.readThrowable(oin);
-        assertEqualThrowables(t1, result1);
-    }
-
-    /**
-     * Test ExternalizeUtil writeThrowable() and readThrowable() on a mix of types.
-     * 
-     * @throws Exception
-     */
-    public void testWriteThrowableMixed() throws Exception {
-        Status status3 = new Status(IStatus.WARNING, "plugin3", 3, "message3", null); //$NON-NLS-1$//$NON-NLS-2$
-        ModelerCoreException t3 = new ModelerCoreException(status3);
-        MetaMatrixCoreException t2 = new MetaMatrixCoreException(t3);
-        Throwable t1 = new Throwable(t2);
-
-        ExternalizeUtil.writeThrowable(oout, t1);
-        oout.flush();
-        bin = new ByteArrayInputStream(bout.toByteArray());
-        oin = new ObjectInputStream(bin);
-
-        Throwable result1 = ExternalizeUtil.readThrowable(oin);
-        assertEqualThrowables(t1, result1);
-
-        MetaMatrixCoreException result2 = (MetaMatrixCoreException)result1.getCause();
-        assertEqualThrowables(t2, result2);
     }
 }

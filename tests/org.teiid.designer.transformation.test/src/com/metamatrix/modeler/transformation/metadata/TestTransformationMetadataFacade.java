@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.IDocument;
@@ -45,7 +45,7 @@ import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlModelAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlProcedureAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlTableAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.RuntimeAdapter;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
+import org.teiid.query.metadata.StoredProcedureInfo;
 
 /**
  * TestTransformationMetadata
@@ -682,69 +682,69 @@ public class TestTransformationMetadataFacade extends TestCase {
         }
 
         @Override
-        public Object getElementID( String elementName ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Object getElementID( String elementName ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getElementID(elementName);
         }
 
         @Override
-        public Object getModelID( Object groupOrElementID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Object getModelID( Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getModelID(groupOrElementID);
         }
 
         @Override
-        public List getElementIDsInGroupID( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public List getElementIDsInGroupID( Object groupID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getElementIDsInGroupID(groupID);
         }
 
         @Override
-        public Collection getIndexesInGroup( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Collection getIndexesInGroup( Object groupID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getIndexesInGroup(groupID);
         }
 
         @Override
-        public Collection getForeignKeysInGroup( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Collection getForeignKeysInGroup( Object groupID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getForeignKeysInGroup(groupID);
         }
 
         @Override
-        public Collection getAccessPatternsInGroup( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Collection getAccessPatternsInGroup( Object groupID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getAccessPatternsInGroup(groupID);
         }
 
         @Override
-        public Collection getUniqueKeysInGroup( Object groupID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Collection getUniqueKeysInGroup( Object groupID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getUniqueKeysInGroup(groupID);
         }
 
         @Override
         public StoredProcedureInfo getStoredProcedureInfoForProcedure( String procName )
-            throws MetaMatrixComponentException, QueryMetadataException {
+            throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getStoredProcedureInfoForProcedure(procName);
         }
 
         @Override
-        public Object getGroupID( String groupName ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Object getGroupID( String groupName ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getGroupID(groupName);
         }
 
         @Override
         public Collection getGroupsForPartialName( String partialGroupName )
-            throws MetaMatrixComponentException, QueryMetadataException {
+            throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getGroupsForPartialName(partialGroupName);
         }
 
         @Override
-        public Object getGroupIDForElementID( Object elementID ) throws MetaMatrixComponentException, QueryMetadataException {
+        public Object getGroupIDForElementID( Object elementID ) throws TeiidComponentException, QueryMetadataException {
             indexFileHitCount++;
             return super.getGroupIDForElementID(elementID);
         }

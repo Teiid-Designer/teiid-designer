@@ -14,4 +14,5 @@ Require-Bundle: org.teiid.designer.sdt,
  org.teiid.designer.core,
  org.eclipse.core.runtime,
  org.teiid.designer.core.test,
- org.eclipse.emf.edit
+ org.eclipse.emf.edit,
+ teiid_embedded_query

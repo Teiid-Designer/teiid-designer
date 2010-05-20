@@ -20,7 +20,7 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.api.exception.query.QueryMetadataException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.core.util.SmartTestSuite;
@@ -29,10 +29,10 @@ import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnSetRecord;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.core.metadata.runtime.TableRecord;
-import com.metamatrix.query.mapping.relational.QueryNode;
-import com.metamatrix.query.mapping.xml.MappingNode;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
-import com.metamatrix.query.metadata.StoredProcedureInfo;
+import org.teiid.query.mapping.relational.QueryNode;
+import org.teiid.query.mapping.xml.MappingNode;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.StoredProcedureInfo;
 
 /**
  * TestServerRuntimeMetadata

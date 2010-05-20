@@ -34,7 +34,7 @@ import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlModelAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlTableAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.RuntimeAdapter;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceIndexManager;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TestPerformanceIndexFilePerRecordType

@@ -11,7 +11,7 @@ import java.io.File;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.core.util.EquivalenceUtil;
+import org.teiid.core.util.EquivalenceUtil;
 import com.metamatrix.core.util.SmartTestSuite;
 
 /**

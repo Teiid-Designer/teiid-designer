@@ -15,6 +15,8 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.CorePlugin;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.PluginUtilImpl;
 

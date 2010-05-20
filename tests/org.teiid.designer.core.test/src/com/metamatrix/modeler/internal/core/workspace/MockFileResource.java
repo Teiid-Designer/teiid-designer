@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import com.metamatrix.core.util.FileUtils;
+import org.teiid.core.util.FileUtils;
 import com.metamatrix.modeler.core.ModelerCore;
 
 @SuppressWarnings( "deprecation" )

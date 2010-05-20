@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectionFactory;
+import org.teiid.adminapi.Translator;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -46,7 +46,7 @@ public class ExecutionAdminTest {
     }
 
     private Connector getNewConnector() throws Exception {
-        return new Connector(mock(ConnectionFactory.class), mock(ConnectorType.class));
+        return new Connector(mock(Translator.class), mock(ConnectorType.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -89,14 +89,14 @@ public class ExecutionAdminTest {
     @Test
     public void shouldAddConnector() throws Exception {
         String name = "name";
-        ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
+        Translator connectionFactory = mock(Translator.class);
 
         Admin admin = mock(Admin.class);
-        when(admin.getConnectionFactory(name)).thenReturn(connectionFactory);
+        when(admin.getTranslator(name)).thenReturn(connectionFactory);
 
         ConnectorType type = mock(ConnectorType.class);
         when(type.getName()).thenReturn("type");
-        when(admin.addConnectionFactory(anyString(), anyString(), (Properties)anyObject())).thenReturn(connectionFactory);
+        when(admin.addTranslator(anyString(), anyString(), (Properties)anyObject())).thenReturn(connectionFactory);
 
         ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
         execAdmin.addConnector(name, mock(ConnectorType.class), new Properties());
@@ -236,7 +236,7 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAllowRemoveConnectorWithConnector() throws Exception {
-        getNewAdmin().removeConnector(new Connector(mock(ConnectionFactory.class), mock(ConnectorType.class)));
+        getNewAdmin().removeConnector(new Connector(mock(Translator.class), mock(ConnectorType.class)));
     }
 
     @Test

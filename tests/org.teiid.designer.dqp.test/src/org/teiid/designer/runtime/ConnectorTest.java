@@ -25,8 +25,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.Translator;
 
 /**
  * 
@@ -45,7 +45,7 @@ public class ConnectorTest {
     @Mock
     private PropertyDefinition propertyDefinition;
     @Mock
-    private ConnectionFactory connectionFactory;
+    private Translator translator;
 
     private Connector connector;
 
@@ -59,12 +59,12 @@ public class ConnectorTest {
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
 
-        this.connectionFactory = mock(ConnectionFactory.class);
-        when(this.connectionFactory.getName()).thenReturn(CONNECTOR_NAME);
-        when(this.connectionFactory.getProperties()).thenReturn(PROPERTIES);
+        this.translator = mock(Translator.class);
+        when(this.translator.getName()).thenReturn(CONNECTOR_NAME);
+        when(this.translator.getProperties()).thenReturn(PROPERTIES);
 
         when(this.connectorType.getPropertyDefinition(PROP_NAME)).thenReturn(this.propertyDefinition);
-        this.connector = new Connector(this.connectionFactory, this.connectorType);
+        this.connector = new Connector(this.translator, this.connectorType);
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -74,7 +74,7 @@ public class ConnectorTest {
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowNullType() {
-        new Connector(connectionFactory, null);
+        new Connector(translator, null);
     }
 
     @Test
@@ -298,8 +298,8 @@ public class ConnectorTest {
 
         Properties props = new Properties();
         props.setProperty(PROP_NAME, "oldValue");
-        when(connectionFactory.getProperties()).thenReturn(props);
-        when(connectionFactory.getPropertyValue(PROP_NAME)).thenReturn(props.getProperty(PROP_NAME));
+        when(translator.getProperties()).thenReturn(props);
+        when(translator.getPropertyValue(PROP_NAME)).thenReturn(props.getProperty(PROP_NAME));
 
         String newValue = "newValue";
         this.connector.setPropertyValue(PROP_NAME, newValue);
@@ -317,7 +317,7 @@ public class ConnectorTest {
         when(connectorType.getAdmin()).thenReturn(admin);
         Properties props = new Properties();
 
-        when(connectionFactory.getProperties()).thenReturn(props);
+        when(translator.getProperties()).thenReturn(props);
 
         Properties newProps = new Properties();
         newProps.put("prop_1", "value_1");
@@ -341,8 +341,8 @@ public class ConnectorTest {
     @Test
     public void shouldBeEqualWhenSameNameSameServer() {
         // setup
-        ConnectionFactory thisBinding = MockObjectFactory.createConnectionFactory(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
-        ConnectionFactory thatBinding = MockObjectFactory.createConnectionFactory(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
+    	Translator thisBinding = MockObjectFactory.createTranslator(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
+    	Translator thatBinding = MockObjectFactory.createTranslator(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
         ConnectorType connectorType = MockObjectFactory.createConnectorType(CONNECTOR_TYPE_NAME);
         Connector thisConnector = new Connector(thisBinding, connectorType);
         Connector thatConnector = new Connector(thatBinding, connectorType);
@@ -366,7 +366,7 @@ public class ConnectorTest {
     public void shouldNotBeEqualWhenDifferentNameSameServer() {
         // setup
         Connector thisConnector = MockObjectFactory.createConnector(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
-        ConnectionFactory thatBinding = MockObjectFactory.createConnectionFactory("differentName", CONNECTOR_TYPE_NAME);
+        Translator thatBinding = MockObjectFactory.createTranslator("differentName", CONNECTOR_TYPE_NAME);
         Connector thatConnector = new Connector(thatBinding, thisConnector.getType());
 
         // test
@@ -377,8 +377,8 @@ public class ConnectorTest {
     @Test
     public void shouldHaveSameHashcodeIfEquals() {
         // setup
-        ConnectionFactory thisBinding = MockObjectFactory.createConnectionFactory(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
-        ConnectionFactory thatBinding = MockObjectFactory.createConnectionFactory(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
+    	Translator thisBinding = MockObjectFactory.createTranslator(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
+    	Translator thatBinding = MockObjectFactory.createTranslator(CONNECTOR_NAME, CONNECTOR_TYPE_NAME);
         ConnectorType connectorType = MockObjectFactory.createConnectorType(CONNECTOR_TYPE_NAME);
         Connector thisConnector = new Connector(thisBinding, connectorType);
         Connector thatConnector = new Connector(thatBinding, connectorType);

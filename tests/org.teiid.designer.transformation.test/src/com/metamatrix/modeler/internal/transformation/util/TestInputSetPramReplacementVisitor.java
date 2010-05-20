@@ -11,9 +11,9 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
 /**
  */

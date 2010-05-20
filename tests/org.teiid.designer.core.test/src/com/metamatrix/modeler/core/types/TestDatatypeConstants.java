@@ -11,8 +11,8 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.core.id.UUID;
-import com.metamatrix.core.id.UUIDFactory;
+import org.teiid.core.id.UUID;
+import org.teiid.core.id.UUIDFactory;
 
 /**
  * DatatypeConstantsTest

@@ -13,4 +13,5 @@ Require-Bundle: org.teiid.designer.modelgenerator,
  org.teiid.designer.core,
  org.eclipse.core.runtime,
  org.teiid.core.designer,
- org.junit4
+ org.junit4,
+ teiid_embedded_query

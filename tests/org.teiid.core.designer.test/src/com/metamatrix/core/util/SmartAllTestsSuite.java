@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import junit.framework.Test;
 import org.junit.Ignore;
+import org.teiid.core.util.FileUtils;
 
 /**
  * The <code>SmartAllTestsSuite</code> class is a {@link junit.framework.TestSuite} that uses reflection to find the test classes

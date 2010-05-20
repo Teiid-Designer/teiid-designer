@@ -19,9 +19,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import com.metamatrix.core.id.IDGenerator;
-import com.metamatrix.core.id.InvalidIDException;
-import com.metamatrix.core.id.ObjectID;
+import org.teiid.core.id.IDGenerator;
+import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.modeler.core.container.Container;
 
 /**

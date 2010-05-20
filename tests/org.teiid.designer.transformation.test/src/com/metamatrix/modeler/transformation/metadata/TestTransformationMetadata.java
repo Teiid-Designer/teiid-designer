@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.api.exception.MetaMatrixComponentException;
-import com.metamatrix.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IEntryResult;
@@ -42,7 +42,7 @@ import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlColumnAspect
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlModelAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlTableAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.RuntimeAdapter;
-import com.metamatrix.query.metadata.QueryMetadataInterface;
+import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TestTransformationMetadata
@@ -400,7 +400,7 @@ public class TestTransformationMetadata extends TestCase {
             shortName = queryMetadata.getShortElementName("Model.table.column"); //$NON-NLS-1$
         } catch (QueryMetadataException e) {
             e.printStackTrace();
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             e.printStackTrace();
         }
         assertEquals("column", shortName); //$NON-NLS-1$
@@ -417,7 +417,7 @@ public class TestTransformationMetadata extends TestCase {
             shortName = queryMetadata.getFullElementName("Model.table", "column"); //$NON-NLS-1$ //$NON-NLS-2$
         } catch (QueryMetadataException e) {
             e.printStackTrace();
-        } catch (MetaMatrixComponentException e) {
+        } catch (TeiidComponentException e) {
             e.printStackTrace();
         }
         assertEquals("Model.table.column", shortName); //$NON-NLS-1$

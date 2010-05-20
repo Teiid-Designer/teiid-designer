@@ -17,10 +17,10 @@ import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationFactory;
 import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
-import com.metamatrix.query.parser.QueryParser;
-import com.metamatrix.query.sql.lang.Command;
-import com.metamatrix.query.sql.lang.Query;
-import com.metamatrix.query.sql.lang.SetQuery;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.SetQuery;
 
 
 /** 

@@ -15,4 +15,5 @@ Require-Bundle: org.teiid.designer.relationship,
  org.teiid.designer.core,
  org.teiid.designer.core.test,
  org.teiid.core.designer.test,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ teiid_embedded_query

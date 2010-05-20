@@ -18,8 +18,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.ConnectionFactory;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.Translator;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -37,9 +38,9 @@ public class MockObjectFactory {
      * @param connectorTypeName the name of the connector type of this connection factory
      * @return the connection factory
      */
-    public static ConnectionFactory createConnectionFactory( String name,
+    public static Translator createTranslator( String name,
                                                              String connectorTypeName ) {
-        ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
+    	Translator connectionFactory = mock(Translator.class);
         Properties props = new Properties();
         props.setProperty(IConnectorProperties.CONNECTOR_TYPE, connectorTypeName);
 
@@ -63,9 +64,9 @@ public class MockObjectFactory {
     public static Connector createConnector( String name,
                                              String connectorTypeName ) {
         ConnectorType connectorType = createConnectorType(connectorTypeName);
-        ConnectionFactory connectionFactory = createConnectionFactory(name, connectorTypeName);
+        Translator translator = createTranslator(name, connectorTypeName);
 
-        return new Connector(connectionFactory, connectorType);
+        return new Connector(translator, connectorType);
     }
 
     /**

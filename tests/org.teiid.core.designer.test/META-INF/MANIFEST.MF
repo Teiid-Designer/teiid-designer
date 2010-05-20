@@ -11,5 +11,6 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.modeler.core
 Require-Bundle: org.junit4,
  org.eclipse.core.runtime,
- org.teiid.core.designer
+ org.teiid.core.designer,
+ teiid_embedded_query
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
