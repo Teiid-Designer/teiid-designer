@@ -8,7 +8,8 @@
 package com.metamatrix.core.util;
 
 import java.util.Collection;
-import com.metamatrix.core.CorePlugin;
+import java.util.Properties;
+import org.teiid.core.CorePlugin;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
@@ -191,6 +192,32 @@ public class CoreArgCheck {
         isNotNull(collection);
         if (collection.isEmpty()) {
             final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isCollectionNotEmpty"); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Check that the properties is not empty
+     * 
+     * @param collection Properties
+     * @throws IllegalArgumentException If properties is null or empty
+     */
+    public static final void isNotEmpty( Properties properties ) {
+        isNotEmpty(properties, null);
+    }
+
+    /**
+     * Check that the properties is not empty
+     * 
+     * @param collection Properties
+     * @param message Exception message if check fails
+     * @throws IllegalArgumentException If properties is null or empty
+     */
+    public static final void isNotEmpty( Properties properties,
+                                         String message ) {
+        isNotNull(properties);
+        if (properties.isEmpty()) {
+            final String msg = message != null ? message : CoreModelerPlugin.Util.getString("ArgCheck.isPropertiesNotEmpty"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
     }
