@@ -8,6 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
+
+import org.teiid.language.SQLReservedWords;
 import org.teiid.query.function.FunctionLibrary;
 import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.symbol.Constant;
@@ -62,8 +64,10 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
         if(args!=null) {
 	        for(int i=0; i<args.length; i++) {
 	            // Special case for TIMESTAMPADD, TIMESTAMPDIFF. 
-	            if(i==0 && 
-	               (name.equalsIgnoreCase(ReservedWords.TIMESTAMPADD)||name.equalsIgnoreCase(ReservedWords.TIMESTAMPDIFF)) ) {
+	            if((i==1 && 
+	 	               (name.equalsIgnoreCase(SQLReservedWords.CAST) || name.equalsIgnoreCase(ReservedWords.CONVERT))) ||
+	            		(i==0 && 
+	               (name.equalsIgnoreCase(SQLReservedWords.XMLPI) || name.equalsIgnoreCase(ReservedWords.TIMESTAMPADD)||name.equalsIgnoreCase(ReservedWords.TIMESTAMPDIFF))) ) {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,((Constant)args[i]).getValue()));
 	            } else {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,args[i]));
@@ -96,35 +100,6 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
                     displayNodeList.add(child);
             }
             
-		} else if(name.equalsIgnoreCase(FunctionLibrary.CONVERT) || name.equalsIgnoreCase(FunctionLibrary.CAST)) {
-            displayNodeList.add(DisplayNodeFactory.createFunctionNameDisplayNode(this,name));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
-            if(childNodeList.size()!=0) {
-	            child = (DisplayNode)childNodeList.get(0);
-	            if( child.hasDisplayNodes() ) {
-	                    displayNodeList.addAll(child.getDisplayNodeList());
-	            } else {
-	                    displayNodeList.add(child);
-	            }
-				if(name.equalsIgnoreCase(FunctionLibrary.CONVERT)) {
-	                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
-				} else {
-	                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-	                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AS));
-	                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-				}
-            }
-            if(childNodeList.size()>0) {
-                Expression[] args = function.getArgs();
-                if(args!=null) {
-        			if(args.length < 2 || args[1] == null || !(args[1] instanceof Constant)) {
-    	                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,UNDEFINED));
-        			} else {
-	                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,((Constant)args[1]).getValue()));
-        			}
-                }
-            }
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
 		} else if(name.equals("+") || name.equals("-") ||    //$NON-NLS-1$ //$NON-NLS-2$
                   name.equals("*") || name.equals("/") ||    //$NON-NLS-1$ //$NON-NLS-2$
                   name.equals("||")) {                       //$NON-NLS-1$
@@ -148,6 +123,10 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 
 			if(childNodeList.size() > 0) {
 				for(int i=0; i<childNodeList.size(); i++) {
+					if (i == 0 && name.equalsIgnoreCase(SQLReservedWords.XMLPI)) {
+						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,"NAME"));
+						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+					}
                     child = (DisplayNode)childNodeList.get(i);
                     if( child.hasDisplayNodes() ) {
                             displayNodeList.addAll(child.getDisplayNodeList());
@@ -155,7 +134,13 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
                             displayNodeList.add(child);
                     }
 					if(i < (childNodeList.size()-1)) {
-                        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
+						if (name.equalsIgnoreCase(FunctionLibrary.CAST)) {
+							displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+			                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AS));
+			                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+						} else {
+							displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));
+						}
 					}
 				}
 			}

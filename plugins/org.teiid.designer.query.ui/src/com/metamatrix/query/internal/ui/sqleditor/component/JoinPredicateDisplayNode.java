@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.query.sql.lang.AtomicCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.JoinPredicate;
@@ -68,7 +70,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
 
         Iterator iter = joinPredicate.getJoinCriteria().iterator();
         while (iter.hasNext()) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, clause));
+            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, iter.next()));
         }
 
         // Build the Display Node List
@@ -152,7 +154,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
     		Iterator critIter = joinCriteria.iterator();
     		while(critIter.hasNext()) {
     			Criteria crit = (Criteria) critIter.next();
-                if(crit instanceof PredicateCriteria) {
+                if(crit instanceof PredicateCriteria || crit instanceof AtomicCriteria) {
                     displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,crit));
                 } else {
                 	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));

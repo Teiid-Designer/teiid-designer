@@ -48,6 +48,10 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
         if(expr!=null) {
             childNodeList.add(DisplayNodeFactory.createDisplayNode(this,expr));
         }
+        
+        if(aggregateSymbol.getOrderBy() != null ) {
+        	childNodeList.add(DisplayNodeFactory.createDisplayNode(this, aggregateSymbol.getOrderBy()));
+        }
         // Build the Display Node List
         createDisplayNodeList();
     }
@@ -77,10 +81,23 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
             } else {
                     displayNodeList.add(child);
             }
+            
+            if(childNodeList.size()>1) {
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
+                child = (DisplayNode)childNodeList.get(1);
+//              indent = child.getIndentLevel();
+              if( child.hasDisplayNodes() ) {
+                      displayNodeList.addAll(child.getDisplayNodeList());
+              } else {
+                      displayNodeList.add(child);
+              }
+          }
         } else {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ALL_COLS));
         }
 
+        
+        
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
     }
 

@@ -11,14 +11,15 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.teiid.client.metadata.ParameterInfo;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.LanguageObject;
-import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.lang.AbstractCompareCriteria;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
@@ -74,6 +75,8 @@ import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.ScalarSubquery;
+
+import com.metamatrix.query.sql.ReservedWords;
 
 public class TestDisplayNodeFactory extends TestCase {
 
@@ -545,7 +548,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nGROUP BY e1 \nHAVING e1 > 0 \nORDER BY e1  "); //$NON-NLS-1$
+        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nGROUP BY e1 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
     }
 
     public void testQuery4() {
@@ -567,7 +570,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nHAVING e1 > 0 \nORDER BY e1  "); //$NON-NLS-1$
+        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
     }
 
     public void testQuery5() {
@@ -589,7 +592,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setGroupBy(groupBy);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nORDER BY e1  "); //$NON-NLS-1$
+        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nORDER BY e1 "); //$NON-NLS-1$
     }
 
     public void testQuery6() {
@@ -964,14 +967,14 @@ public class TestDisplayNodeFactory extends TestCase {
     }
 
     public void testAliasSymbol1() {
-        AliasSymbol as = new AliasSymbol("x", new ElementSymbol("element")); //$NON-NLS-1$ //$NON-NLS-2$
-        helpTest(as, "element AS x"); //$NON-NLS-1$
+        AliasSymbol as = new AliasSymbol("x", new ElementSymbol("y")); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest(as, "y AS x"); //$NON-NLS-1$
     }
 
     // Test alias symbol with reserved word
     public void testAliasSymbol2() {
-        AliasSymbol as = new AliasSymbol("select", new ElementSymbol("element")); //$NON-NLS-1$ //$NON-NLS-2$
-        helpTest(as, "element AS \"select\""); //$NON-NLS-1$
+        AliasSymbol as = new AliasSymbol("select", new ElementSymbol("y")); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest(as, "y AS \"select\""); //$NON-NLS-1$
     }
 
     public void testAllSymbol() {
@@ -1127,13 +1130,6 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(func, "convert(null, integer)"); //$NON-NLS-1$
     }
 
-    public void testConvertFunction4() {
-        Function func = new Function("convert", new Expression[] { //$NON-NLS-1$
-                                     new Constant("abc"), //$NON-NLS-1$
-                                         null});
-        helpTest(func, "convert('abc', <undefined>)"); //$NON-NLS-1$
-    }
-
     public void testConvertFunction5() {
         Function func = new Function("convert", null); //$NON-NLS-1$
         helpTest(func, "convert()"); //$NON-NLS-1$
@@ -1142,11 +1138,6 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testConvertFunction6() {
         Function func = new Function("convert", new Expression[0]); //$NON-NLS-1$
         helpTest(func, "convert()"); //$NON-NLS-1$
-    }
-
-    public void testConvertFunction7() {
-        Function func = new Function("convert", new Expression[] {new Constant("abc")}); //$NON-NLS-1$ //$NON-NLS-2$
-        helpTest(func, "convert('abc', <undefined>)"); //$NON-NLS-1$
     }
 
     public void testCastFunction1() {
@@ -1169,13 +1160,6 @@ public class TestDisplayNodeFactory extends TestCase {
                                      new Constant(null), new Constant("integer") //$NON-NLS-1$
                                      });
         helpTest(func, "cast(null AS integer)"); //$NON-NLS-1$
-    }
-
-    public void testCastFunction4() {
-        Function func = new Function("cast", new Expression[] { //$NON-NLS-1$
-                                     new Constant("abc"), //$NON-NLS-1$
-                                         null});
-        helpTest(func, "cast('abc' AS <undefined>)"); //$NON-NLS-1$
     }
 
     public void testArithemeticFunction1() {
@@ -1842,7 +1826,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testNullExpressionInNamedParameter() {
 
-        String expected = "EXEC sp1(PARAM = sp1.PARAM)"; //$NON-NLS-1$
+        String expected = "EXEC sp1(PARAM = \"sp1.PARAM\")"; //$NON-NLS-1$
 
         StoredProcedure sp = new StoredProcedure();
         sp.setDisplayNamedParameters(true);
@@ -1902,7 +1886,32 @@ public class TestDisplayNodeFactory extends TestCase {
         Query query = (Query)QueryParser.getQueryParser().parseCommand("Select a From (db.g1 JOIN db.g2 ON a = b) makedep LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
         helpTest(query, "SELECT \n\t\ta \nFROM \n\t\t(db.g1 INNER JOIN db.g2 ON a = b) MAKEDEP LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
     }
+    
+    public void testCast() throws Exception {
+        Expression ex = QueryParser.getQueryParser().parseExpression("cast(x as integer)"); //$NON-NLS-1$
+        helpTest(ex, "cast(x AS integer)"); //$NON-NLS-1$
+    }
+    
+    public void testXMLPi() throws Exception {
+        Expression ex = QueryParser.getQueryParser().parseExpression("xmlpi(name foo, 'bar')"); //$NON-NLS-1$
+        helpTest(ex, "xmlpi(NAME foo, 'bar')"); //$NON-NLS-1$
+    }
+    
+    public void testTimestampAdd() throws Exception {
+        Expression ex = QueryParser.getQueryParser().parseExpression("timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
+        helpTest(ex, "timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
+    }
+    
+    public void testXMLAgg() throws Exception {
+        LanguageObject ex = QueryParser.getQueryParser().parseCommand("select xmlagg(x order by y)"); //$NON-NLS-1$
+        helpTest(ex, "SELECT \n\t\tXMLAGG(x ORDER BY y )"); //$NON-NLS-1$
+    }
 
+    public void testXMLElement() throws Exception {
+        LanguageObject ex = QueryParser.getQueryParser().parseExpression("xmlelement(name y, xmlattributes('x' as foo), q)"); //$NON-NLS-1$
+        helpTest(ex, "XMLELEMENT(NAME y, XMLATTRIBUTES('x' AS foo), q)"); //$NON-NLS-1$
+    }
+    
     // ################################## TEST SUITE ################################
 
     /**
