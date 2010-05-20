@@ -229,7 +229,7 @@ public class ZoomComboActionContributeItem extends ActionContributionItem implem
         //        if (SWT.getPlatform().equals("gtk")) //$NON-NLS-1$
         combo.setItems(DiagramUiConstants.Zoom.zoomStrings);
         combo.setText(initString);
-        toolitem.setWidth(computeWidth(combo) + 10);
+        toolitem.setWidth(80); //computeWidth(combo) + 10);
         combo.setToolTipText(getAction().getToolTipText());
         return combo;
     }
