@@ -15,7 +15,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -27,11 +29,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.ZipUtil;
 import com.metamatrix.core.util.ChecksumUtil;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  *
@@ -240,8 +244,9 @@ public class VdbEntry {
      */
     public final void setDescription( final String description ) {
         final String oldDescription = this.description.get();
-        this.description.set(description);
-        vdb.setModified(this, Vdb.DESCRIPTION, oldDescription, description);
+        if( StringUtilities.areSame(description, oldDescription, false)) return;
+	    this.description.set(description);
+	    vdb.setModified(this, Vdb.DESCRIPTION, oldDescription, description);
     }
 
     void setSynchronization( final Synchronization synchronization ) {

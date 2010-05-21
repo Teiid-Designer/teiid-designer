@@ -241,6 +241,35 @@ public class StringUtilities {
         firstChar = firstChar.toUpperCase();
         return (firstChar + value.substring(1));
     }
+    
+    /**
+     * Method to determine if two strings are the same.
+     * 
+     * @param string1 the first string. may be null or empty
+     * @param string2 the second string. may be null or empty
+     * @param matchCase do not ignore case of string characters
+     * @return true if string objects are same, false if not.
+     */
+    public static boolean areSame(String string1, String string2, boolean matchCase) {
+    	if( string1 == null ) {
+    		return string2 == null;
+    	}
+    	// String 1 != null
+    	if( string2 == null ) {
+    		return false;
+    	}
+    	
+    	// Now we know that BOTH strings are NOT null
+    	if( matchCase ) {
+    		if( string1.length() != string2.length() ) {
+    			return false;
+    		}
+    		
+    		return string1.equals(string2);
+    	}
+    	
+    	return string1.equalsIgnoreCase(string2);
+    }
 
     private StringUtilities() {
     }

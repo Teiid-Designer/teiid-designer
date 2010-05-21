@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.teiid.designer.vdb.connections.ConnectionFinderExtensionManager;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -35,6 +36,7 @@ import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -72,21 +74,27 @@ public final class VdbModelEntry extends VdbEntry {
 	        final EmfResource model = (EmfResource)findModel();
 	        builtIn = getFinder().isBuiltInResource(model);
 	        type = model.getModelType();
-	        description.set(model.getModelAnnotation().getDescription());
+	        if( model.getModelAnnotation().getDescription() != null ) {
+	        	description.set(model.getModelAnnotation().getDescription());
+	        } else {
+	        	description.set(StringUtilities.EMPTY_STRING);
+	        }
+	        
 	        if( ModelUtil.isPhysical(model) ) {
-	        	source.set(name.removeFileExtension().lastSegment());
+	        	String connectionName = ConnectionFinderExtensionManager.findConnectionName(model, name.removeFileExtension().lastSegment());
+	        	source.set(connectionName);
 	        }
         } else if( name.getFileExtension().equalsIgnoreCase(ModelUtil.EXTENSION_XSD)) {
 	        final XSDResourceImpl model = (XSDResourceImpl)findModel();
 	        builtIn = getFinder().isBuiltInResource(model);
 	        type = ModelType.UNKNOWN_LITERAL;
-	        description.set("");
-	        source.set("");
+	        description.set(StringUtilities.EMPTY_STRING);
+	        source.set(StringUtilities.EMPTY_STRING);
         } else {
 	        builtIn = false;
 	        type = ModelType.UNKNOWN_LITERAL;
-	        description.set("");
-	        source.set("");
+	        description.set(StringUtilities.EMPTY_STRING);
+	        source.set(StringUtilities.EMPTY_STRING);
         }
     }
 
@@ -255,7 +263,7 @@ public final class VdbModelEntry extends VdbEntry {
      */
     public final void setDataSource( final String source ) {
         final String oldSource = getDataSource();
-        if (oldSource != null && oldSource.equals(source)) return;
+        if( StringUtilities.areSame(source, oldSource, false) ) return;
         this.source.set(source);
         getVdb().setModified(this, Vdb.DATA_SOURCE, oldSource, source);
     }

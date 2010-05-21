@@ -398,6 +398,8 @@ public final class Vdb {
      * @param description Sets description to the specified value.
      */
     public final void setDescription( final String description ) {
+    	final String oldDescription = this.description.get();
+        if( StringUtilities.areSame(description, oldDescription, false)) return;
         this.description.set(description);
         setModified(this, DESCRIPTION, null, description);
     }

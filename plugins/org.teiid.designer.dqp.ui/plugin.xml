@@ -181,15 +181,6 @@
             class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewResultsCountPreferenceContributor">
       </preference>
   </extension>
-<!-- JDBC Importer Post Processor (Connector Binding) -->
-  <extension
-        point="org.teiid.designer.jdbc.ui.jdbcImportPostProcessor"
-        id="connectorBindingImportPostProcessor"
-        name="%connectorBindingImportPostProcessor">
-        <class
-            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.ConnectorBindingImportPostProcessor">
-        </class>
-  </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension
         id="PreviewTableDataContextAction"
@@ -208,5 +199,11 @@
          name="org.teiid.designer.runtime.ui.DeployVdbAction"
          label="%deployVdbAction.label">
       </resourceAction>
+   </extension>
+   <extension
+         point="org.teiid.designer.vdb.connectionFinder">
+      <class
+            name="org.teiid.designer.runtime.ui.VdbSouceConnectionFinder">
+      </class>
    </extension>
 </plugin>

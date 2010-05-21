@@ -123,8 +123,8 @@ public final class ModelerDqpUtils {
      * @return a map of JDBC connection properties (never <code>null</code> but maybe empty)
      * @since 5.0
      */
-    public static Map getModelJdbcProperties( VdbModelEntry modelEntry ) {
-        Map result = null;
+    public static Map<String, String> getModelJdbcProperties( VdbModelEntry modelEntry ) {
+        Map<String, String> result = null;
         IPath modelPath = modelEntry.getName();
 
         IResource resource = WorkspaceResourceFinderUtil.findIResourceByPath(modelPath);
@@ -132,7 +132,7 @@ public final class ModelerDqpUtils {
         if ((modelEntry.getType() != ModelType.PHYSICAL_LITERAL) || (resource == null)) {
             result = Collections.EMPTY_MAP;
         } else {
-            result = new HashMap();
+            result = new HashMap<String, String>();
 
             // TODO: Find Model's JDBC PRoperties here!!!!
 
