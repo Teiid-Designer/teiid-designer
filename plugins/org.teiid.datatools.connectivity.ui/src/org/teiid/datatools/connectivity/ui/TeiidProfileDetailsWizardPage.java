@@ -5,7 +5,7 @@ import org.eclipse.datatools.connectivity.ui.wizards.ExtensibleProfileDetailsWiz
 public class TeiidProfileDetailsWizardPage extends ExtensibleProfileDetailsWizardPage {
 
     public TeiidProfileDetailsWizardPage( String pageName ) {
-        super(pageName, "org.teiid.datatools.connectivity.driver.teiidCategory"); //$NON-NLS-1$
+        super(pageName, ITeiidDriverConstants.TEIID_CATEGORY);
     }
 
 }

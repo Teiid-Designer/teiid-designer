@@ -4,26 +4,36 @@ import org.eclipse.datatools.connectivity.ui.wizards.ExtensibleProfileDetailsPro
 import org.eclipse.datatools.help.ContextProviderDelegate;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
+public class TeiidPropertyPage extends ExtensibleProfileDetailsPropertyPage 
+    implements IContextProvider {
 
-public class TeiidPropertyPage extends ExtensibleProfileDetailsPropertyPage
-		implements IContextProvider {
+    private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(
+            Activator.getDefault().getBundle().getSymbolicName());
 
-	private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(
-			Activator.getDefault().getBundle().getSymbolicName());
-	
-	@Override
-	public IContext getContext(Object target) {
-		return contextProviderDelegate.getContext(target);
-	}
+    public TeiidPropertyPage() {
+        super("org.teiid.datatools.connectivity.driver.teiidCategory");
+    }
 
-	@Override
-	public int getContextChangeMask() {
-		return contextProviderDelegate.getContextChangeMask();
-	}
+    @Override
+    public IContext getContext( Object target ) {
+        return contextProviderDelegate.getContext(target);
+    }
 
-	@Override
-	public String getSearchExpression(Object target) {
-		return contextProviderDelegate.getSearchExpression(target);
-	}
+    @Override
+    public int getContextChangeMask() {
+        return contextProviderDelegate.getContextChangeMask();
+    }
+
+    @Override
+    public String getSearchExpression( Object target ) {
+        return contextProviderDelegate.getSearchExpression(target);
+    }
+
+    protected Control createContents( Composite parent ) {
+        Control contents = super.createContents(parent);
+        return contents;
+    }
 }

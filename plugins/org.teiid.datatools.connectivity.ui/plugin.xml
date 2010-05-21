@@ -15,18 +15,13 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            category="org.teiid.datatools.connectivity.ui.profileProperties"
             class="org.teiid.datatools.connectivity.ui.TeiidPropertyPage"
             id="org.teiid.datatools.connectivity.ui.profileProperties"
-            name="Teiid Property Page">
+            name="Driver Properties"
+            objectClass="org.eclipse.datatools.connectivity.IConnectionProfile">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.datatools.connectivity.connectionProfile"/>
-         <enabledWhen>
-            <instanceof
-                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
-            </instanceof>
-         </enabledWhen>
       </page>
    </extension>
    

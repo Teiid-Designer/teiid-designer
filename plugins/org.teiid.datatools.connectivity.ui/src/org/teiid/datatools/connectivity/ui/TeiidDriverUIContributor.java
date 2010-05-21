@@ -323,7 +323,7 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             parentPage.setErrorMessage(Messages.getString("TeiidDriverUIContributor.VALIDATE_HOST_REQ_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (usernameText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(Messages.getString("TeiidDriverUIContributor.VALIDATE_USERID_REQ_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(Messages.getString("TeiidDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (portText.getText().trim().length() < 1) {
             parentPage.setErrorMessage(Messages.getString("TeiidDriverUIContributor.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
