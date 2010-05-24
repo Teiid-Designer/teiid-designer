@@ -9,18 +9,27 @@ package com.metamatrix.modeler.internal.vdb.ui.wizards;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,28 +40,37 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
-import com.metamatrix.core.util.I18nUtil;
+
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.InternalUiConstants;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
+import com.metamatrix.ui.internal.viewsupport.ListContentProvider;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 /**
@@ -81,9 +99,6 @@ public final class NewVdbWizard extends AbstractWizard
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
                                                                                      new char[] {'\''});
 
-    /**
-     * @since 4.0
-     */
     private static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);
     }
@@ -95,6 +110,8 @@ public final class NewVdbWizard extends AbstractWizard
     private Text nameText, folderText;
     private Button btnBrowse;
     private ISelectionStatusValidator projectValidator = new ModelProjectSelectionStatusValidator();
+
+    IStructuredSelection initialSelection;
 
     /**
      * @since 4.0
@@ -116,15 +133,40 @@ public final class NewVdbWizard extends AbstractWizard
 
         // create VDB resource
         final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            @SuppressWarnings("unchecked")
+			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
-                    final IFile file = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
-                    file.create(new ByteArrayInputStream(new byte[0]), false, monitor);
+                    final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
+                    vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+
 
                     // open editor
                     IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-                    IDE.openEditor(page, file);
+                    IDE.openEditor(page, vdbFile);
+                    
+                    //Thread.sleep(200);
+                    
+                    
+                    
+                    if (initialSelection != null && !initialSelection.isEmpty()) {
+                    	if( isAllModelsSelected(initialSelection) ) {
+                    		VdbEditor editor = getVdbEditor(vdbFile);
+                    		
+                    		if( editor != null ) {
+	                    		List selectedModels = SelectionUtilities.getSelectedIResourceObjects(initialSelection);
+	                    		List<IFile> models = new ArrayList<IFile>();
+	                    		
+	                    		for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+	                    			models.add((IFile)iter.next());
+	                    		}
+	                    		
+	                    		editor.addModels(models);
+	                    		editor.doSave(new NullProgressMonitor());
+                    		}
+                    	}
+                    }
+                    
                 } catch (final Exception err) {
                     throw new InvocationTargetException(err);
                 } finally {
@@ -151,6 +193,10 @@ public final class NewVdbWizard extends AbstractWizard
      */
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
+
+        if (isAllModelsSelected(selection)) {
+            initialSelection = new StructuredSelection(selection.toArray());
+        }
         if (selection != null && !selection.isEmpty()) {
             this.folder = ModelUtil.getContainer(selection.getFirstElement());
         }
@@ -205,6 +251,34 @@ public final class NewVdbWizard extends AbstractWizard
     }
 
     /**
+     * Indicates if all selected objects are {@link IResource}s.
+     * 
+     * @param theSelection the selection being checked
+     * @return <code>true</code> if all selected objects are <code>EObject</code>; <code>false</code> otherwise.
+     */
+    @SuppressWarnings( "unchecked" ) boolean isAllModelsSelected( ISelection theSelection ) {
+        boolean result = ((theSelection != null) && !theSelection.isEmpty() && (theSelection instanceof IStructuredSelection) && SelectionUtilities.isAllIResourceObjects(theSelection));
+
+        if (result) {
+            List selectedObjects = SelectionUtilities.getSelectedObjects(theSelection);
+            for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+                IResource res = (IResource)iter.next();
+                if (!ModelUtilities.isModelFile(res)) {
+                    result = false;
+                    break;
+                }
+            }
+
+        }
+
+        return result;
+    }
+    
+    private boolean isAllModelsSelected() {
+    	return isAllModelsSelected(this.initialSelection);
+    }
+
+    /**
      * @see org.eclipse.jface.wizard.IWizard#canFinish()
      * @since 4.0
      */
@@ -220,9 +294,12 @@ public final class NewVdbWizard extends AbstractWizard
     }
 
     /**
+     * @param parent 
+     * @return composite the page
      * @since 4.0
      */
-    Composite createPageControl( final Composite parent ) {
+    @SuppressWarnings("unchecked")
+	Composite createPageControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
         pg.setLayout(new GridLayout(COLUMN_COUNT, false));
@@ -256,7 +333,18 @@ public final class NewVdbWizard extends AbstractWizard
         } else {
             nameText.setFocus();
         }
-
+        
+        if( isAllModelsSelected() ) {
+	        Group group = WidgetFactory.createGroup(pg, getString("selectedModelsGroupTitle"), GridData.FILL_BOTH, COLUMN_COUNT, COLUMN_COUNT); //$NON-NLS-1$
+	        TableViewer viewer = new TableViewer(group);
+	        GridData gdv = new GridData(GridData.FILL_BOTH);
+	        //gdv.horizontalSpan = COLUMN_COUNT;
+	        viewer.getControl().setLayoutData(gdv);
+	        viewer.setContentProvider(new ListContentProvider());
+	        viewer.setLabelProvider(new ModelExplorerLabelProvider());
+	        List selectedModels = SelectionUtilities.getSelectedIResourceObjects(initialSelection);
+	        viewer.setInput(selectedModels);
+        }
         return pg;
     }
 
@@ -340,4 +428,48 @@ public final class NewVdbWizard extends AbstractWizard
             WizardUtil.setPageComplete(this.pg, err.getLocalizedMessage(), IMessageProvider.ERROR);
         }
     }
+    
+	/**
+	 * Finds the visible VDB Editor for the supplied VDB
+	 * 
+	 * If an editor is NOT open for this vdb, then null is returned.
+	 * 
+	 * @param vdb
+	 * @return the VdbEditor
+	 */
+	public VdbEditor getVdbEditor(final IFile vdb) {
+		final IWorkbenchWindow window = UiPlugin.getDefault()
+				.getCurrentWorkbenchWindow();
+
+		if (window != null) {
+			final IWorkbenchPage page = window.getActivePage();
+
+			if (page != null) {
+				VdbEditor editor = findEditorPart(page, vdb);
+				if( editor != null ) {
+					return editor;
+				}
+			}
+		}
+		return null;
+	}
+
+	private VdbEditor findEditorPart(final IWorkbenchPage page, IFile vdbFile) {
+		// look through the open editors and see if there is one available for
+		// this model file.
+		final IEditorReference[] editors = page.getEditorReferences();
+		for (int i = 0; i < editors.length; ++i) {
+
+			final IEditorPart editor = editors[i].getEditor(false);
+			if (editor instanceof VdbEditor) {
+				final VdbEditor vdbEditor = (VdbEditor) editor;
+				final IPath editorVdbPath = vdbEditor.getVdb().getName();
+				if (vdbFile.getFullPath().equals(editorVdbPath))
+					return vdbEditor;
+
+			}
+		}
+
+		return null;
+	}
 }

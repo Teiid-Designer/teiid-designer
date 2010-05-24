@@ -11,6 +11,7 @@ import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -116,6 +117,19 @@ public final class VdbEditor extends EditorPart {
     private Button synchronizeAllButton;
     private PropertyChangeListener vdbListener;
 
+    
+    /**
+     * Method which adds models to the VDB.
+     * 
+     * @param models
+     */
+    public void addModels(List<IFile> models) {
+    	for (final Object model : models)
+            vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+    	
+    	modelsGroup.getTable().getViewer().refresh();
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -587,4 +601,5 @@ public final class VdbEditor extends EditorPart {
         synchronizeAllButton.setEnabled(vdb.isModified());
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
+
 }
