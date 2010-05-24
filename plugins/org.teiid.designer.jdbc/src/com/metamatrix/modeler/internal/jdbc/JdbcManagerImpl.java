@@ -23,15 +23,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import javax.sql.DataSource;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.drivers.DriverInstance;
 import org.eclipse.datatools.connectivity.drivers.DriverManager;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
@@ -137,6 +142,7 @@ public class JdbcManagerImpl implements JdbcManager {
     private ProfileManager profileManager;
     private DriverManager driverManager;
     private boolean sourcesUpdated;
+	private ProfileListener profileListener;
 
     // ===========================================================================================================================
     // Constructors
@@ -166,6 +172,8 @@ public class JdbcManagerImpl implements JdbcManager {
      */
     public void start() throws JdbcException {
         profileManager = ProfileManager.getInstance();
+		profileListener = new ProfileListener();
+		profileManager.addProfileListener(profileListener);
         driverManager = DriverManager.getInstance();
     }
 
@@ -173,6 +181,7 @@ public class JdbcManagerImpl implements JdbcManager {
      * This method is not synchronized and is not thread safe.
      */
     public void shutdown() {
+		profileManager.removeProfileListener(profileListener);
         profileManager = null;
         driverManager = null;
         sources = null; // no need to synchronize since nulling reference is atomic
@@ -679,4 +688,50 @@ public class JdbcManagerImpl implements JdbcManager {
         }
         return (JdbcSource[])result.toArray(new JdbcSource[result.size()]);
     }
+
+	public class ProfileListener implements IProfileListener {
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileAdded(org.eclipse.datatools.connectivity.IConnectionProfile)
+		 */
+		@Override
+		public void profileAdded(IConnectionProfile arg0) {
+			try {
+				reload(new NullProgressMonitor());
+			} catch (JdbcException e) {
+				// do nothing
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileChanged(org.eclipse.datatools.connectivity.IConnectionProfile)
+		 */
+		@Override
+		public void profileChanged(IConnectionProfile arg0) {
+			try {
+				reload(new NullProgressMonitor());
+			} catch (JdbcException e) {
+				// do nothing
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileDeleted(org.eclipse.datatools.connectivity.IConnectionProfile)
+		 */
+		@Override
+		public void profileDeleted(IConnectionProfile arg0) {
+			try {
+				reload(new NullProgressMonitor());
+			} catch (JdbcException e) {
+				// do nothing
+			}
+		}
+
+	}
 }
