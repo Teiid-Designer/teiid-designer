@@ -151,7 +151,7 @@ public class ByteArrayHelper {
 	/**
      * converts the byte array to an input stream 
      */
-    public static InputStream toInputStream(byte[] data) throws Exception {
+    public static InputStream toInputStream(byte[] data) {
             ByteArrayInputStream bais = new ByteArrayInputStream(data);
             InputStream isContent = new BufferedInputStream(bais);
             

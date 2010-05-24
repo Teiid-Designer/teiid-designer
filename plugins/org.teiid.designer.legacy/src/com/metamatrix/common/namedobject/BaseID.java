@@ -37,6 +37,10 @@ import org.teiid.core.util.StringUtil;
  */
 public abstract class BaseID implements Cloneable, Comparable, Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * The character that delimits the atomic components of the name
      */
     public static final String DELIMITER = new String(new char[] {IDVerifier.DELIMITER_CHARACTER});
@@ -153,7 +157,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * @param obj the object that this instance is to be compared to.
      * @return whether the object is equal to this object.
      */
-    public boolean equals( Object obj ) {
+    @Override
+	public boolean equals( Object obj ) {
         // Check if instances are identical ...
         if (this == obj) {
             return true;
@@ -244,7 +249,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * 
      * @return a hash code value for this object.
      */
-    public final int hashCode() {
+    @Override
+	public final int hashCode() {
         return this.hashCode;
     }
 
@@ -253,7 +259,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * 
      * @return the string representation of this instance.
      */
-    public final String toString() {
+    @Override
+	public final String toString() {
         return this.fullName;
     }
 
@@ -264,7 +271,8 @@ public abstract class BaseID implements Cloneable, Comparable, Serializable {
      * @throws CloneNotSupportedException if this object cannot be cloned (i.e., only objects in
      *         {@link com.metamatrix.metadata.api.Defaults Defaults} cannot be cloned).
      */
-    public Object clone() throws CloneNotSupportedException {
+    @Override
+	public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 

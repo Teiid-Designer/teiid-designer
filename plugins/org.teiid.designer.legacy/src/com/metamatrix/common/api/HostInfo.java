@@ -55,6 +55,7 @@ public class HostInfo {
         return portNumber;
     }
     
+	@Override
 	public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(hostName).append(":").append(portNumber); //$NON-NLS-1$
@@ -65,7 +66,8 @@ public class HostInfo {
      * @see java.lang.Object#equals(java.lang.Object)
      * @since 4.2
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
     	if (obj == this) {
     		return true;
     	}
@@ -80,7 +82,8 @@ public class HostInfo {
      * @see java.lang.Object#hashCode()
      * @since 4.2
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hc = HashCodeUtil.hashCode(0, hostName);
         return HashCodeUtil.hashCode(hc, portNumber);
     }

@@ -137,18 +137,18 @@ public class VdbHeaderReader {
      */
     public VdbHeader read( File file ) throws TeiidException {
         if (file == null) {
-            // TODO: ADD I18n ??
+            //// TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_file_reference_may_not_be_null_2"; //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
         if (!file.exists()) {
-            final Object[] params = new Object[] {file};
+            //final Object[] params = new Object[] {file};
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_file_0_does_not_exist_and_therefore_cannot_be_read._3"; //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
         if (!file.canRead()) {
-            final Object[] params = new Object[] {file};
+            //final Object[] params = new Object[] {file};
             // TODO: ADD I18n ??
             final String msg = "VdbHeaderReader.The_file_0_does_not_have_read_privileges._4"; //$NON-NLS-1$
             throw new IllegalArgumentException(msg);

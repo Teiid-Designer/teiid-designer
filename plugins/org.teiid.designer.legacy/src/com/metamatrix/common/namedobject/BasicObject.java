@@ -41,6 +41,10 @@ public abstract class BasicObject implements BaseObject, Serializable {
     // developers as they provide new subclasses.
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * The ID for this object. Never null.
      * 
      * @label ID
@@ -108,7 +112,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * 
      * @return the hash code value for this metadata object.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return this.id.hashCode();
     }
 
@@ -120,7 +125,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * @param obj the object that this instance is to be compared to.
      * @return whether the object is equal to this object.
      */
-    public boolean equals( Object obj ) {
+    @Override
+	public boolean equals( Object obj ) {
         // Check if instances are identical ...
         if (this == obj) {
             return true;
@@ -177,7 +183,8 @@ public abstract class BasicObject implements BaseObject, Serializable {
      * 
      * @return the string representation of this instance.
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return this.id.toString();
     }
 

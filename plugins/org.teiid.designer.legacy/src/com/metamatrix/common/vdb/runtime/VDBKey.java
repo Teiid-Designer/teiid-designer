@@ -34,14 +34,16 @@ public class VDBKey {
     /**
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return HashCodeUtil.hashCode(name.hashCode(), version);
     }
 
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals( Object obj ) {
+    @Override
+	public boolean equals( Object obj ) {
         if (obj == this) {
             return true;
         }
@@ -70,7 +72,8 @@ public class VDBKey {
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return name + " " + version; //$NON-NLS-1$
     }
 
