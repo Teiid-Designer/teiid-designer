@@ -22,6 +22,7 @@ Require-Bundle: org.teiid.designer.metamodels.relational,
  teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.eclipse.datatools.connectivity
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

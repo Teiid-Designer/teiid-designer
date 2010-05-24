@@ -8,6 +8,9 @@
 package com.metamatrix.modeler.jdbc;
 
 import java.util.List;
+
+import org.eclipse.datatools.connectivity.internal.ConnectivityPlugin;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -26,6 +29,7 @@ public class TestJdbcTestManager extends TestCase {
     private JdbcTestManager standardUtil;
     private JdbcTestManager scratchUtil;
     private JdbcTestManager emptyFileUtil;
+	private ConnectivityPlugin plugin;
 
     /**
      * Constructor for TestJdbcTestManager.
@@ -42,6 +46,7 @@ public class TestJdbcTestManager extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        this.plugin = new ConnectivityPlugin();
         this.standardUtil = new JdbcTestManager();
         this.scratchUtil = new JdbcTestManager(URI);
         this.emptyFileUtil = new JdbcTestManager(EMPTY_URI);

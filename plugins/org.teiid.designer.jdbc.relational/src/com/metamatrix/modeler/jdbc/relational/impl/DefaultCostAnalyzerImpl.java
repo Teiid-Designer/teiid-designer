@@ -84,8 +84,8 @@ public class DefaultCostAnalyzerImpl implements CostAnalyzer {
     protected void connect() throws Exception {
         if (this.connection == null) {
             // Create the SQL connection ...
-            final JdbcManager mgr = (JdbcRelationalPlugin.getDefault() == null ? JdbcManagerImpl.create(ModelerJdbcRelationalConstants.Util.getString("JdbcManager.name"), configFolder, vdbContainer) : JdbcRelationalUtil.getJdbcManager());//$NON-NLS-1$
-            this.connection = mgr.createConnection(this.src, null, this.password);
+            final JdbcManager mgr = (JdbcRelationalPlugin.getDefault() == null ? JdbcManagerImpl.create(ModelerJdbcRelationalConstants.Util.getString("JdbcManager.name")) : JdbcRelationalUtil.getJdbcManager());//$NON-NLS-1$
+            this.connection = mgr.createConnection(this.src, this.password);
         }
     }
     

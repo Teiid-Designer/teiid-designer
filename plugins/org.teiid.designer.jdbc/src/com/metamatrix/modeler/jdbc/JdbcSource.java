@@ -265,4 +265,8 @@ public interface JdbcSource extends EObject{
      */
     void setImportSettings(JdbcImportSettings value);
 
+	void setPassword(String password);
+
+	String getPassword();
+
 } // JdbcSource

@@ -67,7 +67,7 @@ public class JdbcRelationalUtil implements ModelerJdbcRelationalConstants {
                                                                                             JdbcException,
                                                                                             SQLException {
         CoreArgCheck.isNotNull(source);
-        return getJdbcManager().createConnection(source, source.getJdbcDriver(), password);
+        return getJdbcManager().createConnection(source, password);
     }
 
     /**
@@ -76,41 +76,7 @@ public class JdbcRelationalUtil implements ModelerJdbcRelationalConstants {
     public static JdbcManager getJdbcManager() throws CoreException,
                                                       IOException {
         if (JdbcRelationalUtil.mgr == null) {
-            final URI uri = URI.createFileURI(JdbcRelationalPlugin.getDefault().getStateLocation().append(FILENAME).toString());
-            // Copy JDBC model from installation folder if one doesn't exist in state folder
-            final File file = new File(uri.toFileString());
-            if (!file.exists()) {
-                final InputStream stream = FileLocator.openStream(JdbcRelationalPlugin.getDefault().getBundle(),
-				                                                  new Path(FILENAME),
-				                                                  false);
-                try {
-                    FileUtils.write(stream,file);
-                } finally {
-                    if (stream != null) {
-                        try {
-                            stream.close();
-                        } catch (IOException e) {
-                            ModelerJdbcRelationalConstants.Util.log(e);
-                        }
-                    }
-                }
-            }
-            final Resource resrc = JdbcRelationalPlugin.getModelContainer().getOrCreateResource(uri);
-            JdbcRelationalUtil.mgr = JdbcPlugin.createJdbcManager(JDBC_MANAGER_NAME, resrc);
-        }
-        return JdbcRelationalUtil.mgr;
-    }
-
-    /**
-     * @throws CoreException
-     * @since 4.4
-     */
-    public static JdbcManager getJdbcManager(final String folder,
-                                             final ResourceSet container) throws CoreException {
-        if (JdbcRelationalUtil.mgr == null) {
-            final URI uri = URI.createFileURI(new Path(folder).append(FILENAME).toString());
-            final Resource resrc = container.getResource(uri, true);
-            JdbcRelationalUtil.mgr = JdbcPlugin.createJdbcManager(JDBC_MANAGER_NAME, resrc);
+            JdbcRelationalUtil.mgr = JdbcPlugin.createJdbcManager(JDBC_MANAGER_NAME);
         }
         return JdbcRelationalUtil.mgr;
     }

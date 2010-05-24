@@ -176,7 +176,7 @@ public final class JdbcImporter implements
 
         // Create the SQL connection ...
         final JdbcManager mgr = JdbcRelationalUtil.getJdbcManager();
-        final Connection connection = mgr.createConnection(this.src, null, password, monitor);
+        final Connection connection = mgr.createConnection(this.src, password, monitor);
 
         // Create the JdbcDatabase instance with this connection ...
         this.db = JdbcPlugin.getJdbcDatabase(this.src, connection);

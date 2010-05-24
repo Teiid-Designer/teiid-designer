@@ -10,7 +10,12 @@ package com.metamatrix.modeler.internal.jdbc.ui.util;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.drivers.DriverInstance;
+import org.eclipse.datatools.connectivity.drivers.DriverManager;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.CLabel;
@@ -26,6 +31,7 @@ import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConsta
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcManager;
 import com.metamatrix.modeler.jdbc.JdbcSource;
+import com.metamatrix.modeler.jdbc.impl.JdbcFactoryImpl;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -76,7 +82,6 @@ public final class JdbcUiUtil
                 monitor.setTaskName(taskName);
                 try {
                     JdbcUiUtil.connection = getJdbcManager().createConnection(database,
-                                                                              null/*database.getJdbcDriver()*/,
                                                                               password,
                                                                               monitor);
                 } catch (final Exception err) {

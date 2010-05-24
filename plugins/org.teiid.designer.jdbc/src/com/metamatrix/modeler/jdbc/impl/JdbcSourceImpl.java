@@ -179,8 +179,23 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
     protected String url = URL_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getPassword() <em>Password</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
+     * @see #getPassword()
+     */
+    protected static final String PASSWORD_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getPassword() <em>Password</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see #getUrl()
+     */
+    protected String password = PASSWORD_EDEFAULT;
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected JdbcSourceImpl() {
@@ -207,8 +222,9 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
             JdbcDriver oldJdbcDriver = jdbcDriver;
             jdbcDriver = (JdbcDriver)eResolveProxy((InternalEObject)jdbcDriver);
             if (jdbcDriver != oldJdbcDriver) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, JdbcPackage.JDBC_SOURCE__JDBC_DRIVER, oldJdbcDriver, jdbcDriver));
+                if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+                                                                           JdbcPackage.JDBC_SOURCE__JDBC_DRIVER, oldJdbcDriver,
+                                                                           jdbcDriver));
             }
         }
         return jdbcDriver;
@@ -228,11 +244,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setJdbcDriver(JdbcDriver newJdbcDriver) {
+    public void setJdbcDriver( JdbcDriver newJdbcDriver ) {
         JdbcDriver oldJdbcDriver = jdbcDriver;
         jdbcDriver = newJdbcDriver;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__JDBC_DRIVER, oldJdbcDriver, jdbcDriver));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__JDBC_DRIVER,
+                                                                   oldJdbcDriver, jdbcDriver));
     }
 
     /**
@@ -242,7 +258,9 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      */
     public EList getProperties() {
         if (properties == null) {
-            properties = new EObjectContainmentWithInverseEList(JdbcSourceProperty.class, this, JdbcPackage.JDBC_SOURCE__PROPERTIES, JdbcPackage.JDBC_SOURCE_PROPERTY__SOURCE);
+            properties = new EObjectContainmentWithInverseEList(JdbcSourceProperty.class, this,
+                                                                JdbcPackage.JDBC_SOURCE__PROPERTIES,
+                                                                JdbcPackage.JDBC_SOURCE_PROPERTY__SOURCE);
         }
         return properties;
     }
@@ -262,20 +280,24 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setJdbcSourceContainer(JdbcSourceContainer newJdbcSourceContainer) {
-        if (newJdbcSourceContainer != eContainer || (eContainerFeatureID != JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER && newJdbcSourceContainer != null)) {
-            if (EcoreUtil.isAncestor(this, newJdbcSourceContainer))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
+    public void setJdbcSourceContainer( JdbcSourceContainer newJdbcSourceContainer ) {
+        if (newJdbcSourceContainer != eContainer
+            || (eContainerFeatureID != JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER && newJdbcSourceContainer != null)) {
+            if (EcoreUtil.isAncestor(this, newJdbcSourceContainer)) throw new IllegalArgumentException(
+                                                                                                       "Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
-            if (eContainer != null)
-                msgs = eBasicRemoveFromContainer(msgs);
-            if (newJdbcSourceContainer != null)
-                msgs = ((InternalEObject)newJdbcSourceContainer).eInverseAdd(this, JdbcPackage.JDBC_SOURCE_CONTAINER__JDBC_SOURCES, JdbcSourceContainer.class, msgs);
-            msgs = eBasicSetContainer((InternalEObject)newJdbcSourceContainer, JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER, msgs);
+            if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
+            if (newJdbcSourceContainer != null) msgs = ((InternalEObject)newJdbcSourceContainer).eInverseAdd(this,
+                                                                                                             JdbcPackage.JDBC_SOURCE_CONTAINER__JDBC_SOURCES,
+                                                                                                             JdbcSourceContainer.class,
+                                                                                                             msgs);
+            msgs = eBasicSetContainer((InternalEObject)newJdbcSourceContainer,
+                                      JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER,
+                                      msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER, newJdbcSourceContainer, newJdbcSourceContainer));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER,
+                                                                          newJdbcSourceContainer, newJdbcSourceContainer));
     }
 
     /**
@@ -292,12 +314,16 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetImportSettings(JdbcImportSettings newImportSettings, NotificationChain msgs) {
+    public NotificationChain basicSetImportSettings( JdbcImportSettings newImportSettings,
+                                                     NotificationChain msgs ) {
         JdbcImportSettings oldImportSettings = importSettings;
         importSettings = newImportSettings;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS, oldImportSettings, newImportSettings);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                                                                   JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS, oldImportSettings,
+                                                                   newImportSettings);
+            if (msgs == null) msgs = notification;
+            else msgs.add(notification);
         }
         return msgs;
     }
@@ -307,18 +333,22 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setImportSettings(JdbcImportSettings newImportSettings) {
+    public void setImportSettings( JdbcImportSettings newImportSettings ) {
         if (newImportSettings != importSettings) {
             NotificationChain msgs = null;
-            if (importSettings != null)
-                msgs = ((InternalEObject)importSettings).eInverseRemove(this, JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE, JdbcImportSettings.class, msgs);
-            if (newImportSettings != null)
-                msgs = ((InternalEObject)newImportSettings).eInverseAdd(this, JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE, JdbcImportSettings.class, msgs);
+            if (importSettings != null) msgs = ((InternalEObject)importSettings).eInverseRemove(this,
+                                                                                                JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE,
+                                                                                                JdbcImportSettings.class,
+                                                                                                msgs);
+            if (newImportSettings != null) msgs = ((InternalEObject)newImportSettings).eInverseAdd(this,
+                                                                                                   JdbcPackage.JDBC_IMPORT_SETTINGS__SOURCE,
+                                                                                                   JdbcImportSettings.class,
+                                                                                                   msgs);
             msgs = basicSetImportSettings(newImportSettings, msgs);
             if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS, newImportSettings, newImportSettings));
+        } else if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET,
+                                                                          JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS,
+                                                                          newImportSettings, newImportSettings));
     }
 
     /**
@@ -335,11 +365,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setName(String newName) {
+    public void setName( String newName ) {
         String oldName = name;
         name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__NAME, oldName, name));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__NAME,
+                                                                   oldName, name));
     }
 
     /**
@@ -356,11 +386,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDriverName(String newDriverName) {
+    public void setDriverName( String newDriverName ) {
         String oldDriverName = driverName;
         driverName = newDriverName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_NAME, oldDriverName, driverName));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_NAME,
+                                                                   oldDriverName, driverName));
     }
 
     /**
@@ -377,11 +407,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setDriverClass(String newDriverClass) {
+    public void setDriverClass( String newDriverClass ) {
         String oldDriverClass = driverClass;
         driverClass = newDriverClass;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_CLASS, oldDriverClass, driverClass));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__DRIVER_CLASS,
+                                                                   oldDriverClass, driverClass));
     }
 
     /**
@@ -398,11 +428,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUsername(String newUsername) {
+    public void setUsername( String newUsername ) {
         String oldUsername = username;
         username = newUsername;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__USERNAME, oldUsername, username));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__USERNAME,
+                                                                   oldUsername, username));
     }
 
     /**
@@ -419,11 +449,11 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setUrl(String newUrl) {
+    public void setUrl( String newUrl ) {
         String oldUrl = url;
         url = newUrl;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__URL, oldUrl, url));
+        if (eNotificationRequired()) eNotify(new ENotificationImpl(this, Notification.SET, JdbcPackage.JDBC_SOURCE__URL, oldUrl,
+                                                                   url));
     }
 
     /**
@@ -432,25 +462,29 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseAdd( InternalEObject otherEnd,
+                                          int featureID,
+                                          Class baseClass,
+                                          NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case JdbcPackage.JDBC_SOURCE__PROPERTIES:
                     return ((InternalEList)getProperties()).basicAdd(otherEnd, msgs);
                 case JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER:
-                    if (eContainer != null)
-                        msgs = eBasicRemoveFromContainer(msgs);
+                    if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
                     return eBasicSetContainer(otherEnd, JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER, msgs);
                 case JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS:
-                    if (importSettings != null)
-                        msgs = ((InternalEObject)importSettings).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS, null, msgs);
+                    if (importSettings != null) msgs = ((InternalEObject)importSettings).eInverseRemove(this,
+                                                                                                        EOPPOSITE_FEATURE_BASE
+                                                                                                        - JdbcPackage.JDBC_SOURCE__IMPORT_SETTINGS,
+                                                                                                        null,
+                                                                                                        msgs);
                     return basicSetImportSettings((JdbcImportSettings)otherEnd, msgs);
                 default:
                     return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
             }
         }
-        if (eContainer != null)
-            msgs = eBasicRemoveFromContainer(msgs);
+        if (eContainer != null) msgs = eBasicRemoveFromContainer(msgs);
         return eBasicSetContainer(otherEnd, featureID, msgs);
     }
 
@@ -460,7 +494,10 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+    public NotificationChain eInverseRemove( InternalEObject otherEnd,
+                                             int featureID,
+                                             Class baseClass,
+                                             NotificationChain msgs ) {
         if (featureID >= 0) {
             switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
                 case JdbcPackage.JDBC_SOURCE__PROPERTIES:
@@ -482,11 +519,14 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainer( NotificationChain msgs ) {
         if (eContainerFeatureID >= 0) {
             switch (eContainerFeatureID) {
                 case JdbcPackage.JDBC_SOURCE__JDBC_SOURCE_CONTAINER:
-                    return eContainer.eInverseRemove(this, JdbcPackage.JDBC_SOURCE_CONTAINER__JDBC_SOURCES, JdbcSourceContainer.class, msgs);
+                    return eContainer.eInverseRemove(this,
+                                                     JdbcPackage.JDBC_SOURCE_CONTAINER__JDBC_SOURCES,
+                                                     JdbcSourceContainer.class,
+                                                     msgs);
                 default:
                     return eDynamicBasicRemoveFromContainer(msgs);
             }
@@ -500,7 +540,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public Object eGet(EStructuralFeature eFeature, boolean resolve) {
+    public Object eGet( EStructuralFeature eFeature,
+                        boolean resolve ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case JdbcPackage.JDBC_SOURCE__JDBC_DRIVER:
                 if (resolve) return getJdbcDriver();
@@ -531,7 +572,8 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public void eSet(EStructuralFeature eFeature, Object newValue) {
+    public void eSet( EStructuralFeature eFeature,
+                      Object newValue ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case JdbcPackage.JDBC_SOURCE__JDBC_DRIVER:
                 setJdbcDriver((JdbcDriver)newValue);
@@ -571,7 +613,7 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public void eUnset(EStructuralFeature eFeature) {
+    public void eUnset( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case JdbcPackage.JDBC_SOURCE__JDBC_DRIVER:
                 setJdbcDriver((JdbcDriver)null);
@@ -610,7 +652,7 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
      * @generated
      */
     @Override
-    public boolean eIsSet(EStructuralFeature eFeature) {
+    public boolean eIsSet( EStructuralFeature eFeature ) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
             case JdbcPackage.JDBC_SOURCE__JDBC_DRIVER:
                 return jdbcDriver != null;
@@ -658,4 +700,24 @@ public class JdbcSourceImpl extends EObjectImpl implements JdbcSource {
         return result.toString();
     }
 
-} //JdbcSourceImpl
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.jdbc.JdbcSource#getPassword()
+     */
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.jdbc.JdbcSource#setPassword(java.lang.String)
+     */
+    @Override
+    public void setPassword( String password ) {
+        this.password = password;
+    }
+
+} // JdbcSourceImpl

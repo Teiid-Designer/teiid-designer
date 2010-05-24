@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -22,8 +23,8 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.osgi.framework.BundleContext;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -141,9 +142,8 @@ public class JdbcPlugin extends Plugin {
      * @throws JdbcException if there is an error loading the manager
      * @see #getJdbcDriverManager()
      */
-    public static JdbcManager createJdbcManager( final String name,
-                                                 final Resource model ) throws JdbcException {
-        final JdbcManagerImpl mgr = new JdbcManagerImpl(name, model);
+    public static JdbcManager createJdbcManager( final String name) throws JdbcException {
+        final JdbcManagerImpl mgr = new JdbcManagerImpl(name);
         mgr.start();
         return mgr;
     }

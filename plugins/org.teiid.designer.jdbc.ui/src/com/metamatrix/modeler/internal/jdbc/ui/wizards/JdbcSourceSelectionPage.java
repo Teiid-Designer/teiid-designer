@@ -15,6 +15,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.IProfileListener;
+import org.eclipse.datatools.connectivity.ProfileManager;
+import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -30,14 +34,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
+import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcManager;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -260,25 +266,32 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     }
 
     /**
-     * @since 4.0
+     * @since 7.0
      */
     void launchSourceWizard() {
-        final JdbcSourceWizard wizard = new JdbcSourceWizard();
-        final WizardDialog dlg = WidgetFactory.createOnePageWizardDialog(getShell(), wizard);
-        wizard.setSelection(this.src);
-        if (dlg.open() == Window.OK) {
-            // Update src combo, preserving any previous selection
-            WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
-            final JdbcSource src = wizard.getSelection();
-            if (src != null && this.src != src) {
-                WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
-            }
-            // Update password field
-            String pwd = wizard.getPassword();
-            if (pwd != null) {
-                this.pwdText.setText(pwd);
+        NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
+        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+        wizardDialog.setBlockOnOpen(true);
+
+        CPListener listener = new CPListener();
+        ProfileManager.getInstance().addProfileListener(listener);
+        if (wizardDialog.open() == Window.OK) {
+            try {
+                this.src = listener.getJdbcSource();
+                this.mgr.reload(null);
+                WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
+
+                if (src != null) {
+                    WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
+                }
+
+            } catch (JdbcException e) {
+                // TODO Auto-generated catch block
+                ProfileManager.getInstance().removeProfileListener(listener);
+                e.printStackTrace();
             }
         }
+        ProfileManager.getInstance().removeProfileListener(listener);
     }
 
     /**
@@ -287,6 +300,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     void passwordModified() {
         this.password = this.pwdText.getText();
         this.connection = null;
+        validatePage();
     }
 
     /**
@@ -310,6 +324,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
             this.driverLabel.setText(this.src.getDriverName());
             this.urlLabel.setText(this.src.getUrl());
             JdbcUiUtil.setText(this.userNameLabel, this.src.getUsername());
+            if (null != this.src.getPassword()) {
+                JdbcUiUtil.setText(this.pwdText, this.src.getPassword());
+            }
         } else {
             this.src = null;
             this.driverLabel.setText(EMPTY_STRING);
@@ -347,6 +364,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
             WizardUtil.setPageComplete(this, getString("noOpenProjectsMessage"), ERROR); //$NON-NLS-1$
         } else if (this.srcCombo.getText().length() == 0) {
             WizardUtil.setPageComplete(this, INVALID_PAGE_MESSAGE, ERROR);
+        } else if (null == this.password) {
+            WizardUtil.setPageComplete(this, getString("noPasswordMessage"), ERROR); //$NON-NLS-1$
         } else {
             WizardUtil.setPageComplete(this);
         }
@@ -360,6 +379,31 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
         
         for (Object listener : listeners) {
             ((IChangeListener)listener).stateChanged(this);
+        }
+    }
+
+    public class CPListener implements IProfileListener {
+
+        IConnectionProfile latestProfile;
+
+        @Override
+        public void profileAdded( IConnectionProfile profile ) {
+            latestProfile = profile;
+            fireStateChanged();
+        }
+
+        @Override
+        public void profileChanged( IConnectionProfile profile ) {
+            // nothing
+        }
+
+        @Override
+        public void profileDeleted( IConnectionProfile profile ) {
+            // nothing
+        }
+
+        public JdbcSource getJdbcSource() {
+            return mgr.getJdbcSource(latestProfile);
         }
     }
 }

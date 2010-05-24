@@ -55,15 +55,14 @@ public abstract class JdbcDatabaseTest {
         // Find the source and driver for the desired source name
         this.source = jdbcTestManager.getJdbcSource(sourceName);
         Assert.assertNotNull(source);
-        final JdbcDriver driver = jdbcTestManager.getJdbcManager().findBestDriver(source);
-
+        
         if (isRunPasswordTests()) {
-            performPasswordTests(jdbcTestManager, source, driver, password);
+            performPasswordTests(jdbcTestManager, source, password);
         }
 
         try {
             // Create the connection to the database ...
-            this.conn = jdbcTestManager.getJdbcManager().createConnection(source, driver, password);
+            this.conn = jdbcTestManager.getJdbcManager().createConnection(source, password);
             Assert.assertNotNull(this.conn);
 
         } catch (JdbcException e) {
@@ -102,7 +101,6 @@ public abstract class JdbcDatabaseTest {
 
     protected void performPasswordTests( final JdbcTestManager manager,
                                          final JdbcSource source,
-                                         final JdbcDriver driver,
                                          final String password ) {
         for (int i = 0; i <= 2; ++i) {
             String pw = password;
@@ -127,7 +125,7 @@ public abstract class JdbcDatabaseTest {
 
             try {
                 // Create the connection to the database ...
-                this.conn = jdbcTestManager.getJdbcManager().createConnection(source, driver, pw);
+                this.conn = jdbcTestManager.getJdbcManager().createConnection(source, pw);
                 // Clean up the connection
                 if (this.conn != null) {
                     try {

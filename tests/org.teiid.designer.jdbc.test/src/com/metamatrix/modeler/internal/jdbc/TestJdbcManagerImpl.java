@@ -15,15 +15,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IStatus;
-import com.metamatrix.core.util.SmartTestSuite;
+
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
-import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcFactory;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;
@@ -85,7 +87,7 @@ public class TestJdbcManagerImpl extends TestCase {
         private final List drivers;
 
         public JdbcDriverManagerForTesting() {
-            super("Testing Manager", new FakeResource()); //$NON-NLS-1$
+            super("Testing Manager"); //$NON-NLS-1$
             this.drivers = new ArrayList();
         }
 
@@ -313,19 +315,6 @@ public class TestJdbcManagerImpl extends TestCase {
         assertEquals(expectedSeverity, status.getSeverity());
     }
 
-    public void helpTestClassLoader( final String[] paths,
-                                     final String[] classNames,
-                                     final boolean shouldSucceed ) throws Exception {
-        try {
-            final ClassLoader loader = mgr.getClassLoader(paths);
-            helpTestClassLoader(loader, classNames, shouldSucceed);
-        } catch (JdbcException e) {
-            if (shouldSucceed) {
-                throw e;
-            }
-        }
-    }
-
     public void helpTestClassLoader( final ClassLoader loader,
                                      final String[] classNames,
                                      final boolean shouldSucceed ) {
@@ -365,12 +354,11 @@ public class TestJdbcManagerImpl extends TestCase {
     }
 
     public void helpTestConnection( final JdbcSource source,
-                                    final JdbcDriver driver,
                                     final String passwd,
                                     final boolean shouldConnect ) throws Exception {
         Connection conn = null;
         try {
-            conn = mgr.createConnection(source, driver, passwd);
+            conn = mgr.createConnection(source, passwd);
             if (!shouldConnect) {
                 if (conn == null) {
                     fail("Should not have been able to connect; got null Connection and no exception!"); //$NON-NLS-1$
@@ -391,7 +379,7 @@ public class TestJdbcManagerImpl extends TestCase {
 
     public void testConstructorWithZeroLengthNameArg() {
         try {
-            new JdbcManagerImpl("", new FakeResource()); //$NON-NLS-1$
+            new JdbcManagerImpl(""); //$NON-NLS-1$
             fail("Failed to catch zero-length name"); //$NON-NLS-1$
         } catch (IllegalArgumentException e) {
             // Expected
@@ -400,17 +388,8 @@ public class TestJdbcManagerImpl extends TestCase {
 
     public void testConstructorWithNullNameArg() {
         try {
-            new JdbcManagerImpl(null, new FakeResource());
+            new JdbcManagerImpl(null);
             fail("Failed to catch null name"); //$NON-NLS-1$
-        } catch (IllegalArgumentException e) {
-            // Expected
-        }
-    }
-
-    public void testConstructorWithNullResourceArg() {
-        try {
-            new JdbcManagerImpl("Some valid name", null); //$NON-NLS-1$
-            fail("Failed to catch null resource"); //$NON-NLS-1$
         } catch (IllegalArgumentException e) {
             // Expected
         }
@@ -418,16 +397,11 @@ public class TestJdbcManagerImpl extends TestCase {
 
     public void testConstructorWithNullArgs() {
         try {
-            new JdbcManagerImpl(null, null);
+            new JdbcManagerImpl(null);
             fail("Failed to catch null parameters"); //$NON-NLS-1$
         } catch (IllegalArgumentException e) {
             // Expected
         }
-    }
-
-    public void testGetResource() {
-        // Should never be null
-        assertNotNull(mgr.getResource());
     }
 
     public void testGetFactory() {
@@ -471,11 +445,6 @@ public class TestJdbcManagerImpl extends TestCase {
 
     public void testCheckClassNameForErrorWithSpaceAsNonFirstChar5() {
         helpCheckClassNameForError(JdbcManagerImpl.ILLEGAL_CHAR_IN_CLASS_NAME, IStatus.ERROR, "java.x.y.z "); //$NON-NLS-1$
-    }
-
-    public void testGetClassLoaderWithInvalidDriver() throws Exception {
-        final ClassLoader loader = mgr.getClassLoader(sampleDriver);
-        assertNotNull(loader);
     }
 
     public void testIsValidJdbcSourceWithNullName() {
@@ -673,113 +642,6 @@ public class TestJdbcManagerImpl extends TestCase {
         helpIsValidJdbcDriver(sampleDriver, JdbcManagerImpl.JAR_FILE_DOESNT_EXIST, IStatus.ERROR);
     }
 
-    public void testFindBest() {
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.exactMatchDriver, driver);
-    }
-
-    public void testFindBestWithReference() {
-        this.matchSource.setJdbcDriver(this.exactMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.exactMatchDriver, driver);
-    }
-
-    public void testFindBestWithWrongReference() {
-        this.matchSource.setJdbcDriver(this.noMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.exactMatchDriver, driver);
-    }
-
-    public void testFindBestWithoutExact() {
-        this.mgr.getJdbcDrivers().remove(this.exactMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.preferredClassMatchDriver, driver);
-    }
-
-    public void testFindBestWithoutExactOrPreferred() {
-        this.mgr.getJdbcDrivers().remove(this.exactMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.preferredClassMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.availableClassMatchDriver, driver);
-    }
-
-    public void testFindBestWithoutExactOrPreferredOrAvailable() {
-        this.mgr.getJdbcDrivers().remove(this.exactMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.preferredClassMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.availableClassMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.nameMatchDriver, driver);
-    }
-
-    public void testFindBestWithoutExactOrPreferredOrAvailableOrNameOrRef() {
-        this.mgr.getJdbcDrivers().remove(this.exactMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.preferredClassMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.availableClassMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.nameMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        final JdbcDriver[] drivers = mgr.findDrivers(this.matchSource);
-        assertNull(driver);
-        assertNotNull(drivers);
-        assertTrue(drivers.length == 0);
-    }
-
-    public void testFindBestWithoutExactOrPreferredOrAvailableOrName() {
-        this.mgr.getJdbcDrivers().remove(this.exactMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.preferredClassMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.availableClassMatchDriver);
-        this.mgr.getJdbcDrivers().remove(this.nameMatchDriver);
-        this.matchSource.setJdbcDriver(this.noMatchDriver);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        final JdbcDriver[] drivers = mgr.findDrivers(this.matchSource);
-        assertSame(this.noMatchDriver, driver);
-        assertNotNull(drivers);
-        assertTrue(drivers.length == 1);
-        assertSame(this.noMatchDriver, drivers[0]);
-    }
-
-    public void testFindBestWithNullDriverClass() {
-        this.matchSource.setDriverClass(null);
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.nameMatchDriver, driver);
-    }
-
-    public void testFindBestWithEmptyDriverClass() {
-        this.matchSource.setDriverClass(""); //$NON-NLS-1$
-        final JdbcDriver driver = mgr.findBestDriver(this.matchSource);
-        assertSame(this.nameMatchDriver, driver);
-        // Move the nameMatchDriver to the end of the list and try again
-        this.mgr.getJdbcDrivers().remove(this.nameMatchDriver);
-        this.mgr.getJdbcDrivers().add(this.nameMatchDriver);
-        final JdbcDriver driver2 = mgr.findBestDriver(this.matchSource);
-        assertSame(this.exactMatchDriver, driver2);
-    }
-
-    public void testFindDrivers() {
-        final JdbcDriver[] matches = mgr.findDrivers(this.matchSource);
-        assertTrue(matches[0] == this.exactMatchDriver);
-        assertTrue(matches[1] == this.preferredClassMatchDriver);
-        assertTrue(matches[2] == this.availableClassMatchDriver);
-        assertTrue(matches[3] == this.nameMatchDriver);
-    }
-
-    public void testFindBestWithNullSource() {
-        try {
-            mgr.findBestDriver(null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // Should do this
-        }
-    }
-
-    public void testFindDriverWithNullSource() {
-        try {
-            mgr.findDrivers((JdbcSource)null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // Should do this
-        }
-    }
-
     public void testWizardUseCase() {
         final JdbcDriver driver = mgr.getFactory().createJdbcDriver();
         helpIsValidJdbcDriver(driver, JdbcManagerImpl.NAME_NOT_SPECIFIED, IStatus.ERROR);
@@ -795,6 +657,6 @@ public class TestJdbcManagerImpl extends TestCase {
 
     public void testExcelConnectingWithBadUrl() throws Exception {
         excelSource.setUrl("jdbc:odbc:Driver={MicroSoft Excel Driver (*.xls)}");//$NON-NLS-1$
-        helpTestConnection(excelSource, excelDriver, null, false);
+        helpTestConnection(excelSource, null, false);
     }
 }

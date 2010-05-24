@@ -106,7 +106,7 @@ public final class JdbcTestManager {
                         	throw new RuntimeException(e);
                         }
                     }
-                    manager = new JdbcManagerImpl("Test Manager",this.resource); //$NON-NLS-1$
+                    manager = new JdbcManagerImpl("Test Manager"); //$NON-NLS-1$
                     try {
                         manager.start();
                     } catch (JdbcException e) {
