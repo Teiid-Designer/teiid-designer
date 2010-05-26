@@ -19,9 +19,6 @@ import org.teiid.designer.udf.UdfManager;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.function.FunctionTree;
-import org.teiid.query.function.SystemFunctionManager;
-import org.teiid.query.function.UDFSource;
 import com.metamatrix.query.sql.ReservedWords;
 
 /**

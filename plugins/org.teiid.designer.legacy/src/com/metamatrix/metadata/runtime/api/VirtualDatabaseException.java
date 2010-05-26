@@ -14,6 +14,9 @@ import org.teiid.core.TeiidProcessingException;
  */
 public class VirtualDatabaseException extends TeiidProcessingException {
 
+    /**
+     */
+    private static final long serialVersionUID = 1L;
     public static final String NO_MODELS = "1"; //$NON-NLS-1$
     public static final String MODEL_NON_DEPLOYABLE_STATE = "2";  //$NON-NLS-1$
     public static final String VDB_NON_DEPLOYABLE_STATE = "3";  //$NON-NLS-1$

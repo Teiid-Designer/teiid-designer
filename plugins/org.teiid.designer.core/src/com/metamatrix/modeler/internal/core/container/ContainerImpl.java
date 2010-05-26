@@ -37,7 +37,6 @@ import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.xsd.XSDPackage;
-import com.metamatrix.core.event.EventBroker;
 import org.teiid.core.id.IDGenerator;
 import org.teiid.core.id.InvalidIDException;
 import org.teiid.core.id.ObjectID;

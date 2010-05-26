@@ -50,7 +50,6 @@ import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;

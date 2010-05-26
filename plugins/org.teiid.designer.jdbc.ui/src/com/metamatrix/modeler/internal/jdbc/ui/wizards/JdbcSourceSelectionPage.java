@@ -56,12 +56,9 @@ import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 /**
  * @since 4.0
  */
-public class JdbcSourceSelectionPage extends AbstractWizardPage implements
-                                                               IChangeNotifier,
-                                                               InternalModelerJdbcUiPluginConstants,
-                                                               InternalModelerJdbcUiPluginConstants.Widgets,
-                                                               InternalUiConstants.Widgets,
-                                                               CoreStringUtil.Constants {
+public class JdbcSourceSelectionPage extends AbstractWizardPage
+    implements IChangeNotifier, InternalModelerJdbcUiPluginConstants, InternalModelerJdbcUiPluginConstants.Widgets,
+    InternalUiConstants.Widgets, CoreStringUtil.Constants {
 
     // ===========================================================================================================================
     // Constants
@@ -79,7 +76,6 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     private static final String SOURCES_BUTTON = getString("sourcesButton"); //$NON-NLS-1$
 
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
-    
 
     // ===========================================================================================================================
     // Static Methods
@@ -87,14 +83,14 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     /**
      * @since 4.0
      */
-    private static String getString(final String id) {
+    private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
     }
 
     // ===========================================================================================================================
     // Variables
 
-    private JdbcManager mgr;
+    JdbcManager mgr;
     private JdbcSource src;
     private Connection connection;
     private ListenerList notifier;
@@ -120,7 +116,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     /**
      * @since 4.0
      */
-    public JdbcSourceSelectionPage(final JdbcSource source) {
+    public JdbcSourceSelectionPage( final JdbcSource source ) {
         super(JdbcSourceSelectionPage.class.getSimpleName(), TITLE);
         this.src = source;
         this.mgr = JdbcUiUtil.getJdbcManager();
@@ -135,7 +131,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     /**
      * @since 4.0
      */
-    public void addChangeListener(final IChangeListener listener) {
+    public void addChangeListener( final IChangeListener listener ) {
         this.notifier.add(listener);
     }
 
@@ -160,7 +156,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl(final Composite parent) {
+    public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
         pg.setLayout(new GridLayout(COLUMN_COUNT, false));
@@ -177,7 +173,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
         this.srcLabelProvider = new LabelProvider() {
 
             @Override
-            public String getText(final Object source) {
+            public String getText( final Object source ) {
                 return ((JdbcSource)source).getName();
             }
         };
@@ -190,17 +186,17 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
                                                   true);
         this.srcCombo.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            public void modifyText( final ModifyEvent event ) {
                 sourceModified();
             }
         });
-        
+
         this.srcCombo.setVisibleItemCount(10);
-        
+
         WidgetFactory.createButton(pg, SOURCES_BUTTON).addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent event) {
+            public void widgetSelected( final SelectionEvent event ) {
                 launchSourceWizard();
             }
         });
@@ -220,13 +216,13 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
         this.pwdText.setEchoChar('*');
         this.pwdText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            public void modifyText( final ModifyEvent event ) {
                 passwordModified();
             }
         });
         sourceModified();
 
-        if( validatePage() ) {
+        if (validatePage()) {
             setMessage(INITIAL_MESSAGE);
         }
 
@@ -306,7 +302,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     /**
      * @since 4.0
      */
-    public void removeChangeListener(final IChangeListener listener) {
+    public void removeChangeListener( final IChangeListener listener ) {
         this.notifier.remove(listener);
     }
 
@@ -346,12 +342,11 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
     private boolean validatePage() {
         // Check for at least ONE open non-hidden Model Project
         boolean validProj = false;
-        for( IProject proj: ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+        for (IProject proj : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
             try {
-                boolean result =  proj.isOpen() && 
-                                 !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID) &&
-                                 proj.hasNature(ModelerCore.NATURE_ID);
-                if( result ) {
+                boolean result = proj.isOpen() && !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
+                                 && proj.hasNature(ModelerCore.NATURE_ID);
+                if (result) {
                     validProj = true;
                     break;
                 }
@@ -359,8 +354,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
                 UiConstants.Util.log(e);
             }
         }
-        
-        if( !validProj ) {
+
+        if (!validProj) {
             WizardUtil.setPageComplete(this, getString("noOpenProjectsMessage"), ERROR); //$NON-NLS-1$
         } else if (this.srcCombo.getText().length() == 0) {
             WizardUtil.setPageComplete(this, INVALID_PAGE_MESSAGE, ERROR);
@@ -370,13 +365,13 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage implements
             WizardUtil.setPageComplete(this);
         }
         fireStateChanged();
-        
+
         return validProj;
     }
-    
-    private void fireStateChanged() {
+
+    void fireStateChanged() {
         Object[] listeners = this.notifier.getListeners();
-        
+
         for (Object listener : listeners) {
             ((IChangeListener)listener).stateChanged(this);
         }

@@ -33,28 +33,16 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
     //
     // Class constants:
     //
-    private static final String TEXT_VDB_VALIDATION_ERRORS = getString("vdb_validation_errors"); //$NON-NLS-1$
     private static final String TEXT_MISSING_MODELS = getString("missing_physical_models"); //$NON-NLS-1$
-    private static final String TEXT_UNEXECUTABLE_ERROR = getString("unsavedvdb_cannotexecute"); //$NON-NLS-1$
     private static final String TEXT_SYNC_WARNING = getString("outofsynchvdb_cannotexecute"); //$NON-NLS-1$
 
-    protected static final Status STATUS_NO_MODELS_WARNING = new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID,
-                                                                        NO_MODELS_ERROR_CODE, TEXT_MISSING_MODELS, null);
-    private static final Status STATUS_VDB_VALIDATION_ERRORS = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
-                                                                          VDB_VALIDATION_ERROR_CODE, TEXT_VDB_VALIDATION_ERRORS,
-                                                                          null);
-    private static final Status STATUS_UNEXECUTABLE_ERROR = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID,
-                                                                       SAVE_REQUIRED_ERROR_CODE, TEXT_UNEXECUTABLE_ERROR, null);
+    protected static final Status STATUS_NO_MODELS_WARNING = new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, NO_MODELS_ERROR_CODE,
+                                                                        TEXT_MISSING_MODELS, null);
     private static final Status STATUS_SYNC_WARNING = new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, SYNCH_WARNING_CODE,
                                                                  TEXT_SYNC_WARNING, null);
 
-    private static String getString( String key ) {
+    private static String getString( final String key ) {
         return DqpPlugin.Util.getString(I18N_PREFIX + key);
-    }
-
-    private static String getString( String key,
-                                     Object obj ) {
-        return DqpPlugin.Util.getString(I18N_PREFIX + key, obj);
     }
 
     //
@@ -65,6 +53,53 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
     //
     // Implementation of VDBExecutionValidator interface:
     //
+
+    protected IStatus checkForValidationErrors( final Vdb vdb ) {
+        // if the vdb has validation errors....exit with an error...cannot execute such a vdb
+
+        // TODO: Somehow DO this?????
+
+        // if (vdb.getSeverity().getValue() == Severity.ERROR) {
+        // return STATUS_VDB_VALIDATION_ERRORS;
+        // }
+        return OK_STATUS;
+    }
+
+    // /**
+    // * Get the names of all materialization models in the given vdb.
+    // *
+    // * @param database The {@link com.metamatrix.vdb.edit.manifest.VirtualDatabase}
+    // * @return The names of all materialization models in given vdb.
+    // * @since 4.3
+    // */
+    // private Collection getMaterializationModelNames( final Vdb vdb ) {
+    // final Collection materializationModelNames = new ArrayList();
+    //
+    // for (final VdbModelEntry entry : vdb.getModelEntries()) {
+    // if (entry.getType() == ModelType.MATERIALIZATION_LITERAL) {
+    // materializationModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
+    // }
+    // }
+    // return materializationModelNames;
+    // }
+
+    /**
+     * Get the names of all physical models in the given vdb.
+     * 
+     * @param database The {@link com.metamatrix.vdb.edit.manifest.VirtualDatabase}
+     * @return The names of all physical models in given vdb.
+     * @since 4.3
+     */
+    private Collection getPhysicalModelNames( final Vdb vdb ) {
+        final Collection physicalModelNames = new ArrayList();
+
+        for (final VdbModelEntry entry : vdb.getModelEntries()) {
+            if (entry.getType() == ModelType.PHYSICAL_LITERAL) {
+                physicalModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
+            }
+        }
+        return physicalModelNames;
+    }
 
     /**
      * Validate the vdb given the vdb editing context.
@@ -85,7 +120,7 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
      * @since 4.3
      */
     public IStatus validateVdb( final Vdb vdb,
-                                boolean addSyncWarning ) {
+                                final boolean addSyncWarning ) {
         final AutoMultiStatus status = new AutoMultiStatus(OK_STATUS);
 
         try {
@@ -100,8 +135,8 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
                 status.add(STATUS_SYNC_WARNING);
             }
 
-        } catch (Exception e) {
-            String message = (e.getMessage() != null) ? e.getMessage() : CoreStringUtil.Constants.EMPTY_STRING;
+        } catch (final Exception e) {
+            final String message = (e.getMessage() != null) ? e.getMessage() : CoreStringUtil.Constants.EMPTY_STRING;
             status.add(new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, EXECPTION_ERROR_CODE, message, e));
         } finally {
 
@@ -124,12 +159,10 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
         CoreArgCheck.isNotNull(vdb);
 
         // validate the virtual database
-        AutoMultiStatus vdbStatus = new AutoMultiStatus(OK_STATUS);
+        final AutoMultiStatus vdbStatus = new AutoMultiStatus(OK_STATUS);
 
         // map of modelNames to connector bindings
         // verify each of the physical models has a connector binding defined
-
-        // TODO:
 
         // for (final Iterator iter = getPhysicalModelNames(vdb).iterator(); iter.hasNext();) {
         // String modelName = (String)iter.next();
@@ -141,8 +174,6 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
         // }
         // verify each of the materialization models has a connector binding defined
 
-        // TODO:
-
         // for (final Iterator iter = getMaterializationModelNames(vdb).iterator(); iter.hasNext();) {
         // String modelName = (String)iter.next();
         // Collection routingIDList = (Collection)modelBindingMap.get(modelName);
@@ -153,13 +184,13 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
         // }
 
         // for each connector binding make sure their masked properties can be decrypted. stop after finding one that can't.
-        Collection modelEntries = vdb.getModelEntries();
+        final Collection modelEntries = vdb.getModelEntries();
 
         if ((modelEntries != null) && !modelEntries.isEmpty()) {
-            Iterator modelItr = modelEntries.iterator();
+            final Iterator modelItr = modelEntries.iterator();
 
             while (modelItr.hasNext()) {
-                VdbModelEntry modelEntry = (VdbModelEntry)modelItr.next();
+                // final VdbModelEntry modelEntry = (VdbModelEntry)modelItr.next();
 
                 // TODO: Check whether or not a ModelEntry is a source model that requires a ConnectionFactory
                 // IF NOT, then add a new status
@@ -206,64 +237,17 @@ public class VdbExecutionValidatorImpl implements VdbExecutionValidator {
      * @since 4.3
      */
     protected IStatus validateVirtualDatabase( final Vdb vdb ) {
-        IStatus valCheck = checkForValidationErrors(vdb);
+        final IStatus valCheck = checkForValidationErrors(vdb);
         if (valCheck.getSeverity() == IStatus.ERROR) {
             return valCheck;
         }
 
-        Collection physicalModels = getPhysicalModelNames(vdb);
+        final Collection physicalModels = getPhysicalModelNames(vdb);
         // if there are no physical models there is nothing more to validate....just warn.
         if (physicalModels.isEmpty()) {
             return STATUS_NO_MODELS_WARNING;
         }
         return OK_STATUS;
-    }
-
-    protected IStatus checkForValidationErrors( final Vdb vdb ) {
-        // if the vdb has validation errors....exit with an error...cannot execute such a vdb
-
-        // TODO: Somehow DO this?????
-
-        // if (vdb.getSeverity().getValue() == Severity.ERROR) {
-        // return STATUS_VDB_VALIDATION_ERRORS;
-        // }
-        return OK_STATUS;
-    }
-
-    /**
-     * Get the names of all physical models in the given vdb.
-     * 
-     * @param database The {@link com.metamatrix.vdb.edit.manifest.VirtualDatabase}
-     * @return The names of all physical models in given vdb.
-     * @since 4.3
-     */
-    private Collection getPhysicalModelNames( final Vdb vdb ) {
-        Collection physicalModelNames = new ArrayList();
-
-        for (VdbModelEntry entry : vdb.getModelEntries()) {
-            if (entry.getType() == ModelType.PHYSICAL_LITERAL) {
-                physicalModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
-            }
-        }
-        return physicalModelNames;
-    }
-
-    /**
-     * Get the names of all materialization models in the given vdb.
-     * 
-     * @param database The {@link com.metamatrix.vdb.edit.manifest.VirtualDatabase}
-     * @return The names of all materialization models in given vdb.
-     * @since 4.3
-     */
-    private Collection getMaterializationModelNames( final Vdb vdb ) {
-        Collection materializationModelNames = new ArrayList();
-
-        for (VdbModelEntry entry : vdb.getModelEntries()) {
-            if (entry.getType() == ModelType.MATERIALIZATION_LITERAL) {
-                materializationModelNames.add(FileUtils.getFilenameWithoutExtension(entry.getName().lastSegment()));
-            }
-        }
-        return materializationModelNames;
     }
 
 }

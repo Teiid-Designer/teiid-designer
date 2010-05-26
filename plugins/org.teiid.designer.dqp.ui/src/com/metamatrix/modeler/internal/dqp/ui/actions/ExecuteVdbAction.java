@@ -254,9 +254,6 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
         // dialog is shown for either error, warning, or info severity.
         if (!this.canExecute.isOK() && this.allowUserInput) UiBusyIndicator.showWhile(null, new Runnable() {
             public void run() {
-                final Shell shell = DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-                // TODO: Launch some "Select or Create Connection Factory Dialog"
-                // dialog = new ConnectorBindingsDialog(shell, getSelectedVdbFile(), vdb, getVdbExecutionValidator());
             }
         });
     }

@@ -35,7 +35,6 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.DocumentGenerator;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
-import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.symbol.Constant;

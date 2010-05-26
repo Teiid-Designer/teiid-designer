@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -24,7 +23,6 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -43,7 +41,7 @@ public class JdbcPlugin extends Plugin {
      * The plug-in identifier of this plugin (value <code>"com.metamatrix.modeler.jdbc"</code>).
      */
     public static final String PLUGIN_ID = "org.teiid.designer.jdbc"; //$NON-NLS-1$
-    
+
     public static final String PACKAGE_ID = JdbcPlugin.class.getPackage().getName();
 
     /**
@@ -67,39 +65,39 @@ public class JdbcPlugin extends Plugin {
                 final URI uri = URI.createURI(getClass().getResource("plugin.properties").toString()); //$NON-NLS-1$
                 final URL baseUrl = new URL(uri.trimSegments(1).toString() + "/"); //$NON-NLS-1$
                 return baseUrl;
-            } catch (IOException exception) {
+            } catch (final IOException exception) {
                 throw new WrappedException(exception);
             }
         }
 
-        public Object getImage( String key ) {
+        public Object getImage( final String key ) {
             try {
                 final URL baseUrl = getBaseURL();
                 final URL url = new URL(baseUrl + "icons/" + key + ".gif"); //$NON-NLS-1$//$NON-NLS-2$
-                InputStream inputStream = url.openStream();
+                final InputStream inputStream = url.openStream();
                 inputStream.close();
                 return url;
-            } catch (MalformedURLException exception) {
+            } catch (final MalformedURLException exception) {
                 throw new WrappedException(exception);
-            } catch (IOException exception) {
+            } catch (final IOException exception) {
                 throw new MissingResourceException(
                                                    CommonPlugin.INSTANCE.getString("_UI_StringResourceNotFound_exception", new Object[] {key}), //$NON-NLS-1$
                                                    getClass().getName(), key);
             }
         }
 
-        public String getString( String key ) {
+        public String getString( final String key ) {
             return Util.getString(key);
-        }
-
-        public String getString( String key,
-                                 Object[] substitutions ) {
-            return Util.getString(key, substitutions);
         }
 
         public String getString( final String key,
                                  final boolean translate ) {
             return getString(key);
+        }
+
+        public String getString( final String key,
+                                 final Object[] substitutions ) {
+            return Util.getString(key, substitutions);
         }
 
         public String getString( final String key,
@@ -109,49 +107,50 @@ public class JdbcPlugin extends Plugin {
         }
     };
 
-    /**
-     * Called by the {@link com.metamatrix.metamodels.transformation.provider.TransformationEditPlugin}
-     * 
-     * @return the EMF ResourceLocator used when run as a plugin
-     */
-    public static ResourceLocator getPluginResourceLocator() {
-        return RESOURCE_LOCATOR;
-    }
-
     static JdbcPlugin INSTANCE = null;
 
     public static boolean DEBUG = false;
 
     /**
-     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-     * @since 4.3.2
-     */
-    @Override
-    public void start( final BundleContext context ) throws Exception {
-        super.start(context);
-        INSTANCE = this;
-        ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
-    }
-
-    /**
-     * Starts the manager for the {@link JdbcDriver} instances by loading the instances from the supplied model. This method is
-     * safe to call more than once; the method returns whether the manager was actually started.
+     * Starts the manager for the {@link JdbcDriver} instances by loading the instances from the supplied model. This method is safe
+     * to call more than once; the method returns whether the manager was actually started.
      * 
      * @param jdbcModelUri the full path to the model file containing the {@link JdbcDriver} instances.
      * @return true if the manager was started, or false if the manager was already started
      * @throws JdbcException if there is an error loading the manager
      * @see #getJdbcDriverManager()
      */
-    public static JdbcManager createJdbcManager( final String name) throws JdbcException {
+    public static JdbcManager createJdbcManager( final String name ) {
         final JdbcManagerImpl mgr = new JdbcManagerImpl(name);
         mgr.start();
         return mgr;
     }
 
     /**
-     * Return the {@link JdbcDatabase} object that provides access to metadata and other information about the JDBC system
-     * described by the supplied {@link JdbcSource source} and {@link Connection connection}. Each time this method is called, a
-     * new {@link JdbcDatabase} object will be created, so care should be taken not to make duplicates as this is not efficient.
+     * Method that obtains an existing {@link JdbcImportSettings} object from the supplied {@link JdbcSource source}, or creates a
+     * new {@link JdbcImportSettings} object if needed and sets the reference from the {@link JdbcSource source} to the
+     * {@link JdbcImportSettings settings}.
+     * 
+     * @param source the JdbcSource that identifies the JDBC system and in which the node selections are to be recorded; may not be
+     *        null
+     * @return the {@link JdbcImportSettings} object on the source; never null
+     */
+    public static JdbcImportSettings ensureNonNullImportSettings( final JdbcSource source ) {
+        CoreArgCheck.isNotNull(source);
+
+        // Get (or create) the import settings on the source
+        JdbcImportSettings settings = source.getImportSettings();
+        if (settings == null) {
+            settings = JdbcFactory.eINSTANCE.createJdbcImportSettings();
+            source.setImportSettings(settings);
+        }
+        return settings;
+    }
+
+    /**
+     * Return the {@link JdbcDatabase} object that provides access to metadata and other information about the JDBC system described
+     * by the supplied {@link JdbcSource source} and {@link Connection connection}. Each time this method is called, a new
+     * {@link JdbcDatabase} object will be created, so care should be taken not to make duplicates as this is not efficient.
      * 
      * @param source the JdbcSource that identifies the JDBC system; may not be null
      * @param connection the JDBC Connection to the JDBC system; may not be null
@@ -177,7 +176,7 @@ public class JdbcPlugin extends Plugin {
         final JdbcDatabaseImpl result = new JdbcDatabaseImpl(connection, source.getName(), selectionsCache);
         if (!existingSelections) {
             // There are no existing selections, so make the "default" selections
-            IStatus status = result.selectDefaultNodes(source.getUsername());
+            final IStatus status = result.selectDefaultNodes(source.getUsername());
             if (status.getSeverity() == IStatus.ERROR) {
                 Util.log(status);
             }
@@ -199,33 +198,21 @@ public class JdbcPlugin extends Plugin {
     }
 
     /**
-     * Method that obtains an existing {@link JdbcImportSettings} object from the supplied {@link JdbcSource source}, or creates a
-     * new {@link JdbcImportSettings} object if needed and sets the reference from the {@link JdbcSource source} to the
-     * {@link JdbcImportSettings settings}.
+     * Called by the {@link com.metamatrix.metamodels.transformation.provider.TransformationEditPlugin}
      * 
-     * @param source the JdbcSource that identifies the JDBC system and in which the node selections are to be recorded; may not
-     *        be null
-     * @return the {@link JdbcImportSettings} object on the source; never null
+     * @return the EMF ResourceLocator used when run as a plugin
      */
-    public static JdbcImportSettings ensureNonNullImportSettings( final JdbcSource source ) {
-        CoreArgCheck.isNotNull(source);
-
-        // Get (or create) the import settings on the source
-        JdbcImportSettings settings = source.getImportSettings();
-        if (settings == null) {
-            settings = JdbcFactory.eINSTANCE.createJdbcImportSettings();
-            source.setImportSettings(settings);
-        }
-        return settings;
+    public static ResourceLocator getPluginResourceLocator() {
+        return RESOURCE_LOCATOR;
     }
 
     /**
      * Method that records in the {@link JdbcSource source descriptor} the selected {@link JdbcNode nodes} in the supplied
-     * {@link JdbcDatabase database tree}. The selections are actually recorded in the {@link JdbcSource#getImportSettings()
+     * {@link JdbcDatabase database tree}. The selections are actually recorded in the {@link JdbcSource#getImportSettings() 
      * source's import settings}. Consequently, if the import settings
      * 
-     * @param source the JdbcSource that identifies the JDBC system and in which the node selections are to be recorded; may not
-     *        be null
+     * @param source the JdbcSource that identifies the JDBC system and in which the node selections are to be recorded; may not be
+     *        null
      * @param database the JDBC database object tree whose selections are to be recorded; may not be null
      * @throws JdbcException if there is an error visiting the database
      */
@@ -240,6 +227,17 @@ public class JdbcPlugin extends Plugin {
         // Use a visitor to navigate the database tree and record those selected nodes
         final JdbcNodeVisitor visitor = new ImportSettingsSelectionVisitor(settings);
         database.accept(visitor, JdbcNode.DEPTH_INFINITE);
+    }
+
+    /**
+     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+     * @since 4.3.2
+     */
+    @Override
+    public void start( final BundleContext context ) throws Exception {
+        super.start(context);
+        INSTANCE = this;
+        ((PluginUtilImpl)Util).initializePlatformLogger(this); // This must be called to initialize the platform logger!
     }
 
 }

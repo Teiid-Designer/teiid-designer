@@ -37,8 +37,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.IRevertable;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
@@ -77,6 +77,8 @@ public class VdbEditorWsdlPage extends EditorPart
     //    private static final String SPACE = "  "; //$NON-NLS-1$
 
     /**
+     * @param id
+     * @return the i18n string for the supplied ID
      * @since 4.2
      */
     static String getString( final String id ) {
@@ -100,6 +102,7 @@ public class VdbEditorWsdlPage extends EditorPart
     private StyledTextEditor textEditor;
 
     /**
+     * @param editor
      * @since 4.2
      */
     public VdbEditorWsdlPage( final VdbEditor editor ) {
@@ -109,6 +112,7 @@ public class VdbEditorWsdlPage extends EditorPart
     /**
      * Provides access to the text editor.
      * 
+     * @return the text editor
      * @since 5.5.3
      */
     StyledTextEditor accessTextEditor() {
@@ -262,6 +266,11 @@ public class VdbEditorWsdlPage extends EditorPart
         super.dispose();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.ui.editors.IRevertable#doRevertToSaved()
+     */
     public void doRevertToSaved() {
         // defect 18303 - make sure open and visible:
         if (editor.getVdb() == null || disabledPanel == null || disabledPanel.isDisposed()) return;
@@ -296,6 +305,7 @@ public class VdbEditorWsdlPage extends EditorPart
      * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
      * @since 5.5.3
      */
+    @SuppressWarnings( "unchecked" )
     @Override
     public Object getAdapter( final Class adapter ) {
         if (adapter.equals(IFindReplaceTarget.class) && this.textEditor.getTextWidget().isFocusControl()) return this.textEditor.getTextViewer().getFindReplaceTarget();
@@ -446,7 +456,8 @@ public class VdbEditorWsdlPage extends EditorPart
                     editor.getEditorSite().getShell().getDisplay().asyncExec(new Runnable() {
 
                         public void run() {
-                            MessageDialog.openError(editor.getSite().getShell(), getString("errorTitle"), getString("errorMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                            MessageDialog.openError(editor.getSite().getShell(),
+                                                    getString("errorTitle"), getString("errorMessage")); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     });
                     throw new InvocationTargetException(err);
@@ -471,6 +482,9 @@ class WsdlDialog extends Dialog {
 
     /**
      * Construct an instance of ModelStatisticsDialog.
+     * 
+     * @param shell
+     * @param wsdlString
      */
     public WsdlDialog( final Shell shell,
                        final String wsdlString ) {
@@ -498,7 +512,7 @@ class WsdlDialog extends Dialog {
     }
 
     /**
-     * @see org.eclipse.jface.window.Window#createDialogArea(org.eclipse.swt.widgets.Composite)
+     * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected Control createDialogArea( final Composite parent ) {

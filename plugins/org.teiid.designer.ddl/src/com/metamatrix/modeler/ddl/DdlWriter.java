@@ -13,7 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.logging.Logger;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspace;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceSelections;
 
 /**

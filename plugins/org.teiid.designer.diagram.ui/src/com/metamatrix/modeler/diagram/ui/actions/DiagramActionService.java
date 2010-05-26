@@ -212,7 +212,8 @@ public final class DiagramActionService extends AbstractActionService implements
         }
 
         final IAction action = defaultActionsMap.getAction(theActionId);
-        if (action != null) //            System.out.println("[DiagramActionService.getAction] returning action from our default map: " + action ); //$NON-NLS-1$     
+        if (action != null) // System.out.println("[DiagramActionService.getAction] returning action from our default map: " +
+                            // action );
         return action;
 
         // registering actions to receive events is done by the getAction(Class) method

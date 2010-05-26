@@ -15,6 +15,10 @@ package com.metamatrix.metadata.runtime.api;
 public class VirtualDatabaseDoesNotExistException extends VirtualDatabaseException {
 
     /**
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * No-arg costructor required by Externalizable semantics
      */
     public VirtualDatabaseDoesNotExistException() {

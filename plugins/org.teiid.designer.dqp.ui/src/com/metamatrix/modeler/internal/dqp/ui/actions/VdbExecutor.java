@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.dqp.ui.actions;
 
 import java.io.File;
-import java.sql.SQLException;
 import net.sourceforge.sqlexplorer.AliasModel;
 import net.sourceforge.sqlexplorer.DriverModel;
 import net.sourceforge.sqlexplorer.IConstants;
@@ -111,7 +110,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
     }
 
     private boolean deployVDB( final String vdbName,
-                               final File vdbFile ) throws SQLException {
+                               final File vdbFile ) {
 
         // Admin admin = getAdminConnection().getAdminAPI();
         //
@@ -153,7 +152,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
         final SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         final String vdbName = this.vdb.getName().toString();
 
-        String vdbVersion = "1"; //$NON-NLS-1$
+        final String vdbVersion = "1"; //$NON-NLS-1$
 
         final File vdbFile = getVdbFile();
 
@@ -265,11 +264,7 @@ public class VdbExecutor extends QueryClient implements DqpUiConstants {
             } else closeAllConnections();
 
             // since the VDB changed now deploy the new one VDB file
-            if (deployVDB) try {
-                deployVDB(vdbName, vdbFile);
-            } catch (final SQLException e) {
-                return new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, getString("dqpDriverError"), e); //$NON-NLS-1$
-            }
+            if (deployVDB) deployVDB(vdbName, vdbFile);
 
             // create new connection if old connection with right timestamp is not found
             if (this.sqlConnection == null) {

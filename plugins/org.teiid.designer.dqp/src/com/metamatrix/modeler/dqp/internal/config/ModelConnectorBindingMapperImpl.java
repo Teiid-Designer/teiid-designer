@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.designer.runtime.Connector;
 import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -58,6 +57,20 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#createConnectorBinding(org.teiid.designer.vdb.VdbModelEntry,
+     *      org.teiid.designer.runtime.ConnectorType, java.lang.String)
+     */
+    @Override
+    public Connector createConnectorBinding( final VdbModelEntry modelEntry,
+                                             final ConnectorType ConnectorType,
+                                             final String theName ) throws Exception {
+        // TODO: Implement!!!!!!!!!!!
+        return null;
+    }
+
+    /**
      * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#findAllConnectorBindingMatches()
      * @since 4.3
      */
@@ -85,7 +98,7 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         // update matches
         try {
             updateConnectorTypeMatches();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             DqpPlugin.Util.log(e);
         }
         final Collection matches = (Collection)this.modelConnectorTypeMatches.get(modelEntry);
@@ -165,17 +178,6 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     }
 
     /**
-     * Get the configuration manager stored on the mapper or lookup the default manager from the plug-in.
-     * 
-     * @return The configuration manager
-     * @throws Exception
-     * @since 4.3
-     */
-    private ExecutionAdmin getExecutionAdmin() throws Exception {
-        return (this.executionAdmin != null) ? this.executionAdmin : DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
-    }
-
-    /**
      * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#getConnector(com.metamatrix.vdb.edit.manifest.ModelReference)
      * @since 4.3
      */
@@ -186,64 +188,14 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
     }
 
     /**
-     * Given the JDBC properties and a list of available bindings, find all the matching bindings
+     * Get the configuration manager stored on the mapper or lookup the default manager from the plug-in.
      * 
-     * @param jdbcProperties the JDBC properties
-     * @param bindings the list of available bindings
-     * @return the list of matching bindings
+     * @return The configuration manager
+     * @throws Exception
+     * @since 4.3
      */
-    private Collection getMatchingBindings( final Map jdbcProperties,
-                                            final Collection bindings ) {
-        // matching bindings
-        final Collection bindingMatches = new ArrayList();
-        // for each binding get properties
-        for (final Iterator iter1 = bindings.iterator(); iter1.hasNext();) {
-            final Connector connector = (Connector)iter1.next();
-
-            final ConnectorType type = connector.getType();
-
-            String driverClassName = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-
-            if (driverClassName == null) {
-                // if no value set see if the type has a default value
-                final PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_DRIVER_CLASS);
-
-                if ((defn != null) && defn.getDefaultValue() != null) driverClassName = defn.getDefaultValue().toString();
-            }
-
-            String url = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
-
-            if (url == null) {
-                // if no value set see if the type has a default value
-                final PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_URL);
-
-                if ((defn != null) && defn.getDefaultValue() != null) url = defn.getDefaultValue().toString();
-            }
-
-            String user = connector.getPropertyValue(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
-
-            if (user == null) {
-                // if no value set see if the type has a default value
-                final PropertyDefinition defn = type.getPropertyDefinition(JDBCConnectionPropertyNames.CONNECTOR_JDBC_USER);
-
-                if ((defn != null) && defn.getDefaultValue() != null) user = defn.getDefaultValue().toString();
-            }
-
-            if (CoreStringUtil.isEmpty(driverClassName) || CoreStringUtil.isEmpty(url)) continue;
-            final String jdbcClassName = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_DRIVER_CLASS);
-            if (CoreStringUtil.isEmpty(jdbcClassName) || !driverClassName.equals(jdbcClassName)) continue;
-
-            final String jdbcUrl = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_URL);
-            if (CoreStringUtil.isEmpty(jdbcUrl) || !url.equalsIgnoreCase(jdbcUrl)) continue;
-
-            final String userName = (String)jdbcProperties.get(JDBCConnectionPropertyNames.JDBC_IMPORT_USERNAME);
-            if ((CoreStringUtil.isEmpty(userName) && !CoreStringUtil.isEmpty(user))
-                || (!CoreStringUtil.isEmpty(userName) && CoreStringUtil.isEmpty(user))
-                || ((!CoreStringUtil.isEmpty(userName) && !CoreStringUtil.isEmpty(user)) && !user.equalsIgnoreCase(userName))) continue;
-
-            bindingMatches.add(connector);
-        }
-        return bindingMatches;
+    private ExecutionAdmin getExecutionAdmin() throws Exception {
+        return (this.executionAdmin != null) ? this.executionAdmin : DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
     }
 
     /**
@@ -256,13 +208,16 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
         return this.vdb.getModelEntries();
     }
 
-    private VdbModelEntry getModelEntry( final String modelPath ) {
-        for (VdbModelEntry entry : this.vdb.getModelEntries()) {
-            if (entry.getName().toString().equals(modelPath)) {
-                return entry;
-            }
-        }
-        return null;
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#setConnector(org.teiid.designer.vdb.VdbModelEntry,
+     *      org.teiid.designer.runtime.Connector)
+     */
+    @Override
+    public void setConnector( final VdbModelEntry modelEntry,
+                              final Connector connector ) {
+        // TODO: Implement!!!!!!!!!!!v
     }
 
     /**
@@ -292,31 +247,5 @@ public class ModelConnectorBindingMapperImpl implements ModelConnectorBindingMap
             final Collection types = findMatchingConnectorType(modelEntry);
             if (types != null && !types.isEmpty()) this.modelConnectorTypeMatches.put(modelEntry, types);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#createConnectorBinding(org.teiid.designer.vdb.VdbModelEntry,
-     *      org.teiid.designer.runtime.ConnectorType, java.lang.String)
-     */
-    @Override
-    public Connector createConnectorBinding( VdbModelEntry modelEntry,
-                                             ConnectorType ConnectorType,
-                                             String theName ) throws Exception {
-        // TODO: Implement!!!!!!!!!!!
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.modeler.dqp.config.ModelConnectorBindingMapper#setConnector(org.teiid.designer.vdb.VdbModelEntry,
-     *      org.teiid.designer.runtime.Connector)
-     */
-    @Override
-    public void setConnector( VdbModelEntry modelEntry,
-                              Connector connector ) {
-        // TODO: Implement!!!!!!!!!!!v
     }
 }

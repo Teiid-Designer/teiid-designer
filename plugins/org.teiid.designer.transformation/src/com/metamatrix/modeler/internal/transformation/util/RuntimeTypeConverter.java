@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.udf.UdfManager;
@@ -21,9 +20,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.function.FunctionTree;
-import org.teiid.query.function.SystemFunctionManager;
-import org.teiid.query.function.UDFSource;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;

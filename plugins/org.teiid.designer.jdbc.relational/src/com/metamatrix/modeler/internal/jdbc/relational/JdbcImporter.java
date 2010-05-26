@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.internal.jdbc.relational;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -39,23 +38,13 @@ import com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor;
  * 
  * @since 4.0
  */
-public final class JdbcImporter implements
-                               ModelerJdbcRelationalConstants {
-
-    // ============================================================================================================================
-    // Variables
+public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 
     private ModelResource updatedModel;
     private JdbcSource src;
     private JdbcDatabase db;
 
-    // ============================================================================================================================
-    // Property Methods
-
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public JdbcDatabase getDatabase() {
@@ -63,9 +52,6 @@ public final class JdbcImporter implements
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public JdbcSource getSource() {
@@ -73,9 +59,6 @@ public final class JdbcImporter implements
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public ModelResource getUpdatedModel() {
@@ -83,24 +66,17 @@ public final class JdbcImporter implements
     }
 
     /**
-     * <p>
-     * </p>
-     * 
-     * @param database
-     *            may be null.
+     * @param database may be null.
      * @since 4.0
      */
-    public void setDatabase(final JdbcDatabase database) {
+    public void setDatabase( final JdbcDatabase database ) {
         this.db = database;
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
-    public void setSource(final JdbcSource source) {
+    public void setSource( final JdbcSource source ) {
         CoreArgCheck.isNotNull(source);
         this.src = source;
     }
@@ -108,7 +84,7 @@ public final class JdbcImporter implements
     /**
      * @since 4.0
      */
-    public void setUpdatedModel(final ModelResource model) throws ModelWorkspaceException {
+    public void setUpdatedModel( final ModelResource model ) throws ModelWorkspaceException {
         this.updatedModel = null;
         if (model != null) {
             for (final Iterator modelIter = model.getAllRootEObjects().iterator(); modelIter.hasNext();) {
@@ -128,7 +104,7 @@ public final class JdbcImporter implements
     }
 
     /**
-     * @throws JdbcException 
+     * @throws JdbcException
      * @since 5.0
      */
     public void setUpdatedModelSettings() throws JdbcException {
@@ -155,22 +131,15 @@ public final class JdbcImporter implements
         }
     }
 
-    // ============================================================================================================================
-    // Utility Methods
-
     /**
      * Connect to the {@link #getSource() source}.
      * 
-     * @param password
-     *            may be null.
-     * @param monitor
-     *            the monitor, and may be used to cancel the connection attempt; may be null
+     * @param password may be null.
+     * @param monitor the monitor, and may be used to cancel the connection attempt; may be null
      * @since 4.0
      */
-    public void connect(final String password,
-                        final IProgressMonitor monitor) throws CoreException,
-                                                       IOException,
-                                                       SQLException {
+    public void connect( final String password,
+                         final IProgressMonitor monitor ) throws CoreException, SQLException {
         // Disconnect any existing connection ...
         disconnect();
 
@@ -185,20 +154,14 @@ public final class JdbcImporter implements
     /**
      * Connect to the {@link #getSource() source}.
      * 
-     * @param password
-     *            may be null.
+     * @param password may be null.
      * @since 4.0
      */
-    public void connect(final String password) throws CoreException,
-                                              IOException,
-                                              SQLException {
+    public void connect( final String password ) throws CoreException, SQLException {
         connect(password, null);
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public void disconnect() throws SQLException {
@@ -213,8 +176,8 @@ public final class JdbcImporter implements
     /**
      * @since 4.2
      */
-    public JdbcNode findNode(final IPath path,
-                              final JdbcNode parent) throws JdbcException {
+    public JdbcNode findNode( final IPath path,
+                              final JdbcNode parent ) throws JdbcException {
         final String seg = path.segment(0);
         final JdbcNode[] children = parent.getChildren();
         for (int ndx = children.length; --ndx >= 0;) {
@@ -230,9 +193,6 @@ public final class JdbcImporter implements
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
     public IStatus importModel() throws ModelWorkspaceException {
@@ -240,12 +200,9 @@ public final class JdbcImporter implements
     }
 
     /**
-     * <p>
-     * </p>
-     * 
      * @since 4.0
      */
-    public IStatus importModel(final IProgressMonitor monitor) throws ModelWorkspaceException {
+    public IStatus importModel( final IProgressMonitor monitor ) throws ModelWorkspaceException {
         final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(this.src);
 
         // apply the import settings to the model ...

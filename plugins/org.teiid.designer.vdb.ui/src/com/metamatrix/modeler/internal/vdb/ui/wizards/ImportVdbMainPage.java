@@ -25,7 +25,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -64,6 +63,9 @@ import com.metamatrix.ui.internal.viewsupport.ListContentProvider;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
+/**
+ * 
+ */
 public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiConstants {
 
     private final static int SIZING_LISTS_HEIGHT = 200;
@@ -85,6 +87,10 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     static final IStatus STATUS_OK = new StatusInfo(PLUGIN_ID);
     static final IStatus STATUS_ERROR = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("validationError")); //$NON-NLS-1$
 
+    /**
+     * @param parent
+     * @return ?
+     */
     public static int availableRows( final Composite parent ) {
 
         final int fontHeight = (parent.getFont().getFontData())[0].getHeight();
@@ -220,6 +226,9 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         }
     };
 
+    /**
+     * 
+     */
     public ImportVdbMainPage() {
         super(PAGE_TITLE);
         setTitle(PAGE_TITLE);
@@ -236,6 +245,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Called when the user presses the Cancel button. Return a boolean indicating permission to close the wizard.
+     * 
+     * @return <code>true</code>
      */
     public boolean cancel() {
         return true;
@@ -254,6 +265,7 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
      * @param id the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
      * @param label the label from the button
      * @param defaultButton <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+     * @return the new button
      */
     protected Button createButton( final Composite parent,
                                    final int id,
@@ -281,6 +293,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Method declared on IDialogPage.
+     * 
+     * @param parent
      */
     public void createControl( final Composite parent ) {
         initializing = true;
@@ -366,6 +380,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Create the group for creating the root directory
+     * 
+     * @param parent
      */
     protected void createFromFileSystemGroup( final Composite parent ) {
         final Group fromFileSystemContainerGroup = new Group(parent, SWT.NONE);
@@ -436,6 +452,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Create the group for creating the root directory
+     * 
+     * @param parent
      */
     protected void createFromWorkspaceGroup( final Composite parent ) {
         final Group fromWorkspaceContainerGroup = new Group(parent, SWT.NONE);
@@ -595,11 +613,15 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         projectViewer.setContentProvider(new ListContentProvider());
         projectViewer.setLabelProvider(new ProjectReferenceLabelProvider());
 
-        setViewerContents(Collections.EMPTY_LIST);
+        List<IProject> projects = Collections.emptyList();
+        setViewerContents(projects);
     }
 
     /**
      * Answer a boolean indicating whether the specified source currently exists and is valid (ie.- proper format)
+     * 
+     * @param specifiedFile
+     * @return <code>true</code> if source is valid
      */
     protected boolean ensureSourceIsValid( final Object specifiedFile ) {
 
@@ -610,6 +632,9 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Execute the passed import operation. Answer a boolean indicating success.
+     * 
+     * @param op
+     * @return true if operation succeeded
      */
     protected boolean executeImportOperation( final ImportOperation op ) {
         initializeOperation(op);
@@ -635,8 +660,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * The Finish button was pressed. Try to do the required work now and answer a boolean indicating success. If false is returned
-     * then the wizard will not close.
+     * The Finish button was pressed. Try to do the required work now and answer a boolean indicating success. If false is
+     * returned then the wizard will not close.
      * 
      * @return boolean
      */
@@ -666,24 +691,9 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFileProvider()
-     * @since 4.2
-     */
-    protected ITreeContentProvider getFileProvider() {
-        return null;
-    }
-
-    /**
-     * @see org.eclipse.ui.dialogs.WizardResourceImportPage#getFolderProvider()
-     * @since 4.2
-     */
-    protected ITreeContentProvider getFolderProvider() {
-        return null;
-    }
-
-    /**
      * Returns the current project location path as entered by the user, or its anticipated initial value.
      * 
+     * @param projectName
      * @return the project location path, its anticipated initial value, or <code>null</code> if no project location path is known
      */
     public IPath getLocationPath( final String projectName ) {
@@ -702,11 +712,16 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Answer the string to display as the label for the source specification field
+     * 
+     * @return ?
      */
     protected String getSourceLabel() {
         return getString("fromDirectory"); //$NON-NLS-1$
     }
 
+    /**
+     * @return ?
+     */
     protected String getSourceName() {
         if (importFromFileSystemCheckbox.getSelection()) return fileSystemSourceFile;
 
@@ -716,8 +731,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Returns the container resource specified in the container name entry field, or <code>null</code> if such a container does not
-     * exist in the workbench.
+     * Returns the container resource specified in the container name entry field, or <code>null</code> if such a container does
+     * not exist in the workbench.
      * 
      * @return the container resource specified in the container name entry field, or <code>null</code>
      */
@@ -730,8 +745,10 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Answer a handle to the zip file currently specified as being the source. Return null if this file does not exist or is not of
-     * valid format.
+     * Answer a handle to the zip file currently specified as being the source. Return null if this file does not exist or is not
+     * of valid format.
+     * 
+     * @return <code>null</code>
      */
     protected File getSpecifiedSourceFile() {
         fileSystemSourceNameField.setFocus();
@@ -900,6 +917,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Initializes the specified operation appropriately.
+     * 
+     * @param op
      */
     protected void initializeOperation( final ImportOperation op ) {
         // op.setCreateContainerStructure(createContainerStructureButton.getSelection());
@@ -965,8 +984,8 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
     }
 
     /**
-     * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next invocation of this
-     * wizard page
+     * Since Finish was pressed, write widget values to the dialog store so that they will persist into the next invocation of
+     * this wizard page
      */
     @Override
     protected void saveWidgetValues() {
@@ -988,6 +1007,9 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         }
     }
 
+    /**
+     * @return <code>true</code> if status was set to complete
+     */
     protected boolean setCompletionStatus() {
         // Need to call the method to update the project list because source (zip file) may have changed.
         // String selectedFileString = fileSystemSourceNameField.getText();
@@ -1057,8 +1079,10 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
         projectViewer.setInput(pList);
     }
 
-    /*
-     * (non-Javadoc) Method declared on IDialogPage. Set the selection up when it becomes visible.
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
      */
     @Override
     public void setVisible( final boolean visible ) {
@@ -1096,8 +1120,6 @@ public class ImportVdbMainPage extends WizardDataTransferPage implements VdbUiCo
 
     /**
      * Check if widgets are enabled or disabled by a change in the dialog. Provided here to give access to inner classes.
-     * 
-     * @param event Event
      */
     @Override
     protected void updateWidgetEnablements() {

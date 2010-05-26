@@ -9,7 +9,6 @@ package com.metamatrix.modeler.dqp.ui.workspace;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -19,37 +18,10 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * A factory class to create connections to the embedded query from the Designer.
  */
 public class QueryClient {
-    static final String TXN_AUTO_WRAP = "txnAutoWrap";
+    static final String TXN_AUTO_WRAP = "txnAutoWrap"; //$NON-NLS-1$
 
     private Connection adminConnection;
     boolean showPlan = false;
-
-    protected Connection getAdminConnection() throws SQLException {
-        if (this.adminConnection == null) {
-            ClassLoader current = Thread.currentThread().getContextClassLoader();
-            try {
-                // File propertiesDir = DqpPath.getRuntimePath().toFile();
-                //                String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
-                //                DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
-                // EmbeddedDriver driver = new EmbeddedDriver();
-                //
-                // Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
-                //
-                // Properties props = new Properties();
-                //                props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
-                //                props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
-                // this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
-                //
-                // // wire the logging so that the messages are flown into designer
-                // this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
-                // } catch (Exception e) {
-                // throw new RuntimeException(e);
-            } finally {
-                Thread.currentThread().setContextClassLoader(current);
-            }
-        }
-        return this.adminConnection;
-    }
 
     /**
      * Obtain a string version of a URL suitable for the EmbeddedDriver.
@@ -59,15 +31,15 @@ public class QueryClient {
      * @param propsFile the path (including file name) of the DQP properties file
      * @return
      */
-    public String buildConnectionURL( String executionDir,
-                                      String theVdbName,
-                                      String theVersion,
-                                      Properties executionProps ) {
-        String txnAutoWrap = executionProps.getProperty(TXN_AUTO_WRAP);
+    public String buildConnectionURL( final String executionDir,
+                                      final String theVdbName,
+                                      final String theVersion,
+                                      final Properties executionProps ) {
+        final String txnAutoWrap = executionProps.getProperty(TXN_AUTO_WRAP);
 
-        File propsFile = new File(executionDir, "workspace.properties"); //$NON-NLS-1$
+        final File propsFile = new File(executionDir, "workspace.properties"); //$NON-NLS-1$
 
-        StringBuffer sb = new StringBuffer().append("jdbc:metamatrix:") //$NON-NLS-1$
+        final StringBuffer sb = new StringBuffer().append("jdbc:metamatrix:") //$NON-NLS-1$
         .append(theVdbName).append('@').append("mmrofile:") //$NON-NLS-1$
         .append(CoreStringUtil.replaceAll(propsFile.getAbsolutePath(), "\\", "/")) //$NON-NLS-1$ //$NON-NLS-2$
         .append(";version=") //$NON-NLS-1$
@@ -96,6 +68,7 @@ public class QueryClient {
 
         return sb.toString();
     }
+
     //
     // static class DesignerLogger implements EmbeddedLogger {
     //
@@ -124,4 +97,31 @@ public class QueryClient {
     // }
     // }
     // }
+
+    protected Connection getAdminConnection() {
+        if (this.adminConnection == null) {
+            final ClassLoader current = Thread.currentThread().getContextClassLoader();
+            try {
+                // File propertiesDir = DqpPath.getRuntimePath().toFile();
+                //                String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
+                //                DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
+                // EmbeddedDriver driver = new EmbeddedDriver();
+                //
+                // Thread.currentThread().setContextClassLoader(driver.getClass().getClassLoader());
+                //
+                // Properties props = new Properties();
+                //                props.setProperty("user", "admin"); //$NON-NLS-1$ //$NON-NLS-2$
+                //                props.setProperty("password", "teiid"); //$NON-NLS-1$ //$NON-NLS-2$
+                // this.adminConnection = (com.metamatrix.jdbc.api.Connection)driver.connect(url, props);
+                //
+                // // wire the logging so that the messages are flown into designer
+                // this.adminConnection.getAdminAPI().setLogListener(new DesignerLogger());
+                // } catch (Exception e) {
+                // throw new RuntimeException(e);
+            } finally {
+                Thread.currentThread().setContextClassLoader(current);
+            }
+        }
+        return this.adminConnection;
+    }
 }

@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.teiid.designer.udf.UdfManager;
@@ -18,9 +17,6 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.function.FunctionTree;
-import org.teiid.query.function.SystemFunctionManager;
-import org.teiid.query.function.UDFSource;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.symbol.Constant;

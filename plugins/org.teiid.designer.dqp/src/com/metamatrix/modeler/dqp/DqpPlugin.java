@@ -7,8 +7,6 @@
  */
 package com.metamatrix.modeler.dqp;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -17,7 +15,6 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
@@ -64,24 +61,10 @@ public class DqpPlugin extends Plugin {
         return plugin;
     }
 
-    // listener for context changes (specifically closed contexts)
-    private IChangeListener changeListener = new IChangeListener() {
-        public void stateChanged( IChangeNotifier theContext ) {
-            handleContextChanged(theContext);
-        }
-    };
-
     /**
      * The Teiid server registry.
      */
     private ServerManager serverMgr;
-
-    /**
-     * Collection of {@link VdbDefnHelper}s for a given {@link InternalVdbEditingContext}. Important to make sure only one context
-     * and one helper is constructed for a given VDB. Made protected for testing purposes. Key=InternalVdbEditingContext,
-     * value=VdbDefnHelper
-     */
-    private Map vdbHelperMap = new HashMap();
 
     /**
      * @return the server manager
@@ -91,59 +74,12 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
-     * <p>
-     * {@inheritDoc}
-     * </p>
-     * 
-     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-     */
-    @Override
-    public void start( BundleContext context ) throws Exception {
-        super.start(context);
-        plugin = this;
-
-        // initialize logger first so that other methods can use logger
-        ((PluginUtilImpl)Util).initializePlatformLogger(this);
-
-        try {
-            initializeServerRegistry();
-        } catch (Exception e) {
-            if (e instanceof CoreException) {
-                throw (CoreException)e;
-            }
-
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-     */
-    @Override
-    public void stop( BundleContext context ) throws Exception {
-        super.stop(context);
-
-        // restore registry
-        IStatus status = this.serverMgr.saveState();
-
-        if (!status.isOK()) {
-            Util.log(status);
-        }
-
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new CoreException(status);
-        }
-    }
-
-    /**
      * Cleans up the map of context helpers.
      * 
      * @param theContext the context whose state has changed
      * @since 4.3
      */
-    void handleContextChanged( IChangeNotifier vdb ) {
+    void handleContextChanged( final IChangeNotifier vdb ) {
         // TODO: re-implement
         // if (this.vdbHelperMap.get(vdb) != null) {
         // // only care if the context is now closed
@@ -158,7 +94,54 @@ public class DqpPlugin extends Plugin {
         this.serverMgr = new ServerManager(DqpPath.getRuntimePath().toFile().getAbsolutePath());
 
         // restore registry
-        IStatus status = this.serverMgr.restoreState();
+        final IStatus status = this.serverMgr.restoreState();
+
+        if (!status.isOK()) {
+            Util.log(status);
+        }
+
+        if (status.getSeverity() == IStatus.ERROR) {
+            throw new CoreException(status);
+        }
+    }
+
+    /**
+     * <p>
+     * {@inheritDoc}
+     * </p>
+     * 
+     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void start( final BundleContext context ) throws Exception {
+        super.start(context);
+        plugin = this;
+
+        // initialize logger first so that other methods can use logger
+        ((PluginUtilImpl)Util).initializePlatformLogger(this);
+
+        try {
+            initializeServerRegistry();
+        } catch (final Exception e) {
+            if (e instanceof CoreException) {
+                throw (CoreException)e;
+            }
+
+            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop( final BundleContext context ) throws Exception {
+        super.stop(context);
+
+        // restore registry
+        final IStatus status = this.serverMgr.saveState();
 
         if (!status.isOK()) {
             Util.log(status);

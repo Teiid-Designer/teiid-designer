@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidException;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IIndex;

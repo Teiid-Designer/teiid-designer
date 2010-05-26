@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import javax.sql.DataSource;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -36,7 +34,6 @@ import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.drivers.DriverInstance;
 import org.eclipse.datatools.connectivity.drivers.DriverManager;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
@@ -55,9 +52,6 @@ import com.metamatrix.modeler.jdbc.impl.JdbcFactoryImpl;
  * JdbcManagerImpl
  */
 public class JdbcManagerImpl implements JdbcManager {
-
-    // ===========================================================================================================================
-    // Constants
 
     public static final int MISSING_DRIVER_CLASS = 1001;
     public static final int VALID_SOURCE = 1002;
@@ -90,20 +84,12 @@ public class JdbcManagerImpl implements JdbcManager {
     public static final int AVAILABLE_CLASSES_WITH_ERRORS = 1103;
     public static final int AVAILABLE_CLASSES_WITH_WARNINGS_AND_ERRORS = 1104;
 
-    private static final String PID = JdbcPlugin.PLUGIN_ID;
-
     /**
      * @since 5.0
      */
     public static final String JDBC_MODEL = "jdbcModel" + ModelerCore.MODEL_FILE_EXTENSION; //$NON-NLS-1$
 
-    // ===========================================================================================================================
-    // Static Variables
-
     private static JdbcManager shared;
-
-    // ===========================================================================================================================
-    // Static Model Methods
 
     /**
      * @param name
@@ -113,7 +99,7 @@ public class JdbcManagerImpl implements JdbcManager {
      * @throws JdbcException
      * @since 5.0
      */
-    public static JdbcManager create( final String name ) throws JdbcException {
+    public static JdbcManager create( final String name ) {
         if (JdbcManagerImpl.shared == null) {
             // Create and start JDBC manager (which loads JDBC driver model)
             final JdbcManagerImpl mgr = new JdbcManagerImpl(name);
@@ -131,9 +117,6 @@ public class JdbcManagerImpl implements JdbcManager {
         return JdbcManagerImpl.shared;
     }
 
-    // ===========================================================================================================================
-    // Variables
-
     private final String name;
     private JdbcDriverContainer drivers;
     private JdbcSourceContainer sources;
@@ -142,13 +125,10 @@ public class JdbcManagerImpl implements JdbcManager {
     private ProfileManager profileManager;
     private DriverManager driverManager;
     private boolean sourcesUpdated;
-	private ProfileListener profileListener;
-
-    // ===========================================================================================================================
-    // Constructors
+    private ProfileListener profileListener;
 
     /**
-     * Construct an instance of JdbcManagerImpl. This form of the contructor is useful when the resource is already opened and
+     * Construct an instance of JdbcManagerImpl. This form of the constructor is useful when the resource is already opened and
      * known.
      * 
      * @param name the name of this manager; may not be null or zero-length
@@ -160,156 +140,65 @@ public class JdbcManagerImpl implements JdbcManager {
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#getName()
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * This method is not synchronized and is not thread safe.
-     */
-    public void start() throws JdbcException {
-        profileManager = ProfileManager.getInstance();
-		profileListener = new ProfileListener();
-		profileManager.addProfileListener(profileListener);
-        driverManager = DriverManager.getInstance();
-    }
-
-    /**
-     * This method is not synchronized and is not thread safe.
-     */
-    public void shutdown() {
-		profileManager.removeProfileListener(profileListener);
-        profileManager = null;
-        driverManager = null;
-        sources = null; // no need to synchronize since nulling reference is atomic
-        drivers = null; // no need to synchronize since nulling reference is atomic
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#hasChanges()
-     */
-    public boolean hasChanges() {
-        return true;
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#saveChanges(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public void saveChanges( IProgressMonitor monitor ) throws IOException {
-        // If there are no changes, then return
-        if (!hasChanges()) {
-            return;
+    protected IStatus checkClassNameForError( final String className ) {
+        if (className == null || className.trim().length() == 0) {
+            final int code = NAME_NOT_SPECIFIED;
+            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_class_name_is_empty")); //$NON-NLS-1$
         }
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#reload(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public void reload( IProgressMonitor monitor ) throws JdbcException {
-        shutdown();
-        start();
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#getJdbcDrivers()
-     */
-    public List getJdbcDrivers() {
-        if (drivers == null) {
-            synchronized (driversLock) {
-                if (drivers == null) {
-                    JdbcFactoryImpl factory = new JdbcFactoryImpl();
-                    drivers = factory.createJdbcDriverContainer();
-                    DriverInstance[] tempDrivers = driverManager.getDriverInstancesByCategory("org.eclipse.datatools.connectivity.db.category");
-                    for (int i = 0; i < tempDrivers.length; i++) {
-                        DriverInstance driverInstance = tempDrivers[i];
-                        JdbcDriver driver = factory.createJdbcDriver();
-                        driver.setName(driverInstance.getName());
-                        driver.setPreferredDriverClassName(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.driverClass"));
-                        driver.setUrlSyntax(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.URL"));
-                        driver.setJdbcDriverContainer(drivers);
-                        drivers.getJdbcDrivers().add(driver);
-                    }
-                }
+        if (!Character.isJavaIdentifierStart(className.charAt(0))) {
+            final Object params = new Object[] {new Character(className.charAt(0))};
+            final int code = ILLEGAL_CHAR_AT_START_OF_CLASS_NAME;
+            return createError(code,
+                               JdbcPlugin.Util.getString("JdbcManagerImpl.A_Java_class_may_not_begin_with_the_{0}_character", params)); //$NON-NLS-1$
+        }
+        final CharacterIterator iter = new StringCharacterIterator(className);
+        char c = iter.next(); // skip the first character
+        while ((c = iter.next()) != CharacterIterator.DONE) {
+            if (c != '.' && !Character.isJavaIdentifierPart(c)) {
+                final Object params = new Object[] {new Character(className.charAt(0))};
+                final int code = ILLEGAL_CHAR_IN_CLASS_NAME;
+                return createError(code,
+                                   JdbcPlugin.Util.getString("JdbcManagerImpl.A_Java_class_may_not_contain_the_{0}_character", params)); //$NON-NLS-1$
             }
         }
-        return drivers.getJdbcDrivers();
+        return null;
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#getJdbcSources()
-     */
-    public List getJdbcSources() {
-        if (sources == null || sourcesUpdated) {
-            synchronized (sourcesLock) {
-                if (sources == null) {
-                    JdbcFactoryImpl factory = new JdbcFactoryImpl();
-                    sources = factory.createJdbcSourceContainer();
-                    IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.connectivity.db.category");
-                    for (int i = 0; i < tempProfiles.length; i++) {
-                        IConnectionProfile profile = tempProfiles[i];
-                        JdbcSource source = getJdbcSource(profile);
-                        source.setJdbcSourceContainer(sources);
-                        sources.getJdbcSources().add(source);
-                    }
-                }
-            }
+    @Override
+    public Connection createConnection( final JdbcSource jdbcSource,
+                                        final String password ) throws JdbcException, SQLException {
+        final IConnectionProfile profile = profileManager.getProfileByName(jdbcSource.getName());
+        if (null == profile) {
+            throw new JdbcException("ConnectionProfile " + jdbcSource.getName() + " cannot be found");
         }
-        return sources.getJdbcSources();
-    }
 
-    public JdbcSource getJdbcSource( IConnectionProfile profile ) {
-        JdbcSource source = new JdbcFactoryImpl().createJdbcSource();
-        source.setName(profile.getName());
-        Properties props = profile.getBaseProperties();
-        source.setDriverClass(props.getProperty("org.eclipse.datatools.connectivity.db.driverClass"));
-        source.setUsername(props.getProperty("org.eclipse.datatools.connectivity.db.username"));
-        source.setUrl(props.getProperty("org.eclipse.datatools.connectivity.db.URL"));
-        String password = props.getProperty("org.eclipse.datatools.connectivity.db.password");
-        if (null != password) {
-            source.setPassword(password);
+        final String factoryId = profile.getProvider().getConnectionFactory("java.sql.Connection").getId(); //$NON-NLS-1$
+        // override the pw in the ConnectionProfile with one supplied in the importer.
+        // IConnection connection = profile.createConnection(factoryId, jdbcSource.getUsername(), password);
+        final IConnection connection = profile.createConnection(factoryId);
+
+        final Connection sqlConnection = (Connection)connection.getRawConnection();
+        if (null == sqlConnection || sqlConnection.isClosed()) {
+            final Throwable e = connection.getConnectException();
+            throw new JdbcException(e == null ? "Unspecified connection error" : e.getMessage());
         }
-        String driverID = props.getProperty("org.eclipse.datatools.connectivity.driverDefinitionID");
-        DriverInstance driver = driverManager.getDriverInstanceByID(driverID);
-        source.setDriverName(driver.getName());
-        return source;
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#getFactory()
-     */
-    public JdbcFactory getFactory() {
-        return JdbcFactory.eINSTANCE;
+        return (Connection)connection.getRawConnection();
     }
 
     public Connection createConnection( final JdbcSource jdbcSource,
                                         final String password,
                                         final IProgressMonitor monitor ) throws JdbcException, SQLException {
-        // TODO: the monitor
         return createConnection(jdbcSource, password);
     }
 
-    @Override
-    public Connection createConnection( JdbcSource jdbcSource,
-                                        String password ) throws JdbcException, SQLException {
-        IConnectionProfile profile = profileManager.getProfileByName(jdbcSource.getName());
-        if (null == profile) {
-            throw new JdbcException("ConnectionProfile " + jdbcSource.getName() + " cannot be found");
-        }
+    protected IStatus createError( final int code,
+                                   final String msg ) {
+        return new Status(IStatus.ERROR, JdbcPlugin.PLUGIN_ID, code, msg, null);
+    }
 
-        String factoryId = profile.getProvider().getConnectionFactory("java.sql.Connection").getId();
-        // override the pw in the ConnectionProfile with one supplied in the importer.
-        // IConnection connection = profile.createConnection(factoryId, jdbcSource.getUsername(), password);
-        IConnection connection = profile.createConnection(factoryId);
-
-        Connection sqlConnection = (Connection)connection.getRawConnection();
-        if (null == sqlConnection || sqlConnection.isClosed()) {
-            Throwable e = connection.getConnectException();
-            throw new JdbcException(e == null ? "Unspecified connection error" : e.getMessage());
-        }
-        return (Connection)connection.getRawConnection();
+    protected IStatus createOK( final int code,
+                                final String msg ) {
+        return new Status(IStatus.OK, JdbcPlugin.PLUGIN_ID, code, msg, null);
     }
 
     /**
@@ -326,83 +215,130 @@ public class JdbcManagerImpl implements JdbcManager {
         return props;
     }
 
-    /**
-     * @param dataSource
-     */
-    protected void setProperties( final Properties props,
-                                  final DataSource dataSource ) throws JdbcException {
-        final Method[] methods = dataSource.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            final Method method = methods[i];
-            final String methodName = method.getName();
-            // If setter ...
-            if (methodName.startsWith("set") && method.getParameterTypes().length == 1) { //$NON-NLS-1$
-                // Get the property name
-                final String propertyName = methodName.substring(3); // remove the "set"
-                String propertyValue = (String)props.get(propertyName.toLowerCase());
-                if (propertyValue != null) {
-                    final Class argType = method.getParameterTypes()[0];
-                    final Object[] params = new Object[1];
-                    if (argType == Integer.TYPE) {
-                        params[0] = Integer.decode(propertyValue);
-                    } else if (argType == Boolean.TYPE) {
-                        params[0] = Boolean.valueOf(propertyValue);
-                    } else if (argType == String.class) {
-                        params[0] = propertyValue;
-                    }
+    protected IStatus createWarning( final int code,
+                                     final String msg ) {
+        return new Status(IStatus.WARNING, JdbcPlugin.PLUGIN_ID, code, msg, null);
+    }
 
-                    // Actually set the property ...
-                    try {
-                        method.invoke(dataSource, params);
-                    } catch (Throwable e) {
-                        final Object[] msgParams = new Object[] {propertyName, propertyValue};
-                        final String msg = JdbcPlugin.Util.getString("JdbcManagerImpl.Unable_to_set_property_to_value", msgParams); //$NON-NLS-1$
-                        throw new JdbcException(msg);
+    protected IStatus createWarning( final int code,
+                                     final Throwable t,
+                                     final String msg ) {
+        return new Status(IStatus.WARNING, JdbcPlugin.PLUGIN_ID, code, msg, t);
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#findDrivers(java.lang.String)
+     */
+    public JdbcDriver[] findDrivers( final String driverName ) {
+        final List result = new ArrayList();
+        final List instances = getJdbcDrivers();
+        final Iterator iter = instances.iterator();
+        while (iter.hasNext()) {
+            final JdbcDriver instance = (JdbcDriver)iter.next();
+            if (instance.getName().equalsIgnoreCase(driverName)) {
+                result.add(instance);
+            }
+        }
+        return (JdbcDriver[])result.toArray(new JdbcDriver[result.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#findSources(java.lang.String)
+     */
+    public JdbcSource[] findSources( final String sourceName ) {
+        final List result = new ArrayList();
+        final List instances = getJdbcSources();
+        final Iterator iter = instances.iterator();
+        while (iter.hasNext()) {
+            final JdbcSource instance = (JdbcSource)iter.next();
+            if (instance.getName().equalsIgnoreCase(sourceName)) {
+                result.add(instance);
+            }
+        }
+        return (JdbcSource[])result.toArray(new JdbcSource[result.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#getFactory()
+     */
+    public JdbcFactory getFactory() {
+        return JdbcFactory.eINSTANCE;
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#getJdbcDrivers()
+     */
+    public List getJdbcDrivers() {
+        if (drivers == null) {
+            synchronized (driversLock) {
+                if (drivers == null) {
+                    final JdbcFactoryImpl factory = new JdbcFactoryImpl();
+                    drivers = factory.createJdbcDriverContainer();
+                    final DriverInstance[] tempDrivers = driverManager.getDriverInstancesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
+                    for (final DriverInstance driverInstance : tempDrivers) {
+                        final JdbcDriver driver = factory.createJdbcDriver();
+                        driver.setName(driverInstance.getName());
+                        driver.setPreferredDriverClassName(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.driverClass")); //$NON-NLS-1$
+                        driver.setUrlSyntax(driverInstance.getNamedPropertyByID("org.eclipse.datatools.connectivity.db.URL")); //$NON-NLS-1$
+                        driver.setJdbcDriverContainer(drivers);
+                        drivers.getJdbcDrivers().add(driver);
                     }
                 }
             }
         }
+        return drivers.getJdbcDrivers();
     }
 
-    protected JdbcDriverProperty[] getPropertyDescriptions( final Driver driver,
-                                                            final JdbcSource jdbcSource ) throws SQLException {
-        CoreArgCheck.isNotNull(driver);
-        CoreArgCheck.isNotNull(jdbcSource);
+    public JdbcSource getJdbcSource( final IConnectionProfile profile ) {
+        final JdbcSource source = new JdbcFactoryImpl().createJdbcSource();
+        source.setName(profile.getName());
+        final Properties props = profile.getBaseProperties();
+        source.setDriverClass(props.getProperty("org.eclipse.datatools.connectivity.db.driverClass")); //$NON-NLS-1$
+        source.setUsername(props.getProperty("org.eclipse.datatools.connectivity.db.username")); //$NON-NLS-1$
+        source.setUrl(props.getProperty("org.eclipse.datatools.connectivity.db.URL")); //$NON-NLS-1$
+        final String password = props.getProperty("org.eclipse.datatools.connectivity.db.password"); //$NON-NLS-1$
+        if (null != password) {
+            source.setPassword(password);
+        }
+        final String driverID = props.getProperty("org.eclipse.datatools.connectivity.driverDefinitionID"); //$NON-NLS-1$
+        final DriverInstance driver = driverManager.getDriverInstanceByID(driverID);
+        source.setDriverName(driver.getName());
+        return source;
+    }
 
-        DriverPropertyInfo[] propInfo = null;
-        final String url = jdbcSource.getUrl() != null ? jdbcSource.getUrl() : ""; //$NON-NLS-1$
-        try {
-            propInfo = driver.getPropertyInfo(url, null);
-        } catch (RuntimeException err) {
-            // Some drivers (Sun's ODBC-JDBC) throw null pointer exceptions ...
-
-            // Try again, but with an empty properties ...
-            try {
-                propInfo = driver.getPropertyInfo(url, new Properties());
-            } catch (RuntimeException err2) {
-                // Okay, give up
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#getJdbcSources()
+     */
+    public List getJdbcSources() {
+        if (sources == null || sourcesUpdated) {
+            synchronized (sourcesLock) {
+                if (sources == null) {
+                    final JdbcFactoryImpl factory = new JdbcFactoryImpl();
+                    sources = factory.createJdbcSourceContainer();
+                    final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
+                    for (final IConnectionProfile profile : tempProfiles) {
+                        final JdbcSource source = getJdbcSource(profile);
+                        source.setJdbcSourceContainer(sources);
+                        sources.getJdbcSources().add(source);
+                    }
+                }
             }
         }
-        if (propInfo == null || propInfo.length == 0) {
-            return new JdbcDriverProperty[] {};
-        }
+        return sources.getJdbcSources();
+    }
 
-        final List props = new ArrayList(propInfo.length);
-        for (int i = 0; i < propInfo.length; i++) {
-            final DriverPropertyInfo info = propInfo[i];
-            final JdbcDriverProperty prop = new JdbcDriverProperty(info);
-            props.add(prop);
-        }
-
-        return (JdbcDriverProperty[])props.toArray(new JdbcDriverProperty[props.size()]);
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#getName()
+     */
+    public String getName() {
+        return this.name;
     }
 
     protected JdbcDriverProperty[] getPropertyDescriptions( final DataSource dataSource,
                                                             final JdbcSource jdbcSource ) {
         final Method[] methods = dataSource.getClass().getMethods();
         final List props = new ArrayList();
-        for (int i = 0; i < methods.length; i++) {
-            final Method method = methods[i];
+        for (final Method method : methods) {
             final String methodName = method.getName();
             // If setter ...
             if (methodName.startsWith("set") && method.getParameterTypes().length == 1) { //$NON-NLS-1$
@@ -419,61 +355,43 @@ public class JdbcManagerImpl implements JdbcManager {
         return (JdbcDriverProperty[])props.toArray(new JdbcDriverProperty[props.size()]);
     }
 
-    public IStatus isValid( final JdbcSource jdbcSource ) {
+    protected JdbcDriverProperty[] getPropertyDescriptions( final Driver driver,
+                                                            final JdbcSource jdbcSource ) throws SQLException {
+        CoreArgCheck.isNotNull(driver);
         CoreArgCheck.isNotNull(jdbcSource);
 
-        // A JdbcDriver is considered valid if all of the following conditions are true:
-        // - There is a {@link JdbcSource#getName() name} that is not zero-length.
-        final String name = jdbcSource.getName();
-        if (name == null || name.trim().length() == 0) {
-            final int code = NAME_NOT_SPECIFIED;
-            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_name_is_empty")); //$NON-NLS-1$
-        }
-        if (!Character.isLetterOrDigit(name.charAt(0))) {
-            final int code = NAME_MUST_BEGIN_WITH_LETTER_OR_NUMBER;
-            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_name_must_begin_with_a_letter_or_digit")); //$NON-NLS-1$
-        }
+        DriverPropertyInfo[] propInfo = null;
+        final String url = jdbcSource.getUrl() != null ? jdbcSource.getUrl() : ""; //$NON-NLS-1$
+        try {
+            propInfo = driver.getPropertyInfo(url, null);
+        } catch (final RuntimeException err) {
+            // Some drivers (Sun's ODBC-JDBC) throw null pointer exceptions ...
 
-        // - There is a {@link JdbcSource#get preferred driver class}.
-        final String driverClass = jdbcSource.getDriverClass();
-        if (driverClass == null || driverClass.trim().length() == 0) {
-            final int code = MISSING_DRIVER_CLASS;
-            return createError(code,
-                               JdbcPlugin.Util.getString("JdbcManagerImpl.A_driver_class_must_be_specified", jdbcSource.getName())); //$NON-NLS-1$
-        }
-        final IStatus error = checkClassNameForError(driverClass);
-        if (error != null) {
-            return error;
-        }
-
-        // - There are no null property names or values
-        final Iterator iter = jdbcSource.getProperties().iterator();
-        while (iter.hasNext()) {
-            final JdbcSourceProperty prop = (JdbcSourceProperty)iter.next();
-            final String propName = prop.getName();
-            final String value = prop.getValue();
-            if (propName == null || propName.trim().length() == 0) {
-                final int code = PROPERTY_NAME_MISSING;
-                return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Property_names_may_not_be_null_or_empty")); //$NON-NLS-1$
-            }
-            if (value == null || value.trim().length() == 0) {
-                final int code = PROPERTY_VALUE_MISSING;
-                return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Property_values_may_not_be_null_or_empty")); //$NON-NLS-1$
+            // Try again, but with an empty properties ...
+            try {
+                propInfo = driver.getPropertyInfo(url, new Properties());
+            } catch (final RuntimeException err2) {
+                // Okay, give up
             }
         }
-
-        IConnectionProfile profile = profileManager.getProfileByName(jdbcSource.getName());
-        if (null == profile) {
-            final int code = MISSING_CONNECTION_PROFILE;
-            return createError(code,
-                               JdbcPlugin.Util.getString("JdbcManagerImpl.Missing_connection_profile", jdbcSource.getName())); //$NON-NLS-1$
-        } else if (!profile.arePropertiesComplete()) {
-            final int code = INVALID_CONNECTION_PROFILE;
-            return createError(code,
-                               JdbcPlugin.Util.getString("JdbcManagerImpl.Invalid_connection_profile", jdbcSource.getName())); //$NON-NLS-1$	
+        if (propInfo == null || propInfo.length == 0) {
+            return new JdbcDriverProperty[] {};
         }
-        final int code = VALID_SOURCE;
-        return createOK(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_data_source_is_valid")); //$NON-NLS-1$
+
+        final List props = new ArrayList(propInfo.length);
+        for (final DriverPropertyInfo info : propInfo) {
+            final JdbcDriverProperty prop = new JdbcDriverProperty(info);
+            props.add(prop);
+        }
+
+        return (JdbcDriverProperty[])props.toArray(new JdbcDriverProperty[props.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#hasChanges()
+     */
+    public boolean hasChanges() {
+        return true;
     }
 
     /* (non-Javadoc)
@@ -525,8 +443,7 @@ public class JdbcManagerImpl implements JdbcManager {
             final String preferred = driver.getPreferredDriverClassName();
             if (preferred == null || preferred.trim().length() == 0) {
                 final int code = PREFERRED_NOT_SPECIFIED;
-                return createError(code,
-                                   JdbcPlugin.Util.getString("JdbcManagerImpl.A_preferred_driver_class_must_be_chosen", name)); //$NON-NLS-1$
+                return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.A_preferred_driver_class_must_be_chosen", name)); //$NON-NLS-1$
             }
             final IStatus error = checkClassNameForError(preferred);
             if (error != null) {
@@ -551,7 +468,7 @@ public class JdbcManagerImpl implements JdbcManager {
         }
         final Iterator jarFileUriIter = driver.getJarFileUris().iterator();
         while (jarFileUriIter.hasNext()) {
-            String jarFileUri = (String)jarFileUriIter.next();
+            final String jarFileUri = (String)jarFileUriIter.next();
             if (jarFileUri == null || jarFileUri.trim().length() == 0) {
                 final int code = JAR_FILE_URI_NOT_SPECIFIED;
                 return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_jar_file_uri_is_empty", name)); //$NON-NLS-1$
@@ -563,13 +480,13 @@ public class JdbcManagerImpl implements JdbcManager {
                 final URL url = new URL(jarFileUri);
                 stream = url.openStream();
                 validUrl = true;
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 // Let the rest of the patterns try ...
             } finally {
                 if (stream != null) {
                     try {
                         stream.close();
-                    } catch (IOException e1) {
+                    } catch (final IOException e1) {
                         // do nothing, because we don't care
                     }
                 }
@@ -586,7 +503,7 @@ public class JdbcManagerImpl implements JdbcManager {
                     }
                     jarFile.toURI().toURL();
                     validUrl = true;
-                } catch (MalformedURLException e) {
+                } catch (final MalformedURLException e) {
                     // Let the rest of the patterns try ...
                 }
             }
@@ -612,126 +529,168 @@ public class JdbcManagerImpl implements JdbcManager {
         return createOK(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_driver_specification_is_valid", name)); //$NON-NLS-1$
     }
 
-    protected IStatus checkClassNameForError( final String className ) {
-        if (className == null || className.trim().length() == 0) {
+    public IStatus isValid( final JdbcSource jdbcSource ) {
+        CoreArgCheck.isNotNull(jdbcSource);
+
+        // A JdbcDriver is considered valid if all of the following conditions are true:
+        // - There is a {@link JdbcSource#getName() name} that is not zero-length.
+        final String name = jdbcSource.getName();
+        if (name == null || name.trim().length() == 0) {
             final int code = NAME_NOT_SPECIFIED;
-            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_class_name_is_empty")); //$NON-NLS-1$
+            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_name_is_empty")); //$NON-NLS-1$
         }
-        if (!Character.isJavaIdentifierStart(className.charAt(0))) {
-            final Object params = new Object[] {new Character(className.charAt(0))};
-            final int code = ILLEGAL_CHAR_AT_START_OF_CLASS_NAME;
+        if (!Character.isLetterOrDigit(name.charAt(0))) {
+            final int code = NAME_MUST_BEGIN_WITH_LETTER_OR_NUMBER;
+            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_name_must_begin_with_a_letter_or_digit")); //$NON-NLS-1$
+        }
+
+        // - There is a {@link JdbcSource#get preferred driver class}.
+        final String driverClass = jdbcSource.getDriverClass();
+        if (driverClass == null || driverClass.trim().length() == 0) {
+            final int code = MISSING_DRIVER_CLASS;
             return createError(code,
-                               JdbcPlugin.Util.getString("JdbcManagerImpl.A_Java_class_may_not_begin_with_the_{0}_character", params)); //$NON-NLS-1$
+                               JdbcPlugin.Util.getString("JdbcManagerImpl.A_driver_class_must_be_specified", jdbcSource.getName())); //$NON-NLS-1$
         }
-        CharacterIterator iter = new StringCharacterIterator(className);
-        char c = iter.next(); // skip the first character
-        while ((c = iter.next()) != CharacterIterator.DONE) {
-            if (c != '.' && !Character.isJavaIdentifierPart(c)) {
-                final Object params = new Object[] {new Character(className.charAt(0))};
-                final int code = ILLEGAL_CHAR_IN_CLASS_NAME;
-                return createError(code,
-                                   JdbcPlugin.Util.getString("JdbcManagerImpl.A_Java_class_may_not_contain_the_{0}_character", params)); //$NON-NLS-1$
+        final IStatus error = checkClassNameForError(driverClass);
+        if (error != null) {
+            return error;
+        }
+
+        // - There are no null property names or values
+        final Iterator iter = jdbcSource.getProperties().iterator();
+        while (iter.hasNext()) {
+            final JdbcSourceProperty prop = (JdbcSourceProperty)iter.next();
+            final String propName = prop.getName();
+            final String value = prop.getValue();
+            if (propName == null || propName.trim().length() == 0) {
+                final int code = PROPERTY_NAME_MISSING;
+                return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Property_names_may_not_be_null_or_empty")); //$NON-NLS-1$
+            }
+            if (value == null || value.trim().length() == 0) {
+                final int code = PROPERTY_VALUE_MISSING;
+                return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Property_values_may_not_be_null_or_empty")); //$NON-NLS-1$
             }
         }
-        return null;
-    }
 
-    protected IStatus createError( final int code,
-                                   final String msg ) {
-        return new Status(IStatus.ERROR, JdbcPlugin.PLUGIN_ID, code, msg, null);
-    }
-
-    protected IStatus createWarning( final int code,
-                                     final String msg ) {
-        return new Status(IStatus.WARNING, JdbcPlugin.PLUGIN_ID, code, msg, null);
-    }
-
-    protected IStatus createWarning( final int code,
-                                     final Throwable t,
-                                     final String msg ) {
-        return new Status(IStatus.WARNING, JdbcPlugin.PLUGIN_ID, code, msg, t);
-    }
-
-    protected IStatus createOK( final int code,
-                                String msg ) {
-        return new Status(IStatus.OK, JdbcPlugin.PLUGIN_ID, code, msg, null);
+        final IConnectionProfile profile = profileManager.getProfileByName(jdbcSource.getName());
+        if (null == profile) {
+            final int code = MISSING_CONNECTION_PROFILE;
+            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Missing_connection_profile", jdbcSource.getName())); //$NON-NLS-1$
+        } else if (!profile.arePropertiesComplete()) {
+            final int code = INVALID_CONNECTION_PROFILE;
+            return createError(code, JdbcPlugin.Util.getString("JdbcManagerImpl.Invalid_connection_profile", jdbcSource.getName())); //$NON-NLS-1$	
+        }
+        final int code = VALID_SOURCE;
+        return createOK(code, JdbcPlugin.Util.getString("JdbcManagerImpl.The_data_source_is_valid")); //$NON-NLS-1$
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#findDrivers(java.lang.String)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#reload(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public JdbcDriver[] findDrivers( String driverName ) {
-        final List result = new ArrayList();
-        final List instances = getJdbcDrivers();
-        final Iterator iter = instances.iterator();
-        while (iter.hasNext()) {
-            final JdbcDriver instance = (JdbcDriver)iter.next();
-            if (instance.getName().equalsIgnoreCase(driverName)) {
-                result.add(instance);
-            }
-        }
-        return (JdbcDriver[])result.toArray(new JdbcDriver[result.size()]);
+    public void reload( final IProgressMonitor monitor ) {
+        shutdown();
+        start();
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.JdbcManager#findSources(java.lang.String)
+     * @see com.metamatrix.modeler.jdbc.JdbcManager#saveChanges(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public JdbcSource[] findSources( String sourceName ) {
-        final List result = new ArrayList();
-        final List instances = getJdbcSources();
-        final Iterator iter = instances.iterator();
-        while (iter.hasNext()) {
-            final JdbcSource instance = (JdbcSource)iter.next();
-            if (instance.getName().equalsIgnoreCase(sourceName)) {
-                result.add(instance);
-            }
+    public void saveChanges( final IProgressMonitor monitor ) {
+        // If there are no changes, then return
+        if (!hasChanges()) {
+            return;
         }
-        return (JdbcSource[])result.toArray(new JdbcSource[result.size()]);
     }
 
-	public class ProfileListener implements IProfileListener {
+    /**
+     * @param dataSource
+     */
+    protected void setProperties( final Properties props,
+                                  final DataSource dataSource ) throws JdbcException {
+        final Method[] methods = dataSource.getClass().getMethods();
+        for (final Method method : methods) {
+            final String methodName = method.getName();
+            // If setter ...
+            if (methodName.startsWith("set") && method.getParameterTypes().length == 1) { //$NON-NLS-1$
+                // Get the property name
+                final String propertyName = methodName.substring(3); // remove the "set"
+                final String propertyValue = (String)props.get(propertyName.toLowerCase());
+                if (propertyValue != null) {
+                    final Class argType = method.getParameterTypes()[0];
+                    final Object[] params = new Object[1];
+                    if (argType == Integer.TYPE) {
+                        params[0] = Integer.decode(propertyValue);
+                    } else if (argType == Boolean.TYPE) {
+                        params[0] = Boolean.valueOf(propertyValue);
+                    } else if (argType == String.class) {
+                        params[0] = propertyValue;
+                    }
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileAdded(org.eclipse.datatools.connectivity.IConnectionProfile)
-		 */
-		@Override
-		public void profileAdded(IConnectionProfile arg0) {
-			try {
-				reload(new NullProgressMonitor());
-			} catch (JdbcException e) {
-				// do nothing
-			}
-		}
+                    // Actually set the property ...
+                    try {
+                        method.invoke(dataSource, params);
+                    } catch (final Throwable e) {
+                        final Object[] msgParams = new Object[] {propertyName, propertyValue};
+                        final String msg = JdbcPlugin.Util.getString("JdbcManagerImpl.Unable_to_set_property_to_value", msgParams); //$NON-NLS-1$
+                        throw new JdbcException(msg);
+                    }
+                }
+            }
+        }
+    }
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileChanged(org.eclipse.datatools.connectivity.IConnectionProfile)
-		 */
-		@Override
-		public void profileChanged(IConnectionProfile arg0) {
-			try {
-				reload(new NullProgressMonitor());
-			} catch (JdbcException e) {
-				// do nothing
-			}
-		}
+    /**
+     * This method is not synchronized and is not thread safe.
+     */
+    public void shutdown() {
+        profileManager.removeProfileListener(profileListener);
+        profileManager = null;
+        driverManager = null;
+        sources = null; // no need to synchronize since nulling reference is atomic
+        drivers = null; // no need to synchronize since nulling reference is atomic
+    }
 
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.datatools.connectivity.IProfileListener#profileDeleted(org.eclipse.datatools.connectivity.IConnectionProfile)
-		 */
-		@Override
-		public void profileDeleted(IConnectionProfile arg0) {
-			try {
-				reload(new NullProgressMonitor());
-			} catch (JdbcException e) {
-				// do nothing
-			}
-		}
+    /**
+     * This method is not synchronized and is not thread safe.
+     */
+    public void start() {
+        profileManager = ProfileManager.getInstance();
+        profileListener = new ProfileListener();
+        profileManager.addProfileListener(profileListener);
+        driverManager = DriverManager.getInstance();
+    }
 
-	}
+    public class ProfileListener implements IProfileListener {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.datatools.connectivity.IProfileListener#profileAdded(org.eclipse.datatools.connectivity.IConnectionProfile)
+         */
+        @Override
+        public void profileAdded( final IConnectionProfile arg0 ) {
+            reload(new NullProgressMonitor());
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.datatools.connectivity.IProfileListener#profileChanged(org.eclipse.datatools.connectivity.IConnectionProfile)
+         */
+        @Override
+        public void profileChanged( final IConnectionProfile arg0 ) {
+            reload(new NullProgressMonitor());
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.datatools.connectivity.IProfileListener#profileDeleted(org.eclipse.datatools.connectivity.IConnectionProfile)
+         */
+        @Override
+        public void profileDeleted( final IConnectionProfile arg0 ) {
+            reload(new NullProgressMonitor());
+        }
+
+    }
 }
