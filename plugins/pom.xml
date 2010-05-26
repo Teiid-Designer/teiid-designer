@@ -89,8 +89,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.xml.ui</module>
 		<module>org.teiid.designer.xsd</module>
 		<module>org.teiid.designer.xsd.ui</module>
-		<module>org.teiid.datatools.connectivity</module>
-		<module>org.teiid.datatools.connectivity.ui</module>
 		<module>org.wsdl4j</module>
 		<module>teiid_embedded_query</module>
 	</modules>
