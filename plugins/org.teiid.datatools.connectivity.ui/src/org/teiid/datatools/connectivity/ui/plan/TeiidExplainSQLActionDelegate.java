@@ -43,11 +43,13 @@ public class TeiidExplainSQLActionDelegate extends BaseExplainAction implements
 					&& super.canBeEnabled());
 		}
 
-		public DatabaseIdentifier getDatabaseIdentifier() {
+		@Override
+        public DatabaseIdentifier getDatabaseIdentifier() {
 			return _sqlEditor == null ? null : _sqlEditor.getDatabaseIdentifier();
 		}
 
-		public String getSQLStatements() {
+		@Override
+        public String getSQLStatements() {
 			String orignalSql = (_sqlEditor == null) ? null : _sqlEditor
 					.getTargetText();
 			return orignalSql;
@@ -56,7 +58,8 @@ public class TeiidExplainSQLActionDelegate extends BaseExplainAction implements
 		/**
 		 * Sets the focus to the editor after the execution plan is shown
 		 */
-		public Runnable getPostRun() {
+		@Override
+        public Runnable getPostRun() {
 			Runnable postRun = new Runnable() {
 				public void run() {
 					_sqlEditor.getEditorSite().getPage().activate(_sqlEditor);
@@ -68,7 +71,8 @@ public class TeiidExplainSQLActionDelegate extends BaseExplainAction implements
 		/**
 		 * Returns the variable declarations in the SQL Editor
 		 */
-		protected HashMap getVariableDeclarations() {
+		@Override
+        protected HashMap getVariableDeclarations() {
 			ITextSelection _selection = (ITextSelection) _sqlEditor
 					.getSelectionProvider().getSelection();
 			int start = 0;

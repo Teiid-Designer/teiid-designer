@@ -32,6 +32,7 @@ public class TeiidPropertyPage extends ExtensibleProfileDetailsPropertyPage
         return contextProviderDelegate.getSearchExpression(target);
     }
 
+    @Override
     protected Control createContents( Composite parent ) {
         Control contents = super.createContents(parent);
         return contents;

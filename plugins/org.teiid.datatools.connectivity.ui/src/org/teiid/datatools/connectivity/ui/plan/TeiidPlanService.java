@@ -9,7 +9,8 @@ public class TeiidPlanService extends PlanService {
 	
 	private static IPlanParser teiidPlanParser = new TeiidPlanParser();
 	
-	public PlanSupportRunnable createPlanSupportRunnable(
+	@Override
+    public PlanSupportRunnable createPlanSupportRunnable(
 			final PlanRequest request, final String profileName,
 			final String dbName) {
 		return new TeiidPlanSupportRunnable(request, profileName, dbName);

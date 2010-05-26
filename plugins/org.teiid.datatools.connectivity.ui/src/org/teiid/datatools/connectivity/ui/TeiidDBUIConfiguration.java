@@ -10,6 +10,7 @@ public class TeiidDBUIConfiguration extends SQLDevToolsUIConfiguration {
     @Override
     public SQLEditorUIService getSQLEditorUIService() {
         return new SQLEditorUIService() {
+            @Override
             public HashMap getAdditionalActions() {
                 HashMap additions = super.getAdditionalActions();
                 additions.put("", new TeiidExplainSQLActionDelegate()); //$NON-NLS-1$

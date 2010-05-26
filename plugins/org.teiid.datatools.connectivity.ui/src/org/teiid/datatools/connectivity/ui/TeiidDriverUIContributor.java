@@ -398,8 +398,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     private class TeiidServerJDBCURL {
 
-        private String subprotocol = ""; //$NON-NLS-1$
-
         private String node = ""; //$NON-NLS-1$
 
         private String port = ""; //$NON-NLS-1$
@@ -431,13 +429,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             return node;
         }
 
-        /**
-         * @return Returns the subprotocol.
-         */
-        public String getSubprotocol() {
-            return subprotocol;
-        }
-
         private void parseURL( String url ) {
             // jdbc:teiid:<vdb-name>@mm[s]://<host>:<port>;[prop-name=prop-value;]*
             try {
@@ -445,7 +436,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
                 remainingURL = remainingURL.substring(url.indexOf(':') + 2);
                 this.vdbName = remainingURL.substring(0, remainingURL.indexOf('@'));
                 remainingURL = remainingURL.substring(remainingURL.indexOf('@') + 1);
-                this.subprotocol = remainingURL.substring(0, remainingURL.indexOf(':'));
                 remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 3);
                 this.node = remainingURL.substring(0, remainingURL.indexOf(':'));
                 remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 1);
