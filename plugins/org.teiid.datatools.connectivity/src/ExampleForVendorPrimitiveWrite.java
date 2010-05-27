@@ -7,6 +7,7 @@
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.datatools.modelbase.dbdefinition.CheckOption;
 import org.eclipse.datatools.modelbase.dbdefinition.ColumnDefinition;
 import org.eclipse.datatools.modelbase.dbdefinition.ConstraintDefinition;
@@ -30,13 +31,13 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 public class ExampleForVendorPrimitiveWrite {
 
     public static void main( String[] arg ) {
-        URI uri = URI.createFileURI("/home/jdoyle/teiidDB.xmi");
+		URI uri = URI.createFileURI(".teiidDB.xmi"); //$NON-NLS-1$
         Resource rf = new XMIResourceImpl(uri);
 
         // Database vendor definitions
         DatabaseVendorDefinition databaseVendorDefinition = DatabaseDefinitionFactory.eINSTANCE.createDatabaseVendorDefinition();
-        databaseVendorDefinition.setVendor("Teiid.org");
-        databaseVendorDefinition.setVersion("6.2");
+		databaseVendorDefinition.setVendor("Teiid.org"); //$NON-NLS-1$
+		databaseVendorDefinition.setVersion("6.2"); //$NON-NLS-1$
         databaseVendorDefinition.setViewTriggerSupported(false);
         databaseVendorDefinition.setMaximumIdentifierLength(64);
         databaseVendorDefinition.setMaximumCommentLength(64);
@@ -73,70 +74,75 @@ public class ExampleForVendorPrimitiveWrite {
         // CHARACTER
         PredefinedDataTypeDefinition characterDataTypeDefinition = DatabaseDefinitionFactory.eINSTANCE.createPredefinedDataTypeDefinition();
         characterDataTypeDefinition.setPrimitiveType(PrimitiveType.CHARACTER_LITERAL);
-        characterDataTypeDefinition.getName().add("CHAR");
-        characterDataTypeDefinition.getName().add("CHARACTER");
+		characterDataTypeDefinition.getName().add("CHAR"); //$NON-NLS-1$
+		characterDataTypeDefinition.getName().add("CHARACTER"); //$NON-NLS-1$
         characterDataTypeDefinition.setMaximumLength(254);
         characterDataTypeDefinition.setKeyConstraintSupported(true);
-        characterDataTypeDefinition.getDefaultValueTypes().add("CURRENT_USER");
-        characterDataTypeDefinition.getDefaultValueTypes().add("NULL");
+		characterDataTypeDefinition.getDefaultValueTypes().add("CURRENT_USER"); //$NON-NLS-1$
+		characterDataTypeDefinition.getDefaultValueTypes().add("NULL"); //$NON-NLS-1$
         characterDataTypeDefinition.setLengthSupported(true);
         characterDataTypeDefinition.setJdbcEnumType(1);
-        characterDataTypeDefinition.setJavaClassName("java.lang.String");
+		characterDataTypeDefinition.setJavaClassName("java.lang.String"); //$NON-NLS-1$
         databaseVendorDefinition.getPredefinedDataTypeDefinitions().add(characterDataTypeDefinition);
-        ((XMIResource)rf).setID(characterDataTypeDefinition, PrimitiveType.CHARACTER_LITERAL + "_1");
+		((XMIResource) rf).setID(characterDataTypeDefinition,
+				PrimitiveType.CHARACTER_LITERAL + "_1"); //$NON-NLS-1$
 
         // DECIMAL
         PredefinedDataTypeDefinition decimalDataTypeDefinition = DatabaseDefinitionFactory.eINSTANCE.createPredefinedDataTypeDefinition();
         decimalDataTypeDefinition.setPrimitiveType(PrimitiveType.DECIMAL_LITERAL);
-        decimalDataTypeDefinition.getName().add("DECIMAL");
-        decimalDataTypeDefinition.getName().add("DEC");
+		decimalDataTypeDefinition.getName().add("DECIMAL"); //$NON-NLS-1$
+		decimalDataTypeDefinition.getName().add("DEC"); //$NON-NLS-1$
         decimalDataTypeDefinition.setPrecisionSupported(true);
         decimalDataTypeDefinition.setScaleSupported(true);
         decimalDataTypeDefinition.setKeyConstraintSupported(true);
         decimalDataTypeDefinition.setIdentitySupported(true);
-        decimalDataTypeDefinition.getDefaultValueTypes().add("NULL");
+		decimalDataTypeDefinition.getDefaultValueTypes().add("NULL"); //$NON-NLS-1$
         decimalDataTypeDefinition.setJdbcEnumType(3);
-        decimalDataTypeDefinition.setJavaClassName("java.math.BigDecimal");
+		decimalDataTypeDefinition.setJavaClassName("java.math.BigDecimal"); //$NON-NLS-1$
         databaseVendorDefinition.getPredefinedDataTypeDefinitions().add(decimalDataTypeDefinition);
-        ((XMIResource)rf).setID(decimalDataTypeDefinition, PrimitiveType.DECIMAL_LITERAL + "_1");
+		((XMIResource) rf).setID(decimalDataTypeDefinition,
+				PrimitiveType.DECIMAL_LITERAL + "_1"); //$NON-NLS-1$
 
         // DOUBLE
         PredefinedDataTypeDefinition doublePrecisionDataTypeDefinition = DatabaseDefinitionFactory.eINSTANCE.createPredefinedDataTypeDefinition();
         doublePrecisionDataTypeDefinition.setPrimitiveType(PrimitiveType.DOUBLE_PRECISION_LITERAL);
-        doublePrecisionDataTypeDefinition.getName().add("DOUBLE");
+		doublePrecisionDataTypeDefinition.getName().add("DOUBLE"); //$NON-NLS-1$
         doublePrecisionDataTypeDefinition.setKeyConstraintSupported(true);
-        doublePrecisionDataTypeDefinition.getDefaultValueTypes().add("NULL");
+		doublePrecisionDataTypeDefinition.getDefaultValueTypes().add("NULL"); //$NON-NLS-1$
         doublePrecisionDataTypeDefinition.setJdbcEnumType(8);
-        doublePrecisionDataTypeDefinition.setJavaClassName("double");
+		doublePrecisionDataTypeDefinition.setJavaClassName("double"); //$NON-NLS-1$
         databaseVendorDefinition.getPredefinedDataTypeDefinitions().add(doublePrecisionDataTypeDefinition);
-        ((XMIResource)rf).setID(doublePrecisionDataTypeDefinition, PrimitiveType.DOUBLE_PRECISION_LITERAL + "_1");
+		((XMIResource) rf).setID(doublePrecisionDataTypeDefinition,
+				PrimitiveType.DOUBLE_PRECISION_LITERAL + "_1"); //$NON-NLS-1$
 
         // INTEGER
         PredefinedDataTypeDefinition integerDataTypeDefinition = DatabaseDefinitionFactory.eINSTANCE.createPredefinedDataTypeDefinition();
         integerDataTypeDefinition.setPrimitiveType(PrimitiveType.INTEGER_LITERAL);
-        integerDataTypeDefinition.getName().add("INTEGER");
-        integerDataTypeDefinition.getName().add("INT");
+		integerDataTypeDefinition.getName().add("INTEGER"); //$NON-NLS-1$
+		integerDataTypeDefinition.getName().add("INT"); //$NON-NLS-1$
         integerDataTypeDefinition.setKeyConstraintSupported(true);
         integerDataTypeDefinition.setIdentitySupported(true);
-        integerDataTypeDefinition.getDefaultValueTypes().add("NULL");
+		integerDataTypeDefinition.getDefaultValueTypes().add("NULL"); //$NON-NLS-1$
         integerDataTypeDefinition.setJdbcEnumType(4);
-        integerDataTypeDefinition.setJavaClassName("int");
+		integerDataTypeDefinition.setJavaClassName("int"); //$NON-NLS-1$
         databaseVendorDefinition.getPredefinedDataTypeDefinitions().add(integerDataTypeDefinition);
-        ((XMIResource)rf).setID(integerDataTypeDefinition, PrimitiveType.INTEGER_LITERAL + "_1");
+		((XMIResource) rf).setID(integerDataTypeDefinition,
+				PrimitiveType.INTEGER_LITERAL + "_1"); //$NON-NLS-1$
 
         // NUMERIC
         PredefinedDataTypeDefinition numericDataTypeDefinition = DatabaseDefinitionFactory.eINSTANCE.createPredefinedDataTypeDefinition();
         numericDataTypeDefinition.setPrimitiveType(PrimitiveType.NUMERIC_LITERAL);
-        numericDataTypeDefinition.getName().add("NUMERIC");
-        numericDataTypeDefinition.getName().add("NUM");
+		numericDataTypeDefinition.getName().add("NUMERIC"); //$NON-NLS-1$
+		numericDataTypeDefinition.getName().add("NUM"); //$NON-NLS-1$
         numericDataTypeDefinition.setKeyConstraintSupported(true);
         numericDataTypeDefinition.setPrecisionSupported(true);
         numericDataTypeDefinition.setScaleSupported(true);
-        numericDataTypeDefinition.getDefaultValueTypes().add("NULL");
+		numericDataTypeDefinition.getDefaultValueTypes().add("NULL"); //$NON-NLS-1$
         numericDataTypeDefinition.setJdbcEnumType(2);
-        numericDataTypeDefinition.setJavaClassName("java.math.BigDecimal");
+		numericDataTypeDefinition.setJavaClassName("java.math.BigDecimal"); //$NON-NLS-1$
         databaseVendorDefinition.getPredefinedDataTypeDefinitions().add(numericDataTypeDefinition);
-        ((XMIResource)rf).setID(numericDataTypeDefinition, PrimitiveType.NUMERIC_LITERAL + "_1");
+		((XMIResource) rf).setID(numericDataTypeDefinition,
+				PrimitiveType.NUMERIC_LITERAL + "_1"); //$NON-NLS-1$
 
         EList resourceContents = rf.getContents();
         resourceContents.add(databaseVendorDefinition);

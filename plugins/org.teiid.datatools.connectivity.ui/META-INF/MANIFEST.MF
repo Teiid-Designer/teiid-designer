@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.teiid.datatools.connectivity.ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.teiid.datatools.connectivity.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.teiid.datatools.connectivity.ui.Activator
-Bundle-Vendor: Teiid.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,
@@ -19,3 +19,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.datatools.sqltools.core,
  org.eclipse.datatools.sqltools.sql.parser
+Bundle-Localization: plugin

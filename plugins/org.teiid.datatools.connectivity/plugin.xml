@@ -60,7 +60,6 @@
             name="Database Connections"/>
       <connectionProfile
             category="org.eclipse.datatools.connectivity.db.category"
-            configurationType="org.eclipse.datatools.connectivity.db.generic.configurationType"
             icon="icons/jdbc_16.gif"
             id="org.teiid.datatools.connectivity.connectionProfile"
             name="Teiid Virtual Database"

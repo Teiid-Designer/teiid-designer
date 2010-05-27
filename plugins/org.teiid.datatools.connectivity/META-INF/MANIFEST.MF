@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Connectivity
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.teiid.datatools.connectivity;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.teiid.datatools.connectivity.Activator
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,
@@ -17,3 +18,4 @@ Import-Package: org.eclipse.datatools.modelbase.dbdefinition,
  org.eclipse.emf.ecore.resource,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.ecore.xmi.impl
+Bundle-Localization: plugin

@@ -17,7 +17,7 @@ public class TeiidPlanParser implements IPlanParser {
 		
 		TreePlanNodeComponent rootNode = new TreePlanNodeComposite();
 		
-		String planName = "The Plan";
+		String planName = "Teiid Plan"; //$NON-NLS-1$
 		result = new TreeExecutionPlanDocument(rootNode, planName, rawPlan);
 		return new TreeExecutionPlanDocument[]{result};
 	}

@@ -6,6 +6,7 @@ public class ConnectionProfileWizard extends ExtensibleNewConnectionProfileWizar
 
     public ConnectionProfileWizard() {
         super(new TeiidProfileDetailsWizardPage("detailsPage")); //$NON-NLS-1$
-        setWindowTitle(Messages.getString("ConnectionProfileWizard.WizardTitle"));
+		setWindowTitle(Messages
+				.getString("ConnectionProfileWizard.WizardTitle")); //$NON-NLS-1$
     }
 }
