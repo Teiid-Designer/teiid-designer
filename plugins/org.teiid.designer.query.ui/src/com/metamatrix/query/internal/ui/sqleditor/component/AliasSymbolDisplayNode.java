@@ -61,7 +61,7 @@ public class AliasSymbolDisplayNode extends ExpressionDisplayNode {
 
         AliasSymbol aliasSymbol = (AliasSymbol)this.getLanguageObject();
         // Get the childNode
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         // int indent = child.getIndentLevel();
 
         if (child.hasDisplayNodes()) {

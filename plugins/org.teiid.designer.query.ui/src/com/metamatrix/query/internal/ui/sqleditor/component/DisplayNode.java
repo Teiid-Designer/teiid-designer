@@ -28,8 +28,8 @@ public abstract class DisplayNode implements
     protected int endIndex = 0;
     protected DisplayNode parentNode = null;
     protected LanguageObject languageObject = null;
-    protected List childNodeList = Collections.EMPTY_LIST;
-    protected List displayNodeList = Collections.EMPTY_LIST;
+    protected List<DisplayNode> childNodeList = Collections.EMPTY_LIST;
+    protected List<DisplayNode> displayNodeList = Collections.EMPTY_LIST;
     protected int indentLevel = 0;
     private boolean visible = true;
 
@@ -54,7 +54,7 @@ public abstract class DisplayNode implements
     /**
      * Get the Child Nodes of this Display Node
      */
-    public List getChildren() {
+    public List<DisplayNode> getChildren() {
         return childNodeList;
     }
 

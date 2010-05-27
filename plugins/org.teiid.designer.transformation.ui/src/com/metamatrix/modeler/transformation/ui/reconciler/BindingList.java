@@ -22,9 +22,9 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 public class BindingList {
 
 	private final int COUNT = 10;
-	private List bindings = new ArrayList(COUNT);
+	private List<Binding> bindings = new ArrayList<Binding>(COUNT);
     private List removedBindings = new ArrayList();
-	private Set changeListeners = new HashSet();
+	private Set<IBindingListViewer> changeListeners = new HashSet<IBindingListViewer>();
 
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class BindingList {
      */
     public Binding get(int index) {
         if(index>=0 && index<bindings.size()) {
-            return (Binding)bindings.get(index);
+            return bindings.get(index);
         } 
         return null;
     }
@@ -91,9 +91,9 @@ public class BindingList {
      */
     public void add(Binding binding) {
         bindings.add(bindings.size(), binding);
-        Iterator iterator = changeListeners.iterator();
+        Iterator<IBindingListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((IBindingListViewer) iterator.next()).addBinding(binding);
+            iterator.next().addBinding(binding);
     }
     
     /**
@@ -114,9 +114,9 @@ public class BindingList {
      */
     public void insert(Binding binding,int index) {
         bindings.add(index, binding);
-        Iterator iterator = changeListeners.iterator();
+        Iterator<IBindingListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((IBindingListViewer) iterator.next()).insertBinding(binding,index);
+            iterator.next().insertBinding(binding,index);
     }
     
     /**
@@ -128,9 +128,9 @@ public class BindingList {
         if(!removedBindings.contains(binding)) {
             removedBindings.add(binding);
         }
-        Iterator iterator = changeListeners.iterator();
+        Iterator<IBindingListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((IBindingListViewer) iterator.next()).removeBinding(binding);
+            iterator.next().removeBinding(binding);
     }
 
     /**
@@ -198,9 +198,9 @@ public class BindingList {
 	 * @param binding that changed.
 	 */
 	public void bindingChanged(Binding binding) {
-		Iterator iterator = changeListeners.iterator();
+		Iterator<IBindingListViewer> iterator = changeListeners.iterator();
 		while (iterator.hasNext())
-			((IBindingListViewer) iterator.next()).updateBinding(binding);
+			iterator.next().updateBinding(binding);
 	}
 
     /**
@@ -208,9 +208,9 @@ public class BindingList {
      * @param updateLabels 'true' if label update is required, 'false' if not.
      */
     public void refresh(boolean updateLabels) {
-        Iterator iterator = changeListeners.iterator();
+        Iterator<IBindingListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((IBindingListViewer) iterator.next()).refresh(updateLabels);
+            iterator.next().refresh(updateLabels);
     }
 
     /**
@@ -288,7 +288,7 @@ public class BindingList {
         
         // Look from the current index to the end of the list
         for(int i=index+1; i<size(); i++) {
-            Binding nextBinding = (Binding)bindings.get(i);
+            Binding nextBinding = bindings.get(i);
             if(!nextBinding.isBound()) {
                 result = nextBinding;
                 break;
@@ -315,7 +315,7 @@ public class BindingList {
         
         // Look from the current index to the end of the list
         for(int i=index+1; i<size(); i++) {
-            Binding nextBinding = (Binding)bindings.get(i);
+            Binding nextBinding = bindings.get(i);
             if(nextBinding.isBound()) {
                 result = nextBinding;
                 break;
@@ -342,7 +342,7 @@ public class BindingList {
         
         // Look from the current index to the end of the list
         for(int i=index+1; i<size(); i++) {
-            Binding nextBinding = (Binding)bindings.get(i);
+            Binding nextBinding = bindings.get(i);
             if(nextBinding.hasTypeConflict()) {
                 result = nextBinding;
                 break;
@@ -364,7 +364,7 @@ public class BindingList {
     public void moveUp(Binding binding) {
         int currentIndex = indexOf(binding);
         if(currentIndex>0) {
-            Binding removedBinding = (Binding)bindings.remove(currentIndex);
+            Binding removedBinding = bindings.remove(currentIndex);
             bindings.add(--currentIndex,removedBinding);
             refresh(true);
         }
@@ -377,7 +377,7 @@ public class BindingList {
     public void moveTop(Binding binding) {
         int currentIndex = indexOf(binding);
         if(currentIndex>0) {
-            Binding removedBinding = (Binding)bindings.remove(currentIndex);
+            Binding removedBinding = bindings.remove(currentIndex);
             bindings.add(0,removedBinding);
             refresh(true);
         }
@@ -390,7 +390,7 @@ public class BindingList {
     public void moveBottom(Binding binding) {
         int currentIndex = indexOf(binding);
         if(currentIndex>-1 && currentIndex<bindings.size()-1) {
-            Binding removedBinding = (Binding)bindings.remove(currentIndex);
+            Binding removedBinding = bindings.remove(currentIndex);
             bindings.add(removedBinding);
             refresh(true);
         }
@@ -403,7 +403,7 @@ public class BindingList {
     public void moveDown(Binding binding) {
         int index = indexOf(binding);
         if(index>-1 && index<bindings.size()-1) {
-            Binding removedBinding = (Binding)bindings.remove(index);
+            Binding removedBinding = bindings.remove(index);
             bindings.add(++index,removedBinding);
             refresh(true);
         }
@@ -418,8 +418,8 @@ public class BindingList {
         int index1 = indexOf(binding1);
         int index2 = indexOf(binding2);
         if(index1>-1 && index2>-1) {
-            Object obj1 = bindings.get(index1);
-            Object obj2 = bindings.get(index2);
+            Binding obj1 = bindings.get(index1);
+            Binding obj2 = bindings.get(index2);
             bindings.set(index2,obj1);
             bindings.set(index1,obj2);
             refresh(true);

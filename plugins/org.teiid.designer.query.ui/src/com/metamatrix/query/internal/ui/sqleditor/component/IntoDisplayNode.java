@@ -66,7 +66,7 @@ public class IntoDisplayNode extends DisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Group Symbol Child
-        DisplayNode node = (DisplayNode)childNodeList.get(0);
+        DisplayNode node = childNodeList.get(0);
         displayNodeList.add(node);
         
 //        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));

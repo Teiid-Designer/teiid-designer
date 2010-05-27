@@ -30,7 +30,7 @@ public class ClassLoaderUtil {
     private static final Class[] EMPTY_ARGUMENT_LIST = new Class[] {};
 
     private final URLClassLoader loader;
-    private final List problems;
+    private final List<IStatus> problems;
 
     /**
      * Construct an instance of ClassLoaderUtil.
@@ -38,7 +38,7 @@ public class ClassLoaderUtil {
     public ClassLoaderUtil( final URLClassLoader loader ) {
         CoreArgCheck.isNotNull(loader);
         this.loader = loader;
-        this.problems = new ArrayList();
+        this.problems = new ArrayList<IStatus>();
     }
 
     /**

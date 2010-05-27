@@ -110,7 +110,7 @@ public class QueryDisplayNode extends DisplayNode {
         int nChildren = childNodeList.size();
         List validClauses = new ArrayList(0);
         for(int i=0; i<nChildren; i++) {
-            DisplayNode node = (DisplayNode)childNodeList.get(i);
+            DisplayNode node = childNodeList.get(i);
             if( node.isAnywhereWithin(index) ) {
                 validClauses.add(node);
             }
@@ -120,8 +120,8 @@ public class QueryDisplayNode extends DisplayNode {
         if(nClauses==0) {
             // Do one last check to see if between nodes
             for(int i=0; i<(nChildren-1); i++) {
-                DisplayNode node1 = (DisplayNode)childNodeList.get(i);
-                DisplayNode node2 = (DisplayNode)childNodeList.get(i+1);
+                DisplayNode node1 = childNodeList.get(i);
+                DisplayNode node2 = childNodeList.get(i+1);
                 int endNode1 = node1.getEndIndex();
                 int startNode2 = node2.getStartIndex();
                 if( index>(endNode1+1) && index<startNode2 ) {

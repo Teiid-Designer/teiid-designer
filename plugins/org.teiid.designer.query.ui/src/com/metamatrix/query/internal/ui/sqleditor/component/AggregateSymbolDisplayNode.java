@@ -41,7 +41,7 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
      *   the Expression - if there is one.
      */
     private void createChildNodes() {
-        childNodeList = new ArrayList();
+        childNodeList = new ArrayList<DisplayNode>();
 //        int indent = this.getIndentLevel();
         AggregateSymbol aggregateSymbol = (AggregateSymbol)this.getLanguageObject();
         Expression expr = aggregateSymbol.getExpression();
@@ -74,7 +74,7 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
         }
 
         if(childNodeList.size()>0) {
-            DisplayNode child = (DisplayNode)childNodeList.get(0);
+            DisplayNode child = childNodeList.get(0);
 //            indent = child.getIndentLevel();
             if( child.hasDisplayNodes() ) {
                     displayNodeList.addAll(child.getDisplayNodeList());
@@ -84,7 +84,7 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
             
             if(childNodeList.size()>1) {
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                child = (DisplayNode)childNodeList.get(1);
+                child = childNodeList.get(1);
 //              indent = child.getIndentLevel();
               if( child.hasDisplayNodes() ) {
                       displayNodeList.addAll(child.getDisplayNodeList());

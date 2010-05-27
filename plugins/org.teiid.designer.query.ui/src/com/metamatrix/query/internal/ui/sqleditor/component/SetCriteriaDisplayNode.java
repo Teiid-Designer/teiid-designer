@@ -85,7 +85,7 @@ public class SetCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         //int indent = this.getIndentLevel();
 
         // If Left Expression has display nodes, add them to the list
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());
         } else {
@@ -106,7 +106,7 @@ public class SetCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         // value list
 		int size = childNodeList.size()-1;
 		if(size == 1) {
-            child = (DisplayNode)childNodeList.get(1);
+            child = childNodeList.get(1);
             if( child.hasDisplayNodes() ) {
                     displayNodeList.addAll(child.getDisplayNodeList());
             } else {

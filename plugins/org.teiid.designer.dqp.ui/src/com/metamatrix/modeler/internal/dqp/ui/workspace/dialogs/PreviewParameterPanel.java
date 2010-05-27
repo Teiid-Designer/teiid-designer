@@ -130,9 +130,9 @@ public class PreviewParameterPanel extends ScrolledComposite implements DqpUiCon
                                           List<EObject> parameters ) {
         ILabelProvider labelProvider = ModelUtilities.getAdapterFactoryLabelProvider();
         int numCols = parameters.size();
-        this.names = new ArrayList(numCols);
-        this.images = new ArrayList(numCols);
-        this.textFields = new ArrayList(numCols);
+        this.names = new ArrayList<Label>(numCols);
+        this.images = new ArrayList<Label>(numCols);
+        this.textFields = new ArrayList<Text>(numCols);
         this.statuses = new IStatus[numCols];
 
         for (EObject param : parameters) {

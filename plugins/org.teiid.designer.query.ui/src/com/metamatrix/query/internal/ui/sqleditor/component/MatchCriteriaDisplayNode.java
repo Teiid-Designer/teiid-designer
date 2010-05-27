@@ -81,7 +81,7 @@ public class MatchCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
 
         MatchCriteria matchCriteria = (MatchCriteria)this.getLanguageObject();
         // If Left Expression has display nodes, add them to the list
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());
         } else {
@@ -97,7 +97,7 @@ public class MatchCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // If Right Expression has display nodes, add them to the list
-        child = (DisplayNode)childNodeList.get(1);
+        child = childNodeList.get(1);
 //        indent = child.getIndentLevel();
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());

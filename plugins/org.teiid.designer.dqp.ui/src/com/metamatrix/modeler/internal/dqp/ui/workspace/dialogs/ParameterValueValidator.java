@@ -146,8 +146,8 @@ public class ParameterValueValidator implements
             Collection<XSDDiagnostic> diagnostics = assessment.getLocalDiagnostics();
 
             if ((diagnostics != null) && !diagnostics.isEmpty()) {
-                for (Iterator itr = diagnostics.iterator(); itr.hasNext();) {
-                    XSDDiagnostic diagnostic = (XSDDiagnostic)itr.next();
+                for (Iterator<XSDDiagnostic> itr = diagnostics.iterator(); itr.hasNext();) {
+                    XSDDiagnostic diagnostic = itr.next();
 
                     if (diagnostic.getSeverity() == XSDDiagnosticSeverity.ERROR_LITERAL) {
                         String name = ModelerCore.getModelEditor().getName(object);

@@ -93,7 +93,7 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 
 		if(function.isImplicit()) {
 			// Hide this function, which is implicit
-            child = (DisplayNode)childNodeList.get(0);
+            child = childNodeList.get(0);
             if( child.hasDisplayNodes() ) {
                     displayNodeList.addAll(child.getDisplayNodeList());
             } else {
@@ -106,7 +106,7 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 
 			for(int i=0; i<childNodeList.size(); i++) {
-                child = (DisplayNode)childNodeList.get(i);
+                child = childNodeList.get(i);
                 if( child.hasDisplayNodes() ) {
                         displayNodeList.addAll(child.getDisplayNodeList());
                 } else {
@@ -127,7 +127,7 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,"NAME"));
 						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 					}
-                    child = (DisplayNode)childNodeList.get(i);
+                    child = childNodeList.get(i);
                     if( child.hasDisplayNodes() ) {
                             displayNodeList.addAll(child.getDisplayNodeList());
                     } else {

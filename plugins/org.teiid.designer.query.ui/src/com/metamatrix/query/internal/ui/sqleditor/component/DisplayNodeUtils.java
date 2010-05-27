@@ -829,27 +829,27 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     	}
     	DisplayNode result = null;
         if(displayNode instanceof SubqueryFromClauseDisplayNode) {
-            result = (DisplayNode)displayNode.getChildren().get(0);
+            result = displayNode.getChildren().get(0);
         } else if(displayNode instanceof SubquerySetCriteriaDisplayNode) {
-            result = (DisplayNode)displayNode.getChildren().get(1);
+            result = displayNode.getChildren().get(1);
         } else if(displayNode instanceof ScalarSubqueryDisplayNode) {
-            result = (DisplayNode)displayNode.getChildren().get(0);
+            result = displayNode.getChildren().get(0);
         } else if(displayNode instanceof SubqueryCompareCriteriaDisplayNode) {
-            result = (DisplayNode)displayNode.getChildren().get(1);
+            result = displayNode.getChildren().get(1);
         } else {
 	        DisplayNode parentNode = displayNode.getParent();
 	        while(parentNode!=null) {
 	            if(parentNode instanceof SubqueryFromClauseDisplayNode) {
-            		result = (DisplayNode)parentNode.getChildren().get(0);
+            		result = parentNode.getChildren().get(0);
             		break;
 	            } else if(parentNode instanceof SubquerySetCriteriaDisplayNode) {
-            		result = (DisplayNode)parentNode.getChildren().get(1);
+            		result = parentNode.getChildren().get(1);
             		break;
                 } else if(parentNode instanceof ScalarSubqueryDisplayNode) {
-                    result = (DisplayNode)parentNode.getChildren().get(0);
+                    result = parentNode.getChildren().get(0);
                     break;
                 } else if(parentNode instanceof SubqueryCompareCriteriaDisplayNode) {
-                    result = (DisplayNode)parentNode.getChildren().get(1);
+                    result = parentNode.getChildren().get(1);
                     break;
 	            }
 	            parentNode = parentNode.getParent();

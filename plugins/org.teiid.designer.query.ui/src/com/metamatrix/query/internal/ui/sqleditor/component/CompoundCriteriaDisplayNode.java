@@ -79,7 +79,7 @@ public class CompoundCriteriaDisplayNode extends LogicalCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 
         // Criteria 1
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());
         } else {
@@ -93,7 +93,7 @@ public class CompoundCriteriaDisplayNode extends LogicalCriteriaDisplayNode {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,opStr));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE+LTPAREN));
-            child = (DisplayNode)childNodeList.get(i);
+            child = childNodeList.get(i);
             if( child.hasDisplayNodes() ) {
                     displayNodeList.addAll(child.getDisplayNodeList());
             } else {

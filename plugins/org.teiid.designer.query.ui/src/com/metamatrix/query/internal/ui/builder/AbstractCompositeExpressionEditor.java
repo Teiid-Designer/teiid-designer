@@ -20,11 +20,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.Expression;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.internal.ui.builder.model.CompositeLanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.util.CompositeEditorMessagePanel;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.Expression;
 import com.metamatrix.query.ui.builder.AbstractCompositeLanguageObjectEditor;
 import com.metamatrix.query.ui.builder.ILanguageObjectEditor;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -38,7 +38,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private List editorButtons;
+    private List<Button> editorButtons;
 
     StackLayout stackLayout; // layout for the editors
 
@@ -65,16 +65,16 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
     // METHODS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void createEditorButtons( List theEditors ) {
+    private void createEditorButtons( List<ILanguageObjectEditor> theEditors ) {
         CoreArgCheck.isNotEmpty(theEditors);
 
         int numEditors = theEditors.size();
-        editorButtons = new ArrayList(numEditors);
+        editorButtons = new ArrayList<Button>(numEditors);
         GridLayout gdlayout = (GridLayout)pnlButtons.getLayout();
         gdlayout.numColumns = numEditors;
 
         for (int i = 0; i < numEditors; i++) {
-            ILanguageObjectEditor editor = (ILanguageObjectEditor)theEditors.get(i);
+            ILanguageObjectEditor editor = theEditors.get(i);
 
             String title = editor.getTitle();
             Button btn = new Button(pnlButtons, SWT.RADIO);
@@ -178,7 +178,7 @@ public abstract class AbstractCompositeExpressionEditor extends AbstractComposit
      * @param theEditor the editor whose button is being requested
      */
     protected Button getEditorButton( ILanguageObjectEditor theEditor ) {
-        return (Button)editorButtons.get(getEditors().indexOf(theEditor));
+        return editorButtons.get(getEditors().indexOf(theEditor));
     }
 
     /* (non-Javadoc)

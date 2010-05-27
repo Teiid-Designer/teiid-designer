@@ -78,7 +78,7 @@ public class ConnectorPropertySource implements IPropertySource {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
         Collection<PropertyDefinition> typeDefs = this.type.getPropertyDefinitions();
         boolean showExpertProps = this.provider.isShowingExpertProperties();
-        Collection temp = new ArrayList(typeDefs.size());
+        Collection<PropertyDescriptor> temp = new ArrayList<PropertyDescriptor>(typeDefs.size());
 
         for (final PropertyDefinition propDefn : typeDefs) {
             final String id = propDefn.getName();

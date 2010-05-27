@@ -55,7 +55,7 @@ public class SqlCompletionProcessor
 
 		// iterate over all the different categories
 		for (int i = 0; i < SqlSyntax.ALL_WORDS.size(); i++) {
-			if ( ((String)SqlSyntax.ALL_WORDS.get(i)).startsWith(wordPart.getString().toUpperCase()))
+			if ( (SqlSyntax.ALL_WORDS.get(i)).startsWith(wordPart.getString().toUpperCase()))
 			     proposalList.add(SqlSyntax.ALL_WORDS.get(i));
 		}
 

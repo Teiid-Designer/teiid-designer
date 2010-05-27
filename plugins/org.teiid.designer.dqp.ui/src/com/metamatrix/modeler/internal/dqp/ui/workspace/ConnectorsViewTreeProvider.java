@@ -91,7 +91,7 @@ public class ConnectorsViewTreeProvider implements ITreeContentProvider, ILabelP
 
         } else if (parentElement instanceof Connector) {
             Connector connector = (Connector)parentElement;
-            Collection bindings = Collections.EMPTY_LIST;
+            Collection<SourceBinding> bindings = Collections.emptyList();
 
             if (showModelMappings && serverMgr != null) {
                 try {

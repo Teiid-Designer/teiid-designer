@@ -66,7 +66,7 @@ public class IsNullCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
 //        int indent = this.getIndentLevel();
 
         // If Expression has display nodes, add them to the list
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());
         } else {

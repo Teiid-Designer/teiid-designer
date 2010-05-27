@@ -97,7 +97,7 @@ public class HavingDisplayNode extends DisplayNode {
 //        }
 
         if(childNodeList.size()>0) {
-            DisplayNode childNode = (DisplayNode) childNodeList.get(0);
+            DisplayNode childNode = childNodeList.get(0);
             //indent = childNode.getIndentLevel();
             if(childNode.hasDisplayNodes()) {
                 displayNodeList.addAll(childNode.getDisplayNodeList());

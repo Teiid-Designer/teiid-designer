@@ -68,7 +68,7 @@ public class SubqueryFromClauseDisplayNode extends FromClauseDisplayNode {
 
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         // ChildNode is the QueryCommand DisplayNode
-        DisplayNode childNode = (DisplayNode)childNodeList.get(0);
+        DisplayNode childNode = childNodeList.get(0);
         if(childNode.hasDisplayNodes()) {
             displayNodeList.addAll(childNode.getDisplayNodeList());
         } else {

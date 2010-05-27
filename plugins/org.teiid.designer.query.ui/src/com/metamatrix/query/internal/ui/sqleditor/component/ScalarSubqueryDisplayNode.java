@@ -65,7 +65,7 @@ public class ScalarSubqueryDisplayNode extends ExpressionDisplayNode {
 		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 
 		// Add Command DisplayNodes to the list
-		DisplayNode child = (DisplayNode)childNodeList.get(0);
+		DisplayNode child = childNodeList.get(0);
 		if( child.hasDisplayNodes() ) {
 				displayNodeList.addAll(child.getDisplayNodeList());
 		} else {

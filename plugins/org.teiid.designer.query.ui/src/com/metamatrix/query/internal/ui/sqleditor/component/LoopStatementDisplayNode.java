@@ -84,7 +84,7 @@ public class LoopStatementDisplayNode extends StatementDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         
         // Add the Command
-        DisplayNode node = (DisplayNode)childNodeList.get(0);
+        DisplayNode node = childNodeList.get(0);
         if(node.hasDisplayNodes()) {
         	displayNodeList.addAll(node.getDisplayNodeList());
         } else {
@@ -101,7 +101,7 @@ public class LoopStatementDisplayNode extends StatementDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
 
         // Add the Block 
-		node = (DisplayNode)childNodeList.get(1);
+		node = childNodeList.get(1);
         if(node.hasDisplayNodes()) {
         	displayNodeList.addAll(node.getDisplayNodeList());
         } else {

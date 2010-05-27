@@ -139,10 +139,10 @@ public class ModelConnectorMapperImpl implements ModelConnectorMapper {
      */
     private Collection<ConnectorType> findMatchingConnectorType( final VdbModelEntry modelEntry ) throws Exception {
         if (modelEntry.getType() != ModelType.PHYSICAL_LITERAL) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         final Map<String, String> jdbcProperties = ModelerDqpUtils.getModelJdbcProperties(modelEntry);
-        final Collection connTypes = new ArrayList();
+        final Collection<ConnectorType> connTypes = new ArrayList();
         if (!jdbcProperties.isEmpty()) {
             // get all the available connector
             // for each type, get properties

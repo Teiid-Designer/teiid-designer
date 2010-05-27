@@ -23,6 +23,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -180,7 +181,7 @@ public class SqlEditorPanel extends SashForm
     private int caretYPosition = 0;
 
     // Actions
-    private List actionList = null;
+    private List<IAction> actionList = null;
     Validate validateAction;
     LaunchCriteriaBuilder launchCriteriaBuilderAction;
     LaunchExpressionBuilder launchExpressionBuilderAction;
@@ -1915,7 +1916,7 @@ public class SqlEditorPanel extends SashForm
         return result;
     }
 
-    public List getActions() {
+    public List<IAction> getActions() {
 
         /*
          * jh note (8/22/2003): Find and Replace have been removed from this toolbar.
@@ -1923,7 +1924,7 @@ public class SqlEditorPanel extends SashForm
          */
 
         if (actionList == null) {
-            actionList = new ArrayList(11);
+            actionList = new ArrayList<IAction>(11);
             if (includedActionsList.contains(ACTION_ID_VALIDATE)) {
                 validateAction = new Validate(this);
                 actionList.add(validateAction);

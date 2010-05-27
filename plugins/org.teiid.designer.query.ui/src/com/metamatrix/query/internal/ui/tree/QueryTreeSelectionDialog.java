@@ -86,7 +86,7 @@ public class QueryTreeSelectionDialog extends ElementTreeSelectionDialog impleme
     }
 
     private void init() {
-        ArrayList inputList = new ArrayList(1);
+        List<Command> inputList = new ArrayList<Command>(1);
         inputList.add(root);
         setInput(inputList);
         setAllowMultiple(false);

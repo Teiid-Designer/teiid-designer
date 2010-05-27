@@ -68,7 +68,7 @@ public class SubquerySetCriteriaDisplayNode extends CriteriaDisplayNode {
         SubquerySetCriteria subquerySetCriteria = (SubquerySetCriteria)this.getLanguageObject();
         
         // First ChildNode is the Expression
-        DisplayNode childNode = (DisplayNode)childNodeList.get(0);
+        DisplayNode childNode = childNodeList.get(0);
         if(childNode.hasDisplayNodes()) {
             displayNodeList.addAll(childNode.getDisplayNodeList());
         } else {
@@ -86,7 +86,7 @@ public class SubquerySetCriteriaDisplayNode extends CriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         
         // Second ChildNode is the command
-        childNode = (DisplayNode)childNodeList.get(1);
+        childNode = childNodeList.get(1);
         if(childNode.hasDisplayNodes()) {
             displayNodeList.addAll(childNode.getDisplayNodeList());
         } else {

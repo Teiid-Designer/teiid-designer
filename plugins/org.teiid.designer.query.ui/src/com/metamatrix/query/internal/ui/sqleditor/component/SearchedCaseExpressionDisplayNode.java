@@ -122,7 +122,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
             int nChildren = childNodeList.size();
-            DisplayNode elseNode = (DisplayNode)childNodeList.get(nChildren-1);
+            DisplayNode elseNode = childNodeList.get(nChildren-1);
             if( elseNode!=null && elseNode.hasDisplayNodes() ) {
                 displayNodeList.addAll(elseNode.getDisplayNodeList());
             } else {

@@ -96,7 +96,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
         }
 
         // Left FromClause
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         // indent = child.getIndentLevel();
         if (child instanceof JoinPredicateDisplayNode && !joinPredicate.getLeftClause().hasHint()) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));
@@ -126,7 +126,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
         // Right FromClause
-        child = (DisplayNode)childNodeList.get(1);
+        child = childNodeList.get(1);
         // indent = child.getIndentLevel();
         if (child instanceof JoinPredicateDisplayNode && !joinPredicate.getRightClause().hasHint()) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));

@@ -16,11 +16,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.types.DataTypeManager.DefaultDataTypes;
-import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 
@@ -89,20 +89,20 @@ public final class BuilderUtils implements UiConstants {
     public static final List STRING_TYPES_LIST = Collections.unmodifiableList(Arrays.asList(STRING_TYPES));
 
     /** Keep in same order as STRING_TYPES. */
-    private static final Map TEXT_LIMITS; // STRING
+    private static final Map<String, Integer> TEXT_LIMITS; // STRING
 
     /** Text used to indicate something has not be defined or has not value. */
     public static final String UNDEFINED = SQLStringVisitor.getSQLString(null);
 
     /** Keep in same order as STRING_TYPES. */
-    private static final Map VALID_CHARS;
+    private static final Map<String, String> VALID_CHARS;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // INITIALIZER
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     static {
-        TEXT_LIMITS = new HashMap();
+        TEXT_LIMITS = new HashMap<String, Integer>();
         TEXT_LIMITS.put(STRING_TYPES[0], new Integer(30)); // BIG_DECIMAL
         TEXT_LIMITS.put(STRING_TYPES[1], new Integer(30)); // BIG_INTEGER
         TEXT_LIMITS.put(STRING_TYPES[2], new Integer(3)); // BYTE
@@ -114,7 +114,7 @@ public final class BuilderUtils implements UiConstants {
         TEXT_LIMITS.put(STRING_TYPES[8], new Integer(5)); // SHORT
         TEXT_LIMITS.put(STRING_TYPES[9], new Integer(256)); // STRING
 
-        VALID_CHARS = new HashMap();
+        VALID_CHARS = new HashMap<String, String>();
         VALID_CHARS.put(STRING_TYPES[0], "0123456789-."); // BIG_DECIMAL //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[1], "0123456789-"); // BIG_INTEGER //$NON-NLS-1$
         VALID_CHARS.put(STRING_TYPES[2], "0123456789-"); // BYTE //$NON-NLS-1$
@@ -175,7 +175,7 @@ public final class BuilderUtils implements UiConstants {
         int result = -1;
 
         if (TEXT_LIMITS.containsKey(theTextType)) {
-            Integer limit = (Integer)TEXT_LIMITS.get(theTextType);
+            Integer limit = TEXT_LIMITS.get(theTextType);
 
             if (limit != null) {
                 result = limit.intValue();
@@ -205,7 +205,7 @@ public final class BuilderUtils implements UiConstants {
     }
 
     public static String getValidChars( String theTextType ) {
-        return (String)VALID_CHARS.get(theTextType);
+        return VALID_CHARS.get(theTextType);
     }
 
     /**

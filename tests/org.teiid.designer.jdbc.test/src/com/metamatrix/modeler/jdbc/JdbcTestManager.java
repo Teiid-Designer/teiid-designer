@@ -107,11 +107,7 @@ public final class JdbcTestManager {
                         }
                     }
                     manager = new JdbcManagerImpl("Test Manager"); //$NON-NLS-1$
-                    try {
-                        manager.start();
-                    } catch (JdbcException e) {
-                    	throw new RuntimeException(e);
-                    }
+                    manager.start();
                 }
             }
         }

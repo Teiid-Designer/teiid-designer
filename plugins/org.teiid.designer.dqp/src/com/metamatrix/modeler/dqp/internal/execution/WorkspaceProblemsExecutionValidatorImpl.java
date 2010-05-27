@@ -130,7 +130,7 @@ public class WorkspaceProblemsExecutionValidatorImpl extends VdbExecutionValidat
      */
     private IStatus processStatus( IStatus theStatus ) {
         IStatus result = null;
-        List temp = new ArrayList();
+        List<IStatus> temp = new ArrayList<IStatus>();
 
         // if multistatus check children
         if (theStatus.isMultiStatus()) {
@@ -151,7 +151,7 @@ public class WorkspaceProblemsExecutionValidatorImpl extends VdbExecutionValidat
                 AutoMultiStatus multiStatus = new AutoMultiStatus(OK_STATUS);
 
                 for (int size = temp.size(), i = 0; i < size; ++i) {
-                    multiStatus.add(translate((IStatus)temp.get(i)));
+                    multiStatus.add(translate(temp.get(i)));
                 }
 
                 result = multiStatus;

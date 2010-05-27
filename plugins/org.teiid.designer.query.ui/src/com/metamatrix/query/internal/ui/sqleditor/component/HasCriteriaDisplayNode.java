@@ -66,7 +66,7 @@ public class HasCriteriaDisplayNode extends DisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         
         // Add the CriteriaSelector DisplayNodes
-        DisplayNode child = (DisplayNode)childNodeList.get(0);
+        DisplayNode child = childNodeList.get(0);
         if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());
         } else {

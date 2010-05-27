@@ -18,11 +18,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.udf.UdfManager;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidRuntimeException;
+import org.teiid.designer.udf.UdfManager;
+import org.teiid.query.analysis.AnalysisRecord;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.metadata.BasicQueryMetadataWrapper;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.report.ReportItem;
+import org.teiid.query.resolver.QueryResolver;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
+import org.teiid.query.validator.Validator;
+import org.teiid.query.validator.ValidatorReport;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -49,18 +61,6 @@ import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFacade;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.transformation.metadata.VdbMetadata;
-import org.teiid.query.analysis.AnalysisRecord;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.metadata.BasicQueryMetadataWrapper;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.report.ReportItem;
-import org.teiid.query.resolver.QueryResolver;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
-import org.teiid.query.validator.Validator;
-import org.teiid.query.validator.ValidatorReport;
 
 /**
  * TransformationValidator Static methods for doing Validation on the transformation.
@@ -383,7 +383,7 @@ public class TransformationValidator implements QueryValidator {
      */
     public SqlTransformationResult validateCommand( final Command command ) {
         CoreArgCheck.isNotNull(command);
-        Collection statusList = null;
+        Collection<IStatus> statusList = null;
         try {
             // Validate
             ValidatorReport report = Validator.validate(command, getQueryMetadata());
@@ -401,7 +401,7 @@ public class TransformationValidator implements QueryValidator {
             // handle exception
         } catch (TeiidComponentException e) {
             // Add exception to the problems list
-            statusList = new ArrayList(1);
+            statusList = new ArrayList<IStatus>(1);
             statusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
         }
 
@@ -561,10 +561,10 @@ public class TransformationValidator implements QueryValidator {
      * @param report the ValidatorReport
      * @return the List of Status
      */
-    protected List createStatusList( final ValidatorReport report ) {
+    private List<IStatus> createStatusList( final ValidatorReport report ) {
         if (report != null && report.hasItems()) {
             Collection items = report.getItems();
-            List statusList = new ArrayList(items.size());
+            List<IStatus> statusList = new ArrayList<IStatus>(items.size());
             Iterator itemIter = items.iterator();
             while (itemIter.hasNext()) {
                 ReportItem item = (ReportItem)itemIter.next();
@@ -573,7 +573,7 @@ public class TransformationValidator implements QueryValidator {
             }
             return statusList;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     protected SqlTransformationResult resolveCommand( final Command command,
@@ -620,11 +620,11 @@ public class TransformationValidator implements QueryValidator {
      * @param statuslist to which an error can be added
      * @return statuslist The updated status list
      */
-    protected Collection validateReferences( final Command command,
-                                             Collection statusList ) {
+    private Collection<IStatus> validateReferences( final Command command,
+                                                    Collection<IStatus> statusList ) {
         Collection references = ReferenceCollectorVisitor.getReferences(command);
         if (!references.isEmpty()) {
-            statusList = statusList != null ? statusList : new ArrayList(1);
+            statusList = statusList != null ? statusList : new ArrayList<IStatus>(1);
             IStatus status = new Status(
                                         IStatus.ERROR,
                                         TransformationPlugin.PLUGIN_ID,
@@ -643,10 +643,10 @@ public class TransformationValidator implements QueryValidator {
      * @param statuslist to which an error can be added
      * @return statuslist The updated status list
      */
-    protected Collection validateSources( final Command command,
-                                          Collection statusList ) {
+    private Collection<IStatus> validateSources( final Command command,
+                                                 Collection<IStatus> statusList ) {
         if (isTargetASourceInCommand(command)) {
-            statusList = statusList != null ? statusList : new ArrayList(1);
+            statusList = statusList != null ? statusList : new ArrayList<IStatus>(1);
             String message = TransformationPlugin.Util.getString("TransformationValidator.errorTargetIsSourceMsg", ModelerCore.getModelEditor().getName(targetGroup)); //$NON-NLS-1$
             IStatus status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, message, null);
             statusList.add(status);

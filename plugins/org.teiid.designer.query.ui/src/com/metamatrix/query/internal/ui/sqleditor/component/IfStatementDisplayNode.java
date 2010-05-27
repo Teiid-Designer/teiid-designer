@@ -93,7 +93,7 @@ public class IfStatementDisplayNode extends StatementDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IF));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         // Add the Conditional Criteria
-        DisplayNode node = (DisplayNode)childNodeList.get(0);
+        DisplayNode node = childNodeList.get(0);
         if(node.hasDisplayNodes()) {
         	displayNodeList.addAll(node.getDisplayNodeList());
         } else {
@@ -103,7 +103,7 @@ public class IfStatementDisplayNode extends StatementDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
 
         // Add the IfBlock 
-		node = (DisplayNode)childNodeList.get(1);
+		node = childNodeList.get(1);
         if(node.hasDisplayNodes()) {
         	displayNodeList.addAll(node.getDisplayNodeList());
         } else {
@@ -116,7 +116,7 @@ public class IfStatementDisplayNode extends StatementDisplayNode {
         	//displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ELSE));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-			node = (DisplayNode)childNodeList.get(2);
+			node = childNodeList.get(2);
 	        if(node.hasDisplayNodes()) {
 	        	displayNodeList.addAll(node.getDisplayNodeList());
 	        } else {

@@ -78,7 +78,7 @@ public class CreateUpdateProcedureDisplayNode extends DisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
 
         // Add the Block
-        DisplayNode childNode = (DisplayNode)getChildren().get(0);
+        DisplayNode childNode = getChildren().get(0);
         displayNodeList.addAll(childNode.getDisplayNodeList());
     }
 }

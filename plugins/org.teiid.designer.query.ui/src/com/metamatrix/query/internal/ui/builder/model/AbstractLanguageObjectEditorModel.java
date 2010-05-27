@@ -9,10 +9,10 @@ package com.metamatrix.query.internal.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.query.sql.LanguageObject;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import org.teiid.query.sql.LanguageObject;
 import com.metamatrix.query.ui.UiConstants;
 
 /**
@@ -32,7 +32,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
 
     private LanguageObject savedLangObj;
 
-    private List listeners;
+    private List<ILanguageObjectEditorModelListener> listeners;
 
     protected boolean notifyListeners = true;
 
@@ -60,7 +60,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
         boolean result = false;
 
         if (listeners == null) {
-            listeners = new ArrayList();
+            listeners = new ArrayList<ILanguageObjectEditorModelListener>();
         }
 
         if (!listeners.contains(theListener)) {
@@ -91,7 +91,7 @@ public abstract class AbstractLanguageObjectEditorModel implements ILanguageObje
             LanguageObjectEditorModelEvent event = new LanguageObjectEditorModelEvent(this, theType);
 
             for (int size = listeners.size(), i = 0; i < size; i++) {
-                ILanguageObjectEditorModelListener listener = (ILanguageObjectEditorModelListener)listeners.get(i);
+                ILanguageObjectEditorModelListener listener = listeners.get(i);
                 listener.modelChanged(event);
             }
         }

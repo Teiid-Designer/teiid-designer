@@ -87,7 +87,7 @@ public class BetweenCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         BetweenCriteria criteria = (BetweenCriteria)(this.getLanguageObject());
 
         // Add the Expression Child
-        DisplayNode node = (DisplayNode)childNodeList.get(0);
+        DisplayNode node = childNodeList.get(0);
         if( node.hasDisplayNodes() ) {
             displayNodeList.addAll(node.getDisplayNodeList());
         } else {
@@ -104,7 +104,7 @@ public class BetweenCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Lower Expression Child
-        node = (DisplayNode)childNodeList.get(1);
+        node = childNodeList.get(1);
         if( node.hasDisplayNodes() ) {
             displayNodeList.addAll(node.getDisplayNodeList());
         } else {
@@ -116,7 +116,7 @@ public class BetweenCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Upper Expression Child
-        node = (DisplayNode)childNodeList.get(2);
+        node = childNodeList.get(2);
         if( node.hasDisplayNodes() ) {
             displayNodeList.addAll(node.getDisplayNodeList());
         } else {

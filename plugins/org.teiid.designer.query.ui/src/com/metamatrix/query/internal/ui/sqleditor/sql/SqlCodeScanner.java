@@ -97,7 +97,7 @@ public class SqlCodeScanner extends RuleBasedScanner {
                     SWT.NORMAL));
 
 		setDefaultReturnToken(other);
-		List rules = new ArrayList();
+		List<IRule> rules = new ArrayList<IRule>();
 
 		// Add rule for single line comments.
 		rules.add(new EndOfLineRule("//", comment)); //$NON-NLS-1$
@@ -112,11 +112,11 @@ public class SqlCodeScanner extends RuleBasedScanner {
 		// Add word rule for keywords, datatypes, and function names.
 		WordRule wordRule = new CaseInsensitiveWordRule(new SqlWordDetector(), other);
         for (int i = 0; i < SqlSyntax.RESERVED_WORDS.size(); i++)
-            wordRule.addWord((String)SqlSyntax.RESERVED_WORDS.get(i), keyword);
+            wordRule.addWord(SqlSyntax.RESERVED_WORDS.get(i), keyword);
         for (int i = 0; i < SqlSyntax.DATATYPE_NAMES.size(); i++)
-            wordRule.addWord((String)SqlSyntax.DATATYPE_NAMES.get(i), datatype);
+            wordRule.addWord(SqlSyntax.DATATYPE_NAMES.get(i), datatype);
         for (int i = 0; i < SqlSyntax.FUNCTION_NAMES.size(); i++)
-            wordRule.addWord((String)SqlSyntax.FUNCTION_NAMES.get(i), function);
+            wordRule.addWord(SqlSyntax.FUNCTION_NAMES.get(i), function);
 		rules.add(wordRule);
 
 		IRule[] result = new IRule[rules.size()];

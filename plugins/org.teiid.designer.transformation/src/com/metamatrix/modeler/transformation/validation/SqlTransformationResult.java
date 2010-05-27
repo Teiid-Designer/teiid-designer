@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.query.sql.lang.Command;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlTransformationResult
@@ -34,7 +34,7 @@ public class SqlTransformationResult implements QueryValidationResult {
 	private boolean isUUIDStatus;
     private Collection sourceGroups = Collections.EMPTY_LIST;
     private Map externalMetadataMap = null;
-    private Collection statuses = null;
+    private Collection<IStatus> statuses = null;
 
     /**
      * Construct an instance of SqlTransformationResult.
@@ -44,7 +44,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     /**
      * Construct an instance of SqlTransformationResult.
      */
-    public SqlTransformationResult(final Command command, Collection statuses) {
+    public SqlTransformationResult(final Command command, Collection<IStatus> statuses) {
         this.command = command;
         this.statuses = statuses;
         isParsable = command != null ? true : false;        
@@ -54,7 +54,7 @@ public class SqlTransformationResult implements QueryValidationResult {
      * Construct an instance of SqlTransformationResult.
      */
     public SqlTransformationResult(final Command command, IStatus status) {
-        this(command, new HashSet(1));
+        this(command, new HashSet<IStatus>(1));
         if (status != null) {
             this.statuses.add(status);      
         }
@@ -261,7 +261,7 @@ public class SqlTransformationResult implements QueryValidationResult {
      * @see com.metamatrix.query.resolver.util.QueryValidationResult#getStatusList()
      * @since 4.2
      */
-    public Collection getStatusList() {
+    public Collection<IStatus> getStatusList() {
         return this.statuses;
     }	
 

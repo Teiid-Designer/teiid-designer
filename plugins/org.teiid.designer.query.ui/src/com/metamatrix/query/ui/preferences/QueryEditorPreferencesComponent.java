@@ -45,7 +45,7 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
 
     private static int MAX_NUMBER = 255;
     private static int MIN_NUMBER = 1;
-    private List validationListeners = new ArrayList();
+    private List<IEditorPreferencesValidationListener> validationListeners = new ArrayList<IEditorPreferencesValidationListener>();
 
     public QueryEditorPreferencesComponent() {
     }
@@ -211,7 +211,7 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
     public void fireValidationStatus( boolean validationStatus,
                                       String message ) {
         for (int i = 0; i < this.validationListeners.size(); i++) {
-            ((IEditorPreferencesValidationListener)this.validationListeners.get(i)).validationStatus(validationStatus, message);
+            this.validationListeners.get(i).validationStatus(validationStatus, message);
         }
     }
 

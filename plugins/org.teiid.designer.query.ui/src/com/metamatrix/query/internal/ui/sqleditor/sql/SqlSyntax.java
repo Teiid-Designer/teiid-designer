@@ -13,10 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.teiid.designer.udf.UdfManager;
-
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.udf.UdfManager;
 import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
 import com.metamatrix.query.sql.ReservedWords;
@@ -29,16 +27,16 @@ import com.metamatrix.query.sql.ReservedWords;
 public class SqlSyntax {
 
     // Word Lists
-    public static final List RESERVED_WORDS = new ArrayList();
-    public static final List FUNCTION_NAMES = new ArrayList();
-    public static final List DATATYPE_NAMES = new ArrayList();
-    public static final List ALL_WORDS = new ArrayList();
+    public static final List<String> RESERVED_WORDS = new ArrayList<String>();
+    public static final List<String> FUNCTION_NAMES = new ArrayList<String>();
+    public static final List<String> DATATYPE_NAMES = new ArrayList<String>();
+    public static final List<String> ALL_WORDS = new ArrayList<String>();
 
     // String with valid starting characters
-    public static final List RESERVED_WORD_START_CHARS = new ArrayList();
-    public static final List FUNCTION_NAME_START_CHARS = new ArrayList();
-    public static final List DATATYPE_NAME_START_CHARS = new ArrayList();
-    public static final List ALL_WORD_START_CHARS = new ArrayList();
+    public static final List<String> RESERVED_WORD_START_CHARS = new ArrayList<String>();
+    public static final List<String> FUNCTION_NAME_START_CHARS = new ArrayList<String>();
+    public static final List<String> DATATYPE_NAME_START_CHARS = new ArrayList<String>();
+    public static final List<String> ALL_WORD_START_CHARS = new ArrayList<String>();
 
     static {
         // RESERVED WORDS List
@@ -75,7 +73,7 @@ public class SqlSyntax {
         Collections.sort(FUNCTION_NAMES);
 
         // DATATYPE NAMES List
-        Set dataTypes = DataTypeManager.getAllDataTypeNames();
+        Set<String> dataTypes = DataTypeManager.getAllDataTypeNames();
         iter = dataTypes.iterator();
         while (iter.hasNext()) {
             String dtypeName = (String)iter.next();

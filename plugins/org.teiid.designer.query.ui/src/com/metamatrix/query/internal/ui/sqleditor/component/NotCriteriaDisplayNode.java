@@ -76,7 +76,7 @@ public class NotCriteriaDisplayNode extends AtomicCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE+LTPAREN));
 
         if(childNodeList.size()>0) {
-            DisplayNode child = (DisplayNode)childNodeList.get(0);
+            DisplayNode child = childNodeList.get(0);
             //indent = child.getIndentLevel();
             if( child.hasDisplayNodes() ) {
                 displayNodeList.addAll(child.getDisplayNodeList());

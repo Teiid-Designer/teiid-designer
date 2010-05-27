@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.core.query;
 
 import java.util.Collection;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.query.sql.lang.Command;
 
 /** 
@@ -42,7 +43,7 @@ public interface QueryValidationResult {
 	
     /**
      * Get the status List indicating the success/ failure of validation
-     * @return the Colletion of IStatus objects
+     * @return the Collection of IStatus objects
      */
-    Collection getStatusList();
+    Collection<IStatus> getStatusList();
 }

@@ -40,7 +40,7 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
 
     private ILanguageObjectEditor currentEditor;
 
-    private List editors;
+    private List<ILanguageObjectEditor> editors;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -75,7 +75,7 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
     @Override
     public void clear() {
         for (int size = editors.size(), i = 0; i < size; i++) {
-            ILanguageObjectEditor editor = (ILanguageObjectEditor)editors.get(i);
+            ILanguageObjectEditor editor = editors.get(i);
             editor.clear();
         }
         super.clear();
@@ -96,7 +96,7 @@ public abstract class AbstractCompositeLanguageObjectEditor extends AbstractLang
         Class modelType = subModel.getModelType();
 
         for (int size = editors.size(), i = 0; i < size; i++) {
-            ILanguageObjectEditor editor = (ILanguageObjectEditor)editors.get(i);
+            ILanguageObjectEditor editor = editors.get(i);
 
             if (editor.getEditorType().isAssignableFrom(modelType)) {
                 setCurrentEditor(editor);

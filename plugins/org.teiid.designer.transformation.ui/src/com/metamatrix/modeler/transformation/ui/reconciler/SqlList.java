@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
+import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelper;
 
 /**
  * Class that plays the role of the domain model in the TableViewerExample
@@ -26,7 +26,7 @@ public class SqlList {
 
     private final int COUNT = 10;
     private List currentSymbolsList = new ArrayList(COUNT);
-    private Set changeListeners = new HashSet();
+    private Set<ISqlListViewer> changeListeners = new HashSet<ISqlListViewer>();
 
     /**
      * Constructor
@@ -53,9 +53,9 @@ public class SqlList {
      */
     public void add(SingleElementSymbol symbol) {
         currentSymbolsList.add(currentSymbolsList.size(), symbol);
-        Iterator iterator = changeListeners.iterator();
+        Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((ISqlListViewer) iterator.next()).addSymbol(symbol);
+            iterator.next().addSymbol(symbol);
     }
     
     public boolean containsSymbol(SingleElementSymbol singleSymbol) {
@@ -77,9 +77,9 @@ public class SqlList {
         }
         if( !addedSymbols.isEmpty() ) {
             currentSymbolsList.addAll(addedSymbols);
-            Iterator iterator = changeListeners.iterator();
+            Iterator<ISqlListViewer> iterator = changeListeners.iterator();
             while (iterator.hasNext()) {
-                ((ISqlListViewer) iterator.next()).addSymbols(addedSymbols.toArray());
+                iterator.next().addSymbols(addedSymbols.toArray());
             }
         }
     }
@@ -89,9 +89,9 @@ public class SqlList {
      */
     public void insert(SingleElementSymbol symbol,int index) {
         currentSymbolsList.add(index, symbol);
-        Iterator iterator = changeListeners.iterator();
+        Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((ISqlListViewer) iterator.next()).insertSymbol(symbol,index);
+            iterator.next().insertSymbol(symbol,index);
     }
     
     /**
@@ -110,9 +110,9 @@ public class SqlList {
     public void removeAll(List theseSymbols) {
         if( ! theseSymbols.isEmpty() ) {
             currentSymbolsList.removeAll(theseSymbols);
-            Iterator iterator = changeListeners.iterator();
+            Iterator<ISqlListViewer> iterator = changeListeners.iterator();
             while (iterator.hasNext()) {
-                ((ISqlListViewer) iterator.next()).removeSymbols(theseSymbols.toArray());
+                iterator.next().removeSymbols(theseSymbols.toArray());
             }
         }
     }
@@ -121,18 +121,18 @@ public class SqlList {
      * @param symbol
      */
     public void symbolChanged(SingleElementSymbol symbol) {
-        Iterator iterator = changeListeners.iterator();
+        Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((ISqlListViewer) iterator.next()).updateSymbol(symbol);
+            iterator.next().updateSymbol(symbol);
     }
 
     /**
      * @param symbol
      */
     public void refresh(boolean updateLabels) {
-        Iterator iterator = changeListeners.iterator();
+        Iterator<ISqlListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext())
-            ((ISqlListViewer) iterator.next()).refresh(updateLabels);
+            iterator.next().refresh(updateLabels);
     }
 
     /**

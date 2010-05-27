@@ -22,14 +22,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.query.internal.ui.sqleditor.SqlTextViewer;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
 import com.metamatrix.ui.UiConstants;
 
 /**
@@ -196,7 +196,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
         private boolean isResolvable = false;
         private boolean isValidatable = false;
         private Command command = null;
-        private Collection statuses = null;
+        private Collection<IStatus> statuses = null;
 
         /**
          * Construct an instance of SqlTransformationResult.
@@ -204,10 +204,10 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
         public QueryValidationResultImpl( final Command command,
                                           IStatus status ) {
             if (status != null) {
-                this.statuses = new ArrayList(1);
+                this.statuses = new ArrayList<IStatus>(1);
                 this.statuses.add(status);
             } else {
-                this.statuses = Collections.EMPTY_LIST;
+                this.statuses = Collections.emptyList();
             }
             this.command = command;
             isParsable = command != null ? true : false;
@@ -253,7 +253,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          * @see com.metamatrix.query.resolver.util.QueryValidationResult#getStatusList()
          * @since 4.2
          */
-        public Collection getStatusList() {
+        public Collection<IStatus> getStatusList() {
             return this.statuses;
         }
 
