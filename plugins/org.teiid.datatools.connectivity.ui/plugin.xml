@@ -17,8 +17,7 @@
       <page
             class="org.teiid.datatools.connectivity.ui.TeiidPropertyPage"
             id="org.teiid.datatools.connectivity.ui.profileProperties"
-            name="Driver Properties"
-            objectClass="org.eclipse.datatools.connectivity.IConnectionProfile">
+            name="Driver Properties">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.datatools.connectivity.connectionProfile"/>
