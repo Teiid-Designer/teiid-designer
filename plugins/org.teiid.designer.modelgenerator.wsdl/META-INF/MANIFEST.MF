@@ -12,8 +12,7 @@ Export-Package: com.metamatrix.modeler.modelgenerator.wsdl,
  com.metamatrix.modeler.modelgenerator.wsdl.modelextension,
  com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions,
  com.metamatrix.modeler.modelgenerator.wsdl.util,
- com.metamatrix.modeler.modelgenerator.wsdl.validation,
- com.metamatrix.modeler.modelgenerator.wsdl.validation.internal
+ com.metamatrix.modeler.modelgenerator.wsdl.validation
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.xerces,
  org.eclipse.core.resources,

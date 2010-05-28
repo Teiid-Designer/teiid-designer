@@ -7,13 +7,13 @@
  */
 package com.metamatrix.modeler.modelgenerator.xml.wizards;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
@@ -55,10 +55,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         store.setDefault(XmlImporterUiPlugin.requestTable, requestTableDefault);
         
         String mergedChildSepDefault = getString("mergedChildSep.default"); //$NON-NLS-1$
-        store.setDefault(XmlImporterUiPlugin.mergedChildSep, mergedChildSepDefault);
-        
-        String xsdLibraryDefault = Platform.getLocation().toOSString();
-        store.setDefault(XmlImporterUiPlugin.xsdLibrary, xsdLibraryDefault);
+		store.setDefault(XmlImporterUiPlugin.mergedChildSep,
+				mergedChildSepDefault);
     }
 	
 /**
@@ -82,9 +80,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
         String mergedChildSepLabel = getString("mergedChildSep.label"); //$NON-NLS-1$
         addField(new StringFieldEditor(XmlImporterUiPlugin.mergedChildSep, mergedChildSepLabel, getFieldEditorParent()));
-        
-        String xsdLibraryLabel = getString("xsdLibrary.label"); //$NON-NLS-1$
-        addField(new StringFieldEditor(XmlImporterUiPlugin.xsdLibrary, xsdLibraryLabel, getFieldEditorParent()));
     }
 	
 	public void init(IWorkbench workbench) {

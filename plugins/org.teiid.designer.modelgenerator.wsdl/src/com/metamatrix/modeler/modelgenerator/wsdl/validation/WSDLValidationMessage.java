@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.modelgenerator.wsdl.validation.internal;
+package com.metamatrix.modeler.modelgenerator.wsdl.validation;
 
 import org.eclipse.core.runtime.IStatus;
 

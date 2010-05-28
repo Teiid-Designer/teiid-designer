@@ -7,14 +7,22 @@
  */
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.wst.wsdl.validation.internal.IValidationMessage;
+import org.eclipse.wst.wsdl.validation.internal.IValidationReport;
+import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.internal.ModelBuilder;
-import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidator;
-import com.metamatrix.modeler.modelgenerator.wsdl.validation.internal.WSDLValidatorImpl;
+import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationException;
+import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationMessage;
 
 /**
  * This class is responsible for reading WSDL files from a URI or filesystem validating them and producing an OO representation of
@@ -23,7 +31,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.validation.internal.WSDLValida
 public class WSDLReader {
 
     private String m_fileURI;
-    private static WSDLValidator VALIDATOR;
+	private static WSDLValidator VALIDATOR;
 
     public static final int VALIDATION_SEVERITY_ERROR = 0;
     public static final int VALIDATION_SEVERITY_WARNING = 1;
@@ -86,27 +94,116 @@ public class WSDLReader {
     /**
      * @return true if the wsdl is valid, false otherwise
      */
-    public MultiStatus validateWSDL( IProgressMonitor monitor ) {
-
-        // lazy
-        if (VALIDATOR == null) {
-            VALIDATOR = new WSDLValidatorImpl();
+	public MultiStatus validateWSDL(IProgressMonitor monitor) {
+    	
+		monitor.beginTask(ModelGeneratorWsdlPlugin.Util
+				.getString("WSDLReader.validating.wsdl"), //$NON-NLS-1$
+				IProgressMonitor.UNKNOWN);
+		monitor.worked(1);
+		if (VALIDATOR == null) {
+			VALIDATOR = new WSDLValidator();
         }
-        MultiStatus success = VALIDATOR.validateWSDL(getFileUri(), monitor);
-        return success;
+		String fileUri = getFileUri();
+        monitor.worked(1);
+		IValidationReport report = VALIDATOR.validate(fileUri);
+		monitor.worked(1);
+		boolean success = !report.hasErrors() && report.isWSDLValid();
 
-        /*
-        // TEMP - RETURN MULTISTATUS WITH OK SEVERITY
-        final int embeddedSeverity1 = IStatus.OK;
-        final int code = 100;
-        final String embeddedMessage1 = "This is the embedded warning message 1"; //$NON-NLS-1$
-        final String message = "This is the message for the outter multistatus"; //$NON-NLS-1$
-        final Throwable t = new Throwable("This is the throwable"); //$NON-NLS-1$
-        t.fillInStackTrace();
-        final String pluginID = ModelGeneratorWsdlPlugin.PLUGIN_ID;
-        final IStatus embeddedStatus1 = new Status(embeddedSeverity1,pluginID,code+1,embeddedMessage1,t);
-        final IStatus[] embedded = new IStatus[]{embeddedStatus1};
-        return new MultiStatus(pluginID,code,embedded,message,t);
-        */
+		MultiStatus status;
+        if (success) {
+            final int code = 100;
+            status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, code, new IStatus[0],
+                ModelGeneratorWsdlPlugin.Util
+							.getString("WSDLReader.validation.passed"), null); //$NON-NLS-1$
+        } else {
+            boolean warningsOnly = report.isWSDLValid();
+            final int code = 500;
+            IValidationMessage[] vmessages = report.getValidationMessages();
+            IStatus[] messages = new WSDLValidationMessage[vmessages.length];
+            for (int i = 0; i < vmessages.length; i++) {
+                String message = buildValidationMessageString(vmessages[i]);
+                int severity = vmessages[i].getSeverity();
+                if (severity == IValidationMessage.SEV_ERROR) warningsOnly = false;
+                int newSeverity = (severity == IValidationMessage.SEV_ERROR ? IStatus.ERROR : IStatus.WARNING);
+                messages[i] = new WSDLValidationMessage(message, newSeverity);
+            }
+            if (warningsOnly) {
+                status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
+						ModelGeneratorWsdlPlugin.Util
+								.getString("WSDLReader.validation.warning"), null); //$NON-NLS-1$
+            } else {
+				try {
+					URL url = new URL(fileUri);
+					URLConnection connection = url.openConnection();
+					String contentType = connection.getContentType();
+					if (messages.length == 0) {
+						if ((null != contentType)
+								&& (!contentType.contains("text/xml") || !contentType.contains("application/xml"))) { //$NON-NLS-1$ //$NON-NLS-2$
+							String messageSuffix = MessageFormat
+									.format(ModelGeneratorWsdlPlugin.Util
+													.getString("WSDLReader.validation.content.type.error"), //$NON-NLS-1$
+											fileUri, contentType);
+							String fullMessage = ModelGeneratorWsdlPlugin.Util
+									.getString("WSDLReader.wsdl.invalid") + messageSuffix; //$NON-NLS-1$
+							messages = new WSDLValidationMessage[]{new WSDLValidationMessage(
+									fullMessage, IStatus.ERROR)};
+							status = new MultiStatus(
+									ModelGeneratorWsdlPlugin.PLUGIN_ID, code,
+									messages, fullMessage,
+									new WSDLValidationException());
+						} else {
+							messages = new WSDLValidationMessage[]{new WSDLValidationMessage(
+									ModelGeneratorWsdlPlugin.Util
+											.getString("WSDLReader.wsdl.invalid"), IStatus.ERROR)}; //$NON-NLS-1$
+							status = new MultiStatus(
+									ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
+									ModelGeneratorWsdlPlugin.Util
+											.getString("WSDLReader.wsdl.invalid"), new WSDLValidationException()); //$NON-NLS-1$
+						}
+					} else {
+						if (!url.getProtocol().equals("file") && !contentType.contains("text/xml") //$NON-NLS-1$//$NON-NLS-2$
+								|| !contentType.equals("application/xml")) { //$NON-NLS-1$
+							String messageSuffix = MessageFormat
+									.format(
+											ModelGeneratorWsdlPlugin.Util
+													.getString("WSDLReader.validation.content.type.error"), //$NON-NLS-1$
+											fileUri, contentType);
+							status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
+									ModelGeneratorWsdlPlugin.Util
+											.getString("WSDLReader.validation.error") + messageSuffix, new WSDLValidationException()); //$NON-NLS-1$
+						} else {
+							status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
+									ModelGeneratorWsdlPlugin.Util
+											.getString("WSDLReader.validation.error"), new WSDLValidationException()); //$NON-NLS-1$
+						}
+					}
+				} catch (Exception e) { 
+					if (messages.length == 0) {
+						messages = new WSDLValidationMessage[1];
+						messages[0] = new WSDLValidationMessage(
+								ModelGeneratorWsdlPlugin.Util
+										.getString("WSDLReader.open.connection.error"), //$NON-NLS-1$
+								IStatus.ERROR);
+					}
+					status = new MultiStatus(
+							ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
+							ModelGeneratorWsdlPlugin.Util
+									.getString("WSDLReader.open.connection.error"), new WSDLValidationException()); //$NON-NLS-1$
+				}
+			}
+		}
+		monitor.worked(1);
+		monitor.done();
+        return status;
     }
+
+	private String buildValidationMessageString(IValidationMessage vmessage) {
+		StringBuffer buff = new StringBuffer();
+		buff.append(vmessage.getLine());
+		buff.append(":"); //$NON-NLS-1$
+		buff.append(vmessage.getColumn());
+		buff.append(" - "); //$NON-NLS-1$
+		buff.append(vmessage.getMessage());
+		return buff.toString();
+	}
 }

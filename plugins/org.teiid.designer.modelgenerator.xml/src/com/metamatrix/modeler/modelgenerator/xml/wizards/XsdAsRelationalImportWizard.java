@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -31,11 +32,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.core.util.FileUtils;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
-import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.core.extension.XPackage;
@@ -233,9 +235,6 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
 
         String mergedChildSep = prefs.getString(XmlImporterUiPlugin.mergedChildSep);
         userSettings.setMergedChildSep(mergedChildSep);
-
-        String xsdLibrary = prefs.getString(XmlImporterUiPlugin.xsdLibrary);
-        userSettings.setXsdLibrary(xsdLibrary);
 
         jdbcFactory = new JdbcFactoryImpl();
         jdbcConnection = new ConnectionImpl(manager, userSettings, this);
