@@ -47,7 +47,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.metamodels.dependency</module>
 		<module>org.teiid.designer.metamodels.diagram</module>
 		<module>org.teiid.designer.metamodels.function</module>
-		<module>org.teiid.designer.metamodels.history</module>
 		<module>org.teiid.designer.metamodels.relational</module>
 		<module>org.teiid.designer.metamodels.relationship</module>
 		<module>org.teiid.designer.metamodels.transformation</module>
