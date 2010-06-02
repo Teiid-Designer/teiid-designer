@@ -36,45 +36,25 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
      * 
      * @generated
      */
-    public XmlElementItemProvider( AdapterFactory adapterFactory ) {
+    public XmlElementItemProvider( final AdapterFactory adapterFactory ) {
         super(adapterFactory);
     }
 
     /**
-     * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#createItemPropertyDescriptor(org.eclipse.emf.common.notify.AdapterFactory,
-     *      org.eclipse.emf.common.util.ResourceLocator, java.lang.String, java.lang.String,
-     *      org.eclipse.emf.ecore.EStructuralFeature, boolean, java.lang.Object, java.lang.String, java.lang.String[])
-     * @since 4.3
-     */
-    @Override
-    protected ItemPropertyDescriptor createItemPropertyDescriptor( AdapterFactory adapterFactory,
-                                                                   ResourceLocator resourceLocator,
-                                                                   String displayName,
-                                                                   String description,
-                                                                   EStructuralFeature feature,
-                                                                   boolean isSettable,
-                                                                   Object staticImage,
-                                                                   String category,
-                                                                   String[] filterFlags ) {
-        return new XmlElementPropertyDescriptor(adapterFactory, resourceLocator, displayName, description, feature, isSettable,
-                                                staticImage, category, filterFlags);
-    }
-
-    /**
-     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * This adds a property descriptor for the Recursive feature. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      */
-    @Override
-    public List getPropertyDescriptors( Object object ) {
-        if (itemPropertyDescriptors == null) {
-            super.getPropertyDescriptors(object);
-
-            addValuePropertyDescriptor(object);
-            addValueTypePropertyDescriptor(object);
-            addRecursivePropertyDescriptor(object);
-        }
-        return itemPropertyDescriptors;
+    protected void addRecursivePropertyDescriptor( final Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_XmlElement_recursive_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_XmlElement_recursive_feature", "_UI_XmlElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 XmlDocumentPackage.eINSTANCE.getXmlElement_Recursive(),
+                                                                 true,
+                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                                                                 null,
+                                                                 null));
     }
 
     /**
@@ -82,7 +62,7 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
      * 
      * @generated
      */
-    protected void addValuePropertyDescriptor( Object object ) {
+    protected void addValuePropertyDescriptor( final Object object ) {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlValueHolder_value_feature"), //$NON-NLS-1$
@@ -99,7 +79,7 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
      * 
      * @generated
      */
-    protected void addValueTypePropertyDescriptor( Object object ) {
+    protected void addValueTypePropertyDescriptor( final Object object ) {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
                                                                  getString("_UI_XmlValueHolder_valueType_feature"), //$NON-NLS-1$
@@ -112,131 +92,17 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
     }
 
     /**
-     * This adds a property descriptor for the Recursive feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    protected void addRecursivePropertyDescriptor( Object object ) {
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_XmlElement_recursive_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_XmlElement_recursive_feature", "_UI_XmlElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 XmlDocumentPackage.eINSTANCE.getXmlElement_Recursive(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
-    }
-
-    /**
-     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    public Collection getChildrenFeatures( Object object ) {
-        if (childrenFeatures == null) {
-            super.getChildrenFeatures(object);
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlCommentHolder_Comments());
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getProcessingInstructionHolder_ProcessingInstructions());
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlElementHolder_Elements());
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers());
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlElement_Attributes());
-            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlElement_DeclaredNamespaces());
-        }
-        return childrenFeatures;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    protected EStructuralFeature getChildFeature( Object object,
-                                                  Object child ) {
-        // Check the type of the specified child object and return the proper feature to use for
-        // adding (see {@link AddCommand}) it as a child.
-
-        return super.getChildFeature(object, child);
-    }
-
-    /**
-     * This returns XmlElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    public Object getImage( Object object ) {
-        return getResourceLocator().getImage("full/obj16/XmlElement"); //$NON-NLS-1$
-    }
-
-    /**
-     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that can
+     * be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT
      */
     @Override
-    public String getText( Object object ) {
-        String label = ((XmlElement)object).getName();
-        return label == null || label.trim().length() == 0 ? getString("_UI_XmlElement_type") : //$NON-NLS-1$
-        label;
-    }
-
-    /**
-     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    public String getTextGen( Object object ) {
-        String label = ((XmlElement)object).getName();
-        return label == null || label.length() == 0 ? getString("_UI_XmlElement_type") : //$NON-NLS-1$
-        getString("_UI_XmlElement_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    /**
-     * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
-     * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    public void notifyChanged( Notification notification ) {
-        updateChildren(notification);
-
-        switch (notification.getFeatureID(XmlElement.class)) {
-            case XmlDocumentPackage.XML_ELEMENT__VALUE:
-            case XmlDocumentPackage.XML_ELEMENT__VALUE_TYPE:
-            case XmlDocumentPackage.XML_ELEMENT__RECURSIVE:
-                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-                return;
-            case XmlDocumentPackage.XML_ELEMENT__COMMENTS:
-            case XmlDocumentPackage.XML_ELEMENT__PROCESSING_INSTRUCTIONS:
-            case XmlDocumentPackage.XML_ELEMENT__ELEMENTS:
-            case XmlDocumentPackage.XML_ELEMENT__CONTAINERS:
-            case XmlDocumentPackage.XML_ELEMENT__ATTRIBUTES:
-            case XmlDocumentPackage.XML_ELEMENT__DECLARED_NAMESPACES:
-                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-                return;
-        }
-        super.notifyChanged(notification);
-    }
-
-    /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that
-     * can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated NOT
-     */
-    @Override
-    protected void collectNewChildDescriptors( Collection newChildDescriptors,
-                                               Object object ) {
+    protected void collectNewChildDescriptors( final Collection newChildDescriptors,
+                                               final Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElementHolder_Elements(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlElement()));
 
         // We don't want root elements below anything but the fragment/document.
@@ -257,13 +123,13 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
         newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElement_DeclaredNamespaces(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlNamespace()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlSequence()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlChoice()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlAll()));
 
         newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlCommentHolder_Comments(),
@@ -275,13 +141,13 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that
-     * can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that can
+     * be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      */
-    protected void collectNewChildDescriptorsGen( Collection newChildDescriptors, // NO_UCD
-                                                  Object object ) {
+    protected void collectNewChildDescriptorsGen( final Collection newChildDescriptors, // NO_UCD
+                                                  final Object object ) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 
         newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlCommentHolder_Comments(),
@@ -290,22 +156,22 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
         newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getProcessingInstructionHolder_ProcessingInstructions(),
                                                      XmlDocumentFactory.eINSTANCE.createProcessingInstruction()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElementHolder_Elements(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlElement()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElementHolder_Elements(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlRoot()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElementHolder_Elements(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlFragmentUse()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlSequence()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlAll()));
 
-        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlContainerHolder_Containers(),
+        newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities(),
                                                      XmlDocumentFactory.eINSTANCE.createXmlChoice()));
 
         newChildDescriptors.add(createChildParameter(XmlDocumentPackage.eINSTANCE.getXmlElement_Attributes(),
@@ -316,6 +182,87 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
     }
 
     /**
+     * @see org.eclipse.emf.edit.provider.ItemProviderAdapter#createItemPropertyDescriptor(org.eclipse.emf.common.notify.AdapterFactory,
+     *      org.eclipse.emf.common.util.ResourceLocator, java.lang.String, java.lang.String,
+     *      org.eclipse.emf.ecore.EStructuralFeature, boolean, java.lang.Object, java.lang.String, java.lang.String[])
+     * @since 4.3
+     */
+    @Override
+    protected ItemPropertyDescriptor createItemPropertyDescriptor( final AdapterFactory adapterFactory,
+                                                                   final ResourceLocator resourceLocator,
+                                                                   final String displayName,
+                                                                   final String description,
+                                                                   final EStructuralFeature feature,
+                                                                   final boolean isSettable,
+                                                                   final Object staticImage,
+                                                                   final String category,
+                                                                   final String[] filterFlags ) {
+        return new XmlElementPropertyDescriptor(adapterFactory, resourceLocator, displayName, description, feature, isSettable,
+                                                staticImage, category, filterFlags);
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    protected EStructuralFeature getChildFeature( final Object object,
+                                                  final Object child ) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
+
+        return super.getChildFeature(object, child);
+    }
+
+    /**
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public Collection getChildrenFeatures( final Object object ) {
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlCommentHolder_Comments());
+            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getProcessingInstructionHolder_ProcessingInstructions());
+            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlEntityHolder_Entities());
+            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlElement_Attributes());
+            childrenFeatures.add(XmlDocumentPackage.eINSTANCE.getXmlElement_DeclaredNamespaces());
+        }
+        return childrenFeatures;
+    }
+
+    /**
+     * This returns XmlElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public Object getImage( final Object object ) {
+        return getResourceLocator().getImage("full/obj16/XmlElement"); //$NON-NLS-1$
+    }
+
+    /**
+     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public List getPropertyDescriptors( final Object object ) {
+        if (itemPropertyDescriptors == null) {
+            super.getPropertyDescriptors(object);
+
+            addValuePropertyDescriptor(object);
+            addValueTypePropertyDescriptor(object);
+            addRecursivePropertyDescriptor(object);
+        }
+        return itemPropertyDescriptors;
+    }
+
+    /**
      * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
@@ -323,6 +270,57 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
     @Override
     public ResourceLocator getResourceLocator() {
         return XmlDocumentEditPlugin.INSTANCE;
+    }
+
+    /**
+     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    @Override
+    public String getText( final Object object ) {
+        final String label = ((XmlElement)object).getName();
+        return label == null || label.trim().length() == 0 ? getString("_UI_XmlElement_type") : //$NON-NLS-1$
+        label;
+    }
+
+    /**
+     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public String getTextGen( final Object object ) {
+        final String label = ((XmlElement)object).getName();
+        return label == null || label.length() == 0 ? getString("_UI_XmlElement_type") : //$NON-NLS-1$
+        getString("_UI_XmlElement_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer
+     * notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public void notifyChanged( final Notification notification ) {
+        updateChildren(notification);
+
+        switch (notification.getFeatureID(XmlElement.class)) {
+            case XmlDocumentPackage.XML_ELEMENT__VALUE:
+            case XmlDocumentPackage.XML_ELEMENT__VALUE_TYPE:
+            case XmlDocumentPackage.XML_ELEMENT__RECURSIVE:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+            case XmlDocumentPackage.XML_ELEMENT__COMMENTS:
+            case XmlDocumentPackage.XML_ELEMENT__PROCESSING_INSTRUCTIONS:
+            case XmlDocumentPackage.XML_ELEMENT__ENTITIES:
+            case XmlDocumentPackage.XML_ELEMENT__ATTRIBUTES:
+            case XmlDocumentPackage.XML_ELEMENT__DECLARED_NAMESPACES:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
+        }
+        super.notifyChanged(notification);
     }
 
     // ===========================================================================================================================
@@ -336,15 +334,15 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
         /**
          * @since 4.3
          */
-        protected XmlElementPropertyDescriptor( AdapterFactory adapterFactory,
-                                                ResourceLocator resourceLocator,
-                                                String displayName,
-                                                String description,
-                                                EStructuralFeature feature,
-                                                boolean isSettable,
-                                                Object staticImage,
-                                                String category,
-                                                String[] filterFlags ) {
+        protected XmlElementPropertyDescriptor( final AdapterFactory adapterFactory,
+                                                final ResourceLocator resourceLocator,
+                                                final String displayName,
+                                                final String description,
+                                                final EStructuralFeature feature,
+                                                final boolean isSettable,
+                                                final Object staticImage,
+                                                final String category,
+                                                final String[] filterFlags ) {
             super(adapterFactory, resourceLocator, displayName, description, feature, isSettable, staticImage, category,
                   filterFlags);
         }
@@ -372,15 +370,11 @@ public class XmlElementItemProvider extends XmlBaseElementItemProvider {
         @Override
         protected Collection getComboBoxObjects( final Object object ) {
             final Collection objs = super.getComboBoxObjects(object);
-            if (objs != null && feature == XmlDocumentPackage.eINSTANCE.getXmlDocumentNode_XsdComponent()) {
-                for (final Iterator iter = objs.iterator(); iter.hasNext();) {
-                    final Object obj = iter.next();
-                    if (obj instanceof XSDElementDeclaration) {
-                        final XSDElementDeclaration elem = (XSDElementDeclaration)obj;
-                        if (XSDConstants.isSchemaForSchemaNamespace(elem.getTargetNamespace()) || filterElement(elem)) {
-                            iter.remove();
-                        }
-                    }
+            if (objs != null && feature == XmlDocumentPackage.eINSTANCE.getXmlDocumentNode_XsdComponent()) for (final Iterator iter = objs.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
+                if (obj instanceof XSDElementDeclaration) {
+                    final XSDElementDeclaration elem = (XSDElementDeclaration)obj;
+                    if (XSDConstants.isSchemaForSchemaNamespace(elem.getTargetNamespace()) || filterElement(elem)) iter.remove();
                 }
             }
             return objs;
