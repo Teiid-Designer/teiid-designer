@@ -574,7 +574,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         // Save new state to preferences
         IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.Reconciler.SHOW_SQL_DISPLAY, !isCurrentlyVisible);
-        UiPlugin.getDefault().savePluginPreferences();
+        UiPlugin.getDefault().savePreferences();
     }
 
     /**

@@ -26,7 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -306,8 +306,16 @@ public class XsdTextEditorPage extends TextEditor implements ModelEditorPage, IS
      * @see ValidationDescriptor#NOT_SET
      */
     private String getValidateSchemaUserPreference() {
-        Preferences prefs = ModelerCore.getPlugin().getPluginPreferences();
-        return prefs.getString(ValidationPreferences.XSD_MODEL_VALIDATION);
+        IEclipsePreferences prefs = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
+        
+        String value = prefs.get(ValidationPreferences.XSD_MODEL_VALIDATION, null);
+        
+        if (value == null) {
+            prefs = ModelerCore.getDefaultPreferences(ModelerCore.PLUGIN_ID);
+            value = prefs.get(ValidationPreferences.XSD_MODEL_VALIDATION, ValidationDescriptor.WARNING);
+        }
+
+        return value;
     }
 
     /**

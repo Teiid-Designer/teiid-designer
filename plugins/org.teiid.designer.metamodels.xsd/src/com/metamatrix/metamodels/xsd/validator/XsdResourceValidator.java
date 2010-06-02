@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -554,7 +553,4 @@ public class XsdResourceValidator implements ResourceValidator {
         }
     }
 
-    protected String getPreferenceValue( Preferences prefs ) {
-        return prefs.getString(ValidationPreferences.XSD_MODEL_VALIDATION);
-    }
 }

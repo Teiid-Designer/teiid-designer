@@ -167,7 +167,7 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
         }
 
         if (changeMade) {
-            UiPlugin.getDefault().savePluginPreferences();
+            UiPlugin.getDefault().savePreferences();
         }
         return true;
     }

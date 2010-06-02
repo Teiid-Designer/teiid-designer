@@ -30,6 +30,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -41,9 +44,10 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
+import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.aspects.DeclarativeTransactionManager;
-import org.teiid.core.id.ObjectID;
 import com.metamatrix.core.interceptor.InvocationFactoryHelper;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -699,6 +703,43 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static Plugin getPlugin() {
         return MODELER_CORE_PLUGIN;
+    }
+
+    /**
+     * Obtains the default preferences values of the plugin with the specified identifier. <strong>This method should be used
+     * instead of {@link Plugin#getPluginPreferences()} to obtain default values.</strong>
+     * 
+     * @param pluginId the plugin ID (may not be <code>null</code>)
+     * @return the preferences (never <code>null</code>)
+     */
+    public static IEclipsePreferences getDefaultPreferences(String pluginId) {
+        CoreArgCheck.isNotNull(pluginId, "pluginId"); //$NON-NLS-1$
+        return new DefaultScope().getNode(pluginId);
+    }
+    
+    /**
+     * Obtains the current preferences values for the plugin with the specified identifier. <strong>This method should be used
+     * instead of {@link Plugin#getPluginPreferences()}.</strong>
+     * 
+     * @param pluginId the plugin ID (may not be <code>null</code>)
+     * @return the preferences (never <code>null</code>)
+     */
+    public static IEclipsePreferences getPreferences( String pluginId ) {
+        CoreArgCheck.isNotNull(pluginId, "pluginId"); //$NON-NLS-1$
+        return new InstanceScope().getNode(pluginId);
+    }
+    
+    /**
+     * Persists preferences for the plugin with the specified identifier. <strong>This method should be used instead of
+     * {@link Plugin#savePluginPreferences()}.</strong>
+     * 
+     * @param pluginId the plugin ID (may not be <code>null</code>)
+     * @throws BackingStoreException
+     */
+    public static void savePreferences( String pluginId ) throws BackingStoreException {
+        CoreArgCheck.isNotNull(pluginId, "pluginId"); //$NON-NLS-1$
+        new DefaultScope().getNode(pluginId).flush(); // save defaults
+        new InstanceScope().getNode(pluginId).flush(); // save current values
     }
 
     /**

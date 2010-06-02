@@ -151,7 +151,7 @@ public class AppearanceProcessor implements DiagramUiConstants, PluginConstants 
                                          colorInfo[i].getColorObject().getRGBPreferenceKey(),
                                          colorInfo[i].getSelector().getColorValue());
         }
-        DiagramUiPlugin.getDefault().savePluginPreferences();
+        DiagramUiPlugin.getDefault().savePreferences();
         return true;
     }
 

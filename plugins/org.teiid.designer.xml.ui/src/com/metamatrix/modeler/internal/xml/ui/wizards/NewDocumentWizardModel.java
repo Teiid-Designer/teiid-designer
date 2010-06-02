@@ -7,11 +7,14 @@
  */
 package com.metamatrix.modeler.internal.xml.ui.wizards;
 
+import static com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants.PLUGIN_ID;
 import java.util.Collection;
 import java.util.HashSet;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.widgets.Composite;
 import com.metamatrix.metamodels.xml.XmlFragment;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.mapping.factory.MappingClassBuilderStrategy;
 import com.metamatrix.modeler.xml.IVirtualDocumentFragmentSource;
@@ -38,12 +41,15 @@ public class NewDocumentWizardModel {
 //  may not be needed:
 //  public IDocumentsAndFragmentsPopulator populator;
     
-    public NewDocumentWizardModel(){
+    public NewDocumentWizardModel() {
         ModelerXmlPlugin plugin = ModelerXmlPlugin.getDefault();
-        if(plugin != null) {
-            plugin.getPluginPreferences().setDefault(PluginConstants.PreferenceKeys.MAPPING_TYPE_FROM_XSD, true);
+
+        if (plugin != null) {
+            IEclipsePreferences defaultPrefs = ModelerCore.getDefaultPreferences(PLUGIN_ID);
+            defaultPrefs.putBoolean(PluginConstants.PreferenceKeys.MAPPING_TYPE_FROM_XSD, true);
         }
     }
+
     //
     // Data methods:
     //

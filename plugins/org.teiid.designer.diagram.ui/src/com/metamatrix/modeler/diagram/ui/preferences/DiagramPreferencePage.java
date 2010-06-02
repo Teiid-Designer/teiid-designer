@@ -285,7 +285,7 @@ public class DiagramPreferencePage extends PreferencePage
             savePrefs = true;
         }
         if (savePrefs) {
-            DiagramUiPlugin.getDefault().savePluginPreferences();
+            DiagramUiPlugin.getDefault().savePreferences();
             DiagramUiPlugin.updateEditorForPreferences();
         }
         wasOKed = true;

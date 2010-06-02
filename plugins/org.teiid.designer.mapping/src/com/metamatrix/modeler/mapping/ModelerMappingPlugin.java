@@ -7,8 +7,10 @@
  */
 package com.metamatrix.modeler.mapping;
 
+import static com.metamatrix.modeler.mapping.PluginConstants.PLUGIN_ID;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import com.metamatrix.modeler.core.ModelerCore;
 
 /**
  * ModelerMappingPlugin is the plugin class for com.metamatrix.modeler.mapping
@@ -43,7 +45,7 @@ public class ModelerMappingPlugin extends Plugin {
      */
     @Override
     public void stop(BundleContext context) throws Exception {
-        savePluginPreferences();
+        ModelerCore.savePreferences(PLUGIN_ID);
         super.stop(context);
     }
     

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -28,6 +27,16 @@ import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.report.ReportItem;
+import org.teiid.query.resolver.util.ResolverVisitor;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.validator.Validator;
+import org.teiid.query.validator.ValidatorReport;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
@@ -77,16 +86,6 @@ import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.QueryMetadataContext;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 import com.metamatrix.modeler.xml.PluginConstants;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.report.ReportItem;
-import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-import org.teiid.query.validator.Validator;
-import org.teiid.query.validator.ValidatorReport;
 
 /**
  * XmlDocumentValidationRule
@@ -99,8 +98,8 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
     private Map elementColumnMap = null;
     // map between XmlElement and MappingClass
     private Map elementMappingClassMap = null;
-    // preferences to be used for validation
-    private Preferences preferences;
+    // validation context
+    private ValidationContext context;
 
     /*
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
@@ -136,8 +135,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         context.recordRuleRun(uuid, RULE_NAME);
 
         Resource documentResource = document.eResource();
-        // get the preferences from the context
-        this.preferences = context.getPreferences();
+        this.context = context;
 
         // model contents for this resource
         ModelContents mdlContents = new ModelContents(documentResource);
@@ -231,7 +229,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
         } finally {
             // clear any state on this rule, since this object may be reused
             elementColumnMap = null;
-            preferences = null;
+            this.context = null;
             elementMappingClassMap = null;
         }
     }
@@ -550,7 +548,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                 int maxOccurs = xsdComponent != null ? XsdUtil.getMaxOccurs(xsdComponent) : -1;
                 // if the node is mapped to a mapping class column
                 if (hasMappedMappingClassColumn(node)) {
-                    // alll elements and attributes are value holders
+                    // all elements and attributes are value holders
                     XmlValueHolder valueHolder = (XmlValueHolder)node;
                     // The element/attribute has a value type of "DEFAULT" or "FIXED"
                     if (valueHolder.isValueFixed() || valueHolder.isValueDefault()) {
@@ -561,7 +559,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                   0,
                                                                                   status,
                                                                                   TransformationPlugin.Util.getString("XmlDocumentValidationRule.This_entity_{0}_is_fixed_or_default_and_should_not_have_a_mapping_attribute_defined_in_MappingClasses_1", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                            problem.setHasPreference(this.preferences != null);
+                            problem.setHasPreference(this.context.hasPreferences());
                             validationResult.addProblem(problem);
                             if (status == IStatus.ERROR) {
                                 return false;
@@ -578,7 +576,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                   0,
                                                                                   status,
                                                                                   TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_entity_{0}_has_been_selected_to_be_excluded_from_the_Document,_but_has_a_mapping_attribute_defined_in_MappingClasses_2", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                            problem.setHasPreference(this.preferences != null);
+                            problem.setHasPreference(this.context.hasPreferences());
                             validationResult.addProblem(problem);
                             if (status == IStatus.ERROR) {
                                 return false;
@@ -596,7 +594,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                   status,
                                                                                   TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_entity_{0}_has_a_min_occurs_of_zero,_but_has_a_mapping_attribute_defined_in_MappingClasses_3", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
                             validationResult.addProblem(problem);
-                            problem.setHasPreference(this.preferences != null);
+                            problem.setHasPreference(this.context.hasPreferences());
                             if (status == IStatus.ERROR) {
                                 return false;
                             }
@@ -612,7 +610,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                   status,
                                                                                   TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_entity_{0}__s_schema_component_reference_is_nullable,_but_has_a_mapping_attribute_defined_in_MappingClasses._5", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
                             validationResult.addProblem(problem);
-                            problem.setHasPreference(this.preferences != null);
+                            problem.setHasPreference(this.context.hasPreferences());
                             if (status == IStatus.ERROR) {
                                 return false;
                             }
@@ -648,7 +646,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                       0,
                                                                                       status,
                                                                                       TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_element_{0}_is_root_but_is_mapped_to_a_MappingClass", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                                problem.setHasPreference(this.preferences != null);
+                                problem.setHasPreference(this.context.hasPreferences());
                                 validationResult.addProblem(problem);
                                 if (status == IStatus.ERROR) {
                                     return false;
@@ -663,7 +661,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                                       0,
                                                                                       status,
                                                                                       TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_element_{0}_has_a_max_occurs_of_one,_but_is_mapped_to_a_MappingClass", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                                problem.setHasPreference(this.preferences != null);
+                                problem.setHasPreference(this.context.hasPreferences());
                                 validationResult.addProblem(problem);
                                 if (status == IStatus.ERROR) {
                                     return false;
@@ -701,7 +699,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                               0,
                                                                               status,
                                                                               TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_document_element/attribute_{0}_doesn__t_reference_a_schema_component._10", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                        problem.setHasPreference(this.preferences != null);
+                        problem.setHasPreference(this.context.hasPreferences());
                         validationResult.addProblem(problem);
                         return false;
                     }
@@ -753,14 +751,14 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                               0,
                                                                               status,
                                                                               TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_attribute_{0}_references_a_prohibited_schema_attribute._7", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                        problem.setHasPreference(this.preferences != null);
+                        problem.setHasPreference(this.context.hasPreferences());
                         validationResult.addProblem(problem);
                     } else {
                         ValidationProblem problem = new ValidationProblemImpl(
                                                                               0,
                                                                               status,
                                                                               TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_entity_{0},_may_be_violating_maxOccurs_specified_by_the_schema._1", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                        problem.setHasPreference(this.preferences != null);
+                        problem.setHasPreference(this.context.hasPreferences());
                         validationResult.addProblem(problem);
                     }
                 }
@@ -788,7 +786,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
                                                                           0,
                                                                           status,
                                                                           TransformationPlugin.Util.getString("XmlDocumentValidationRule.The_entity_{0}_has_been_selected_to_be_excluded_from_the_Document,_but_the_neither_the_entity_nor_its_parent_are_optional._9", node.getName()), getLocationPath(node), getURIString(node)); //$NON-NLS-1$
-                    problem.setHasPreference(this.preferences != null);
+                    problem.setHasPreference(this.context.hasPreferences());
                     validationResult.addProblem(problem);
                     return false;
                 }

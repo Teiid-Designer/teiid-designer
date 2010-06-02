@@ -191,7 +191,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         String sNewAutoExpandMappingClassMax = txfAutoExpandMappingClassMax.getText();
         if (!sOldAutoExpandMappingClassMax.equals(sNewAutoExpandMappingClassMax)) {
             getPreferenceStore().setValue(PluginConstants.Prefs.AUTO_EXPAND_MAX_MAPPING_CLASSES, sNewAutoExpandMappingClassMax);
-            UiPlugin.getDefault().savePluginPreferences();
+            UiPlugin.getDefault().savePreferences();
         }
 
         String sOldAutoExpandTreeTargetLevel = getPreferenceStore().getString(PluginConstants.Prefs.AUTO_EXPAND_TARGET_LEVEL);
@@ -199,7 +199,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         String sNewAutoExpandTreeTargetLevel = txfAutoExpandTreeTargetLevel.getText();
         if (!sOldAutoExpandTreeTargetLevel.equals(sNewAutoExpandTreeTargetLevel)) {
             getPreferenceStore().setValue(PluginConstants.Prefs.AUTO_EXPAND_TARGET_LEVEL, sNewAutoExpandTreeTargetLevel);
-            UiPlugin.getDefault().savePluginPreferences();
+            UiPlugin.getDefault().savePreferences();
 
         }
 
@@ -220,7 +220,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
         }
 
         if (changeMade) {
-            UiPlugin.getDefault().savePluginPreferences();
+            UiPlugin.getDefault().savePreferences();
         }
 
         return true;

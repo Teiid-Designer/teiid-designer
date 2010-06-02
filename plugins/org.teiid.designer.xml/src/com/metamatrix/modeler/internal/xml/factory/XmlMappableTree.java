@@ -7,11 +7,14 @@
  */
 package com.metamatrix.modeler.internal.xml.factory;
 
+import static com.metamatrix.modeler.xml.PluginConstants.PLUGIN_ID;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import com.metamatrix.metamodels.xml.ProcessingInstruction;
@@ -29,7 +32,6 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.internal.mapping.factory.DefaultMappableTree;
 import com.metamatrix.modeler.internal.mapping.factory.FragmentMappingAdapter;
-import com.metamatrix.modeler.xml.ModelerXmlPlugin;
 import com.metamatrix.modeler.xml.PluginConstants;
 
 /**
@@ -136,9 +138,14 @@ public class XmlMappableTree extends DefaultMappableTree implements PluginConsta
     public EObject getDatatype( EObject node ) {
 
         boolean useXsdType = true;
-        Preferences prefs = ModelerXmlPlugin.getDefault().getPluginPreferences();
-        if (prefs.contains(MAPPING_TYPE_FROM_XSD)) {
-            useXsdType = prefs.getBoolean(MAPPING_TYPE_FROM_XSD);
+        IEclipsePreferences prefs = new InstanceScope().getNode(PLUGIN_ID);
+
+        if (prefs.get(MAPPING_TYPE_FROM_XSD, null) == null) {
+            // then use default value if available
+            IEclipsePreferences defaultPrefs = new DefaultScope().getNode(PLUGIN_ID);
+            useXsdType = defaultPrefs.getBoolean(MAPPING_TYPE_FROM_XSD, useXsdType);
+        } else {
+            useXsdType = prefs.getBoolean(MAPPING_TYPE_FROM_XSD, useXsdType);
         }
 
         if (!useXsdType) {

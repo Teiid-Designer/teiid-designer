@@ -118,7 +118,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
             PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, PluginConstants.Prefs.Appearance.PREFERENCES[i]);
         }
 
-        DiagramUiPlugin.getDefault().savePluginPreferences();
+        DiagramUiPlugin.getDefault().savePreferences();
 
         // -----------------------------------------------------------
         // prefs for this plugin
@@ -131,7 +131,7 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
             PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, PluginConstants.Prefs.Reconciler.PREFERENCES[i]);
         }
 
-        getDefault().savePluginPreferences();
+        getDefault().savePreferences();
     }
 
     /**

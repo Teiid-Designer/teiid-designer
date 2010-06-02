@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -40,6 +41,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.osgi.service.prefs.BackingStoreException;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xml.XmlFragment;
 import com.metamatrix.modeler.core.ModelEditor;
@@ -57,7 +59,6 @@ import com.metamatrix.modeler.internal.xml.factory.IDocumentsAndFragmentsPopulat
 import com.metamatrix.modeler.internal.xml.factory.VirtualDocumentModelPopulator;
 import com.metamatrix.modeler.ui.wizards.INewModelObjectWizard;
 import com.metamatrix.modeler.xml.IVirtualDocumentFragmentSource;
-import com.metamatrix.modeler.xml.ModelerXmlPlugin;
 import com.metamatrix.modeler.xml.PluginConstants;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiPlugin;
@@ -200,9 +201,14 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
                                         final NewDocumentWizardModel wizModel ) {
         // save pref:
         final boolean useXsdTypes = wizModel.getUseSchemaTypes();
-        ModelerXmlPlugin.getDefault().getPluginPreferences().setValue(PluginConstants.PreferenceKeys.MAPPING_TYPE_FROM_XSD,
-                                                                      useXsdTypes);
-        ModelerXmlPlugin.getDefault().savePluginPreferences();
+        IEclipsePreferences prefs = ModelerCore.getPreferences(PLUGIN_ID);
+        prefs.putBoolean(PluginConstants.PreferenceKeys.MAPPING_TYPE_FROM_XSD, useXsdTypes);
+
+        try {
+            ModelerCore.savePreferences(PLUGIN_ID);
+        } catch (BackingStoreException e) {
+            Util.log(e);
+        }
 
         // Get handle to DatatypeManager
         final DatatypeManager dtMgr = ModelerCore.getWorkspaceDatatypeManager();

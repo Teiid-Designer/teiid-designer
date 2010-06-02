@@ -8,12 +8,10 @@
 package com.metamatrix.metamodels.relational.aspects.validation.rules;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
-import com.metamatrix.modeler.core.ValidationDescriptor;
 import com.metamatrix.modeler.core.ValidationPreferences;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
@@ -47,33 +45,24 @@ public class ColumnIntegerDatatypeRule implements ObjectValidationRule {
         if(!isBuiltInType ||typeName == null || !typeName.equals(DatatypeConstants.BuiltInNames.INTEGER)) {
             return;
         }
+        
+        int severity = IStatus.WARNING;
 
-        int status = IStatus.WARNING;
-        //TODO: Replace code with context.getPreferenceStatus(String , int);
-        Preferences prefs = context.getPreferences();
-        if(prefs != null) {        
-	        String value = getPreferenceValue(prefs);
-	        if(value.equals(ValidationDescriptor.IGNORE)) {
-	            return;
-	        } else if(value.equals(ValidationDescriptor.ERROR)) {
-	            status = IStatus.ERROR;
-	        } else if(value.equals(ValidationDescriptor.INFO)) {
-	            status = IStatus.INFO;
-	        }  else if(value.equals(ValidationDescriptor.WARNING)) {
-	            status = IStatus.WARNING;
-	        }
+        if (context.hasPreferences()) {
+            severity = context.getPreferenceStatus(ValidationPreferences.RELATIONAL_COLUMN_INTEGER_TYPE, severity);
+
+            if (severity == IStatus.OK) {
+                return;
+            }
         }
 
+        // problem exists
         ValidationResult result = new ValidationResultImpl(eObject);
         // create validation problem and add it to the result
         final String msg = RelationalPlugin.Util.getString("ColumnIntegerDatatypeRule.Integer_datatype_would_result_in_a_bigInteger_runtimetype._1"); //$NON-NLS-1$
-        ValidationProblem problem  = new ValidationProblemImpl(0, status ,msg);
+        ValidationProblem problem  = new ValidationProblemImpl(0, severity ,msg);
         result.addProblem(problem);
         context.addResult(result);
-    }
-
-    protected String getPreferenceValue(Preferences prefs) {
-        return prefs.getString(ValidationPreferences.RELATIONAL_COLUMN_INTEGER_TYPE);
     }
 
 }

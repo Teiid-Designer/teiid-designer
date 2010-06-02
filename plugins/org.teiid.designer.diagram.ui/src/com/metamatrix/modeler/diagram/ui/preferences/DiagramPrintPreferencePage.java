@@ -293,7 +293,7 @@ public class DiagramPrintPreferencePage extends PreferencePage
         store.setValue(PluginConstants.Prefs.Print.OVER_THEN_DOWN, radioOverThenDown.getSelection());
         store.setValue(PluginConstants.Prefs.Print.DOWN_THEN_OVER, radioDownThenOver.getSelection());
 
-        DiagramUiPlugin.getDefault().savePluginPreferences();
+        DiagramUiPlugin.getDefault().savePreferences();
     }
 
     private void setUIFromPreferenceStore() {

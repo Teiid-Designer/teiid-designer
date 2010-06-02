@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.mapping.factory;
 
+import static com.metamatrix.modeler.mapping.PluginConstants.PLUGIN_ID;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.osgi.service.prefs.BackingStoreException;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramContainer;
 import com.metamatrix.metamodels.diagram.DiagramEntity;
@@ -35,7 +38,6 @@ import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.util.NewModelObjectHelperManager;
 import com.metamatrix.modeler.internal.core.ClearEObjectReferences;
-import com.metamatrix.modeler.mapping.ModelerMappingPlugin;
 import com.metamatrix.modeler.mapping.PluginConstants;
 import com.metamatrix.modeler.mapping.factory.IMappableTree;
 import com.metamatrix.modeler.mapping.factory.ITreeToRelationalMapper;
@@ -55,7 +57,10 @@ public class MappingClassFactory {
 
     public static MappingClassBuilderStrategy getDefaultStrategy() {
         if (defaultStrategy == null) {
-            String defValue = ModelerMappingPlugin.getDefault().getPluginPreferences().getString(STRATEGY_PREF_KEY);
+            IEclipsePreferences prefs = ModelerCore.getPreferences(PLUGIN_ID);
+            IEclipsePreferences defaultPrefs = ModelerCore.getDefaultPreferences(PLUGIN_ID);
+            String defValue = prefs.get(STRATEGY_PREF_KEY, defaultPrefs.get(STRATEGY_PREF_KEY, null));
+
             if (COMPOSITOR_PREF_VALUE.equals(defValue)) {
                 defaultStrategy = MappingClassBuilderStrategy.compositorStrategy;
             } else {
@@ -66,12 +71,22 @@ public class MappingClassFactory {
     }
 
     public static void setDefaultStrategy( MappingClassBuilderStrategy strategy ) {
+        IEclipsePreferences prefs = ModelerCore.getPreferences(PLUGIN_ID);
+
         if (strategy instanceof CompositorBasedBuilderStrategy) {
-            ModelerMappingPlugin.getDefault().getPluginPreferences().setValue(STRATEGY_PREF_KEY, COMPOSITOR_PREF_VALUE);
-        } else if (strategy instanceof IterationBasedBuilderStrategy) {
-            ModelerMappingPlugin.getDefault().getPluginPreferences().setValue(STRATEGY_PREF_KEY, ITERATION_PREF_VALUE);
+            prefs.put(STRATEGY_PREF_KEY, COMPOSITOR_PREF_VALUE);
+        } else {
+            assert (strategy instanceof IterationBasedBuilderStrategy);
+            prefs.put(STRATEGY_PREF_KEY, ITERATION_PREF_VALUE);
         }
+
         defaultStrategy = strategy;
+
+        try {
+            ModelerCore.savePreferences(PLUGIN_ID);
+        } catch (BackingStoreException e) {
+            PluginConstants.Util.log(e);
+        }
     }
 
     private EObject treeRoot;

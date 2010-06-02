@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -34,12 +33,14 @@ import com.metamatrix.modeler.internal.core.index.IndexUtil;
 public class ValidationContext {
 
     private final static Resource[] EMPTY_RESOURCE_ARRAY = new Resource[0];
+    
+    /**
+     * A namespace qualifier for the preferences (typically a plugin ID).
+     */
+    private String preferenceQualifier;
 
-    // control/preference info
-    private Preferences preferences;
-
-    // Map of preference key to IStatus value
-    private Map preferenceStatusMap;
+    // Map of preference key to IStatus severity
+    private Map<String, Integer> preferenceStatusMap;
 
     // validation results to be passed as part of context as
     private List validationResults;
@@ -94,18 +95,15 @@ public class ValidationContext {
      * Construct an instance of ValidationContext.
      */
     public ValidationContext() {
-        this.preferenceStatusMap = new HashMap();
+        this(null);
     }
-
+    
     /**
-     * Construct an instance of ValidationContext.
-     * 
-     * @param preferences Preferences used by various validation rules.
+     * @param preferenceQualifier the namespace qualifier for the preferences (typically a plugin ID)
      */
-    public ValidationContext( final Preferences preferences ) {
-        CoreArgCheck.isNotNull(preferences);
-        this.preferences = preferences;
-        this.preferenceStatusMap = new HashMap();
+    public ValidationContext( String preferenceQualifier ) {
+        this.preferenceQualifier = preferenceQualifier;
+        this.preferenceStatusMap = new HashMap<String, Integer>();   
     }
 
     /**
@@ -337,73 +335,74 @@ public class ValidationContext {
      * @since 4.2
      */
     public boolean hasPreferences() {
-        return preferences != null;
+        return (this.preferenceQualifier != null);
     }
 
     /**
-     * Get the preferences for this context
+     * Get the value for a given preference key.
      * 
-     * @return Preferences object with validation preference info
+     * @param key the preference key (man not be <code>null</code>)
+     * @return the preference value (can be <code>null</code>)
      */
-    public Preferences getPreferences() {
-        return preferences;
-    }
+    public String getPreferenceValue( final String key ) {
+        CoreArgCheck.isNotNull(key, "key"); //$NON-NLS-1$
 
-    /**
-     * Get the value given a preference key, look up preferences on the context.
-     * 
-     * @param prefKey The pref key
-     * @param context The validation context to look up preferences
-     * @return String value of preference
-     * @since 4.2
-     */
-    public String getPreferenceValue( final String prefKey ) {
-        if (this.preferences != null) {
-            String preferenceValue = this.preferences.getString(prefKey);
-            if (CoreStringUtil.isEmpty(preferenceValue)) {
-                preferenceValue = this.preferences.getDefaultString(prefKey);
+        if (hasPreferences()) {
+            String value = ModelerCore.getPreferences(this.preferenceQualifier).get(key, null);
+
+            // if no value set get default value
+            if (CoreStringUtil.isEmpty(value)) {
+                value = ModelerCore.getDefaultPreferences(this.preferenceQualifier).get(key, null);
             }
-            return preferenceValue;
+
+            return value;
         }
+
+        // no preferences
         return null;
     }
 
     /**
-     * Get an IStatus value for the given preference string
+     * Obtains an {@link IStatus} severity for the given preference.
      * 
-     * @param preferences The preferences to look up
-     * @param value The key used to look up preference value
-     * @return The IStatus value
+     * @param prefKey the preference key whose status is being requested
+     * @param defaultStatus the severity to return if the status can't be determined
+     * @return the <code>IStatus</code> code
      * @since 4.2
      */
     public int getPreferenceStatus( final String prefKey,
                                     final int defaultStatus ) {
-        if (this.preferenceStatusMap.containsKey(prefKey)) {
-            // System.out.println(prefKey +
-            // " = "+getValidationDescriptorValue(((Integer)this.preferenceStatusMap.get(prefKey)).intValue()));
-            return ((Integer)this.preferenceStatusMap.get(prefKey)).intValue();
-        }
+        if (hasPreferences()) {
+            if (this.preferenceStatusMap.containsKey(prefKey)) {
+                return this.preferenceStatusMap.get(prefKey);
+            }
+    
+            String value = getPreferenceValue(prefKey);
 
-        String value = getPreferenceValue(prefKey);
-        if (value != null) {
-            if (value.equals(ValidationDescriptor.IGNORE)) {
-                this.preferenceStatusMap.put(prefKey, new Integer(IStatus.OK));
-                return IStatus.OK;
-
-            } else if (value.equals(ValidationDescriptor.INFO)) {
-                this.preferenceStatusMap.put(prefKey, new Integer(IStatus.INFO));
-                return IStatus.INFO;
-
-            } else if (value.equals(ValidationDescriptor.WARNING)) {
-                this.preferenceStatusMap.put(prefKey, new Integer(IStatus.WARNING));
-                return IStatus.WARNING;
-
-            } else if (value.equals(ValidationDescriptor.ERROR)) {
-                this.preferenceStatusMap.put(prefKey, new Integer(IStatus.ERROR));
-                return IStatus.ERROR;
+            if (value != null) {
+                if (value.equals(ValidationDescriptor.IGNORE)) {
+                    this.preferenceStatusMap.put(prefKey, IStatus.OK);
+                    return IStatus.OK;
+                }
+    
+                if (value.equals(ValidationDescriptor.INFO)) {
+                    this.preferenceStatusMap.put(prefKey, IStatus.INFO);
+                    return IStatus.INFO;
+                }
+    
+                if (value.equals(ValidationDescriptor.WARNING)) {
+                    this.preferenceStatusMap.put(prefKey, IStatus.WARNING);
+                    return IStatus.WARNING;
+                }
+    
+                if (value.equals(ValidationDescriptor.ERROR)) {
+                    this.preferenceStatusMap.put(prefKey, IStatus.ERROR);
+                    return IStatus.ERROR;
+                }
             }
         }
 
+        // no preference value so use default status
         this.preferenceStatusMap.put(prefKey, new Integer(defaultStatus));
         return defaultStatus;
     }
@@ -454,7 +453,7 @@ public class ValidationContext {
         }
 
         this.resourcesToValidate = null;
-        this.preferences = null;
+        this.preferenceQualifier = null;
         this.preferenceStatusMap.clear();
         this.resourceContainer = null;
         this.useServerIndexes = false;

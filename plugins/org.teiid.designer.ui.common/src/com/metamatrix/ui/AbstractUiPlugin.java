@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWTException;
@@ -28,7 +29,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
 import com.metamatrix.core.PluginUtil;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.ui.actions.ActionService;
 import com.metamatrix.ui.graphics.ImageImageDescriptor;
 import com.metamatrix.ui.internal.EditorPerspectiveListener;
@@ -221,7 +224,40 @@ public abstract class AbstractUiPlugin extends org.eclipse.ui.plugin.AbstractUIP
         }
         return result;
     }
+    
+    /**
+     * Obtains the current values of all plugin preferences.
+     * <p>
+     * <strong>This method should be used instead of <code>getPluginPreferences()</code>.</strong>
+     * 
+     * @return the preferences (never <code>null</code>)
+     */
+    public final IEclipsePreferences getPreferences() {
+        return ModelerCore.getPreferences(getBundle().getSymbolicName());
+    }
+    
+    /**
+     * Persists plugin preferences.
+     */
+    public final void savePreferences() {
+        try {
+            ModelerCore.savePreferences(getBundle().getSymbolicName());
+        } catch (BackingStoreException e) {
+            getPluginUtil().log(e);
+        }
+    }
 
+    /**
+     * Obtains the default values of all plugin preferences.
+     * <p>
+     * <strong>This method should be used instead of <code>getPluginPreferences()</code>.</strong>
+     * 
+     * @return the preferences (never <code>null</code>)
+     */
+    public final IEclipsePreferences getDefaultPreferences() {
+        return ModelerCore.getDefaultPreferences(getBundle().getSymbolicName());
+    }
+    
     /**
      * Indicates if the image registry contains an image accessed by the specified identifier.
      * 

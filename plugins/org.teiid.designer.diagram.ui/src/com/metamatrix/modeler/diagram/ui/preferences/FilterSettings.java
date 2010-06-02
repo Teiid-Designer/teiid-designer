@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.diagram.ui.preferences;
 
-import org.eclipse.core.runtime.Preferences;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.PluginConstants;
 
@@ -51,18 +50,15 @@ public class FilterSettings implements PluginConstants {
     };
 
     public static boolean getBoolean(String settingID) {
-        Preferences pref = DiagramUiPlugin.getDefault().getPluginPreferences();
-        return pref.getBoolean(settingID);
+        return DiagramUiPlugin.getDefault().getPreferences().getBoolean(settingID, getDefaultBoolean(settingID));
     }
 
     public static boolean getDefaultBoolean(String settingID) {
-        Preferences pref = DiagramUiPlugin.getDefault().getPluginPreferences();
-        return pref.getDefaultBoolean(settingID);
+        return DiagramUiPlugin.getDefault().getDefaultPreferences().getBoolean(settingID, false);
     }
 
     public static void setBoolean(String settingID, boolean value) {
-        Preferences pref = DiagramUiPlugin.getDefault().getPluginPreferences();
-        pref.setValue(settingID, value);
+        DiagramUiPlugin.getDefault().getPreferences().putBoolean(settingID, value);
     }
 
     public static String[] getSettings(int group) {
@@ -70,6 +66,7 @@ public class FilterSettings implements PluginConstants {
     }
 
     public static void save() {
-        DiagramUiPlugin.getDefault().savePluginPreferences();
+        DiagramUiPlugin.getDefault().savePreferences();
     }
+
 }

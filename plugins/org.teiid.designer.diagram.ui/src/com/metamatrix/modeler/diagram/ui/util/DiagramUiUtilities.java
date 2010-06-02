@@ -1126,7 +1126,7 @@ public class DiagramUiUtilities {
                     IPreferenceStore preferenceStore = DiagramUiPlugin.getDefault().getPreferenceStore();
                     if (preferenceStore != null) {
                         preferenceStore.setValue(PluginConstants.Prefs.DIAGRAM_ROUTER_STYLE, style);
-                        DiagramUiPlugin.getDefault().savePluginPreferences();
+                        DiagramUiPlugin.getDefault().savePreferences();
                     }
                     notFound = false;
                 } else {
@@ -1145,7 +1145,7 @@ public class DiagramUiUtilities {
             IPreferenceStore preferenceStore = DiagramUiPlugin.getDefault().getPreferenceStore();
             if (preferenceStore != null) {
                 preferenceStore.setValue(PluginConstants.Prefs.DIAGRAM_ROUTER_STYLE, routers[id]);
-                DiagramUiPlugin.getDefault().savePluginPreferences();
+                DiagramUiPlugin.getDefault().savePreferences();
             }
             DiagramUiPlugin.updateEditorForPreferences();
         }

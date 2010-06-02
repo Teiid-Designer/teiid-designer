@@ -406,7 +406,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         final IPreferenceStore preferenceStore = UiPlugin.getDefault().getPreferenceStore();
         for (final PreferenceKeyAndDefaultValue element : PluginConstants.Prefs.General.PREFERENCES)
             PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, element);
-        UiPlugin.getDefault().savePluginPreferences();
+        UiPlugin.getDefault().savePreferences();
     }
 
     /**

@@ -16,9 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.teiid.core.util.ExternalizeUtil;
-
-import org.teiid.core.TeiidException;
 
 /**
  */

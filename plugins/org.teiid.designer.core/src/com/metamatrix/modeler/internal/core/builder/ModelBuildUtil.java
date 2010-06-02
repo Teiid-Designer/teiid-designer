@@ -114,7 +114,7 @@ public class ModelBuildUtil {
         ValidationContext context = null;
         Plugin corePlugin = ModelerCore.getPlugin();
         if (corePlugin != null && !ModelerCore.ignoreValidationPreferencesOnBuild()) {
-            context = new ValidationContext(corePlugin.getPluginPreferences());
+            context = new ValidationContext(ModelerCore.PLUGIN_ID);
         } else {
             // non plugin environment
             context = new ValidationContext();

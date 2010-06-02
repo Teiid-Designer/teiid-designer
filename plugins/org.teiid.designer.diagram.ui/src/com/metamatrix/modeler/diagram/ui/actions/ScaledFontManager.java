@@ -64,7 +64,7 @@ public class ScaledFontManager {
 	private static void saveFontPreference() {
 		PreferenceConverter.setValue(DiagramUiPlugin.getDefault().getPreferenceStore(), 
 						PluginConstants.Prefs.Appearance.FONT, getFont().getFontData()[0]);
-		DiagramUiPlugin.getDefault().savePluginPreferences();
+		DiagramUiPlugin.getDefault().savePreferences();
 	}
     
     public static void increase() {

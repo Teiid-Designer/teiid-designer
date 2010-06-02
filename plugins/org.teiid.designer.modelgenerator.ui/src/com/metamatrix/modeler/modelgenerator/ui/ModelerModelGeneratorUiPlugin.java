@@ -99,6 +99,6 @@ public class ModelerModelGeneratorUiPlugin extends AbstractUiPlugin implements M
                     PluginConstants.Prefs.ModelGenerator.PREFERENCES[i]);
         }
 
-        getDefault().savePluginPreferences();
+        getDefault().savePreferences();
     }
 }

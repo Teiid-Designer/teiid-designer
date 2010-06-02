@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.osgi.service.prefs.BackingStoreException;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationDescriptor;
@@ -62,7 +62,6 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
         // validation uses the options map from this class. an initial options map is needed that
         // contains all the validation descriptors to ensure all will be used during validation.
         if ((descriptors != null) && !descriptors.isEmpty()) {
-            Preferences preferences = ModelerCore.getPlugin().getPluginPreferences();
             int size = descriptors.size();
             Map changeMap = new HashMap(size);
             
@@ -70,7 +69,7 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
                 ValidationDescriptor descriptor = (ValidationDescriptor)descriptors.get(i);
                 
                 // get current value of preference. if one does not exist use the default
-                String value = getCurrentPreferenceValue(preferences, descriptor);
+                String value = getCurrentPreferenceValue(descriptor);
                 
                 if (CoreStringUtil.isEmpty(value)) {
                     value = descriptor.getDefaultOption();
@@ -85,14 +84,13 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
     
     /**
      * Obtains the current preference value for the specified descriptor.
-     * @param thePreferences the preferences containing the specified preference
+     * 
      * @param theDescriptor the descriptor whose value is being requested
      * @return the current value or an empty string if no value exists
-     * @since 5.0.1
      */
-    private String getCurrentPreferenceValue(Preferences thePreferences,
-                                             ValidationDescriptor theDescriptor) {
-        return thePreferences.getString(getFullName(theDescriptor));
+    private String getCurrentPreferenceValue( ValidationDescriptor theDescriptor ) {
+        IEclipsePreferences prefs = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
+        return prefs.get(getFullName(theDescriptor), ""); //$NON-NLS-1$
     }
 
     public List getValidationDescriptors() {
@@ -113,7 +111,7 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
     public void setOptions(Map newOptions) {
 
         // see #initializeDefaultPluginPreferences() for changing default settings
-        Preferences preferences = ModelerCore.getPlugin().getPluginPreferences();
+        IEclipsePreferences preferences = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
 
         Iterator keyIter = newOptions.keySet().iterator();
         while (keyIter.hasNext()){
@@ -122,11 +120,15 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
             if (!optionNames.contains(name)) continue; // unrecognized option
             Object value = newOptions.get(key);
             if(value == null) continue;
-            preferences.setValue(name, getValidOption((String)value));
+            preferences.put(name, getValidOption((String)value));
         }
 
         // persist options
-        ModelerCore.getPlugin().savePluginPreferences();
+        try {
+            ModelerCore.savePreferences(ModelerCore.PLUGIN_ID);
+        } catch (BackingStoreException e) {
+            ModelerCore.Util.log(e);
+        }
     }
 
     /**
@@ -143,29 +145,38 @@ public class ValidationPreferencesImpl implements ValidationPreferences {
         Map options = new HashMap();
 
         // see #initializeDefaultPluginPreferences() for changing default settings
-        Plugin plugin = ModelerCore.getPlugin();
-        if (plugin != null) {
-            Preferences preferences = plugin.getPluginPreferences();
+        if (ModelerCore.getPlugin() != null) {
+            IEclipsePreferences preferences = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
+            IEclipsePreferences defaultPrefs = ModelerCore.getDefaultPreferences(ModelerCore.PLUGIN_ID);
 
-            // get preferences set to their default
-//            String[] defaultPropertyNames = preferences.defaultPropertyNames();
-//            for (int i = 0; i < defaultPropertyNames.length; i++){
-//                String propertyName = defaultPropertyNames[i];
-//                if (optionNames.contains(propertyName)){
-//                    options.put(propertyName, preferences.getDefaultString(propertyName));
-//                }
-//            }
-            // get preferences not set to their default
-            String[] propertyNames = preferences.propertyNames();
-            for (int i = 0; i < propertyNames.length; i++){
-                String propertyName = propertyNames[i];
-                if (optionNames.contains(propertyName)){
-                    String value = preferences.getString(propertyName).trim();
-                    options.put(propertyName, value);
+            try {
+                String[] propertyNames = preferences.keys();
+    
+                for (int i = 0; i < propertyNames.length; i++) {
+                    String propertyName = propertyNames[i];
+                    if (optionNames.contains(propertyName)) {
+                        String value = preferences.get(propertyName, defaultPrefs.get(propertyName, getDefaultValue(propertyName)));
+                        options.put(propertyName, value.trim());
+                    }
                 }
-            }       
+            } catch (Exception e) {
+                ModelerCore.Util.log(e);
+            }
         }
+
         return options;
+    }
+    
+    private static String getDefaultValue(String propertyName) {
+        for (int size = validationDescriptors.size(), i = 0; i < size; ++i) {
+            ValidationDescriptor desc = (ValidationDescriptor)validationDescriptors.get(i);
+            
+            if (desc.getPreferenceName().equals(propertyName)) {
+                return desc.getDefaultOption();
+            }
+        }
+        
+        return null;
     }
 
     /**

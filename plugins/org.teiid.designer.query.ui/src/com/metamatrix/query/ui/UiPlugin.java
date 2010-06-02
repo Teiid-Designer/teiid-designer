@@ -85,6 +85,6 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, UiConstan
         for (int i = 0; i < UiConstants.Prefs.PREFERENCES.length; i++) {
             PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore, UiConstants.Prefs.PREFERENCES[i]);
         }
-        UiPlugin.getDefault().savePluginPreferences();
+        UiPlugin.getDefault().savePreferences();
     }
 }

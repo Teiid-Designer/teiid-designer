@@ -261,7 +261,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
                 String typeName = ModelerCore.getWorkspaceDatatypeManager().getName(keysDatatype);
                 IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
                 prefStore.setValue(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_TYPE, typeName);
-                ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+                ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
             }
             // Validate the page
             this.wizardPage.validatePage();
@@ -359,7 +359,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
         String listString = serializeList(pKeyNames);
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.PRIMARY_KEY_STEREOTYPES, listString);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
         // Validate the page
         this.wizardPage.validatePage();
     }
@@ -377,7 +377,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
         // Update the PreferenceStore
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.NUMBER_KEY_COLUMNS, nKeyCols);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
         // Validate the page
         this.wizardPage.validatePage();
     }
@@ -397,7 +397,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
             // Update the PreferenceStore
             IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
             prefStore.setValue(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_BASE_NAME, baseName);
-            ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+            ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
         }
         // Validate the page
         this.wizardPage.validatePage();
@@ -416,7 +416,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
         // Update the PreferenceStore
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_LENGTH, nLength);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
 
         // Validate the page
         this.wizardPage.validatePage();

@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
@@ -20,7 +19,6 @@ import com.metamatrix.metamodels.relational.ColumnSet;
 import com.metamatrix.metamodels.relational.Index;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.Table;
-import com.metamatrix.modeler.core.ValidationDescriptor;
 import com.metamatrix.modeler.core.ValidationPreferences;
 import com.metamatrix.modeler.core.validation.ObjectValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;
@@ -41,19 +39,13 @@ public class IndexReferenceOneTableRule implements ObjectValidationRule {
         CoreArgCheck.isInstanceOf(Index.class, eObject);
 
         // See what the preference is ...
-        int status = IStatus.WARNING;
-        //TODO: Replace code with context.getPreferenceStatus(String , int);
-        Preferences prefs = context.getPreferences();
-        if(prefs != null) {        
-            String value = getPreferenceValue(prefs);
-            if(value.equals(ValidationDescriptor.IGNORE)) {
+        int severity = IStatus.WARNING;
+
+        if (context.hasPreferences()) {        
+            severity = context.getPreferenceStatus(ValidationPreferences.RELATIONAL_INDEXES_WITH_COLUMNS_FROM_MULTIPLE_TABLES, severity);
+
+            if (severity == IStatus.OK) {
                 return;
-            } else if(value.equals(ValidationDescriptor.ERROR)) {
-                status = IStatus.ERROR;
-            } else if(value.equals(ValidationDescriptor.INFO)) {
-                status = IStatus.INFO;
-            }  else if(value.equals(ValidationDescriptor.WARNING)) {
-                status = IStatus.WARNING;
             }
         }
 
@@ -74,14 +66,10 @@ public class IndexReferenceOneTableRule implements ObjectValidationRule {
         if ( referencedTables.size() > 1 ) {
             ValidationResult result = new ValidationResultImpl(eObject);
             // create validation problem and add it to the result
-            ValidationProblem problem  = new ValidationProblemImpl(0, status, getValidationMsg(0, new Object[] {eObject}));
+            ValidationProblem problem  = new ValidationProblemImpl(0, severity, getValidationMsg(0, new Object[] {eObject}));
             result.addProblem(problem);
             context.addResult(result);
         }
-    }
-
-    protected String getPreferenceValue(Preferences prefs) {
-        return prefs.getString(ValidationPreferences.RELATIONAL_INDEXES_WITH_COLUMNS_FROM_MULTIPLE_TABLES);
     }
     
     /**

@@ -7,7 +7,8 @@
  */
 package com.metamatrix.modeler.internal.core;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.osgi.service.prefs.BackingStoreException;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.TransformationPreferences;
 
@@ -18,96 +19,116 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
 
     //Used to enable Unit Testing.
     public static boolean HEADLESS = false;
-    
-    private Preferences preferences; 
-    private boolean hasInitialized = false;
-
     private static int DEFAULT_LENGTH = 10;
     private static int UPPER_RECURSION_LIMIT = 10;
     private static boolean DEFAULT_REMOVE_ATTRIBUTES_VALUE = false;
+
+    private boolean hasInitialized = false;
     
     private void initializeDefaultsIfNeeded() {
     	if(HEADLESS) return;
     	
-        int val = getPreferences().getInt(DEFAULT_STRING_LENGTH_KEY);
+    	IEclipsePreferences defaultPrefs = ModelerCore.getDefaultPreferences(ModelerCore.PLUGIN_ID);
+
+    	int val = defaultPrefs.getInt(DEFAULT_STRING_LENGTH_KEY, 0);
         if (val == 0) {
-            getPreferences().setValue(DEFAULT_STRING_LENGTH_KEY, DEFAULT_LENGTH);
+            defaultPrefs.putInt(DEFAULT_STRING_LENGTH_KEY, DEFAULT_LENGTH);
         }
-        val = getPreferences().getInt(UPPER_RECURSION_LIMIT_KEY);
+
+        val = defaultPrefs.getInt(UPPER_RECURSION_LIMIT_KEY, 0);
         if (val == 0) {
-            getPreferences().setValue(UPPER_RECURSION_LIMIT_KEY, UPPER_RECURSION_LIMIT);
+            defaultPrefs.putInt(UPPER_RECURSION_LIMIT_KEY, UPPER_RECURSION_LIMIT);
         }
         
-        boolean bol = getPreferences().getBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY);
+        boolean bol = defaultPrefs.getBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, false);
         if (!bol) {
-            getPreferences().setValue(REMOVE_DUPLICATE_ATTRIBUTES_KEY, DEFAULT_REMOVE_ATTRIBUTES_VALUE);
-        }  
+            defaultPrefs.putBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, DEFAULT_REMOVE_ATTRIBUTES_VALUE);
+        }
+        
+        save();
     }
     
-
-    
-    
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     *
      * @see com.metamatrix.modeler.core.TransformationPreferences#getDefaultStringLength()
      */
     public int getDefaultStringLength() {
-        if(HEADLESS) return DEFAULT_LENGTH;
+        if (HEADLESS) return DEFAULT_LENGTH;
+
         if (!hasInitialized) {
             initializeDefaultsIfNeeded();
             hasInitialized = true;
         }
-        return getPreferences().getInt(DEFAULT_STRING_LENGTH_KEY); 
+
+        return getPreferences().getInt(DEFAULT_STRING_LENGTH_KEY, DEFAULT_LENGTH);
     }
     
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.core.TransformationPreferences#setDefaultStringLength()
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.TransformationPreferences#setDefaultStringLength(int)
      */
-    public void setDefaultStringLength(int val) {
-    	if(HEADLESS) return;
-        getPreferences().setValue(DEFAULT_STRING_LENGTH_KEY, val);
-        ModelerCore.getPlugin().savePluginPreferences();
+    public void setDefaultStringLength( int val ) {
+        if (HEADLESS) return;
+        getPreferences().putInt(DEFAULT_STRING_LENGTH_KEY, val);
+        save();
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.core.TransformationPreferences#setUpperRecursionLimit()
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.TransformationPreferences#setUpperRecursionLimit(int)
      */
-    public void setUpperRecursionLimit(int val) {
-    	if(HEADLESS) return;
-        getPreferences().setValue(UPPER_RECURSION_LIMIT_KEY, val);
-        ModelerCore.getPlugin().savePluginPreferences();
+    public void setUpperRecursionLimit( int val ) {
+        if (HEADLESS) return;
+        getPreferences().putInt(UPPER_RECURSION_LIMIT_KEY, val);
+        save();
     }
     
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     *
      * @see com.metamatrix.modeler.core.TransformationPreferences#getUpperRecursionLimit()
      */
     public int getUpperRecursionLimit() {
-        if(HEADLESS) return UPPER_RECURSION_LIMIT;
+        if (HEADLESS) return UPPER_RECURSION_LIMIT;
+
         if (!hasInitialized) {
             initializeDefaultsIfNeeded();
             hasInitialized = true;
         }
-        return getPreferences().getInt(UPPER_RECURSION_LIMIT_KEY); 
+
+        return getPreferences().getInt(UPPER_RECURSION_LIMIT_KEY, UPPER_RECURSION_LIMIT);
     }
 
     public boolean getRemoveDuplicateAttibutes() {
-        if(HEADLESS) return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
+        if (HEADLESS) return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
+
         if (!hasInitialized) {
             initializeDefaultsIfNeeded();
             hasInitialized = true;
         }
-        return getPreferences().getBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY);
+
+        return getPreferences().getBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, DEFAULT_REMOVE_ATTRIBUTES_VALUE);
     }
     
-    public void setRemoveDuplicateAttibutes(boolean val) {
-    	if(HEADLESS) return;
-        getPreferences().setValue(REMOVE_DUPLICATE_ATTRIBUTES_KEY, val);
-        ModelerCore.getPlugin().savePluginPreferences();
+    public void setRemoveDuplicateAttibutes( boolean val ) {
+        if (HEADLESS) return;
+        getPreferences().putBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, val);
+        save();
     }
     
-    private Preferences getPreferences() {
-        if (preferences == null) {
-            preferences = ModelerCore.getPlugin().getPluginPreferences();
+    private IEclipsePreferences getPreferences() {
+        return ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
+    }
+    
+    private void save() {
+        try {
+            ModelerCore.savePreferences(ModelerCore.PLUGIN_ID);
+        } catch (BackingStoreException e) {
+            ModelerCore.Util.log(e);
         }
-        return preferences;
     }
+
 }

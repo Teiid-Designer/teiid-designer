@@ -111,6 +111,6 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 					PluginConstants.Prefs.Appearance.PREFERENCES[i]);
 		}
 
-		DiagramUiPlugin.getDefault().savePluginPreferences();
+		DiagramUiPlugin.getDefault().savePreferences();
 	}
 }

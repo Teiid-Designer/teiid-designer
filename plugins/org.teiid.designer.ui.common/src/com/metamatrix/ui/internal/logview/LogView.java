@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -957,13 +957,13 @@ public class LogView extends ViewPart implements ILogListener {
      * 
      * @return the plugin preferences
      */
-    private Preferences getLogPreferences() {
-        return UiPlugin.getDefault().getPluginPreferences();
+    private IEclipsePreferences getLogPreferences() {
+        return UiPlugin.getDefault().getPreferences();
     }
 
     private void readSettings() {
         IDialogSettings s = getLogSettings();
-        Preferences p = getLogPreferences();
+        IEclipsePreferences p = getLogPreferences();
         if (s == null || p == null) {
             initializeMemento();
             return;
@@ -975,13 +975,13 @@ public class LogView extends ViewPart implements ILogListener {
             fMemento.putString(P_LOG_WARNING, s.getBoolean(P_LOG_WARNING) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
             fMemento.putString(P_LOG_ERROR, s.getBoolean(P_LOG_ERROR) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
             fMemento.putString(P_SHOW_ALL_SESSIONS, s.getBoolean(P_SHOW_ALL_SESSIONS) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
-            fMemento.putInteger(P_COLUMN_1, p.getInt(P_COLUMN_1) > 0 ? p.getInt(P_COLUMN_1) : 300);
-            fMemento.putInteger(P_COLUMN_2, p.getInt(P_COLUMN_2) > 0 ? p.getInt(P_COLUMN_2) : 150);
-            fMemento.putInteger(P_COLUMN_3, p.getInt(P_COLUMN_3) > 0 ? p.getInt(P_COLUMN_3) : 300);
-            fMemento.putString(P_ACTIVATE, p.getBoolean(P_ACTIVATE) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
-            int order = p.getInt(P_ORDER_VALUE);
+            fMemento.putInteger(P_COLUMN_1, p.getInt(P_COLUMN_1, 0) > 0 ? p.getInt(P_COLUMN_1, 0) : 300);
+            fMemento.putInteger(P_COLUMN_2, p.getInt(P_COLUMN_2, 0) > 0 ? p.getInt(P_COLUMN_2, 0) : 150);
+            fMemento.putInteger(P_COLUMN_3, p.getInt(P_COLUMN_3, 0) > 0 ? p.getInt(P_COLUMN_3, 0) : 300);
+            fMemento.putString(P_ACTIVATE, p.getBoolean(P_ACTIVATE, false) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+            int order = p.getInt(P_ORDER_VALUE, 0);
             fMemento.putInteger(P_ORDER_VALUE, order == 0 ? -1 : order);
-            fMemento.putInteger(P_ORDER_TYPE, p.getInt(P_ORDER_TYPE));
+            fMemento.putInteger(P_ORDER_TYPE, p.getInt(P_ORDER_TYPE, MESSAGE));
         } catch (NumberFormatException e) {
             fMemento.putInteger(P_LOG_LIMIT, 50);
             fMemento.putInteger(P_COLUMN_1, 300);
@@ -1009,13 +1009,13 @@ public class LogView extends ViewPart implements ILogListener {
     }
 
     private void writeViewSettings() {
-        Preferences preferences = getLogPreferences();
-        preferences.setValue(P_COLUMN_1, fMemento.getInteger(P_COLUMN_1).intValue());
-        preferences.setValue(P_COLUMN_2, fMemento.getInteger(P_COLUMN_2).intValue());
-        preferences.setValue(P_COLUMN_3, fMemento.getInteger(P_COLUMN_3).intValue());
-        preferences.setValue(P_ACTIVATE, fMemento.getString(P_ACTIVATE).equals("true")); //$NON-NLS-1$
-        int order = fMemento.getInteger(P_ORDER_VALUE).intValue();
-        preferences.setValue(P_ORDER_VALUE, order == 0 ? -1 : order);
-        preferences.setValue(P_ORDER_TYPE, fMemento.getInteger(P_ORDER_TYPE).intValue());
+        IEclipsePreferences preferences = getLogPreferences();
+        preferences.putInt(P_COLUMN_1, fMemento.getInteger(P_COLUMN_1));
+        preferences.putInt(P_COLUMN_2, fMemento.getInteger(P_COLUMN_2));
+        preferences.putInt(P_COLUMN_3, fMemento.getInteger(P_COLUMN_3));
+        preferences.putBoolean(P_ACTIVATE, fMemento.getString(P_ACTIVATE).equals("true")); //$NON-NLS-1$
+        int order = fMemento.getInteger(P_ORDER_VALUE);
+        preferences.putInt(P_ORDER_VALUE, order == 0 ? -1 : order);
+        preferences.putInt(P_ORDER_TYPE, fMemento.getInteger(P_ORDER_TYPE));
     }
 }

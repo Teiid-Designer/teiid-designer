@@ -410,7 +410,7 @@ public class GeneralOptionsWizardPanel extends Composite
                 String typeName = ModelerCore.getWorkspaceDatatypeManager().getName(relationalColDatatype);
                 IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
                 prefStore.setValue(PluginConstants.Prefs.ModelGenerator.RELATIONAL_COLUMN_TYPE, typeName);
-                ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+                ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
             }
             // Validate the page
             this.wizardPage.validatePage();
@@ -534,7 +534,7 @@ public class GeneralOptionsWizardPanel extends Composite
         if (usageOption == Uml2RelationalOptions.PackageUsage.FLATTEN || usageOption == Uml2RelationalOptions.PackageUsage.IGNORE) {
             IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
             prefStore.setValue(PluginConstants.Prefs.ModelGenerator.PACKAGE_USAGE, usageOption);
-            ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+            ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
         }
         // Validate the page
         this.wizardPage.validatePage();
@@ -553,7 +553,7 @@ public class GeneralOptionsWizardPanel extends Composite
         // Update the PreferenceStore
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.REACHABILITY_CONTRAINT, constraint);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
         // Validate the page
         this.wizardPage.validatePage();
     }
@@ -572,7 +572,7 @@ public class GeneralOptionsWizardPanel extends Composite
         String listString = serializeList(ignoredStereos);
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.CLASS_IGNORED_STEREOTYPES, listString);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
 
         // Validate the page
         this.wizardPage.validatePage();
@@ -593,7 +593,7 @@ public class GeneralOptionsWizardPanel extends Composite
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
 
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.CLASS_READONLY_STEREOTYPES, listString);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
 
         // Validate the page
         this.wizardPage.validatePage();
@@ -612,7 +612,7 @@ public class GeneralOptionsWizardPanel extends Composite
         // Update the PreferenceStore
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
         prefStore.setValue(PluginConstants.Prefs.ModelGenerator.DEFAULT_STRING_LENGTH, nStringLength);
-        ModelerModelGeneratorUiPlugin.getDefault().savePluginPreferences();
+        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
 
         // Validate the page
         this.wizardPage.validatePage();

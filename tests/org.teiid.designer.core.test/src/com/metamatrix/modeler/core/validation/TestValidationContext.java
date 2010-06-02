@@ -11,7 +11,6 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.core.runtime.Preferences;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 
 /**
@@ -81,43 +80,13 @@ public final class TestValidationContext extends TestCase {
     // H E L P E R M E T H O D S
     // =========================================================================
 
-    private ValidationContext helpCreateValidationContext( final Preferences preferences ) {
-        return new ValidationContext(preferences);
+    private ValidationContext helpCreateValidationContext() {
+        return new ValidationContext();
     }
 
     // =========================================================================
     // T E S T C A S E S
     // =========================================================================
-    /**
-     * @since 4.0
-     */
-    public void testConstruction() {
-        final StringBuffer failures = new StringBuffer();
-        ValidationContext context = null;
-
-        // valid construction 1 (not null map)
-        try {
-            context = helpCreateValidationContext(new Preferences());
-        } catch (Exception e) {
-            failures.append("\nUnexpected exception during valid construction 1"); //$NON-NLS-1$
-        }
-
-        // invalid construction 1 (null entries)
-        try {
-            context = null;
-            context = helpCreateValidationContext(null);
-        } catch (Exception e) {
-            // expected;
-        }
-
-        if (context != null) {
-            failures.append("\nExpected contruction failure, but did not get one for invalid construction 1"); //$NON-NLS-1$
-        }
-
-        if (failures.length() > 0) {
-            fail(failures.toString());
-        }
-    }
 
     // public void testgetPreferences(){
     // final StringBuffer failures = new StringBuffer();
@@ -138,7 +107,7 @@ public final class TestValidationContext extends TestCase {
     // }
 
     public void testAddNullResults() {
-        final ValidationContext context = helpCreateValidationContext(new Preferences());
+        final ValidationContext context = helpCreateValidationContext();
         try {
             context.addResult(null);
         } catch (RuntimeException e) {
@@ -151,7 +120,7 @@ public final class TestValidationContext extends TestCase {
 
     public void testAddResults() {
         final StringBuffer failures = new StringBuffer();
-        final ValidationContext context = helpCreateValidationContext(new Preferences());
+        final ValidationContext context = helpCreateValidationContext();
         Object target = new String("target"); //$NON-NLS-1$
         final ValidationResult result1 = new ValidationResultImpl(target);
         final ValidationResult result2 = new ValidationResultImpl(target);

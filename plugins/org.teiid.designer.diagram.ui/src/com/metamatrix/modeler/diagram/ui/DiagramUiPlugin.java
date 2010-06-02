@@ -185,7 +185,7 @@ implements DiagramUiConstants {
             PreferenceKeyAndDefaultValue.storePreferenceDefault(preferenceStore,
                     PluginConstants.Prefs.Print.PREFERENCES[i]);
         }
-		DiagramUiPlugin.getDefault().savePluginPreferences();
+		DiagramUiPlugin.getDefault().savePreferences();
 	}
 
     public static AbstractModelEditorPageActionBarContributor getActionBarContributor(ModelEditorPage newPage) {

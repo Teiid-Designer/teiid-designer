@@ -47,6 +47,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -83,11 +85,14 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
 
     /**
      * Indicates if the query plan should be part of the query results.
+     * 
      * @return <code>true</code>if show query plan; <code>false</code> otherwise.
      * @since 5.0
      */
     public boolean shouldShowQueryPlan() {
-        return getPluginPreferences().getBoolean(IConstants.SHOW_QUERY_PLAN);
+        boolean defaultValue = new DefaultScope().getNode(getBundle().getSymbolicName()).getBoolean(IConstants.SHOW_QUERY_PLAN,
+                                                                                                    true);
+        return new InstanceScope().getNode(getBundle().getSymbolicName()).getBoolean(IConstants.SHOW_QUERY_PLAN, defaultValue);
     }
 
     public void addListener(SqlHistoryChangedListener listener) {

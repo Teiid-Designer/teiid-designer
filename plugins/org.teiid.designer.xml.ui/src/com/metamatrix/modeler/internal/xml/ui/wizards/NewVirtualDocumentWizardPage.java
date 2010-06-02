@@ -21,7 +21,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -637,9 +638,10 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
             // validate the schema if necessary
             page.setErrorMessage(null);
             IResource resource = (IResource)populator.getItem();
-            Preferences currentPrefs = ModelerCore.getPlugin().getPluginPreferences();
+            IEclipsePreferences currentPrefs = ModelerCore.getPreferences(ModelerCore.PLUGIN_ID);
+
             if (ResourcesPlugin.getWorkspace().isAutoBuilding()
-                && currentPrefs.getString(ValidationPreferences.XSD_MODEL_VALIDATION).equals(ValidationDescriptor.ERROR)) {
+                && currentPrefs.get(ValidationPreferences.XSD_MODEL_VALIDATION, "").equals(ValidationDescriptor.ERROR)) { //$NON-NLS-1$
                 // should have already been validated
                 if (errorMarkersExist(resource)) {
                     page.setErrorMessage(Util.getString("NewVirtualDocumentWizardPage.invalidSchema")); //$NON-NLS-1$
@@ -647,9 +649,7 @@ class NewVirtualDocumentWizardPanel extends ScrolledComposite implements Modeler
                 }
             } else {
                 // validate the schema
-                Preferences prefs = new Preferences();
-                prefs.setValue(ValidationPreferences.XSD_MODEL_VALIDATION, ValidationDescriptor.ERROR);
-                ValidationContext context = new ValidationContext(prefs);
+                ValidationContext context = new ValidationContext(ModelerCore.PLUGIN_ID);
                 XsdResourceValidator xsdValidator = new XsdResourceValidator();
                 try {
                     XSDValidatorWithProgress validatorWithProgress = new XSDValidatorWithProgress(xsdValidator, resource, context);
