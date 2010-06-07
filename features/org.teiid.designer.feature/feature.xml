@@ -371,13 +371,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.designer.modelgenerator.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.teiid.designer.metamodels.builder"
          download-size="0"
          install-size="0"
@@ -386,20 +379,6 @@
 
    <plugin
          id="org.teiid.designer.metamodels.builder.execution"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.modelgenerator.wsdl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.modelgenerator.wsdl.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -505,9 +484,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
    <plugin
          id="net.jcip.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
 </feature>
