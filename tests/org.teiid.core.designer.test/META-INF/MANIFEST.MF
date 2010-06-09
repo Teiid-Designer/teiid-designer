@@ -12,7 +12,7 @@ Export-Package: com.metamatrix.core,
  org.teiid.core.designer
 Require-Bundle: org.teiid.core.designer,
  teiid_embedded_query,
- org.eclipse.core.resources;bundle-version="3.5.1",
+ org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.powermock;bundle-version="1.3.7",
  org.mockito;bundle-version="1.8.4",
