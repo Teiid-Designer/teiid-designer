@@ -25,6 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.Translator;
+import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -32,13 +33,11 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {ConnectorType.class, ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
-public class ExecutionAdminTest {
+@RunWith( PowerMockRunner.class ) @PrepareForTest( {ConnectorType.class, ModelerCore.class, ModelWorkspaceManager.class,
+    ResourcesPlugin.class} ) public class ExecutionAdminTest {
 
-    @Before
-    public void beforeEach() {
-        MockObjectFactory.initializeStaticWorkspaceClasses();
+    @Before public void beforeEach() {
+        new ModelWorkspaceMock();
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
@@ -49,266 +48,224 @@ public class ExecutionAdminTest {
         return new Connector(mock(Translator.class), mock(ConnectorType.class));
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullAdmin() throws Exception {
-        assertThat(new ExecutionAdmin(null, null, null), notNullValue());
-    }
+    @Test public void shouldAddConnector() throws Exception {
+        final String name = "name";
+        final Translator connectionFactory = mock(Translator.class);
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullServer() throws Exception {
-        assertThat(new ExecutionAdmin(mock(Admin.class), null, null), notNullValue());
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullEventManager() throws Exception {
-        assertThat(new ExecutionAdmin(mock(Admin.class), mock(Server.class), null), notNullValue());
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullNameForAddConnector() throws Exception {
-        getNewAdmin().addConnector(null, null, null);
-
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowEmptyNameForAddConnector() throws Exception {
-        getNewAdmin().addConnector("", null, null);
-
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullTypeForAddConnector() throws Exception {
-        getNewAdmin().addConnector("name", null, null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullPropertiesForAddConnector() throws Exception {
-        getNewAdmin().addConnector("", mock(ConnectorType.class), null);
-    }
-
-    @Test
-    public void shouldAddConnector() throws Exception {
-        String name = "name";
-        Translator connectionFactory = mock(Translator.class);
-
-        Admin admin = mock(Admin.class);
+        final Admin admin = mock(Admin.class);
         when(admin.getTranslator(name)).thenReturn(connectionFactory);
 
-        ConnectorType type = mock(ConnectorType.class);
+        final ConnectorType type = mock(ConnectorType.class);
         when(type.getName()).thenReturn("type");
         when(admin.addTranslator(anyString(), anyString(), (Properties)anyObject())).thenReturn(connectionFactory);
 
-        ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
+        final ExecutionAdmin execAdmin = new ExecutionAdmin(admin, mock(Server.class), mock(EventManager.class));
         execAdmin.addConnector(name, mock(ConnectorType.class), new Properties());
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullIFileVdbForDeployVdb() throws Exception {
-        IFile nullFile = null;
-        getNewAdmin().deployVdb(nullFile);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullVdbForDeployVdb() throws Exception {
-        Vdb nullVdb = null;
-        getNewAdmin().deployVdb(nullVdb);
-    }
-
-    @Test
-    public void shouldDeployVdb() throws Exception {
-        getNewAdmin().deployVdb(mock(IFile.class));
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowNullConnectorName() throws Exception {
-        getNewAdmin().ensureUniqueConnectorName("");
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowZeroLengthConnectorName() throws Exception {
-        getNewAdmin().ensureUniqueConnectorName("");
-    }
-
-    @Test
-    public void shouldAllowEnsureUniqueConnectorName() throws Exception {
+    @Test public void shouldAllowEnsureUniqueConnectorName() throws Exception {
         getNewAdmin().ensureUniqueConnectorName("name");
     }
 
-    @Test
-    public void shouldAllowGetAdminApi() throws Exception {
+    @Test public void shouldAllowGetAdminApi() throws Exception {
         getNewAdmin().getAdminApi();
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetConnectorWithNull() throws Exception {
-        getNewAdmin().getConnector(null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetConnectorWithZeroLengthName() throws Exception {
-        getNewAdmin().getConnector("");
-    }
-
-    @Test
-    public void shouldAllowGetConnector() throws Exception {
+    @Test public void shouldAllowGetConnector() throws Exception {
         getNewAdmin().getConnector("name");
     }
 
-    @Test
-    public void shouldAllowGetConnectors() throws Exception {
+    @Test public void shouldAllowGetConnectors() throws Exception {
         getNewAdmin().getConnectors();
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetConnectorsForNullType() throws Exception {
-        getNewAdmin().getConnectors(null);
-    }
-
-    @Test
-    public void shouldAllowGetConnectorsForType() throws Exception {
+    @Test public void shouldAllowGetConnectorsForType() throws Exception {
         getNewAdmin().getConnectors(mock(ConnectorType.class));
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetConnectorTypeWithNullName() throws Exception {
-        getNewAdmin().getConnectorType(null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetConnectorTypeWithZeroLengthName() throws Exception {
-        getNewAdmin().getConnectorType("");
-    }
-
-    @Test
-    public void shouldAllowGetConnectorType() throws Exception {
+    @Test public void shouldAllowGetConnectorType() throws Exception {
         getNewAdmin().getConnectorType("name");
     }
 
-    @Test
-    public void shouldAllowGetConnectorTypes() throws Exception {
+    @Test public void shouldAllowGetConnectorTypes() throws Exception {
         getNewAdmin().getConnectorTypes();
     }
 
-    @Test
-    public void shouldAllowGetEventManager() throws Exception {
+    @Test public void shouldAllowGetEventManager() throws Exception {
         assertThat(getNewAdmin().getEventManager(), notNullValue());
     }
 
-    @Test
-    public void shouldAllowGetServer() throws Exception {
+    @Test public void shouldAllowGetServer() throws Exception {
         assertThat(getNewAdmin().getServer(), notNullValue());
     }
 
-    @Test
-    public void shouldAllowGetSourceBindingManager() throws Exception {
+    @Test public void shouldAllowGetSourceBindingManager() throws Exception {
         assertThat(getNewAdmin().getSourceBindingsManager(), notNullValue());
     }
 
-    @Test
-    public void shouldAllowGetVdbs() throws Exception {
+    @Test public void shouldAllowGetVdbs() throws Exception {
         getNewAdmin().getVdbs();
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetVdbWithNullName() throws Exception {
-        getNewAdmin().getVdb(null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetVdbWithEmptyName() throws Exception {
-        getNewAdmin().getVdb("");
-    }
-
-    @Test
-    public void shouldAllowGetVdbWithName() throws Exception {
+    @Test public void shouldAllowGetVdbWithName() throws Exception {
         getNewAdmin().getVdb("name");
     }
 
-    @Test
-    public void shouldAllowRefresh() throws Exception {
+    @Test public void shouldAllowRefresh() throws Exception {
         getNewAdmin().refresh();
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowRemoveConnectorWithNullConnector() throws Exception {
-        getNewAdmin().removeConnector(null);
-    }
-
-    @Test
-    public void shouldAllowRemoveConnectorWithConnector() throws Exception {
+    @Test public void shouldAllowRemoveConnectorWithConnector() throws Exception {
         getNewAdmin().removeConnector(new Connector(mock(Translator.class), mock(ConnectorType.class)));
     }
 
-    @Test
-    public void shouldReturnExceptionOnValidateConnectorNameWithNullName() throws Exception {
-        assertThat(getNewAdmin().validateConnectorName(null), instanceOf(Exception.class));
+    @Test public void shouldAllowSetProperties() throws Exception {
+        final ExecutionAdmin admin = mock(ExecutionAdmin.class);
+        final Connector connector = getNewConnector();
+
+        final Properties newProps = new Properties();
+        newProps.put("prop_1", "value_1");
+
+        admin.setProperties(connector, newProps);
     }
 
-    @Test
-    public void shouldReturnExceptionOnValidateConnectorNameWithZeroLengthName() throws Exception {
-        assertThat(getNewAdmin().validateConnectorName(""), instanceOf(Exception.class));
-    }
-
-    @Test
-    public void shouldAllowValidateConnectorName() throws Exception {
-        assertThat(getNewAdmin().validateConnectorName("name"), nullValue());
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertyValueWithNullConnector() throws Exception {
-        getNewAdmin().setPropertyValue(null, null, null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertyValueWithNullName() throws Exception {
-        getNewAdmin().setPropertyValue(getNewConnector(), null, null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertyValueWithZeroLengthName() throws Exception {
-        getNewAdmin().setPropertyValue(getNewConnector(), "", null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertyValueWithNullValue() throws Exception {
-        getNewAdmin().setPropertyValue(getNewConnector(), "name", null);
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertyValueWithZeroLengthValue() throws Exception {
-        getNewAdmin().setPropertyValue(getNewConnector(), "name", "");
-    }
-
-    @Test
-    public void shouldAllowSetPropertyValue() throws Exception {
-        Connector mockConnector = mock(Connector.class);
+    @Test public void shouldAllowSetPropertyValue() throws Exception {
+        final Connector mockConnector = mock(Connector.class);
         when(mockConnector.isValidPropertyValue("name", "value")).thenReturn(null);
         getNewAdmin().setPropertyValue(mockConnector, "name", "value");
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertiesWithNullConnector() throws Exception {
-        getNewAdmin().setProperties(null, null);
+    @Test public void shouldAllowValidateConnectorName() throws Exception {
+        assertThat(getNewAdmin().validateConnectorName("name"), nullValue());
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertiesWithNullProperties() throws Exception {
-        getNewAdmin().setProperties(getNewConnector(), null);
+    @Test public void shouldDeployVdb() throws Exception {
+        getNewAdmin().deployVdb(mock(IFile.class));
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowSetPropertiesWithEmptyProperties() throws Exception {
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowEmptyNameForAddConnector() throws Exception {
+        getNewAdmin().addConnector("", null, null);
+
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetConnectorsForNullType() throws Exception {
+        getNewAdmin().getConnectors(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetConnectorTypeWithNullName() throws Exception {
+        getNewAdmin().getConnectorType(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetConnectorTypeWithZeroLengthName()
+        throws Exception {
+        getNewAdmin().getConnectorType("");
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetConnectorWithNull() throws Exception {
+        getNewAdmin().getConnector(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetConnectorWithZeroLengthName() throws Exception {
+        getNewAdmin().getConnector("");
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetVdbWithEmptyName() throws Exception {
+        getNewAdmin().getVdb("");
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowGetVdbWithNullName() throws Exception {
+        getNewAdmin().getVdb(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullAdmin() throws Exception {
+        assertThat(new ExecutionAdmin(null, null, null), notNullValue());
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullConnectorName() throws Exception {
+        getNewAdmin().ensureUniqueConnectorName("");
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullEventManager() throws Exception {
+        assertThat(new ExecutionAdmin(mock(Admin.class), mock(Server.class), null), notNullValue());
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullIFileVdbForDeployVdb() throws Exception {
+        final IFile nullFile = null;
+        getNewAdmin().deployVdb(nullFile);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullNameForAddConnector() throws Exception {
+        getNewAdmin().addConnector(null, null, null);
+
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullPropertiesForAddConnector() throws Exception {
+        getNewAdmin().addConnector("", mock(ConnectorType.class), null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullServer() throws Exception {
+        assertThat(new ExecutionAdmin(mock(Admin.class), null, null), notNullValue());
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullTypeForAddConnector() throws Exception {
+        getNewAdmin().addConnector("name", null, null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowNullVdbForDeployVdb() throws Exception {
+        final Vdb nullVdb = null;
+        getNewAdmin().deployVdb(nullVdb);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowRemoveConnectorWithNullConnector()
+        throws Exception {
+        getNewAdmin().removeConnector(null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertiesWithEmptyProperties()
+        throws Exception {
         getNewAdmin().setProperties(getNewConnector(), new Properties());
     }
 
-    @Test
-    public void shouldAllowSetProperties() throws Exception {
-        ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        Connector connector = getNewConnector();
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertiesWithNullConnector() throws Exception {
+        getNewAdmin().setProperties(null, null);
+    }
 
-        Properties newProps = new Properties();
-        newProps.put("prop_1", "value_1");
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertiesWithNullProperties() throws Exception {
+        getNewAdmin().setProperties(getNewConnector(), null);
+    }
 
-        admin.setProperties(connector, newProps);
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertyValueWithNullConnector()
+        throws Exception {
+        getNewAdmin().setPropertyValue(null, null, null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertyValueWithNullName() throws Exception {
+        getNewAdmin().setPropertyValue(getNewConnector(), null, null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertyValueWithNullValue() throws Exception {
+        getNewAdmin().setPropertyValue(getNewConnector(), "name", null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertyValueWithZeroLengthName()
+        throws Exception {
+        getNewAdmin().setPropertyValue(getNewConnector(), "", null);
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowSetPropertyValueWithZeroLengthValue()
+        throws Exception {
+        getNewAdmin().setPropertyValue(getNewConnector(), "name", "");
+    }
+
+    @Test( expected = IllegalArgumentException.class ) public void shouldNotAllowZeroLengthConnectorName() throws Exception {
+        getNewAdmin().ensureUniqueConnectorName("");
+    }
+
+    @Test public void shouldReturnExceptionOnValidateConnectorNameWithNullName() throws Exception {
+        assertThat(getNewAdmin().validateConnectorName(null), instanceOf(Exception.class));
+    }
+
+    @Test public void shouldReturnExceptionOnValidateConnectorNameWithZeroLengthName() throws Exception {
+        assertThat(getNewAdmin().validateConnectorName(""), instanceOf(Exception.class));
     }
 }

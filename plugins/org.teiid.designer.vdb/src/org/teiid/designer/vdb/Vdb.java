@@ -42,7 +42,6 @@ import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
-import org.teiid.designer.vdb.plugin.VdbPlugin;
 import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
@@ -52,8 +51,7 @@ import com.metamatrix.core.util.StringUtilities;
 /**
  * 
  */
-@ThreadSafe
-public final class Vdb {
+@ThreadSafe public final class Vdb {
 
     /**
      * The file extension of VDBs ( {@value} )
@@ -119,7 +117,6 @@ public final class Vdb {
 
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 
-    private final IPath name;
     final IFile file;
     private final File folder;
     final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
@@ -135,29 +132,25 @@ public final class Vdb {
     public Vdb( final IFile file,
                 final IProgressMonitor monitor ) {
         this.file = file;
-        name = file.getFullPath();
         // Create folder for VDB in state folder
-        folder = VdbPlugin.singleton.getStateLocation().append(name).toFile();
+        folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
         folder.mkdirs();
         // Open archive and populate model entries
-        if (file.getLocation().toFile().length() == 0) return;
+        if (file.getLocation().toFile().length() == 0L) return;
         OperationUtil.perform(new Unreliable() {
 
             ZipFile archive = null;
             InputStream entryStream = null;
 
-            @Override
-            public void doIfFails() {
+            @Override public void doIfFails() {
             }
 
-            @Override
-            public void finallyDo() throws Exception {
+            @Override public void finallyDo() throws Exception {
                 if (entryStream != null) entryStream.close();
                 if (archive != null) archive.close();
             }
 
-            @Override
-            public void tryToDo() throws Exception {
+            @Override public void tryToDo() throws Exception {
                 archive = new ZipFile(file.getLocation().toString());
                 for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
                     final ZipEntry zipEntry = iter.nextElement();
@@ -229,7 +222,7 @@ public final class Vdb {
         listeners.clear();
         description.set(StringUtilities.EMPTY_STRING);
         // Clean up state folder
-        FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton.getStateLocation().append(name.segment(0)).toFile());
+        FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton().getStateLocation().append(file.getFullPath().segment(0)).toFile());
         // Mark VDB as unmodified
         if (isModified()) modified.set(false);
         // Notify change listeners VDB is closed
@@ -284,7 +277,7 @@ public final class Vdb {
      * @return the name of this VDB
      */
     public final IPath getName() {
-        return name;
+        return file.getFullPath();
     }
 
     /**
@@ -335,6 +328,8 @@ public final class Vdb {
     }
 
     /**
+     * Must not be called unless this VDB has been {@link #isModified() modified}
+     * 
      * @param monitor
      */
     public final void save( final IProgressMonitor monitor ) {
@@ -342,24 +337,21 @@ public final class Vdb {
         final VdbElement vdbElement = new VdbElement(this);
         // Save archive
         final File tmpFolder = new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
-        final File tmpArchive = new File(tmpFolder, name.toString());
+        final File tmpArchive = new File(tmpFolder, file.getFullPath().toString());
         tmpArchive.getParentFile().mkdirs();
         OperationUtil.perform(new Unreliable() {
 
             ZipOutputStream out = null;
 
-            @Override
-            public void doIfFails() {
+            @Override public void doIfFails() {
             }
 
-            @Override
-            public void finallyDo() throws Exception {
+            @Override public void finallyDo() throws Exception {
                 if (out != null) out.close();
                 FileUtils.removeDirectoryAndChildren(new File(tmpFolder, getName().segment(0)));
             }
 
-            @Override
-            public void tryToDo() throws Exception {
+            @Override public void tryToDo() throws Exception {
                 out = new ZipOutputStream(new FileOutputStream(tmpArchive));
                 // Create VDB manifest
                 final ZipEntry zipEntry = new ZipEntry(MANIFEST);
@@ -398,8 +390,8 @@ public final class Vdb {
      * @param description Sets description to the specified value.
      */
     public final void setDescription( final String description ) {
-    	final String oldDescription = this.description.get();
-        if( StringUtilities.areSame(description, oldDescription, false)) return;
+        final String oldDescription = this.description.get();
+        if (StringUtilities.areSame(description, oldDescription, false)) return;
         this.description.set(description);
         setModified(this, DESCRIPTION, null, description);
     }
@@ -412,12 +404,8 @@ public final class Vdb {
         notifyChangeListeners(source, propertyName, oldValue, newValue);
     }
 
-    /**
-     * @param entries
-     * @param monitor
-     */
-    public final void synchronize( final Collection<VdbEntry> entries,
-                                   final IProgressMonitor monitor ) {
+    private final void synchronize( final Collection<VdbEntry> entries,
+                                    final IProgressMonitor monitor ) {
         for (final VdbEntry entry : entries)
             if (entry.getSynchronization() == Synchronization.NotSynchronized) entry.synchronize(monitor);
     }

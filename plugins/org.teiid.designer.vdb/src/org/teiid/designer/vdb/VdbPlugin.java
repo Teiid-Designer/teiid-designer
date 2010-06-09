@@ -1,4 +1,4 @@
-package org.teiid.designer.vdb.plugin;
+package org.teiid.designer.vdb;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,21 +37,31 @@ public class VdbPlugin extends Plugin {
     /**
      * The UUID created and persisted for the current workspace
      */
-    public static UUID workspaceUuid;
+    private static UUID workspaceUuid;
 
     /**
      * The singleton instance of this plug-in
      */
-    public static VdbPlugin singleton;
+    private static VdbPlugin singleton;
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+     * @return the singleton instance of this type
      */
-    @Override
-    public void start( final BundleContext context ) throws Exception {
-        super.start(context);
+    public static VdbPlugin singleton() {
+        return singleton;
+    }
+
+    /**
+     * @return the UUID of the current workspace
+     */
+    public static UUID workspaceUuid() {
+        return workspaceUuid;
+    }
+
+    /**
+     * @throws IOException
+     */
+    public VdbPlugin() throws IOException {
         singleton = this;
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
         final File file = getStateLocation().append(WORKSPACE_UUID_FILE).toFile();
@@ -86,8 +96,7 @@ public class VdbPlugin extends Plugin {
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */
-    @Override
-    public void stop( final BundleContext context ) throws Exception {
+    @Override public void stop( final BundleContext context ) throws Exception {
         singleton = null;
         super.stop(context);
     }

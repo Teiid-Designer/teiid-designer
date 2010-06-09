@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.teiid.designer.vdb.VdbConstants;
-import org.teiid.designer.vdb.plugin.VdbPlugin;
+import org.teiid.designer.vdb.VdbPlugin;
 
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 
