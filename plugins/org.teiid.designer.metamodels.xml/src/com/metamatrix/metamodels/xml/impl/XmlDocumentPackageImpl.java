@@ -1150,19 +1150,19 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
         xmlRootEClass.getESuperTypes().add(this.getXmlElement());
         xmlCommentEClass.getESuperTypes().add(this.getXmlDocumentEntity());
         xmlNamespaceEClass.getESuperTypes().add(this.getXmlDocumentEntity());
-        xmlContainerNodeEClass.getESuperTypes().add(this.getXmlHolderEntity());
         xmlContainerNodeEClass.getESuperTypes().add(this.getXmlDocumentEntity());
         xmlContainerNodeEClass.getESuperTypes().add(this.getXmlEntityHolder());
         xmlContainerNodeEClass.getESuperTypes().add(this.getChoiceOption());
         xmlContainerNodeEClass.getESuperTypes().add(this.getXmlBuildable());
+        xmlContainerNodeEClass.getESuperTypes().add(this.getXmlHolderEntity());
         xmlSequenceEClass.getESuperTypes().add(this.getXmlContainerNode());
         xmlAllEClass.getESuperTypes().add(this.getXmlContainerNode());
         xmlChoiceEClass.getESuperTypes().add(this.getXmlContainerNode());
         processingInstructionEClass.getESuperTypes().add(this.getXmlDocumentEntity());
         xmlFragmentUseEClass.getESuperTypes().add(this.getXmlBaseElement());
-        xmlBaseElementEClass.getESuperTypes().add(this.getXmlHolderEntity());
         xmlBaseElementEClass.getESuperTypes().add(this.getXmlDocumentNode());
         xmlBaseElementEClass.getESuperTypes().add(this.getChoiceOption());
+        xmlBaseElementEClass.getESuperTypes().add(this.getXmlHolderEntity());
 
         // Initialize classes and features; add operations and parameters
         initEClass(xmlFragmentEClass, XmlFragment.class, "XmlFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1274,7 +1274,7 @@ public class XmlDocumentPackageImpl extends EPackageImpl implements XmlDocumentP
 
         initEClass(xmlHolderEntityEClass,
                    XmlHolderEntity.class,
-                   "XmlHolderEntity", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+                   "XmlHolderEntity", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEReference(getXmlHolderEntity_Parent(),
                        this.getXmlEntityHolder(),
                        this.getXmlEntityHolder_Entities(),

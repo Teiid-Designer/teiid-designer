@@ -25,7 +25,7 @@ import org.eclipse.xsd.XSDComponent;
  * @model abstract="true"
  * @generated
  */
-public interface XmlContainerNode extends XmlHolderEntity, XmlDocumentEntity, XmlEntityHolder, ChoiceOption, XmlBuildable {
+public interface XmlContainerNode extends XmlDocumentEntity, XmlEntityHolder, ChoiceOption, XmlBuildable, XmlHolderEntity {
 
     /**
      * Returns the value of the '<em><b>Max Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->

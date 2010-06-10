@@ -152,8 +152,9 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#createObjectFromFactory(org.eclipse.emf.ecore.EFactory, java.lang.String)
      */
-    @Override protected EObject createObjectFromFactory( final EFactory factory,
-                                                         final String typeName ) {
+    @Override
+    protected EObject createObjectFromFactory( final EFactory factory,
+                                               final String typeName ) {
         EObject newObject = null;
 
         if (factory != null) {
@@ -179,8 +180,9 @@ public class MtkXmiHandler extends SAXXMIHandler {
      * Create a top object based on the prefix and name. Overrides same method in super-class, but wraps resulting object in a java
      * proxy
      */
-    @Override protected void createTopObject( final String prefix,
-                                              final String name ) {
+    @Override
+    protected void createTopObject( final String prefix,
+                                    final String name ) {
         if (isXsdPrefix(prefix)) {
             isXsdResource = true;
         }
@@ -233,7 +235,8 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#endDocument()
      */
-    @Override public void endDocument() {
+    @Override
+    public void endDocument() {
         addNamespaceConversions();
 
         // Execute XSDSchema.update() on any XSDSchema instances
@@ -272,7 +275,8 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /**
      * Attempt to get the namespace for the given prefix, then return ERegister.getPackage() or null.
      */
-    @Override protected EPackage getPackageForURI( final String uriString ) {
+    @Override
+    protected EPackage getPackageForURI( final String uriString ) {
         if (uriString == null) {
             return null;
         }
@@ -312,10 +316,24 @@ public class MtkXmiHandler extends SAXXMIHandler {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#handleFeature(java.lang.String, java.lang.String)
+     */
+    @Override
+    protected void handleFeature( final String prefix,
+                                  String name ) {
+        if ("".equals(prefix) && ("containers".equals(name) || "elements".equals(name)) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            && objects.peekEObject().getClass().getName().startsWith("com.metamatrix.metamodels.xml.impl.")) name = "entities"; //$NON-NLS-1$ //$NON-NLS-2$
+        super.handleFeature(prefix, name);
+    }
+
+    /**
      * Process the XMI attributes for the newly created object. Overrides same method in super-class, but handles UUID instead of
      * explicitly ignoring it as the super class does.
      */
-    @Override protected void handleObjectAttribs( final EObject obj ) {
+    @Override
+    protected void handleObjectAttribs( final EObject obj ) {
         if (attribs != null) {
             final InternalEObject internalEObject = (InternalEObject)obj;
             for (int i = 0, size = attribs.getLength(); i < size; ++i) {
@@ -433,8 +451,9 @@ public class MtkXmiHandler extends SAXXMIHandler {
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#handleProxy(org.eclipse.emf.ecore.InternalEObject, java.lang.String)
      * @since 4.3
      */
-    @Override protected void handleProxy( final InternalEObject proxy,
-                                          final String uriLiteral ) {
+    @Override
+    protected void handleProxy( final InternalEObject proxy,
+                                final String uriLiteral ) {
         super.handleProxy(proxy, uriLiteral);
 
         // Save the URI of the proxy's resource
@@ -578,7 +597,8 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /* (non-Javadoc)
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#processTopObject(org.eclipse.emf.ecore.EObject)
      */
-    @Override protected void processTopObject( final EObject object ) {
+    @Override
+    protected void processTopObject( final EObject object ) {
         super.processObject(object);
         roots.add(object);
     }
@@ -643,10 +663,11 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /**
      * Set the given feature of the given object to the given value.
      */
-    @Override protected void setFeatureValue( final EObject object,
-                                              final EStructuralFeature feature,
-                                              Object value,
-                                              final int position ) {
+    @Override
+    protected void setFeatureValue( final EObject object,
+                                    final EStructuralFeature feature,
+                                    Object value,
+                                    final int position ) {
         try {
             // If there is a reference to an XMLSchema entity ...
             if (value instanceof EObject && ((EObject)value).eIsProxy()) {
@@ -740,9 +761,10 @@ public class MtkXmiHandler extends SAXXMIHandler {
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#startElement(java.lang.String, java.lang.String, java.lang.String)
      */
-    @Override public void startElement( final String uri,
-                                        final String localName,
-                                        final String name ) {
+    @Override
+    public void startElement( final String uri,
+                              final String localName,
+                              final String name ) {
         // System.out.println("startElement "+uri+ ", "+localName+", "+name);
         super.startElement(uri, localName, name);
     }

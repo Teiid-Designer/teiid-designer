@@ -14,5 +14,5 @@ package com.metamatrix.metamodels.xml;
  * @model abstract="true"
  * @generated
  */
-public interface XmlBaseElement extends XmlHolderEntity, XmlDocumentNode, ChoiceOption {
+public interface XmlBaseElement extends XmlDocumentNode, ChoiceOption, XmlHolderEntity {
 }

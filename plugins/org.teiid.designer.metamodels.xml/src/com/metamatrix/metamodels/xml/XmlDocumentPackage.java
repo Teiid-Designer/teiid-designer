@@ -57,36 +57,6 @@ public interface XmlDocumentPackage extends EPackage {
     XmlDocumentPackage eINSTANCE = com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl.init();
 
     /**
-     * The meta object id for the '{@link com.metamatrix.metamodels.xml.ProcessingInstructionHolder
-     * <em>Processing Instruction Holder</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @see com.metamatrix.metamodels.xml.ProcessingInstructionHolder
-     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getProcessingInstructionHolder()
-     * @generated
-     */
-    int PROCESSING_INSTRUCTION_HOLDER = 15;
-
-    /**
-     * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlFragmentImpl <em>Xml Fragment</em>}' class. <!--
-     * begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @see com.metamatrix.metamodels.xml.impl.XmlFragmentImpl
-     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getXmlFragment()
-     * @generated
-     */
-    int XML_FRAGMENT = 0;
-
-    /**
-     * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlDocumentImpl <em>Xml Document</em>}' class. <!--
-     * begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentImpl
-     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getXmlDocument()
-     * @generated
-     */
-    int XML_DOCUMENT = 1;
-
-    /**
      * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlDocumentEntityImpl <em>Entity</em>}' class. <!--
      * begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -103,6 +73,16 @@ public interface XmlDocumentPackage extends EPackage {
      * @ordered
      */
     int XML_DOCUMENT_ENTITY_FEATURE_COUNT = 0;
+
+    /**
+     * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlFragmentImpl <em>Xml Fragment</em>}' class. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see com.metamatrix.metamodels.xml.impl.XmlFragmentImpl
+     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getXmlFragment()
+     * @generated
+     */
+    int XML_FRAGMENT = 0;
 
     /**
      * The feature id for the '<em><b>Comments</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -144,6 +124,16 @@ public interface XmlDocumentPackage extends EPackage {
      * @ordered
      */
     int XML_FRAGMENT_FEATURE_COUNT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 4; // 4
+
+    /**
+     * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlDocumentImpl <em>Xml Document</em>}' class. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentImpl
+     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getXmlDocument()
+     * @generated
+     */
+    int XML_DOCUMENT = 1;
 
     /**
      * The feature id for the '<em><b>Comments</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -337,20 +327,12 @@ public interface XmlDocumentPackage extends EPackage {
     int XML_BASE_ELEMENT = 17;
 
     /**
-     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     * @ordered
-     */
-    int XML_BASE_ELEMENT__PARENT = XML_HOLDER_ENTITY__PARENT; // 0
-
-    /**
      * The feature id for the '<em><b>Build State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__BUILD_STATE = XML_HOLDER_ENTITY_FEATURE_COUNT + 0; // 1
+    int XML_BASE_ELEMENT__BUILD_STATE = XML_DOCUMENT_NODE__BUILD_STATE; // 0
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -358,7 +340,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__NAME = XML_HOLDER_ENTITY_FEATURE_COUNT + 1; // 2
+    int XML_BASE_ELEMENT__NAME = XML_DOCUMENT_NODE__NAME; // 1
 
     /**
      * The feature id for the '<em><b>Exclude From Document</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -366,7 +348,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__EXCLUDE_FROM_DOCUMENT = XML_HOLDER_ENTITY_FEATURE_COUNT + 2; // 3
+    int XML_BASE_ELEMENT__EXCLUDE_FROM_DOCUMENT = XML_DOCUMENT_NODE__EXCLUDE_FROM_DOCUMENT; // 2
 
     /**
      * The feature id for the '<em><b>Min Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -374,7 +356,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__MIN_OCCURS = XML_HOLDER_ENTITY_FEATURE_COUNT + 3; // 4
+    int XML_BASE_ELEMENT__MIN_OCCURS = XML_DOCUMENT_NODE__MIN_OCCURS; // 3
 
     /**
      * The feature id for the '<em><b>Max Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -382,7 +364,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__MAX_OCCURS = XML_HOLDER_ENTITY_FEATURE_COUNT + 4; // 5
+    int XML_BASE_ELEMENT__MAX_OCCURS = XML_DOCUMENT_NODE__MAX_OCCURS; // 4
 
     /**
      * The feature id for the '<em><b>Xsd Component</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -390,7 +372,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__XSD_COMPONENT = XML_HOLDER_ENTITY_FEATURE_COUNT + 5; // 6
+    int XML_BASE_ELEMENT__XSD_COMPONENT = XML_DOCUMENT_NODE__XSD_COMPONENT; // 5
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -398,7 +380,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__NAMESPACE = XML_HOLDER_ENTITY_FEATURE_COUNT + 6; // 7
+    int XML_BASE_ELEMENT__NAMESPACE = XML_DOCUMENT_NODE__NAMESPACE; // 6
 
     /**
      * The feature id for the '<em><b>Choice Criteria</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -406,7 +388,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__CHOICE_CRITERIA = XML_HOLDER_ENTITY_FEATURE_COUNT + 7; // 8
+    int XML_BASE_ELEMENT__CHOICE_CRITERIA = XML_DOCUMENT_NODE_FEATURE_COUNT + 0; // 7
 
     /**
      * The feature id for the '<em><b>Choice Order</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -414,7 +396,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__CHOICE_ORDER = XML_HOLDER_ENTITY_FEATURE_COUNT + 8; // 9
+    int XML_BASE_ELEMENT__CHOICE_ORDER = XML_DOCUMENT_NODE_FEATURE_COUNT + 1; // 8
 
     /**
      * The feature id for the '<em><b>Default For</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -422,7 +404,15 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT__DEFAULT_FOR = XML_HOLDER_ENTITY_FEATURE_COUNT + 9; // 10
+    int XML_BASE_ELEMENT__DEFAULT_FOR = XML_DOCUMENT_NODE_FEATURE_COUNT + 2; // 9
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     * @ordered
+     */
+    int XML_BASE_ELEMENT__PARENT = XML_DOCUMENT_NODE_FEATURE_COUNT + 3; // 10
 
     /**
      * The number of structural features of the the '<em>Xml Base Element</em>' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -430,7 +420,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_BASE_ELEMENT_FEATURE_COUNT = XML_HOLDER_ENTITY_FEATURE_COUNT + 10; // 11
+    int XML_BASE_ELEMENT_FEATURE_COUNT = XML_DOCUMENT_NODE_FEATURE_COUNT + 4; // 11
 
     /**
      * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlElementImpl <em>Xml Element</em>}' class. <!--
@@ -443,20 +433,12 @@ public interface XmlDocumentPackage extends EPackage {
     int XML_ELEMENT = 3;
 
     /**
-     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     * @ordered
-     */
-    int XML_ELEMENT__PARENT = XML_BASE_ELEMENT__PARENT; // 0
-
-    /**
      * The feature id for the '<em><b>Build State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__BUILD_STATE = XML_BASE_ELEMENT__BUILD_STATE; // 1
+    int XML_ELEMENT__BUILD_STATE = XML_BASE_ELEMENT__BUILD_STATE; // 0
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -464,7 +446,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__NAME = XML_BASE_ELEMENT__NAME; // 2
+    int XML_ELEMENT__NAME = XML_BASE_ELEMENT__NAME; // 1
 
     /**
      * The feature id for the '<em><b>Exclude From Document</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -472,7 +454,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__EXCLUDE_FROM_DOCUMENT = XML_BASE_ELEMENT__EXCLUDE_FROM_DOCUMENT; // 3
+    int XML_ELEMENT__EXCLUDE_FROM_DOCUMENT = XML_BASE_ELEMENT__EXCLUDE_FROM_DOCUMENT; // 2
 
     /**
      * The feature id for the '<em><b>Min Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -480,7 +462,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__MIN_OCCURS = XML_BASE_ELEMENT__MIN_OCCURS; // 4
+    int XML_ELEMENT__MIN_OCCURS = XML_BASE_ELEMENT__MIN_OCCURS; // 3
 
     /**
      * The feature id for the '<em><b>Max Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -488,7 +470,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__MAX_OCCURS = XML_BASE_ELEMENT__MAX_OCCURS; // 5
+    int XML_ELEMENT__MAX_OCCURS = XML_BASE_ELEMENT__MAX_OCCURS; // 4
 
     /**
      * The feature id for the '<em><b>Xsd Component</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -496,7 +478,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__XSD_COMPONENT = XML_BASE_ELEMENT__XSD_COMPONENT; // 6
+    int XML_ELEMENT__XSD_COMPONENT = XML_BASE_ELEMENT__XSD_COMPONENT; // 5
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -504,7 +486,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__NAMESPACE = XML_BASE_ELEMENT__NAMESPACE; // 7
+    int XML_ELEMENT__NAMESPACE = XML_BASE_ELEMENT__NAMESPACE; // 6
 
     /**
      * The feature id for the '<em><b>Choice Criteria</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -512,7 +494,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__CHOICE_CRITERIA = XML_BASE_ELEMENT__CHOICE_CRITERIA; // 8
+    int XML_ELEMENT__CHOICE_CRITERIA = XML_BASE_ELEMENT__CHOICE_CRITERIA; // 7
 
     /**
      * The feature id for the '<em><b>Choice Order</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -520,7 +502,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__CHOICE_ORDER = XML_BASE_ELEMENT__CHOICE_ORDER; // 9
+    int XML_ELEMENT__CHOICE_ORDER = XML_BASE_ELEMENT__CHOICE_ORDER; // 8
 
     /**
      * The feature id for the '<em><b>Default For</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -528,7 +510,15 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_ELEMENT__DEFAULT_FOR = XML_BASE_ELEMENT__DEFAULT_FOR; // 10
+    int XML_ELEMENT__DEFAULT_FOR = XML_BASE_ELEMENT__DEFAULT_FOR; // 9
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     * @ordered
+     */
+    int XML_ELEMENT__PARENT = XML_BASE_ELEMENT__PARENT; // 10
 
     /**
      * The feature id for the '<em><b>Comments</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -977,20 +967,12 @@ public interface XmlDocumentPackage extends EPackage {
     int XML_CONTAINER_NODE = 9;
 
     /**
-     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     * @ordered
-     */
-    int XML_CONTAINER_NODE__PARENT = XML_HOLDER_ENTITY__PARENT; // 0
-
-    /**
      * The feature id for the '<em><b>Entities</b></em>' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__ENTITIES = XML_HOLDER_ENTITY_FEATURE_COUNT + 0; // 1
+    int XML_CONTAINER_NODE__ENTITIES = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 0; // 0
 
     /**
      * The feature id for the '<em><b>Choice Criteria</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -998,7 +980,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__CHOICE_CRITERIA = XML_HOLDER_ENTITY_FEATURE_COUNT + 1; // 2
+    int XML_CONTAINER_NODE__CHOICE_CRITERIA = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 1; // 1
 
     /**
      * The feature id for the '<em><b>Choice Order</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1006,7 +988,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__CHOICE_ORDER = XML_HOLDER_ENTITY_FEATURE_COUNT + 2; // 3
+    int XML_CONTAINER_NODE__CHOICE_ORDER = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 2; // 2
 
     /**
      * The feature id for the '<em><b>Default For</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1014,7 +996,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__DEFAULT_FOR = XML_HOLDER_ENTITY_FEATURE_COUNT + 3; // 4
+    int XML_CONTAINER_NODE__DEFAULT_FOR = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 3; // 3
 
     /**
      * The feature id for the '<em><b>Build State</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1022,7 +1004,15 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__BUILD_STATE = XML_HOLDER_ENTITY_FEATURE_COUNT + 4; // 5
+    int XML_CONTAINER_NODE__BUILD_STATE = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 4; // 4
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     * @ordered
+     */
+    int XML_CONTAINER_NODE__PARENT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 5; // 5
 
     /**
      * The feature id for the '<em><b>Exclude From Document</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1030,7 +1020,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__EXCLUDE_FROM_DOCUMENT = XML_HOLDER_ENTITY_FEATURE_COUNT + 5; // 6
+    int XML_CONTAINER_NODE__EXCLUDE_FROM_DOCUMENT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 6; // 6
 
     /**
      * The feature id for the '<em><b>Min Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1038,7 +1028,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__MIN_OCCURS = XML_HOLDER_ENTITY_FEATURE_COUNT + 6; // 7
+    int XML_CONTAINER_NODE__MIN_OCCURS = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 7; // 7
 
     /**
      * The feature id for the '<em><b>Max Occurs</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1046,7 +1036,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__MAX_OCCURS = XML_HOLDER_ENTITY_FEATURE_COUNT + 7; // 8
+    int XML_CONTAINER_NODE__MAX_OCCURS = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 8; // 8
 
     /**
      * The feature id for the '<em><b>Xsd Component</b></em>' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1054,7 +1044,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE__XSD_COMPONENT = XML_HOLDER_ENTITY_FEATURE_COUNT + 8; // 9
+    int XML_CONTAINER_NODE__XSD_COMPONENT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 9; // 9
 
     /**
      * The number of structural features of the the '<em>Xml Container Node</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1063,7 +1053,7 @@ public interface XmlDocumentPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int XML_CONTAINER_NODE_FEATURE_COUNT = XML_HOLDER_ENTITY_FEATURE_COUNT + 9; // 10
+    int XML_CONTAINER_NODE_FEATURE_COUNT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 10; // 10
 
     /**
      * The meta object id for the '{@link com.metamatrix.metamodels.xml.impl.XmlSequenceImpl <em>Xml Sequence</em>}' class. <!--
@@ -1444,6 +1434,16 @@ public interface XmlDocumentPackage extends EPackage {
      * @ordered
      */
     int PROCESSING_INSTRUCTION_FEATURE_COUNT = XML_DOCUMENT_ENTITY_FEATURE_COUNT + 3;
+
+    /**
+     * The meta object id for the '{@link com.metamatrix.metamodels.xml.ProcessingInstructionHolder
+     * <em>Processing Instruction Holder</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see com.metamatrix.metamodels.xml.ProcessingInstructionHolder
+     * @see com.metamatrix.metamodels.xml.impl.XmlDocumentPackageImpl#getProcessingInstructionHolder()
+     * @generated
+     */
+    int PROCESSING_INSTRUCTION_HOLDER = 15;
 
     /**
      * The feature id for the '<em><b>Processing Instructions</b></em>' containment reference list. <!-- begin-user-doc --> <!--
