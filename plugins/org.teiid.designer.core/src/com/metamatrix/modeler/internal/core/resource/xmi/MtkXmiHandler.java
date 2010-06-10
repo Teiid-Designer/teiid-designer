@@ -42,12 +42,12 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.SAXXMIHandler;
 import org.eclipse.xsd.XSDPackage;
-import org.xml.sax.Attributes;
 import org.teiid.core.id.IDGenerator;
 import org.teiid.core.id.InvalidIDException;
+import org.teiid.core.util.ReflectionHelper;
+import org.xml.sax.Attributes;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.DateUtil;
-import org.teiid.core.util.ReflectionHelper;
 import com.metamatrix.metamodels.core.CorePackage;
 import com.metamatrix.metamodels.core.Identifiable;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -79,8 +79,8 @@ public class MtkXmiHandler extends SAXXMIHandler {
     private final Resource resource;
     private final Collection roots;
     private boolean isXsdResource;
-    private List xmlSchemaProxies;
-    private List targetNamespaces;
+    private final List xmlSchemaProxies;
+    private final List targetNamespaces;
     private final Collection proxyResourceURIs;
     private final Collection modelImportsToConvert;
 
@@ -104,7 +104,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
             final String msg = ModelerCore.Util.getString("MtkXmiHandler.The_XMIResource_must_be_an_instance_of_MtkXMIResourceImpl_2"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
         }
-        MtkXmiResourceImpl mtkResource = (MtkXmiResourceImpl)xmiResource;
+        final MtkXmiResourceImpl mtkResource = (MtkXmiResourceImpl)xmiResource;
 
         this.resource = mtkResource;
         this.registry = mtkResource.getMetamodelRegistry();
@@ -117,68 +117,70 @@ public class MtkXmiHandler extends SAXXMIHandler {
         this.modelImportsToConvert = new HashSet();
     }
 
-    /**
-     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#startElement(java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Override
-    public void startElement( String uri,
-                              String localName,
-                              String name ) {
-        // System.out.println("startElement "+uri+ ", "+localName+", "+name);
-        super.startElement(uri, localName, name);
-    }
-
-    /**
-     * Attempt to get the namespace for the given prefix, then return ERegister.getPackage() or null.
-     */
-    @Override
-    protected EPackage getPackageForURI( final String uriString ) {
-        if (uriString == null) {
-            return null;
-        }
-        // Ensure that any metamodel for this URI is loaded
-        if (registry != null && registry.containsURI(uriString)) {
-            ensureMetamodelIsLoaded(registry.getURI(uriString));
-        }
-        return super.getPackageForURI(uriString);
-    }
-
-    /**
-     * Ensure that the metamodel with the specified URI is loaded
-     */
-    private void ensureMetamodelIsLoaded( final URI metamodelURI ) {
-        if (metamodelURI == null) {
-            final String msg = ModelerCore.Util.getString("MtkXmiHandler.The_URI_reference_may_not_be_null_3"); //$NON-NLS-1$
-            throw new IllegalArgumentException(msg);
+    private void addNamespaceConversions() {
+        final Resource resource = this.xmlResource;
+        final ResourceSet resourceSet = this.resourceSet;
+        for (final Iterator iter = this.targetNamespaces.iterator(); iter.hasNext();) {
+            final String targetNamespace = (String)iter.next();
+            final URI logicalURI = URI.createURI(targetNamespace);
+            final URI physicalURI = resource.getURI();
+            resourceSet.getURIConverter().getURIMap().put(logicalURI, physicalURI);
+            // System.out.println("Added URI conversion from "+logicalURI+" to "+physicalURI);
         }
 
-        // Load the metamodel if it is not yet loaded
-        final Resource resource = registry.getResource(metamodelURI);
-        CoreArgCheck.isTrue(resource.isLoaded(), "Resource " + resource.getURI() + " must be loaded"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    private boolean isXsdPrefix( final String prefix ) {
-        // MetamodelDescriptor descriptor = ModelerCore.getMetamodels().getMetamodelDescriptor(SDT_URI);
-        // if (descriptor != null && descriptor.getNamespacePrefix().equalsIgnoreCase(prefix)) {
-        // return true;
-        // }
-        final URI nsUri = ModelerCore.getMetamodelRegistry().getURI(XSD_URI);
-        if (nsUri != null) {
-            MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(nsUri);
-            if (descriptor != null && descriptor.getNamespacePrefix().equalsIgnoreCase(prefix)) {
-                return true;
+    private String convertDateFormat( final String value ) {
+        Date valueAsDate = null;
+        for (int i = 0; i < DATE_FORMATS.length; ++i) {
+            try {
+                valueAsDate = DATE_FORMATS[i].parse(value);
+                // MyDefect : 18060 Added break to break for the right date formatter. no break was there before.
+                break;
+            } catch (final ParseException parseException) {
+                // do nothing
             }
         }
-        return false;
+        if (valueAsDate == null) {
+            final String msg = ModelerCore.Util.getString("MtkXmiHandler.Error_parsing_date_String", value); //$NON-NLS-1$
+            ModelerCore.Util.log(IStatus.ERROR, msg);
+            return value;
+        }
+        return DateUtil.getDateAsString(valueAsDate);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#createObjectFromFactory(org.eclipse.emf.ecore.EFactory, java.lang.String)
+     */
+    @Override protected EObject createObjectFromFactory( final EFactory factory,
+                                                         final String typeName ) {
+        EObject newObject = null;
+
+        if (factory != null) {
+            newObject = helper.createObject(factory, helper.getType(factory, typeName));
+            if (newObject != null) {
+                if (disableNotify) newObject.eSetDeliver(false);
+
+                handleObjectAttribs(newObject);
+
+                // Fix for defect 12764. Ensure that any EObject instances from the
+                // "http://www.eclipse.org/emf/2002/Ecore" metamodel are resolved immediately
+                newObject = handleEcoreProxy(newObject, attribs);
+
+            } else {
+                super.error(new ClassNotFoundException(typeName, factory, getLocation(), getLineNumber(), getColumnNumber()));
+            }
+        }
+
+        return newObject;
     }
 
     /**
-     * Create a top object based on the prefix and name. Overrides same method in super-class, but wraps resulting object in a
-     * java proxy
+     * Create a top object based on the prefix and name. Overrides same method in super-class, but wraps resulting object in a java
+     * proxy
      */
-    @Override
-    protected void createTopObject( final String prefix,
-                                    final String name ) {
+    @Override protected void createTopObject( final String prefix,
+                                              final String name ) {
         if (isXsdPrefix(prefix)) {
             isXsdResource = true;
         }
@@ -186,7 +188,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
         EObject newObject = null;
         try {
             newObject = createObjectFromFactory(eFactory, name);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             final Object[] params = new Object[] {prefix, name};
             ModelerCore.Util.log(IStatus.ERROR,
                                  t,
@@ -208,10 +210,10 @@ public class MtkXmiHandler extends SAXXMIHandler {
                     final String msg = ModelerCore.Util.getString("MtkXmiHandler.No_metamodel_descriptor_was_found"); //$NON-NLS-1$
                     throw new AssertionError(msg);
                 }
-                EPackage ePackage = (EPackage)newObject;
+                final EPackage ePackage = (EPackage)newObject;
                 ePackage.setNsPrefix(descriptor.getNamespacePrefix());
                 ePackage.setNsURI(uri.toString());
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 final Object[] params = new Object[] {prefix, name};
                 ModelerCore.Util.log(IStatus.ERROR,
                                      t,
@@ -220,7 +222,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
         }
         try {
             processTopObject(newObject);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             final Object[] params = new Object[] {prefix, name};
             ModelerCore.Util.log(IStatus.ERROR,
                                  t,
@@ -228,25 +230,96 @@ public class MtkXmiHandler extends SAXXMIHandler {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#processTopObject(org.eclipse.emf.ecore.EObject)
+    /**
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#endDocument()
      */
-    @Override
-    protected void processTopObject( EObject object ) {
-        super.processObject(object);
-        roots.add(object);
+    @Override public void endDocument() {
+        addNamespaceConversions();
+
+        // Execute XSDSchema.update() on any XSDSchema instances
+        // found as top level objects
+        if (isXsdResource) {
+            final List topObjects = this.xmlResource.getContents();
+            for (final Iterator iter = topObjects.iterator(); iter.hasNext();) {
+                updateSchema((EObject)iter.next());
+            }
+        }
+
+        // resolveXmlSchemaProxies();
+        this.resource.getContents().addAll(roots);
+
+        // This second patch reconciles the "modelLocation" value that was simply transfered from
+        // / the "path" value in the first patch to its correct relative URI path
+        patchB_modelImport();
+
+        super.endDocument();
+    }
+
+    /**
+     * Ensure that the metamodel with the specified URI is loaded
+     */
+    private void ensureMetamodelIsLoaded( final URI metamodelURI ) {
+        if (metamodelURI == null) {
+            final String msg = ModelerCore.Util.getString("MtkXmiHandler.The_URI_reference_may_not_be_null_3"); //$NON-NLS-1$
+            throw new IllegalArgumentException(msg);
+        }
+
+        // Load the metamodel if it is not yet loaded
+        final Resource resource = registry.getResource(metamodelURI);
+        CoreArgCheck.isTrue(resource.isLoaded(), "Resource " + resource.getURI() + " must be loaded"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Attempt to get the namespace for the given prefix, then return ERegister.getPackage() or null.
+     */
+    @Override protected EPackage getPackageForURI( final String uriString ) {
+        if (uriString == null) {
+            return null;
+        }
+        // Ensure that any metamodel for this URI is loaded
+        if (registry != null && registry.containsURI(uriString)) {
+            ensureMetamodelIsLoaded(registry.getURI(uriString));
+        }
+        return super.getPackageForURI(uriString);
+    }
+
+    /**
+     * For a newly created EObject along with its associated attributes, check if that EObject has an "href" attribte to a
+     * "http://www.eclipse.org/emf/2002/Ecore" instance and resolve it immediately, otherwise return the original object. Fix for
+     * defect 12764.
+     */
+    private EObject handleEcoreProxy( final EObject obj,
+                                      final Attributes atts ) {
+        if (atts != null) {
+            final InternalEObject internalEObject = (InternalEObject)obj;
+            for (int i = 0, size = atts.getLength(); i < size; ++i) {
+                final String name = atts.getQName(i);
+                final String value = atts.getValue(i);
+
+                // If the xmi:href attribute is encountered ...
+                if (name.equals(XMLResource.HREF)) {
+                    // System.out.println("handleEcoreProxy for "+value);
+                    final URI uri = URI.createURI(value);
+                    if (EcorePackage.eNS_URI.equals(uri.trimFragment().toString())) {
+                        if (this.container != null) {
+                            return EcoreUtil.resolve(internalEObject, this.container.getMetamodelRegistry().getResource(uri));
+                        }
+                    }
+                }
+            }
+        }
+        return obj;
     }
 
     /**
      * Process the XMI attributes for the newly created object. Overrides same method in super-class, but handles UUID instead of
      * explicitly ignoring it as the super class does.
      */
-    @Override
-    protected void handleObjectAttribs( final EObject obj ) {
+    @Override protected void handleObjectAttribs( final EObject obj ) {
         if (attribs != null) {
-            InternalEObject internalEObject = (InternalEObject)obj;
+            final InternalEObject internalEObject = (InternalEObject)obj;
             for (int i = 0, size = attribs.getLength(); i < size; ++i) {
-                String name = attribs.getQName(i);
+                final String name = attribs.getQName(i);
 
                 // If the xmi:uuid attribute is encountered ...
                 if (name.equals(UUID_ATTRIB) && this.idGenerator != null) {
@@ -269,7 +342,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
                                 // ...
                                 final String uuidAttributeName = CorePackage.eINSTANCE.getModelImport_Uuid().getName();
                                 for (int k = (i + 1); k < size; ++k) { // start at the next unread attribute!!!
-                                    String attributeName = attribs.getQName(k);
+                                    final String attributeName = attribs.getQName(k);
                                     if (uuidAttributeName.equals(attributeName)) {
                                         uuidOfRefedModel = attribs.getValue(k);
                                     }
@@ -285,7 +358,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
                         // -------------------------------------------------------------------------------
 
                         xmlResource.setID(internalEObject, uuidStr);
-                    } catch (InvalidIDException e) {
+                    } catch (final InvalidIDException e) {
                         ModelerCore.Util.log(IStatus.ERROR,
                                              ModelerCore.Util.getString("MtkXmiHandler.Error_handling_Object_attributes_for_-_5", new Object[] {obj, e.getMessage()})); //$NON-NLS-1$
                     }
@@ -301,7 +374,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
                 }
                 // For all other attributes ...
                 else if (!name.startsWith(XMLResource.XML_NS) && !notFeatures.contains(name)) {
-                    EStructuralFeature feature = obj.eClass().getEStructuralFeature(name);
+                    final EStructuralFeature feature = obj.eClass().getEStructuralFeature(name);
                     if (feature != null && feature.isChangeable()) {
                         setAttribValue(obj, name, attribs.getValue(i));
                     } else {
@@ -360,30 +433,227 @@ public class MtkXmiHandler extends SAXXMIHandler {
      * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#handleProxy(org.eclipse.emf.ecore.InternalEObject, java.lang.String)
      * @since 4.3
      */
-    @Override
-    protected void handleProxy( InternalEObject proxy,
-                                String uriLiteral ) {
+    @Override protected void handleProxy( final InternalEObject proxy,
+                                          final String uriLiteral ) {
         super.handleProxy(proxy, uriLiteral);
 
         // Save the URI of the proxy's resource
         this.proxyResourceURIs.add(proxy.eProxyURI().trimFragment());
     }
 
+    private boolean isXsdPrefix( final String prefix ) {
+        // MetamodelDescriptor descriptor = ModelerCore.getMetamodels().getMetamodelDescriptor(SDT_URI);
+        // if (descriptor != null && descriptor.getNamespacePrefix().equalsIgnoreCase(prefix)) {
+        // return true;
+        // }
+        final URI nsUri = ModelerCore.getMetamodelRegistry().getURI(XSD_URI);
+        if (nsUri != null) {
+            final MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(nsUri);
+            if (descriptor != null && descriptor.getNamespacePrefix().equalsIgnoreCase(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * First of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their new
+     * "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
+     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
+     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This first patch simply transfers
+     * the "path" value to the new "modelLocation" feature.
+     */
+    protected EObject patchA_modelImport( final EObject obj,
+                                          final Attributes attribs ) {
+        if (obj instanceof ModelImport && attribs != null) {
+            for (int i = 0, size = attribs.getLength(); i < size; ++i) {
+                final String qName = attribs.getQName(i);
+                final String value = attribs.getValue(i);
+                if (qName.equals("path")) { //$NON-NLS-1$
+                    ((ModelImport)obj).setModelLocation(value);
+                    this.modelImportsToConvert.add(obj);
+                }
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * Second of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their new
+     * "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
+     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
+     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This second patch reconciles the
+     * "modelLocation" value that was simply transfered from the "path" value in the first patch to its correct relative URI path
+     */
+    protected void patchB_modelImport() {
+        // If no ModelImport conversion work is required, return
+        if (this.modelImportsToConvert.isEmpty()) {
+            return;
+        }
+
+        final URI eResourceURI = this.resource.getURI();
+
+        // Preprocess the collection of proxy resource URIs ...
+        removeBadProxyResourceUris(this.proxyResourceURIs);
+
+        // Reconcile the workspace relative paths, stored in the "modelLocation" feature,
+        // against the resource URIs of the proxies
+        final Collection unconvertedImports = new HashSet(this.modelImportsToConvert);
+        for (final Iterator i = this.modelImportsToConvert.iterator(); i.hasNext();) {
+            final ModelImport modelImport = (ModelImport)i.next();
+            final String modelLocation = modelImport.getModelLocation().toLowerCase();
+
+            // If the modelLocation value represents a logical location of a built-in resource then ignore it
+            if (modelLocation.startsWith("http") || //$NON-NLS-1$
+                modelLocation.startsWith(ResourceFinder.METAMODEL_PREFIX)
+                || modelLocation.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
+                unconvertedImports.remove(modelImport);
+                continue;
+            }
+
+            for (final Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
+                URI importURI = (URI)j.next();
+                final String uriString = URI.decode(importURI.toString()).toLowerCase();
+
+                // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
+                if (uriString.startsWith("http") && !uriString.endsWith("xmi")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    continue;
+                }
+
+                // Match the modelLocation, currently of the form "/project/.../model.xmi" to
+                // a resource URI of the form "file:/C:/.../project/.../model.xmi"
+                if (uriString.endsWith(modelLocation)) {
+                    final boolean deresolve = (eResourceURI != null && !eResourceURI.isRelative() && eResourceURI.isHierarchical());
+                    if (deresolve && !importURI.isRelative()) {
+                        final URI deresolvedURI = importURI.deresolve(eResourceURI, true, true, false);
+                        if (deresolvedURI.hasRelativePath()) {
+                            importURI = deresolvedURI;
+                        }
+                    }
+                    modelImport.setModelLocation(URI.decode(importURI.toString()));
+                    unconvertedImports.remove(modelImport);
+                    break;
+                }
+            }
+        }
+
+        // Reconcile the workspace relative paths, stored in the "modelLocation" feature,
+        // against the model names found in the resource URIs of the proxies
+        for (final Iterator i = unconvertedImports.iterator(); i.hasNext();) {
+            final ModelImport modelImport = (ModelImport)i.next();
+            final String modelLocation = removeProjectNameFromLocation(modelImport.getModelLocation()).toLowerCase();
+
+            for (final Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
+                URI importURI = (URI)j.next();
+                final String uriString = URI.decode(importURI.toString()).toLowerCase();
+
+                // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
+                if (uriString.startsWith("http") && !uriString.endsWith("xmi")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    continue;
+                }
+
+                // Match the modelLocation, currently a project relative path, to a resource URI
+                if (uriString.endsWith(modelLocation)) {
+                    final boolean deresolve = (eResourceURI != null && !eResourceURI.isRelative() && eResourceURI.isHierarchical());
+                    if (deresolve && !importURI.isRelative()) {
+                        final URI deresolvedURI = importURI.deresolve(eResourceURI, true, true, false);
+                        if (deresolvedURI.hasRelativePath()) {
+                            importURI = deresolvedURI;
+                        }
+                    }
+                    modelImport.setModelLocation(URI.decode(importURI.toString()));
+                    i.remove();
+                    break;
+                }
+            }
+        }
+
+        // Remove any model imports that could not be matched to a proxy resource
+        for (final Iterator i = unconvertedImports.iterator(); i.hasNext();) {
+            final ModelImport modelImport = (ModelImport)i.next();
+            modelImport.setModel(null);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#processTopObject(org.eclipse.emf.ecore.EObject)
+     */
+    @Override protected void processTopObject( final EObject object ) {
+        super.processObject(object);
+        roots.add(object);
+    }
+
+    /**
+     * If any of the resource URIs begin with '/' then it may represent a bad href (Eclipse workspace relative path of the form
+     * "/project/.../model.xmi") which are sometimes found in old model files. Check if the collection contains the correct file URI
+     * so that the bad one can be removed
+     */
+    protected void removeBadProxyResourceUris( final Collection proxyResourceUris ) {
+        if (proxyResourceUris == null || proxyResourceUris.isEmpty()) {
+            return;
+        }
+        // Collect all the URIs that are identified as being bad and
+        // remove them from the collection of proxy resource URIs
+        final List badUris = new ArrayList(proxyResourceUris.size());
+        for (final Iterator i = proxyResourceUris.iterator(); i.hasNext();) {
+            final URI uri = (URI)i.next();
+            final String uriString = uri.toString();
+            if (uriString.charAt(0) == '/') {
+                badUris.add(uri);
+                i.remove();
+            }
+        }
+        if (badUris.isEmpty()) {
+            return;
+        }
+        // Check the collection of remaining proxy resource URIs attempting to
+        // match the bad Eclipse workspace relative path to a good file URI path.
+        // If a match is not found then re-add the bad path
+        for (final Iterator i = proxyResourceUris.iterator(); i.hasNext();) {
+            final URI uri = (URI)i.next();
+            final String uriString = URI.decode(uri.toString()).toLowerCase();
+            for (final Iterator j = badUris.iterator(); j.hasNext();) {
+                final URI badUri = (URI)j.next();
+                final String badUriString = URI.decode(badUri.toString()).toLowerCase();
+                if (uriString.endsWith(badUriString)) {
+                    j.remove();
+                }
+            }
+        }
+        if (!badUris.isEmpty()) {
+            proxyResourceUris.addAll(badUris);
+        }
+    }
+
+    protected String removeProjectNameFromLocation( final String location ) {
+        String newLocation = location;
+        final URI uri = URI.createURI(location);
+        if (uri.segmentCount() > 1) {
+            final StringBuffer sb = new StringBuffer(location.length());
+            final String[] segments = uri.segments();
+            for (int i = 1; i != segments.length; ++i) {
+                sb.append("/"); //$NON-NLS-1$
+                sb.append(segments[i]);
+            }
+            newLocation = sb.toString();
+        }
+        return newLocation;
+    }
+
     /**
      * Set the given feature of the given object to the given value.
      */
-    @Override
-    protected void setFeatureValue( EObject object,
-                                    EStructuralFeature feature,
-                                    Object value,
-                                    int position ) {
+    @Override protected void setFeatureValue( final EObject object,
+                                              final EStructuralFeature feature,
+                                              Object value,
+                                              final int position ) {
         try {
             // If there is a reference to an XMLSchema entity ...
             if (value instanceof EObject && ((EObject)value).eIsProxy()) {
-                URI proxyURI = ((InternalEObject)value).eProxyURI();
+                final URI proxyURI = ((InternalEObject)value).eProxyURI();
                 if (proxyURI != null && proxyURI.toString().startsWith(MtkXmiSaveImpl.XML_SCHEMA_ECLIPSE_PLATFORM_URI_PREFIX)) {
                     // System.out.println("setFeatureValue - creating ProxyReferenceHolder for "+value+" and feature "+feature.getName());
-                    ProxyReferenceHolder refHolder = new ProxyReferenceHolder(object, feature, (EObject)value, position);
+                    final ProxyReferenceHolder refHolder = new ProxyReferenceHolder(object, feature, (EObject)value, position);
                     this.xmlSchemaProxies.add(refHolder);
                 }
             }
@@ -405,76 +675,30 @@ public class MtkXmiHandler extends SAXXMIHandler {
             // Process as a normal feature value
             super.setFeatureValue(object, feature, value, position);
 
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             error(new IllegalValueException(object, feature, value, e, getLocation(), getLineNumber(), getColumnNumber()));
         }
     }
 
-    private String convertDateFormat( final String value ) {
-        Date valueAsDate = null;
-        for (int i = 0; i < DATE_FORMATS.length; ++i) {
-            try {
-                valueAsDate = DATE_FORMATS[i].parse(value);
-                // MyDefect : 18060 Added break to break for the right date formatter. no break was there before.
-                break;
-            } catch (ParseException parseException) {
-                // do nothing
-            }
-        }
-        if (valueAsDate == null) {
-            final String msg = ModelerCore.Util.getString("MtkXmiHandler.Error_parsing_date_String", value); //$NON-NLS-1$
-            ModelerCore.Util.log(IStatus.ERROR, msg);
-            return value;
-        }
-        return DateUtil.getDateAsString(valueAsDate);
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#createObjectFromFactory(org.eclipse.emf.ecore.EFactory, java.lang.String)
-     */
-    @Override
-    protected EObject createObjectFromFactory( EFactory factory,
-                                               String typeName ) {
-        EObject newObject = null;
-
-        if (factory != null) {
-            newObject = helper.createObject(factory, helper.getType(factory, typeName));
-            if (newObject != null) {
-                if (disableNotify) newObject.eSetDeliver(false);
-
-                handleObjectAttribs(newObject);
-
-                // Fix for defect 12764. Ensure that any EObject instances from the
-                // "http://www.eclipse.org/emf/2002/Ecore" metamodel are resolved immediately
-                newObject = handleEcoreProxy(newObject, attribs);
-
-            } else {
-                super.error(new ClassNotFoundException(typeName, factory, getLocation(), getLineNumber(), getColumnNumber()));
-            }
-        }
-
-        return newObject;
-    }
-
-    public void setValue( EObject object,
-                          EStructuralFeature feature,
-                          Object value,
-                          int position ) {
-        int kind = helper.getFeatureKind(feature);
+    public void setValue( final EObject object,
+                          final EStructuralFeature feature,
+                          final Object value,
+                          final int position ) {
+        final int kind = helper.getFeatureKind(feature);
 
         switch (kind) {
             case XMLHelper.DATATYPE_SINGLE:
             case XMLHelper.DATATYPE_IS_MANY:
-                EClassifier eMetaObject = feature.getEType();
-                EDataType eDataType = (EDataType)eMetaObject;
-                EFactory eFactory = eDataType.getEPackage().getEFactoryInstance();
+                final EClassifier eMetaObject = feature.getEType();
+                final EDataType eDataType = (EDataType)eMetaObject;
+                final EFactory eFactory = eDataType.getEPackage().getEFactoryInstance();
 
                 if (kind == XMLHelper.DATATYPE_IS_MANY) {
-                    BasicEList list = (BasicEList)object.eGet(feature);
+                    final BasicEList list = (BasicEList)object.eGet(feature);
                     if (position == -2) {
-                        for (StringTokenizer stringTokenizer = new StringTokenizer((String)value, " "); //$NON-NLS-1$
+                        for (final StringTokenizer stringTokenizer = new StringTokenizer((String)value, " "); //$NON-NLS-1$
                         stringTokenizer.hasMoreTokens();) {
-                            String token = stringTokenizer.nextToken();
+                            final String token = stringTokenizer.nextToken();
                             list.addUnique(eFactory.createFromString(eDataType, token));
                         }
 
@@ -496,7 +720,7 @@ public class MtkXmiHandler extends SAXXMIHandler {
                 break;
             case XMLHelper.IS_MANY_ADD:
             case XMLHelper.IS_MANY_MOVE:
-                BasicEList list = (BasicEList)object.eGet(feature);
+                final BasicEList list = (BasicEList)object.eGet(feature);
 
                 if (position == -1) {
                     list.addUnique(value);
@@ -514,70 +738,13 @@ public class MtkXmiHandler extends SAXXMIHandler {
     }
 
     /**
-     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#endDocument()
+     * @see org.eclipse.emf.ecore.xmi.impl.XMLHandler#startElement(java.lang.String, java.lang.String, java.lang.String)
      */
-    @Override
-    public void endDocument() {
-        addNamespaceConversions();
-
-        // Execute XSDSchema.update() on any XSDSchema instances
-        // found as top level objects
-        if (isXsdResource) {
-            final List topObjects = this.xmlResource.getContents();
-            for (Iterator iter = topObjects.iterator(); iter.hasNext();) {
-                updateSchema((EObject)iter.next());
-            }
-        }
-
-        // resolveXmlSchemaProxies();
-        this.resource.getContents().addAll(roots);
-
-        // This second patch reconciles the "modelLocation" value that was simply transfered from
-        // / the "path" value in the first patch to its correct relative URI path
-        patchB_modelImport();
-
-        super.endDocument();
-    }
-
-    private void addNamespaceConversions() {
-        final Resource resource = this.xmlResource;
-        final ResourceSet resourceSet = this.resourceSet;
-        for (Iterator iter = this.targetNamespaces.iterator(); iter.hasNext();) {
-            String targetNamespace = (String)iter.next();
-            URI logicalURI = URI.createURI(targetNamespace);
-            URI physicalURI = resource.getURI();
-            resourceSet.getURIConverter().getURIMap().put(logicalURI, physicalURI);
-            // System.out.println("Added URI conversion from "+logicalURI+" to "+physicalURI);
-        }
-
-    }
-
-    /**
-     * For a newly created EObject along with its associated attributes, check if that EObject has an "href" attribte to a
-     * "http://www.eclipse.org/emf/2002/Ecore" instance and resolve it immediately, otherwise return the original object. Fix for
-     * defect 12764.
-     */
-    private EObject handleEcoreProxy( final EObject obj,
-                                      final Attributes atts ) {
-        if (atts != null) {
-            InternalEObject internalEObject = (InternalEObject)obj;
-            for (int i = 0, size = atts.getLength(); i < size; ++i) {
-                String name = atts.getQName(i);
-                String value = atts.getValue(i);
-
-                // If the xmi:href attribute is encountered ...
-                if (name.equals(XMLResource.HREF)) {
-                    // System.out.println("handleEcoreProxy for "+value);
-                    URI uri = URI.createURI(value);
-                    if (EcorePackage.eNS_URI.equals(uri.trimFragment().toString())) {
-                        if (this.container != null) {
-                            return EcoreUtil.resolve(internalEObject, this.container.getMetamodelRegistry().getResource(uri));
-                        }
-                    }
-                }
-            }
-        }
-        return obj;
+    @Override public void startElement( final String uri,
+                                        final String localName,
+                                        final String name ) {
+        // System.out.println("startElement "+uri+ ", "+localName+", "+name);
+        super.startElement(uri, localName, name);
     }
 
     /**
@@ -597,11 +764,11 @@ public class MtkXmiHandler extends SAXXMIHandler {
         Method updateSchemaMethod = null;
         try {
             updateSchemaMethod = helper.findBestMethodOnTarget("update", args); //$NON-NLS-1$
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             ModelerCore.Util.log(IStatus.ERROR,
                                  e,
                                  ModelerCore.Util.getString("MtkXmiHandler.Error_execute_the_XSDSchema.update()_method_for_1", topObject)); //$NON-NLS-1$
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // do nothing
         }
 
@@ -610,186 +777,10 @@ public class MtkXmiHandler extends SAXXMIHandler {
             // System.out.println("Executing update() on "+topObject);
             try {
                 updateSchemaMethod.invoke(topObject, args);
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 ModelerCore.Util.log(IStatus.ERROR,
                                      ModelerCore.Util.getString("MtkXmiHandler.Error_execute_the_XSDSchema.update()_method_for_2", topObject)); //$NON-NLS-1$
             }
-        }
-    }
-
-    /**
-     * First of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their
-     * new "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
-     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
-     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This first patch simply transfers
-     * the "path" value to the new "modelLocation" feature.
-     */
-    protected EObject patchA_modelImport( final EObject obj,
-                                          final Attributes attribs ) {
-        if (obj instanceof ModelImport && attribs != null) {
-            for (int i = 0, size = attribs.getLength(); i < size; ++i) {
-                String qName = attribs.getQName(i);
-                String value = attribs.getValue(i);
-                if (qName.equals("path")) { //$NON-NLS-1$
-                    ((ModelImport)obj).setModelLocation(value);
-                    this.modelImportsToConvert.add(obj);
-                }
-            }
-        }
-        return obj;
-    }
-
-    /**
-     * Second of two patches to convert the Core::ModelImport "path" feature value found in models created prior to 4.4 to their
-     * new "modelLocation" value. In 4.4, the "path" feature on Core::ModelImport was changed to be transient and volatile to be
-     * replaced by a new feature, "modelLocation". The new feature stores the relative URI path of the referenced resource instead
-     * of the "path" relative to the workspace root which assumed an Eclipse runtime workspace. This second patch reconciles the
-     * "modelLocation" value that was simply transfered from the "path" value in the first patch to its correct relative URI path
-     */
-    protected void patchB_modelImport() {
-        // If no ModelImport conversion work is required, return
-        if (this.modelImportsToConvert.isEmpty()) {
-            return;
-        }
-
-        URI eResourceURI = this.resource.getURI();
-
-        // Preprocess the collection of proxy resource URIs ...
-        removeBadProxyResourceUris(this.proxyResourceURIs);
-
-        // Reconcile the workspace relative paths, stored in the "modelLocation" feature,
-        // against the resource URIs of the proxies
-        Collection unconvertedImports = new HashSet(this.modelImportsToConvert);
-        for (Iterator i = this.modelImportsToConvert.iterator(); i.hasNext();) {
-            ModelImport modelImport = (ModelImport)i.next();
-            String modelLocation = modelImport.getModelLocation().toLowerCase();
-
-            // If the modelLocation value represents a logical location of a built-in resource then ignore it
-            if (modelLocation.startsWith("http") || //$NON-NLS-1$
-                modelLocation.startsWith(ResourceFinder.METAMODEL_PREFIX)
-                || modelLocation.startsWith(ResourceFinder.UML2_METAMODELS_PREFIX)) {
-                unconvertedImports.remove(modelImport);
-                continue;
-            }
-
-            for (Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
-                URI importURI = (URI)j.next();
-                String uriString = URI.decode(importURI.toString()).toLowerCase();
-
-                // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
-                if (uriString.startsWith("http") && !uriString.endsWith("xmi")) { //$NON-NLS-1$ //$NON-NLS-2$
-                    continue;
-                }
-
-                // Match the modelLocation, currently of the form "/project/.../model.xmi" to
-                // a resource URI of the form "file:/C:/.../project/.../model.xmi"
-                if (uriString.endsWith(modelLocation)) {
-                    boolean deresolve = (eResourceURI != null && !eResourceURI.isRelative() && eResourceURI.isHierarchical());
-                    if (deresolve && !importURI.isRelative()) {
-                        URI deresolvedURI = importURI.deresolve(eResourceURI, true, true, false);
-                        if (deresolvedURI.hasRelativePath()) {
-                            importURI = deresolvedURI;
-                        }
-                    }
-                    modelImport.setModelLocation(URI.decode(importURI.toString()));
-                    unconvertedImports.remove(modelImport);
-                    break;
-                }
-            }
-        }
-
-        // Reconcile the workspace relative paths, stored in the "modelLocation" feature,
-        // against the model names found in the resource URIs of the proxies
-        for (Iterator i = unconvertedImports.iterator(); i.hasNext();) {
-            ModelImport modelImport = (ModelImport)i.next();
-            String modelLocation = removeProjectNameFromLocation(modelImport.getModelLocation()).toLowerCase();
-
-            for (Iterator j = this.proxyResourceURIs.iterator(); j.hasNext();) {
-                URI importURI = (URI)j.next();
-                String uriString = URI.decode(importURI.toString()).toLowerCase();
-
-                // If the URI of the proxy resource is a logical URI of the form "http://..." then ignore it
-                if (uriString.startsWith("http") && !uriString.endsWith("xmi")) { //$NON-NLS-1$ //$NON-NLS-2$
-                    continue;
-                }
-
-                // Match the modelLocation, currently a project relative path, to a resource URI
-                if (uriString.endsWith(modelLocation)) {
-                    boolean deresolve = (eResourceURI != null && !eResourceURI.isRelative() && eResourceURI.isHierarchical());
-                    if (deresolve && !importURI.isRelative()) {
-                        URI deresolvedURI = importURI.deresolve(eResourceURI, true, true, false);
-                        if (deresolvedURI.hasRelativePath()) {
-                            importURI = deresolvedURI;
-                        }
-                    }
-                    modelImport.setModelLocation(URI.decode(importURI.toString()));
-                    i.remove();
-                    break;
-                }
-            }
-        }
-
-        // Remove any model imports that could not be matched to a proxy resource
-        for (Iterator i = unconvertedImports.iterator(); i.hasNext();) {
-            ModelImport modelImport = (ModelImport)i.next();
-            modelImport.setModel(null);
-        }
-    }
-
-    protected String removeProjectNameFromLocation( final String location ) {
-        String newLocation = location;
-        URI uri = URI.createURI(location);
-        if (uri.segmentCount() > 1) {
-            StringBuffer sb = new StringBuffer(location.length());
-            String[] segments = uri.segments();
-            for (int i = 1; i != segments.length; ++i) {
-                sb.append("/"); //$NON-NLS-1$
-                sb.append(segments[i]);
-            }
-            newLocation = sb.toString();
-        }
-        return newLocation;
-    }
-
-    /**
-     * If any of the resource URIs begin with '/' then it may represent a bad href (Eclipse workspace relative path of the form
-     * "/project/.../model.xmi") which are sometimes found in old model files. Check if the collection contains the correct file
-     * URI so that the bad one can be removed
-     */
-    protected void removeBadProxyResourceUris( final Collection proxyResourceUris ) {
-        if (proxyResourceUris == null || proxyResourceUris.isEmpty()) {
-            return;
-        }
-        // Collect all the URIs that are identified as being bad and
-        // remove them from the collection of proxy resource URIs
-        final List badUris = new ArrayList(proxyResourceUris.size());
-        for (Iterator i = proxyResourceUris.iterator(); i.hasNext();) {
-            URI uri = (URI)i.next();
-            String uriString = uri.toString();
-            if (uriString.charAt(0) == '/') {
-                badUris.add(uri);
-                i.remove();
-            }
-        }
-        if (badUris.isEmpty()) {
-            return;
-        }
-        // Check the collection of remaining proxy resource URIs attempting to
-        // match the bad Eclipse workspace relative path to a good file URI path.
-        // If a match is not found then re-add the bad path
-        for (Iterator i = proxyResourceUris.iterator(); i.hasNext();) {
-            URI uri = (URI)i.next();
-            String uriString = URI.decode(uri.toString()).toLowerCase();
-            for (Iterator j = badUris.iterator(); j.hasNext();) {
-                URI badUri = (URI)j.next();
-                String badUriString = URI.decode(badUri.toString()).toLowerCase();
-                if (uriString.endsWith(badUriString)) {
-                    j.remove();
-                }
-            }
-        }
-        if (!badUris.isEmpty()) {
-            proxyResourceUris.addAll(badUris);
         }
     }
 
