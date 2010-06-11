@@ -385,6 +385,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.teiid.designer.schema.tools"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.teiid.designer.xsd"
          download-size="0"
          install-size="0"
