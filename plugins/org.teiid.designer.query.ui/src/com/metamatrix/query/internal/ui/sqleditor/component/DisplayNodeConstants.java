@@ -41,6 +41,7 @@ public interface DisplayNodeConstants {
     public static final String OPTIONAL_COMMENTS = "/* optional */"; //$NON-NLS-1$
     public static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
     public static final String EXEC = "EXEC"; //$NON-NLS-1$
+    public static final String NAME = "NAME"; //$NON-NLS-1$
 
 	// Node Type Identifiers
     public static final int ELEMENT = 0;

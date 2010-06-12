@@ -129,6 +129,7 @@ public class ReservedWords {
 	public static final String WHERE = "WHERE"; //$NON-NLS-1$
     public static final String WHILE = "WHILE"; //$NON-NLS-1$
     public static final String XML = "XML"; //$NON-NLS-1$
+    public static final String XMLPI = "XMLPI"; //$NON-NLS-1$
 
     public static final String[] ALL_WORDS = new String[] {
         ALL,

@@ -51,7 +51,6 @@ import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
-import org.teiid.query.sql.lang.XQuery;
 import org.teiid.query.sql.lang.SetQuery.Operation;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
@@ -1744,39 +1743,6 @@ public class TestDisplayNodeFactory extends TestCase {
 
         helpTest(q2,
                  "SELECT \n\t\te1, (SELECT e1 FROM m.g1) \nFROM \n\t\tm.g2 \nWHERE \n\t\t(e3 >= ANY (SELECT e1 FROM m.g1)) AND (EXISTS (SELECT \n\t\t\t\t\t\te1 \nFROM \n\t\t\t\t\t\tm.g1))"); //$NON-NLS-1$
-    }
-
-    public void testXQuery() {
-
-        String xquerystring = "XQUERY <Items>\r\n" + //$NON-NLS-1$
-                              "{\r\n" + //$NON-NLS-1$
-                              "for $x in doc(\"xmltest.doc9893\")//ItemName\r\n" + //$NON-NLS-1$
-                              "return  <Item>{$x/text()}</Item>\r\n" + //$NON-NLS-1$
-                              "}\r\n" + //$NON-NLS-1$
-                              "</Items>\r\n"; //$NON-NLS-1$
-
-        XQuery xquery = new XQuery(xquerystring, null);
-        helpTest(xquery, xquerystring);
-    }
-
-    public void testXQueryWithOption() {
-
-        String xquerystring = "XQUERY <Items>\r\n" + //$NON-NLS-1$
-                              "{\r\n" + //$NON-NLS-1$
-                              "for $x in doc(\"xmltest.doc9893\")//ItemName\r\n" + //$NON-NLS-1$
-                              "return  <Item>{$x/text()}</Item>\r\n" + //$NON-NLS-1$
-                              "}\r\n" + //$NON-NLS-1$
-                              "</Items>"; //$NON-NLS-1$
-
-        String expectedString = "XQUERY <Items>\r\n" + //$NON-NLS-1$
-                                "{\r\n" + //$NON-NLS-1$
-                                "for $x in doc(\"xmltest.doc9893\")//ItemName\r\n" + //$NON-NLS-1$
-                                "return  <Item>{$x/text()}</Item>\r\n" + //$NON-NLS-1$
-                                "}\r\n" + //$NON-NLS-1$
-                                "</Items>"; //$NON-NLS-1$
-
-        XQuery xquery = new XQuery(xquerystring, null);
-        helpTest(xquery, expectedString);
     }
 
     /**

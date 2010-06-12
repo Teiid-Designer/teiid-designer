@@ -9,7 +9,6 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 
-import org.teiid.language.SQLReservedWords;
 import org.teiid.query.function.FunctionLibrary;
 import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.symbol.Constant;
@@ -65,9 +64,9 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 	        for(int i=0; i<args.length; i++) {
 	            // Special case for TIMESTAMPADD, TIMESTAMPDIFF. 
 	            if((i==1 && 
-	 	               (name.equalsIgnoreCase(SQLReservedWords.CAST) || name.equalsIgnoreCase(ReservedWords.CONVERT))) ||
+	 	               (name.equalsIgnoreCase(ReservedWords.CAST) || name.equalsIgnoreCase(ReservedWords.CONVERT))) ||
 	            		(i==0 && 
-	               (name.equalsIgnoreCase(SQLReservedWords.XMLPI) || name.equalsIgnoreCase(ReservedWords.TIMESTAMPADD)||name.equalsIgnoreCase(ReservedWords.TIMESTAMPDIFF))) ) {
+	               (name.equalsIgnoreCase(ReservedWords.XMLPI) || name.equalsIgnoreCase(ReservedWords.TIMESTAMPADD)||name.equalsIgnoreCase(ReservedWords.TIMESTAMPDIFF))) ) {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,((Constant)args[i]).getValue()));
 	            } else {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,args[i]));
@@ -123,8 +122,8 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 
 			if(childNodeList.size() > 0) {
 				for(int i=0; i<childNodeList.size(); i++) {
-					if (i == 0 && name.equalsIgnoreCase(SQLReservedWords.XMLPI)) {
-						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,"NAME"));
+					if (i == 0 && name.equalsIgnoreCase(ReservedWords.XMLPI)) {
+						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,NAME));
 						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 					}
                     child = childNodeList.get(i);
