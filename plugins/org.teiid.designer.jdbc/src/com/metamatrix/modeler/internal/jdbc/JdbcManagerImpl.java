@@ -169,7 +169,7 @@ public class JdbcManagerImpl implements JdbcManager {
                                         final String password ) throws JdbcException, SQLException {
         final IConnectionProfile profile = profileManager.getProfileByName(jdbcSource.getName());
         if (null == profile) {
-            throw new JdbcException("ConnectionProfile " + jdbcSource.getName() + " cannot be found");
+            throw new JdbcException(JdbcPlugin.Util.getString("JdbcManagerImpl.ConnectionProfile_{0}_cannot_be_found"));  //$NON-NLS-1$
         }
 
         final String factoryId = profile.getProvider().getConnectionFactory("java.sql.Connection").getId(); //$NON-NLS-1$
@@ -180,7 +180,7 @@ public class JdbcManagerImpl implements JdbcManager {
         final Connection sqlConnection = (Connection)connection.getRawConnection();
         if (null == sqlConnection || sqlConnection.isClosed()) {
             final Throwable e = connection.getConnectException();
-            throw new JdbcException(e == null ? "Unspecified connection error" : e.getMessage());
+            throw new JdbcException(e == null ? JdbcPlugin.Util.getString("JdbcManagerImpl.Unspecified_connection_error") : e.getMessage()); //$NON-NLS-1$
         }
         return (Connection)connection.getRawConnection();
     }

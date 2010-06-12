@@ -14,7 +14,7 @@ public class TeiidPropertyPage extends ExtensibleProfileDetailsPropertyPage
             Activator.getDefault().getBundle().getSymbolicName());
 
     public TeiidPropertyPage() {
-        super("org.teiid.datatools.connectivity.driver.teiidCategory");
+        super(ITeiidDriverConstants.TEIID_CATEGORY);
     }
 
     @Override

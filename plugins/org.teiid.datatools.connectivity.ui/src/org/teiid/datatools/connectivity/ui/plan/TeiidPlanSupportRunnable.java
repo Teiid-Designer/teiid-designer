@@ -10,6 +10,7 @@ import org.eclipse.datatools.sqltools.core.SQLToolsFacade;
 import org.eclipse.datatools.sqltools.core.services.ConnectionService;
 import org.eclipse.datatools.sqltools.plan.PlanRequest;
 import org.eclipse.datatools.sqltools.plan.PlanSupportRunnable;
+import org.teiid.datatools.connectivity.ui.Messages;
 
 public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
 
@@ -23,7 +24,7 @@ public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
     @Override
     protected String explainPlan( Statement stmt ) {
         // execute the query
-        String result = "Didn't work";
+        String result = Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"); //$NON-NLS-1$
         try {
             String sql = this._request.getSql();
 			ResultSet resultSet = stmt.executeQuery(sql + " OPTION PLANONLY"); //$NON-NLS-1$

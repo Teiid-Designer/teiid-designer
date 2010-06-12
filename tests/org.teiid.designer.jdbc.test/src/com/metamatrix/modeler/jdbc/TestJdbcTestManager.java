@@ -86,6 +86,10 @@ public class TestJdbcTestManager extends TestCase {
     // H E L P E R M E T H O D S
     // =========================================================================
 
+    public ConnectivityPlugin getConnectivityPlugin() {
+    	return this.plugin;
+    }
+    
     // =========================================================================
     // T E S T C A S E S
     // =========================================================================

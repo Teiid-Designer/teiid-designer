@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -46,6 +49,7 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
@@ -401,6 +405,35 @@ public abstract class ModelObjectUtilities {
             names.add(physical.getItemName());
         }
         return names.toArray(new String[names.size()]);
+    }
+    
+    /**
+     * Helper method returns a list of dependent physical models based on an input EObject, including the model containing
+     * the EObject if it is a physical model.
+     * 
+     * 
+     * @param eObject
+     * @return the set of dependent physical models
+     * @throws ModelWorkspaceException
+     */
+    public static Set<IResource> getDependentPhysicalModels( EObject eObject ) throws ModelWorkspaceException {
+    	Set<IResource> result = new HashSet<IResource>();
+
+        // given the object get all the dependent physical models that this
+        // is dependent upon
+    	Set<ModelResource> physicalModels = new HashSet<ModelResource>();
+        ModelResource model = ModelUtilities.getModelResourceForModelObject(eObject);
+        if (model != null) {
+            if (ModelUtilities.isPhysical(model)) {
+            	physicalModels.add(model);
+            }
+            ModelUtilities.getDependentPhysicalModelResources(model, physicalModels);
+        }
+
+        for(ModelResource mr : physicalModels ) {
+        	result.add(mr.getCorrespondingResource());
+        }
+        return result;
     }
 
     /**
