@@ -11,7 +11,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.TeiidTranslator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -26,7 +26,7 @@ import com.metamatrix.modeler.ui.viewsupport.IExtendedModelObject;
  * model's JdbcSource node (if it exists).
  * @since 5.0
  */
-public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
+public class ConnectionBindingSourceWrapper implements IExtendedModelObject {
     // ----------------------------------------------------------------------------------
     // Static Constants
     // ----------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
     // ----------------------------------------------------------------------------------
     // Variables
     // ----------------------------------------------------------------------------------
-    private Connector binding;
+    private TeiidTranslator binding;
     private JdbcSource jdbcSource;
     private PropertySheetPage propertyPage;
     private IPropertySourceProvider propertySourceProvider;
@@ -50,7 +50,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
      * @param jdbcSource
      * @since 5.0
      */
-    public ConnectorBindingSourceWrapper(Connector connector, JdbcSource jdbcSource) {
+    public ConnectionBindingSourceWrapper(TeiidTranslator connector, JdbcSource jdbcSource) {
         
         
         
@@ -63,7 +63,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
      * @return
      * @since 5.0
      */
-    public Connector getConnector() {
+    public TeiidTranslator getConnector() {
         return binding;
     }
     
@@ -89,7 +89,7 @@ public class ConnectorBindingSourceWrapper implements IExtendedModelObject {
             
         }
         ((RuntimePropertySourceProvider)propertySourceProvider).setEditable(true);
-        ((ConnectorPropertySource)propertySourceProvider.getPropertySource(binding)).setEditable(true);
+        ((ConnectionPropertySource)propertySourceProvider.getPropertySource(binding)).setEditable(true);
         
         return propertySourceProvider.getPropertySource(binding);
     }

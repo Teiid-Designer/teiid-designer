@@ -12,13 +12,14 @@ Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.internal.config,
  com.metamatrix.modeler.dqp.internal.execution,
  com.metamatrix.modeler.dqp.internal.workspace,
- com.metamatrix.modeler.dqp.util,
- org.teiid.designer.runtime
+ org.teiid.designer.runtime,
+ org.teiid.designer.runtime.connection
 Require-Bundle: org.eclipse.core.runtime,
  org.jdom,
  teiid_embedded_query,
  org.eclipse.core.resources,
  org.teiid.designer.jdbc,
+ org.teiid.designer.jdbc.relational,
  org.teiid.designer.core,
  org.teiid.core.designer,
  org.teiid.designer.metamodels.core,
@@ -26,6 +27,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.transformation,
  org.teiid.designer.legacy,
  org.teiid.designer.vdb,
+  org.eclipse.datatools.connectivity,
  net.jcip.annotations
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

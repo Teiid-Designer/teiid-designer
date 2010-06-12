@@ -12,9 +12,9 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.TeiidTranslator;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -33,14 +33,6 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public Object[] getChildren( Object parentElement ) {
-        if (parentElement instanceof ConnectorType) {
-            try {
-                return this.admin.getConnectors((ConnectorType)parentElement).toArray();
-            } catch (Exception e) {
-                UTIL.log(e);
-                return new Object[0];
-            }
-        }
 
         return new Object[0];
     }
@@ -66,11 +58,8 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public Image getImage( Object element ) {
-        if (element instanceof Connector) {
+        if (element instanceof TeiidTranslator) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
-        }
-        if (element instanceof ConnectorType) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_TYPE_ICON);
         }
 
         return null;
@@ -81,11 +70,8 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
      * @since 4.2
      */
     public String getText( Object element ) {
-        if (element instanceof Connector) {
-            return ((Connector)element).getName();
-        }
-        if (element instanceof ConnectorType) {
-            return ((ConnectorType)element).getName();
+        if (element instanceof TeiidTranslator) {
+            return ((TeiidTranslator)element).getName();
         }
         if (element instanceof String) {
             return (String)element;
@@ -128,7 +114,7 @@ public class ConnectorBindingsTreeProvider implements DqpUiConstants, ITreeConte
             this.admin = (ExecutionAdmin)inputElement;
             Object[] types = null;
             try {
-                types = this.admin.getConnectorTypes().toArray();
+                types = this.admin.getTranslators().toArray();
             } catch (Exception e) {
                 DqpPlugin.Util.log(e);
                 return new Object[0];

@@ -22,6 +22,7 @@ public class PseudoTranslator implements Translator {
 
     private final Properties initialProperties; // the initial value of all properties
     private String name;
+    private String type;
 
     /**
      * Used when constructing a new connection factory.
@@ -30,25 +31,25 @@ public class PseudoTranslator implements Translator {
      * @param type the initial type (never <code>null</code>)
      */
     public PseudoTranslator( String name,
-                                    ConnectorType type ) {
+                                    String type, ExecutionAdmin admin) {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
         this.name = name;
-        this.initialProperties = type.getDefaultPropertyValues();
+        this.initialProperties = new Properties();
     }
-
+    
     /**
-     * Use when editing an existing connector.
+     * Use when editing an existing translator.
      * 
-     * @param connector the existing connector whose initialProperties will be copied
+     * @param translator the existing translator whose initialProperties will be copied
      */
-    public PseudoTranslator( Connector connector ) {
-        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        this.name = connector.getName();
-        this.initialProperties = (Properties)connector.getProperties().clone();
+    public PseudoTranslator( TeiidTranslator translator ) {
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        this.name = translator.getName();
+        this.initialProperties = (Properties)translator.getProperties().clone();
 
         // make sure all properties are present
-        Properties defaults = connector.getType().getDefaultPropertyValues();
+        Properties defaults = translator.getDefaultPropertyValues();
 
         for (String name : defaults.stringPropertyNames()) {
             if (!this.initialProperties.containsKey(name)) {
@@ -88,45 +89,21 @@ public class PseudoTranslator implements Translator {
     }
 
     /**
-     * @param name the new name of the connection factory (can be <code>null</code>)
+     * @param name the new name of the translator (can be <code>null</code>)
      */
     public void setName( String name ) {
         this.name = name;
     }
 
 	@Override
-	public String getExecutionFactoryClass() {
+	public String getType() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.type;
 	}
-
-	@Override
-	public int getMaxResultRows() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getTemplateName() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isExceptionOnMaxRows() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isImmutable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isXaCapable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+    /**
+     * @param type the type of the translator (can be <code>null</code>)
+     */
+    public void setType( String type ) {
+        this.type = type;
+    }
 }

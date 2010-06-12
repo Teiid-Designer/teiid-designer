@@ -124,6 +124,7 @@ public class Server {
             }
             this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(this.user, pwd, this.url), this,
                                             this.eventManager);
+            this.admin.load();
         }
 
         return this.admin;

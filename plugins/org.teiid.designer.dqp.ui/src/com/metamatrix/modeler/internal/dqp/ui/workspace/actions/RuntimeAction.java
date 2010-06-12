@@ -8,17 +8,18 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace.actions;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.teiid.adminapi.AdminComponentException;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.SourceBindingsManager;
+import org.teiid.designer.runtime.TeiidTranslator;
+
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
@@ -55,13 +56,13 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
     /**
      * @return the source bindings manager (maybe <code>null</code> if there is no admin object)
      */
-    protected SourceBindingsManager getSourceBindingsManager() {
-        if (this.admin == null) {
-            return null;
-        }
-
-        return this.admin.getSourceBindingsManager();
-    }
+//    protected SourceConnectionBindingsManager getSourceBindingsManager() {
+//        if (this.admin == null) {
+//            return null;
+//        }
+//
+//        return this.admin.getSourceConnectionBindingsManager();
+//    }
 
     public void selectionChanged( SelectionChangedEvent theEvent ) {
         this.admin = null;
@@ -74,10 +75,8 @@ public abstract class RuntimeAction extends Action implements ISelectionChangedL
             ExecutionAdmin tempAdmin = null;
 
             for (Object obj : selectedObjects) {
-                if (obj instanceof ConnectorType) {
-                    tempAdmin = ((ConnectorType)obj).getAdmin();
-                } else if (obj instanceof Connector) {
-                    tempAdmin = ((Connector)obj).getType().getAdmin();
+                if (obj instanceof TeiidTranslator) {
+                    tempAdmin = ((TeiidTranslator)obj).getAdmin();
                 } else if (obj instanceof Server) {
                     try {
                         tempAdmin = ((Server)obj).getAdmin();

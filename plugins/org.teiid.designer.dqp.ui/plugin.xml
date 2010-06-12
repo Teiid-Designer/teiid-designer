@@ -12,7 +12,18 @@
      <extension-point id="vdbEditorUtil" name="%vdbEditorUtil" schema="schema/vdbEditorUtil.exsd"/>
 
   <extension
-        point="org.eclipse.ui.views">
+    point="org.eclipse.ui.views">
+      <category
+            name="%category.name.0"
+            id="com.metamatrix.modeler.runtime.ui">
+      </category>
+      <view
+            name="%connectorsView"
+            icon="icons/full/obj16/connectorBinding.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidView"
+            id="connectorsView">
+      </view>
 <!-- SqlResultsView -->
       <view
             name="%SqlResultsView.name"
@@ -38,6 +49,15 @@
             id="xmlDocumentSqlResultsView">
       </view>
   </extension>
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="teiidPerspectiveContributor"
+         name="%teiidPerspectiveContributor.name"
+         point="org.teiid.designer.ui.modelerPerspectiveContributor">
+      <class
+        name="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidPerspectiveContributor">
+      </class>
+   </extension>
 <!-- JDBC Client Perspective -->
    <extension
          point="org.eclipse.ui.perspectives">
@@ -99,54 +119,13 @@
          point="net.sourceforge.sqlexplorer.requestDocGenerator">
       <class name="com.metamatrix.modeler.internal.dqp.ui.connection.WebServiceRequestGenerator"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            name="%category.name.0"
-            id="com.metamatrix.modeler.runtime.ui">
-      </category>
-      <view
-            name="%connectorsView"
-            icon="icons/full/obj16/connectorBinding.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsView"
-            id="connectorsView">
-      </view>
-   </extension>
-   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
-   <extension
-         id="connectorsPerspectiveContributor"
-         name="%connectorsPerspectiveContributor.name"
-         point="org.teiid.designer.ui.modelerPerspectiveContributor">
-      <class
-        name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsPerspectiveContributor">
-      </class>
-   </extension>
-   <extension
-        id="BindToConnectorAction"
-        name="%bindToConnectorAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.BindToConnectorAction"
-         label="%bindToConnectorAction.label">
-      </resourceAction>
-   </extension>
-   <extension
-        id="UnbindFromConnectorAction"
-        name="%unbindFromConnectorAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="com.metamatrix.modeler.internal.dqp.ui.workspace.actions.UnbindFromConnectorAction"
-         label="%unbindFromConnectorAction.label">
-      </resourceAction>
-   </extension>
-   
+
    <extension
          id="connectorBindingContentProvider"
          name="Connector Binding Content Provider"
          point="org.teiid.designer.ui.extendedModelContentProvider">
       <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingModelContentProvider">
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelContentProvider">
       </class>
    </extension>
    <extension
@@ -154,7 +133,7 @@
          name="Connector Binding Label Provider"
          point="org.teiid.designer.ui.extendedModelLabelProvider">
       <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorBindingModelLabelProvider">
+            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelLabelProvider">
       </class>
    </extension>
    
@@ -201,9 +180,19 @@
       </resourceAction>
    </extension>
    <extension
-         point="org.teiid.designer.vdb.connectionFinder">
+        id="SetConnectionProfileAction"
+        name="%setConnectionProfileAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.SetConnectionProfileAction"
+         label="%setConnectionProfileAction.label">
+      </resourceAction>
+   </extension>
+
+   <extension
+         point="org.teiid.designer.vdb.sourceHandler">
       <class
-            name="org.teiid.designer.runtime.ui.VdbSouceConnectionFinder">
+            name="org.teiid.designer.runtime.ui.VdbSouceHandler">
       </class>
    </extension>
 </plugin>

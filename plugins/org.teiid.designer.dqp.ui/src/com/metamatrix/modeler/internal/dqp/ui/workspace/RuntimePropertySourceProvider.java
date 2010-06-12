@@ -16,12 +16,11 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorTemplate;
-import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TranslatorTemplate;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.properties.ModelPropertySource;
@@ -32,7 +31,6 @@ import com.metamatrix.modeler.internal.ui.properties.ModelPropertySource;
 public class RuntimePropertySourceProvider implements IPropertySourceProvider {
 
     private boolean connectorsEditable = false;
-    private boolean connectorTypesEditable = false;
 
     private ArrayList<IPropertyChangeListener> listenerList = new ArrayList<IPropertyChangeListener>();
     private boolean showExpertProps = false;
@@ -48,26 +46,22 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
      * @since 4.2
      */
     public IPropertySource getPropertySource( Object object ) {
-        if (object instanceof ConnectorTemplate) {
-            ConnectorPropertySource source = new ConnectorPropertySource((Connector)object);
+        if (object instanceof TranslatorTemplate) {
+            ConnectionPropertySource source = new ConnectionPropertySource((TeiidTranslator)object);
             source.setEditable(this.connectorsEditable);
             source.setProvider(this);
             return source;
-        } else if (object instanceof Connector) {
-            ConnectorPropertySource source = new ConnectorPropertySource(new ConnectorTemplate((Connector)object));
+        } else if (object instanceof TeiidTranslator) {
+            ConnectionPropertySource source = new ConnectionPropertySource(new TranslatorTemplate((TeiidTranslator)object));
             source.setEditable(this.connectorsEditable);
             source.setProvider(this);
             return source;
-        } else if (object instanceof ConnectorType) {
-            ConnectorTypePropertySource source = new ConnectorTypePropertySource((ConnectorType)object);
-            source.setEditable(this.connectorTypesEditable);
-            return source;
-        } else if (object instanceof SourceBinding) {
-            SourceBinding binding = (SourceBinding)object;
+        } else if (object instanceof SourceConnectionBinding) {
+            SourceConnectionBinding binding = (SourceConnectionBinding)object;
             // Create the project path
-            IPath modelPath = new Path(binding.getContainerPath());
+            IPath modelPath = new Path(binding.getModelLocation());
             // append the model name
-            modelPath = modelPath.append(binding.getName());
+            modelPath = modelPath.append(binding.getModelName());
 
             ModelResource mr = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().findModelResource(modelPath);
 
@@ -125,7 +119,6 @@ public class RuntimePropertySourceProvider implements IPropertySourceProvider {
     public void setEditable( boolean connectorBindingsEditable,
                              boolean componentTypesEditable ) {
         this.connectorsEditable = connectorBindingsEditable;
-        this.connectorTypesEditable = componentTypesEditable;
     }
 
     /**

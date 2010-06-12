@@ -11,197 +11,194 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
+import org.teiid.designer.runtime.TeiidTranslator;
+
+import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 
 /**
  * 
  */
 @RunWith( PowerMockRunner.class )
-@PrepareForTest( ConnectorType.class )
 public class SourceBindingTest {
 
-    private static final Set<Connector> NULL_CONNECTORS = null;
-    private static final Connector NULL_CONNECTOR = null;
+    private static final Set<TeiidTranslator> NULL_CONNECTORS = null;
+    private static final TeiidTranslator NULL_CONNECTOR = null;
 
     @Mock
     private ExecutionAdmin commonExecutionAdmin;
 
-    private Connector commonConnector;
+    private TeiidTranslator commonConnector;
 
     @Before
     public void beforeEach() {
         MockitoAnnotations.initMocks(this);
 
-        commonConnector = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
-        when(commonConnector.getType()).thenReturn(type);
-        when(type.getAdmin()).thenReturn(commonExecutionAdmin);
+        commonConnector = mock(TeiidTranslator.class);
+        when(commonConnector.getType()).thenReturn("theType");
+        when(commonConnector.getAdmin()).thenReturn(commonExecutionAdmin);
     }
 
-    private Connector getMockConnector() {
-        Connector conn = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
+    private TeiidTranslator getMockConnector() {
+        TeiidTranslator conn = mock(TeiidTranslator.class);
         ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        when(conn.getType()).thenReturn(type);
-        when(type.getAdmin()).thenReturn(admin);
+        when(conn.getType()).thenReturn("theType");
+        when(conn.getAdmin()).thenReturn(admin);
 
         return conn;
     }
 
-    private Connector getMockConnectorWithCommonAdmin() {
-        Connector conn = mock(Connector.class);
-        ConnectorType type = mock(ConnectorType.class);
-        when(conn.getType()).thenReturn(type);
-        when(type.getAdmin()).thenReturn(commonExecutionAdmin);
+    private TeiidTranslator getMockConnectorWithCommonAdmin() {
+        TeiidTranslator conn = mock(TeiidTranslator.class);
+        when(conn.getType()).thenReturn("theType");
+        when(conn.getAdmin()).thenReturn(commonExecutionAdmin);
 
         return conn;
     }
 
-    private SourceBinding getNewSourceBinding() {
-        Set<Connector> connectors = new HashSet<Connector>();
+    private SourceConnectionBinding getNewSourceBinding() {
+        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
         connectors.add(getMockConnector());
-        return new SourceBinding("name", "path", connectors);
+        return new SourceConnectionBinding("name", "path", connectors);
     }
 
-    private SourceBinding getNewSourceBindingWithCommonAdmin() {
-        Set<Connector> connectors = new HashSet<Connector>();
+    private SourceConnectionBinding getNewSourceBindingWithCommonAdmin() {
+        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
         connectors.add(getMockConnectorWithCommonAdmin());
-        return new SourceBinding("name", "path", connectors);
+        return new SourceConnectionBinding("name", "path", connectors);
     }
 
-    private SourceBinding getNewSourceBindingWithMultipleConnectors() {
-        Set<Connector> connectors = new HashSet<Connector>();
+    private SourceConnectionBinding getNewSourceBindingWithMultipleConnectors() {
+        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
         connectors.add(getMockConnectorWithCommonAdmin());
         connectors.add(commonConnector);
-        return new SourceBinding("name", "path", connectors);
+        return new SourceConnectionBinding("name", "path", connectors);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullName() {
-        new SourceBinding(null, null, NULL_CONNECTOR);
+        new SourceConnectionBinding(null, null, NULL_CONNECTOR);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingEmptyName() {
-        new SourceBinding("", null, NULL_CONNECTOR);
+        new SourceConnectionBinding("", null, NULL_CONNECTOR);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullPath() {
-        new SourceBinding("name", null, NULL_CONNECTOR);
+        new SourceConnectionBinding("name", null, NULL_CONNECTOR);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingEmptyPath() {
-        new SourceBinding("name", "", NULL_CONNECTOR);
+        new SourceConnectionBinding("name", "", NULL_CONNECTOR);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullConnector() {
-        new SourceBinding("name", "path", NULL_CONNECTOR);
+        new SourceConnectionBinding("name", "path", NULL_CONNECTOR);
     }
 
     @Test
     public void shouldCreateSourceBindingWithConnector() {
-        new SourceBinding("name", "path", getMockConnector());
+        new SourceConnectionBinding("name", "path", getMockConnector());
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullName_2() {
-        new SourceBinding(null, null, NULL_CONNECTORS);
+        new SourceConnectionBinding(null, null, NULL_CONNECTORS);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingEmptyName_2() {
-        new SourceBinding("", null, NULL_CONNECTORS);
+        new SourceConnectionBinding("", null, NULL_CONNECTORS);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullPath_2() {
-        new SourceBinding("name", null, NULL_CONNECTORS);
+        new SourceConnectionBinding("name", null, NULL_CONNECTORS);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingEmptyPath_2() {
-        new SourceBinding("name", "", NULL_CONNECTORS);
+        new SourceConnectionBinding("name", "", NULL_CONNECTORS);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingNullConnectors() {
-        new SourceBinding("name", "", NULL_CONNECTORS);
+        new SourceConnectionBinding("name", "", NULL_CONNECTORS);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowCreateSourceBindingWithEmptyConnectors() {
-        new SourceBinding("name", "path", new HashSet<Connector>());
+        new SourceConnectionBinding("name", "path", new HashSet<TeiidTranslator>());
     }
 
     @Test
     public void shouldCreateSourceBindingWithConnectors() {
-        Set<Connector> connectors = new HashSet<Connector>();
+        Set<TeiidTranslator> connectors = new HashSet<TeiidTranslator>();
         connectors.add(getMockConnector());
-        new SourceBinding("name", "path", connectors);
+        new SourceConnectionBinding("name", "path", connectors);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowAddConnectorWithNullConnector() {
-        getNewSourceBinding().addConnector(null);
+        getNewSourceBinding().addTranslator(null);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowAddConnectorWithDifferentAdminConnector() {
-        getNewSourceBinding().addConnector(getMockConnector());
+        getNewSourceBinding().addTranslator(getMockConnector());
     }
 
     @Test
     public void shouldAllowAddConnectorWithCommonAdminConnector() {
-        getNewSourceBindingWithCommonAdmin().addConnector(getMockConnectorWithCommonAdmin());
+        getNewSourceBindingWithCommonAdmin().addTranslator(getMockConnectorWithCommonAdmin());
     }
 
     @Test
     public void shouldAllowGetConnectors() {
-        assertThat(getNewSourceBinding().getConnectors(), notNullValue());
+        assertThat(getNewSourceBinding().getTranslators(), notNullValue());
     }
 
     @Test
     public void shouldAllowGetName() {
-        assertThat(getNewSourceBinding().getName(), notNullValue());
+        assertThat(getNewSourceBinding().getModelName(), notNullValue());
     }
 
     @Test
     public void shouldAllowGetContainerPath() {
-        assertThat(getNewSourceBinding().getContainerPath(), notNullValue());
+        assertThat(getNewSourceBinding().getModelLocation(), notNullValue());
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowRemoveConnectorWithNullConnector() {
-        getNewSourceBinding().removeConnector(NULL_CONNECTOR);
+        getNewSourceBinding().removeTranslator(NULL_CONNECTOR);
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowRemoveConnectorWithOneConnector() {
-        getNewSourceBinding().removeConnector(getMockConnector());
+        getNewSourceBinding().removeTranslator(getMockConnector());
     }
 
     @Test( expected = IllegalArgumentException.class )
     public void shouldNotAllowRemoveConnectorWithNonBoundConnector() {
-        getNewSourceBindingWithMultipleConnectors().removeConnector(getMockConnector());
+        getNewSourceBindingWithMultipleConnectors().removeTranslator(getMockConnector());
     }
 
     @Test
     public void shouldAllowRemoveConnector() {
-        getNewSourceBindingWithMultipleConnectors().removeConnector(commonConnector);
+        getNewSourceBindingWithMultipleConnectors().removeTranslator(commonConnector);
     }
 }

@@ -22,18 +22,21 @@ import com.metamatrix.core.util.StringUtilities;
 
 /**
  */
-public class Connector implements Comparable<Connector> {
+public class TeiidTranslator implements Comparable<TeiidTranslator> {
 
-    private final Translator binding;
-    private final ConnectorType type;
+    private final Translator translator;
+    private final ExecutionAdmin admin;
 
-    Connector( Translator binding,
-               ConnectorType type ) {
-        CoreArgCheck.isNotNull(binding, "binding"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+    private final Collection<PropertyDefinition> propDefs;
 
-        this.binding = binding;
-        this.type = type;
+    TeiidTranslator( Translator translator, Collection<PropertyDefinition> propDefs, ExecutionAdmin admin) {
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propDefs, "propDefs"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
+
+        this.translator = translator;
+        this.admin = admin;
+        this.propDefs = propDefs;
     }
 
     /**
@@ -42,9 +45,9 @@ public class Connector implements Comparable<Connector> {
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo( Connector connector ) {
-        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        return getName().compareTo(connector.getName());
+    public int compareTo( TeiidTranslator translator ) {
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        return getName().compareTo(translator.getName());
     }
 
     /**
@@ -57,10 +60,10 @@ public class Connector implements Comparable<Connector> {
         if (obj == null) return false;
         if (obj.getClass() != getClass()) return false;
 
-        Connector other = (Connector)obj;
-        Server otherServer = other.getType().getAdmin().getServer();
+        TeiidTranslator other = (TeiidTranslator)obj;
+        Server otherServer = other.getAdmin().getServer();
 
-        if (getName().equals(other.getName()) && getType().getAdmin().getServer().equals(otherServer)) return true;
+        if (getName().equals(other.getName()) && (getAdmin().getServer() == otherServer || getAdmin().getServer().equals(otherServer)) ) return true;
 
         return false;
     }
@@ -73,7 +76,7 @@ public class Connector implements Comparable<Connector> {
     public Collection<String> findInvalidProperties() {
         Collection<String> propertyNames = new ArrayList<String>();
 
-        for (PropertyDefinition propDefn : getType().getPropertyDefinitions()) {
+        for (PropertyDefinition propDefn : this.propDefs) {
             String name = propDefn.getName();
             String value = getPropertyValue(name);
 
@@ -90,7 +93,7 @@ public class Connector implements Comparable<Connector> {
     }
 
     protected Translator getTranslator() {
-        return this.binding;
+        return this.translator;
     }
 
     /**
@@ -99,7 +102,7 @@ public class Connector implements Comparable<Connector> {
      * @see org.teiid.adminapi.AdminObject#getName()
      */
     public String getName() {
-        return binding.getName();
+        return translator.getName();
     }
 
     /**
@@ -108,7 +111,7 @@ public class Connector implements Comparable<Connector> {
      * @see org.teiid.adminapi.AdminObject#getProperties()
      */
     public Properties getProperties() {
-        return binding.getProperties();
+        return translator.getProperties();
     }
 
     /**
@@ -117,14 +120,14 @@ public class Connector implements Comparable<Connector> {
      * @see org.teiid.adminapi.AdminObject#getPropertyValue(java.lang.String)
      */
     public String getPropertyValue( String name ) {
-        return binding.getPropertyValue(name);
+        return translator.getPropertyValue(name);
     }
 
     /**
      * @return type
      */
-    public ConnectorType getType() {
-        return type;
+    public String getType() {
+        return this.translator.getType();
     }
 
     /**
@@ -136,19 +139,55 @@ public class Connector implements Comparable<Connector> {
     public int hashCode() {
         int result = 0;
         result = HashCodeUtil.hashCode(result, getName());
-        return HashCodeUtil.hashCode(result, getType().getAdmin().getServer().hashCode());
+        return HashCodeUtil.hashCode(result, getAdmin().getServer().hashCode());
     }
 
     /**
+     * @return the execution admin (never <code>null</code>)
+     */
+    public ExecutionAdmin getAdmin() {
+        return this.admin;
+    }
+    
+    /**
+     * @param name the name of the <code>PropertyDefinition</code> being requested (never <code>null</code> or empty)
+     * @return the property definition or <code>null</code> if not found
+     */
+    public PropertyDefinition getPropertyDefinition( String name ) {
+        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+
+        for (PropertyDefinition propDef : getPropertyDefinitions()) {
+            if (name.equals(propDef.getName())) return propDef;
+        }
+
+        return null;
+    }
+    
+    /**
+     * @return the string version of the default value for each property (empty string if no default)
+     */
+    public Properties getDefaultPropertyValues() {
+        Properties defaultValues = new Properties();
+
+        for (PropertyDefinition propDef : getPropertyDefinitions()) {
+            String value = (propDef.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+                                                              : propDef.getDefaultValue().toString();
+            defaultValues.setProperty(propDef.getName(), value);
+        }
+
+        return defaultValues;
+    }
+    
+    /**
      * @param name the property name
      * @param value the proposed new value
-     * @return <code>true</code> if the property exists and the proposed value is valid
+     * @return null if the property exists and the proposed value is valid or an error message
      * @since 7.0
      */
     public String isValidPropertyValue( String name,
                                         String value ) {
         // make sure there is a property definition
-        PropertyDefinition definition = this.type.getPropertyDefinition(name);
+        PropertyDefinition definition = this.getPropertyDefinition(name);
         if (definition == null) return Util.getString("missingPropertyDefinition", name); //$NON-NLS-1$
 
         // make sure there is a value
@@ -237,7 +276,6 @@ public class Connector implements Comparable<Connector> {
     public void setPropertyValue( String name,
                                   String value ) throws Exception {
         CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-        this.type.getAdmin().setPropertyValue(this, name, value);
         getProperties().setProperty(name, value); // TODO does the admin call do this
     }
 
@@ -250,7 +288,6 @@ public class Connector implements Comparable<Connector> {
         CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         Set<Entry<Object, Object>> entrySet = changedProperties.entrySet();
         CoreArgCheck.isNotEmpty(entrySet, "changedProperties"); //$NON-NLS-1$
-        this.type.getAdmin().setProperties(this, changedProperties);
 
         // TODO does the admin call do this
         Properties props = getProperties();
@@ -260,6 +297,14 @@ public class Connector implements Comparable<Connector> {
             props.setProperty((String)entry.getKey(), (String)entry.getValue());
         }
     }
+    
+    /**
+     * @return an immutable collection of property definitions (never <code>null</code>);
+     * @since 7.0
+     */
+    public Collection<PropertyDefinition> getPropertyDefinitions() {
+        return this.propDefs;
+    }
 
     /**
      * {@inheritDoc}
@@ -268,7 +313,7 @@ public class Connector implements Comparable<Connector> {
      */
     @Override
     public String toString() {
-        return Util.getString("connectorDetailedName", getName(), getType().getName(), getType().getAdmin().getServer()); //$NON-NLS-1$
+        return Util.getString("connectorDetailedName", getName(), getType(), getAdmin().getServer()); //$NON-NLS-1$
     }
 
 }

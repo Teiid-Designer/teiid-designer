@@ -18,28 +18,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.designer.runtime.Connector;
+import org.teiid.designer.runtime.TeiidTranslator;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectorsViewTreeProvider;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider;
 
 /**
  * @since 5.0
  */
-public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
+public class SelectTranslatorDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
     private static final String DEFAULT_TITLE = DqpUiConstants.UTIL.getString("SelectConnectorBindingDialog.title"); //$NON-NLS-1$
 
-    private Connector selectedConnectorBinding;
+    private TeiidTranslator selectedTranslator;
 
     /**
      * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
      * 
      * @param parent
      */
-    public SelectConnectorBindingDialog( Shell parent ) {
+    public SelectTranslatorDialog( Shell parent ) {
 
-        this(parent, DEFAULT_TITLE, new ConnectorsViewTreeProvider(false), new ConnectorsViewTreeProvider(false));
+        this(parent, DEFAULT_TITLE, new TeiidViewTreeProvider(false), new TeiidViewTreeProvider(false));
     }
 
     /**
@@ -49,7 +49,7 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
      * @param labelProvider an ILabelProvider for the tree
      * @param contentProvider an ITreeContentProvider for the tree
      */
-    public SelectConnectorBindingDialog( Shell parent,
+    public SelectTranslatorDialog( Shell parent,
                                          String title,
                                          ILabelProvider labelProvider,
                                          ITreeContentProvider contentProvider ) {
@@ -107,12 +107,12 @@ public class SelectConnectorBindingDialog extends ElementTreeSelectionDialog imp
     public void selectionChanged( SelectionChangedEvent event ) {
         IStructuredSelection sel = (IStructuredSelection)getTreeViewer().getSelection();
 
-        if (sel.getFirstElement() instanceof Connector) {
-            selectedConnectorBinding = (Connector)sel.getFirstElement();
+        if (sel.getFirstElement() instanceof TeiidTranslator) {
+        	selectedTranslator = (TeiidTranslator)sel.getFirstElement();
         }
     }
 
-    public Connector getSelectedConnector() {
-        return selectedConnectorBinding;
+    public TeiidTranslator getSelectedConnector() {
+        return selectedTranslator;
     }
 }

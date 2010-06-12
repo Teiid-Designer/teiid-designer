@@ -9,7 +9,7 @@ package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 
 /**
  * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}
@@ -52,19 +52,19 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.SERVER, server, updatedServer);
     }
 
-    public static ExecutionConfigurationEvent createAddConnectorEvent( Connector connector ) {
+    public static ExecutionConfigurationEvent createAddConnectorEvent( TeiidTranslator connector ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.CONNECTOR, connector);
     }
 
-    public static ExecutionConfigurationEvent createRemoveConnectorEvent( Connector connector ) {
+    public static ExecutionConfigurationEvent createRemoveConnectorEvent( TeiidTranslator connector ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.CONNECTOR, connector);
     }
 
-    public static ExecutionConfigurationEvent createUpdateConnectorEvent( Connector connector ) {
+    public static ExecutionConfigurationEvent createUpdateConnectorEvent( TeiidTranslator connector ) {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.CONNECTOR, connector);
     }
 
-    public static ExecutionConfigurationEvent createAddSourceBindingEvent( SourceBinding binding ) {
+    public static ExecutionConfigurationEvent createAddSourceBindingEvent( SourceConnectionBinding binding ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SOURCE_BINDING, binding);
     }
 
@@ -72,7 +72,7 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(TargetType.SOURCE_BINDING);
     }
 
-    public static ExecutionConfigurationEvent createRemoveSourceBindingEvent( SourceBinding binding ) {
+    public static ExecutionConfigurationEvent createRemoveSourceBindingEvent( SourceConnectionBinding binding ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SOURCE_BINDING, binding);
     }
 
@@ -114,28 +114,28 @@ public final class ExecutionConfigurationEvent {
      * @return the source binding involved in the event
      * @throws IllegalStateException if method is called for a non-source binding event
      */
-    public SourceBinding getSourceBinding() {
+    public SourceConnectionBinding getSourceBinding() {
         if (this.targetType != TargetType.SOURCE_BINDING) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetSourceBindingMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.SOURCE_BINDING));
         }
 
-        return (SourceBinding)this.target;
+        return (SourceConnectionBinding)this.target;
     }
 
     /**
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
      */
-    public Connector getConnector() {
+    public TeiidTranslator getConnector() {
         if (this.targetType != TargetType.CONNECTOR) {
             throw new IllegalStateException(Util.getString("invalidTargetTypeForGetConnectorMethod", //$NON-NLS-1$
                                                            this.targetType,
                                                            TargetType.CONNECTOR));
         }
 
-        return (Connector)this.target;
+        return (TeiidTranslator)this.target;
     }
 
     /**

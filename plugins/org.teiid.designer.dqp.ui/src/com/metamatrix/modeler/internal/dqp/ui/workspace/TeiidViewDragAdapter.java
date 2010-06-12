@@ -15,7 +15,7 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 /** 
  * @since 5.0
  */
-public class ConnectorsViewDragAdapter extends DragSourceAdapter {
+public class TeiidViewDragAdapter extends DragSourceAdapter {
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -26,7 +26,7 @@ public class ConnectorsViewDragAdapter extends DragSourceAdapter {
      * 
      * @since 5.0
      */
-    public ConnectorsViewDragAdapter(ISelectionProvider theProvider) {
+    public TeiidViewDragAdapter(ISelectionProvider theProvider) {
         super();
         selectionProvider = theProvider;
     }

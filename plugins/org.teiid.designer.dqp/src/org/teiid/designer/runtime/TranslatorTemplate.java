@@ -9,31 +9,34 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
+import java.util.ArrayList;
 import java.util.Properties;
 
+import org.teiid.adminapi.PropertyDefinition;
+
 /**
- * The <code>ConnectorTemplate</code> class is an implementation of {@link Connector} that does not communicate with a Teiid
- * server. So it can be used when changes to a connector are not intended to be updated on the server as they occur.
+ * The <code>TranslatorTemplate</code> class is an implementation of {@link TeiidTranslator} that does not communicate with a Teiid
  */
-public class ConnectorTemplate extends Connector {
+public class TranslatorTemplate extends TeiidTranslator {
 
     private final Properties changedProperties;
 
     /**
-     * @param name the name of the new connector (never <code>null</code>)
-     * @param type the type of the new connector (never <code>null</code>)
+     * @param name the name of the new translator (never <code>null</code>)
+     * @param type the type of the new translator (never <code>null</code>)
      */
-    public ConnectorTemplate( String name,
-                              ConnectorType type ) {
-        super(new PseudoTranslator(name, type), type);
+    public TranslatorTemplate( String name,
+                              String type ) {
+        super(new PseudoTranslator(name, type, null), new ArrayList<PropertyDefinition>(), null);
         this.changedProperties = new Properties();
     }
 
     /**
-     * @param connector the connector whose properties are used to create this template (never <code>null</code>)
+     * @param translator the translator whose properties are used to create this template (never <code>null</code>)
      */
-    public ConnectorTemplate( Connector connector ) {
-        super(new PseudoTranslator(connector), connector.getType());
+    public TranslatorTemplate( TeiidTranslator translator ) {
+        super(new PseudoTranslator(translator), translator.getPropertyDefinitions(), translator.getAdmin());
         this.changedProperties = new Properties();
     }
 
@@ -47,7 +50,7 @@ public class ConnectorTemplate extends Connector {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.Connector#getPropertyValue(java.lang.String)
+     * @see org.teiid.designer.runtime.TeiidTranslator#getPropertyValue(java.lang.String)
      */
     @Override
     public String getPropertyValue( String name ) {
@@ -61,7 +64,7 @@ public class ConnectorTemplate extends Connector {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.Connector#getProperties()
+     * @see org.teiid.designer.runtime.TeiidTranslator#getProperties()
      */
     @Override
     public Properties getProperties() {
@@ -71,7 +74,7 @@ public class ConnectorTemplate extends Connector {
     }
 
     /**
-     * Modifies the name of the connector.
+     * Modifies the name of the translator.
      * 
      * @param name the new name (may be <code>null</code>)
      */
@@ -82,7 +85,7 @@ public class ConnectorTemplate extends Connector {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.Connector#setProperties(java.util.Properties)
+     * @see org.teiid.designer.runtime.TeiidTranslator#setProperties(java.util.Properties)
      * @throws UnsupportedOperationException if called
      */
     @Override
@@ -93,7 +96,7 @@ public class ConnectorTemplate extends Connector {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.Connector#setPropertyValue(java.lang.String, java.lang.String)
+     * @see org.teiid.designer.runtime.TeiidTranslator#setPropertyValue(java.lang.String, java.lang.String)
      */
     @Override
     public void setPropertyValue( String name,

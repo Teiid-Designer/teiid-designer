@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
@@ -51,28 +52,23 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.adminapi.VDB;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceBinding;
+import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.CloneConnectorBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteConnectorBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.DeleteSourceBindingAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.EditConnectionFactoryAction;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.actions.NewConnectionFactoryAction;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
@@ -85,15 +81,14 @@ import com.metamatrix.ui.internal.widget.Label;
  * The ConnectorsView provides a tree view of workspace connector bindings which are stored in a configuration.xml file and
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
  */
-public class ConnectorsView extends ViewPart implements ISelectionListener, IExecutionConfigurationListener {
+public class TeiidView extends ViewPart implements ISelectionListener, IExecutionConfigurationListener {
 
-    static final String PREFIX = I18nUtil.getPropertyPrefix(ConnectorsView.class);
+    static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidView.class);
     private static final String OPEN_ACTION_LABEL = getString("openAction.text"); //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_OK = "statusBarUpdater.statusLabel"; //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_MULTIPLE = "statusBarUpdater.statusLabelMultipleConnectors"; //$NON-NLS-1$
     private static final String SOURCE_BINDING_STATUS_NONE = "statusBarUpdater.statusLabelNotBound"; //$NON-NLS-1$
     private static final String CONNECTOR_BINDING_STATUS_LABEL = "statusBarUpdater.connectorBindingStatusLabel"; //$NON-NLS-1$
-    private static final String CONNECTOR_TYPE_STATUS_LABEL = "statusBarUpdater.connectorTypeStatusLabel"; //$NON-NLS-1$
 
     static final String SHOW_CONNECTORS_LABEL = getString("showConnectors.tooltip"); //$NON-NLS-1$
     static final String HIDE_CONNECTORS_LABEL = getString("hideConnectors.tooltip"); //$NON-NLS-1$
@@ -103,14 +98,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     TreeViewer viewer;
-    ConnectorsViewTreeProvider treeProvider;
+    TeiidViewTreeProvider treeProvider;
 
-    Action showConnectorTypesToggleAction;
-    private EditConnectionFactoryAction editConnectionFactoryAction;
-    private NewConnectionFactoryAction newConnectionFactoryAction;
-    private DeleteConnectorBindingAction deleteConnectorBindingAction;
-    private CloneConnectorBindingAction cloneConnectorBindingAction;
-    private DeleteSourceBindingAction deleteSourceBindingAction;
+    //Action showConnectorTypesToggleAction;
     private Action openModelAction;
     /**
      * Collapses all tree nodes.
@@ -154,7 +144,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     /**
      * The constructor.
      */
-    public ConnectorsView() {
+    public TeiidView() {
         this.setPartName(getString("title.text")); //$NON-NLS-1$
         this.setTitleImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.SOURCE_BINDING_ICON));
         this.setTitleToolTip(getString("title.tooltip")); //$NON-NLS-1$
@@ -173,11 +163,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
             public boolean select( Viewer viewer,
                                    Object parentElement,
                                    Object element ) {
-                if (element instanceof SourceBinding) {
-                    SourceBinding binding = (SourceBinding)element;
+                if (element instanceof SourceConnectionBinding) {
+                    SourceConnectionBinding binding = (SourceConnectionBinding)element;
 
                     // Check to see if model in closed project or not?
-                    String modelName = binding.getName();
+                    String modelName = binding.getModelName();
                     IResource openModel = ModelUtilities.findModelByName(modelName);
                     if (openModel != null) {
                         return true;
@@ -192,8 +182,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         initDragAndDrop();
 
-        treeProvider = new ConnectorsViewTreeProvider();
-        treeProvider.setShowTypes(true);
+        treeProvider = new TeiidViewTreeProvider();
+//        treeProvider.setShowTypes(true);
         viewer.setContentProvider(treeProvider);
         viewer.setLabelProvider(treeProvider);
 
@@ -298,7 +288,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         Transfer[] transfers = new Transfer[] {ResourceTransfer.getInstance()};
 
         // drop support
-        ConnectorsViewDropAdapter adapter = new ConnectorsViewDropAdapter(this.viewer);
+        TeiidViewDropAdapter adapter = new TeiidViewDropAdapter(this.viewer);
         adapter.setFeedbackEnabled(false);
 
         viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
@@ -368,8 +358,8 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                             Object data = item.getData();
                             if (data != null) {
                                 String tooltip = CoreStringUtil.Constants.EMPTY_STRING;
-                                if (data instanceof Connector) {
-                                    tooltip = getConnectorToolTip((Connector)data);
+                                if (data instanceof TeiidTranslator) {
+                                    tooltip = getConnectorToolTip((TeiidTranslator)data);
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -405,9 +395,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
     }
 
-    String getConnectorToolTip( Connector connector ) {
-        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", new Object[] {connector.getName(), //$NON-NLS-1$
-            connector.getType().getName()});
+    String getConnectorToolTip( TeiidTranslator connector ) {
+        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", new Object[] { //$NON-NLS-1$
+            connector.getName()});
     }
 
     private void hookContextMenu() {
@@ -415,7 +405,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
             public void menuAboutToShow( IMenuManager manager ) {
-                ConnectorsView.this.fillContextMenu(manager);
+                TeiidView.this.fillContextMenu(manager);
             }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
@@ -439,10 +429,10 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         return null;
     }
 
-    SourceBinding getSelectedBinding() {
+    SourceConnectionBinding getSelectedBinding() {
         StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceBinding) {
-            return (SourceBinding)selection.getFirstElement();
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceConnectionBinding) {
+            return (SourceConnectionBinding)selection.getFirstElement();
         }
 
         return null;
@@ -459,34 +449,16 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 }
                 manager.add(this.reconnectAction);
                 manager.add(new Separator());
-                manager.add(this.newConnectionFactoryAction);
-                manager.add(new Separator());
                 manager.add(this.newServerAction);
-            } else if (selection instanceof Connector) {
-                manager.add(this.newConnectionFactoryAction);
-                manager.add(new Separator());
-                manager.add(this.editConnectionFactoryAction);
-                manager.add(this.cloneConnectorBindingAction);
-                manager.add(new Separator());
-                manager.add(this.deleteConnectorBindingAction);
-                manager.add(new Separator());
-                manager.add(this.newServerAction);
-            } else if (selection instanceof ConnectorType) {
-                manager.add(this.newConnectionFactoryAction);
-                manager.add(new Separator());
+            } else if (selection instanceof TeiidTranslator) {
                 manager.add(this.newServerAction);
             } else {
-                manager.add(this.deleteSourceBindingAction);
-                manager.add(new Separator());
                 manager.add(this.openModelAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
             }
         } else {
             manager.add(this.newServerAction);
-            manager.add(new Separator());
-            this.newConnectionFactoryAction.checkEnablement();
-            manager.add(this.newConnectionFactoryAction);
         }
 
         // Other plug-ins can contribute there actions here
@@ -494,9 +466,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.add(this.newConnectionFactoryAction);
-        manager.add(new Separator());
-        manager.add(this.showConnectorTypesToggleAction);
+        //manager.add(this.showConnectorTypesToggleAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
     }
@@ -505,27 +475,13 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
      *  Initialize view actions, set icons and action text.
      */
     private void initActions() {
-        this.editConnectionFactoryAction = new EditConnectionFactoryAction();
-        this.viewer.addSelectionChangedListener(editConnectionFactoryAction);
-
-        this.newConnectionFactoryAction = new NewConnectionFactoryAction();
-        this.viewer.addSelectionChangedListener(newConnectionFactoryAction);
-
-        this.deleteConnectorBindingAction = new DeleteConnectorBindingAction();
-        this.viewer.addSelectionChangedListener(deleteConnectorBindingAction);
-
-        this.cloneConnectorBindingAction = new CloneConnectorBindingAction();
-        this.viewer.addSelectionChangedListener(cloneConnectorBindingAction);
-
-        this.deleteSourceBindingAction = new DeleteSourceBindingAction();
-        this.viewer.addSelectionChangedListener(deleteSourceBindingAction);
 
         this.openModelAction = new Action(OPEN_ACTION_LABEL) {
             @Override
             public void run() {
-                SourceBinding binding = getSelectedBinding();
+                SourceConnectionBinding binding = getSelectedBinding();
                 if (binding != null) {
-                    String modelName = binding.getName();
+                    String modelName = binding.getModelName();
 
                     IResource theModel = ModelUtilities.findModelByName(modelName);
                     if (theModel != null) {
@@ -539,7 +495,7 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                         }
                     } else {
                         final String title = getString("openModelAction.title"); //$NON-NLS-1$
-                        final String message = DqpUiConstants.UTIL.getString(PREFIX + "openModelAction.noModelFoundMessage", modelName, binding.getContainerPath()); //$NON-NLS-1$
+                        final String message = DqpUiConstants.UTIL.getString(PREFIX + "openModelAction.noModelFoundMessage", modelName, binding.getModelLocation()); //$NON-NLS-1$
                         MessageDialog.openInformation(UiUtil.getWorkbenchShellOnlyIfUiThread(), title, message);
                     }
                 }
@@ -547,27 +503,27 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         };
         this.openModelAction.setEnabled(true);
 
-        this.showConnectorTypesToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                treeProvider.setShowTypes(showConnectorTypesToggleAction.isChecked());
-                // Set Tooltip based on toggle state
-                if (showConnectorTypesToggleAction.isChecked()) {
-                    showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
-                    viewer.refresh();
-                    viewer.expandAll();
-                } else {
-                    showConnectorTypesToggleAction.setToolTipText(SHOW_CONNECTORS_LABEL);
-                    viewer.refresh();
-                    viewer.expandAll();
-                }
-
-            }
-        };
-        this.showConnectorTypesToggleAction.setEnabled(true);
-        this.showConnectorTypesToggleAction.setChecked(true);
-        this.showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
-        this.showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
+//        this.showConnectorTypesToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
+//            @Override
+//            public void run() {
+//                treeProvider.setShowTypes(showConnectorTypesToggleAction.isChecked());
+//                // Set Tooltip based on toggle state
+//                if (showConnectorTypesToggleAction.isChecked()) {
+//                    showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
+//                    viewer.refresh();
+//                    viewer.expandAll();
+//                } else {
+//                    showConnectorTypesToggleAction.setToolTipText(SHOW_CONNECTORS_LABEL);
+//                    viewer.refresh();
+//                    viewer.expandAll();
+//                }
+//
+//            }
+//        };
+//        this.showConnectorTypesToggleAction.setEnabled(true);
+//        this.showConnectorTypesToggleAction.setChecked(true);
+//        this.showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
+//        this.showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
 
         this.collapseAllAction = new Action() {
             @Override
@@ -632,9 +588,9 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
         if (event.stateMask != 0) return;
 
         if (event.character == SWT.DEL) {
-            if (deleteConnectorBindingAction != null && deleteConnectorBindingAction.isEnabled()) {
-                deleteConnectorBindingAction.run();
-            }
+//            if (deleteConnectorBindingAction != null && deleteConnectorBindingAction.isEnabled()) {
+//                deleteConnectorBindingAction.run();
+//            }
         }
     }
 
@@ -680,14 +636,18 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 Object selObj = sel.getFirstElement();
 
                 if (selObj instanceof IResource && ModelUtilities.isModelFile((IResource)selObj)) {
-                    ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
-                    Collection<SourceBinding> bindings = serverMgr.getSourceBindingsForModel(((IResource)selObj).getName());
-
-                    if (bindings.isEmpty()) {
-                        viewer.setSelection(StructuredSelection.EMPTY);
-                    } else {
-                        viewer.setSelection(new StructuredSelection(bindings.toArray()), true);
-                    }
+                	viewer.setSelection(StructuredSelection.EMPTY);
+                	
+                    @SuppressWarnings("unused")
+					ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                    // TODO: Replace this?
+//                    Collection<SourceConnectionBinding> bindings = serverMgr.getSourceBindingsForModel(((IResource)selObj).getName());
+//
+//                    if (bindings.isEmpty()) {
+//                        viewer.setSelection(StructuredSelection.EMPTY);
+//                    } else {
+//                        viewer.setSelection(new StructuredSelection(bindings.toArray()), true);
+//                    }
                 }
             }
         }
@@ -704,13 +664,11 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
 
         if (selectedObject instanceof Server) {
             msg = selectedObject.toString();
-        } else if (selectedObject instanceof Connector) {
-            msg = selectedObject.toString();
-        } else if (selectedObject instanceof ConnectorType) {
+        } else if (selectedObject instanceof TeiidTranslator) {
             msg = selectedObject.toString();
         } else if (selectedObject instanceof VDB) {
             msg = selectedObject.toString();
-        } else if (selectedObject instanceof SourceBinding) {
+        } else if (selectedObject instanceof SourceConnectionBinding) {
             msg = selectedObject.toString();
         }
 
@@ -736,25 +694,22 @@ public class ConnectorsView extends ViewPart implements ISelectionListener, IExe
                 int nElements = selection.size();
                 if (nElements == 1) {
                     Object elem = selection.getFirstElement();
-                    if (elem instanceof Connector) {
-                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL, ((Connector)elem).getName());
-                    } else if (elem instanceof SourceBinding) {
+                    if (elem instanceof TeiidTranslator) {
+                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL, ((TeiidTranslator)elem).getName());
+                    } else if (elem instanceof SourceConnectionBinding) {
                         // Check for Connector Bindings
-                        SourceBinding binding = (SourceBinding)elem;
-                        Collection<Connector> connectors = binding.getConnectors();
+                        SourceConnectionBinding binding = (SourceConnectionBinding)elem;
+                        Collection<TeiidTranslator> connectors = binding.getTranslators();
                         if (connectors.isEmpty()) {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, binding.getName());
+                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, binding.getModelName());
                         } else if (connectors.size() == 1) {
                             String firstConnectorName = connectors.iterator().next().getName();
                             return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_OK,
-                                                                 binding.getName(),
+                                                                 binding.getModelName(),
                                                                  firstConnectorName);
                         } else {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, binding.getName());
+                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, binding.getModelName());
                         }
-                    } else if (elem instanceof ConnectorType) {
-                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_TYPE_STATUS_LABEL,
-                                                             ((ConnectorType)elem).getName());
                     }
                 }
             }

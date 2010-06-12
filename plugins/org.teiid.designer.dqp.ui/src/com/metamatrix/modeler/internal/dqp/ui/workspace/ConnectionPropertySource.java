@@ -23,8 +23,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.teiid.adminapi.PropertyDefinition;
-import org.teiid.designer.runtime.Connector;
-import org.teiid.designer.runtime.ConnectorType;
+import org.teiid.designer.runtime.TeiidTranslator;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.JDBCConnectionPropertyNames;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -32,10 +31,9 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 /**
  * @since 5.5
  */
-public class ConnectorPropertySource implements IPropertySource {
+public class ConnectionPropertySource implements IPropertySource {
 
-    private Connector connector;
-    private final ConnectorType type;
+    private TeiidTranslator translator;
     private final Properties initialValues;
 
     private boolean isEditable = false;
@@ -44,21 +42,18 @@ public class ConnectorPropertySource implements IPropertySource {
     /**
      * @param connector the connector whose properties are being edited (never <code>null</code>)
      */
-    public ConnectorPropertySource( Connector connector ) {
-        this(connector.getType(), connector.getProperties());
-        this.connector = connector;
+    public ConnectionPropertySource( TeiidTranslator translator ) {
+        this(translator.getProperties());
+        this.translator = translator;
     }
 
     /**
      * @param type the connector type of the connector (never <code>null</code>)
      * @param properties the properties of the connector (never <code>null</code>)
      */
-    private ConnectorPropertySource( ConnectorType type,
-                                     Properties properties ) {
-        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
+    private ConnectionPropertySource( Properties properties ) {
         CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
 
-        this.type = type;
         this.initialValues = new Properties(properties);
     }
 
@@ -67,7 +62,7 @@ public class ConnectorPropertySource implements IPropertySource {
      * @since 4.2
      */
     public Object getEditableValue() {
-        return this.connector;
+        return this.translator;
     }
 
     /**
@@ -76,7 +71,7 @@ public class ConnectorPropertySource implements IPropertySource {
      */
     public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] result = new IPropertyDescriptor[0];
-        Collection<PropertyDefinition> typeDefs = this.type.getPropertyDefinitions();
+        Collection<PropertyDefinition> typeDefs = this.translator.getPropertyDefinitions();
         boolean showExpertProps = this.provider.isShowingExpertProperties();
         Collection<PropertyDescriptor> temp = new ArrayList<PropertyDescriptor>(typeDefs.size());
 
@@ -100,7 +95,7 @@ public class ConnectorPropertySource implements IPropertySource {
                 }
 
                 // set validator
-                final Connector validator = this.connector;
+                final TeiidTranslator validator = this.translator;
 
                 descriptor.setValidator(new ICellEditorValidator() {
                     @Override
@@ -148,7 +143,7 @@ public class ConnectorPropertySource implements IPropertySource {
      */
     public Object getPropertyValue( Object id ) {
         String propName = (String)id;
-        String result = this.connector.getPropertyValue(propName);
+        String result = this.translator.getPropertyValue(propName);
 
         // property not found or value is null
         if (result == null) return null;
@@ -156,7 +151,7 @@ public class ConnectorPropertySource implements IPropertySource {
         // return empty string
         if (result.length() == 0) return result;
 
-        PropertyDefinition propDefn = this.type.getPropertyDefinition(propName);
+        PropertyDefinition propDefn = this.translator.getPropertyDefinition(propName);
 
         // if masked property don't return actual result
         if (propDefn.isMasked()) {
@@ -202,10 +197,10 @@ public class ConnectorPropertySource implements IPropertySource {
         String propName = (String)id;
 
         try {
-            String oldValue = this.connector.getPropertyValue(propName);
+            String oldValue = this.translator.getPropertyValue(propName);
             String newValue = value.toString();
-            this.connector.setPropertyValue(propName, newValue);
-            this.provider.propertyChanged(new PropertyChangeEvent(connector, propName, oldValue, newValue));
+            this.translator.setPropertyValue(propName, newValue);
+            this.provider.propertyChanged(new PropertyChangeEvent(translator, propName, oldValue, newValue));
         } catch (Exception e) {
             UTIL.log(e);
         }

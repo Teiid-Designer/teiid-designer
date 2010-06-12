@@ -16,8 +16,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.util.Collection;
-import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,9 +26,6 @@ import org.mockito.MockitoAnnotations;
  * 
  */
 public class ServerManagerTest {
-    private static final String MODEL1 = "Model1";
-
-    private static final String CONNECTOR1 = "Connector1";
 
     private static final String RESTORED_SERVER1_URL = "mm://localhost:8080";
     private static final String RESTORED_SERVER1_USER = "user8080";
@@ -126,24 +122,6 @@ public class ServerManagerTest {
 
         // test to make sure listener was called once
         verify(listener, never()).configurationChanged((ExecutionConfigurationEvent)anyObject());
-    }
-
-    @Test
-    public void shouldFindConnectorsForModel() throws Exception {
-        // register the server
-        final ExecutionAdmin admin = mock(ExecutionAdmin.class);
-        when(server1.getAdmin()).thenReturn(admin);
-        final SourceBindingsManager srcBindingsMgr = mock(SourceBindingsManager.class);
-        when(admin.getSourceBindingsManager()).thenReturn(srcBindingsMgr);
-        final Connector connector = mock(Connector.class);
-        when(srcBindingsMgr.getConnectorsForModel(MODEL1)).thenReturn(Collections.singleton(connector));
-        when(connector.getName()).thenReturn(CONNECTOR1);
-        this.mgr.addServer(server1);
-
-        // test
-        final Collection<Connector> connectors = this.mgr.getConnectorsForModel(MODEL1);
-        assertThat(connectors.size(), is(1));
-        assertThat(connectors.iterator().next().getName(), is(CONNECTOR1));
     }
 
     @Test

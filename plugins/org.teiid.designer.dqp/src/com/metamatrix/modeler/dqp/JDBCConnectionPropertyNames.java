@@ -58,7 +58,7 @@ public class JDBCConnectionPropertyNames {
      */    
     public static final String JDBC_IMPORT_USERNAME = "com.metamatrix.modeler.jdbc.JdbcSource.username"; //$NON-NLS-1$
     
-    
+    public static final String JDBC_IMPORT_DRIVER_NAME = "com.metamatrix.modeler.jdbc.JdbcSource.driverName"; //$NON-NLS-1$
     /**
      * This is the name of the default JDBC connector
      */

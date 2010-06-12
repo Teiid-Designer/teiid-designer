@@ -19,13 +19,13 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  * child node of a JdbcSource object.  @see also <code>ConnectorBindingModelContentProvider</code>
  * @since 5.0
  */
-public class ConnectorBindingModelLabelProvider extends LabelProvider {
+public class ConnectionBindingModelLabelProvider extends LabelProvider {
 
     /**
      *
      * @since 5.0
      */
-    public ConnectorBindingModelLabelProvider() {
+    public ConnectionBindingModelLabelProvider() {
         super();
     }
 
@@ -41,7 +41,7 @@ public class ConnectorBindingModelLabelProvider extends LabelProvider {
     public Image getImage(Object element) {
         try {
 
-            if ( element instanceof ConnectorBindingSourceWrapper ) {
+            if ( element instanceof ConnectionBindingSourceWrapper ) {
                 return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
             }
 
@@ -59,8 +59,8 @@ public class ConnectorBindingModelLabelProvider extends LabelProvider {
      */
     @Override
     public String getText(Object element) {
-        if (element instanceof ConnectorBindingSourceWrapper) {
-            return ((ConnectorBindingSourceWrapper)element).getConnector().getName();
+        if (element instanceof ConnectionBindingSourceWrapper) {
+            return ((ConnectionBindingSourceWrapper)element).getConnector().getName();
         }
 
         // must return null to indicate we can't process that element type

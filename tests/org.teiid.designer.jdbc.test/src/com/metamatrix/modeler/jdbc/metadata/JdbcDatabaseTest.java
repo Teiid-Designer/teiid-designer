@@ -9,8 +9,9 @@ package com.metamatrix.modeler.jdbc.metadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import junit.framework.Assert;
-import com.metamatrix.modeler.jdbc.JdbcDriver;
+
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;

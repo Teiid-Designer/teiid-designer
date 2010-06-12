@@ -50,6 +50,9 @@ Require-Bundle: org.eclipse.ui.views,
  org.junit4,
  org.teiid.designer.vdb,
  org.teiid.designer.legacy,
- org.teiid.designer.udf;bundle-version="7.0.0"
+ org.teiid.designer.udf,
+ org.eclipse.datatools.connectivity,
+ org.eclipse.datatools.connectivity.db.generic.ui,
+  org.eclipse.datatools.connectivity.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

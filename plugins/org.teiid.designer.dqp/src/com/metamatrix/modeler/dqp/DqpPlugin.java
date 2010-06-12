@@ -7,7 +7,14 @@
  */
 package com.metamatrix.modeler.dqp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -47,7 +54,16 @@ public class DqpPlugin extends Plugin {
      * @since 4.2.1
      */
     public static PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
+    
+    /**
+     * The name of the file containing the {{@link #workspaceUuid workspace UUID} for the current workspace: {@value}
+     */
+    public static final String WORKSPACE_UUID_FILE = "workspace.uuid"; //$NON-NLS-1$
 
+    /**
+     * The UUID created and persisted for the current workspace
+     */
+    public static UUID workspaceUuid;
     /**
      * The shared instance.
      */
@@ -104,6 +120,34 @@ public class DqpPlugin extends Plugin {
             throw new CoreException(status);
         }
     }
+    
+    private void initalizeWorkspaceId() throws Exception {
+        final File file = getStateLocation().append(WORKSPACE_UUID_FILE).toFile();
+        if (file.exists()) {
+            final BufferedReader reader = new BufferedReader(new FileReader(file));
+            try {
+                workspaceUuid = UUID.fromString(reader.readLine());
+            } catch (final IOException error) {
+            } finally {
+                try {
+                    reader.close();
+                } catch (final IOException ignored) {
+                }
+            }
+        }
+        if (workspaceUuid == null) {
+            workspaceUuid = UUID.randomUUID();
+            final FileWriter writer = new FileWriter(file);
+            try {
+                writer.write(workspaceUuid.toString());
+            } finally {
+                try {
+                    writer.close();
+                } catch (final IOException ignored) {
+                }
+            }
+        }
+    }
 
     /**
      * <p>
@@ -122,6 +166,8 @@ public class DqpPlugin extends Plugin {
 
         try {
             initializeServerRegistry();
+            
+            initalizeWorkspaceId();
         } catch (final Exception e) {
             if (e instanceof CoreException) {
                 throw (CoreException)e;

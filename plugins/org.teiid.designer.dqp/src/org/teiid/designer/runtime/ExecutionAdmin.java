@@ -8,23 +8,24 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IStatus;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 
 /**
  *
@@ -32,12 +33,14 @@ import com.metamatrix.modeler.dqp.util.ModelerDqpUtils;
 public class ExecutionAdmin {
 
     private final Admin admin;
-    protected Map<String, Connector> connectorByNameMap;
-    protected Map<String, ConnectorType> connectorTypeByNameMap;
+    protected Map<String, TeiidTranslator> translatorByNameMap;
+    protected Collection<String> dataSourceNames;
+    protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final Server server;
-    private final SourceBindingsManager sourceBindingsMgr;
     private Set<VDB> vdbs;
+    
+    private boolean loaded = false;
 
     /**
      * @param admin the associated Teiid Admin API (never <code>null</code>)
@@ -55,33 +58,65 @@ public class ExecutionAdmin {
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
-        this.sourceBindingsMgr = new SourceBindingsManager(this);
-
+        
         refresh();
     }
-
+    
     /**
-     * @param name
-     * @param type
-     * @param properties validated, complete connector properties
+     * 
      * @throws Exception
-     * @since 0.6
-     * @see #validateConnectorProperties(Properties)
      */
-    public void addConnector( String name,
-                              ConnectorType type,
-                              Properties properties ) throws Exception {
-        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(properties, "properties"); //$NON-NLS-1$
-
-        Translator translator = this.admin.addTranslator(name, type.getName(), properties);
-        // TODO ask server guys if type needs to also be in properties
-
-        Connector connector = new Connector(translator, type);
-        this.connectorByNameMap.put(name, connector);
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddConnectorEvent(connector));
+    public void load() throws Exception {
+    	if( !loaded ) {
+    		refresh();
+    	}
+    }
+    
+    public Set<String> getDataSourceTypeNames() {
+    	return this.dataSourceTypeNames;
+    }
+    
+    /**
+     * 
+     * @param name
+     * @param typeName
+     * @param properties
+     * @return true if data source is created. false if it already exists
+     * @throws Exception
+     */
+    public boolean getOrCreateDataSource(String name, String typeName, Properties properties) throws Exception {
+    	// Check if exists, return false
+    	if( this.dataSourceNames.contains(name)) {
+    		return false;
+    	}
+    	
+    	// Verify the "typeName" exists.
+    	if( !this.dataSourceTypeNames.contains(typeName) ) {
+    		throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer().getUrl())); //$NON-NLS-1$
+    	}
+    	this.admin.createDataSource(name, typeName, properties);
+    	
+    	if( this.admin.getDataSourceNames().contains(name) ) {
+    		this.dataSourceNames.add(name);
+    		return true;
+    	}
+    	
+    	throw new Exception(Util.getString("errorCreatingDataSource", name, typeName, getServer().getUrl())); //$NON-NLS-1$
+    }
+    
+    /**
+     * 
+     * @param name
+     * @return true if data source exists with the provided name. else false.
+     * @throws Exception
+     */
+    public boolean dataSourceExists(String name) throws Exception {
+    	// Check if exists, return false
+    	if( this.dataSourceNames.contains(name)) {
+    		return true;
+    	}
+    	
+    	return false;
     }
 
     /**
@@ -108,88 +143,22 @@ public class ExecutionAdmin {
         return deployedVdb;
     }
 
-    /**
-     * @param proposedName the proposed name of the connector (must not be <code>null</code> or empty and it must contain all
-     *        valid characters)
-     * @return the unique connector name (maybe different than the proposed name if a connector of that name already exists)
-     * @throws Exception if there is a problem obtaining connectors and connector types from the server or if name contains
-     *         invalid characters
-     * @see ModelerDqpUtils#isValidBindingName(String)
-     */
-    public String ensureUniqueConnectorName( String proposedName ) throws Exception {
-        CoreArgCheck.isNotEmpty(proposedName, "proposedName"); //$NON-NLS-1$
-
-        String result = proposedName;
-        boolean validName = false;
-        int suffix = 1;
-
-        while (!validName) {
-            IStatus status = (ModelerDqpUtils.isValidBindingName(result));
-
-            if (!status.isOK()) {
-                throw new IllegalArgumentException(status.getMessage());
-            }
-
-            if ((getConnector(result) != null)) {
-                result = proposedName + "_" + suffix; //$NON-NLS-1$
-                ++suffix;
-            } else {
-                validName = true;
-            }
-        }
-
-        return result;
-    }
-
     Admin getAdminApi() {
         return this.admin;
     }
 
     /**
-     * @param name the connector name (never <code>null</code> or empty)
+     * @param name the translator name (never <code>null</code> or empty)
      * @return
      * @throws Exception
      */
-    public Connector getConnector( String name ) {
+    public TeiidTranslator getTranslator( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        return this.connectorByNameMap.get(name);
+        return this.translatorByNameMap.get(name);
     }
 
-    public Collection<Connector> getConnectors() {
-        return this.connectorByNameMap.values();
-    }
-
-    /**
-     * @param type the <code>ConnectorType</code> whose connectors are being requested (never <code>null</code>)
-     * @return the connectors (never <code>null</code> or empty)
-     */
-    public Collection<Connector> getConnectors( ConnectorType type ) {
-        CoreArgCheck.isNotNull(type, "type"); //$NON-NLS-1$
-
-        List<Connector> connectors = new ArrayList<Connector>();
-        for (Connector connector : connectorByNameMap.values()) {
-            if (connector.getType() == type) connectors.add(connector);
-        }
-        return connectors;
-    }
-
-    /**
-     * @param name
-     * @return
-     * @throws Exception
-     */
-    public ConnectorType getConnectorType( String name ) {
-        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        // return this.connectorTypeByNameMap.get(name);
-        String fixedRarName = name;
-        if (fixedRarName.endsWith(".rar")) {
-            fixedRarName = fixedRarName.substring(0, fixedRarName.length() - 4);
-        }
-        return this.connectorTypeByNameMap.get(fixedRarName);
-    }
-
-    public Collection<ConnectorType> getConnectorTypes() {
-        return this.connectorTypeByNameMap.values();
+    public Collection<TeiidTranslator> getTranslators() {
+        return this.translatorByNameMap.values();
     }
 
     /**
@@ -204,13 +173,6 @@ public class ExecutionAdmin {
      */
     public Server getServer() {
         return this.server;
-    }
-
-    /**
-     * @return the source bindings manager (never <code>null</code>)
-     */
-    public SourceBindingsManager getSourceBindingsManager() {
-        return this.sourceBindingsMgr;
     }
 
     /**
@@ -235,95 +197,56 @@ public class ExecutionAdmin {
     }
 
     public void refresh() throws Exception {
-        this.connectorByNameMap = new HashMap<String, Connector>();
-        this.connectorTypeByNameMap = new HashMap<String, ConnectorType>();
+        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.dataSourceNames = new ArrayList<String>();
+        this.dataSourceTypeNames = new HashSet<String>();
+        // populate translator map
+        refreshTranslators(this.admin.getTranslators());
+        
+        // populate data source type names set
+        dataSourceTypeNames = new HashSet(this.admin.getDataSourceTemplateNames());
 
-        // populate connector type map
-        refreshConnectorTypes(this.admin.getTranslatorTemplateNames());
-
-        // populate connector map
-        refreshConnectors(this.admin.getTranslators());
+        // populate data source names list
+        dataSourceNames = new ArrayList(this.admin.getDataSourceNames());
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
         this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
-        refreshSourceBindings();
     }
 
-    protected void refreshConnectors( Collection<Translator> translators ) {
+    protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
         for (Translator translator : translators) {
-            ConnectorType type = getConnectorType(translator.getPropertyValue(IConnectorProperties.CONNECTOR_TYPE));
-            this.connectorByNameMap.put(translator.getName(), new Connector(translator, type));
+        	// TODO: FIX THIS : Remove [!translator.getName().equalsIgnoreCase("file")] code cause it's a hack to get around 
+        	// A Teiid Exception
+        	if( translator.getName() != null && !translator.getName().equalsIgnoreCase("file")) {
+        		Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
+	            this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
+        	}
         }
-    }
-
-    protected void refreshConnectorTypes( Set<String> connectorTypeNames ) throws Exception {
-        for (String connectorTypeName : connectorTypeNames) {
-            String fixedRarName = connectorTypeName;
-            if (fixedRarName.endsWith(".rar")) {
-                fixedRarName = fixedRarName.substring(0, fixedRarName.length() - 4);
-            }
-            Collection<PropertyDefinition> propDefs = this.admin.getTranslatorTemplatePropertyDefinitions(fixedRarName);
-            ConnectorType connectorType = new ConnectorType(fixedRarName, propDefs, this);
-            this.connectorTypeByNameMap.put(fixedRarName, connectorType);
-            //
-            // Collection<PropertyDefinition> propDefs = this.admin.getConnectorPropertyDefinitions(connectorTypeName);
-            // System.out.println("ExecutionAdmin.refreshConnectorTypes() Adding typeName = " + connectorTypeName);
-            // ConnectorType connectorType = new ConnectorType(connectorTypeName, propDefs, this);
-            // this.connectorTypeByNameMap.put(connectorTypeName, connectorType);
-        }
-    }
-
-    protected void refreshSourceBindings() throws Exception {
-        this.sourceBindingsMgr.refresh();
-    }
-
-    public void removeConnector( Connector connector ) throws Exception {
-        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
-        this.admin.deleteTranslator(connector.getName());
-        this.connectorByNameMap.remove(connector.getName());
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveConnectorEvent(connector));
-    }
-
-    public Exception validateConnectorName( String name ) {
-        if (name == null) {
-            return new Exception(Util.getString("connectorNameCannotBeNull", name)); //$NON-NLS-1$
-        }
-
-        if (name.length() == 0) {
-            return new Exception(Util.getString("connectorNameCannotBeEmpty", name)); //$NON-NLS-1$
-        }
-
-        // TODO is there other name validation needed (number of chars, chars allowed, ...)
-        if (this.connectorByNameMap.containsKey(name)) {
-            return new Exception(Util.getString("connectorNameAlreadyExists", name)); //$NON-NLS-1$
-        }
-
-        return null;
     }
 
     /**
-     * @param connector the connector whose property is being changed (never <code>null</code>)
+     * @param translator the translator whose property is being changed (never <code>null</code>)
      * @param propName the name of the property being changed (never <code>null</code> or empty)
      * @param value the new value
      * @throws Exception if there is a problem setting the property
      * @since 7.0
      */
-    public void setPropertyValue( Connector connector,
+    public void setPropertyValue( TeiidTranslator translator,
                                   String propName,
                                   String value ) throws Exception {
-        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
-        internalSetPropertyValue(connector, propName, value, true);
+        internalSetPropertyValue(translator, propName, value, true);
     }
 
-    private void internalSetPropertyValue( Connector connector,
+    private void internalSetPropertyValue( TeiidTranslator translator,
                                            String propName,
                                            String value,
                                            boolean notify ) throws Exception {
-        if (connector.isValidPropertyValue(propName, value) == null) {
-            String oldValue = connector.getPropertyValue(propName);
+        if (translator.isValidPropertyValue(propName, value) == null) {
+            String oldValue = translator.getPropertyValue(propName);
 
             // don't set if value has not changed
             if (oldValue == null) {
@@ -331,10 +254,10 @@ public class ExecutionAdmin {
             } else if (oldValue.equals(value)) return;
 
             // set value
-            this.admin.setTranslatorProperty(connector.getName(), propName, value);
+//            this.admin.setTranslatorProperty(translator.getName(), propName, value);
 
             if (notify) {
-                this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+                this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
             }
         } else {
             throw new Exception(Util.getString("invalidPropertyValue", value, propName)); //$NON-NLS-1$
@@ -342,30 +265,30 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param connector the connector whose properties are being changed (never <code>null</code>)
+     * @param translator the translator whose properties are being changed (never <code>null</code>)
      * @param changedProperties a collection of properties that have changed (never <code>null</code> or empty)
      * @throws Exception if there is a problem changing the properties
      * @since 7.0
      */
-    public void setProperties( Connector connector,
+    public void setProperties( TeiidTranslator translator,
                                Properties changedProperties ) throws Exception {
-        CoreArgCheck.isNotNull(connector, "connector"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
 
         if (changedProperties.size() == 1) {
             String name = changedProperties.stringPropertyNames().iterator().next();
-            setPropertyValue(connector, name, changedProperties.getProperty(name));
+            setPropertyValue(translator, name, changedProperties.getProperty(name));
         } else {
-            // TODO stop connector??
+            // TODO stop translator??
 
             for (String name : changedProperties.stringPropertyNames()) {
-                internalSetPropertyValue(connector, name, changedProperties.getProperty(name), false);
+                internalSetPropertyValue(translator, name, changedProperties.getProperty(name), false);
             }
 
-            // TODO restart connector??
+            // TODO restart translator??
 
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(connector));
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
         }
     }
 
