@@ -3,7 +3,7 @@
 <schema targetNamespace="org.teiid.designer.vdb" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.teiid.designer.vdb" id="org.teiid.designer.vdb.connectionFinder" name="connectionFinder"/>
+         <meta.schema plugin="org.teiid.designer.vdb" id="org.teiid.designer.vdb.sourceHandler" name="sourceHandler"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -60,7 +60,7 @@
                   The full class name of an implementation of ConnectionFactoryMatcher that supplies objects of the specified types.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.teiid.designer.vdb.ConnectionFinder"/>
+                  <meta.attribute kind="java" basedOn=":org.teiid.designer.vdb.SourceHandler"/>
                </appinfo>
             </annotation>
          </attribute>

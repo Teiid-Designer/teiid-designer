@@ -10,8 +10,6 @@ import org.eclipse.core.runtime.Platform;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbPlugin;
 
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-
 /**
  * 
  * Class to provide extension management for the org.teiid.designer.vdb.connectionFinder extension point.
@@ -20,42 +18,34 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
  * we find more than the expected.
  *
  */
-public class ConnectionFinderExtensionManager {
+public class SourceHandlerExtensionManager {
 	private static boolean extensionsLoaded;
-	private static ConnectionFinder vdbConnectionFinder;
+	private static SourceHandler vdbSourceHandler;
 
 	/**
-	 * Method returns a connection name based on properties found (or not) within the <code>EmfResource</code> model and
-	 * the provided model name.
 	 * 
-	 * @param model
-	 * @param name
-	 * @return the best-matched source connection name
+	 * @param sourceModelName
+	 * @param properties
+	 * @return the vdb source connection object
 	 */
-	public static String findConnectionName(EmfResource model, String name) {
+	public static VdbSourceConnection findVdbSourceConnection(String sourceModelName, Properties properties) {
 		if( !extensionsLoaded ) {
 			loadExtensions();
 		}
 		
-		String connectionName = name;
+		VdbSourceConnection sourceConnection = null;
 		
-		if( vdbConnectionFinder != null ) {
+		if( vdbSourceHandler != null ) {
 			try {
-				connectionName = vdbConnectionFinder.findConnectionName(name, getConnectionProperties(model, name));
+				sourceConnection = vdbSourceHandler.ensureVdbSourceConnection(sourceModelName, properties);
 			} catch (Exception e) {
-                String message = VdbPlugin.UTIL.getString("errorFindingConnectionForSource", name);//$NON-NLS-1$     
+                String message = VdbPlugin.UTIL.getString("errorFindingVdbSourceConnection", sourceModelName);//$NON-NLS-1$     
 				VdbPlugin.UTIL.log(IStatus.ERROR, e, message);
-				return connectionName;
 			}
 		}
 		
-		return connectionName;
-	}
-	
-	private static Properties getConnectionProperties(EmfResource model, String name) {
-		Properties props = new Properties();
-		props.setProperty("name", name);
-		return props;
+		return sourceConnection;
+
 	}
 	
 	/**
@@ -63,20 +53,20 @@ public class ConnectionFinderExtensionManager {
 	 * 
 	 * @return the ConnectionFinder
 	 */
-	public static ConnectionFinder getVdbConnectionFinder() {
+	public static SourceHandler getVdbConnectionFinder() {
 		if( !extensionsLoaded ) {
 			loadExtensions();
 		}
 		
-		return vdbConnectionFinder;
+		return vdbSourceHandler;
 	}
 	
     private static void loadExtensions() {
         extensionsLoaded = true;
 
-        String id = VdbConstants.ConnectionFinderExtension.ID;
-        String classTag = VdbConstants.ConnectionFinderExtension.CLASS;
-        String className = VdbConstants.ConnectionFinderExtension.CLASSNAME;
+        String id = VdbConstants.SourceHandlerExtension.ID;
+        String classTag = VdbConstants.SourceHandlerExtension.CLASS;
+        String className = VdbConstants.SourceHandlerExtension.CLASSNAME;
         IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(VdbConstants.PLUGIN_ID, id);
         
         // get the all extensions to the NewChildAction extension point
@@ -89,7 +79,7 @@ public class ConnectionFinderExtensionManager {
                 // Find the first one
                 for (int j = 0; j < elements.length; ++j) {
                     if (elements[j].getName().equals(classTag)) {
-                        vdbConnectionFinder = (ConnectionFinder)elements[j].createExecutableExtension(className);
+                        vdbSourceHandler = (SourceHandler)elements[j].createExecutableExtension(className);
                     }
                 }
 

@@ -34,9 +34,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.ServerUtils;
+
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.util.ServerUtils;
 
 /**
  * The <code>ServerPage</code> is used to create or modify a server.

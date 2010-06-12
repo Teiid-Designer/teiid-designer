@@ -17,7 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -28,12 +30,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.designer.vdb.connections.ConnectionFinderExtensionManager;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -81,8 +83,7 @@ public final class VdbModelEntry extends VdbEntry {
 	        }
 	        
 	        if( ModelUtil.isPhysical(model) ) {
-	        	String connectionName = ConnectionFinderExtensionManager.findConnectionName(model, name.removeFileExtension().lastSegment());
-	        	source.set(connectionName);
+	        	source.set(name.removeFileExtension().lastSegment());
 	        }
         } else if( name.getFileExtension().equalsIgnoreCase(ModelUtil.EXTENSION_XSD)) {
 	        final XSDResourceImpl model = (XSDResourceImpl)findModel();

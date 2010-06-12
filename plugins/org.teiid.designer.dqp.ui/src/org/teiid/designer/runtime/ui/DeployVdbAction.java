@@ -10,13 +10,12 @@ package org.teiid.designer.runtime.ui;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -77,11 +76,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
         if (server != null) {
             try {
-                // server.getAdmin().deployVdb(selectedVDB);
-                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "VDB Deployed", "VDB: "
-                                                                                                     + selectedVDB.getName()
-                                                                                                     + " is Deployed on server: "
-                                                                                                     + server.getUrl());
+                server.getAdmin().deployVdb(selectedVDB);
             } catch (Exception e) {
                 DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpPlugin.Util.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
                                                                                    selectedVDB.getName(),

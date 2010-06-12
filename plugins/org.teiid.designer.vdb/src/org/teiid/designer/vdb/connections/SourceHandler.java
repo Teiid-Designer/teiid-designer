@@ -15,17 +15,17 @@ import java.util.Properties;
  * 
  * All the VDB needs is source connection "names" and not concrete connection objects, so the only interface method is findConnectioName()
  */
-public interface ConnectionFinder {
-
+public interface SourceHandler {
+    
     /**
-     * Method to find a connection name for the supplied model name and properties. These properties could represent JDBC
-     * or Text or any other connector type information.
+     * This method provides a mechanism for Connection properties to be passed between non-dependent plugins for the purpose
+     * of creating a <code>VdbSourceConnection</code> object containing data source name, translator name and
+     * jndi connection name info.
+     * @param sourceModelName the name of the source model. may not be null.
+     * @param connectionProperties the connection <code>Properties</code> object. may not be null
      * 
-     * @param modelName
-     * @param properties
-     * @return name of the connection
-     * @throws Exception
+     * @return the vdb source connection object
+     * @throws Exception 
      */
-    public String findConnectionName( String modelName,
-                                             Properties properties ) throws Exception;
+    public VdbSourceConnection ensureVdbSourceConnection(String sourceModelName, Properties connectionProperties) throws Exception;
 }

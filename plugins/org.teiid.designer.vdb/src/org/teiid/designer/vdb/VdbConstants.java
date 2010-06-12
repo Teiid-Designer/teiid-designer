@@ -23,9 +23,9 @@ public interface VdbConstants {
      */
     String PACKAGE_ID = VdbConstants.class.getPackage().getName();
 	
-    /** Constants for the ConnectionFinder extension point */
-    interface ConnectionFinderExtension {
-        String ID = "connectionFinder"; //$NON-NLS-1$
+    /** Constants for the SourceHandler extension point */
+    interface SourceHandlerExtension {
+        String ID = "sourceHandler"; //$NON-NLS-1$
         String CLASS = "class"; //$NON-NLS-1$
         String CLASSNAME = "name"; //$NON-NLS-1$
     }

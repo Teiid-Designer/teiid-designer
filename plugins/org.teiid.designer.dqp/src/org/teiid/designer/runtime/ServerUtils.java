@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.dqp.util;
+package org.teiid.designer.runtime;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
