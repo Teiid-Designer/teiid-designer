@@ -51,7 +51,8 @@ import com.metamatrix.core.util.StringUtilities;
 /**
  * 
  */
-@ThreadSafe public final class Vdb {
+@ThreadSafe
+public final class Vdb {
 
     /**
      * The file extension of VDBs ( {@value} )
@@ -83,25 +84,31 @@ import com.metamatrix.core.util.StringUtilities;
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB entry's
      * {@link VdbEntry#getChecksum() checksum} changes
      */
-    public static final String CHECKSUM = "checksum"; //$NON-NLS-1$
+    public static final String ENTRY_CHECKSUM = "entry.checksum"; //$NON-NLS-1$
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB entry's
      * {@link VdbEntry#getSynchronization() synchronization} changes
      */
-    public static final String SYNCHRONIZATION = "synchronization"; //$NON-NLS-1$
+    public static final String ENTRY_SYNCHRONIZATION = "entry.synchronization"; //$NON-NLS-1$
+
+    /**
+     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB entry's
+     * {@link VdbEntry#getDescription() description} changes
+     */
+    public static final String ENTRY_DESCRIPTION = "entry.description"; //$NON-NLS-1$
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB model
      * entry's {@link VdbModelEntry#isVisible() visibility} changes
      */
-    public static final String VISIBLE = "visible"; //$NON-NLS-1$
+    public static final String MODEL_VISIBLE = "modelentry.visible"; //$NON-NLS-1$
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
      * model entry's {@link VdbModelEntry#getDataSource() data source} changes
      */
-    public static final String DATA_SOURCE = "dataSource"; //$NON-NLS-1$
+    public static final String MODEL_DATA_SOURCE = "modelentry.dataSource"; //$NON-NLS-1$
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
@@ -142,15 +149,18 @@ import com.metamatrix.core.util.StringUtilities;
             ZipFile archive = null;
             InputStream entryStream = null;
 
-            @Override public void doIfFails() {
+            @Override
+            public void doIfFails() {
             }
 
-            @Override public void finallyDo() throws Exception {
+            @Override
+            public void finallyDo() throws Exception {
                 if (entryStream != null) entryStream.close();
                 if (archive != null) archive.close();
             }
 
-            @Override public void tryToDo() throws Exception {
+            @Override
+            public void tryToDo() throws Exception {
                 archive = new ZipFile(file.getLocation().toString());
                 for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
                     final ZipEntry zipEntry = iter.nextElement();
@@ -197,7 +207,7 @@ import com.metamatrix.core.util.StringUtilities;
                                              final IProgressMonitor monitor ) {
         // Return existing entry if it exists
         if (!entries.add(entry)) for (final T existingEntry : entries)
-            if (existingEntry.equals(entry)) return entry;
+            if (existingEntry.equals(entry)) return existingEntry;
         // Mark VDB as modified
         setModified(this, ENTRY_ADDED, null, entry);
         return entry;
@@ -343,15 +353,18 @@ import com.metamatrix.core.util.StringUtilities;
 
             ZipOutputStream out = null;
 
-            @Override public void doIfFails() {
+            @Override
+            public void doIfFails() {
             }
 
-            @Override public void finallyDo() throws Exception {
+            @Override
+            public void finallyDo() throws Exception {
                 if (out != null) out.close();
                 FileUtils.removeDirectoryAndChildren(new File(tmpFolder, getName().segment(0)));
             }
 
-            @Override public void tryToDo() throws Exception {
+            @Override
+            public void tryToDo() throws Exception {
                 out = new ZipOutputStream(new FileOutputStream(tmpArchive));
                 // Create VDB manifest
                 final ZipEntry zipEntry = new ZipEntry(MANIFEST);
@@ -390,10 +403,10 @@ import com.metamatrix.core.util.StringUtilities;
      * @param description Sets description to the specified value.
      */
     public final void setDescription( final String description ) {
+        if (description.equals(this.description.get())) return;
         final String oldDescription = this.description.get();
-        if (StringUtilities.areSame(description, oldDescription, false)) return;
         this.description.set(description);
-        setModified(this, DESCRIPTION, null, description);
+        setModified(this, DESCRIPTION, oldDescription, description);
     }
 
     void setModified( final Object source,

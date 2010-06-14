@@ -594,7 +594,7 @@ public final class VdbEditor extends EditorPart {
 
     void vdbNotification( final String property ) {
         if (Vdb.CLOSED.equals(property)) return;
-        if (Vdb.SYNCHRONIZATION.equals(property)) {
+        if (Vdb.ENTRY_SYNCHRONIZATION.equals(property)) {
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
         }

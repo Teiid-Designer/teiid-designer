@@ -17,9 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -35,7 +33,6 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -263,10 +260,10 @@ public final class VdbModelEntry extends VdbEntry {
      * @param source
      */
     public final void setDataSource( final String source ) {
+        if (source.equals(this.source.get())) return;
         final String oldSource = getDataSource();
-        if( StringUtilities.areSame(source, oldSource, false) ) return;
         this.source.set(source);
-        getVdb().setModified(this, Vdb.DATA_SOURCE, oldSource, source);
+        getVdb().setModified(this, Vdb.MODEL_DATA_SOURCE, oldSource, source);
     }
 
     /**
@@ -276,7 +273,7 @@ public final class VdbModelEntry extends VdbEntry {
         final boolean oldVisible = isVisible();
         if (oldVisible == visible) return;
         this.visible.set(visible);
-        getVdb().setModified(this, Vdb.VISIBLE, oldVisible, visible);
+        getVdb().setModified(this, Vdb.MODEL_VISIBLE, oldVisible, visible);
     }
 
     /**
