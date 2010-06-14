@@ -19,3 +19,4 @@ Import-Package: org.eclipse.datatools.modelbase.dbdefinition,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.ecore.xmi.impl
 Bundle-Localization: plugin
+Export-Package: org.teiid.datatools.connectivity

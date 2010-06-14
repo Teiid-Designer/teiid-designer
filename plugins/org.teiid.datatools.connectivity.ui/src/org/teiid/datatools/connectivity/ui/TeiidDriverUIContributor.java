@@ -3,6 +3,7 @@ package org.teiid.datatools.connectivity.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.datatools.connectivity.TeiidServerJDBCURL;
 
 public class TeiidDriverUIContributor implements IDriverUIContributor, Listener {
 
@@ -349,7 +351,9 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     public void loadProperties() {
         removeListeners();
-        TeiidServerJDBCURL url = new TeiidServerJDBCURL(this.properties.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID));
+		TeiidServerJDBCURL url = new TeiidServerJDBCURL(
+				this.properties
+						.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID));
         hostText.setText(url.getNode());
         portText.setText(url.getPort());
         databaseText.setText(url.getDatabaseName());
@@ -394,78 +398,5 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
             savePasswordButton.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
         summaryData.add(new String[] {URL_SUMMARY_DATA_TEXT_, this.urlText.getText().trim()});
         return summaryData;
-    }
-
-    private class TeiidServerJDBCURL {
-
-        private String node = ""; //$NON-NLS-1$
-
-        private String port = ""; //$NON-NLS-1$
-
-        private String vdbName = ""; //$NON-NLS-1$
-
-        private String properties = ""; //$NON-NLS-1$
-
-        /**
-         * @param url
-         */
-        public TeiidServerJDBCURL( String url ) {
-            if (url != null) {
-                parseURL(url);
-            }
-        }
-
-        /**
-         * @return Returns the databaseName.
-         */
-        public String getDatabaseName() {
-            return vdbName;
-        }
-
-        /**
-         * @return Returns the node.
-         */
-        public String getNode() {
-            return node;
-        }
-
-        private void parseURL( String url ) {
-            // jdbc:teiid:<vdb-name>@mm[s]://<host>:<port>;[prop-name=prop-value;]*
-            try {
-                String remainingURL = url.substring(url.indexOf(':') + 1);
-                remainingURL = remainingURL.substring(url.indexOf(':') + 2);
-                this.vdbName = remainingURL.substring(0, remainingURL.indexOf('@'));
-                remainingURL = remainingURL.substring(remainingURL.indexOf('@') + 1);
-                remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 3);
-                this.node = remainingURL.substring(0, remainingURL.indexOf(':'));
-                remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 1);
-
-                if (remainingURL.indexOf(';') > -1) {
-                    // there are connection properties
-                    // TODO: how do we want to handle these? As checkboxes or test fields?
-                    this.node = remainingURL.substring(0, remainingURL.indexOf(';'));
-                    remainingURL = remainingURL.substring(remainingURL.indexOf(';') + 1);
-                    this.properties = remainingURL;
-
-                } else {
-                    this.port = remainingURL;
-                }
-            } catch (Exception e) {
-            }
-        }
-
-        /**
-         * @return Returns the port.
-         */
-        public String getPort() {
-            return port;
-        }
-
-        /**
-         * @return Returns the properties.
-         */
-        public String getProperties() {
-            return properties;
-        }
     }
 }
