@@ -28,6 +28,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.hamcrest.core.IsSame;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -71,6 +72,19 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
         return new Vdb(vdbFile, null);
     }
 
+    @Test public void shouldBeModifiedWhenDescriptionChanges() throws Exception {
+        Vdb vdb = createVdb();
+        vdb.setDescription("new description");
+        assertThat(vdb.isModified(), is(true));
+    }
+
+    @Test public void shouldBeModifiedWhenEntryIsAdded() throws Exception {
+        new EclipseMock();
+        Vdb vdb = createVdb();
+        vdb.addEntry(mock(IPath.class), null);
+        assertThat(vdb.isModified(), is(true));
+    }
+
     @Test public void shouldBeSynchronizedAfterAddingEntry() throws Exception {
         final ModelWorkspaceMock modelWorkspaceMock = new ModelWorkspaceMock();
         final Vdb vdb = createVdb();
@@ -111,13 +125,26 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
     }
 
     @Test public void shouldNotifyAfterChangingDescription() throws Exception {
-        final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         final Vdb vdb = createVdb();
+        
+        // set an initial description
+        String oldDescription = "oldDescription";
+        vdb.setDescription(oldDescription);
+
+        // hookup listener
+        final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
-        vdb.setDescription("test");
+        
+        // change description
+        String newDescription = "newDescription";
+        vdb.setDescription("newDescription");
+        
+        // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
         assertThat(arg.getValue().getPropertyName(), is(Vdb.DESCRIPTION));
+        assertThat((String)arg.getValue().getOldValue(), is(oldDescription));
+        assertThat((String)arg.getValue().getNewValue(), is(newDescription));        
     }
 
     @Test public void shouldNotNotifyAfterRemovingListener() throws Exception {
@@ -179,5 +206,15 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
         final Vdb vdb = createVdb();
         vdb.setDescription("test");
         assertThat(vdb.getDescription(), is("test"));
+    }
+    
+    @Test
+    public void shouldReturnExistingEntryWhenAddingDuplicateEntry() {
+        new EclipseMock();
+        Vdb vdb = createVdb();
+        IPath path = new Path("/my/full/path");
+        VdbEntry thisEntry = vdb.addEntry(path, null);
+        VdbEntry thatEntry = vdb.addEntry(path, null);
+        assertThat(thatEntry, IsSame.sameInstance(thisEntry));
     }
 }
