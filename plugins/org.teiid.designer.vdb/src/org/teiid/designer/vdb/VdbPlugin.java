@@ -59,9 +59,13 @@ public class VdbPlugin extends Plugin {
     }
 
     /**
-     * @throws IOException
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      */
-    public VdbPlugin() throws IOException {
+    @Override
+    public void start( final BundleContext context ) throws Exception {
+        super.start(context);
         singleton = this;
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
         final File file = getStateLocation().append(WORKSPACE_UUID_FILE).toFile();
@@ -96,7 +100,8 @@ public class VdbPlugin extends Plugin {
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */
-    @Override public void stop( final BundleContext context ) throws Exception {
+    @Override
+    public void stop( final BundleContext context ) throws Exception {
         singleton = null;
         super.stop(context);
     }

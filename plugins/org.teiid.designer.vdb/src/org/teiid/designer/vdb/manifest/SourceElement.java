@@ -18,13 +18,20 @@ import org.teiid.designer.vdb.VdbPlugin;
 /**
  * 
  */
-@XmlAccessorType( XmlAccessType.NONE ) @XmlType( name = "" ) public class SourceElement implements Serializable {
+@XmlAccessorType( XmlAccessType.NONE )
+@XmlType( name = "" )
+public class SourceElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlAttribute( name = "name", required = true ) private String name;
+    @XmlAttribute( name = "name", required = true )
+    private String name;
 
-    @XmlAttribute( name = "jndi-name" ) private String jndiName;
+    @XmlAttribute( name = "connection-jndi-name" )
+    private String jndiName;
+
+    @XmlAttribute( name = "translator-name", required = true )
+    private String translatorName;
 
     /**
      * Used by JAXB
@@ -37,7 +44,8 @@ import org.teiid.designer.vdb.VdbPlugin;
         final StringBuilder builder = new StringBuilder(VdbPlugin.workspaceUuid().toString());
         for (final String segment : entry.getName().removeLastSegments(1).segments())
             builder.append('.').append(segment);
-        this.jndiName = builder.append(name).toString();
+        jndiName = builder.append('.').append(name).toString();
+        translatorName = "";
     }
 
     /**
@@ -52,5 +60,12 @@ import org.teiid.designer.vdb.VdbPlugin;
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return translatorName
+     */
+    public String getTranslatorName() {
+        return translatorName;
     }
 }

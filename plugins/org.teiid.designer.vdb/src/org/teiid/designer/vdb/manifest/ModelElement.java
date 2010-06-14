@@ -66,7 +66,7 @@ public class ModelElement extends EntryElement {
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType().getName();
         visible = entry.isVisible();
-        getSources().add(new SourceElement(entry));
+        if (entry.getDataSource() != null) getSources().add(new SourceElement(entry));
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
         final List<PropertyElement> props = getProperties();

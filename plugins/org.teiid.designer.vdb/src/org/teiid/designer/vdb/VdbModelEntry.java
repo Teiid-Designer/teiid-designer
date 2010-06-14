@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -35,7 +34,6 @@ import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -69,31 +67,14 @@ public final class VdbModelEntry extends VdbEntry {
         super(vdb, name, monitor);
         indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
         synchronizeModelEntry(monitor);
-        if( name.getFileExtension().equalsIgnoreCase(ModelUtil.EXTENSION_XMI)) {
-	        final EmfResource model = (EmfResource)findModel();
-	        builtIn = getFinder().isBuiltInResource(model);
-	        type = model.getModelType();
-	        if( model.getModelAnnotation().getDescription() != null ) {
-	        	description.set(model.getModelAnnotation().getDescription());
-	        } else {
-	        	description.set(StringUtilities.EMPTY_STRING);
-	        }
-	        
-	        if( ModelUtil.isPhysical(model) ) {
-	        	source.set(name.removeFileExtension().lastSegment());
-	        }
-        } else if( name.getFileExtension().equalsIgnoreCase(ModelUtil.EXTENSION_XSD)) {
-	        final XSDResourceImpl model = (XSDResourceImpl)findModel();
-	        builtIn = getFinder().isBuiltInResource(model);
-	        type = ModelType.UNKNOWN_LITERAL;
-	        description.set(StringUtilities.EMPTY_STRING);
-	        source.set(StringUtilities.EMPTY_STRING);
-        } else {
-	        builtIn = false;
-	        type = ModelType.UNKNOWN_LITERAL;
-	        description.set(StringUtilities.EMPTY_STRING);
-	        source.set(StringUtilities.EMPTY_STRING);
-        }
+        final Resource model = findModel();
+        builtIn = getFinder().isBuiltInResource(model);
+        if (ModelUtil.isXmiFile(model)) {
+            final EmfResource emfModel = (EmfResource)model;
+            type = emfModel.getModelType();
+            if (emfModel.getModelAnnotation().getDescription() != null) description.set(emfModel.getModelAnnotation().getDescription());
+            if (ModelUtil.isPhysical(model)) source.set(name.removeFileExtension().lastSegment());
+        } else type = ModelType.TYPE_LITERAL;
     }
 
     VdbModelEntry( final Vdb vdb,
