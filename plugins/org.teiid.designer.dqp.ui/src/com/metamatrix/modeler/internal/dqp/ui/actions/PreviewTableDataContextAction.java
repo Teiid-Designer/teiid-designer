@@ -7,6 +7,9 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.actions;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,10 +19,21 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.datatools.connectivity.IConnection;
+import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.IConnectionProfileProvider;
+import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
+import org.eclipse.datatools.sqltools.core.profile.NoSuchProfileException;
+import org.eclipse.datatools.sqltools.routineeditor.launching.LaunchHelper;
+import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfigurationAttribute;
+import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -27,6 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
 import org.teiid.designer.runtime.ui.connection.SetConnectionProfileAction;
 
@@ -36,6 +51,7 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Extensions;
@@ -47,6 +63,7 @@ import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDi
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.PrunePreviewResultsDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -281,10 +298,61 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         }
 
         if (sql != null) {
+
+
+			String driverPath = getClientJarPath();
+			try {
+
+				// TODO: All of these values should be taken from the deployed
+				// pvdb. I have hardcoded them here so that I can test with
+				// a fully depolyed VDB, see the Teiid download for this VDB.
+				String username = "admin";
+				String password = "teiid";
+				String vdbName = "DynamicPortfolio";
+				String connectionURL = "jdbc:teiid:DynamicPortfolio@mm://localhost:31000;version=1";// "jdbc:teiid:Qt_Ora10ds_Push@mm://localhost:31000";
+
+				// Note that this is a Transient profile, it is not visible in
+				// the
+				// UI and goes away when it is garbage collected.
+				IConnectionProfile profile = ConnectivityUtil
+						.createTransientTeiidProfile(driverPath, connectionURL,
+								username, password, vdbName);
+
+        		final Connection sqlConnection = getSqlConnection(profile);
+
+        		DatabaseIdentifier ID = new DatabaseIdentifier(profile
+						.getName(), vdbName);
+				ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql,
+						ID);
+
+        		try {
+					// This runnable executes the SQL and displays the results
+					// in the DTP 'SQL Results' view.
+					CallableSQLResultRunnable runnable = new CallableSQLResultRunnable(
+							sqlConnection, config, false, null, ID);
+					final IWorkbenchWindow iww = DqpUiPlugin.getDefault()
+							.getCurrentWorkbenchWindow();
+					iww.getShell().getDisplay().asyncExec(runnable);
+
+        		} catch (SQLException e) {
+					// TODO: Handle this
+					System.out.print(e);
+				} catch (NoSuchProfileException e) {
+					// TODO: Handle this
+					System.out.print(e);
+				}
+			} catch (CoreException e) {
+				// TODO: Handle this
+				System.out.print(e);
+			} catch (SQLException e) {
+				// TODO: Handle this
+				System.out.print(e);
+			}
+
         	// TODO:  REPLACE DIALOG WITH NEW PREVIEW DATA LOGIC
-        	MessageDialog.openInformation(shell, "Preview Data Action Results Pending",  //$NON-NLS-1$
-        			"Note that this feature is being re-architected and not yet available. " +  //$NON-NLS-1$
-        			"\n\nThank you for your patience." + "\n\n Eventually the following query will be executed for you:\n\n" + displaySQL);  //$NON-NLS-1$//$NON-NLS-2$
+			//MessageDialog.openInformation(shell, "Preview Data Action Results Pending",  //$NON-NLS-1$
+			//		"Note that this feature is being re-architected and not yet available. " +  //$NON-NLS-1$
+			//		"\n\nThank you for your patience." + "\n\n Eventually the following query will be executed for you:\n\n" + displaySQL);  //$NON-NLS-1$//$NON-NLS-2$
         	
 //            class QueryExecutor implements IRunnableWithProgress {
 //                private final QueryMetadataInterface qmi;
@@ -350,6 +418,74 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                                             "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
         }
     }
+
+	/**
+	 * @param sql
+	 * @param ID
+	 * @return
+	 * @throws CoreException
+	 */
+	private ILaunchConfigurationWorkingCopy creatLaunchConfig(String sql,
+			DatabaseIdentifier ID) throws CoreException {
+		ILaunchConfigurationWorkingCopy config = LaunchHelper
+				.createExternalClientConfiguration(ID, "pvdb");
+		config.setAttribute(
+				RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
+		// ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
+		config.setAttribute(
+				RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);
+		return config;
+	}
+
+	/**
+	 * @param profile
+	 * @return
+	 * @throws SQLException
+	 * @throws JdbcException
+	 */
+	private Connection getSqlConnection(IConnectionProfile profile)
+			throws SQLException, JdbcException {
+		IConnectionProfileProvider provider = profile.getProvider();
+		IConnectionFactoryProvider factory = provider
+				.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
+		final String factoryId = factory.getId();
+
+		final IConnection connection = profile.createConnection(factoryId);
+
+		final Connection sqlConnection = (Connection) connection
+				.getRawConnection();
+		if (null == sqlConnection || sqlConnection.isClosed()) {
+			final Throwable e = connection.getConnectException();
+			throw new JdbcException(e == null
+					? "Unspecified connection error"
+					: e.getMessage());
+		}
+		return sqlConnection;
+	}
+
+	/**
+	 * @return
+	 * @throws Error
+	 */
+	private String getClientJarPath() throws Error {
+		// We could have a predefined driver created around the jars we
+		// deliver in the dqp plugin, then we could use that driver to
+		// assist in the creation of the Profile. That driver would be
+		// visible to the users though, unlike the transient ConnProfiles.
+
+		IPath jarPath;
+		try {
+			// TODO: has to be a better way to do this, this breaks with
+			// every API change
+			jarPath = DqpPath.getInstallLibPath().addTrailingSeparator()
+					.append("teiid-7.0.0-client.jar");
+		} catch (IOException e) {
+			throw new Error(e);
+		}
+		// String driverPath = jarPath.toOSString();
+		String driverPath = "/home/jdoyle/NotBackedUp/workspaces/Designer_features/teiid-designer-trunk/plugins/teiid_embedded_query/teiid-7.0.0-CR1-client.jar";
+		return driverPath;
+	}
 
     private ParameterInputDialog getInputDialog( List<EObject> params ) {
         ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);

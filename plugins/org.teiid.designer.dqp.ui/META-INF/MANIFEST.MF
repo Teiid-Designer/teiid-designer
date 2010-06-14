@@ -51,8 +51,15 @@ Require-Bundle: org.eclipse.ui.views,
  org.teiid.designer.vdb,
  org.teiid.designer.legacy,
  org.teiid.designer.udf,
+ org.eclipse.debug.core,
+ org.eclipse.datatools.sqltools.debugger.core.ui,
+ org.eclipse.datatools.sqltools.routineeditor,
+ org.eclipse.datatools.sqltools.routineeditor.ui,
+ org.eclipse.datatools.sqltools.editor.core,
+ org.teiid.datatools.connectivity,
+ org.teiid.designer.udf,
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.connectivity.db.generic.ui,
-  org.eclipse.datatools.connectivity.ui
+ org.eclipse.datatools.connectivity.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
