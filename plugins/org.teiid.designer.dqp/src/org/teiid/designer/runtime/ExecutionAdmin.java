@@ -151,6 +151,7 @@ public class ExecutionAdmin {
      * @param name the translator name (never <code>null</code> or empty)
      * @return
      * @throws Exception
+     * @since 7.0
      */
     public TeiidTranslator getTranslator( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
@@ -185,6 +186,7 @@ public class ExecutionAdmin {
     /**
      * @param name the name of the VDB being requested (never <code>null</code> or empty)
      * @return the VDB or <code>null</code> if not found
+     * @since 7.0
      */
     public VDB getVdb( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
@@ -214,11 +216,15 @@ public class ExecutionAdmin {
         this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
     }
 
+    /**
+     * Refreshes the local collection of Translators on the referenced Teiid server.
+     * 
+     * @param translators
+     * @throws Exception
+     */
     protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
         for (Translator translator : translators) {
-        	// TODO: FIX THIS : Remove [!translator.getName().equalsIgnoreCase("file")] code cause it's a hack to get around 
-        	// A Teiid Exception
-        	if( translator.getName() != null && !translator.getName().equalsIgnoreCase("file")) {
+        	if( translator.getName() != null ) {
         		Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
 	            this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
         	}

@@ -26,7 +26,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 @RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelResourceContainerFactory.class, ResourceAnnotationHelper.class} )
+@PrepareForTest( {ModelerCore.class, ModelResourceContainerFactory.class} )
 public class ResourceAnnotationHelperTest {
     @Mock
     private ModelResource testModelResource;

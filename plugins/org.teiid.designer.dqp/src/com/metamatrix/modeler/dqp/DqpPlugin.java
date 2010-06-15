@@ -90,6 +90,13 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
+     * @return the UUID of the current workspace
+     */
+    public static UUID workspaceUuid() {
+        return workspaceUuid;
+    }
+    
+    /**
      * Cleans up the map of context helpers.
      * 
      * @param theContext the context whose state has changed

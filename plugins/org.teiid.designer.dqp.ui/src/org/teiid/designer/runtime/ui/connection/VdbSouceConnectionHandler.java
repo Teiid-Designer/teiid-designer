@@ -10,12 +10,14 @@ package org.teiid.designer.runtime.ui.connection;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -33,8 +35,12 @@ public class VdbSouceConnectionHandler implements SourceHandler {
         
         VdbSourceConnection vdbSourceConnection = null;
         
+        ExecutionAdmin defaultAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+        
+        String uuid = DqpPlugin.workspaceUuid().toString();
+        
         try {
-			vdbSourceConnection = mapper.getVdbSourceConnection();
+			vdbSourceConnection = mapper.getVdbSourceConnection(defaultAdmin, uuid);
 		} catch (ModelWorkspaceException e) {
 			// TODO Auto-generated catch block
 			DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
