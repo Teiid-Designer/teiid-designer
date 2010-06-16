@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IPath;
 public final class EclipseMock {
 
     private final IWorkspaceRoot root;
-    private final IPath rootPath;
+    private final IPath rootLocation;
 
     public EclipseMock() {
         mockStatic(ResourcesPlugin.class);
@@ -29,8 +29,8 @@ public final class EclipseMock {
         when(ResourcesPlugin.getWorkspace()).thenReturn(workspace);
         root = mock(IWorkspaceRoot.class);
         when(workspace.getRoot()).thenReturn(root);
-        rootPath = mock(IPath.class);
-        when(root.getLocation()).thenReturn(rootPath);
+        rootLocation = mock(IPath.class);
+        when(root.getLocation()).thenReturn(rootLocation);
     }
     
     /**
@@ -43,7 +43,7 @@ public final class EclipseMock {
     /**
      * @return rootPath
      */
-    public IPath getRootPath() {
-        return rootPath;
+    public IPath getRootLocation() {
+        return rootLocation;
     }
 }
