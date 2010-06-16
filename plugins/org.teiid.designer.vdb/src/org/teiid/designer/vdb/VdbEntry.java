@@ -32,6 +32,7 @@ import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.ZipUtil;
 import com.metamatrix.core.util.ChecksumUtil;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  *
@@ -238,9 +239,10 @@ public class VdbEntry {
     /**
      * @param description (never <code>null</code>)
      */
-    public final void setDescription( final String description ) {
-        if (description.equals(this.description.get())) return;
+    public final void setDescription( String description ) {
+        if (StringUtilities.isEmpty(description)) description = null;
         final String oldDescription = this.description.get();
+        if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);
         vdb.setModified(this, Vdb.ENTRY_DESCRIPTION, oldDescription, description);
     }

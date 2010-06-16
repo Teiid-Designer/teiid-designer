@@ -40,12 +40,12 @@ public class SourceElement implements Serializable {
     }
 
     SourceElement( final VdbModelEntry entry ) {
-        name = entry.getDataSource();
+        name = entry.getSourceName();
         final StringBuilder builder = new StringBuilder(VdbPlugin.workspaceUuid().toString());
         for (final String segment : entry.getName().removeLastSegments(1).segments())
             builder.append('.').append(segment);
-        jndiName = builder.append('.').append(name).toString();
-        translatorName = "";
+        jndiName = entry.getJndiName();
+        translatorName = entry.getTranslator();
     }
 
     /**

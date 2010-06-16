@@ -106,9 +106,21 @@ public final class Vdb {
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
-     * model entry's {@link VdbModelEntry#getDataSource() data source} changes
+     * model entry's {@link VdbModelEntry#getSourceName() source name} changes
      */
-    public static final String MODEL_DATA_SOURCE = "modelentry.dataSource"; //$NON-NLS-1$
+    public static final String MODEL_SOURCE_NAME = "modelentry.sourceName"; //$NON-NLS-1$
+
+    /**
+     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
+     * model entry's {@link VdbModelEntry#getTranslator() translator} changes
+     */
+    public static final String MODEL_TRANSLATOR = "modelEntry.translator"; //$NON-NLS-1$
+
+    /**
+     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
+     * model entry's {@link VdbModelEntry#getJndiName() JNDI name} changes
+     */
+    public static final String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
 
     /**
      * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
@@ -402,9 +414,10 @@ public final class Vdb {
     /**
      * @param description Sets description to the specified value.
      */
-    public final void setDescription( final String description ) {
-        if (description.equals(this.description.get())) return;
+    public final void setDescription( String description ) {
+        if (StringUtilities.isEmpty(description)) description = null;
         final String oldDescription = this.description.get();
+        if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);
         setModified(this, DESCRIPTION, oldDescription, description);
     }

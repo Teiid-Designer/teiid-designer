@@ -34,6 +34,7 @@ import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -58,7 +59,9 @@ public final class VdbModelEntry extends VdbEntry {
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
     private final boolean builtIn;
     private final ModelType type;
+    private final AtomicReference<String> translator = new AtomicReference<String>();
     private final AtomicReference<String> source = new AtomicReference<String>();
+    private final AtomicReference<String> jndiName = new AtomicReference<String>();
     private transient ModelElement element;
 
     VdbModelEntry( final Vdb vdb,
@@ -73,7 +76,12 @@ public final class VdbModelEntry extends VdbEntry {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
             if (emfModel.getModelAnnotation().getDescription() != null) description.set(emfModel.getModelAnnotation().getDescription());
-            if (ModelUtil.isPhysical(model)) source.set(name.removeFileExtension().lastSegment());
+            if (ModelUtil.isPhysical(model)) {
+                final String defaultName = name.removeFileExtension().lastSegment();
+                source.set(defaultName);
+                translator.set("");
+                jndiName.set(defaultName);
+            }
         } else type = ModelType.TYPE_LITERAL;
     }
 
@@ -87,6 +95,8 @@ public final class VdbModelEntry extends VdbEntry {
         visible.set(element.isVisible());
         for (final SourceElement source : element.getSources()) {
             this.source.set(source.getName());
+            translator.set(source.getTranslatorName());
+            jndiName.set(source.getJndiName());
             break; // TODO: support multi-source bindings
         }
         for (final ProblemElement problem : element.getProblems())
@@ -132,13 +142,6 @@ public final class VdbModelEntry extends VdbEntry {
                                      false);
     }
 
-    /**
-     * @return source
-     */
-    public final String getDataSource() {
-        return source.get();
-    }
-
     private ResourceFinder getFinder() {
         try {
             return ModelerCore.getModelContainer().getResourceFinder();
@@ -174,10 +177,31 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     /**
+     * @return jndiName
+     */
+    public String getJndiName() {
+        return jndiName.get();
+    }
+
+    /**
      * @return the immutable set of problems associated with this model entry
      */
     public final Set<Problem> getProblems() {
         return Collections.unmodifiableSet(problems);
+    }
+
+    /**
+     * @return source
+     */
+    public final String getSourceName() {
+        return source.get();
+    }
+
+    /**
+     * @return translator
+     */
+    public String getTranslator() {
+        return translator.get();
     }
 
     /**
@@ -238,13 +262,36 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
     /**
-     * @param source
+     * @param name
      */
-    public final void setDataSource( final String source ) {
-        if (source.equals(this.source.get())) return;
-        final String oldSource = getDataSource();
-        this.source.set(source);
-        getVdb().setModified(this, Vdb.MODEL_DATA_SOURCE, oldSource, source);
+    public void setJndiName( String name ) {
+        if (StringUtilities.isEmpty(name)) name = null;
+        final String oldName = getJndiName();
+        if (StringUtilities.equals(name, oldName)) return;
+        this.jndiName.set(name);
+        getVdb().setModified(this, Vdb.MODEL_JNDI_NAME, oldName, name);
+    }
+
+    /**
+     * @param name
+     */
+    public final void setSourceName( String name ) {
+        if (StringUtilities.isEmpty(name)) name = null;
+        final String oldName = getSourceName();
+        if (StringUtilities.equals(name, oldName)) return;
+        this.source.set(name);
+        getVdb().setModified(this, Vdb.MODEL_SOURCE_NAME, oldName, name);
+    }
+
+    /**
+     * @param translator
+     */
+    public final void setTranslator( String translator ) {
+        if (StringUtilities.isEmpty(translator)) translator = null;
+        final String oldTranslator = getTranslator();
+        if (StringUtilities.equals(translator, oldTranslator)) return;
+        this.translator.set(translator);
+        getVdb().setModified(this, Vdb.MODEL_TRANSLATOR, oldTranslator, translator);
     }
 
     /**

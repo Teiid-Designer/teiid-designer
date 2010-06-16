@@ -54,11 +54,16 @@ public class ModelElement extends EntryElement {
     private List<ProblemElement> problems;
 
     /**
-     * Used by JAXB
+     * Used by JAXB when loading a VDB
      */
     public ModelElement() {
     }
 
+    /**
+     * Used to save a model entry
+     * 
+     * @param entry
+     */
     ModelElement( final VdbModelEntry entry ) {
         super(entry);
         final String lastSeg = entry.getName().lastSegment();
@@ -66,7 +71,7 @@ public class ModelElement extends EntryElement {
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType().getName();
         visible = entry.isVisible();
-        if (entry.getDataSource() != null) getSources().add(new SourceElement(entry));
+        if (entry.getSourceName() != null) getSources().add(new SourceElement(entry));
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
         final List<PropertyElement> props = getProperties();
