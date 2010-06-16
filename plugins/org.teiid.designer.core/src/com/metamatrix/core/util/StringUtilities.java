@@ -43,37 +43,6 @@ public class StringUtilities {
     public static final String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, NEW_LINE);
 
     /**
-     * Method to determine if two strings are the same.
-     * 
-     * @param string1 the first string. may be null or empty
-     * @param string2 the second string. may be null or empty
-     * @param matchCase do not ignore case of string characters
-     * @return true if string objects are same, false if not.
-     */
-    public static boolean areSame( final String string1,
-                                   final String string2,
-                                   final boolean matchCase ) {
-        if (string1 == null) {
-            return string2 == null;
-        }
-        // String 1 != null
-        if (string2 == null) {
-            return false;
-        }
-
-        // Now we know that BOTH strings are NOT null
-        if (matchCase) {
-            if (string1.length() != string2.length()) {
-                return false;
-            }
-
-            return string1.equals(string2);
-        }
-
-        return string1.equalsIgnoreCase(string2);
-    }
-
-    /**
      * Returns the path representing the concatenation of the specified path prefix and suffix. The resulting path is guaranteed to
      * have exactly one file separator between the prefix and suffix.
      * 
@@ -111,6 +80,28 @@ public class StringUtilities {
         sb.append(originalString.substring(originalLength - endLength, originalLength));
 
         return sb.toString();
+    }
+
+    /**
+     * @param string1 may be <code>null</code>
+     * @param string2 may be <code>null</code>
+     * @return <code>true</code> if the supplied strings are equal.
+     */
+    public static boolean equals( final String string1,
+                                  final String string2 ) {
+        if (string1 == null) return string2 == null;
+        return string1.equals(string2);
+    }
+
+    /**
+     * @param string1 may be <code>null</code>
+     * @param string2 may be <code>null</code>
+     * @return <code>true</code> if the supplied strings are equal, ignoring case.
+     */
+    public static boolean equalsIgnoreCase( final String string1,
+                                            final String string2 ) {
+        if (string1 == null) return string2 == null;
+        return string1.equalsIgnoreCase(string2);
     }
 
     /**
@@ -184,7 +175,7 @@ public class StringUtilities {
      * @return <code>true</code> if the specified text is either empty or <code>null</code>
      */
     public static boolean isEmpty( final String text ) {
-        return ((text == null) || (text.length() == 0));
+        return ((text == null) || (text.trim().length() == 0));
     }
 
     /**
