@@ -11,7 +11,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -22,13 +21,16 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
 import org.hamcrest.core.IsSame;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -37,28 +39,40 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
-import org.teiid.designer.core.ModelWorkspaceMock;
-import com.metamatrix.metamodels.core.ModelAnnotation;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.internal.core.index.IndexUtil;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class ) @PrepareForTest( {VdbPlugin.class, ResourcesPlugin.class, ModelerCore.class,
-    ModelWorkspaceManager.class, IndexUtil.class} ) public class VdbTest {
+@RunWith( PowerMockRunner.class )
+@PrepareForTest( {JAXBContext.class, ResourcesPlugin.class, VdbPlugin.class} )
+public class VdbTest {
 
-    @Mock private IFile vdbFile;
+    private Vdb vdb;
+    private EclipseMock eclipseMock;
+    @Mock
+    private IFile vdbFile;
 
-    Vdb createVdb() {
+    @Before
+    public void before() throws Exception {
         initMocks(this);
+
+        final IPath vdbPathAbsolute = mock(IPath.class);
+        when(vdbFile.getLocation()).thenReturn(vdbPathAbsolute);
+        final File vdbFileAbsolute = File.createTempFile(VdbTest.class.getSimpleName(), ".vdb");
+        vdbFileAbsolute.deleteOnExit();
+        when(vdbPathAbsolute.toFile()).thenReturn(vdbFileAbsolute);
         final IPath vdbPath = mock(IPath.class);
-        when(vdbFile.getLocation()).thenReturn(vdbPath);
-        final File vdbFileAbsolute = mock(File.class);
-        when(vdbPath.toFile()).thenReturn(vdbFileAbsolute);
-        when(vdbFileAbsolute.length()).thenReturn(0L);
+        when(vdbFile.getFullPath()).thenReturn(vdbPath);
+        when(vdbFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
+
+        eclipseMock = new EclipseMock();
+        when(eclipseMock.getRoot().findMember(vdbPath)).thenReturn(vdbFile);
+
+        mockStatic(JAXBContext.class);
+        final JAXBContext context = PowerMockito.mock(JAXBContext.class);
+        when(JAXBContext.newInstance((Class[])anyObject())).thenReturn(context);
+        final Marshaller marshaller = mock(Marshaller.class);
+        when(context.createMarshaller()).thenReturn(marshaller);
 
         mockStatic(VdbPlugin.class);
         final VdbPlugin plugin = PowerMockito.mock(VdbPlugin.class);
@@ -69,87 +83,105 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
         when(stateFolderPath.append((IPath)anyObject())).thenReturn(vdbFolderPath);
         final File vdbFolderFile = new File(".");
         when(vdbFolderPath.toFile()).thenReturn(vdbFolderFile);
-        return new Vdb(vdbFile, null);
+        vdb = new Vdb(vdbFile, null);
     }
 
-    @Test public void shouldBeModifiedWhenDescriptionChanges() throws Exception {
-        Vdb vdb = createVdb();
+    /**
+     * @return eclipseMock
+     */
+    EclipseMock getEclipseMock() {
+        return eclipseMock;
+    }
+
+    /**
+     * @return vdb
+     */
+    Vdb getVdb() {
+        return vdb;
+    }
+
+    @Test
+    public void shouldBeModifiedWhenDescriptionChanges() throws Exception {
         vdb.setDescription("new description");
         assertThat(vdb.isModified(), is(true));
     }
 
-    @Test public void shouldBeModifiedWhenEntryIsAdded() throws Exception {
-        new EclipseMock();
-        Vdb vdb = createVdb();
+    @Test
+    public void shouldBeModifiedWhenEntryIsAdded() throws Exception {
         vdb.addEntry(mock(IPath.class), null);
         assertThat(vdb.isModified(), is(true));
     }
 
-    @Test public void shouldBeSynchronizedAfterAddingEntry() throws Exception {
-        final ModelWorkspaceMock modelWorkspaceMock = new ModelWorkspaceMock();
-        final Vdb vdb = createVdb();
+    @Test
+    public void shouldBeSynchronizedAfterAddingEntry() throws Exception {
         vdb.addEntry(mock(IPath.class), null);
         assertThat(vdb.isSynchronized(), is(true));
-        mockStatic(IndexUtil.class);
-        when(IndexUtil.getRuntimeIndexFileName(isA(IResource.class))).thenReturn("indexName");
-        final IPath modelPath = Path.fromPortableString("model.xmi");
-        when(modelWorkspaceMock.getEclipseMock().getRootPath().append(modelPath)).thenReturn(modelPath);
-        final EmfResource model = mock(EmfResource.class);
-        when(modelWorkspaceMock.getFinder().findByURI(isA(URI.class), eq(false))).thenReturn(model);
-        final ModelAnnotation annotation = mock(ModelAnnotation.class);
-        when(model.getModelAnnotation()).thenReturn(annotation);
-        vdb.addModelEntry(modelPath, null);
+    }
+
+    @Test
+    public void shouldBeUnmodifiedAfterDescriptionChangesFromNullToEmpty() throws Exception {
+        vdb.setDescription(" ");
+        assertThat(vdb.isModified(), is(false));
+    }
+
+    @Test
+    public void shouldBeUnmodifiedAfterSave() throws Exception {
+        vdb.setDescription("new description");
+        vdb.save(null);
+        assertThat(vdb.isModified(), is(false));
+    }
+
+    @Test
+    public void shouldExposeFile() throws Exception {
+        assertThat(vdb.getFile(), is(vdbFile));
+    }
+
+    @Test
+    public void shouldExposeNameAsFileName() throws Exception {
+        assertThat(vdb.getName(), is(vdbFile.getFullPath()));
+    }
+
+    @Test
+    public void shouldInitiallyBeSynchronized() throws Exception {
         assertThat(vdb.isSynchronized(), is(true));
     }
 
-    @Test public void shouldExposeFile() throws Exception {
-        assertThat(createVdb().getFile(), is(vdbFile));
+    @Test
+    public void shouldInitiallyBeUnmodified() throws Exception {
+        assertThat(vdb.isModified(), is(false));
     }
 
-    @Test public void shouldExposeNameAsFileName() throws Exception {
-        assertThat(createVdb().getName(), is(vdbFile.getFullPath()));
-    }
-
-    @Test public void shouldInitiallyBeSynchronized() throws Exception {
-        assertThat(createVdb().isSynchronized(), is(true));
-    }
-
-    @Test public void shouldInitiallyBeUnmodified() throws Exception {
-        assertThat(createVdb().isModified(), is(false));
-    }
-
-    @Test public void shouldNeverReturnNullForEntries() throws Exception {
-        final Vdb vdb = createVdb();
+    @Test
+    public void shouldNeverReturnNullForEntries() throws Exception {
         assertThat(vdb.getEntries(), notNullValue());
         assertThat(vdb.getModelEntries(), notNullValue());
     }
 
-    @Test public void shouldNotifyAfterChangingDescription() throws Exception {
-        final Vdb vdb = createVdb();
-        
+    @Test
+    public void shouldNotifyAfterChangingDescription() throws Exception {
         // set an initial description
-        String oldDescription = "oldDescription";
+        final String oldDescription = "oldDescription";
         vdb.setDescription(oldDescription);
 
         // hookup listener
         final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
-        
+
         // change description
-        String newDescription = "newDescription";
+        final String newDescription = "newDescription";
         vdb.setDescription("newDescription");
-        
+
         // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
         assertThat(arg.getValue().getPropertyName(), is(Vdb.DESCRIPTION));
         assertThat((String)arg.getValue().getOldValue(), is(oldDescription));
-        assertThat((String)arg.getValue().getNewValue(), is(newDescription));        
+        assertThat((String)arg.getValue().getNewValue(), is(newDescription));
     }
 
-    @Test public void shouldNotNotifyAfterRemovingListener() throws Exception {
+    @Test
+    public void shouldNotNotifyAfterRemovingListener() throws Exception {
         final PropertyChangeListener listener = mock(PropertyChangeListener.class);
-        final Vdb vdb = createVdb();
         vdb.addChangeListener(listener);
         vdb.setDescription("test");
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
@@ -160,9 +192,9 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
         verify(listener).propertyChange(isA(PropertyChangeEvent.class));
     }
 
-    @Test public void shouldNotNotifyAfterSettingDescriptionToSameValue() throws Exception {
+    @Test
+    public void shouldNotNotifyAfterSettingDescriptionToSameValue() throws Exception {
         final PropertyChangeListener listener = mock(PropertyChangeListener.class);
-        final Vdb vdb = createVdb();
         vdb.addChangeListener(listener);
         vdb.setDescription("test");
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
@@ -172,49 +204,43 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
         verify(listener).propertyChange(isA(PropertyChangeEvent.class));
     }
 
-    @Test public void shouldNotNotifyIfAlreadySynchronized() throws Exception {
+    @Test
+    public void shouldNotNotifyIfAlreadySynchronized() throws Exception {
         final PropertyChangeListener listener = mock(PropertyChangeListener.class);
-        final Vdb vdb = createVdb();
         vdb.addChangeListener(listener);
         vdb.synchronize(null);
         verify(listener, never()).propertyChange(isA(PropertyChangeEvent.class));
     }
 
-    @Test public void shouldNotRequireMonitorToAddEntry() throws Exception {
-        new EclipseMock();
-        createVdb().addEntry(mock(IPath.class), null);
+    @Test
+    public void shouldNotRequireMonitorToAddEntry() throws Exception {
+        vdb.addEntry(mock(IPath.class), null);
     }
 
-    @Test public void shouldNotRequireMonitorToBeCreated() throws Exception {
-        createVdb();
+    @Test
+    public void shouldNotRequireMonitorToSynchronize() throws Exception {
+        vdb.synchronize(null);
     }
 
-    @Test public void shouldNotRequireMonitorToSynchronize() throws Exception {
-        createVdb().synchronize(null);
-    }
-
-    @Test public void shouldReflectAddedAndRemovedEntries() throws Exception {
-        new EclipseMock();
-        final Vdb vdb = createVdb();
+    @Test
+    public void shouldReflectAddedAndRemovedEntries() throws Exception {
         final VdbEntry entry = vdb.addEntry(mock(IPath.class), null);
         assertThat(vdb.getEntries().size(), is(1));
         vdb.removeEntry(entry);
         assertThat(vdb.getEntries().isEmpty(), is(true));
     }
 
-    @Test public void shouldReflectChangedDescription() throws Exception {
-        final Vdb vdb = createVdb();
+    @Test
+    public void shouldReflectChangedDescription() throws Exception {
         vdb.setDescription("test");
         assertThat(vdb.getDescription(), is("test"));
     }
-    
+
     @Test
-    public void shouldReturnExistingEntryWhenAddingDuplicateEntry() {
-        new EclipseMock();
-        Vdb vdb = createVdb();
-        IPath path = new Path("/my/full/path");
-        VdbEntry thisEntry = vdb.addEntry(path, null);
-        VdbEntry thatEntry = vdb.addEntry(path, null);
+    public void shouldReturnExistingEntryWhenAddingDuplicateEntry() throws Exception {
+        final IPath path = new Path("/my/full/path");
+        final VdbEntry thisEntry = vdb.addEntry(path, null);
+        final VdbEntry thatEntry = vdb.addEntry(path, null);
         assertThat(thatEntry, IsSame.sameInstance(thisEntry));
     }
 }

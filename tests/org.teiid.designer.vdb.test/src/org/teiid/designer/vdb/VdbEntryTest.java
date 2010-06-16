@@ -19,6 +19,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import javax.xml.bind.JAXBContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -39,7 +40,7 @@ import com.metamatrix.core.modeler.util.FileUtils;
  * 
  */
 @RunWith( PowerMockRunner.class )
-@PrepareForTest( {VdbPlugin.class, ResourcesPlugin.class, FileUtils.class} )
+@PrepareForTest( {FileUtils.class, JAXBContext.class, ResourcesPlugin.class, VdbPlugin.class} )
 public class VdbEntryTest {
 
     private EclipseMock eclipseMock;
@@ -47,9 +48,11 @@ public class VdbEntryTest {
     private Vdb vdb;
 
     @Before
-    public void before() {
-        eclipseMock = new EclipseMock();
-        vdb = new VdbTest().createVdb();
+    public void before() throws Exception {
+        final VdbTest vdbTest = new VdbTest();
+        vdbTest.before();
+        eclipseMock = vdbTest.getEclipseMock();
+        vdb = vdbTest.getVdb();
         entry = vdb.addEntry(mock(IPath.class), null);
     }
 
@@ -58,13 +61,13 @@ public class VdbEntryTest {
         mockStatic(FileUtils.class); // so files aren't copied
 
         // mock file and contents so that checksum can be computed
-        IPath name = mock(Path.class);
-        IFile iFile = mock(IFile.class);
+        final IPath name = mock(Path.class);
+        final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
         when(iFile.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()));
 
         // put file in workspace
-        IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
@@ -77,8 +80,8 @@ public class VdbEntryTest {
         mockStatic(FileUtils.class); // so files aren't copied
 
         // mock file and contents so that checksum can be computed
-        IPath name = mock(Path.class);
-        IFile iFile = mock(IFile.class);
+        final IPath name = mock(Path.class);
+        final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
 
         // include values for first call and second call
@@ -86,12 +89,12 @@ public class VdbEntryTest {
                                              new ByteArrayInputStream("xyz".getBytes()));
 
         // put file in workspace
-        IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
         entry = vdb.addEntry(name, null);
-        long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
+        final long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
         entry.synchronize(null); // will use second value of iFile.getContents()
 
@@ -102,9 +105,9 @@ public class VdbEntryTest {
     @Test
     public void shouldIndicateNotSynchronizedWhenFileIsChanged() throws Exception {
         // create resource change
-        IResourceDelta delta = mock(IResourceDelta.class);
+        final IResourceDelta delta = mock(IResourceDelta.class);
         when(delta.getKind()).thenReturn(IResourceDelta.CHANGED);
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(file.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()));
         when(delta.getResource()).thenReturn(file);
 
@@ -122,7 +125,7 @@ public class VdbEntryTest {
 
     @Test
     public void shouldNotChangeSynchronizationStateWhenDescriptionIsChanged() {
-        Synchronization currentState = entry.getSynchronization();
+        final Synchronization currentState = entry.getSynchronization();
         assertThat(entry.getSynchronization(), is(Synchronization.NotApplicable)); // check initial state
 
         // change description
@@ -140,23 +143,23 @@ public class VdbEntryTest {
     @Test
     public void shouldNotifyAfterChangingEntryDescription() throws Exception {
         // set an initial description
-        String oldDescription = "old description";
+        final String oldDescription = "old description";
         entry.setDescription(oldDescription);
-        
+
         // hookup listener
-        PropertyChangeListener listener = mock(PropertyChangeListener.class);
+        final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
 
         // change description
-        String newDescription = "new description";
+        final String newDescription = "new description";
         entry.setDescription(newDescription);
 
         // tests
-        ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
+        final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
         assertThat(arg.getValue().getPropertyName(), is(Vdb.ENTRY_DESCRIPTION));
         assertThat((String)arg.getValue().getOldValue(), is(oldDescription));
-        assertThat((String)arg.getValue().getNewValue(), is(newDescription));        
+        assertThat((String)arg.getValue().getNewValue(), is(newDescription));
     }
 
     @Test
@@ -164,8 +167,8 @@ public class VdbEntryTest {
         mockStatic(FileUtils.class); // so files aren't copied
 
         // change checksum by changing file contents and synchronizing
-        IPath name = mock(Path.class);
-        IFile iFile = mock(IFile.class);
+        final IPath name = mock(Path.class);
+        final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
 
         // include values for first call and second call
@@ -173,7 +176,7 @@ public class VdbEntryTest {
                                              new ByteArrayInputStream("xyz".getBytes()));
 
         // put file in workspace
-        IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
@@ -181,39 +184,39 @@ public class VdbEntryTest {
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
 
         // add listener
-        PropertyChangeListener listener = mock(PropertyChangeListener.class);
+        final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
 
         // this will cause event to fire
         entry.synchronize(null); // will use second value of iFile.getContents() to compute checksum
 
         // tests
-        ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
+        final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener, times(2)).propertyChange(arg.capture());
 
         // expect 2 events
-        List<PropertyChangeEvent> values = arg.getAllValues();
+        final List<PropertyChangeEvent> values = arg.getAllValues();
         assertThat(values.get(0).getPropertyName(), is(Vdb.ENTRY_CHECKSUM));
         assertThat(values.get(1).getPropertyName(), is(Vdb.ENTRY_SYNCHRONIZATION));
     }
 
     @Test
     public void shouldNotifyAfterSynchronizationChanges() throws Exception {
-        PropertyChangeListener listener = mock(PropertyChangeListener.class);
+        final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
 
         // change synchronization
         entry.setSynchronization(Synchronization.Synchronized);
 
         // tests
-        ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
+        final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
         assertThat(arg.getValue().getPropertyName(), is(Vdb.ENTRY_SYNCHRONIZATION));
     }
 
     @Test
     public void shouldSetDescriptionToNonNullValue() {
-        String description = "new description";
+        final String description = "new description";
         entry.setDescription(description);
 
         // test
@@ -222,9 +225,9 @@ public class VdbEntryTest {
 
     @Test
     public void shouldVerifyEqualityWhenSamePath() {
-        IPath path = new Path("/my/path/filename");
-        VdbEntry thisEntry = new VdbEntry(vdb, path, null);
-        VdbEntry thatEntry = new VdbEntry(vdb, path, null);
+        final IPath path = new Path("/my/path/filename");
+        final VdbEntry thisEntry = new VdbEntry(vdb, path, null);
+        final VdbEntry thatEntry = new VdbEntry(vdb, path, null);
         assertThat(thisEntry.equals(thatEntry), is(true));
         assertThat(thisEntry.hashCode(), is(thatEntry.hashCode()));
     }
