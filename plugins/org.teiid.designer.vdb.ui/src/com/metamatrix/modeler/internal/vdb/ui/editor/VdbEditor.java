@@ -82,7 +82,9 @@ public final class VdbEditor extends EditorPart {
     static final String PATH_COLUMN_NAME = i18n("pathColumnName"); //$NON-NLS-1$
     static final String SYNCHRONIZED_COLUMN_NAME = i18n("synchronizedColumnName"); //$NON-NLS-1$
     static final String VISIBLE_COLUMN_NAME = i18n("visibleColumnName"); //$NON-NLS-1$;
-    static final String DATA_SOURCE_COLUMN_NAME = i18n("dataSourceColumnName"); //$NON-NLS-1$;
+    static final String SOURCE_NAME_COLUMN_NAME = i18n("sourceNameColumnName"); //$NON-NLS-1$;
+    static final String TRANSLATOR_COLUMN_NAME = i18n("translatorColumnName"); //$NON-NLS-1$
+    static final String JNDI_NAME_COLUMN_NAME = i18n("jndiNameColumnName"); //$NON-NLS-1$;
     static final String DESCRIPTION_COLUMN_NAME = i18n("descriptionColumnName"); //$NON-NLS-1$;
 
     static final String SYNCHRONIZED_TOOLTIP = i18n("synchronizedTooltip"); //$NON-NLS-1$
@@ -117,19 +119,18 @@ public final class VdbEditor extends EditorPart {
     private Button synchronizeAllButton;
     private PropertyChangeListener vdbListener;
 
-    
     /**
      * Method which adds models to the VDB.
      * 
      * @param models
      */
-    public void addModels(List<IFile> models) {
-    	for (final Object model : models)
+    public void addModels( final List<IFile> models ) {
+        for (final Object model : models)
             vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
-    	
-    	modelsGroup.getTable().getViewer().refresh();
+
+        modelsGroup.getTable().getViewer().refresh();
     }
-    
+
     /**
      * {@inheritDoc}
      * 
@@ -307,12 +308,12 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public String getName() {
-                return DATA_SOURCE_COLUMN_NAME;
+                return SOURCE_NAME_COLUMN_NAME;
             }
 
             @Override
             public String getValue( final VdbModelEntry element ) {
-                final String value = element.getDataSource();
+                final String value = element.getSourceName();
                 return value == null ? EMPTY_STRING : value;
             }
 
@@ -324,7 +325,53 @@ public final class VdbEditor extends EditorPart {
             @Override
             public void setValue( final VdbModelEntry element,
                                   final String value ) {
-                element.setDataSource(value);
+                element.setSourceName(value);
+            }
+        }, new TextColumnProvider<VdbModelEntry>() {
+
+            @Override
+            public String getName() {
+                return TRANSLATOR_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue( final VdbModelEntry element ) {
+                final String value = element.getTranslator();
+                return value == null ? EMPTY_STRING : value;
+            }
+
+            @Override
+            public boolean isEditable( final VdbModelEntry element ) {
+                return true;
+            }
+
+            @Override
+            public void setValue( final VdbModelEntry element,
+                                  final String value ) {
+                element.setTranslator(value);
+            }
+        }, new TextColumnProvider<VdbModelEntry>() {
+
+            @Override
+            public String getName() {
+                return JNDI_NAME_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue( final VdbModelEntry element ) {
+                final String value = element.getJndiName();
+                return value == null ? EMPTY_STRING : value;
+            }
+
+            @Override
+            public boolean isEditable( final VdbModelEntry element ) {
+                return true;
+            }
+
+            @Override
+            public void setValue( final VdbModelEntry element,
+                                  final String value ) {
+                element.setJndiName(value);
             }
         }, descriptionColumnProvider);
         final ModelLabelProvider modelLabelProvider = new ModelLabelProvider();
