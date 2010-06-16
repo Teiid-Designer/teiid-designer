@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import org.eclipse.core.runtime.CoreException;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.util.ArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceFinder;
@@ -29,7 +30,15 @@ public final class ModelWorkspaceMock {
      * Mocks core modeling classes used when running Designer.
      */
     public ModelWorkspaceMock() {
-        eclipseMock = new EclipseMock();
+        this(new EclipseMock());
+    }
+
+    /**
+     * Mocks core modeling classes used when running Designer.
+     */
+    public ModelWorkspaceMock( final EclipseMock mock ) {
+        ArgCheck.isNotNull(mock, "mock"); //$NON-NLS-1$
+        eclipseMock = mock;
 
         // ModelWorkspaceManager
         mockStatic(ModelWorkspaceManager.class);
