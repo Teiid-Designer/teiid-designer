@@ -101,6 +101,7 @@ public class ModelConnectionMapper {
     	VdbSourceConnection sourceConnection = null;
     	String translatorName = null;
     	String jndiName = null;
+    	String dsTypeName = null;
     	
     	
     	if( this.modelResource != null ) {
@@ -112,27 +113,23 @@ public class ModelConnectionMapper {
 	    	matchableStrings.add(jdbcSourceProps.getProperty(DataSourceConnectionConstants.URL));
 	    	
 	    	// Insure this name exists as data source on server
-	    	// TODO:  Need to match up with Teiid DS TYPE Names?
-	    	String dsTypeName = JDBC_DS_TYPE; //ModelerDqpUtils.findMatchingDataSourceTypeName(matchableStrings, defaultAdmin.getDataSourceTypeNames());
-	    	executionAdmin.getOrCreateDataSource(jndiName, dsTypeName, jdbcSourceProps);
+	    	dsTypeName = this.connectionInfoHelper.findMatchingDataSourceTypeName(properties);
+	    	executionAdmin.getOrCreateDataSource(modelResource.getItemName(), jndiName, dsTypeName, jdbcSourceProps);
 	    	
 	    	// Select a translator type;
-	    	translatorName = this.connectionInfoHelper.findMatchingDefaultTranslatorName(matchableStrings, executionAdmin.getTranslators());
+	    	translatorName = this.connectionInfoHelper.findTranslatorName(modelResource);
 	    	
 	    	sourceConnection = new VdbSourceConnection(modelName, translatorName, jndiName);
-    	} else {
+    	} else if( properties != null ) {
     		// TODO: Figure out how to create the source connection object
 	    	
 	    	translatorName = properties.getProperty(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + ConnectionInfoHelper.TRANSLATOR_NAME);
 	    	if( translatorName == null ) {
-		    	Collection<String> matchableStrings = new ArrayList<String>();
-		    	matchableStrings.add(properties.getProperty(ConnectionInfoHelper.DRIVER_CLASS_KEY));
-		    	matchableStrings.add(properties.getProperty(ConnectionInfoHelper.URL_KEY));
-		    	translatorName = this.connectionInfoHelper.findMatchingDefaultTranslatorName(matchableStrings, executionAdmin.getTranslators());
+		    	translatorName = this.connectionInfoHelper.findTranslatorName(this.properties);
 	    	}
 	    	
 	    	jndiName = this.connectionInfoHelper.generateUniqueConnectionJndiName(modelName, new Path(StringUtilities.EMPTY_STRING), workspaceUuid);
-	    	
+	    	dsTypeName = this.connectionInfoHelper.findMatchingDataSourceTypeName(properties);
 	    	Properties dsProps = new Properties();
 	    	boolean enoughProps = true;
         	
@@ -160,8 +157,7 @@ public class ModelConnectionMapper {
 			
 			if( enoughProps ) {
 		    	// Insure this name exists as data source on server
-		    	String dsTypeName = JDBC_DS_TYPE; //ModelerDqpUtils.findMatchingDataSourceTypeName(matchableStrings, defaultAdmin.getDataSourceTypeNames());
-		    	executionAdmin.getOrCreateDataSource(jndiName, dsTypeName, dsProps);
+		    	executionAdmin.getOrCreateDataSource(modelResource.getItemName(), jndiName, dsTypeName, dsProps);
 			}
 	    	
 

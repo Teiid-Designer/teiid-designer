@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -18,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 
 import com.metamatrix.core.util.I18nUtil;
@@ -65,13 +67,21 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
 
 //            if (showTypes) {
                 try {
-                    result = ((Server)parentElement).getAdmin().getTranslators().toArray();
+                    Collection<TeiidTranslator> translators = ((Server)parentElement).getAdmin().getTranslators();
+                    Collection<TeiidDataSource> dataSources = ((Server)parentElement).getAdmin().getDataSources();
+                    Collection<Object> allObjects = new ArrayList<Object>();
+                    allObjects.addAll(translators);
+                    allObjects.addAll(dataSources);
+                    
+                    result = allObjects.toArray();
+                    
                 } catch (AdminComponentException ace) {
                     return new Object[0];
                 } catch (Exception e) {
                     DqpPlugin.Util.log(e);
                     return new Object[0];
                 }
+
                 return result;
 //            }
 //            /Collection<TeiidTranslator> allConnectors = new ArrayList<TeiidTranslator>();
@@ -155,6 +165,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         if (element instanceof TeiidTranslator) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
+        
+        if (element instanceof TeiidDataSource) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
+        }
 
         if (element instanceof SourceConnectionBinding) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
@@ -172,6 +186,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         }
         if (element instanceof TeiidTranslator) {
             return ((TeiidTranslator)element).getName();
+        }
+        
+        if (element instanceof TeiidDataSource) {
+            return ((TeiidDataSource)element).getDisplayName();
         }
         if (element instanceof SourceConnectionBinding) {
             SourceConnectionBinding binding = (SourceConnectionBinding)element;

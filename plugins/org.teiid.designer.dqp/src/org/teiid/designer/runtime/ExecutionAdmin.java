@@ -23,6 +23,7 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -35,10 +36,12 @@ public class ExecutionAdmin {
     private final Admin admin;
     protected Map<String, TeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
+    protected Map<String, TeiidDataSource> dataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final Server server;
     private Set<VDB> vdbs;
+    private final ModelConnectionMatcher connectionMatcher;
     
     private boolean loaded = false;
 
@@ -58,18 +61,33 @@ public class ExecutionAdmin {
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
+        this.connectionMatcher = new ModelConnectionMatcher(this);
         
-        refresh();
+        init();
+//        refresh();
     }
     
+    private void init() throws Exception {
+    	this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.dataSourceNames = new ArrayList<String>();
+        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.dataSourceTypeNames = new HashSet<String>();
+        this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+    }
     /**
      * 
      * @throws Exception
      */
     public void load() throws Exception {
-    	if( !loaded ) {
+    	if( !this.loaded ) {
     		refresh();
+    		this.loaded = true;
     	}
+    }
+    
+
+    public Collection<TeiidDataSource> getDataSources() {
+        return this.dataSourceByNameMap.values();
     }
     
     public Set<String> getDataSourceTypeNames() {
@@ -84,24 +102,38 @@ public class ExecutionAdmin {
      * @return true if data source is created. false if it already exists
      * @throws Exception
      */
-    public boolean getOrCreateDataSource(String name, String typeName, Properties properties) throws Exception {
+    public TeiidDataSource getOrCreateDataSource(String displayName, String jndiName, String typeName, Properties properties) throws Exception {
+    	CoreArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
+    	CoreArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
+    	CoreArgCheck.isNotEmpty(typeName, "typeName"); //$NON-NLS-1$
+    	CoreArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
+    	
     	// Check if exists, return false
-    	if( this.dataSourceNames.contains(name)) {
-    		return false;
+    	if( dataSourceExists(jndiName)) {
+    		return this.dataSourceByNameMap.get(jndiName);
     	}
     	
     	// Verify the "typeName" exists.
     	if( !this.dataSourceTypeNames.contains(typeName) ) {
     		throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer().getUrl())); //$NON-NLS-1$
     	}
-    	this.admin.createDataSource(name, typeName, properties);
     	
-    	if( this.admin.getDataSourceNames().contains(name) ) {
-    		this.dataSourceNames.add(name);
-    		return true;
+    	this.admin.createDataSource(jndiName, typeName, properties);
+    	
+    	refreshDataSourceNames();
+    	
+    	// Check that local name list contains new jndiName
+    	if( dataSourceExists(jndiName) ) {
+    		TeiidDataSource tds = new TeiidDataSource(displayName, jndiName, typeName);
+    		this.dataSourceByNameMap.put(jndiName, tds);
+    		
+    		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
+    		
+    		return tds;
     	}
     	
-    	throw new Exception(Util.getString("errorCreatingDataSource", name, typeName, getServer().getUrl())); //$NON-NLS-1$
+    	// We shouldn't get here if data source was created
+    	throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer().getUrl())); //$NON-NLS-1$
     }
     
     /**
@@ -119,6 +151,29 @@ public class ExecutionAdmin {
     	return false;
     }
 
+    public void deleteDataSource(String jndiName) throws Exception {
+    	// Check if exists, return false
+    	if( this.dataSourceNames.contains(jndiName)) {
+    		this.admin.deleteDataSource(jndiName);
+
+	    	if( !this.admin.getDataSourceNames().contains(jndiName) ) {
+	    		this.dataSourceNames.remove(jndiName);
+	    		TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+	    		if( tds != null ) {
+		    		this.dataSourceByNameMap.remove(jndiName);
+		    		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(tds));
+		    		
+	    		}
+	    	}
+	    	return;
+    	} else {
+    		return;
+    	}
+//    	
+//    	// TODO: I18n
+//    	throw new Exception(Util.getString("errorDeletingDataSource", jndiName, getServer().getUrl()));
+    }
+    
     /**
      * @param vdb
      * @return
@@ -138,9 +193,12 @@ public class ExecutionAdmin {
     public VDB deployVdb( IFile vdbFile ) throws Exception {
         CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
-        VDB deployedVdb = null; // this.admin.deployVDB(vdb.getName(), vdb);
+        String vdbName = vdbFile.getFullPath().lastSegment();
+        
+        admin.deployVDB(vdbName, vdbFile.getContents());
 
-        return deployedVdb;
+
+        return admin.getVDB(vdbName, 1);
     }
 
     Admin getAdminApi() {
@@ -199,21 +257,32 @@ public class ExecutionAdmin {
     }
 
     public void refresh() throws Exception {
-        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
-        this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceTypeNames = new HashSet<String>();
         // populate translator map
         refreshTranslators(this.admin.getTranslators());
         
         // populate data source type names set
-        dataSourceTypeNames = new HashSet(this.admin.getDataSourceTemplateNames());
+        this.dataSourceTypeNames = new HashSet(this.admin.getDataSourceTemplateNames());
 
         // populate data source names list
-        dataSourceNames = new ArrayList(this.admin.getDataSourceNames());
+        refreshDataSourceNames();
+        
+        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources();
+        for( TeiidDataSource ds :tdsList ) {
+        	this.dataSourceByNameMap.put(ds.getName(), ds);
+        }
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
         this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+    }
+    
+    protected void refreshVDBs() throws Exception {
+    	this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+    }
+    
+    protected void refreshDataSourceNames() throws Exception {
+        // populate data source names list
+        this.dataSourceNames = new ArrayList(this.admin.getDataSourceNames());
     }
 
     /**
@@ -263,7 +332,8 @@ public class ExecutionAdmin {
 //            this.admin.setTranslatorProperty(translator.getName(), propName, value);
 
             if (notify) {
-                this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
+            	// TODO: Will we ever update Translator properties in TEIID Server?
+                //this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
             }
         } else {
             throw new Exception(Util.getString("invalidPropertyValue", value, propName)); //$NON-NLS-1$
@@ -294,7 +364,7 @@ public class ExecutionAdmin {
 
             // TODO restart translator??
 
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
+            //this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
         }
     }
 

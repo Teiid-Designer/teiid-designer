@@ -1,5 +1,6 @@
 package org.teiid.designer.runtime.connection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -12,7 +13,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.runtime.TeiidTranslator;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -53,10 +53,15 @@ public class ConnectionInfoHelper {
 	public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version"; //$NON-NLS-1$
 	public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor"; //$NON-NLS-1$
 	
-	public static final String CONNECTION_PROFILE_NAMESPACE = "connection.profile:"; //$NON-NLS-1$
-	public static final String TRANSLATOR_NAMESPACE = "connection.translator:"; //$NON-NLS-1$
+	public static final String CONNECTION_PROFILE_NAMESPACE = "connection:"; //$NON-NLS-1$
 	
-	public static final String TRANSLATOR_NAME = "translator-name"; //$NON-NLS-1$
+	
+	public static final String TRANSLATOR_NAME_KEY = "translator.name"; //$NON-NLS-1$
+	public static final String TRANSLATOR_TYPE_KEY= "translator.type"; //$NON-NLS-1$
+	
+	public static final String TRANSLATOR_NAMESPACE = "translator:"; //$NON-NLS-1$
+	
+	public static final String TRANSLATOR_NAME = "translator"; //$NON-NLS-1$
 	
     /**
      * These are the property keys used for the jdbc source settings of physical models that were created in the legacy
@@ -70,6 +75,8 @@ public class ConnectionInfoHelper {
 	private ResourceAnnotationHelper resourceAnnotationHelper;
 	
 	private ConnectionProfileFactory connectionProfileFactory;
+	
+	private TranslatorProfileFactory translatorProfileFactory;
 
 	public ConnectionInfoHelper() {
 		super();
@@ -129,7 +136,7 @@ public class ConnectionInfoHelper {
 		Properties baseProps = new Properties();
 		Set<Object> keys = props.keySet();
 		for(Object  nextKey : keys ) {
-			baseProps.put(nextKey, removeNamespace((String)props.getProperty((String)nextKey)));
+			baseProps.put(removeNamespace((String)nextKey), props.getProperty((String)nextKey));
 		}
 		
 		return createConnectionProfile(name, desc, id, baseProps);
@@ -154,7 +161,7 @@ public class ConnectionInfoHelper {
 	
 	private String removeNamespace(String str) {
 		
-		int semiColonIndex = str.indexOf(':');
+		int semiColonIndex = str.indexOf(':') + 1;
 		if( semiColonIndex > 0 ) {
 			return str.substring(semiColonIndex, str.length());
 		}
@@ -205,10 +212,41 @@ public class ConnectionInfoHelper {
 			// Add new connection properties
 			getHelper().setProperties(modelResource, props);
 			// Add Translator Properties
-			getHelper().setProperty(modelResource, TRANSLATOR_NAMESPACE + TRANSLATOR_NAME, DataSourceConnectionConstants.Translators.JDBC);
+			String tName = findTranslatorName(modelResource);
+			if( tName != null ) {
+				getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+				getHelper().setProperty(modelResource, TRANSLATOR_NAMESPACE + TRANSLATOR_NAME, tName);
+			}
 		} catch (ModelWorkspaceException e) {
 			DqpPlugin.Util.log(IStatus.ERROR, e, 
 					DqpPlugin.Util.getString("errorSettingConnectionProfilePropertiesForModelResource",  //$NON-NLS-1$
+													modelResource.getItemName()));
+		}
+	}
+	
+	
+	/**
+	 * Stores the critical connection profile information within a model resource.
+	 * 
+	 * @param modelResource the <code>ModelResource</code>
+	 * @param connectionProfile the connection profile
+	 */
+	public void setTranslatorInfo(ModelResource modelResource, TranslatorProfile translatorProfile) {	
+		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+		CoreArgCheck.isNotNull(translatorProfile, "translatorProfile"); //$NON-NLS-1$
+		
+		try {
+			// get name-spaced properties
+			Properties props = getProperties(translatorProfile);
+			// Remove old connection properties
+			getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+			// Add new connection properties
+			getHelper().setProperties(modelResource, props);
+			// Add Translator Properties
+			//getHelper().setProperty(modelResource, TRANSLATOR_NAMESPACE + TRANSLATOR_NAME, DataSourceConnectionConstants.Translators.);
+		} catch (ModelWorkspaceException e) {
+			DqpPlugin.Util.log(IStatus.ERROR, e, 
+					DqpPlugin.Util.getString("errorSettingTranslatorProfilePropertiesForModelResource", //$NON-NLS-1$
 													modelResource.getItemName()));
 		}
 	}
@@ -228,6 +266,16 @@ public class ConnectionInfoHelper {
 			this.connectionProfileFactory = new ConnectionProfileFactory();
 		}
 		return this.connectionProfileFactory.getNamespacedProperties(connectionProfile);
+	}
+	
+
+	protected Properties getProperties(TranslatorProfile translatorProfile) {
+		CoreArgCheck.isNotNull(translatorProfile, "translatorProfile"); //$NON-NLS-1$
+		
+		if( this.translatorProfileFactory == null ) {
+			this.translatorProfileFactory = new TranslatorProfileFactory();
+		}
+		return this.translatorProfileFactory.getNamespacedProperties(translatorProfile);
 	}
 	
 	/**
@@ -290,14 +338,16 @@ public class ConnectionInfoHelper {
      * @return
      */
     public String generateUniqueConnectionJndiName(String name, IPath path, String uuid) {
+//    	return name;
+    	
     	CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
     	CoreArgCheck.isNotNull(path, "path"); //$NON-NLS-1$
     	CoreArgCheck.isNotEmpty(uuid, "uuid"); //$NON-NLS-1$
     	
-        final StringBuilder builder = new StringBuilder(uuid);
+        final StringBuilder builder = new StringBuilder(uuid + "__"); //$NON-NLS-1$
         for (final String segment : path.removeLastSegments(1).segments())
-            builder.append('.').append(segment);
-        
+            builder.append(segment).append('_');
+
         return builder.append(name).toString();
     }
 	
@@ -322,23 +372,74 @@ public class ConnectionInfoHelper {
     	return DataSourceConnectionConstants.UNKNOWN;
     }
     
+    public String findMatchingDataSourceTypeName(ModelResource modelResource) throws ModelWorkspaceException {
+    	Properties properties = getDataSourceProperties(modelResource);
+    	
+    	return findMatchingDataSourceTypeName(properties);
+    }
+    
+    public String findMatchingDataSourceTypeName(Properties properties) {
+    	Collection<String> matchableStrings = new ArrayList<String>();
+    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.DRIVER_CLASS));
+    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.URL));
+    	
+    	if( isJdbcDataSource(matchableStrings)) {
+    		return DataSourceConnectionConstants.DataSource.JDBC;
+    	}
+    	
+    	return DataSourceConnectionConstants.DataSource.UNKNOWN;
+    }
+    
+    public boolean isJdbcDataSource(Collection<String> matchableStrings) {
+    	for(String translatorName : DataSourceConnectionConstants.Translators.JDBC_TRANSLATORS) {
+    		for( String keyword : matchableStrings) {
+	    		if( keyword.toUpperCase().contains(translatorName.toUpperCase())) {
+	    			return true;
+	    		}
+    		}
+    	}
+    	return false;
+    }
+    
+    public String findTranslatorName(ModelResource modelResource) throws ModelWorkspaceException {
+    	Properties properties = getDataSourceProperties(modelResource);
+    	
+    	Collection<String> matchableStrings = new ArrayList<String>();
+    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.DRIVER_CLASS));
+    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.URL));
+    	
+    	for(String translatorName : DataSourceConnectionConstants.Translators.JDBC_TRANSLATORS) {
+    		for( String keyword : matchableStrings) {
+	    		if( keyword.toUpperCase().contains(translatorName.toUpperCase())) {
+	    			return translatorName;
+	    		}
+    		}
+    	}
+    	
+    	return null;
+    }
+    
     /**
-     * Given a set of matchable strings and a set of translator names, find a suitable match.
+     * Given a set of properties, find a suitable translator name.
      * 
      * @param matchableStrings
      * @param translators
      * @return
      */
-    public String findMatchingDefaultTranslatorName(Collection<String> matchableStrings, Collection<TeiidTranslator> translators) {
-    	for( TeiidTranslator translator : translators ) {
+    public String findTranslatorName(Properties properties) {
+    	Collection<String> matchableStrings = new ArrayList<String>();
+    	matchableStrings.add(properties.getProperty(ConnectionInfoHelper.DRIVER_CLASS_KEY));
+    	matchableStrings.add(properties.getProperty(ConnectionInfoHelper.URL_KEY));
+    	
+    	for(String translatorName : DataSourceConnectionConstants.Translators.ALL_TRANSLATORS) {
     		for( String keyword : matchableStrings) {
-	    		if( keyword.toUpperCase().contains(translator.getName().toUpperCase())) {
-	    			return translator.getName();
+	    		if( keyword.toUpperCase().contains(translatorName.toUpperCase())) {
+	    			return translatorName;
 	    		}
     		}
     	}
     	
-    	return DataSourceConnectionConstants.UNKNOWN;
+    	return null;
     }
     
     /**
@@ -377,6 +478,8 @@ public class ConnectionInfoHelper {
 				if (jdbcSource.getPassword() != null) {
 					result.put(DataSourceConnectionConstants.PASSWORD, jdbcSource.getPassword());
 				}
+			} else {
+				
 			}
         }
 

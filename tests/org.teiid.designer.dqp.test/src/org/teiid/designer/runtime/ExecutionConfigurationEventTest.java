@@ -60,78 +60,78 @@ public class ExecutionConfigurationEventTest {
     }
 
     @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateAddConnectorEventWithNullConnector() {
-        ExecutionConfigurationEvent.createAddConnectorEvent(null);
+    public void shouldNotCreateAddDataSourceEventWithNullDataSource() {
+        ExecutionConfigurationEvent.createAddDataSourceEvent(null);
     }
 
     @Test
-    public void shouldCreateAddConnectorEventWithConnector() {
-        ExecutionConfigurationEvent.createAddConnectorEvent(mock(TeiidTranslator.class));
+    public void shouldCreateAddDataSourceEventWithDataSource() {
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateRemoveConnectorEventWithNullConnector() {
-        ExecutionConfigurationEvent.createRemoveConnectorEvent(null);
+    public void shouldNotCreateRemoveDataSourceEventWithNullDataSource() {
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(null);
     }
 
     @Test
-    public void shouldCreateRemoveConnectorEventWithConnector() {
-        ExecutionConfigurationEvent.createRemoveConnectorEvent(mock(TeiidTranslator.class));
+    public void shouldCreateRemoveDataSourceEventWithDataSource() {
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class));
     }
 
     @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateUpdateConnectorEventWithNullConnector() {
-        ExecutionConfigurationEvent.createUpdateConnectorEvent(null);
+    public void shouldNotCreateUpdateDataSourceEventWithNullDataSource() {
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(null);
     }
 
     @Test
-    public void shouldCreateUpdateConnectorEventWithConnector() {
-        ExecutionConfigurationEvent.createUpdateConnectorEvent(mock(TeiidTranslator.class));
+    public void shouldCreateUpdateDataSourceEventWithDataSource() {
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class));
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetConnectorWithAddServerEvent() {
-        ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)).getConnector();
+    public void shouldNotAllowGetTranslatorWithAddServerEvent() {
+        ExecutionConfigurationEvent.createAddServerEvent(mock(Server.class)).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetConnectorWithRemoveServerEvent() {
-        ExecutionConfigurationEvent.createRemoveServerEvent(mock(Server.class)).getConnector();
+    public void shouldNotAllowGetTranslatorWithRemoveServerEvent() {
+        ExecutionConfigurationEvent.createRemoveServerEvent(mock(Server.class)).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetConnectorWithUpdateServerEvent() {
-        ExecutionConfigurationEvent.createUpdateServerEvent(mock(Server.class), null).getConnector();
+    public void shouldNotAllowGetTranslatorWithUpdateServerEvent() {
+        ExecutionConfigurationEvent.createUpdateServerEvent(mock(Server.class), null).getTranslator();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetServerWithAddConnectorEvent() {
-        ExecutionConfigurationEvent.createAddConnectorEvent(mock(TeiidTranslator.class)).getServer();
+    public void shouldNotAllowGetServerWithAddDataSourceEvent() {
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetServerWithRemoveConnectorEvent() {
-        ExecutionConfigurationEvent.createRemoveConnectorEvent(mock(TeiidTranslator.class)).getServer();
+    public void shouldNotAllowGetServerWithRemoveDataSourceEvent() {
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetServerWithUpdateConnectorEvent() {
-        ExecutionConfigurationEvent.createUpdateConnectorEvent(mock(TeiidTranslator.class)).getServer();
+    public void shouldNotAllowGetServerWithUpdateDataSourceEvent() {
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class)).getServer();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetUpdatedServerWithAddConnectorEvent() {
-        ExecutionConfigurationEvent.createAddConnectorEvent(mock(TeiidTranslator.class)).getUpdatedServer();
+    public void shouldNotAllowGetUpdatedServerWithAddDataSourceEvent() {
+        ExecutionConfigurationEvent.createAddDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetUpdatedServerWithRemoveConnectorEvent() {
-        ExecutionConfigurationEvent.createRemoveConnectorEvent(mock(TeiidTranslator.class)).getUpdatedServer();
+    public void shouldNotAllowGetUpdatedServerWithRemoveDataSourceEvent() {
+        ExecutionConfigurationEvent.createRemoveDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test( expected = IllegalStateException.class )
-    public void shouldNotAllowGetUpdatedServerWithUpdateConnectorEvent() {
-        ExecutionConfigurationEvent.createUpdateConnectorEvent(mock(TeiidTranslator.class)).getUpdatedServer();
+    public void shouldNotAllowGetUpdatedServerWithUpdateDataSourceEvent() {
+        ExecutionConfigurationEvent.createUpdateDataSourceEvent(mock(TeiidDataSource.class)).getUpdatedServer();
     }
 
     @Test

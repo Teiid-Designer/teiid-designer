@@ -1,5 +1,6 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class ResourceAnnotationHelper {
 	private static String getNamespace(final String str) {
 		CoreArgCheck.isNotNull(str, "str"); //$NON-NLS-1$
 		
-		int semiColonIndex = str.indexOf(':');
+		int semiColonIndex = str.indexOf(':') + 1;
 		if( semiColonIndex > 0 ) {
 			return str.substring(0, semiColonIndex);
 		}
@@ -137,9 +138,10 @@ public class ResourceAnnotationHelper {
 		CoreArgCheck.isNotNull(namespacePrefix, "namespacePrefix"); //$NON-NLS-1$
 
 		Annotation annotation = getResourceAnnotation(modelResource, false);
+		
 		if( annotation != null ) {
 			EMap tags = annotation.getTags();
-			Set<Object> keys = tags.keySet();
+			Set<Object> keys = new HashSet(tags.keySet());
 			for(Object  nextKey : keys ) {
 				String namespace = getNamespace((String)nextKey);
 				if( namespace != null && namespace.equals(namespacePrefix)) {

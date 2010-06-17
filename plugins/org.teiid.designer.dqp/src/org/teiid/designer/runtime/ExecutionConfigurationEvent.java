@@ -26,7 +26,8 @@ public final class ExecutionConfigurationEvent {
     }
 
     public enum TargetType {
-        CONNECTOR,
+        TRANSLATOR,
+        DATA_SOURCE,
         SERVER,
         SOURCE_BINDING;
     }
@@ -52,16 +53,16 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.SERVER, server, updatedServer);
     }
 
-    public static ExecutionConfigurationEvent createAddConnectorEvent( TeiidTranslator connector ) {
-        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.CONNECTOR, connector);
+    public static ExecutionConfigurationEvent createAddDataSourceEvent( TeiidDataSource dataSource ) {
+        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createRemoveConnectorEvent( TeiidTranslator connector ) {
-        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.CONNECTOR, connector);
+    public static ExecutionConfigurationEvent createRemoveDataSourceEvent( TeiidDataSource dataSource ) {
+        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.DATA_SOURCE, dataSource);
     }
 
-    public static ExecutionConfigurationEvent createUpdateConnectorEvent( TeiidTranslator connector ) {
-        return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.CONNECTOR, connector);
+    public static ExecutionConfigurationEvent createUpdateDataSourceEvent( TeiidDataSource dataSource ) {
+        return new ExecutionConfigurationEvent(EventType.UPDATE, TargetType.DATA_SOURCE, dataSource);
     }
 
     public static ExecutionConfigurationEvent createAddSourceBindingEvent( SourceConnectionBinding binding ) {
@@ -128,14 +129,28 @@ public final class ExecutionConfigurationEvent {
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
      */
-    public TeiidTranslator getConnector() {
-        if (this.targetType != TargetType.CONNECTOR) {
-            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetConnectorMethod", //$NON-NLS-1$
+    public TeiidTranslator getTranslator() {
+        if (this.targetType != TargetType.TRANSLATOR) {
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetTranslatorMethod", //$NON-NLS-1$
                                                            this.targetType,
-                                                           TargetType.CONNECTOR));
+                                                           TargetType.TRANSLATOR));
         }
 
         return (TeiidTranslator)this.target;
+    }
+    
+    /**
+     * @return the connector involved in the event
+     * @throws IllegalStateException if method is called for a server event
+     */
+    public TeiidDataSource getDataSource() {
+        if (this.targetType != TargetType.DATA_SOURCE) {
+            throw new IllegalStateException(Util.getString("invalidTargetTypeForGetDataSourceMethod",  //$NON-NLS-1$
+                                                           this.targetType,
+                                                           TargetType.DATA_SOURCE));
+        }
+
+        return (TeiidDataSource)this.target;
     }
 
     /**

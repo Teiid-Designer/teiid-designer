@@ -11,9 +11,11 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
@@ -31,12 +33,13 @@ import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * 
  */
 @RunWith( PowerMockRunner.class )
-@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class} )
+@PrepareForTest( {ModelerCore.class, ModelWorkspaceManager.class, ResourcesPlugin.class, WorkspaceResourceFinderUtil.class} )
 public class ExecutionAdminTest {
 	
     private static Collection<PropertyDefinition> PROP_DEFS;
@@ -148,6 +151,8 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldAllowRefresh() throws Exception {
+    	mockStatic(WorkspaceResourceFinderUtil.class);
+    	when(WorkspaceResourceFinderUtil.getAllWorkspaceResources()).thenReturn(Collections.EMPTY_LIST);
         getNewAdmin().refresh();
     }
 

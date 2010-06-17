@@ -75,7 +75,7 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
 	                    } catch (Exception e) {
 	                        DqpUiConstants.UTIL.log(IStatus.ERROR,
 	                                                e,
-	                                                DqpUiConstants.UTIL.getString("ConnectorsViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
+	                                                DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
 	                                                                              theFile.getName(),
 	                                                                              theTargetServer.getUrl()));
 	                    }

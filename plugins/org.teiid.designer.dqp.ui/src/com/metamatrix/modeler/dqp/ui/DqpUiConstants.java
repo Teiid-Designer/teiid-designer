@@ -111,6 +111,7 @@ public interface DqpUiConstants {
         public static final String DELETE_SERVER_ICON = PC.CTOOL16 + "delete_server.gif"; //$NON-NLS-1$
         public static final String EDIT_SERVER_ICON = PC.CTOOL16 + "edit_server.gif"; //$NON-NLS-1$
         public static final String NEW_BINDING_ICON = PC.CTOOL16 + "new_binding.png"; //$NON-NLS-1$
+        public static final String CONNECTION_SOURCE_ICON = PC.CTOOL16 + "connection_source.gif"; //$NON-NLS-1$
 
         public static final String PREVIEW_DATA_ICON = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
         public static final String SHOW_HIDE_CONNECTORS_ICON = PC.CTOOL16 + "showHideConnectors.png"; //$NON-NLS-1$
