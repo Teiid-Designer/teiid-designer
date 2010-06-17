@@ -87,9 +87,8 @@ public final class VdbModelEntry extends VdbEntry {
 
     VdbModelEntry( final Vdb vdb,
                    final ModelElement element,
-                   final String description,
                    final IProgressMonitor monitor ) {
-        super(vdb, element, description, monitor);
+        super(vdb, element, monitor);
         this.element = element;
         type = ModelType.get(element.getType());
         visible.set(element.isVisible());
@@ -330,6 +329,7 @@ public final class VdbModelEntry extends VdbEntry {
             final Resource model = findModel();
             final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
             for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
+                // TODO: Does this work for the datatypes model?
                 final IPath name = Path.fromPortableString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
                 VdbModelEntry importedEntry = null;
                 for (final VdbModelEntry entry : getVdb().getModelEntries())

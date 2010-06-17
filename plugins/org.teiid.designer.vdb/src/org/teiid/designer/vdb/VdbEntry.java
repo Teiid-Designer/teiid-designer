@@ -53,7 +53,6 @@ public class VdbEntry {
 
     VdbEntry( final Vdb vdb,
               final EntryElement element,
-              final String description,
               final IProgressMonitor monitor ) {
         this(vdb, Path.fromPortableString(element.getPath()));
         for (final PropertyElement property : element.getProperties()) {
@@ -62,7 +61,7 @@ public class VdbEntry {
         }
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
-        this.description.set(description);
+        this.description.set(element.getDescription());
     }
 
     private VdbEntry( final Vdb vdb,

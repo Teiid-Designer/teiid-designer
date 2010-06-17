@@ -52,6 +52,7 @@ import com.metamatrix.core.util.StringUtilities;
  * 
  */
 @ThreadSafe
+// TODO: File constructor
 public final class Vdb {
 
     /**
@@ -184,9 +185,9 @@ public final class Vdb {
                         final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
                         setDescription(manifest.getDescription());
                         for (final EntryElement element : manifest.getEntries())
-                            entries.add(new VdbEntry(Vdb.this, element, zipEntry.getComment(), monitor));
+                            entries.add(new VdbEntry(Vdb.this, element, monitor));
                         for (final ModelElement element : manifest.getModels())
-                            modelEntries.add(new VdbModelEntry(Vdb.this, element, zipEntry.getComment(), monitor));
+                            modelEntries.add(new VdbModelEntry(Vdb.this, element, monitor));
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries)
                             entry.initializeImports();
