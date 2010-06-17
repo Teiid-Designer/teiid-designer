@@ -58,7 +58,7 @@ public class VdbElement implements Serializable {
      * @param vdb
      */
     public VdbElement( final Vdb vdb ) {
-        name = vdb.getName().lastSegment();
+        name = vdb.getName().removeFileExtension().lastSegment();
         description = vdb.getDescription();
         version = 1;
         for (final VdbEntry entry : vdb.getEntries())
