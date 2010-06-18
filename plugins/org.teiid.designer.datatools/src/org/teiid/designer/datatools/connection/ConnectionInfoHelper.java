@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.teiid.designer.datatools.DatatoolsPlugin;
+import org.teiid.designer.datatools.JdbcTranslatorHelper;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -194,6 +195,34 @@ public class ConnectionInfoHelper {
 		}
 	}
 	
+	/**
+	 * Stores the critical connection profile information within a model resource.
+	 * 
+	 * @param modelResource the <code>ModelResource</code>
+	 * @param connectionProfile the connection profile
+	 */
+	public void setJdbcConnectionInfo(ModelResource modelResource, IConnectionProfile connectionProfile) {	
+		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+		CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
+		
+		try {
+			// get name-spaced properties
+			Properties props = getProperties(connectionProfile);
+			// Remove old connection properties
+			getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
+			
+			// Add JDBC translator
+			props.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, JdbcTranslatorHelper.getTranslator(connectionProfile));
+			// Add new connection properties
+			getHelper().setProperties(modelResource, props);
+			
+		} catch (ModelWorkspaceException e) {
+			DatatoolsPlugin.Util.log(IStatus.ERROR, e, 
+					DatatoolsPlugin.Util.getString("errorSettingConnectionProfilePropertiesForModelResource",  //$NON-NLS-1$
+													modelResource.getItemName()));
+		}
+	}
+	
 	
 	
 	/**
@@ -214,11 +243,20 @@ public class ConnectionInfoHelper {
 	}
 	
 
-	
-
-    
-
-
-    
+	public String getTranslatorName(ModelResource modelResource ) {
+		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+		
+		Properties props = null;
+		
+		try {
+			props = getHelper().getProperties(modelResource, TRANSLATOR_NAMESPACE);
+		} catch (Exception e) {
+			DatatoolsPlugin.Util.log(IStatus.ERROR, e, 
+					DatatoolsPlugin.Util.getString("errorFindingConnectionProfilePropertiesForModelResource",  //$NON-NLS-1$
+													modelResource.getItemName()));
+		}
+		
+		return props.getProperty(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY);
+	}
 
 }

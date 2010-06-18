@@ -662,7 +662,7 @@ public class JdbcImportWizard extends AbstractWizard
                 // model resource.
                 if( this.connectionProfile != null ) {
 	                ConnectionInfoHelper helper = new ConnectionInfoHelper();
-	                helper.setConnectionInfo(resrc, this.connectionProfile);
+	                helper.setJdbcConnectionInfo(resrc, this.connectionProfile);
                 }
                 JdbcImportWizard.this.status = processor.execute(resrc, getDatabase(), src.getImportSettings(), monitor);
 
