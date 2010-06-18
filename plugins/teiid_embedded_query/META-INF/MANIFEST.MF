@@ -9,7 +9,7 @@ Bundle-ClassPath: .,
  jta-1.1.jar,
  teiid-api-7.0.0-SNAPSHOT.jar,
  teiid-engine-7.0.0-SNAPSHOT.jar,
- teiid-7.0.0-CR1-client.jar
+ teiid-7.0.0-CR2-client.jar
 Export-Package: javax.transaction,
  javax.transaction.xa,
  org.teiid.adminapi,
