@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -41,6 +42,8 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -116,6 +119,10 @@ public class JdbcImportWizard extends AbstractWizard
     boolean controlsHaveBeenCreated = false;
 
     private IJdbcImportPostProcessor[] postProcessors;
+    
+    // Need to cash the profile when connection is selected so we can use it in Finish method to 
+    // inject the connection info into model.
+    private IConnectionProfile connectionProfile;
 
     /**
      * @since 4.0
@@ -644,12 +651,19 @@ public class JdbcImportWizard extends AbstractWizard
                 final ModelAnnotation modelAnnotation = resrc.getModelAnnotation();
                 modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
                 modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
+
                 if (resrc instanceof ModelResourceImpl) {
                     ((ModelResourceImpl)resrc).setModelType(ModelType.PHYSICAL_LITERAL);
                 }
                 // Moved this call to AFTER the MODEL TYPE has been set.
                 ModelUtilities.initializeModelContainers(resrc, "Jdbc Import", this); //$NON-NLS-1$
-
+                
+                // If connection profile is cached, which it should, go ahead and inject the data into the 
+                // model resource.
+                if( this.connectionProfile != null ) {
+	                ConnectionInfoHelper helper = new ConnectionInfoHelper();
+	                helper.setConnectionInfo(resrc, this.connectionProfile);
+                }
                 JdbcImportWizard.this.status = processor.execute(resrc, getDatabase(), src.getImportSettings(), monitor);
 
                 // capture objects in the processorpack
@@ -767,6 +781,7 @@ public class JdbcImportWizard extends AbstractWizard
         final Connection sqlConnection = page.getConnection();
         if (sqlConnection == null) {
             this.importer.setDatabase(null);
+            this.connectionProfile = null;
         } else {
             try {
                 final JdbcSource src = (JdbcSource)ModelerCore.getModelEditor().copy(page.getSource());
@@ -803,7 +818,9 @@ public class JdbcImportWizard extends AbstractWizard
                         }
                     }
                 }
-
+                
+                // Cache the CP so it can be used during Finish method
+                this.connectionProfile = page.getConnectionProfile();
                 connectionEstablished();
             } catch (final Exception err) {
                 JdbcUiUtil.showError(err, COPY_ERROR_MESSAGE);

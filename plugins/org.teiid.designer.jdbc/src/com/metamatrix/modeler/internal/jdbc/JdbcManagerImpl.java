@@ -638,8 +638,22 @@ public class JdbcManagerImpl implements JdbcManager {
             }
         }
     }
+    
+    
 
-    /**
+    @Override
+	public IConnectionProfile getConnectionProfile(String profileName) {
+        final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.connectivity.db.category"); //$NON-NLS-1$
+        for (final IConnectionProfile profile : tempProfiles) {
+            if( profile.getName().equals(profileName)) {
+            	return profile;
+            }
+        }
+        
+        return null;
+	}
+
+	/**
      * This method is not synchronized and is not thread safe.
      */
     public void shutdown() {

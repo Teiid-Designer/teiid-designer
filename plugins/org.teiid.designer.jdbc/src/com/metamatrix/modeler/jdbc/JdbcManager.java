@@ -159,5 +159,13 @@ public interface JdbcManager {
 	public Connection createConnection(JdbcSource src, String password) throws JdbcException, SQLException;
 
 	public JdbcSource getJdbcSource(IConnectionProfile profile);
+	
+	/**
+	 * Find a connection profile with given name.
+	 * 
+	 * @param profileName
+	 * @return a conneciton profile
+	 */
+	public IConnectionProfile getConnectionProfile(String profileName);
 
 }

@@ -102,6 +102,10 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private CLabel driverLabel, urlLabel, userNameLabel;
     private Text pwdText;
     private Map enableMap;
+    
+    // Need to cash the profile when connection is selected so we can use it in Finish method to 
+    // inject the connection info into model.
+    private IConnectionProfile connectionProfile;
 
     // ===========================================================================================================================
     // Constructors
@@ -234,6 +238,13 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     public Connection getConnection() {
         return this.connection;
     }
+    
+    /**
+     * @since 4.0
+     */
+    public IConnectionProfile getConnectionProfile() {
+        return this.connectionProfile;
+    }
 
     /**
      * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
@@ -323,6 +334,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             if (null != this.src.getPassword()) {
                 JdbcUiUtil.setText(this.pwdText, this.src.getPassword());
             }
+            // cache the profile stored in the JdbcManager
+            this.connectionProfile = this.mgr.getConnectionProfile(text);
         } else {
             this.src = null;
             this.driverLabel.setText(EMPTY_STRING);
@@ -331,6 +344,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             if (this.enableMap == null) {
                 this.enableMap = WidgetUtil.disable(this.editPanel);
             }
+            this.connectionProfile = null;
         }
         this.connection = null;
         validatePage();
