@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -39,6 +40,7 @@ import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.ResourceFinder;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
@@ -79,7 +81,12 @@ public final class VdbModelEntry extends VdbEntry {
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = name.removeFileExtension().lastSegment();
                 source.set(defaultName);
-                translator.set("");
+                ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
+                String str = StringUtilities.EMPTY_STRING;
+                if( mr != null ) {
+                	str = new ConnectionInfoHelper().getTranslatorName(mr);
+                }
+                translator.set(str);
                 jndiName.set(defaultName);
             }
         } else type = ModelType.TYPE_LITERAL;
