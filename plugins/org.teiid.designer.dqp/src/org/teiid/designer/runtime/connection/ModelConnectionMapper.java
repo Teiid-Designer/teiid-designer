@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Path;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
 
@@ -19,6 +20,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * 
@@ -31,7 +33,7 @@ public class ModelConnectionMapper {
     
     private ModelResource modelResource;
     
-    private ConnectionInfoHelper connectionInfoHelper;
+    private DqpConnectionInfoHelper dqpConnectionInfoHelper;
     
     /**
      * ModelConnectionFactoryMapper
@@ -41,7 +43,7 @@ public class ModelConnectionMapper {
      */
     public ModelConnectionMapper( String modelName,
                                          Properties properties ) {
-    	this(new ConnectionInfoHelper());
+    	this(new DqpConnectionInfoHelper());
     	
         CoreArgCheck.isNotEmpty(modelName);
         CoreArgCheck.isNotEmpty(properties);
@@ -50,7 +52,7 @@ public class ModelConnectionMapper {
     }
     
     public ModelConnectionMapper( String modelName,
-            Properties properties, ConnectionInfoHelper connectionInfoHelper ) {
+            Properties properties, DqpConnectionInfoHelper connectionInfoHelper ) {
 		this(connectionInfoHelper);
 		
 		CoreArgCheck.isNotEmpty(modelName);
@@ -60,23 +62,23 @@ public class ModelConnectionMapper {
 	}
     
     public ModelConnectionMapper( ModelResource modelResource) {
-    	this(new ConnectionInfoHelper());
+    	this(new DqpConnectionInfoHelper());
     	
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 		this.modelResource = modelResource;
     }
     
     
-    public ModelConnectionMapper( ModelResource modelResource, ConnectionInfoHelper connectionInfoHelper) {
+    public ModelConnectionMapper( ModelResource modelResource, DqpConnectionInfoHelper connectionInfoHelper) {
     	this(connectionInfoHelper);
     	
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 		this.modelResource = modelResource;
     }
     
-    private ModelConnectionMapper( ConnectionInfoHelper connectionInfoHelper) {
+    private ModelConnectionMapper( DqpConnectionInfoHelper connectionInfoHelper) {
 		CoreArgCheck.isNotNull(connectionInfoHelper, "connectionInfoHelper"); //$NON-NLS-1$
-		this.connectionInfoHelper = connectionInfoHelper;
+		this.dqpConnectionInfoHelper = connectionInfoHelper;
     }
 
     /**
@@ -105,31 +107,31 @@ public class ModelConnectionMapper {
     	
     	
     	if( this.modelResource != null ) {
-    		Properties jdbcSourceProps = this.connectionInfoHelper.getModelJdbcConnectionProperties(modelResource); 
-	    	jndiName = this.connectionInfoHelper.generateUniqueConnectionJndiName(modelResource, workspaceUuid);
+    		Properties jdbcSourceProps = this.dqpConnectionInfoHelper.getModelJdbcConnectionProperties(modelResource); 
+	    	jndiName = this.dqpConnectionInfoHelper.generateUniqueConnectionJndiName(modelResource, workspaceUuid);
 	    	
 	    	Collection<String> matchableStrings = new ArrayList<String>();
 	    	matchableStrings.add(jdbcSourceProps.getProperty(DataSourceConnectionConstants.DRIVER_CLASS));
 	    	matchableStrings.add(jdbcSourceProps.getProperty(DataSourceConnectionConstants.URL));
 	    	
 	    	// Insure this name exists as data source on server
-	    	dsTypeName = this.connectionInfoHelper.findMatchingDataSourceTypeName(properties);
+	    	dsTypeName = this.dqpConnectionInfoHelper.findMatchingDataSourceTypeName(properties);
 	    	executionAdmin.getOrCreateDataSource(modelResource.getItemName(), jndiName, dsTypeName, jdbcSourceProps);
 	    	
 	    	// Select a translator type;
-	    	translatorName = this.connectionInfoHelper.findTranslatorName(modelResource);
+	    	translatorName = this.dqpConnectionInfoHelper.findTranslatorName(modelResource);
 	    	
 	    	sourceConnection = new VdbSourceConnection(modelName, translatorName, jndiName);
     	} else if( properties != null ) {
     		// TODO: Figure out how to create the source connection object
 	    	
-	    	translatorName = properties.getProperty(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + ConnectionInfoHelper.TRANSLATOR_NAME);
+	    	translatorName = properties.getProperty(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + ConnectionInfoHelper.TRANSLATOR_NAME_KEY);
 	    	if( translatorName == null ) {
-		    	translatorName = this.connectionInfoHelper.findTranslatorName(this.properties);
+		    	translatorName = this.dqpConnectionInfoHelper.findTranslatorName(this.properties);
 	    	}
-	    	
-	    	jndiName = this.connectionInfoHelper.generateUniqueConnectionJndiName(modelName, new Path(StringUtilities.EMPTY_STRING), workspaceUuid);
-	    	dsTypeName = this.connectionInfoHelper.findMatchingDataSourceTypeName(properties);
+
+	    	jndiName = this.dqpConnectionInfoHelper.generateUniqueConnectionJndiName(modelName, new Path(StringUtilities.EMPTY_STRING), workspaceUuid);
+	    	dsTypeName = this.dqpConnectionInfoHelper.findMatchingDataSourceTypeName(properties);
 	    	Properties dsProps = new Properties();
 	    	boolean enoughProps = true;
         	

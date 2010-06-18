@@ -22,6 +22,8 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.core.ModelResourceMockFactory;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -36,6 +38,8 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 public class ConnectionInfoHelperTest {
     
     private ConnectionInfoHelper helper;
+    
+    private DqpConnectionInfoHelper dqpHelper;
     
     private ModelResource modelResource;
     
@@ -81,6 +85,8 @@ public class ConnectionInfoHelperTest {
         resourceHelper.getResourceAnnotation(modelResource, true);
 		// Construct a ConnectionInfoHelper with a mock resource helper & mock CP factory
         helper = new ConnectionInfoHelper(resourceHelper, connectionProfileFactory);
+        
+        dqpHelper = new DqpConnectionInfoHelper(resourceHelper, helper);
 	}
 	
 	@Test
@@ -203,52 +209,52 @@ public class ConnectionInfoHelperTest {
 		when(modelResource.getEmfResource()).thenReturn(emfResource);
 		when(ModelUtil.isPhysical(emfResource)).thenReturn(true);
 		
-		helper.getDataSourceProperties(modelResource);
+		dqpHelper.getDataSourceProperties(modelResource);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGetDataSourcePropertiesWithNullModelResource() throws ModelWorkspaceException {
 		ModelResource nullMR = null;
-		helper.getDataSourceProperties(nullMR);
+		dqpHelper.getDataSourceProperties(nullMR);
 	}
 	
 	@Test
 	public void shouldGenerateUniqueConnectionJndiNameWithNamePathUUID() {
-		String jndiName = helper.generateUniqueConnectionJndiName("modelname", new Path("L/MyProject/"), "uuid_AAAA");
+		String jndiName = dqpHelper.generateUniqueConnectionJndiName("modelname", new Path("L/MyProject/"), "uuid_AAAA");
 		
 		assertNotNull(jndiName);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNameWithNullName() {
-		helper.generateUniqueConnectionJndiName(null, null, null);
+		dqpHelper.generateUniqueConnectionJndiName(null, null, null);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNameWithEmptyName() {
-		helper.generateUniqueConnectionJndiName(EMPTY_STRING, null, null);
+		dqpHelper.generateUniqueConnectionJndiName(EMPTY_STRING, null, null);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNameWithNullPath() {
-		helper.generateUniqueConnectionJndiName("someName", null, null);
+		dqpHelper.generateUniqueConnectionJndiName("someName", null, null);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNameWithNullUuid() {
-		helper.generateUniqueConnectionJndiName("someName", new Path("L/MyProject/"), null);
+		dqpHelper.generateUniqueConnectionJndiName("someName", new Path("L/MyProject/"), null);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNameWithEmptyUuid() {
-		helper.generateUniqueConnectionJndiName("someName", new Path("L/MyProject/"), EMPTY_STRING);
+		dqpHelper.generateUniqueConnectionJndiName("someName", new Path("L/MyProject/"), EMPTY_STRING);
 	}
 	
 	@Test
 	public void shouldGenerateUniqueConnectionJndiNameWithModelResourceUUID() {
 		when(modelResource.getItemName()).thenReturn("modelname)");
 		when(modelResource.getPath()).thenReturn(new Path("L/MyProject/"));
-		String jndiName = helper.generateUniqueConnectionJndiName(modelResource, "uuid_AAAA");
+		String jndiName = dqpHelper.generateUniqueConnectionJndiName(modelResource, "uuid_AAAA");
 		
 		assertNotNull(jndiName);
 	}
@@ -256,22 +262,22 @@ public class ConnectionInfoHelperTest {
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiNullModelResource() {
 		ModelResource nullMR = null;
-		helper.generateUniqueConnectionJndiName(nullMR, EMPTY_STRING);
+		dqpHelper.generateUniqueConnectionJndiName(nullMR, EMPTY_STRING);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiModelResourceNullUuid() {
-		helper.generateUniqueConnectionJndiName(modelResource, null);
+		dqpHelper.generateUniqueConnectionJndiName(modelResource, null);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGenerateUniqueConnectionJndiModelResourceEmptyUuid() {
-		helper.generateUniqueConnectionJndiName(modelResource, EMPTY_STRING);
+		dqpHelper.generateUniqueConnectionJndiName(modelResource, EMPTY_STRING);
 	}
 	
 	@Test ( expected = IllegalArgumentException.class )
 	public void shouldNotGetModelJdbcPropertiesNullModelResource() throws ModelWorkspaceException {
 		ModelResource nullMR = null;
-		helper.getModelJdbcConnectionProperties(nullMR);
+		dqpHelper.getModelJdbcConnectionProperties(nullMR);
 	}
 }

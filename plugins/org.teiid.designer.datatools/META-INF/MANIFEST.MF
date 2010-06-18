@@ -10,6 +10,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.teiid.core.designer,
  org.eclipse.core.runtime.compatibility,
- teiid_embedded_query
+ teiid_embedded_query,
+ org.teiid.designer.core,
+ org.teiid.designer.jdbc,
+ org.eclipse.datatools.connectivity,
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.teiid.designer.datatools,
+ org.teiid.designer.datatools.connection

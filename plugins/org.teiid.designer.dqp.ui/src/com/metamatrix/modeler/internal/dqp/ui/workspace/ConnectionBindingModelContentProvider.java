@@ -14,8 +14,8 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.runtime.TeiidTranslator;
-import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
 
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;

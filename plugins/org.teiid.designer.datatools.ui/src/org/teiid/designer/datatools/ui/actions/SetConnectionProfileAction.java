@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.ui.connection;
+package org.teiid.designer.datatools.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
@@ -7,17 +7,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.datatools.ui.dialogs.SelectConnectionProfileDialog;
 
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -25,8 +25,8 @@ import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
-public class SetConnectionProfileAction  extends SortableSelectionAction implements DqpUiConstants {
-    private static final String label = DqpUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
+public class SetConnectionProfileAction  extends SortableSelectionAction {
+    private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
     //UTIL.getString("BindToConnectorAction.label", SWT.DEFAULT); //$NON-NLS-1$
     
     /**
@@ -34,7 +34,7 @@ public class SetConnectionProfileAction  extends SortableSelectionAction impleme
      */
     public SetConnectionProfileAction() {
         super(label, SWT.DEFAULT);
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
+        setImageDescriptor(DatatoolsUiPlugin.getDefault().getImageDescriptor(DatatoolsUiConstants.Images.SOURCE_BINDING_ICON));
     }
 
     /**
@@ -96,15 +96,15 @@ public class SetConnectionProfileAction  extends SortableSelectionAction impleme
 			Object[] result = dialog.getResult();
 			if( result != null && result.length == 1 ) {
 				IConnectionProfile profile = (IConnectionProfile)result[0];
-				// TODO: Not sure if we keep this dialog or NOT???
-				boolean doIt = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), 
-						DqpUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionTitle"), //$NON-NLS-1$
-						DqpUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionText", profile.getName())); //$NON-NLS-1$
-				
-				if( doIt ) {
+//				// TODO: Not sure if we keep this dialog or NOT???
+//				boolean doIt = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), 
+//						DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionTitle"), //$NON-NLS-1$
+//						DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.applyQuestionText", profile.getName())); //$NON-NLS-1$
+//				
+//				if( doIt ) {
 					SetConnectionProfileAction.setConnectionInfo(modelFile, profile);
 					return true;
-				}
+//				}
 				
 			}
 		}

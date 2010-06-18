@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
+import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 
-import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
@@ -27,7 +25,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     private static final String label = "Delete Teiid Data Source"; //$NON-NLS-1$
     public static final String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$
     
-    private ConnectionInfoHelper helper;
+    private DqpConnectionInfoHelper helper;
     
     /**
      * @since 5.0
@@ -35,7 +33,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     public DeleteDataSourceAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
-        this.helper = new ConnectionInfoHelper();
+        this.helper = new DqpConnectionInfoHelper();
     }
 
     /**
@@ -70,8 +68,8 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     	
     	if( properties != null && !properties.isEmpty() ) {
     		ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
-	    	
-    		String jndiName = this.helper.generateUniqueConnectionJndiName(modelFile.getName(), new Path(StringUtilities.EMPTY_STRING), DqpPlugin.workspaceUuid().toString());
+    		String name = modelFile.getFullPath().removeFileExtension().lastSegment();
+    		String jndiName = this.helper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
 
 	    	boolean enoughProps = true;
         	
@@ -133,7 +131,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     }
     
     public Properties getConnectionProperties(IFile model) throws ModelWorkspaceException {
-    	ConnectionInfoHelper helper = new ConnectionInfoHelper();
+    	DqpConnectionInfoHelper helper = new DqpConnectionInfoHelper();
     	
     	ModelResource modelResource = null;
     	

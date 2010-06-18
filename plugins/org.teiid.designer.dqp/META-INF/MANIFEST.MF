@@ -27,8 +27,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.transformation,
  org.teiid.designer.legacy,
  org.teiid.designer.vdb,
-  org.eclipse.datatools.connectivity,
- net.jcip.annotations
+ org.eclipse.datatools.connectivity,
+ net.jcip.annotations,
+ org.teiid.designer.datatools
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.adminapi

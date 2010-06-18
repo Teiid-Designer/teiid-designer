@@ -3,6 +3,8 @@ package org.teiid.designer.runtime.connection;
 import java.util.Properties;
 import java.util.Set;
 
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 public class TranslatorProfileFactory {

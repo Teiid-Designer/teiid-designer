@@ -11,9 +11,13 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
 	private final String displayName;
     private final String dataSourceName;
     private final String dataSourceType;
+    private String connectionProfileName;
     private final Properties properties;
+    
+    private final ExecutionAdmin admin;
 
-    public TeiidDataSource( String displayName, String dataSourceName, String dataSourceType) {
+
+	public TeiidDataSource( String displayName, String dataSourceName, String dataSourceType, ExecutionAdmin admin) {
         CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
@@ -21,9 +25,10 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
         this.dataSourceName = dataSourceName;
         this.dataSourceType = dataSourceType;
         this.properties = new Properties();
+        this.admin = admin;
     }
     
-    public TeiidDataSource( String displayName,  String dataSourceName, String dataSourceType, Properties properties) {
+    public TeiidDataSource( String displayName,  String dataSourceName, String dataSourceType, Properties properties, ExecutionAdmin admin) {
         CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
@@ -31,7 +36,13 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
         this.dataSourceName = dataSourceName;
         this.dataSourceType = dataSourceType;
         this.properties = properties;
+        this.admin = admin;
     }
+    
+
+    public ExecutionAdmin getAdmin() {
+		return admin;
+	}
 
     /**
      * {@inheritDoc}
@@ -63,6 +74,9 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
     
 
     public String getDisplayName() {
+    	if( this.connectionProfileName != null ) {
+    		return this.displayName + ":" + this.connectionProfileName; //$NON-NLS-1$
+    	}
         return this.displayName;
     }
 
@@ -89,7 +103,14 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
     public String getPropertyValue( String name ) {
         return this.properties.getProperty(name);
     }
+    
+    public void setProfileName( String name ) {
+    	this.connectionProfileName = name;
+    }
 
+    public String getProfileName() {
+    	return this.connectionProfileName;
+    }
 
     /**
      * {@inheritDoc}

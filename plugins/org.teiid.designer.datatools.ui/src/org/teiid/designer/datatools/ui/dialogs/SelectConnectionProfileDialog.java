@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.ui.connection;
+package org.teiid.designer.datatools.ui.dialogs;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,22 +23,22 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.MessageLabel;
 
 public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
-    private static final String DEFAULT_TITLE = DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.title"); //$NON-NLS-1$ 
-    private static final String NEW_BUTTON_TEXT = DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.newButton"); //$NON-NLS-1$
+    private static final String DEFAULT_TITLE = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.title"); //$NON-NLS-1$ 
+    private static final String NEW_BUTTON_TEXT = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.newButton"); //$NON-NLS-1$
     	
     private Text fileNameText;
     private MessageLabel statusMessageLabel;
     private Button newCPButton;
     private IConnectionProfile selectedCP;
     
-    private static final String UNKNOWN_FILE = DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.unknownFileName");  //$NON-NLS-1$
+    private static final String UNKNOWN_FILE = DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.unknownFileName");  //$NON-NLS-1$
 
 	/**
      * Construct an instance of ModelWorkspaceDialog. This constructor defaults to the resource root.
@@ -61,7 +61,7 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
             ITreeContentProvider contentProvider  ) {
     	 super(parent, labelProvider, contentProvider);
     	 setTitle(title);
-    	 setMessage(DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.defaultMessage")); //$NON-NLS-1$
+    	 setMessage(DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.defaultMessage")); //$NON-NLS-1$
     	 setInput(ProfileManager.getInstance());//.getRootCategories());
     	 setAllowMultiple(false);
     }
@@ -75,9 +75,9 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
         panel.setLayoutData(panelData);
         
 //        createMessageArea(panel);
-//        setMessage(DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.defaultMessage")); //$NON-NLS-1$
+//        setMessage(DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.defaultMessage")); //$NON-NLS-1$
         
-        Group selectedGroup = WidgetFactory.createGroup(panel, DqpUiConstants.UTIL.getString("SelectConnectionProfileDialog.selectedGroupTitle"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
+        Group selectedGroup = WidgetFactory.createGroup(panel, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.selectedGroupTitle"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
         //selectedGroup.setText(null);
         selectedGroup.setLayout(new GridLayout(2, false));
 
@@ -139,16 +139,16 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
 	}
 	
 	private void updateOnSelection(Object selectedObject) {
-		IStatus status = new Status(IStatus.INFO, DqpUiPlugin.PLUGIN_ID, DqpUiConstants.UTIL.getString("SetConnectionProfileAction.okSelectionMessage")); //$NON-NLS-1$
+		IStatus status = new Status(IStatus.INFO, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.okSelectionMessage")); //$NON-NLS-1$
 		if( selectedObject != null ) {
 			if( selectedObject instanceof ICategory ) {
-				status = new Status(IStatus.ERROR, DqpUiPlugin.PLUGIN_ID, DqpUiConstants.UTIL.getString("SetConnectionProfileAction.categorySelectionMessage")); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.categorySelectionMessage")); //$NON-NLS-1$
 				getOkButton().setEnabled(false);
 			} else {
 				getOkButton().setEnabled(true);
 			}
 		} else {
-			status = new Status(IStatus.ERROR, DqpUiPlugin.PLUGIN_ID, DqpUiConstants.UTIL.getString("SetConnectionProfileAction.invalidSelectionMessage")); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.invalidSelectionMessage")); //$NON-NLS-1$
 			getOkButton().setEnabled(false);
 		}
 		

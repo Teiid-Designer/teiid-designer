@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -52,10 +53,12 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
@@ -130,6 +133,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
      * Sets the selected Server as the default server for preview and execution
      */
     private SetDefaultServerAction setDefaultServerAction;
+    
+    private Action deleteDataSourceAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
@@ -452,6 +457,10 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
                 manager.add(this.newServerAction);
             } else if (selection instanceof TeiidTranslator) {
                 manager.add(this.newServerAction);
+            } else if (selection instanceof TeiidDataSource ) {
+            	manager.add(this.deleteDataSourceAction);
+                manager.add(new Separator());
+                manager.add(this.newServerAction);
             } else {
                 manager.add(this.openModelAction);
                 manager.add(new Separator());
@@ -535,6 +544,26 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
         this.collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
         this.collapseAllAction.setEnabled(true);
+        
+        this.deleteDataSourceAction = new Action("Delete Teiid Data Source") { //$NON-NLS-1$
+            @Override
+            public void run() {
+                // GEt Selection and call admin.removeDataSource()?
+            	TeiidDataSource tds = (TeiidDataSource)getSelectedObject();
+            	ExecutionAdmin admin = tds.getAdmin();
+            	if( admin != null ) {
+            		try {
+						admin.deleteDataSource(tds.getName());
+					} catch (Exception e) {
+						DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
+					}
+            	}
+            	
+            }
+        };
+        
+        this.deleteDataSourceAction.setToolTipText(getString("deleteDataSourceAction.tooltip")); //$NON-NLS-1$
+        this.deleteDataSourceAction.setEnabled(true);
 
         // the shell used for dialogs that the actions display
         Shell shell = this.getSite().getShell();

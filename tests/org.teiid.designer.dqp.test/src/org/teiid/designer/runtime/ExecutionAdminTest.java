@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,9 +21,11 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.Admin;
@@ -44,6 +47,15 @@ public class ExecutionAdminTest {
 	
     private static Collection<PropertyDefinition> PROP_DEFS;
     
+    @Mock
+    private Admin admin;
+    
+    @Mock 
+    private Server server;
+    
+    @Mock
+    private EventManager eventManager;
+    
     @Before
     public void beforeEach() {
     	new ModelWorkspaceMock();
@@ -55,7 +67,7 @@ public class ExecutionAdminTest {
     }
 
     private ExecutionAdmin getNewAdmin() throws Exception {
-        return new ExecutionAdmin(mock(Admin.class), mock(Server.class), mock(EventManager.class));
+        return new ExecutionAdmin(admin, server, eventManager);
     }
 
     private TeiidTranslator getNewTeiidTranslator() throws Exception {
@@ -91,7 +103,18 @@ public class ExecutionAdminTest {
 
     @Test
     public void shouldDeployVdb() throws Exception {
-        getNewAdmin().deployVdb(mock(IFile.class));
+    	String vdbName = "MyVdb.vdb";
+    	IFile vdbFile = mock(IFile.class);
+    	//vdbFile.getFullPath().lastSegment();
+    	IPath vdbPath = mock(IPath.class);
+    	when(vdbPath.lastSegment()).thenReturn(vdbName);
+    	when(vdbFile.getFullPath()).thenReturn(vdbPath);
+    	
+    	//admin.deployVDB(vdbName, vdbFile.getContents());
+    	InputStream inputStream = mock(InputStream.class);
+    	when(vdbFile.getContents()).thenReturn(inputStream);
+    	
+        getNewAdmin().deployVdb(vdbFile);
     }
 
     @Test

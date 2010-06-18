@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+        id="SetConnectionProfileAction"
+        name="%setConnectionProfileAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction"
+         label="%setConnectionProfileAction.label">
+      </resourceAction>
+   </extension>
+
+</plugin>

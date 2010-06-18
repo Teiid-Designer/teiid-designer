@@ -60,6 +60,8 @@ Require-Bundle: org.eclipse.ui.views,
  org.teiid.designer.udf,
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.connectivity.db.generic.ui,
- org.eclipse.datatools.connectivity.ui
+ org.eclipse.datatools.connectivity.ui,
+ org.teiid.designer.datatools.ui,
+ org.teiid.designer.datatools
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

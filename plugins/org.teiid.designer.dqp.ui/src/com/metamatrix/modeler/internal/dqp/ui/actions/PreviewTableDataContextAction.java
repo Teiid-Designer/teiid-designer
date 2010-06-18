@@ -42,8 +42,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
-import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
-import org.teiid.designer.runtime.ui.connection.SetConnectionProfileAction;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
+import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;

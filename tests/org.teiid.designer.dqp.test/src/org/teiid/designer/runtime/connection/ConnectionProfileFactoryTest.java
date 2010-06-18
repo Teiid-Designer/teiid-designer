@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.junit.Before;
 import org.junit.Test;
+import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
 
 import com.metamatrix.core.util.StringUtilities;
 

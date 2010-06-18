@@ -124,11 +124,12 @@ public class ExecutionAdmin {
     	
     	// Check that local name list contains new jndiName
     	if( dataSourceExists(jndiName) ) {
-    		TeiidDataSource tds = new TeiidDataSource(displayName, jndiName, typeName);
-    		this.dataSourceByNameMap.put(jndiName, tds);
+    		TeiidDataSource tds = connectionMatcher.findTeiidDataSource(jndiName, this);
     		
-    		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
-    		
+    		if( tds != null ) {
+    			this.dataSourceByNameMap.put(jndiName, tds);
+    			this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
+    		}
     		return tds;
     	}
     	
@@ -266,7 +267,7 @@ public class ExecutionAdmin {
         // populate data source names list
         refreshDataSourceNames();
         
-        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources();
+        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this);
         for( TeiidDataSource ds :tdsList ) {
         	this.dataSourceByNameMap.put(ds.getName(), ds);
         }
@@ -293,7 +294,8 @@ public class ExecutionAdmin {
      */
     protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
         for (Translator translator : translators) {
-        	if( translator.getName() != null ) {
+        	// TODO: modeshape has not template show currently throwing exception. Remove check below when it shows up.
+        	if( translator.getName() != null && !translator.getName().equalsIgnoreCase("modeshape")) { //$NON-NLS-1$
         		Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
 	            this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
         	}

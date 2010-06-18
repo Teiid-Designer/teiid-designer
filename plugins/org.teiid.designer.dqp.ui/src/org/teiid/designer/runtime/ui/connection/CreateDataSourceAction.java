@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.TeiidDataSource;
-import org.teiid.designer.runtime.connection.ConnectionInfoHelper;
+import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -27,7 +27,7 @@ public class CreateDataSourceAction  extends SortableSelectionAction implements 
     private static final String label = "Create Teiid Data Source"; //$NON-NLS-1$
     public static final String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$
     
-    private ConnectionInfoHelper helper;
+    private DqpConnectionInfoHelper helper;
     
     /**
      * @since 5.0
@@ -35,7 +35,7 @@ public class CreateDataSourceAction  extends SortableSelectionAction implements 
     public CreateDataSourceAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
-        this.helper = new ConnectionInfoHelper();
+        this.helper = new DqpConnectionInfoHelper();
     }
 
     /**
@@ -140,7 +140,7 @@ public class CreateDataSourceAction  extends SortableSelectionAction implements 
     }
     
     public Properties getConnectionProperties(IFile model) throws ModelWorkspaceException {
-    	ConnectionInfoHelper helper = new ConnectionInfoHelper();
+    	DqpConnectionInfoHelper helper = new DqpConnectionInfoHelper();
     	
     	ModelResource modelResource = null;
     	

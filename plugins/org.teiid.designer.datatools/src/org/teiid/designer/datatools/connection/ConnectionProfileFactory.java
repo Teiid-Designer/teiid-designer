@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.connection;
+package org.teiid.designer.datatools.connection;
 
 import java.util.Properties;
 import java.util.Set;

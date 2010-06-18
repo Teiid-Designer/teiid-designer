@@ -1,4 +1,4 @@
-package org.teiid.designer.runtime.ui.connection;
+package org.teiid.designer.datatools.ui.dialogs;
 
 import java.util.ArrayList;
 
