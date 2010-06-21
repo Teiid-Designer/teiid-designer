@@ -8,13 +8,13 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,
- org.eclipse.datatools.connectivity.ui;bundle-version="1.1.4",
- org.eclipse.datatools.help;bundle-version="1.5.0",
- org.eclipse.datatools.sqltools.plan;bundle-version="1.0.0",
- org.eclipse.datatools.sqltools.editor.core.ui;bundle-version="1.0.0",
+ org.eclipse.datatools.connectivity.ui,
+ org.eclipse.datatools.help,
+ org.eclipse.datatools.sqltools.plan,
+ org.eclipse.datatools.sqltools.editor.core.ui,
  org.eclipse.datatools.sqltools.sqleditor,
- org.eclipse.datatools.sqltools.data.core;bundle-version="1.1.0",
- org.eclipse.datatools.sqltools.sql;bundle-version="1.0.0",
+ org.eclipse.datatools.sqltools.data.core,
+ org.eclipse.datatools.sqltools.sql,
  org.teiid.datatools.connectivity
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
