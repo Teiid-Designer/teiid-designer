@@ -26,6 +26,44 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          version="0.0.0"
          name="Teiid Designer Design-time"/>
 
+   <requires>
+      <import feature="org.eclipse.datatools.common.doc.user" version="1.7.0.v200908280400-26-311A16321A3557"/>
+      <import feature="org.eclipse.datatools.connectivity.doc.user" version="1.7.0.v200908280400-37D-7733L3D753L7BBF"/>
+      <import feature="org.eclipse.datatools.connectivity.feature" version="1.7.0.v200908280400-7B7OAIEn1XeacwFFi4FhDyooRMY"/>
+      <import feature="org.eclipse.datatools.connectivity.oda.designer.feature" version="1.7.1.v200908280400-7E7C77DZRDEBDyIYEqgX"/>
+      <import feature="org.eclipse.datatools.connectivity.oda.feature" version="1.7.1.v200908280400-7H794CcNBC0BvEdEXZe"/>
+      <import feature="org.eclipse.datatools.doc.user" version="1.7.0.v200908280400-47C08w95ENAK6AFDFK7"/>
+      <import feature="org.eclipse.datatools.enablement.apache.derby.feature" version="1.7.0.v200908280400-7768bBmKDLfMjHuIFJW7SBI"/>
+      <import feature="org.eclipse.datatools.enablement.feature" version="1.7.0.v200908280400-7J8i2BWwQJOaz-Gi2C5seJM2FX2f"/>
+      <import feature="org.eclipse.datatools.enablement.hsqldb.feature" version="1.7.0.v200908280400-67B0AqGBJVKbGuH3GP7SBI"/>
+      <import feature="org.eclipse.datatools.enablement.ibm.feature" version="1.7.0.v200908280400-7F47HFC7sRTNSjXAYIRR"/>
+      <import feature="org.eclipse.datatools.enablement.ingres.feature" version="1.7.0.v200908280400-540AkF77g7VBLBPH7"/>
+      <import feature="org.eclipse.datatools.enablement.jdbc.feature" version="1.7.0.v200908280400-4-29oB55W5P7G6RAH"/>
+      <import feature="org.eclipse.datatools.enablement.jdt.feature" version="1.7.0.v200908280400-2-07w311A17131A11"/>
+      <import feature="org.eclipse.datatools.enablement.msft.feature" version="1.7.0.v200908280400-542AkF77g7XAO9a89"/>
+      <import feature="org.eclipse.datatools.enablement.mysql.feature" version="1.7.0.v200908280400-546AkF77g7V9N9e77"/>
+      <import feature="org.eclipse.datatools.enablement.oda.designer.feature" version="1.7.1.v200908280400-3308s733L3G7D3LDB"/>
+      <import feature="org.eclipse.datatools.enablement.oda.feature" version="1.7.1.v200908280400-7A7T6DZRDEADlLkEfSv"/>
+      <import feature="org.eclipse.datatools.enablement.oracle.feature" version="1.7.0.v200908280400-548aAkF77g7XAO9aBB"/>
+      <import feature="org.eclipse.datatools.enablement.postgresql.feature" version="1.7.0.v200908280400-542AkF77g7V9N9e77"/>
+      <import feature="org.eclipse.datatools.enablement.sap.feature" version="1.7.0.v200908280400-540AkF77g7V9N9e77"/>
+      <import feature="org.eclipse.datatools.enablement.sdk.feature" version="1.7.0.v200908280400-7I8r1FE9JfFmk-yuqu6UI6nZ93ao"/>
+      <import feature="org.eclipse.datatools.enablement.sqlite.feature" version="1.7.0.v200908280400-541AkF77g7V9N9e77"/>
+      <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.7.0.v200908280400-7E45F9NiNWvOOXxPdVT"/>
+      <import feature="org.eclipse.datatools.intro" version="1.7.0.v200908280400-26-7w311A17142212"/>
+      <import feature="org.eclipse.datatools.modelbase.feature" version="1.7.0.v200908280400-77-3CcNBC0BkBNNN_0"/>
+      <import feature="org.eclipse.datatools.sdk.feature" version="1.7.0.v200908280400-7O9I2FD0IVGI8_B7adJMUQbHyqiC"/>
+      <import feature="org.eclipse.datatools.sqldevtools.data.feature" version="1.7.0.v200908280400-611BgJ99r9gBQFYDK"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddl.feature" version="1.7.0.v200908280400-26-78B01G8S_IJYJ9JaYkMe"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddlgen.feature" version="1.7.0.v200908280400-7A-0F7RZHIXI8I_XjLd"/>
+      <import feature="org.eclipse.datatools.sqldevtools.feature" version="1.7.0.v200908280400-7N7q0FDr_hSWLSCOHZJgj34YyjZl"/>
+      <import feature="org.eclipse.datatools.sqldevtools.parsers.feature" version="1.7.0.v200908280400-602BgJ99q9_9OGXFJ"/>
+      <import feature="org.eclipse.datatools.sqldevtools.results.feature" version="1.7.0.v200908280400-4019oB55W5P6H9B99"/>
+      <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0.v200908280400-42-8375LG5BJ93413"/>
+      <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0.v200908280400-79--EVVFGMFz0FVTiFT"/>
+      <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0.v200908280400-37D-7733L3D753L7BBF"/>
+   </requires>
+
    <plugin
          id="org.teiid.designer.dqp"
          download-size="0"
@@ -49,9 +87,11 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
    <plugin
          id="net.jcip.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
 </feature>
