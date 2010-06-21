@@ -183,6 +183,8 @@ public class ConnectionInfoHelper {
 		try {
 			// get name-spaced properties
 			Properties props = getProperties(connectionProfile);
+			props.remove(CONNECTION_PROFILE_NAMESPACE + PASSWORD_KEY);
+			
 			// Remove old connection properties
 			getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
 			// Add new connection properties
@@ -208,6 +210,8 @@ public class ConnectionInfoHelper {
 		try {
 			// get name-spaced properties
 			Properties props = getProperties(connectionProfile);
+			
+			props.remove(CONNECTION_PROFILE_NAMESPACE + PASSWORD_KEY);
 			// Remove old connection properties
 			getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
 			
