@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbModelEntry;
-import org.teiid.designer.vdb.VdbPlugin;
+import com.metamatrix.modeler.core.ModelerCore;
 
 /**
  * 
@@ -41,7 +41,7 @@ public class SourceElement implements Serializable {
 
     SourceElement( final VdbModelEntry entry ) {
         name = entry.getSourceName();
-        final StringBuilder builder = new StringBuilder(VdbPlugin.workspaceUuid().toString());
+        final StringBuilder builder = new StringBuilder(ModelerCore.workspaceUuid().toString());
         for (final String segment : entry.getName().removeLastSegments(1).segments())
             builder.append('.').append(segment);
         jndiName = entry.getJndiName();
