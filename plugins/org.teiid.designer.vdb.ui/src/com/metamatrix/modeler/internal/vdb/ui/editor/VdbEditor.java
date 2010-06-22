@@ -70,7 +70,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
 /**
  * @since 4.0
  */
-// TODO: read-only, undo/redo
+// TODO: read-only, undo/redo, function model 259
 public final class VdbEditor extends EditorPart {
 
     private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
