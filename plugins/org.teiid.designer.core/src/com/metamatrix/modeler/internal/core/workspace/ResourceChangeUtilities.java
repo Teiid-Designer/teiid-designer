@@ -97,8 +97,11 @@ public class ResourceChangeUtilities {
         }
 
         System.out.println("********************event=" + System.identityHashCode(theEvent)); //$NON-NLS-1$
+        System.out.println("type=" + theEvent.getType()); //$NON-NLS-1$
         System.out.println("resource=" + theEvent.getResource()); //$NON-NLS-1$
-        System.out.println("isPre=" + isPreEvent(theEvent)); //$NON-NLS-1$
+        System.out.println("isPreClose=" + isPreClose(theEvent)); //$NON-NLS-1$
+        System.out.println("isPreDelete=" + isPreDelete(theEvent)); //$NON-NLS-1$
+        System.out.println("isPreAutoBuild=" + isPreAutoBuild(theEvent)); //$NON-NLS-1$
         System.out.println("delta=" + theEvent.getDelta()); //$NON-NLS-1$
         System.out.println("isPostAutoBuild=" + isPostAutoBuild(theEvent)); //$NON-NLS-1$
         System.out.println("isPostChange=" + isPostChange(theEvent)); //$NON-NLS-1$
