@@ -52,6 +52,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
@@ -60,6 +61,7 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
@@ -93,8 +95,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     private static final String SOURCE_BINDING_STATUS_NONE = "statusBarUpdater.statusLabelNotBound"; //$NON-NLS-1$
     private static final String CONNECTOR_BINDING_STATUS_LABEL = "statusBarUpdater.connectorBindingStatusLabel"; //$NON-NLS-1$
 
-    static final String SHOW_CONNECTORS_LABEL = getString("showConnectors.tooltip"); //$NON-NLS-1$
-    static final String HIDE_CONNECTORS_LABEL = getString("hideConnectors.tooltip"); //$NON-NLS-1$
+    static final String SHOW_TRANSLATORS_LABEL = getString("showTranslators.tooltip"); //$NON-NLS-1$
+    static final String HIDE_TRANSLATORS_LABEL = getString("hideTranslators.tooltip"); //$NON-NLS-1$
 
     static String getString( final String stringId ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId);
@@ -103,7 +105,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     TreeViewer viewer;
     TeiidViewTreeProvider treeProvider;
 
-    //Action showConnectorTypesToggleAction;
+    Action showTranslatorsToggleAction;
     private Action openModelAction;
     /**
      * Collapses all tree nodes.
@@ -135,6 +137,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     private SetDefaultServerAction setDefaultServerAction;
     
     private Action deleteDataSourceAction;
+    
+    private Action undeployVdbAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
@@ -188,7 +192,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         initDragAndDrop();
 
         treeProvider = new TeiidViewTreeProvider();
-//        treeProvider.setShowTypes(true);
+        treeProvider.setShowTranslators(false);
         viewer.setContentProvider(treeProvider);
         viewer.setLabelProvider(treeProvider);
 
@@ -365,6 +369,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
                                 String tooltip = CoreStringUtil.Constants.EMPTY_STRING;
                                 if (data instanceof TeiidTranslator) {
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
+                                } else if( data instanceof TeiidVdb ) { 
+                                	tooltip = getVDBToolTip((TeiidVdb)data);
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -404,6 +410,16 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", new Object[] { //$NON-NLS-1$
             connector.getName()});
     }
+    
+    String getVDBToolTip( TeiidVdb vdb ) {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append(vdb.getName()).append("  contains:"); //$NON-NLS-1$
+    	for( Model model : vdb.getVdb().getModels()) {
+    		builder.append("\n   ").append(model.getName()); //$NON-NLS-1$
+    	}
+        return builder.toString();
+    }
+    
 
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -461,6 +477,10 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
             	manager.add(this.deleteDataSourceAction);
                 manager.add(new Separator());
                 manager.add(this.newServerAction);
+            } else if( selection instanceof TeiidVdb) { 
+            	manager.add(this.undeployVdbAction);
+                manager.add(new Separator());
+                manager.add(this.newServerAction);
             } else {
                 manager.add(this.openModelAction);
                 manager.add(new Separator());
@@ -475,7 +495,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
-        //manager.add(this.showConnectorTypesToggleAction);
+        manager.add(this.showTranslatorsToggleAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
     }
@@ -512,27 +532,27 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         };
         this.openModelAction.setEnabled(true);
 
-//        this.showConnectorTypesToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
-//            @Override
-//            public void run() {
-//                treeProvider.setShowTypes(showConnectorTypesToggleAction.isChecked());
-//                // Set Tooltip based on toggle state
-//                if (showConnectorTypesToggleAction.isChecked()) {
-//                    showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
-//                    viewer.refresh();
-//                    viewer.expandAll();
-//                } else {
-//                    showConnectorTypesToggleAction.setToolTipText(SHOW_CONNECTORS_LABEL);
-//                    viewer.refresh();
-//                    viewer.expandAll();
-//                }
-//
-//            }
-//        };
-//        this.showConnectorTypesToggleAction.setEnabled(true);
-//        this.showConnectorTypesToggleAction.setChecked(true);
-//        this.showConnectorTypesToggleAction.setToolTipText(HIDE_CONNECTORS_LABEL);
-//        this.showConnectorTypesToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
+        this.showTranslatorsToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                treeProvider.setShowTranslators(showTranslatorsToggleAction.isChecked());
+                // Set Tooltip based on toggle state
+                if (showTranslatorsToggleAction.isChecked()) {
+                	showTranslatorsToggleAction.setToolTipText(HIDE_TRANSLATORS_LABEL);
+                    viewer.refresh();
+                    viewer.expandAll();
+                } else {
+                	showTranslatorsToggleAction.setToolTipText(SHOW_TRANSLATORS_LABEL);
+                    viewer.refresh();
+                    viewer.expandAll();
+                }
+
+            }
+        };
+        this.showTranslatorsToggleAction.setEnabled(true);
+        this.showTranslatorsToggleAction.setChecked(true);
+        this.showTranslatorsToggleAction.setToolTipText(HIDE_TRANSLATORS_LABEL);
+        this.showTranslatorsToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
 
         this.collapseAllAction = new Action() {
             @Override
@@ -545,7 +565,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         this.collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
         this.collapseAllAction.setEnabled(true);
         
-        this.deleteDataSourceAction = new Action("Delete Teiid Data Source") { //$NON-NLS-1$
+        this.deleteDataSourceAction = new Action(getString("deleteTeiidDataSourceAction")) { //$NON-NLS-1$
             @Override
             public void run() {
                 // GEt Selection and call admin.removeDataSource()?
@@ -565,6 +585,27 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         this.deleteDataSourceAction.setToolTipText(getString("deleteDataSourceAction.tooltip")); //$NON-NLS-1$
         this.deleteDataSourceAction.setEnabled(true);
 
+        this.undeployVdbAction = new Action(getString("undeployVdbAction")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                // GEt Selection and call admin.removeDataSource()?
+            	TeiidVdb vdb = (TeiidVdb)getSelectedObject();
+
+            	ExecutionAdmin admin = vdb.getAdmin();
+            	if( admin != null ) {
+            		try {
+						admin.undeployVdb(vdb.getVdb());
+					} catch (Exception e) {
+						DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
+					}
+            	}
+            	
+            }
+        };
+        
+        this.undeployVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
+        this.undeployVdbAction.setEnabled(true);
+        
         // the shell used for dialogs that the actions display
         Shell shell = this.getSite().getShell();
         // the reconnect action tries to ping a selected server

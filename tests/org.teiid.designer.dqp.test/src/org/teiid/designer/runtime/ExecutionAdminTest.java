@@ -31,6 +31,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
+import org.teiid.adminapi.VDB;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.vdb.Vdb;
 
@@ -107,12 +108,18 @@ public class ExecutionAdminTest {
     	IFile vdbFile = mock(IFile.class);
     	//vdbFile.getFullPath().lastSegment();
     	IPath vdbPath = mock(IPath.class);
+    	IPath vdbNoExtPath = mock(IPath.class);
     	when(vdbPath.lastSegment()).thenReturn(vdbName);
     	when(vdbFile.getFullPath()).thenReturn(vdbPath);
+    	when(vdbPath.removeFileExtension()).thenReturn(vdbNoExtPath);
+    	when(vdbNoExtPath.lastSegment()).thenReturn("MyVdb");
     	
     	//admin.deployVDB(vdbName, vdbFile.getContents());
     	InputStream inputStream = mock(InputStream.class);
     	when(vdbFile.getContents()).thenReturn(inputStream);
+    	
+    	VDB vdb = mock(VDB.class);
+    	when(admin.getVDB("MyVdb", 1)).thenReturn(vdb);
     	
         getNewAdmin().deployVdb(vdbFile);
     }

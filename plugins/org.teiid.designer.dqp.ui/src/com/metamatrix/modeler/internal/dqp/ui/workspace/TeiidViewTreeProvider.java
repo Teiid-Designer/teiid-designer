@@ -21,6 +21,7 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.TeiidVdb;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -39,7 +40,8 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
 
     private boolean showModelMappings = false;
 
-//    private boolean showTypes = false;
+//    private boolean showWorkspaceItems = false;
+    private boolean showTranslators = false;
 
     /**
      * @since 5.0
@@ -65,38 +67,31 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         if (parentElement instanceof Server) {
             Object[] result = null;
 
-//            if (showTypes) {
-                try {
-                    Collection<TeiidTranslator> translators = ((Server)parentElement).getAdmin().getTranslators();
-                    Collection<TeiidDataSource> dataSources = ((Server)parentElement).getAdmin().getDataSources();
-                    Collection<Object> allObjects = new ArrayList<Object>();
-                    allObjects.addAll(translators);
-                    allObjects.addAll(dataSources);
-                    
-                    result = allObjects.toArray();
-                    
-                } catch (AdminComponentException ace) {
-                    return new Object[0];
-                } catch (Exception e) {
-                    DqpPlugin.Util.log(e);
-                    return new Object[0];
+            try {
+                Collection<TeiidTranslator> translators = new ArrayList<TeiidTranslator>();
+                Collection<TeiidDataSource> dataSources = ((Server)parentElement).getAdmin().getDataSources();
+                Collection<TeiidVdb> vdbs = ((Server)parentElement).getAdmin().getVdbs();
+                
+                if( showTranslators ) {
+                	translators = ((Server)parentElement).getAdmin().getTranslators();
                 }
-
-                return result;
-//            }
-//            /Collection<TeiidTranslator> allConnectors = new ArrayList<TeiidTranslator>();
-
-//            try {
-//                for (TeiidTranslatorType type : ((Server)parentElement).getAdmin().getTranslatorTypes()) {
-//                    allConnectors.addAll(type.getAdmin().getTranslators());
-//                }
-//            } catch (AdminComponentException ace) {
-//                return new Object[0];
-//            } catch (Exception e) {
-//                DqpPlugin.Util.log(e);
-//            }
-//
-//            return allConnectors.toArray();
+                
+                
+                Collection<Object> allObjects = new ArrayList<Object>();
+                allObjects.addAll(translators);
+                allObjects.addAll(dataSources);
+                allObjects.addAll(vdbs);
+                
+                result = allObjects.toArray();
+                
+            } catch (AdminComponentException ace) {
+                return new Object[0];
+            } catch (Exception e) {
+                DqpPlugin.Util.log(e);
+                return new Object[0];
+            }
+   
+            return result;
 
         } else if (parentElement instanceof TeiidTranslator) {
             @SuppressWarnings("unused")
@@ -121,16 +116,6 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         } else if (parentElement instanceof SourceConnectionBinding) {
             return new Object[0];
         } 
-//        else if (parentElement instanceof TeiidTranslatorType) {
-//            TeiidTranslatorType type = (TeiidTranslatorType)parentElement;
-//            Object[] types = null;
-//            try {
-//                types = type.getAdmin().getTranslators((TeiidTranslatorType)parentElement).toArray();
-//            } catch (Exception e) {
-//                types = new Object[0];
-//            }
-//            return types;
-//        }
 
         return new Object[0];
     }
@@ -169,6 +154,11 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         if (element instanceof TeiidDataSource) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
         }
+        
+        
+        if (element instanceof TeiidVdb) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+        }
 
         if (element instanceof SourceConnectionBinding) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
@@ -191,6 +181,11 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         if (element instanceof TeiidDataSource) {
             return ((TeiidDataSource)element).getDisplayName();
         }
+        
+        if (element instanceof TeiidVdb) {
+            return ((TeiidVdb)element).getName();
+        }
+        
         if (element instanceof SourceConnectionBinding) {
             SourceConnectionBinding binding = (SourceConnectionBinding)element;
             return binding.getModelName();
@@ -280,8 +275,8 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public void removeListener( ILabelProviderListener listener ) {
     }
 
-//    public void setShowTypes( boolean value ) {
-//        this.showTypes = value;
-//    }
+    public void setShowTranslators( boolean value ) {
+        this.showTranslators = value;
+    }
 
 }

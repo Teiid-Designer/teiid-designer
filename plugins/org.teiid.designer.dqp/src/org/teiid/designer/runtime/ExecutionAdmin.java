@@ -40,7 +40,8 @@ public class ExecutionAdmin {
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final Server server;
-    private Set<VDB> vdbs;
+//    private Set<VDB> vdbs;
+    private Set<TeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
     
     private boolean loaded = false;
@@ -72,7 +73,7 @@ public class ExecutionAdmin {
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
-        this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+        refreshVDBs();
     }
     /**
      * 
@@ -195,11 +196,32 @@ public class ExecutionAdmin {
         CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         String vdbName = vdbFile.getFullPath().lastSegment();
+        String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
         
         admin.deployVDB(vdbName, vdbFile.getContents());
 
+        refreshVDBs();
+        
+        VDB vdb = admin.getVDB(vdbNameNoExt, 1);
+        
+		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
 
-        return admin.getVDB(vdbName, 1);
+        return vdb;
+    }
+    
+    /**
+     * @param vdb
+     * @return
+     */
+    public void undeployVdb( VDB vdb ) throws Exception {
+        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+
+        
+        admin.deleteVDB(vdb.getName(), vdb.getVersion());
+
+        refreshVDBs();
+        
+		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
     }
 
     Admin getAdminApi() {
@@ -238,8 +260,8 @@ public class ExecutionAdmin {
     /**
      * @return an unmodifiable set of VDBs deployed on the server
      */
-    public Set<VDB> getVdbs() {
-        return this.vdbs;
+    public Set<TeiidVdb> getVdbs() {
+        return this.teiidVdbs;
     }
 
     /**
@@ -250,8 +272,8 @@ public class ExecutionAdmin {
     public VDB getVdb( String name ) {
         CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
 
-        for (VDB vdb : this.vdbs) {
-            if (vdb.getName().equals(name)) return vdb;
+        for (TeiidVdb vdb : this.teiidVdbs) {
+            if (vdb.getName().equals(name)) return vdb.getVdb();
         }
 
         return null;
@@ -274,11 +296,18 @@ public class ExecutionAdmin {
 
         // populate VDBs and source bindings
         // TODO may need to filter out hidden vdb
-        this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+        refreshVDBs();
     }
     
     protected void refreshVDBs() throws Exception {
-    	this.vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+    	Set<VDB> vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+    	Set<TeiidVdb> tmpVdbs = new HashSet();
+    	
+    	for( VDB vdb : vdbs ) {
+    		tmpVdbs.add(new TeiidVdb(vdb, this));
+    	}
+    	
+    	this.teiidVdbs = Collections.unmodifiableSet(tmpVdbs);
     }
     
     protected void refreshDataSourceNames() throws Exception {
