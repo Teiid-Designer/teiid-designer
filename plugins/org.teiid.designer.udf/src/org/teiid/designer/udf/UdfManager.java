@@ -46,6 +46,7 @@ import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.Validator;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
@@ -290,7 +291,13 @@ public final class UdfManager implements IResourceChangeListener {
         if (!udfModel.exists()) {
             IPath udfDir = getPluginInstallPath().append(UDF_PROJECT_NAME);
             File originalUdfModel = udfDir.append(UDF_MODEL_NAME).toFile();
-            FileUtils.copy(originalUdfModel.getAbsolutePath(), udfModel.getAbsolutePath());
+            if( originalUdfModel.exists() ) {
+            	FileUtils.copy(originalUdfModel.getAbsolutePath(), udfModel.getAbsolutePath());
+            } else {
+                String msg = UdfPlugin.UTIL.getString(I18nUtil.getPropertyPrefix(UdfManager.class) + "functionModelNotInstalled", originalUdfModel.getAbsolutePath()); //$NON-NLS-1$
+                IStatus status = new Status(IStatus.ERROR, UdfPlugin.PLUGIN_ID, msg);
+                throw new CoreException(status);
+            }
         }
 
         // make sure UDF model project exists
