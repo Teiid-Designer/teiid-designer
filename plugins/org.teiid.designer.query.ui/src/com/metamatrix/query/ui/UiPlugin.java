@@ -12,6 +12,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
 import org.teiid.core.CoreConstants.Debug;
+import org.teiid.designer.udf.UdfPlugin;
+
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.query.ui.actions.QueryActionService;
 import com.metamatrix.ui.AbstractUiPlugin;
@@ -56,6 +58,10 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, UiConstan
         storeDefaultPreferenceValues();
         // Initialize logging/i18n utility
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
+        
+        // UDF: Insure that this plugin is initialized too
+        
+        UdfPlugin.getInstance();
     }
 
     /**

@@ -40,8 +40,8 @@ public final class UdfPlugin extends Plugin {
         return new Status(IStatus.ERROR, PLUGIN_ID, msg);
     }
 
-    static UdfPlugin getInstance() {
-        return plugin;
+    public static UdfPlugin getInstance() {
+        return UdfPlugin.plugin;
     }
 
     /**
