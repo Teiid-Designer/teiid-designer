@@ -131,6 +131,6 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
      */
     @Override
     public String toString() {
-    	return "Teiid Data Source: " + getDisplayName() + "  JNDI Name: " + getName();  //$NON-NLS-1$//$NON-NLS-2$
+    	return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName();  //$NON-NLS-1$//$NON-NLS-2$
     }
 }

@@ -20,7 +20,6 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * 

@@ -87,6 +87,12 @@ public class ModelConnectionMatcher {
 		    		if( tds != null ) {
 				    	return tds;
 		    		}
+	    		} else {
+		    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
+		    		
+		    		if( tds != null ) {
+				    	return tds;
+		    		}
 	    		}
 	        }
 		}

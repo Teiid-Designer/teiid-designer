@@ -66,14 +66,16 @@ public class SetConnectionProfileAction  extends SortableSelectionAction {
         boolean succeeded = false;
         try {
         	ModelEditor editor = ModelEditorManager.getModelEditorForFile(modelFile, true);
-        	boolean isDirty = editor.isDirty();
-        	
-        	SetConnectionProfileAction.setConnectionProfile(modelFile);
-        	
-        	if( !isDirty && editor.isDirty()) {
-        		editor.doSave(new NullProgressMonitor());
+        	if( editor != null ) {
+	        	boolean isDirty = editor.isDirty();
+	        	
+	        	SetConnectionProfileAction.setConnectionProfile(modelFile);
+	        	
+	        	if( !isDirty && editor.isDirty()) {
+	        		editor.doSave(new NullProgressMonitor());
+	        	}
+	        	succeeded = true;
         	}
-        	succeeded = true;
         } finally {
             //if we started the txn, commit it.
             if(requiredStart){

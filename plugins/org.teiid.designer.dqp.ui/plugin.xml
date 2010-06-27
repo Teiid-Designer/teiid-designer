@@ -201,7 +201,7 @@
    <extension
          point="org.teiid.designer.vdb.sourceHandler">
       <class
-            name="org.teiid.designer.runtime.ui.VdbSouceHandler">
+            name="org.teiid.designer.runtime.ui.connection.VdbSourceConnectionHandler">
       </class>
    </extension>
 </plugin>
