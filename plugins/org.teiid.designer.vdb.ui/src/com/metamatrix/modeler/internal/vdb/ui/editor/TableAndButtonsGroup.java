@@ -9,6 +9,9 @@ package com.metamatrix.modeler.internal.vdb.ui.editor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -23,6 +26,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
+
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -31,11 +36,13 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
  */
 public final class TableAndButtonsGroup<T> {
 
-    static final String ADD_BUTTON = VdbUiConstants.Util.getString("addButton"); //$NON-NLS-1$
+	static final String ADD_BUTTON = VdbUiConstants.Util.getString("addButton"); //$NON-NLS-1$
     static final String EDIT_BUTTON = VdbUiConstants.Util.getString("editButton"); //$NON-NLS-1$
     static final String REMOVE_BUTTON = VdbUiConstants.Util.getString("removeButton"); //$NON-NLS-1$
 
     private final Group group;
+    MenuManager menuManager = new MenuManager();
+    
     final Table<T> table;
     final Composite buttonBar;
     final Map<Button, ButtonProvider> buttonProvidersByButton = new ConcurrentHashMap<Button, ButtonProvider>();
@@ -68,6 +75,28 @@ public final class TableAndButtonsGroup<T> {
                 tableProvider.doubleClicked((T)((IStructuredSelection)event.getSelection()).getFirstElement());
             }
         });
+        
+        // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
+        // retrieved via the SourceHandler extenion point and interface.
+        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
+        // connected in the user's workspace.
+        
+        table.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged( SelectionChangedEvent event ) {
+        		menuManager.removeAll();
+        		Object[] actions = SourceHandlerExtensionManager.findApplicableActions(getTable().getViewer().getSelection());
+        		
+        		if( actions != null && actions.length > 0 ) {
+        			for( Object action : actions ) {
+        				if( action instanceof IAction) {
+        					menuManager.add((IAction)action);
+        				}
+        			}
+        		}
+            }
+        });
+
+        table.getViewer().getControl().setMenu(menuManager.createContextMenu(parent));
     }
 
     /**
@@ -122,6 +151,7 @@ public final class TableAndButtonsGroup<T> {
     public void setInput( final Object input ) {
         table.setInput(input);
     }
+    
 
     /**
      * 

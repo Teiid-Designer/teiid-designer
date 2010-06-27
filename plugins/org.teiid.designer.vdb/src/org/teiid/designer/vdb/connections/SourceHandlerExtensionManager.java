@@ -23,6 +23,30 @@ public class SourceHandlerExtensionManager {
 	private static SourceHandler vdbSourceHandler;
 
 	/**
+	 * @param obj the target object
+	 * @return the array of actions in object array form
+	 */
+	public static Object[] findApplicableActions(Object obj) {
+		if( !extensionsLoaded ) {
+			loadExtensions();
+		}
+		
+		Object[] actions = null;
+		
+		if( vdbSourceHandler != null ) {
+			try {
+				actions = vdbSourceHandler.getApplicableActions(obj);
+			} catch (Exception e) {
+                String message = VdbPlugin.UTIL.getString("errorFindingApplicableActionsFor", obj);    //$NON-NLS-1$
+				VdbPlugin.UTIL.log(IStatus.ERROR, e, message);
+			}
+		}
+		
+		return actions;		
+		
+	}
+	
+	/**
 	 * 
 	 * @param sourceModelName
 	 * @param properties

@@ -28,4 +28,13 @@ public interface SourceHandler {
      * @throws Exception 
      */
     public VdbSourceConnection ensureVdbSourceConnection(String sourceModelName, Properties connectionProperties) throws Exception;
+    
+    /**
+     * Method provides a means for the VDB Editor to get actions associated or applicable to a given object. The original
+     * intent is for VdbModelEntry selections to return Select Translator or Select JNDI Name
+     * 
+     * @param iSelection
+     * @return the list of applicable actions
+     */
+    public Object[] getApplicableActions(Object iSelection);
 }
