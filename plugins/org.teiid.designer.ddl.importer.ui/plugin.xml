@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            class="org.teiid.designer.ddl.importer.ui.DdlImportWizard"
+            id="org.teiid.designer.ddl.importer.ui.ddlImportWizard"
+            name="%wizard.name">
+      </wizard>
+   </extension>
+
+</plugin>
