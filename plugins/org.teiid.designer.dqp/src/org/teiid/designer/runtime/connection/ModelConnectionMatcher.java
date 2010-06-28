@@ -38,14 +38,16 @@ public class ModelConnectionMatcher {
 	        final Iterator itor = fileResources.iterator();
 	        while (itor.hasNext()) {
 	            final IFile modelFile = (IFile)itor.next();
-		    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-	    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
-	    		// generate JNDI Name, see if it exists in admin
-	    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
-	    		
-	    		if( tds != null ) {
-			    	dataSources.add(tds);
-	    		}
+	            if( ModelUtil.EXTENSION_XMI.equalsIgnoreCase(modelFile.getFileExtension()) ) {
+			    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
+		    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+		    		// generate JNDI Name, see if it exists in admin
+		    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
+		    		
+		    		if( tds != null ) {
+				    	dataSources.add(tds);
+		    		}
+	            }
 	        }
 		}
 		

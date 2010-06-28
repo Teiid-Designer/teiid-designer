@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -95,6 +96,7 @@ public class SelectJndiDataSourceDialog  extends ElementTreeSelectionDialog impl
         getTreeViewer().addSelectionChangedListener(this);
 
     	getTreeViewer().getTree().setEnabled(true);
+    	getTreeViewer().setSorter(new ViewerSorter());
     	
     	((TeiidViewTreeProvider)getTreeViewer().getContentProvider()).setShowTranslators(false);
     	getTreeViewer().expandToLevel(2);

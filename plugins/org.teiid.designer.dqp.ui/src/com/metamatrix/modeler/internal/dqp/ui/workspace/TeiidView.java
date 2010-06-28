@@ -191,8 +191,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
 
         initDragAndDrop();
 
-        treeProvider = new TeiidViewTreeProvider();
-        treeProvider.setShowTranslators(false);
+        treeProvider = new TeiidViewTreeProvider(true, false, true);
         viewer.setContentProvider(treeProvider);
         viewer.setLabelProvider(treeProvider);
 

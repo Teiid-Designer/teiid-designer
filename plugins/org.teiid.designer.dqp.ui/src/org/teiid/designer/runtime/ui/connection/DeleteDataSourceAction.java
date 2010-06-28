@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.ExecutionAdmin;
@@ -22,7 +23,7 @@ import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class DeleteDataSourceAction extends SortableSelectionAction implements DqpUiConstants {
-    private static final String label = "Delete Teiid Data Source"; //$NON-NLS-1$
+	private static final String label = DqpUiConstants.UTIL.getString("DeleteDataSourceAction.label"); //$NON-NLS-1$
     public static final String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$
     
     private DqpConnectionInfoHelper helper;
@@ -56,8 +57,8 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     	try {
 			removeDataSource(modelFile);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("DeleteDataSourceAction.errorRemovingDataSource", modelFile.getName())); //$NON-NLS-1$
 		}
     }
     
@@ -138,14 +139,15 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     	try {
     		modelResource = ModelUtilities.getModelResource(model, true);
 		} catch (ModelWorkspaceException e) {
-			// TODO LOG THIS EXCEPTION
-			e.printStackTrace();
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("DeleteDataSourceAction.errorFindingModelResource", model.getName())); //$NON-NLS-1$
 		}
     	
 		if( modelResource != null ) {
 			return helper.getDataSourceProperties(modelResource);
 		} else {
-			// TODO: THROW EXCEPTION OR LOG ERROR HERE!!!
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("DeleteDataSourceAction.errorCannotFindDataSourceProperties", model.getName() )); //$NON-NLS-1$
 		}
 		
 		return null;

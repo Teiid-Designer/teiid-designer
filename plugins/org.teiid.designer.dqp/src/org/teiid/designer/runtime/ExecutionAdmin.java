@@ -323,8 +323,7 @@ public class ExecutionAdmin {
      */
     protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
         for (Translator translator : translators) {
-        	// TODO: modeshape has not template show currently throwing exception. Remove check below when it shows up.
-        	if( translator.getName() != null && !translator.getName().equalsIgnoreCase("modeshape")) { //$NON-NLS-1$
+        	if( translator.getName() != null ) { 
         		Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
 	            this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
         	}
