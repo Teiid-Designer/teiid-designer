@@ -18,14 +18,7 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
 
 
 	public TeiidDataSource( String displayName, String dataSourceName, String dataSourceType, ExecutionAdmin admin) {
-        CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
-
-        this.displayName = displayName;
-        this.dataSourceName = dataSourceName;
-        this.dataSourceType = dataSourceType;
-        this.properties = new Properties();
-        this.admin = admin;
+        this(displayName, dataSourceName, dataSourceType, new Properties(), admin);
     }
     
     public TeiidDataSource( String displayName,  String dataSourceName, String dataSourceType, Properties properties, ExecutionAdmin admin) {
@@ -131,6 +124,6 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
      */
     @Override
     public String toString() {
-    	return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName();  //$NON-NLS-1$//$NON-NLS-2$
+    	return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName() + "\nType: \t\t\t" + getType();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
 }

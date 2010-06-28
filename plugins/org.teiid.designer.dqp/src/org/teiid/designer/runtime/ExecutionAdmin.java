@@ -37,6 +37,7 @@ public class ExecutionAdmin {
     protected Map<String, TeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
     protected Map<String, TeiidDataSource> dataSourceByNameMap;
+    protected Map<String, TeiidDataSource> workspaceDataSourceByNameMap;
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final Server server;
@@ -72,6 +73,7 @@ public class ExecutionAdmin {
     	this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.workspaceDataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
         refreshVDBs();
     }
@@ -111,7 +113,11 @@ public class ExecutionAdmin {
     	
     	// Check if exists, return false
     	if( dataSourceExists(jndiName)) {
-    		return this.dataSourceByNameMap.get(jndiName);
+    		TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+    		if( tds == null ) {
+    			tds = this.workspaceDataSourceByNameMap.get(jndiName);
+    		}
+    		return tds;
     	}
     	
     	// Verify the "typeName" exists.
@@ -128,6 +134,7 @@ public class ExecutionAdmin {
     		TeiidDataSource tds = connectionMatcher.findTeiidDataSource(jndiName, this);
     		
     		if( tds != null ) {
+    			this.workspaceDataSourceByNameMap.put(jndiName, tds);
     			this.dataSourceByNameMap.put(jndiName, tds);
     			this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
     		}
@@ -161,8 +168,12 @@ public class ExecutionAdmin {
 	    	if( !this.admin.getDataSourceNames().contains(jndiName) ) {
 	    		this.dataSourceNames.remove(jndiName);
 	    		TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+	    		if( tds == null ) {
+	    			tds = this.workspaceDataSourceByNameMap.get(jndiName);
+	    		}
 	    		if( tds != null ) {
 		    		this.dataSourceByNameMap.remove(jndiName);
+		    		this.workspaceDataSourceByNameMap.remove(jndiName);
 		    		this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(tds));
 		    		
 	    		}
@@ -243,6 +254,10 @@ public class ExecutionAdmin {
         return this.translatorByNameMap.values();
     }
 
+    public Collection<TeiidDataSource> getWorkspaceDataSources() {
+        return this.workspaceDataSourceByNameMap.values();
+    }
+    
     /**
      * @return the event manager (never <code>null</code>)
      */
@@ -289,7 +304,12 @@ public class ExecutionAdmin {
         // populate data source names list
         refreshDataSourceNames();
         
-        Collection<TeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this);
+        Collection<TeiidDataSource> tdsList = connectionMatcher.findWorkspaceTeiidDataSources(this);
+        for( TeiidDataSource ds :tdsList ) {
+        	this.workspaceDataSourceByNameMap.put(ds.getName(), ds);
+        }
+        
+        tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames, this);
         for( TeiidDataSource ds :tdsList ) {
         	this.dataSourceByNameMap.put(ds.getName(), ds);
         }
@@ -386,15 +406,11 @@ public class ExecutionAdmin {
             String name = changedProperties.stringPropertyNames().iterator().next();
             setPropertyValue(translator, name, changedProperties.getProperty(name));
         } else {
-            // TODO stop translator??
 
             for (String name : changedProperties.stringPropertyNames()) {
                 internalSetPropertyValue(translator, name, changedProperties.getProperty(name), false);
             }
-
-            // TODO restart translator??
-
-            //this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
+           //this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
         }
     }
 

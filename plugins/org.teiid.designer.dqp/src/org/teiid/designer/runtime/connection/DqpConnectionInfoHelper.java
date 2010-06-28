@@ -238,9 +238,10 @@ public class DqpConnectionInfoHelper {
     
     public String findMatchingDataSourceTypeName(Properties properties) {
     	Collection<String> matchableStrings = new ArrayList<String>();
-    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.DRIVER_CLASS));
-    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.URL));
-    	
+    	if( !properties.isEmpty() ) {
+	    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.DRIVER_CLASS));
+	    	matchableStrings.add(properties.getProperty(DataSourceConnectionConstants.URL));
+    	}
     	if( isJdbcDataSource(matchableStrings)) {
     		return DataSourceConnectionConstants.DataSource.JDBC;
     	}

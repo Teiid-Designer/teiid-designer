@@ -97,6 +97,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
 
     static final String SHOW_TRANSLATORS_LABEL = getString("showTranslators.tooltip"); //$NON-NLS-1$
     static final String HIDE_TRANSLATORS_LABEL = getString("hideTranslators.tooltip"); //$NON-NLS-1$
+    static final String SHOW_MY_DATA_SOURCES_LABEL = getString("showOnlyMyDataSources.tooltip"); //$NON-NLS-1$
+    static final String SHOW_ALL_DATA_SOURCES_LABEL = getString("showAllDataSources.tooltip"); //$NON-NLS-1$
 
     static String getString( final String stringId ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId);
@@ -106,6 +108,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     TeiidViewTreeProvider treeProvider;
 
     Action showTranslatorsToggleAction;
+    Action showDataSourcesAction;
+    
     private Action openModelAction;
     /**
      * Collapses all tree nodes.
@@ -494,6 +498,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
+    	manager.add(this.showDataSourcesAction);
         manager.add(this.showTranslatorsToggleAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
@@ -531,6 +536,29 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         };
         this.openModelAction.setEnabled(true);
 
+        this.showDataSourcesAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                treeProvider.setShowAllDataSources(showDataSourcesAction.isChecked());
+                // Set Tooltip based on toggle state
+                if (showDataSourcesAction.isChecked()) {
+                	showDataSourcesAction.setToolTipText(SHOW_MY_DATA_SOURCES_LABEL);
+                    viewer.refresh();
+                    viewer.expandAll();
+                } else {
+                	showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
+                    viewer.refresh();
+                    viewer.expandAll();
+                }
+
+            }
+        };
+        this.showDataSourcesAction.setEnabled(true);
+        this.showDataSourcesAction.setChecked(false);
+        this.showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
+        this.showDataSourcesAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CONNECTION_SOURCE_ICON));
+
+        
         this.showTranslatorsToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
@@ -549,8 +577,8 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
             }
         };
         this.showTranslatorsToggleAction.setEnabled(true);
-        this.showTranslatorsToggleAction.setChecked(true);
-        this.showTranslatorsToggleAction.setToolTipText(HIDE_TRANSLATORS_LABEL);
+        this.showTranslatorsToggleAction.setChecked(false);
+        this.showTranslatorsToggleAction.setToolTipText(SHOW_TRANSLATORS_LABEL);
         this.showTranslatorsToggleAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_HIDE_CONNECTORS_ICON));
 
         this.collapseAllAction = new Action() {

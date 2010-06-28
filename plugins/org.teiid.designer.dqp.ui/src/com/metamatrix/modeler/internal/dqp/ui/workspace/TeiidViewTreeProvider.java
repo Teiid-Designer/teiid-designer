@@ -41,6 +41,7 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     private boolean showTranslators = false;
     private boolean showVDBs = false;
     private boolean showDataSources = false;
+    private boolean showAllDataSources = false;
 
     /**
      * @since 5.0
@@ -73,7 +74,11 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
                 Collection<TeiidVdb> vdbs  = new ArrayList<TeiidVdb>(); 
                 
                 if( this.showDataSources ) {
-                	dataSources = ((Server)parentElement).getAdmin().getDataSources();
+                	if( this.showAllDataSources ) {
+                		dataSources = ((Server)parentElement).getAdmin().getDataSources();
+                	} else {
+                		dataSources = ((Server)parentElement).getAdmin().getWorkspaceDataSources();
+                	}
                 }
                 
                 if( this.showVDBs ) {
@@ -277,6 +282,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
 
     public void setShowDataSources( boolean value ) {
         this.showDataSources = value;
+    }
+    
+    public void setShowAllDataSources( boolean value ) {
+    	this.showAllDataSources = value;
     }
 
 }

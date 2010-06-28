@@ -28,9 +28,37 @@ public class ModelConnectionMatcher {
 		this.connectionHelper = new DqpConnectionInfoHelper();
 		this.profileHelper = new ConnectionInfoHelper();
 	}
+	
+	public Collection<TeiidDataSource> findTeiidDataSources(
+			Collection<String> names,
+			ExecutionAdmin admin) throws Exception {
+ 		Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
+		
+		for( String name : names ) {
+			boolean create = true;
+			if( name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA") ) { //$NON-NLS-1$ //$NON-NLS-2$
+				continue;
+			}
+			
+			for( TeiidDataSource tds : admin.getWorkspaceDataSources() ) {
+				if( tds.getName().equalsIgnoreCase(name)) {
+					dataSources.add(tds);
+					create = false;
+					break;
+				}
+			}
+			
+			if( create) {
+				dataSources.add(new TeiidDataSource(name, name, "<unknown>", admin)); //$NON-NLS-1$
+			}
+		}
+		
+		return dataSources;
+	}
 
-	public Collection<TeiidDataSource> findTeiidDataSources(ExecutionAdmin admin) throws Exception {
+	public Collection<TeiidDataSource> findWorkspaceTeiidDataSources(ExecutionAdmin admin) throws Exception {
 		Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
+		
 		
 		// Get All Workspace Physical Models
 		Collection fileResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
@@ -80,22 +108,25 @@ public class ModelConnectionMatcher {
 	        final Iterator itor = fileResources.iterator();
 	        while (itor.hasNext()) {
 	            final IFile modelFile = (IFile)itor.next();
-		    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-	    		String localJndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
-
-	    		if( jndiName.equalsIgnoreCase(localJndiName)) {
-		    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
-		    		
-		    		if( tds != null ) {
-				    	return tds;
-		    		}
-	    		} else {
-		    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
-		    		
-		    		if( tds != null ) {
-				    	return tds;
-		    		}
-	    		}
+	            if( ModelUtil.EXTENSION_XMI.equalsIgnoreCase(modelFile.getFileExtension()) ) {
+			    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
+		    		String localJndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+	
+		    		if( jndiName.equalsIgnoreCase(localJndiName)) {
+			    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
+			    		
+			    		if( tds != null ) {
+					    	return tds;
+			    		}
+		    		} 
+//		    		else {
+//			    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
+//			    		
+//			    		if( tds != null ) {
+//					    	return tds;
+//			    		}
+//		    		}
+	            }
 	        }
 		}
 		
