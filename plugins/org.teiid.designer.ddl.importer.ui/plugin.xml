@@ -4,6 +4,7 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
+            category="com.metamatrix.modeler.ui"
             class="org.teiid.designer.ddl.importer.ui.DdlImportWizard"
             id="org.teiid.designer.ddl.importer.ui.ddlImportWizard"
             name="%wizard.name">
