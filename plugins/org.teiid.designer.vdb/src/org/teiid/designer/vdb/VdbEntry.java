@@ -250,7 +250,7 @@ public class VdbEntry {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
-        vdb.setModified(this, Vdb.ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
+        vdb.notifyChangeListeners(this, Vdb.ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
     }
 
     /**
