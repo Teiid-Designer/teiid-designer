@@ -73,6 +73,7 @@ public class VdbEntry {
         // Register to listen for changes to this entries associated workspace file
         fileListener = new IResourceChangeListener() {
             public void resourceChanged( final IResourceChangeEvent event ) {
+            	if( event.getDelta() ==  null ) return;
                 final IResourceDelta delta = event.getDelta().findMember(name);
                 if (delta == null) return;
                 fileChanged(delta);
