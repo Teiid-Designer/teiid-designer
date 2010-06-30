@@ -807,12 +807,9 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
                 // Add the tokens ...
                 if (urlRoot != null) {
-                    if (location.startsWith("/")) { //$NON-NLS-1$
-                        location = urlRoot + location;
-                    } else {
-                        location = urlRoot + '/' + location;
-                    }
+                    location = urlRoot + location;
                 }
+
                 if (urlSuffix != null) {
                     location = location + urlSuffix;
                 }
