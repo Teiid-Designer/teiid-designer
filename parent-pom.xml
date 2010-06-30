@@ -8,8 +8,8 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tychoVersion>0.9.0-SNAPSHOT</tychoVersion>
-		<!-- <tychoVersion>0.8.0</tychoVersion> -->
+		<!-- <tychoVersion>0.10.0-SNAPSHOT</tychoVersion> -->
+		<tychoVersion>0.9.0</tychoVersion>
 		<scmBranch>branches/modular_build</scmBranch>
 	</properties>
 
