@@ -89,5 +89,13 @@
         name="com.metamatrix.modeler.webservice.ui.actions.WebServiceObjectEditHelper">
       </class>
    </extension>
-
+   <extension
+		id="GenerateWsdlAction"
+		name="%generateWsdlAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.webservice.ui.actions.GenerateWsdlAction"
+         label="%generateWsdlAction.label">
+      </resourceAction>
+   </extension>
 </plugin>
