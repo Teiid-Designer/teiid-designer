@@ -62,7 +62,7 @@ public class SystemModelTreeViewer extends TreeViewer {
             if (models[i] instanceof MtkXmiResourceImpl) {
                 // need to check if the model is virtual
                 ModelAnnotation annotation = ((MtkXmiResourceImpl)models[i]).getModelAnnotation();
-                if (annotation.getModelType() == (ModelType.VIRTUAL_LITERAL)) {
+                if (annotation.getModelType() == (ModelType.PHYSICAL_LITERAL)) {
                     virtualModels.add(models[i]);
                 }
             }
@@ -172,8 +172,8 @@ public class SystemModelTreeViewer extends TreeViewer {
             if (element instanceof MtkXmiResourceImpl) {
                 // need to check if the model is virtual
                 ModelAnnotation annotation = ((MtkXmiResourceImpl)element).getModelAnnotation();
-                if (annotation.getModelType() == (ModelType.VIRTUAL_LITERAL)) {
-                    return UiPlugin.getDefault().getImage(PluginConstants.Images.VIRTUAL_MODEL);
+                if (annotation.getModelType() == (ModelType.PHYSICAL_LITERAL)) {
+                    return UiPlugin.getDefault().getImage(PluginConstants.Images.MODEL);
                 }
             }
             return delegate.getImage(element);
@@ -212,7 +212,7 @@ public class SystemModelTreeViewer extends TreeViewer {
                 return false;
             }
             if (element instanceof MtkXmiResourceImpl) {
-                if (((MtkXmiResourceImpl)element).getModelAnnotation().getModelType() == ModelType.VIRTUAL_LITERAL) {
+                if (((MtkXmiResourceImpl)element).getModelAnnotation().getModelType() == ModelType.PHYSICAL_LITERAL) {
                     return true;
                 }
                 return false;

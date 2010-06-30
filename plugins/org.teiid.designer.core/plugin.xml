@@ -40,6 +40,23 @@
    <extension-point id="newModelObjectHelper" name="%newModelObjectHelper"/>
    <extension-point id="pasteContributor" name="%extension-point.name.26" schema="schema/pasteContributor.exsd"/>
 
+<!-- Contribute the Sys.xmi model via the System.vdb From teiid-metadata-xxxxx.jar -->
+   <extension
+         id="systemVirtualResource"
+         name="systemVirtualResource"
+         point="org.teiid.designer.core.externalResource">
+      <resourceName>
+         /System/Sys.xmi
+      </resourceName>
+      <resourceUrl>
+         System.vdb
+      </resourceUrl>
+      <internalUri>
+         http://www.metamatrix.com/models/Sys.xmi
+      </internalUri>
+      <priority> 1 </priority>
+   </extension>
+
 <!-- Metamodel extensions -->
    <extension
          point="org.teiid.designer.core.resourceValidator">
@@ -147,6 +164,17 @@
       <builder
             id="org.teiid.designer.core.modelBuilder">
       </builder>
+   </extension>
+<!-- VDB Project Nature   -->
+   <extension
+         id="vdbNature"
+         name="%vdbNatureName"
+         point="org.eclipse.core.resources.natures">
+     <runtime>
+         <run
+               class="com.metamatrix.modeler.internal.core.workspace.VdbNature">
+         </run>
+      </runtime>
    </extension>
 <!-- Hidden Project Nature -->
    <extension
