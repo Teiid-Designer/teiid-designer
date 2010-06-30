@@ -1069,9 +1069,11 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             port.setBinding(portTypeName);
             port.setService(this.service);
 
+            String serviceUrlWithPortName = service.getName();
             // Check that the URL location is a valid URI ...
             if (this.urlService != null) {
-                final IStatus problem = doCheckValidUri(this.urlService);
+                serviceUrlWithPortName = this.urlService + port.getName();
+                final IStatus problem = doCheckValidUri(serviceUrlWithPortName);
                 if (problem != null) {
                     problems.add(problem);
                 }
@@ -1079,7 +1081,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP address ...
             final SoapAddress address = this.soapFactory.createSoapAddress();
-            address.setLocation(this.urlService);
+            address.setLocation(serviceUrlWithPortName);
             address.setPort(port);
 
             return object; // this method handled it, so return non-null
@@ -1107,8 +1109,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = doGetFullyQualifiedName(object);
-            soapOp.setAction(action);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
             soapOp.setBindingOperation(this.bindingOp);
 
