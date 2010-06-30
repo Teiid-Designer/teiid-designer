@@ -165,17 +165,6 @@
             id="org.teiid.designer.core.modelBuilder">
       </builder>
    </extension>
-<!-- VDB Project Nature   -->
-   <extension
-         id="vdbNature"
-         name="%vdbNatureName"
-         point="org.eclipse.core.resources.natures">
-     <runtime>
-         <run
-               class="com.metamatrix.modeler.internal.core.workspace.VdbNature">
-         </run>
-      </runtime>
-   </extension>
 <!-- Hidden Project Nature -->
    <extension
          id="hiddenProjectNature"
