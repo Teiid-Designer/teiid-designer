@@ -7,9 +7,9 @@ Bundle-Vendor: %providerName
 Bundle-ClassPath: .,
  System.vdb,
  jta-1.1.jar,
- teiid-api-7.0.0-SNAPSHOT.jar,
- teiid-engine-7.0.0-SNAPSHOT.jar,
- teiid-7.0.0-CR2-client.jar
+ teiid-7.0.0-client.jar,
+ teiid-api-7.0.0.jar,
+ teiid-engine-7.0.0.jar
 Export-Package: javax.transaction,
  javax.transaction.xa,
  org.teiid.adminapi,
