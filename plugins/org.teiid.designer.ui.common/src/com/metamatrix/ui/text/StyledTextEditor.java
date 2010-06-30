@@ -107,6 +107,8 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      */
     static final String UNDO_ID = ActionFactory.UNDO.getId();
 
+    private boolean bHaveFocus = false;
+
     /**
      * Creates a read only text editor; the cut, paste, undo, and redo actions are not available.
      * 
@@ -375,6 +377,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.copyAction = new ContextMenuAction(COPY_ID);
             }
 
+            this.copyAction.setAccelerator(SWT.CTRL | 'C');
             this.copyAction.setEnabledState();
             return this.copyAction;
         }
@@ -385,7 +388,8 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
             if (this.cutAction == null) {
                 this.cutAction = new ContextMenuAction(CUT_ID);
             }
-
+            
+            this.cutAction.setAccelerator(SWT.CTRL | 'X');
             this.cutAction.setEnabledState();
             return this.cutAction;
         }
@@ -397,6 +401,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.findAction = new ContextMenuAction(FIND_ID);
             }
 
+            this.findAction.setAccelerator(SWT.CTRL | 'F');
             this.findAction.setEnabledState();
             return this.findAction;
         }
@@ -408,6 +413,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.pasteAction = new ContextMenuAction(PASTE_ID);
             }
 
+            this.pasteAction.setAccelerator(SWT.CTRL | 'V');
             this.pasteAction.setEnabledState();
             return this.pasteAction;
         }
@@ -419,6 +425,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.redoAction = new ContextMenuAction(REDO_ID);
             }
 
+            this.redoAction.setAccelerator(SWT.CTRL | 'Y');
             this.redoAction.setEnabledState();
             return this.redoAction;
         }
@@ -430,6 +437,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.selectAllAction = new ContextMenuAction(SELECT_ALL_ID);
             }
 
+            this.selectAllAction.setAccelerator(SWT.CTRL | 'A');
             this.selectAllAction.setEnabledState();
             return this.selectAllAction;
         }
@@ -441,6 +449,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
                 this.undoAction = new ContextMenuAction(UNDO_ID);
             }
 
+            this.selectAllAction.setAccelerator(SWT.CTRL | 'Z');
             this.undoAction.setEnabledState();
             return this.undoAction;
         }
@@ -495,18 +504,19 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @since 5.5.3
      */
     protected void handleFocusGained( FocusEvent e ) {
-        if (this.findAction != null) {
-            this.findAction.setAccelerator(SWT.CTRL | 'F');
-        }
-
-        if (this.selectAllAction != null) {
-            this.selectAllAction.setAccelerator(SWT.CTRL | 'A');
-        }
-
-        if (this.undoAction != null) {
-            this.undoAction.setAccelerator(SWT.CTRL | 'Z');
-            this.redoAction.setAccelerator(SWT.CTRL | 'Y');
-        }
+//        if (this.findAction != null) {
+//            this.findAction.setAccelerator(SWT.CTRL | 'F');
+//        }
+//
+//        if (this.selectAllAction != null) {
+//            this.selectAllAction.setAccelerator(SWT.CTRL | 'A');
+//        }
+//
+//        if (this.undoAction != null) {
+//            this.undoAction.setAccelerator(SWT.CTRL | 'Z');
+//            this.redoAction.setAccelerator(SWT.CTRL | 'Y');
+//        }
+        bHaveFocus =  true;
     }
 
     /**
@@ -514,18 +524,19 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @since 5.5.3
      */
     protected void handleFocusLost( FocusEvent e ) {
-        if (this.findAction != null) {
-            this.findAction.setAccelerator(0);
-        }
-
-        if (this.selectAllAction != null) {
-            this.selectAllAction.setAccelerator(0);
-        }
-
-        if (this.undoAction != null) {
-            this.undoAction.setAccelerator(0);
-            this.redoAction.setAccelerator(0);
-        }
+//        if (this.findAction != null) {
+//            this.findAction.setAccelerator(0);
+//        }
+//
+//        if (this.selectAllAction != null) {
+//            this.selectAllAction.setAccelerator(0);
+//        }
+//
+//        if (this.undoAction != null) {
+//            this.undoAction.setAccelerator(0);
+//            this.redoAction.setAccelerator(0);
+//        }
+        bHaveFocus =  true;
     }
 
     /**
@@ -615,6 +626,10 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
      * @since 5.5.3
      */
     public void keyReleased( KeyEvent e ) {
+    	if ( !this.bHaveFocus ) {
+    		return;
+    	}
+    	
         IAction action = null;
         int accelerator = SWTKeySupport.convertEventToUnmodifiedAccelerator(e);
 
