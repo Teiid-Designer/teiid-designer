@@ -240,7 +240,7 @@ public class VdbEntry {
      * @param description (never <code>null</code>)
      */
     public final void setDescription( String description ) {
-        if (StringUtilities.isEmpty(description)) description = null;
+        if (StringUtilities.isEmpty(description)) description = StringUtilities.EMPTY_STRING;
         final String oldDescription = this.description.get();
         if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);

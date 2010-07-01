@@ -77,7 +77,7 @@ public final class VdbModelEntry extends VdbEntry {
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
-            
+            description.set(StringUtilities.EMPTY_STRING);
             // TODO: re-visit in 7.1
             // For now, we're removing the assumption that the user will want to seed the VDB model entry with the model's
             // Description.  From a UI standpoint, if the description contains multiple lines, then the row height
@@ -117,6 +117,13 @@ public final class VdbModelEntry extends VdbEntry {
             jndiName.set(source.getJndiName());
             break; // TODO: support multi-source bindings
         }
+        
+        String desc = StringUtilities.EMPTY_STRING;
+        if( element.getDescription() != null ) {
+        	desc = element.getDescription();
+        }
+        description.set(desc);
+        
         for (final ProblemElement problem : element.getProblems())
             problems.add(new Problem(problem));
         boolean builtIn = false;
