@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -79,6 +80,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.Label;
 
@@ -444,6 +446,15 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         fillLocalToolBar(bars.getToolBarManager());
     }
 
+    private List<Object> getSelectedObjects() {
+        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+        if (!selection.isEmpty()) {
+            return SelectionUtilities.getSelectedObjects(selection);
+        }
+        
+        return null;
+    }
+    
     private Object getSelectedObject() {
         StructuredSelection selection = (StructuredSelection)viewer.getSelection();
         if (!selection.isEmpty()) {
@@ -595,16 +606,18 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         this.deleteDataSourceAction = new Action(getString("deleteTeiidDataSourceAction")) { //$NON-NLS-1$
             @Override
             public void run() {
-                // GEt Selection and call admin.removeDataSource()?
-            	TeiidDataSource tds = (TeiidDataSource)getSelectedObject();
-            	ExecutionAdmin admin = tds.getAdmin();
-            	if( admin != null ) {
-            		try {
-						admin.deleteDataSource(tds.getName());
-					} catch (Exception e) {
-						DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
-					}
-            	}
+                List<Object> selectedObjs = getSelectedObjects();
+                for( Object obj : selectedObjs ) {
+	            	TeiidDataSource tds = (TeiidDataSource)obj;
+	            	ExecutionAdmin admin = tds.getAdmin();
+	            	if( admin != null ) {
+	            		try {
+							admin.deleteDataSource(tds.getName());
+						} catch (Exception e) {
+							DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
+						}
+	            	}
+                }
             	
             }
         };
@@ -615,17 +628,19 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         this.undeployVdbAction = new Action(getString("undeployVdbAction")) { //$NON-NLS-1$
             @Override
             public void run() {
-                // GEt Selection and call admin.removeDataSource()?
-            	TeiidVdb vdb = (TeiidVdb)getSelectedObject();
-
-            	ExecutionAdmin admin = vdb.getAdmin();
-            	if( admin != null ) {
-            		try {
-						admin.undeployVdb(vdb.getVdb());
-					} catch (Exception e) {
-						DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
-					}
-            	}
+                List<Object> selectedObjs = getSelectedObjects();
+                for( Object obj : selectedObjs ) {
+	            	TeiidVdb vdb = (TeiidVdb)obj;
+	
+	            	ExecutionAdmin admin = vdb.getAdmin();
+	            	if( admin != null ) {
+	            		try {
+							admin.undeployVdb(vdb.getVdb());
+						} catch (Exception e) {
+							DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
+						}
+	            	}
+                }
             	
             }
         };

@@ -81,13 +81,13 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
 	@Override
 	public Object[] getApplicableActions(Object obj) {
+		if( !initialized ) {
+			initialize();
+		}
 		if( obj instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection)obj;
 			if( sel.getFirstElement() instanceof VdbModelEntry) {
 				if( ((VdbModelEntry)sel.getFirstElement()).getType() == ModelType.PHYSICAL_LITERAL) {
-					if( !initialized ) {
-						initialize();
-					}
 					selectTranslatorAction.setSelection((VdbModelEntry)sel.getFirstElement());
 					selectJndiDataSourceAction.setSelection((VdbModelEntry)sel.getFirstElement());
 					return actions;

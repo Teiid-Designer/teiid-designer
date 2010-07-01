@@ -10,14 +10,13 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidTranslator;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -56,29 +55,20 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
             ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resources[0]);
 
             if (mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
-//                SourceConnectionBindingsManager sourceBindingsMgr = this.theTargetBinding.getType().getAdmin().getSourceConnectionBindingsManager();
-//                sourceBindingsMgr.createSourceConnectionBinding(mr, theTargetBinding);
-//                theTargetBinding = null;
                 currentTransfer = null;
                 return true;
             } else if (resources[0] instanceof IFile) {
                 IFile theFile = (IFile)resources[0];
                 String extension = theFile.getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-                    boolean doIt = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
-                    		DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.deployVdb.title"), //$NON-NLS-1$
-                    		DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.Do_you_wish_to_deploy_VDB_{0}_to_Teiid_server_{1}", //$NON-NLS-1$
-                    				theFile.getName(), theTargetServer.getUrl()));
-                    if( doIt ) {
-	                    try {
-	                        theTargetServer.getAdmin().deployVdb(theFile);
-	                    } catch (Exception e) {
-	                        DqpUiConstants.UTIL.log(IStatus.ERROR,
-	                                                e,
-	                                                DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
-	                                                                              theFile.getName(),
-	                                                                              theTargetServer.getUrl()));
-	                    }
+                    try {
+                        theTargetServer.getAdmin().deployVdb(theFile);
+                    } catch (Exception e) {
+                        DqpUiConstants.UTIL.log(IStatus.ERROR,
+                                                e,
+                                                DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
+                                                                              theFile.getName(),
+                                                                              theTargetServer.getUrl()));
                     }
                 }
             }
