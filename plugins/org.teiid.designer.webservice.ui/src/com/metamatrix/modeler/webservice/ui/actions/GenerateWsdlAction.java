@@ -13,6 +13,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDParser;
@@ -31,6 +33,9 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 public class GenerateWsdlAction extends SortableSelectionAction {
 
     public List<ModelResource> wsResources = new ArrayList();
+    public static String WSDL_GENERATION = "WSDL Generation"; //$NON-NLS-1$
+    public static String WSDL_GENERATION_SUCCESS = "Successfully generated WSDL file: "; //$NON-NLS-1$
+    public static String WSDL_GENERATION_ERROR = "There was an error generating the WSDL..."; //$NON-NLS-1$
 
     public GenerateWsdlAction() {
         super();
@@ -70,12 +75,13 @@ public class GenerateWsdlAction extends SortableSelectionAction {
 
         // nothing more to do if an error is expected
         if (status.getSeverity() == IStatus.ERROR) {
+            ErrorDialog.openError(null, WSDL_GENERATION, WSDL_GENERATION_ERROR, status);
             throw new RuntimeException("Unable to generate WSDL"); //$NON-NLS-1$
         }
 
+        String fileName = webServiceName + "." + IUiConstants.WSDL_FILE_EXTENSION; //$NON-NLS-1$
         try {
-            // create our wsdl file and write to it
-            String fileName = webServiceName + "." + IUiConstants.WSDL_FILE_EXTENSION; //$NON-NLS-1$
+            // Create our WSDL file and write to it
             String path = wsModel.getResource().getLocation().toOSString();
             OutputStream stream = new FileOutputStream(new File(path.substring(0, path.lastIndexOf("/")), fileName)); //$NON-NLS-1$
             wsdlGenerator.write(stream);
@@ -84,11 +90,14 @@ public class GenerateWsdlAction extends SortableSelectionAction {
             iFile.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
         } catch (IOException e) {
+            MessageDialog.openInformation(null, WSDL_GENERATION, WSDL_GENERATION_ERROR + e.getMessage());
             throw new RuntimeException(e.getMessage());
-
         } catch (CoreException e) {
+            MessageDialog.openInformation(null, WSDL_GENERATION, WSDL_GENERATION_ERROR + e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
+
+        MessageDialog.openInformation(null, WSDL_GENERATION, WSDL_GENERATION_SUCCESS + fileName);
 
     }
 
