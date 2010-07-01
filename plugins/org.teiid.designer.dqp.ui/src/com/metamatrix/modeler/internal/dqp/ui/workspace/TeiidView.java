@@ -412,8 +412,7 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     }
 
     String getConnectorToolTip( TeiidTranslator connector ) {
-        return DqpUiConstants.UTIL.getString(PREFIX + "bindingToolTip", new Object[] { //$NON-NLS-1$
-            connector.getName()});
+        return connector.getName();
     }
     
     String getVDBToolTip( TeiidVdb vdb ) {
@@ -452,15 +451,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
             return SelectionUtilities.getSelectedObjects(selection);
         }
         
-        return null;
-    }
-    
-    private Object getSelectedObject() {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty()) {
-            return selection.getFirstElement();
-        }
-
         return null;
     }
 
