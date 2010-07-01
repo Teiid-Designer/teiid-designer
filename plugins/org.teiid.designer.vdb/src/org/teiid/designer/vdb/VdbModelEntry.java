@@ -77,28 +77,19 @@ public final class VdbModelEntry extends VdbEntry {
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
-            description.set(StringUtilities.EMPTY_STRING);
             // TODO: re-visit in 7.1
             // For now, we're removing the assumption that the user will want to seed the VDB model entry with the model's
-            // Description.  From a UI standpoint, if the description contains multiple lines, then the row height
+            // Description. From a UI standpoint, if the description contains multiple lines, then the row height
             // is way too high. User can always copy/paste from model to VDB AND the description for a model is always
             // available in the model itself.
-            
-            //if (emfModel.getModelAnnotation().getDescription() != null) description.set(emfModel.getModelAnnotation().getDescription());
-            
+            // if (emfModel.getModelAnnotation().getDescription() != null)
+            // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = name.removeFileExtension().lastSegment();
                 source.set(defaultName);
-                String str = StringUtilities.EMPTY_STRING;
-                
-                if( ModelerCore.getModelEditor() != null ) {
-	                ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
-	                
-	                if( mr != null ) {
-	                	str = new ConnectionInfoHelper().getTranslatorName(mr);
-	                }
-                }
-                translator.set(str);
+                ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
+                String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                this.translator.set(translator == null ? StringUtilities.EMPTY_STRING : translator);
                 jndiName.set(defaultName);
             }
         } else type = ModelType.TYPE_LITERAL;
@@ -117,13 +108,6 @@ public final class VdbModelEntry extends VdbEntry {
             jndiName.set(source.getJndiName());
             break; // TODO: support multi-source bindings
         }
-        
-        String desc = StringUtilities.EMPTY_STRING;
-        if( element.getDescription() != null ) {
-        	desc = element.getDescription();
-        }
-        description.set(desc);
-        
         for (final ProblemElement problem : element.getProblems())
             problems.add(new Problem(problem));
         boolean builtIn = false;

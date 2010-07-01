@@ -73,8 +73,7 @@ public class VdbEntry {
         // Register to listen for changes to this entries associated workspace file
         fileListener = new IResourceChangeListener() {
             public void resourceChanged( final IResourceChangeEvent event ) {
-            	if( event.getDelta() ==  null ) return;
-                final IResourceDelta delta = event.getDelta().findMember(name);
+                final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
                 if (delta == null) return;
                 fileChanged(delta);
             }
@@ -136,8 +135,9 @@ public class VdbEntry {
     }
 
     final void fileChanged( final IResourceDelta delta ) {
-        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) throw new UnsupportedOperationException(
-                                                                                                                                                              toString(delta));
+        // TODO: Handle renames
+        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; //throw new UnsupportedOperationException(
+//                                                                                                                                                              toString(delta));
         final int kind = delta.getKind();
         if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
         else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
@@ -240,7 +240,7 @@ public class VdbEntry {
      * @param description (never <code>null</code>)
      */
     public final void setDescription( String description ) {
-        if (StringUtilities.isEmpty(description)) description = StringUtilities.EMPTY_STRING;
+        if (StringUtilities.isEmpty(description)) description = null;
         final String oldDescription = this.description.get();
         if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);
