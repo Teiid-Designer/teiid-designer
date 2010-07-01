@@ -459,7 +459,7 @@ public final class VdbEditor extends EditorPart {
             @Override
             public VdbEntry[] getElements() {
                 final Set<VdbEntry> entries = vdb.getEntries();
-                return entries.toArray(new VdbModelEntry[entries.size()]);
+                return entries.toArray(new VdbEntry[entries.size()]);
             }
         }, new TextColumnProvider<VdbEntry>() {
 
