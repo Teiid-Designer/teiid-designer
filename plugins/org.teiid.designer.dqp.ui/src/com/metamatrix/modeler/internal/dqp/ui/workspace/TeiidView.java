@@ -474,32 +474,73 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     }
 
     void fillContextMenu( IMenuManager manager ) {
-        Object selection = getSelectedObject();
-        if (selection != null) {
-            if (selection instanceof Server) {
-                manager.add(this.editServerAction);
-                manager.add(this.deleteServerAction);
-                if (this.setDefaultServerAction.isEnabled()) {
-                    manager.add(this.setDefaultServerAction);
+        List<Object> selectedObjs = getSelectedObjects();
+        
+        
+        if (selectedObjs != null && !selectedObjs.isEmpty()) {
+        	if( selectedObjs.size() == 1 ) {
+        		Object selection = selectedObjs.get(0);
+                if (selection instanceof Server) {
+                    manager.add(this.editServerAction);
+                    manager.add(this.deleteServerAction);
+                    if (this.setDefaultServerAction.isEnabled()) {
+                        manager.add(this.setDefaultServerAction);
+                    }
+                    manager.add(this.reconnectAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                } else if (selection instanceof TeiidTranslator) {
+                    manager.add(this.newServerAction);
+                } else if (selection instanceof TeiidDataSource ) {
+                	manager.add(this.deleteDataSourceAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                } else if( selection instanceof TeiidVdb) { 
+                	manager.add(this.undeployVdbAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                } else {
+                    manager.add(this.openModelAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
                 }
-                manager.add(this.reconnectAction);
-                manager.add(new Separator());
+        	} else {
+        		boolean allDataSources = true;
+        		
+        		for(Object obj : selectedObjs ) {
+            		if( !(obj instanceof TeiidDataSource) ) {
+            			allDataSources = false;
+            			break;
+            		} 
+        		}
+        		if( allDataSources ) {
+                	manager.add(this.deleteDataSourceAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                    return;
+        		}
+        		
+        		boolean allVdbs = true;
+        		
+        		for(Object obj : selectedObjs ) {
+            		if( !(obj instanceof TeiidVdb) ) {
+            			allVdbs = false;
+            			break;
+            		} 
+        		}
+        		if( allVdbs ) {
+                	manager.add(this.undeployVdbAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                    return;
+        		}
+        		
                 manager.add(this.newServerAction);
-            } else if (selection instanceof TeiidTranslator) {
-                manager.add(this.newServerAction);
-            } else if (selection instanceof TeiidDataSource ) {
-            	manager.add(this.deleteDataSourceAction);
-                manager.add(new Separator());
-                manager.add(this.newServerAction);
-            } else if( selection instanceof TeiidVdb) { 
-            	manager.add(this.undeployVdbAction);
-                manager.add(new Separator());
-                manager.add(this.newServerAction);
-            } else {
-                manager.add(this.openModelAction);
-                manager.add(new Separator());
-                manager.add(this.newServerAction);
-            }
+                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        	}
+
         } else {
             manager.add(this.newServerAction);
         }
