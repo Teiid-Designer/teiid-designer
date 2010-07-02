@@ -10,7 +10,12 @@
 	<properties>
 		<!-- <tychoVersion>0.10.0-SNAPSHOT</tychoVersion> -->
 		<tychoVersion>0.9.0</tychoVersion>
-		<scmBranch>branches/modular_build</scmBranch>
+		<scmBranch>trunk</scmBranch>
+		<BUILD_ALIAS>M1</BUILD_ALIAS>
+		<memoryOptions1>-Xms512m -Xmx1024m -XX:PermSize=256m</memoryOptions1>
+		<memoryOptions2>-XX:MaxPermSize=256m</memoryOptions2>
+		<systemProperties></systemProperties>
+		<target.platform>e36-wtp32</target.platform>
 	</properties>
 
 	<build>
@@ -20,7 +25,7 @@
 				<artifactId>maven-osgi-packaging-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
-					<format>'v'yyyyMMdd-HHmm</format>
+					<format>'v'yyyyMMdd-HHmm'-${BUILD_ALIAS}'</format>
 					<archiveSite>true</archiveSite>
 				</configuration>
 			</plugin>
@@ -38,17 +43,15 @@
 				<version>${tychoVersion}</version>
 				<configuration>
 					<resolver>p2</resolver>
+					<ignoreTychoRepositories>true</ignoreTychoRepositories>
 					<environments>
 						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86</arch>
 						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>carbon</ws>
-							<arch>x86</arch>
-						</environment>
+						<!-- <environment> <os>macosx</os> <ws>carbon</ws> <arch>x86</arch> 
+							</environment> -->
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
@@ -76,8 +79,13 @@
 				<artifactId>maven-osgi-test-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
+					<!-- timeout in seconds -->
+					<surefire.timeout>900</surefire.timeout>
+					<forkedProcessTimeoutInSeconds>900</forkedProcessTimeoutInSeconds>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>true</useUIThread>
+					<argLine>${memoryOptions1} ${memoryOptions2} ${systemProperties}
+					</argLine>
 					<!-- https://docs.sonatype.org/display/TYCHO/How+to+run+SWTBot+tests+with+Tycho -->
 					<!-- set useUIThread=true for regular ui tests -->
 					<!-- set useUIThread=false for swtbot tests (?) -->
@@ -88,6 +96,17 @@
 							<type>p2-installable-unit</type>
 							<artifactId>org.eclipse.sdk.ide</artifactId>
 							<version>0.0.0</version>
+						</dependency>
+						<!-- http://www.jmock.org/maven.html -->
+						<dependency>
+							<groupId>org.jmock</groupId>
+							<artifactId>jmock-legacy</artifactId>
+							<version>2.5.1</version>
+						</dependency>
+						<dependency>
+							<groupId>org.jmock</groupId>
+							<artifactId>jmock-junit4</artifactId>
+							<version>2.5.1</version>
 						</dependency>
 					</dependencies>
 					<includes>
@@ -106,15 +125,43 @@
 		<system>jira</system>
 		<url>https://jira.jboss.org/jira/secure/</url>
 	</issueManagement>
-
 	<profiles>
 		<profile>
 			<id>helios</id>
 			<activation>
-				<property>
-					<name>helios</name>
-				</property>
+				<activeByDefault>true</activeByDefault>
 			</activation>
+			<properties>
+				<target.platform>e36-wtp32</target.platform>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tychoVersion}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.jboss.tools</groupId>
+									<artifactId>target-platform</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<classifier>${target.platform}</classifier>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Time saver: to build everything from scratch (without target platform); 
+		     To enable it use -P helios-no-target in command line.
+		     Do not remove repos that contains the same artefacts, it is done for purpose
+		     to make build more stable in case one of the repos is offline.
+		-->
+		<profile>
+			<id>helios-no-target</id>
 			<repositories>
 				<repository>
 					<id>helios</id>
@@ -128,8 +175,20 @@
 					</releases>
 				</repository>
 				<repository>
+					<id>webtools32</id>
+					<url>http://download.eclipse.org/webtools/repository/helios</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
 					<id>eclipse36</id>
-					<url>http://download.eclipse.org/eclipse/updates/3.6/</url>
+					<url>http://download.eclipse.org/eclipse/updates/3.6/
+					</url>
 					<layout>p2</layout>
 					<snapshots>
 						<enabled>true</enabled>
@@ -140,7 +199,8 @@
 				</repository>
 				<repository>
 					<id>birt26</id>
-					<url>http://download.eclipse.org/birt/update-site/2.6/</url>
+					<url>http://download.eclipse.org/birt/update-site/2.6/
+					</url>
 					<layout>p2</layout>
 					<snapshots>
 						<enabled>true</enabled>
@@ -151,7 +211,41 @@
 				</repository>
 				<repository>
 					<id>swtbot-helios</id>
-					<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site
+					<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/
+					</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>m2eclipse</id>
+					<url>http://m2eclipse.sonatype.org/sites/m2e/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>m2eclipse-extras</id>
+					<url>http://m2eclipse.sonatype.org/sites/m2e-extras/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>orbit</id>
+					<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/updateSite/
 					</url>
 					<layout>p2</layout>
 					<snapshots>
@@ -163,13 +257,33 @@
 				</repository>
 			</repositories>
 		</profile>
+
+		<!-- TODO: verify that this profile overrides the default profile if BUILD_NUMBER 
+			is set (by a Hudson job) -->
 		<profile>
-			<id>svn-repos</id>
+			<id>hudson</id>
 			<activation>
 				<property>
-					<name>svn</name>
+					<name>BUILD_NUMBER</name>
 				</property>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.tycho</groupId>
+						<artifactId>maven-osgi-packaging-plugin</artifactId>
+						<version>${tychoVersion}</version>
+						<configuration>
+							<format>'v'yyyyMMdd-HHmm'-H${BUILD_NUMBER}-${BUILD_ALIAS}'
+							</format>
+							<archiveSite>true</archiveSite>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>svn-repos</id>
 			<repositories>
 				<repository>
 					<id>svnkit13</id>
@@ -217,112 +331,284 @@
 						<enabled>true</enabled>
 					</releases>
 				</repository>
-
 			</repositories>
+		</profile>
+		<profile>
+			<id>galileo</id>
+			<repositories>
+				<repository>
+					<id>galileo</id>
+					<url>http://download.eclipse.org/releases/galileo/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>eclipse35</id>
+					<url>http://download.eclipse.org/eclipse/updates/3.5/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>birt25r</id>
+					<url>http://download.eclipse.org/birt/update-site/2.5</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>swtbot-galileo</id>
+					<url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site
+					</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>webtools</id>
+					<url>http://download.eclipse.org/webtools/updates/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>orbit</id>
+					<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20100519200754/updateSite/
+					</url>
+					<layout>p2</layout>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+
+				<repository>
+					<id>m2eclipse</id>
+					<url>http://m2eclipse.sonatype.org/sites/m2e/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+				<repository>
+					<id>m2eclipse-extras</id>
+					<url>http://m2eclipse.sonatype.org/sites/m2e-extras/</url>
+					<layout>p2</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+			</repositories>
+		</profile>
+		<profile>
+			<id>coverage</id>
+			<activation>
+				<property>
+					<name>coverage</name>
+				</property>
+			</activation>
+			<properties>
+				<emma.session.out.file>${project.build.directory}/emma/coverage.es</emma.session.out.file>
+				<emma.filter />
+				<emma.instrument.bundles />
+			</properties>
+			<build>
+				<plugins>
+					<!-- plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-artifacts</id>
+								<phase>package</phase>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+								<configuration>
+									<artifacts>
+										<artifact>
+											<file>${emma.session.out.file}</file>
+											<type>es</type>
+										</artifact>
+									</artifacts>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-install-plugin</artifactId>
+						<version>2.3.1</version>
+						<configuration>
+							<file></file>
+							<groupId></groupId>
+							<artifactId></artifactId>
+							<version></version>
+							<packaging></packaging>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.tycho</groupId>
+						<artifactId>maven-osgi-test-plugin</artifactId>
+						<version>${tychoVersion}</version>
+						<configuration>
+							<systemProperties combine.children="append">
+								<emma.session.out.file>${emma.session.out.file}</emma.session.out.file>
+								<emma.filter>${emma.filter}</emma.filter>
+								<eclemma.instrument.bundles>${emma.instrument.bundles}</eclemma.instrument.bundles>
+							</systemProperties>
+							<frameworkExtensions>
+								<frameworkExtension>
+									<groupId>org.eclemma.runtime.equinox</groupId>
+									<artifactId>org.eclemma.runtime.equinox</artifactId>
+									<version>1.1.0.200908261008</version>
+								</frameworkExtension>
+							</frameworkExtensions>
+							<application>org.eclipse.ui.ide.workbench</application>
+							<dependencies>
+								<dependency>
+									<type>p2-installable-unit</type>
+									<artifactId>org.eclipse.sdk.ide</artifactId>
+									<version>0.0.0</version>
+								</dependency>
+							</dependencies>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<dependencies>
+							<dependency>
+								<groupId>emma</groupId>
+								<artifactId>emma_ant</artifactId>
+								<version>2.0.5312</version>
+							</dependency>
+							<dependency>
+								<groupId>emma</groupId>
+								<artifactId>emma</artifactId>
+								<version>2.0.5312</version>
+							</dependency>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>1.0b3</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<id>emma-report</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<taskdef resource="emma_ant.properties" />
+										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+										<if>
+											<available file="${project.build.directory}/emma" type="dir" />
+											<then>
+												<echo>Process emma report...</echo>
+												<!-- emma enabled="true">
+													<instr metadatafile="${project.build.directory}/coverage.em" mode="overwrite" instrpath="${project.build.directory}/../../../plugins/${emma.instrument.bundles}/target/classes" />
+												</emma-->
+												<emma enabled="true">
+													<report>
+														<infileset dir="${project.build.directory}/emma" includes="*.es,*.em" />
+														<txt outfile="${project.build.directory}/emma/coverage.txt" />
+														<xml outfile="${project.build.directory}/emma/coverage.xml" />
+													</report>
+												</emma>
+												<loadfile property="emma.txt"
+													srcFile="${project.build.directory}/emma/coverage.txt"
+													failonerror="false" />
+												<echo>${emma.txt}</echo>
+											</then>
+										</if>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>requirements</id>
+			<activation>
+				<file>
+					<exists>${basedir}/requirements.properties</exists>
+				</file>
+			</activation>
+			<properties>
+				<requirements.root>${basedir}/../../../requirements</requirements.root>
+				<requirement.build.root>${requirements.root}/target</requirement.build.root>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<executions>
+							<execution>
+								<id>download-plugin-requirements</id>
+								<phase>generate-test-resources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<property file="requirements.properties" />
+										<echo>Requirements build</echo>
+										<ant dir="${basedir}/../../../requirements" inheritAll="true" >
+											<property name="requirements" value="${requirements}" />
+											<property name="settings.offline" value="${settings.offline}" />
+											<property name="skipDownload" value="${skipDownload}" />
+										</ant> 
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
-	<repositories>
-		<!-- TODO: add JBT nightly update site so we can build against binaries -->
-		<repository>
-			<id>galileo</id>
-			<url>http://download.eclipse.org/releases/galileo/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>eclipse35</id>
-			<url>http://download.eclipse.org/eclipse/updates/3.5/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>birt25r</id>
-			<url>http://download.eclipse.org/birt/update-site/2.5</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>swtbot-galileo</id>
-			<url>http://download.eclipse.org/technology/swtbot/galileo/dev-build/update-site
-			</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-
-		<repository>
-			<id>webtools</id>
-			<url>http://download.eclipse.org/webtools/updates/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>m2eclipse</id>
-			<url>http://m2eclipse.sonatype.org/sites/m2e/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>m2eclipse-extras</id>
-			<url>http://m2eclipse.sonatype.org/sites/m2e-extras/</url>
-			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
 	<pluginRepositories>
-		<pluginRepository>
-			<id>maven-central</id>
-			<url>http://repo1.maven.org/maven2/
-			</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
 		<pluginRepository>
 			<id>sonatype-maven-central</id>
 			<url>http://repository.sonatype.org/content/repositories/central/
 			</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 			<releases>
 				<enabled>true</enabled>
@@ -336,7 +622,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<releases>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</releases>
 		</pluginRepository>
 		<pluginRepository>
@@ -347,7 +633,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<releases>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</releases>
 		</pluginRepository>
 		<pluginRepository>
@@ -357,9 +643,8 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<releases>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-
 </project>
