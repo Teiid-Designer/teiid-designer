@@ -47,7 +47,7 @@ public abstract class AbstractWizard extends Wizard {
     // ============================================================================================================================
     // Variables
 
-    private List pgs;
+    private final List pgs;
 
     // ============================================================================================================================
     // Constructors
@@ -84,6 +84,20 @@ public abstract class AbstractWizard extends Wizard {
      * <p>
      * </p>
      * 
+     * @since 4.0
+     */
+    public final void addPage( final IWizardPage page,
+                               final int index ) {
+        CoreArgCheck.isNotNull(page);
+        CoreArgCheck.isNonNegative(index);
+        this.pgs.add(index, page);
+        page.setWizard(this);
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
      * @see org.eclipse.jface.wizard.Wizard#canFinish()
      * @since 4.0
      */
@@ -96,6 +110,18 @@ public abstract class AbstractWizard extends Wizard {
             }
         }
         return true;
+    }
+
+    /**
+     * Indicates if the wizard can go to the page after the specified page.
+     * 
+     * @param thePage the page requested to flip to the next page
+     * @return <code>true</code> if can go to next page; <code>false</code> otherwise.
+     * @since 4.1
+     */
+    public boolean canFlipToNextPage( final IWizardPage thePage ) {
+        final int index = indexOf(thePage);
+        return ((index != -1) && thePage.isPageComplete() && ((getPageCount() - 1) > index));
     }
 
     /**
@@ -119,12 +145,12 @@ public abstract class AbstractWizard extends Wizard {
      * @since 4.0
      */
     public void createPageControls( final Composite pageContainer,
-                                    boolean restorePrevSize ) {
+                                    final boolean restorePrevSize ) {
         CoreArgCheck.isNotNull(pageContainer);
         for (final Iterator iter = this.pgs.iterator(); iter.hasNext();) {
             final IWizardPage pg = (IWizardPage)iter.next();
             pg.createControl(pageContainer);
-            // page is responsible for ensuring the created control is accessable
+            // page is responsible for ensuring the created control is accessible
             // via getControl.
             Assert.isNotNull(pg.getControl());
         }
@@ -149,8 +175,8 @@ public abstract class AbstractWizard extends Wizard {
 
                 // reposition shell if necessary when bounds are off-screen
 
-                Rectangle screenSize = shell.getDisplay().getClientArea();
-                Rectangle bounds = shell.getBounds();
+                final Rectangle screenSize = shell.getDisplay().getClientArea();
+                final Rectangle bounds = shell.getBounds();
                 int newX = -1;
                 int newY = -1;
 
@@ -190,6 +216,14 @@ public abstract class AbstractWizard extends Wizard {
      * <p>
      * </p>
      * 
+     * @since 4.0
+     */
+    public abstract boolean finish();
+
+    /**
+     * <p>
+     * </p>
+     * 
      * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
      * @since 4.0
      */
@@ -212,7 +246,7 @@ public abstract class AbstractWizard extends Wizard {
      * @since 4.0
      */
     @Override
-    public final IWizardPage getPage( String name ) {
+    public final IWizardPage getPage( final String name ) {
         CoreArgCheck.isNotNull(name);
         for (final Iterator iter = this.pgs.iterator(); iter.hasNext();) {
             final IWizardPage pg = (IWizardPage)iter.next();
@@ -265,6 +299,9 @@ public abstract class AbstractWizard extends Wizard {
         return (IWizardPage)this.pgs.get(ndx - 1);
     }
 
+    // ============================================================================================================================
+    // Property Methods
+
     /**
      * <p>
      * </p>
@@ -279,6 +316,20 @@ public abstract class AbstractWizard extends Wizard {
         }
         return (IWizardPage)this.pgs.get(0);
     }
+
+    /**
+     * Gets the page index of the specified page.
+     * 
+     * @param thePage the page whose index is being requested
+     * @return the page index or -1 if not found
+     * @since 4.1
+     */
+    public int indexOf( final IWizardPage thePage ) {
+        return this.pgs.indexOf(thePage);
+    }
+
+    // ============================================================================================================================
+    // MVC Controller Methods
 
     /**
      * <p>
@@ -308,23 +359,6 @@ public abstract class AbstractWizard extends Wizard {
         return finished;
     }
 
-    // ============================================================================================================================
-    // Property Methods
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @since 4.0
-     */
-    public final void addPage( final IWizardPage page,
-                               final int index ) {
-        CoreArgCheck.isNotNull(page);
-        CoreArgCheck.isNonNegative(index);
-        this.pgs.add(index, page);
-        page.setWizard(this);
-    }
-
     /**
      * <p>
      * </p>
@@ -334,40 +368,6 @@ public abstract class AbstractWizard extends Wizard {
     public final void removePage( final IWizardPage page ) {
         CoreArgCheck.isNotNull(page);
         this.pgs.remove(page);
-    }
-
-    // ============================================================================================================================
-    // MVC Controller Methods
-
-    /**
-     * Indicates if the wizard can go to the page after the specified page.
-     * 
-     * @param thePage the page requested to flip to the next page
-     * @return <code>true</code> if can go to next page; <code>false</code> otherwise.
-     * @since 4.1
-     */
-    public boolean canFlipToNextPage( final IWizardPage thePage ) {
-        int index = indexOf(thePage);
-        return ((index != -1) && thePage.isPageComplete() && ((getPageCount() - 1) > index));
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @since 4.0
-     */
-    public abstract boolean finish();
-
-    /**
-     * Gets the page index of the specified page.
-     * 
-     * @param thePage the page whose index is being requested
-     * @return the page index or -1 if not found
-     * @since 4.1
-     */
-    public int indexOf( final IWizardPage thePage ) {
-        return this.pgs.indexOf(thePage);
     }
 
 }

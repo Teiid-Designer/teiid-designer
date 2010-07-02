@@ -8,7 +8,16 @@
 package com.metamatrix.ui;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
@@ -26,8 +35,41 @@ import com.metamatrix.ui.internal.InternalUiConstants;
  */
 public final class UiPlugin extends AbstractUiPlugin implements InternalUiConstants, UiConstants.EclipsePluginIds {
 
+    /**
+     * The ID within the {@link JFaceResources#getImageRegistry() JFace image registry} of the checked check box image
+     */
+    public static final String CHECKED_BOX = "checkedBox"; //$NON-NLS-1$
+
+    /**
+     * The ID within the {@link JFaceResources#getImageRegistry() JFace image registry} of the unchecked check box image
+     */
+    public static final String UNCHECKED_BOX = "uncheckedBox"; //$NON-NLS-1$
+
     // The shared instance.
     private static UiPlugin plugin;
+
+    private static final Image createCheckBoxImage( final boolean checked ) {
+        Display display = Display.getCurrent();
+        if (display == null) display = Display.getDefault();
+        final Shell shell = new Shell(display, SWT.NO_TRIM);
+        final Button checkBox = new Button(shell, SWT.CHECK);
+        checkBox.setSelection(checked);
+        checkBox.pack();
+        final Point size = checkBox.getSize();
+        shell.setSize(size);
+        final Color greenScreen = new Color(display, 255, 255, 254);
+        checkBox.setBackground(greenScreen);
+        shell.setBackground(greenScreen);
+        shell.open();
+        final GC gc = new GC(checkBox);
+        final Image image = new Image(display, size.x, size.y);
+        gc.copyArea(image, 0, 0);
+        gc.dispose();
+        shell.close();
+        final ImageData imageData = image.getImageData();
+        imageData.transparentPixel = imageData.palette.getPixel(greenScreen.getRGB());
+        return new Image(display, imageData);
+    }
 
     /**
      * Returns the shared instance.
@@ -48,12 +90,30 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
     }
 
     /**
+     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+     * @since 4.0
+     */
+    @Override
+    protected ActionService createActionService( final IWorkbenchPage page ) {
+        return new UiActionService(page);
+    }
+
+    /**
+     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+     * @since 4.0
+     */
+    @Override
+    public PluginUtil getPluginUtil() {
+        return Util;
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
      */
     @Override
-    public void start( BundleContext context ) throws Exception {
+    public void start( final BundleContext context ) throws Exception {
         super.start(context);
 
         // Initialize logging/i18n utility
@@ -76,41 +136,10 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
             op.run();
         }
 
-    }
-
-    /**
-     * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
-     * @since 4.0
-     */
-    @Override
-    protected ActionService createActionService( IWorkbenchPage page ) {
-        return new UiActionService(page);
-    }
-
-    /**
-     * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
-     * @since 4.0
-     */
-    @Override
-    public PluginUtil getPluginUtil() {
-        return Util;
-    }
-
-    /**
-     * @since 4.0
-     */
-    private class UiActionService extends AbstractActionService {
-
-        UiActionService( IWorkbenchPage page ) {
-            super(getDefault(), page);
-        }
-
-        /**
-         * @see com.metamatrix.ui.actions.AbstractActionService#getDefaultAction(java.lang.String)
-         */
-        public IAction getDefaultAction( String theActionId ) {
-            return null;
-        }
+        // Register commonly-used images. Note that unlike the checkbox images above, these are created using the native UI's
+        // checkbox image
+        JFaceResources.getImageRegistry().put(UNCHECKED_BOX, createCheckBoxImage(false));
+        JFaceResources.getImageRegistry().put(CHECKED_BOX, createCheckBoxImage(true));
     }
 
     /**
@@ -119,10 +148,27 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
      * @see com.metamatrix.ui.AbstractUiPlugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
-    public void stop( BundleContext context ) throws Exception {
+    public void stop( final BundleContext context ) throws Exception {
         // This plugin contains the ModelerUiColorManager so it needs to be told to dispose of all it's cached colors
         GlobalUiColorManager.dispose();
         GlobalUiFontManager.dispose();
         super.stop(context);
+    }
+
+    /**
+     * @since 4.0
+     */
+    private class UiActionService extends AbstractActionService {
+
+        UiActionService( final IWorkbenchPage page ) {
+            super(getDefault(), page);
+        }
+
+        /**
+         * @see com.metamatrix.ui.actions.AbstractActionService#getDefaultAction(java.lang.String)
+         */
+        public IAction getDefaultAction( final String theActionId ) {
+            return null;
+        }
     }
 }

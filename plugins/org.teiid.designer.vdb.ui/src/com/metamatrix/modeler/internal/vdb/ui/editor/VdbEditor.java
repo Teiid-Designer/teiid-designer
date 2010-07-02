@@ -21,12 +21,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -54,17 +59,22 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.internal.vdb.ui.editor.TableAndButtonsGroup.RemoveButtonProvider;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.DefaultContentProvider;
+import com.metamatrix.ui.table.CheckBoxColumnProvider;
+import com.metamatrix.ui.table.DefaultTableProvider;
+import com.metamatrix.ui.table.TableAndButtonsGroup;
+import com.metamatrix.ui.table.TextColumnProvider;
+import com.metamatrix.ui.table.TableAndButtonsGroup.RemoveButtonProvider;
 import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
@@ -451,6 +461,22 @@ public final class VdbEditor extends EditorPart {
             }
         };
         modelsGroup.add(removeButtonProvider);
+        // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
+        // retrieved via the SourceHandler extension point and interface.
+        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
+        // connected in the user's workspace.
+        final TableViewer viewer = modelsGroup.getTable().getViewer();
+        final MenuManager menuManager = new MenuManager();
+        viewer.getControl().setMenu(menuManager.createContextMenu(pg));
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged( final SelectionChangedEvent event ) {
+                menuManager.removeAll();
+                final Object[] actions = SourceHandlerExtensionManager.findApplicableActions(viewer.getSelection());
+                if (actions != null) for (final Object action : actions) {
+                    if (action instanceof IAction) menuManager.add((IAction)action);
+                }
+            }
+        });
         modelsGroup.setInput(vdb);
 
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();

@@ -28,6 +28,8 @@ import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.workspace.ModelObjectAnnotations;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -62,6 +64,10 @@ public class VdbModelEntryTest {
         mockStatic(ModelUtil.class);
         when(ModelUtil.isXmiFile(model)).thenReturn(true);
         when(ModelUtil.isPhysical(model)).thenReturn(true);
+        final ModelResource modelResource = mock(ModelResource.class);
+        when(ModelerCore.getModelEditor().findModelResource(model)).thenReturn(modelResource);
+        final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
+        when(modelResource.getAnnotations()).thenReturn(annotations);
         entry = vdb.addModelEntry(modelPath, null);
     }
 

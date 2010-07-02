@@ -5,7 +5,8 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.vdb.ui.editor;
+package com.metamatrix.ui.table;
+
 
 /**
  * @param <T>

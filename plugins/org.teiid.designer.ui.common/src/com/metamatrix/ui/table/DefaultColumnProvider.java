@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.vdb.ui.editor;
+package com.metamatrix.ui.table;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -37,7 +37,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return {{@link SWT#LEFT}
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getAlignment()
+     * @see com.metamatrix.ui.table.ColumnProvider#getAlignment()
      */
     @Override
     public int getAlignment() {
@@ -48,7 +48,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return the {@link TextCellEditor} class
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getEditorClass()
+     * @see com.metamatrix.ui.table.ColumnProvider#getEditorClass()
      */
     @Override
     public Class<? extends CellEditor> getEditorClass() {
@@ -59,7 +59,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>null</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getImage(java.lang.Object)
+     * @see com.metamatrix.ui.table.ColumnProvider#getImage(java.lang.Object)
      */
     @Override
     public Image getImage( final T element ) {
@@ -70,7 +70,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return {@link #getValue(Object)}<code>.toString()</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getText(java.lang.Object)
+     * @see com.metamatrix.ui.table.ColumnProvider#getText(java.lang.Object)
      */
     @Override
     public String getText( final T element ) {
@@ -82,7 +82,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>null</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getText(java.lang.Object)
+     * @see com.metamatrix.ui.table.ColumnProvider#getText(java.lang.Object)
      */
     @Override
     public String getToolTip( final T element ) {
@@ -93,7 +93,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>false</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#isEditable(java.lang.Object)
+     * @see com.metamatrix.ui.table.ColumnProvider#isEditable(java.lang.Object)
      */
     @Override
     public boolean isEditable( final T element ) {
@@ -104,7 +104,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>true</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#isResizable()
+     * @see com.metamatrix.ui.table.ColumnProvider#isResizable()
      */
     @Override
     public boolean isResizable() {
@@ -115,7 +115,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * {@inheritDoc}
      * 
      * @return <code>true</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#isSortable()
+     * @see com.metamatrix.ui.table.ColumnProvider#isSortable()
      */
     @Override
     public boolean isSortable() {
@@ -128,7 +128,7 @@ public abstract class DefaultColumnProvider<T, V> implements ColumnProvider<T, V
      * This implementation does nothing.
      * </p>
      * 
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.ColumnProvider#getValue(java.lang.Object)
+     * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
      */
     @Override
     public void setValue( final T element,

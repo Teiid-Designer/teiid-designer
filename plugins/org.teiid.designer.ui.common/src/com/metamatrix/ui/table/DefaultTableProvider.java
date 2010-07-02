@@ -5,7 +5,8 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.vdb.ui.editor;
+package com.metamatrix.ui.table;
+
 
 /**
  * @param <T>
@@ -18,7 +19,7 @@ public abstract class DefaultTableProvider<T> implements TableProvider<T> {
      * This implementation does nothing.
      * </p>
      * 
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.TableProvider#doubleClicked(java.lang.Object)
+     * @see com.metamatrix.ui.table.TableProvider#doubleClicked(java.lang.Object)
      */
     @Override
     public void doubleClicked( final T element ) {
@@ -28,7 +29,7 @@ public abstract class DefaultTableProvider<T> implements TableProvider<T> {
      * {@inheritDoc}
      * 
      * @return <code>false</code>
-     * @see com.metamatrix.modeler.internal.vdb.ui.editor.TableProvider#isDoubleClickSupported()
+     * @see com.metamatrix.ui.table.TableProvider#isDoubleClickSupported()
      */
     @Override
     public boolean isDoubleClickSupported() {

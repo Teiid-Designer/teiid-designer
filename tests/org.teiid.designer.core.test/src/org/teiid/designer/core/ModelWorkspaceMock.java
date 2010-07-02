@@ -13,6 +13,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import org.eclipse.core.runtime.CoreException;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.util.ArgCheck;
+import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.container.ResourceFinder;
@@ -57,6 +58,8 @@ public final class ModelWorkspaceMock {
         } catch (final CoreException notPossible) {
             notPossible.printStackTrace();
         }
+        final ModelEditor editor = mock(ModelEditor.class);
+        when(ModelerCore.getModelEditor()).thenReturn(editor);
     }
 
     /**

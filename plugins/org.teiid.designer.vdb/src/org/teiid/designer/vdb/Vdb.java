@@ -359,9 +359,7 @@ public final class Vdb {
         // Build JAXB model
         final VdbElement vdbElement = new VdbElement(this);
         // Save archive
-        final File tmpFolder = new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
-        final File tmpArchive = new File(tmpFolder, file.getFullPath().toString());
-        tmpArchive.getParentFile().mkdirs();
+        final File tmpFolder = VdbPlugin.singleton().getStateLocation().toFile();
         OperationUtil.perform(new Unreliable() {
 
             ZipOutputStream out = null;
@@ -373,11 +371,15 @@ public final class Vdb {
             @Override
             public void finallyDo() throws Exception {
                 if (out != null) out.close();
-                FileUtils.removeDirectoryAndChildren(new File(tmpFolder, getName().segment(0)));
             }
 
             @Override
             public void tryToDo() throws Exception {
+                final IPath path = file.getFullPath();
+                final File tmpArchive = File.createTempFile(path.removeFileExtension().toString(),
+                                                            '.' + path.getFileExtension(),
+                                                            tmpFolder);
+                tmpArchive.getParentFile().mkdirs();
                 out = new ZipOutputStream(new FileOutputStream(tmpArchive));
                 // Create VDB manifest
                 final ZipEntry zipEntry = new ZipEntry(MANIFEST);

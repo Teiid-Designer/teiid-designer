@@ -64,6 +64,8 @@ public class VdbTest {
         final IPath vdbPath = mock(IPath.class);
         when(vdbFile.getFullPath()).thenReturn(vdbPath);
         when(vdbFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
+        final IPath vdbName = mock(IPath.class);
+        when(vdbPath.removeFileExtension()).thenReturn(vdbName);
 
         eclipseMock = new EclipseMock();
         when(eclipseMock.getRoot().findMember(vdbPath)).thenReturn(vdbFile);
