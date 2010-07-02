@@ -340,7 +340,7 @@ public final class VdbModelEntry extends VdbEntry {
             final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
             for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
                 // TODO: Does this work for the datatypes model?
-                final IPath name = Path.fromPortableString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
+                final IPath name = Path.fromOSString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
                 VdbModelEntry importedEntry = null;
                 for (final VdbModelEntry entry : getVdb().getModelEntries())
                     if (name.equals(entry.getName())) {
