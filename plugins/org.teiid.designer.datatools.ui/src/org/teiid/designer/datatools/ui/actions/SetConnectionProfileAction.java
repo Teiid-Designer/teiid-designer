@@ -105,6 +105,8 @@ public class SetConnectionProfileAction  extends SortableSelectionAction {
 //				
 //				if( doIt ) {
 					SetConnectionProfileAction.setConnectionInfo(modelFile, profile);
+					
+					
 					return true;
 //				}
 				
@@ -158,6 +160,7 @@ public class SetConnectionProfileAction  extends SortableSelectionAction {
     	
 		if( mr != null ) {
 			helper.setConnectionInfo(mr, connectionProfile);
+			helper.setJdbcConnectionInfo(mr, connectionProfile);
 		} else {
 			// TODO: THROW EXCEPTION OR LOG ERROR HERE!!!
 		}
