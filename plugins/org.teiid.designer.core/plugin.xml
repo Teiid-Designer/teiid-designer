@@ -46,13 +46,13 @@
          name="systemVirtualResource"
          point="org.teiid.designer.core.externalResource">
       <resourceName>
-         /System/Sys.xmi
+         /System/SYS.xmi
       </resourceName>
       <resourceUrl>
          System.vdb
       </resourceUrl>
       <internalUri>
-         http://www.metamatrix.com/models/Sys.xmi
+         http://www.metamatrix.com/models/SYS.xmi
       </internalUri>
       <priority> 1 </priority>
    </extension>
