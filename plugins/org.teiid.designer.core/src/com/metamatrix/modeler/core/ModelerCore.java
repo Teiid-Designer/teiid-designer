@@ -1061,7 +1061,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             if (rsrcSet != null) {
                 for (final Object element : rsrcSet.getResources()) {
                     final Resource rsrc = (Resource)element;
-                    if (rsrc != null && rsrc.getURI().lastSegment().indexOf("Sys") != -1) { //$NON-NLS-1$
+                    if (rsrc != null && rsrc.getURI().lastSegment().indexOf("SYS") != -1) { //$NON-NLS-1$
                         tmp.add(rsrc);
                     }
                 }
