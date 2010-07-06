@@ -24,30 +24,6 @@
             class="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidView"
             id="connectorsView">
       </view>
-<!-- SqlResultsView -->
-      <view
-            name="%SqlResultsView.name"
-            icon="icons/full/cview16/XmlResultsView.gif"
-            category="SQLExplorerPlugin"
-            class="com.metamatrix.modeler.internal.dqp.ui.views.SqlResultsView"
-            id="sqlResultsView">
-      </view>
-<!-- PreviewDataView -->
-      <view
-            name="%PreviewDataView.name"
-            icon="icons/full/cview16/XmlResultsView.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.internal.dqp.ui.views.PreviewDataView"
-            id="previewDataView">
-      </view>
-<!-- XmlDocumentSqlResultsView -->
-      <view
-            name="%xmlDocumentSqlResultsView.name"
-            icon="icons/full/cview16/XmlResultsView.gif"
-            category="SQLExplorerPlugin"
-            class="com.metamatrix.modeler.internal.dqp.ui.views.XmlDocumentSqlResultsView"
-            id="xmlDocumentSqlResultsView">
-      </view>
   </extension>
    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
    <extension
@@ -77,49 +53,6 @@
          
       </perspectiveExtension>
    </extension>
-   
-<!-- XML Document ResultSet Processor -->
-  <extension
-        id="xmlDocumentResultSetProcessor"
-        name="%xmlDocumentResultSetProcessor.name"
-        point="net.sourceforge.sqlexplorer.resultSetProcessor">
-        <class
-            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.XmlDocumentResultSetProcessor">
-        </class>
-  </extension>
-<!-- SQL ResultSet Processor -->
-  <extension
-        id="sqlResultSetProcessor"
-        name="%sqlResultSetProcessor.name"
-        point="net.sourceforge.sqlexplorer.resultSetProcessor">
-        <class
-            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.SqlResultSetProcessor">
-        </class>
-  </extension>
-<!-- Action to open the log file for a given Connection in SQLExplorer -->   
-   <extension
-        id="staledVDBChecker"
-        name="%staledVDBChecker.name"
-        point="net.sourceforge.sqlexplorer.sqlExecVetoListener">
-        <class
-            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.StaledVDBChecker">
-        </class>
-   </extension>
-   <extension
-        id="staledExtensionModuleChecker"
-        name="%staledExtensionModuleChecker.name"
-        point="net.sourceforge.sqlexplorer.sqlExecVetoListener">
-        <class
-            name="com.metamatrix.modeler.internal.dqp.ui.jdbc.StaledExtensionModuleChecker">
-        </class>
-   </extension>
-   <extension
-         id="WebServiceRequestGenerator"
-         name="%webServiceRequestDocGenerator.name"
-         point="net.sourceforge.sqlexplorer.requestDocGenerator">
-      <class name="com.metamatrix.modeler.internal.dqp.ui.connection.WebServiceRequestGenerator"/>
-   </extension>
-
    <extension
          id="connectorBindingContentProvider"
          name="Connector Binding Content Provider"

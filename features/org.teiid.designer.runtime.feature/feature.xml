@@ -79,13 +79,6 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          unpack="false"/>
 
    <plugin
-         id="net.sourceforge.sqlexplorer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.jdom"
          download-size="0"
          install-size="0"

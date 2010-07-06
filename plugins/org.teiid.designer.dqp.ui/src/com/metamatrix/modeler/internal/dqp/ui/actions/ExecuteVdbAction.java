@@ -8,18 +8,14 @@
 package com.metamatrix.modeler.internal.dqp.ui.actions;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -29,21 +25,18 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.dqp.execution.VdbExecutionValidator;
-import com.metamatrix.modeler.dqp.internal.execution.VdbExecutionValidatorImpl;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
 /**
  * @since 4.2
@@ -64,10 +57,6 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
     // ConnectorBindingsDialog dialog;
 
     private IStatus canExecute;
-
-    private VdbExecutionValidator validator;
-
-    VdbExecutor vdbExecutor;
 
     private boolean allowUserInput = true;
 
@@ -94,7 +83,7 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
      */
     private void executeVdb() {
         // should be in an executable state here but check to be safe
-        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) vdbExecutor.execute(null);
+    	// TODO: Replace
     }
 
     public IStatus getCanExecuteStatus() {
@@ -137,24 +126,6 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
 
     private Shell getShell() {
         return DqpUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
-    }
-
-    /**
-     * run the VdbExecutor.execute method for initializing the connection only, and return a Vdb connection
-     */
-    public Connection getVdbConnection() {
-        Connection connection = null;
-        // should be in an executable state here but check to be safe
-        if (getCanExecuteStatus().getSeverity() != IStatus.ERROR) {
-            final IStatus vdbConnectionStatus = this.vdbExecutor.execute(null, true);
-            if (vdbConnectionStatus.isOK()) connection = this.vdbExecutor.getSqlConnection().getConnection();
-        }
-        return connection;
-    }
-
-    public VdbExecutionValidator getVdbExecutionValidator() {
-        if (this.validator == null) this.validator = new VdbExecutionValidatorImpl();
-        return this.validator;
     }
 
     /**
@@ -227,38 +198,7 @@ public class ExecuteVdbAction extends ActionDelegate implements DqpUiConstants, 
             return;
         }
 
-        // executor for executing VDB and validating execution status
-        vdbExecutor = new VdbExecutor(vdb, getVdbExecutionValidator());
 
-        // check vdb execute status. exit if problem found.
-        final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-            @Override
-            public void execute( final IProgressMonitor monitor ) {
-                setCanExecute(vdbExecutor.canExecute());
-            }
-        };
-
-        try {
-            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, operation);
-        } catch (final InterruptedException e) {
-        } catch (final InvocationTargetException e) {
-            UTIL.log(e.getTargetException());
-            MessageDialog.openError(getShell(), getString("executorErrorDialog.title"), //$NON-NLS-1$
-                                    getString("executorErrorDialog.msg") //$NON-NLS-1$
-            );
-            return;
-        }
-
-        // if not in an executable state, show dialog to allow user to fix any problems
-        // (only if allowing user interaction)
-        // dialog is shown for either error, warning, or info severity.
-        if (!this.canExecute.isOK() && this.allowUserInput) UiBusyIndicator.showWhile(null, new Runnable() {
-            public void run() {
-            }
-        });
-    }
-
-    public void setVdbExecutionValidator( final VdbExecutionValidator validator ) {
-        this.validator = validator;
+        // TODO: REPLACE
     }
 }

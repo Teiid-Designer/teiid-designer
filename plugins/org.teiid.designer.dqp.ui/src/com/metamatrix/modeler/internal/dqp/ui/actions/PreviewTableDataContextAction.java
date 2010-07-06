@@ -39,12 +39,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
-import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
@@ -55,20 +53,16 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Extensions;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Preferences;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
-import com.metamatrix.modeler.internal.dqp.ui.views.PreviewDataView;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.AccessPatternColumnsDialog;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDialog;
-import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.PrunePreviewResultsDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * @since 5.0
@@ -174,40 +168,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
     
      private boolean isShowingMaxPreviews( EObject eObject ) {
-        PreviewDataView view = getPreviewDataView();
-
-        if (view != null) {
-            int diff = getCurrentResultsLimit() - view.getResultCount();
-
-            if (diff == 0) {
-                // see if results are currently displayed than it is OK since old results will
-                // get replaced with the new results
-                return !view.isShowingResult(eObject);
-            }
-
-            if (diff < 0) {
-                return true;
-            }
-        }
 
         return false;
-    }
-
-    private PreviewDataView getPreviewDataView() {
-        return (PreviewDataView)UiUtil.getViewPart(DqpUiConstants.Extensions.PREVIEW_DATA_VIEW);
-    }
-
-    private int displayPruneResultsDialog( EObject object ) {
-        // decrease the limit by one if a preview for this object is already being displayed
-        int limit = getCurrentResultsLimit();
-
-        if (getPreviewDataView().isShowingResult(object)) {
-            --limit;
-        }
-
-        PrunePreviewResultsDialog dialog = new PrunePreviewResultsDialog(getPreviewDataView(), getCurrentResultsLimit(), object);
-        dialog.create();
-        return dialog.open();
     }
 
     /**
@@ -218,13 +180,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         List<String> paramValues = null;
         final Shell shell = getShell();
         final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
-        
-         // if showing the max number of previews don't continue unless user closes the appropriate number of previews
-        if (isShowingMaxPreviews(selected)) {
-            if (displayPruneResultsDialog(selected) != Window.OK) {
-                return;
-            }
-        }
 
         List accessPatternsColumns = null;
         if (SqlAspectHelper.isTable(selected)) {
@@ -519,18 +474,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         return rowLimit;
     }
 
-    
-     private int getCurrentResultsLimit() {
-        IPreferenceStore prefStore = DqpUiPlugin.getDefault().getPreferenceStore();
-        int resultsLimit = prefStore.getInt(Preferences.ID_PREVIEW_RESULTS_LIMIT);
-
-        if (resultsLimit < 1) {
-            resultsLimit = prefStore.getDefaultInt(Preferences.ID_PREVIEW_RESULTS_LIMIT);
-        }
-
-        return resultsLimit;
-    }
-
     /**
      * Show the specified results in the results view.
      * 
@@ -539,21 +482,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @SuppressWarnings("unused")
 	private void showResults( final IResults theResults ) {
-        // let the UI display the results
-        final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
-
-        final IWorkbenchWindow iww = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow();
-        iww.getShell().getDisplay().asyncExec(new Runnable() {
-            public void run() {
-                try {
-                    IWorkbenchPage page = iww.getActivePage();
-                    PreviewDataView view = (PreviewDataView)page.showView(Extensions.PREVIEW_DATA_VIEW);
-                    view.addResults(theResults, selected);
-                } catch (Exception theException) {
-                    DqpUiConstants.UTIL.log(IStatus.ERROR, theException.getLocalizedMessage());
-                }
-            }
-        });
+        // REPLACE
     }
 
     /**
