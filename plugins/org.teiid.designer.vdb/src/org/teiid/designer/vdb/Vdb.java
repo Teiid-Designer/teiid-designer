@@ -370,7 +370,7 @@ public final class Vdb {
 
             @Override
             public void finallyDo() throws Exception {
-//                if (out != null) out.close();
+                if (out != null) out.close();
             }
 
             @Override
@@ -401,10 +401,9 @@ public final class Vdb {
                     entry.save(out, monitor);
                 for (final VdbModelEntry entry : modelEntries)
                     entry.save(out, monitor);
-                
-                // Close zip output stream so its fully writen AND any locks are removed.
+                // Close zip output stream so its fully writen and any locks are removed.
                 out.close();
-                
+                out = null;
                 // Replace archive in workspace with temporary archive
                 final File archiveFile = ResourcesPlugin.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
                 if (!archiveFile.delete()) throw new RuntimeException(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
