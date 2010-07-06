@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.actions.AbstractActionService;
@@ -128,6 +129,10 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
                 registerPluginImage(UI, Images.TASK_ERROR);
                 registerPluginImage(UI, Images.TASK_WARNING);
                 registerPluginImage(UI, Images.TASK_INFO);
+                // Register commonly-used images. Note that unlike the checkbox images above, these are created using the native UI's
+                // checkbox image
+                JFaceResources.getImageRegistry().put(UNCHECKED_BOX, createCheckBoxImage(false));
+		        JFaceResources.getImageRegistry().put(CHECKED_BOX, createCheckBoxImage(true));
             }
         };
         if (Display.getCurrent() == null) {
@@ -135,11 +140,6 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
         } else {
             op.run();
         }
-
-        // Register commonly-used images. Note that unlike the checkbox images above, these are created using the native UI's
-        // checkbox image
-        JFaceResources.getImageRegistry().put(UNCHECKED_BOX, createCheckBoxImage(false));
-        JFaceResources.getImageRegistry().put(CHECKED_BOX, createCheckBoxImage(true));
     }
 
     /**
