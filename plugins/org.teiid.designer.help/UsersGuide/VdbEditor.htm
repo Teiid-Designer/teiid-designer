@@ -12,46 +12,15 @@
 <p class="maintitle_b24">VDB Editor </p>
 
 <p>A <strong>VDB</strong>, or <span class="medium"> <a href="VdbSummary.htm">virtual database</a> is a container for components used to integrate data from multiple data sources, so that they can be accessed in a federated manner through a single, uniform API.</span> <span class="medium">A VDB contains models, which define the structural characteristics of data sources, views, and Web services.</span> The <strong>VDB Editor</strong>, provides the means to manage the contents of the VDB as well as its deployable (validation) state.</p>
-<p>The <strong>VDB Editor</strong>, shown below, contains five editor tabs, namely:</p>
-<ul>
-  <li><a href="#overview"><strong>Overview </strong></a>- Manage/edit contents, description and indicates current deployable state. </li>
-  <li><a href="#problems"><strong>Problems </strong></a>- Table view of any validation problems your VDB may have (i.e. Warnings and/or Errors) </li>
-  <li><a href="#indexes"><strong>Indexes</strong></a> - Provides viewable summary of various Index files utilized at run-time. </li>
-  <li><a href="#userFiles"><strong>User Files</strong></a> - Provides importing or attaching additional user files to the VDB archive. </li>
-  <li><a href="#webServices"><strong>Web Services </strong></a>- When VDB contains Web Services models, this tab provides access edit and view WSDL specific information. </li>
-  <li><strong><a href="#execute">Execute </a></strong> - Manage source model connectors and actually <a href="ExecuteVdbHelp.htm">test your data</a>.  </li>
-</ul>
-
-<p class="medium"><span class="subtitle_b16"><a name="overview"></a>VDB Overview </span></p>
-<p class="medium">Creating a new VDB will automatically open the VDB in a VDB Editor. </p>
-<p><img src="images/views/VDBEditor.jpg" hspace="20" ></p>
-<p>Manage content of the VDB by using the <strong>Add...</strong> and <strong>Remove..</strong>. buttons.</p>
-<p>An example VDB containing multiple models is shown below (including models that have been modified in the workspace after they were added to the VDB).</p>
-<p><img src="images/views/VDBEditor_Example.jpg" hspace="20" > </p>
-
-<p class="medium"><span class="subtitle_b16"><a name="problems"></a>VDB Problems </span></p>
-<p><img src="images/views/VDBEditor_Problems.jpg" width="853" height="184" hspace="20"></p>
-
-<p class="medium"><span class="subtitle_b16"><a name="indexes"></a>VDB Indexes </span></p>
-<p><img src="images/views/VDBEditor_Indexes.jpg" width="853" height="393" hspace="20"></p>
-
-<p class="medium"><span class="subtitle_b16"><a name="userFiles"></a>User Files</span></p>
-<p>You can add additional artifacts or files to your VDB via the <strong>User File</strong>s tab in the <strong>VDB Editor</strong>. Select the <strong>Add...</strong> button and locate/select files from your local file system. </p>
-<p><img src="images/views/VdbEditor_UserFiles.jpg" width="623" height="481" hspace="20"></p>
-
-<p class="medium"><span class="subtitle_b16"><a name="webServices"></a>VDB Web Services </span></p>
-<p><img src="images/views/VDBEditor_WebServices.jpg" width="723" height="315" hspace="20"></p>
-<p><img src="images/views/PreviewWsdlDialog.jpg" width="961" height="525" hspace="20"> </p>
-
-<p class="medium"><span class="subtitle_b16"><a name="execute"></a>VDB Execute </span></p>
-<p class="medium">See <a href="ExecuteVdbHelp.htm">Execute VDB</a> for detailed summary of this editor tab. </p>
-<p><img src="images/views/VDBEditor_Execute.jpg" hspace="20" ></p>
-<p>&nbsp;</p>
-
+<p>The <strong>VDB Editor</strong>, shown below, contains a <strong>Description</strong> area, a <strong>Models</strong> area and an &quot;<strong>Other Files</strong>&quot; area.</p>
+<p><img src="images/views/VDBEditor.jpg" alt="VDB Editor" width="824" height="528"></p>
+<p>Add or remove models via the buttons at the right.</p>
+<p>Set individual model visibility via the &quot;Visibility&quot; checkbox for each model. This provides model-level data access security. </p>
+<p>In order for a VDB to be  fully queryable the &quot;Source Name&quot;, &quot;Translator&quot; and &quot;JNDI Names&quot; must have valid values and represent deployed artifacts on your Teiid server.</p>
+<p>If you have <strong>Designer</strong> runtime plugins installed, and have a <strong>Teiid</strong> server running, you can select a source model in the<strong> VDB Editor</strong> and right-click select &quot;<strong>Change Translator</strong>&quot; or &quot;<strong>Change JNDI Data Source</strong>&quot; which will allow you to select any applicable artifacts on your server. </p>
 <p class="subtitle_b16">Related Topics</p>
 <ul>
-  <li><a href="CreateVirtualDatabase.htm" class="medium">Create a New VDB</a> </li>
-  <li><a href="ExecuteVdbHelp.htm" class="medium">Execute VDB</a></li>
+  <li><a href="CreateVirtualDatabase.htm" class="medium">Create a New VDB</a></li>
   <li><a href="VdbSummary.htm">VDB Facts</a></li>
   <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
 </ul>

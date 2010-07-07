@@ -37,7 +37,7 @@
     <li><strong>XML Service <img src="images/icons/XmlServiceViewModel.gif" width="16" height="16"></strong></li>
     <li><strong>Web services<img src="images/icons/WebServiceViewModel.gif" width="16" height="16"></strong></li>
     <li><strong>Relationship </strong><img src="images/icons/RelationshipModel.gif" width="16" height="16"></li>
-    <li><strong>People </strong><img src="images/icons/PeopleModel.gif" width="16" height="16"></li>
+    <li><strong>Extension</strong> <img src="images/icons/ExtensionModel.gif" alt="Extension" width="16" height="16"></li>
     <li><strong>Function </strong><img src="images/icons/FunctionModel.gif" width="16" height="16"></li>
     <li><strong>Uml 2.0 </strong><img src="images/icons/UmlModel.gif" width="16" height="16"></li>
   </ul>
@@ -68,7 +68,6 @@
     <li><strong>Web Services</strong>, which define Web service interfaces, operations, and operation input and output parameters (in the form of XML Schemas). </li>
     <li><strong>Model Extensions</strong>, for defining property name/value extensions to other model classes. </li>
     <li><strong>Function</strong>, TBD</li>
-    <li><strong>People</strong>, TBD</li>
     <li><strong>Relationship</strong>, TBD </li>
     <li><strong>UML 2.0 </strong>, TBD </li>
   </ul>
@@ -82,12 +81,9 @@
     Models contained within a <a href="VdbSummary.htm">VDB</a> can be imported into the <strong>Teiid Designer</strong>. In this way, VDBs can be used as a way to exchange a set of related models. (See description of a <a href="VdbSummary.htm">Virtual Database</a>) </p>
 </blockquote>
 
-<p><span class="subtitle_b16"><a name="Bindings"></a>Models and Connectors</span></p>
+<p><span class="subtitle_b16"><a name="Bindings"></a>Models and Connection Profiles </span></p>
 <blockquote>
-  <p> A <strong>connector</strong> provides the connectivity to the source for the query engine when it is executing queries to that source.</p>
-  <p>All <strong>Source</strong> models must  have <strong>connectors</strong> associated with them in a VDB in order to be tested in <strong>Designer</strong> or deployed for data access.</p>
-  <p>It is possible that multiple models may use the same connector, but each model must be bound to a connector.  </p>
-  <p> In <strong>Teiid Designer</strong>, connectors are automatically created "under the hood" when you import from a  specific supported data source. You can also create and maintain your own custom connectors. (see <a href="ConnectorBindingsHelp.htm">Connectors</a>)</p>
+  <p> A <strong>connection profile </strong> provides the connectivity to a data source and is defined by the DTP framework. Designer utilizes this framework from withing it's JDBC Importer.</p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="Validation"></a>Model Validation</span></p>
@@ -99,9 +95,7 @@
 
 <p><span class="subtitle_b16"><a name="Testing"></a>Testing Your Models</span></p>
 <blockquote>
-  <p>Models can be tested in <strong>Teiid Designer</strong> by issuing SQL queries in the <a href="ExecuteVdbHelp.htm">VDB Execution</a> perspective. In this way, you can iterate between defining your integration models and testing them out to see if they are yielding the expected results.</p>
-  <p> All the source models in your <strong>VDB</strong> must have <strong>connectors</strong> associated with them in order for the <strong>VDB</strong> to be executable. You can define the <strong>bindings</strong> for each source model in the Designer.
-    (see <a href="ConnectorBindingsHelp.htm">Connectors</a>) </p>
+  <p><em>(NOTE: Documentation for this feature under construction) </em></p>
 </blockquote>
 
 <p><span class="subtitle_b16"><a name="File"></a>Model Files</span></p>
