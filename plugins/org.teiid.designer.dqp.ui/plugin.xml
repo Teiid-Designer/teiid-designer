@@ -34,25 +34,7 @@
         name="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidPerspectiveContributor">
       </class>
    </extension>
-<!-- JDBC Client Perspective -->
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            name="%jdbcClientPerspective.name"
-            icon="icons/full/ctool16/run_vdb.gif"
-            class="com.metamatrix.modeler.internal.dqp.ui.jdbc.JdbcClientPluginPerspective"
-            id="jdbcClientPluginPerspective">
-      </perspective>
-   </extension>
-<!-- jh Added to fix 19314 -->
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="jdbcClientPluginPerspective">
-         <perspectiveShortcut id="jdbcClientPluginPerspective"/>
-         
-      </perspectiveExtension>
-   </extension>
+
    <extension
          id="connectorBindingContentProvider"
          name="Connector Binding Content Provider"
