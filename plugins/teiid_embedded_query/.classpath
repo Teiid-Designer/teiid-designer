@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="teiid-1145.jar"/>
 	<classpathentry exported="true" kind="lib" path="teiid-7.0.0-client.jar" sourcepath="teiid-7.0.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-api-7.0.0.jar" sourcepath="teiid-7.0.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-engine-7.0.0.jar" sourcepath="teiid-7.0.0-src.zip"/>

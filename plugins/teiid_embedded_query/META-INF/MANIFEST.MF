@@ -7,6 +7,7 @@ Bundle-Vendor: %providerName
 Bundle-ClassPath: .,
  System.vdb,
  jta-1.1.jar,
+ teiid-1145.jar,
  teiid-7.0.0-client.jar,
  teiid-api-7.0.0.jar,
  teiid-engine-7.0.0.jar
