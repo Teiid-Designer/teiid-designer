@@ -59,7 +59,7 @@ public class ResourceAnnotationHelper {
 		
 		Annotation annotation = modelResource.getAnnotations().getAnnotation(modelResource.getModelAnnotation());
 		if( annotation == null && forceCreate ) {
-			annotation = ModelResourceContainerFactory.createNewAnnotation(modelResource.getModelAnnotation());
+			annotation = ModelResourceContainerFactory.createNewAnnotation(modelResource.getModelAnnotation(), modelResource.getEmfResource());
 	        
 			ModelContents contents = ModelerCore.getModelEditor().getModelContents(modelResource);
 			AnnotationContainer ac = contents.getAnnotationContainer(false);
