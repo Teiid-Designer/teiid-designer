@@ -10,13 +10,16 @@ package com.metamatrix.modeler.internal.core.workspace;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
+import org.eclipse.core.resources.FileInfoMatcherDescription;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -709,6 +712,60 @@ public class MockContainer implements IContainer {
     @Override
     public boolean isTeamPrivateMember( int options ) {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+     */
+    @Override
+    public IPathVariableManager getPathVariableManager() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isVirtual()
+     */
+    @Override
+    public boolean isVirtual() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void setDerived( boolean arg0,
+                            IProgressMonitor arg1 ) throws CoreException {
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IContainer#createFilter(int, org.eclipse.core.resources.FileInfoMatcherDescription, int,
+     *      org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public IResourceFilterDescription createFilter( int arg0,
+                                                    FileInfoMatcherDescription arg1,
+                                                    int arg2,
+                                                    IProgressMonitor arg3 ) throws CoreException {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IContainer#getFilters()
+     */
+    @Override
+    public IResourceFilterDescription[] getFilters() throws CoreException {
+        return null;
     }
 
 }

@@ -12,20 +12,24 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.util.Map;
+import org.eclipse.core.resources.FileInfoMatcherDescription;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1492,6 +1496,82 @@ public class MockFileResource implements IFile {
         public boolean isTeamPrivateMember( int options ) {
             return false;
         }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IContainer#createFilter(int, org.eclipse.core.resources.FileInfoMatcherDescription,
+         *      int, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        public IResourceFilterDescription createFilter( int arg0,
+                                                        FileInfoMatcherDescription arg1,
+                                                        int arg2,
+                                                        IProgressMonitor arg3 ) throws CoreException {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IContainer#getFilters()
+         */
+        @Override
+        public IResourceFilterDescription[] getFilters() throws CoreException {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+         */
+        @Override
+        public IPathVariableManager getPathVariableManager() {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResource#isVirtual()
+         */
+        @Override
+        public boolean isVirtual() {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        public void setDerived( boolean arg0,
+                                IProgressMonitor arg1 ) throws CoreException {
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IProject#loadSnapshot(int, java.net.URI, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        public void loadSnapshot( int arg0,
+                                  URI arg1,
+                                  IProgressMonitor arg2 ) throws CoreException {
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IProject#saveSnapshot(int, java.net.URI, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        public void saveSnapshot( int arg0,
+                                  URI arg1,
+                                  IProgressMonitor arg2 ) throws CoreException {
+        }
     }
 
     public String getCharset() {
@@ -1657,6 +1737,36 @@ public class MockFileResource implements IFile {
     @Override
     public boolean isTeamPrivateMember( int options ) {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+     */
+    @Override
+    public IPathVariableManager getPathVariableManager() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isVirtual()
+     */
+    @Override
+    public boolean isVirtual() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void setDerived( boolean arg0,
+                            IProgressMonitor arg1 ) throws CoreException {
     }
 
 }

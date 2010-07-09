@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -19,6 +20,7 @@ import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -617,6 +619,36 @@ public class FakeIResource implements IResource {
     @Override
     public boolean isTeamPrivateMember( int options ) {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#getPathVariableManager()
+     */
+    @Override
+    public IPathVariableManager getPathVariableManager() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#isVirtual()
+     */
+    @Override
+    public boolean isVirtual() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResource#setDerived(boolean, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void setDerived( boolean arg0,
+                            IProgressMonitor arg1 ) throws CoreException {
     }
 
 }
