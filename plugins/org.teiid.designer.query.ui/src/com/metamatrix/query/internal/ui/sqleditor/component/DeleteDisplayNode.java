@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Option;
@@ -169,9 +170,9 @@ public class DeleteDisplayNode extends DisplayNode {
         int indent = this.getIndentLevel();
         indent++;
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.DELETE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.DELETE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.FROM));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.FROM));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         
         // Get child DisplayNodes

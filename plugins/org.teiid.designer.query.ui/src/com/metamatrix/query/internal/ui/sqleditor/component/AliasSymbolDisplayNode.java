@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 
@@ -71,7 +72,7 @@ public class AliasSymbolDisplayNode extends ExpressionDisplayNode {
         }
         // Keyword AS
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.AS));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.AS));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
         // If alias is reserved word, it needs to be in quotes to escape it

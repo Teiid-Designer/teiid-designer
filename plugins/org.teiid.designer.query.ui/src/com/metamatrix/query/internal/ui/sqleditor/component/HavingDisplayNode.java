@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Criteria;
 
 /**
@@ -90,7 +91,7 @@ public class HavingDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 //        int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.HAVING));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.HAVING));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 //        if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
 //        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));

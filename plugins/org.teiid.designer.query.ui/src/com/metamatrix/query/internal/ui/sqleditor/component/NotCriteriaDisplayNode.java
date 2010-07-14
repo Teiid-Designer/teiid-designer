@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.NotCriteria;
 
 /**
@@ -72,7 +73,7 @@ public class NotCriteriaDisplayNode extends AtomicCriteriaDisplayNode {
         displayNodeList = new ArrayList();
         //int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE+LTPAREN));
 
         if(childNodeList.size()>0) {

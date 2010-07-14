@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Drop;
 
 /**
@@ -46,9 +47,9 @@ public class DropCommandDisplayNode extends DisplayNode {
 		//int childIndex = 0;
 		
         //int indent = this.getIndentLevel();
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.DROP));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.DROP));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.TABLE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.TABLE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,drop.getTable().getName()));
 	}
@@ -63,7 +64,7 @@ public class DropCommandDisplayNode extends DisplayNode {
     	if(string == null) {
     	    return false;
     	}
-   		return ReservedWords.isReservedWord(string);
+   		return SQLConstants.isReservedWord(string);
     }
 	   
 }

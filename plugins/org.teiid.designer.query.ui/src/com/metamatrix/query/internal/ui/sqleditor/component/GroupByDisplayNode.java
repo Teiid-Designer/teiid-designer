@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -80,9 +81,9 @@ public class GroupByDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 //        int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.GROUP));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.GROUP));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.BY));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.BY));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 //        if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
 //        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));

@@ -14,17 +14,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryMetadataException;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.query.QueryValidationResult;
-import com.metamatrix.modeler.core.query.QueryValidator;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.sql.LanguageObject;
-import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.Query;
@@ -34,6 +32,10 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.SelectSymbol;
 import org.teiid.query.sql.util.ElementSymbolOptimizer;
+
+import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.core.query.QueryValidationResult;
+import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.query.ui.UiConstants;
 
 /**
@@ -232,7 +234,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         //nValidations++;
         // Replace sqlString with the combined toSting() values of sqlDisplayNode's display node list, replacing the visible
         // nodes' text with the current value of sqlString.
-        if (!sqlString.trim().toUpperCase().startsWith(ReservedWords.CREATE) && this.sqlDisplayNode != null) {
+        if (!sqlString.trim().toUpperCase().startsWith(SQLConstants.Reserved.CREATE) && this.sqlDisplayNode != null) {
             StringBuffer text = new StringBuffer();
             boolean replaced = false;
             for (Iterator iter = this.sqlDisplayNode.getDisplayNodeList().iterator(); iter.hasNext();) {
@@ -243,7 +245,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                         replaced = true;
                     }
                 } else {
-                    if (!replaced && node.getParent() instanceof BlockDisplayNode && ReservedWords.END.equals(node.toString())) {
+                    if (!replaced && node.getParent() instanceof BlockDisplayNode && SQLConstants.Reserved.END.equals(node.toString())) {
                         text.append(sqlString);
                     }
                     text.append(node.toString());

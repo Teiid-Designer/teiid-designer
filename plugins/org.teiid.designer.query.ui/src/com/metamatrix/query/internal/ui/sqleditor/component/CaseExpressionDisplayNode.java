@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.symbol.CaseExpression;
 
 /**
@@ -47,47 +48,47 @@ public class CaseExpressionDisplayNode extends ExpressionDisplayNode {
         displayNodeList = new ArrayList();
         CaseExpression caseExpr = (CaseExpression)(this.getLanguageObject());
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.CASE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.CASE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // checking for null compare in decode string case 2969
         for (int i =0; i < caseExpr.getWhenCount(); i++) {          
-            if (ReservedWords.NULL.equalsIgnoreCase(caseExpr.getWhenExpression(i).toString() ) ) {
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.WHEN));
+            if (SQLConstants.Reserved.NULL.equalsIgnoreCase(caseExpr.getWhenExpression(i).toString() ) ) {
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.WHEN));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getExpression()));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IS));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IS));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NULL));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NULL));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.THEN));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.THEN));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getThenExpression(i)));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             }
         }
         for (int i = 0; i < caseExpr.getWhenCount(); i++) {
-            if(!ReservedWords.NULL.equalsIgnoreCase(caseExpr.getWhenExpression(i).toString() ) ) {
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.WHEN));
+            if(!SQLConstants.Reserved.NULL.equalsIgnoreCase(caseExpr.getWhenExpression(i).toString() ) ) {
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.WHEN));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getExpression()));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,EQUALS));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getWhenExpression(i)));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.THEN));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.THEN));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getThenExpression(i)));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             }
         }
 	    if (caseExpr.getElseExpression() != null) {
-	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ELSE));
+	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ELSE));
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,caseExpr.getElseExpression()));
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 	    }
-	    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.END));
+	    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.END));
 
     }
 }

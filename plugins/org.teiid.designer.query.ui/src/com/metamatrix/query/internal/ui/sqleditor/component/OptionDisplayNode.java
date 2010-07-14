@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Option;
 
 /**
@@ -58,7 +59,7 @@ public class OptionDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
         // int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.OPTION));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.OPTION));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         // if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
         // displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
@@ -69,7 +70,7 @@ public class OptionDisplayNode extends DisplayNode {
 
         List makeDepGroups = option.getDependentGroups();
         if (makeDepGroups != null && makeDepGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.MAKEDEP));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.MAKEDEP));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
             Iterator iter = makeDepGroups.iterator();
@@ -84,7 +85,7 @@ public class OptionDisplayNode extends DisplayNode {
 
         List makeNotDepGroups = option.getNotDependentGroups();
         if (makeNotDepGroups != null && makeNotDepGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.MAKENOTDEP));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.MAKENOTDEP));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
             Iterator iter = makeNotDepGroups.iterator();
@@ -99,7 +100,7 @@ public class OptionDisplayNode extends DisplayNode {
 
         Collection noCacheGroups = option.getNoCacheGroups();
         if (noCacheGroups != null && noCacheGroups.size() > 0) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.NOCACHE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.NOCACHE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
             Iterator gIter = noCacheGroups.iterator();
@@ -111,7 +112,7 @@ public class OptionDisplayNode extends DisplayNode {
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, group));
             }
         } else if (option.isNoCache()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.NOCACHE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.NOCACHE));
         }
 
         // No options were set, omit option

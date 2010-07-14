@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Limit;
 import org.teiid.query.sql.symbol.Constant;
 
@@ -54,7 +55,7 @@ public class LimitDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 //        int indent = this.getIndentLevel();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.LIMIT));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.LIMIT));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         Limit limit = (Limit)getLanguageObject();
         if (limit.getOffset() != null) {

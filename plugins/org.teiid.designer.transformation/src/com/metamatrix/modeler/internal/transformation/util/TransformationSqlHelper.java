@@ -16,45 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.designer.udf.UdfManager;
-
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.types.DataTypeManager;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.metamodels.transformation.InputSet;
-import com.metamatrix.metamodels.transformation.SqlAlias;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
-import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
-import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
-import com.metamatrix.modeler.core.metadata.runtime.ProcedureParameterRecord;
-import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
-import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
-import com.metamatrix.modeler.internal.core.metadata.runtime.ColumnRecordImpl;
-import com.metamatrix.modeler.internal.core.metadata.runtime.TableRecordImpl;
-import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.modeler.transformation.aspects.sql.InputParameterSqlAspect;
-import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
-import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
-import com.metamatrix.modeler.transformation.validation.TransformationValidator;
+import org.teiid.designer.udf.UdfManager;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
-import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.FromClause;
@@ -89,6 +64,32 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
+
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.metamodels.transformation.InputSet;
+import com.metamatrix.metamodels.transformation.SqlAlias;
+import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
+import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
+import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
+import com.metamatrix.modeler.core.metadata.runtime.ProcedureParameterRecord;
+import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
+import com.metamatrix.modeler.core.query.QueryValidator;
+import com.metamatrix.modeler.core.types.DatatypeConstants;
+import com.metamatrix.modeler.internal.core.metadata.runtime.ColumnRecordImpl;
+import com.metamatrix.modeler.internal.core.metadata.runtime.TableRecordImpl;
+import com.metamatrix.modeler.transformation.TransformationPlugin;
+import com.metamatrix.modeler.transformation.aspects.sql.InputParameterSqlAspect;
+import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
+import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
+import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 
 /**
  * TransformationSqlHelper This class is responsible for handling sql validation, changes, etc.
@@ -3260,7 +3261,7 @@ public class TransformationSqlHelper implements SqlConstants {
         Expression expr = exprSymbol.getExpression();
         if (expr instanceof Function) {
             String fName = ((Function)expr).getName();
-            if (fName.equalsIgnoreCase(ReservedWords.CONVERT)) {
+            if (fName.equalsIgnoreCase(SQLConstants.Reserved.CONVERT)) {
                 return true;
             }
         }

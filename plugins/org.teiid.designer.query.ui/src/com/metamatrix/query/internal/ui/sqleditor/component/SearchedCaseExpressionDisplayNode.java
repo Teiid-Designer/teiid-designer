@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.symbol.SearchedCaseExpression;
 
 /**
@@ -80,7 +81,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
         displayNodeList = new ArrayList();
         SearchedCaseExpression caseExpr = (SearchedCaseExpression)(this.getLanguageObject());
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.CASE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.CASE));
 
         //----------------------------------------------------
         // n Children - WHEN-THEN criteria/expression pairs
@@ -90,7 +91,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
             DisplayNode thenNode = (DisplayNode)thenExprList.get(i);
             
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.WHEN));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.WHEN));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             
             // Add the WHEN Criteria Child
@@ -101,7 +102,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
             }
             
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.THEN));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.THEN));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             
             // Add the THEN Expression Child
@@ -118,7 +119,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
         // 0 or 1 Children - ELSE expression
         //----------------------------------------------------
         if (caseExpr.getElseExpression() != null) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ELSE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ELSE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
             int nChildren = childNodeList.size();
@@ -131,7 +132,7 @@ public class SearchedCaseExpressionDisplayNode extends ExpressionDisplayNode {
 
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.END));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.END));
     }
 
 }

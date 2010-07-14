@@ -20,6 +20,7 @@ import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -61,6 +62,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
+import org.teiid.language.SQLConstants;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.ExistsCriteria;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.util.ElementSymbolOptimizer;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -98,18 +112,6 @@ import com.metamatrix.query.internal.ui.sqleditor.component.SqlIndexLocator;
 import com.metamatrix.query.internal.ui.sqleditor.component.UpdateDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.WhereDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import org.teiid.query.sql.LanguageObject;
-import com.metamatrix.query.sql.ReservedWords;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.ExistsCriteria;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.util.ElementSymbolOptimizer;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.query.ui.UiPlugin;
 import com.metamatrix.ui.text.ScaledFontManager;
@@ -1410,7 +1412,7 @@ public class SqlEditorPanel extends SashForm
             insertGroups(groupNames, fromEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(ReservedWords.FROM) + ReservedWords.FROM.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM) + SQLConstants.Reserved.FROM.length();
             insertGroups(groupNames, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             StringBuffer sb = new StringBuffer("SELECT * FROM"); //$NON-NLS-1$
@@ -1439,7 +1441,7 @@ public class SqlEditorPanel extends SashForm
             insertGroup(groupName, fromEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(ReservedWords.FROM) + ReservedWords.FROM.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM) + SQLConstants.Reserved.FROM.length();
             insertGroup(groupName, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             setText("SELECT * FROM " + groupName, source); //$NON-NLS-1$
@@ -1544,10 +1546,10 @@ public class SqlEditorPanel extends SashForm
             insertElements(elementNames, parentNames, selectEndIndex + 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(ReservedWords.SELECT) + ReservedWords.SELECT.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT) + SQLConstants.Reserved.SELECT.length();
             insertElements(elementNames, parentNames, insertIndex, source);
         } else if (getText().trim().length() == 0) {
-            StringBuffer sb = new StringBuffer(ReservedWords.SELECT);
+            StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
             // ------------------------------------------
             // Add the list of Elements to the SELECT
             // ------------------------------------------
@@ -1559,7 +1561,7 @@ public class SqlEditorPanel extends SashForm
                     sb.append(COMMA);
                 }
             }
-            sb.append(SPACE + ReservedWords.FROM);
+            sb.append(SPACE + SQLConstants.Reserved.FROM);
             // ------------------------------------------
             // Add the list of Groupss to the FROM
             // ------------------------------------------
@@ -1593,11 +1595,11 @@ public class SqlEditorPanel extends SashForm
             insertElement(elementName, parentName, selectEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(ReservedWords.SELECT) + ReservedWords.SELECT.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT) + SQLConstants.Reserved.SELECT.length();
             insertElement(elementName, parentName, insertIndex, source);
         } else if (getText().trim().length() == 0) {
-            StringBuffer sb = new StringBuffer(ReservedWords.SELECT);
-            sb.append(elementName + SPACE + ReservedWords.FROM + SPACE + parentName);
+            StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
+            sb.append(elementName + SPACE + SQLConstants.Reserved.FROM + SPACE + parentName);
             setText(sb.toString(), source);
         }
     }

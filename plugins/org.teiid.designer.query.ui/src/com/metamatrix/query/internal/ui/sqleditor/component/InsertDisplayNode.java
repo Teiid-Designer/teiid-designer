@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Option;
@@ -191,9 +192,9 @@ public class InsertDisplayNode extends DisplayNode {
         int indent = this.getIndentLevel();
         indent++;
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INSERT));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INSERT));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INTO));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INTO));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         Insert insert = (Insert)(this.getLanguageObject());
@@ -257,7 +258,7 @@ public class InsertDisplayNode extends DisplayNode {
         }
                
         if(insert.getValues() != null) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.VALUES));        
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.VALUES));        
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             
             if( DisplayNodeUtils.isClauseCROn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
@@ -361,9 +362,9 @@ public class InsertDisplayNode extends DisplayNode {
         int indent = this.getIndentLevel();
         indent++;
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INSERT));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INSERT));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INTO));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INTO));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         Insert insert = (Insert)(this.getLanguageObject());

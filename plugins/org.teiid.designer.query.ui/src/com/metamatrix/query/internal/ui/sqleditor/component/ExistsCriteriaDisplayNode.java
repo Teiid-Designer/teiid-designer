@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.ExistsCriteria;
 
@@ -63,7 +64,7 @@ public class ExistsCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
 		displayNodeList = new ArrayList();
 //		int indent = this.getIndentLevel();
 
-		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.EXISTS));
+		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.EXISTS));
 		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 

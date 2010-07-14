@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 
@@ -77,7 +78,7 @@ public class SubqueryFromClauseDisplayNode extends FromClauseDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
         // Keyword AS
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AS));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.AS));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         
 		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,subQueryFromClause.getName()));

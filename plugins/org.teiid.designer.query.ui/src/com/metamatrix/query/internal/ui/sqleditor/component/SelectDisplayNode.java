@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.symbol.SelectSymbol;
 
@@ -100,11 +101,11 @@ public class SelectDisplayNode extends DisplayNode {
         int childIndent = this.getIndentLevel();
         childIndent++;
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.SELECT));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.SELECT));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         
         if(select.isDistinct()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.DISTINCT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.DISTINCT));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
         

@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.BreakStatement;
 
 /**
@@ -44,7 +45,7 @@ public class BreakStatementDisplayNode extends StatementDisplayNode {
     private void createDisplayNodeList() {
         displayNodeList = new ArrayList();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.BREAK));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.BREAK));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SEMICOLON));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
     }    

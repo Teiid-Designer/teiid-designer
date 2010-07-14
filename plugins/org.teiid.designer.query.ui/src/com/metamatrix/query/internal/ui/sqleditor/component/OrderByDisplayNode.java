@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
@@ -79,9 +80,9 @@ public class OrderByDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 
         OrderBy orderBy = (OrderBy)(this.getLanguageObject());
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.ORDER));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.ORDER));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.BY));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.BY));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
 
         if (childNodeList.size() > 0) {
@@ -101,7 +102,7 @@ public class OrderByDisplayNode extends DisplayNode {
                 Boolean type = (Boolean)typeIter.next();
                 if (type.booleanValue() == OrderBy.DESC) {
                     displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.DESC));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.DESC));
                 }
 
                 if (iter.hasNext()) {

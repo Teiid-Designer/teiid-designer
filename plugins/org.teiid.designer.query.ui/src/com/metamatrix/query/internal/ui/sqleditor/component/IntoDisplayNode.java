@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Into;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -62,7 +63,7 @@ public class IntoDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 
         //displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INTO));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INTO));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Group Symbol Child

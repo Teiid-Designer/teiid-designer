@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.teiid.core.types.DataTypeManager;
-import com.metamatrix.query.sql.ReservedWords;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
@@ -43,15 +44,15 @@ public class DynamicCommandDisplayNode extends DisplayNode {
 
         displayNodeList = new ArrayList();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.EXECUTE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.EXECUTE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.STRING));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.STRING));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         addChildNode(DisplayNodeFactory.createDisplayNode(this,query.getSql()));
 
         if(query.isAsClauseSet()){
             addPostClauseFormatting(this);
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AS));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.AS));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             for (int i = 0; i < query.getAsColumns().size(); i++) {
                 ElementSymbol symbol = (ElementSymbol)query.getAsColumns().get(i);
@@ -66,7 +67,7 @@ public class DynamicCommandDisplayNode extends DisplayNode {
 
         if(query.getIntoGroup() != null){
             addPostClauseFormatting(this);
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.INTO));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.INTO));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             addChildNode((DisplayNodeFactory.createDisplayNode(this,query.getIntoGroup())));
         }
@@ -74,7 +75,7 @@ public class DynamicCommandDisplayNode extends DisplayNode {
         if(query.getUsing() != null && query.getUsing().getClauses().size() > 0) {
             addPostClauseFormatting(this);
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.USING));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.USING));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             Iterator i = query.getUsing().getClauseMap().entrySet().iterator();
             while (i.hasNext()) {
@@ -92,7 +93,7 @@ public class DynamicCommandDisplayNode extends DisplayNode {
 
         if (query.getUpdatingModelCount() > 0) {
             addPostClauseFormatting(this);
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.UPDATE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.UPDATE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             if (query.getUpdatingModelCount() > 1) {
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,"*")); //$NON-NLS-1$

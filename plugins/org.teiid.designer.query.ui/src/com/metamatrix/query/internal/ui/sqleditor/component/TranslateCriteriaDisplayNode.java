@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.TranslateCriteria;
 
 /**
@@ -66,7 +67,7 @@ public class TranslateCriteriaDisplayNode extends CriteriaDisplayNode {
         displayNodeList = new ArrayList();
         //int indent = this.getIndentLevel();
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.TRANSLATE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.TRANSLATE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
     	DisplayNode node = DisplayNodeFactory.createDisplayNode(this,transCriteria.getSelector());
@@ -80,7 +81,7 @@ public class TranslateCriteriaDisplayNode extends CriteriaDisplayNode {
         Iterator iter = getChildren().iterator();
         if(iter.hasNext()) {
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.WITH));
+        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.WITH));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         }

@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.ContinueStatement;
 
 /**
@@ -43,7 +44,7 @@ public class ContinueStatementDisplayNode extends StatementDisplayNode {
     private void createDisplayNodeList() {
         displayNodeList = new ArrayList();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.CONTINUE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.CONTINUE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SEMICOLON));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
     }    

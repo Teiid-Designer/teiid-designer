@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.IfStatement;
@@ -90,7 +91,7 @@ public class IfStatementDisplayNode extends StatementDisplayNode {
         
         //int indent = this.getIndentLevel();
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IF));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IF));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         // Add the Conditional Criteria
         DisplayNode node = childNodeList.get(0);
@@ -114,7 +115,7 @@ public class IfStatementDisplayNode extends StatementDisplayNode {
         if(statement.hasElseBlock()) {
         	// previous block ended with cr
         	//displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ELSE));
+        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ELSE));
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
 			node = childNodeList.get(2);
 	        if(node.hasDisplayNodes()) {

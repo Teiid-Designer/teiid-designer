@@ -9,8 +9,9 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.function.FunctionLibrary;
-import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
@@ -76,7 +77,6 @@ public class DisplayNodeFactory {
     private static final String SPACE = " "; //$NON-NLS-1$
     private static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
 
-    private static final List RESERVED_WORDS = Arrays.asList(ReservedWords.ALL_WORDS);
     private static final String[] SEPARATORS = new String[11];
     private static final String[] FUNCTION_NAMES = new String[2];
     private static final String[] JOIN_TYPE_NAMES = new String[5];
@@ -95,11 +95,11 @@ public class DisplayNodeFactory {
        SEPARATORS[10] = ") "; //$NON-NLS-1$
        FUNCTION_NAMES[0] = FunctionLibrary.CAST.toUpperCase();
        FUNCTION_NAMES[1] = FunctionLibrary.CONVERT.toUpperCase();
-       JOIN_TYPE_NAMES[0] = ReservedWords.INNER+SPACE+ReservedWords.JOIN;
-       JOIN_TYPE_NAMES[1] = ReservedWords.CROSS+SPACE+ReservedWords.JOIN;
-       JOIN_TYPE_NAMES[2] = ReservedWords.LEFT+SPACE+ReservedWords.OUTER+SPACE+ReservedWords.JOIN;
-       JOIN_TYPE_NAMES[3] = ReservedWords.RIGHT+SPACE+ReservedWords.OUTER+SPACE+ReservedWords.JOIN;
-       JOIN_TYPE_NAMES[4] = ReservedWords.FULL+SPACE+ReservedWords.OUTER+SPACE+ReservedWords.JOIN;
+       JOIN_TYPE_NAMES[0] = SQLConstants.Reserved.INNER+SPACE+SQLConstants.Reserved.JOIN;
+       JOIN_TYPE_NAMES[1] = SQLConstants.Reserved.CROSS+SPACE+SQLConstants.Reserved.JOIN;
+       JOIN_TYPE_NAMES[2] = SQLConstants.Reserved.LEFT+SPACE+SQLConstants.Reserved.OUTER+SPACE+SQLConstants.Reserved.JOIN;
+       JOIN_TYPE_NAMES[3] = SQLConstants.Reserved.RIGHT+SPACE+SQLConstants.Reserved.OUTER+SPACE+SQLConstants.Reserved.JOIN;
+       JOIN_TYPE_NAMES[4] = SQLConstants.Reserved.FULL+SPACE+SQLConstants.Reserved.OUTER+SPACE+SQLConstants.Reserved.JOIN;
     }
 
     private static final List SEPARATOR_WORDS = Arrays.asList(SEPARATORS);
@@ -184,7 +184,7 @@ public class DisplayNodeFactory {
         //---------------------------------------------------------------------
         } else if (obj instanceof String) {
             String text = (String)obj;
-            if (RESERVED_WORDS.contains(text) || JOIN_TYPE_WORDS.contains(text.toUpperCase())) {
+            if (SQLConstants.isReservedWord(text) || JOIN_TYPE_WORDS.contains(text.toUpperCase())) {
                 return new KeywordDisplayNode(parentNode, text);
             }
             if (FUNCTION_NAME_WORDS.contains(text.toUpperCase())) {

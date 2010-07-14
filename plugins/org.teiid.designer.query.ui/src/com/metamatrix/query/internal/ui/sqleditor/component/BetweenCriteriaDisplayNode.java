@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.BetweenCriteria;
 
 /**
@@ -96,11 +97,11 @@ public class BetweenCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         if (criteria.isNegated()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
         
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.BETWEEN));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.BETWEEN));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Lower Expression Child
@@ -112,7 +113,7 @@ public class BetweenCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         }
 
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AND));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.AND));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // Add the Upper Expression Child

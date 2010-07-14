@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.CriteriaSelector;
 
 /**
@@ -98,29 +99,29 @@ public class CriteriaSelectorDisplayNode extends DisplayNode {
         		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         		break;        		
         	case CriteriaSelector.IN:
-        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IN));
+        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IN));
            		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
            	        		break;        		
         	case CriteriaSelector.IS_NULL:
-        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IS));
+        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IS));
         		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NULL));
+        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NULL));
         		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         		break;        		
         	case CriteriaSelector.LIKE:
-        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.LIKE));
+        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.LIKE));
         		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         		break;        		
         	case CriteriaSelector.BETWEEN:
-        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.BETWEEN));
+        		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.BETWEEN));
         		displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         		break;        		
         }
 
-	    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.CRITERIA));
+	    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.CRITERIA));
 		if(criteriaSelector.hasElements()) {
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ON));
+	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ON));
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 	        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 	        

@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
 
@@ -199,7 +200,7 @@ public class SetQueryDisplayNode extends DisplayNode {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
             if(setQuery.isAll()) {
-                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ALL));
+                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ALL));
                 displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             }
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));

@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -74,13 +75,13 @@ public class IsNullCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         }
 
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IS));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IS));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         if (isNullCriteria.isNegated()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NULL));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NULL));
 
 	}
 

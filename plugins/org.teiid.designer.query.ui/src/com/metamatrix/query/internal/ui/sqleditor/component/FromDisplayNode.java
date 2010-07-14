@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.FromClause;
 
@@ -101,7 +102,7 @@ public class FromDisplayNode extends DisplayNode {
         int childIndent = this.getIndentLevel();
         childIndent++;
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.FROM));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.FROM));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         if(DisplayNodeUtils.isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));

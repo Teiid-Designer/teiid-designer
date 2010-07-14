@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.type.Type;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -49,8 +51,14 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
-import com.metamatrix.core.util.I18nUtil;
+import org.teiid.language.SQLConstants;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.proc.Statement;
+
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.internal.core.xml.XPathHelper;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.metamodels.webservice.Operation;
@@ -68,11 +76,6 @@ import com.metamatrix.query.internal.ui.sqleditor.component.BlockDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DeclareStatementDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeFactory;
-import org.teiid.query.sql.LanguageObject;
-import com.metamatrix.query.sql.ReservedWords;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.proc.Statement;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -157,7 +160,7 @@ public class VariableEditorDialog extends Dialog
                 List nodes = ancestor.getDisplayNodeList();
                 for (int ndx = 0; ndx < nodes.size(); ++ndx) {
                     DisplayNode node = (DisplayNode)nodes.get(ndx);
-                    if (node.getParent() == block && ReservedWords.BEGIN.equals(node.toString())) {
+                    if (node.getParent() == block && SQLConstants.Reserved.BEGIN.equals(node.toString())) {
                         nodes.addAll(ndx + 2, newNodes);
                         break;
                     }

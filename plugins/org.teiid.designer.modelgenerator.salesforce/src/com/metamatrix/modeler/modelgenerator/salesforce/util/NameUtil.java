@@ -7,8 +7,8 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.util;
 
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.ProcedureReservedWords;
-import com.metamatrix.query.sql.ReservedWords;
 
 public class NameUtil {
 
@@ -29,7 +29,7 @@ public class NameUtil {
      * @return
      */
     private static String checkReservedWords( String normal ) {
-        if (ReservedWords.isReservedWord(normal) || ProcedureReservedWords.isProcedureReservedWord(normal)) {
+        if (SQLConstants.isReservedWord(normal) || ProcedureReservedWords.isProcedureReservedWord(normal)) {
             normal = normal + "_"; //$NON-NLS-1$
         }
         return normal;

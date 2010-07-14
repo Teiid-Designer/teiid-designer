@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.metamatrix.query.sql.ReservedWords;
-
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.AtomicCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.FromClause;
@@ -148,7 +147,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
         List joinCriteria = joinPredicate.getJoinCriteria();
     	if(joinCriteria != null && joinCriteria.size() > 0) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ON));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ON));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             
     		Iterator critIter = joinCriteria.iterator();
@@ -164,7 +163,7 @@ public class JoinPredicateDisplayNode extends FromClauseDisplayNode {
 
     			if(critIter.hasNext()) {
                     displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AND));
+                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.AND));
                     displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
     			}
     		}

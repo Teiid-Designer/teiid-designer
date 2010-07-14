@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -21,6 +22,11 @@ import org.teiid.core.id.IDGenerator;
 import org.teiid.core.id.InvalidIDException;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
+import org.teiid.language.SQLConstants;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -33,10 +39,6 @@ import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import org.teiid.query.parser.QueryParser;
-import com.metamatrix.query.sql.ReservedWords;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
 /**
  * SqlConverter
@@ -321,7 +323,7 @@ public class SqlConverter {
 
         if(requiresSpecialProcessing){
             final String result = buf.toString().toUpperCase();
-            int i = CoreStringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
+            int i = CoreStringUtil.indexOfIgnoreCase(result, SQLConstants.Reserved.WHERE);
             if(i > -1){
                 boolean done = false;
                 while(!done){
@@ -413,7 +415,7 @@ public class SqlConverter {
 
         if(requiresSpecialProcessing){
             final String result = buf.toString().toUpperCase();
-            int i = CoreStringUtil.indexOfIgnoreCase(result, ReservedWords.WHERE);
+            int i = CoreStringUtil.indexOfIgnoreCase(result, SQLConstants.Reserved.WHERE);
             if(i > -1){
                 boolean done = false;
                 while(!done){

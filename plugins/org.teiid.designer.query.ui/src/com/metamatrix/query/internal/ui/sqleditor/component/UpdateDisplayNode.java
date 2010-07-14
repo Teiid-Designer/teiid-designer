@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.AbstractCompareCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
@@ -174,7 +175,7 @@ public class UpdateDisplayNode extends DisplayNode {
             indent++;
         }
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.UPDATE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.UPDATE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         if(DisplayNodeUtils.isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
@@ -215,7 +216,7 @@ public class UpdateDisplayNode extends DisplayNode {
         	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
 		}
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.SET));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.SET));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         
         if(DisplayNodeUtils.isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {

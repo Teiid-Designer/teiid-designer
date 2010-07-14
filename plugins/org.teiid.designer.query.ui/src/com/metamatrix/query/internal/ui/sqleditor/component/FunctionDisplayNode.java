@@ -9,8 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 
+import org.teiid.language.SQLConstants;
 import org.teiid.query.function.FunctionLibrary;
-import com.metamatrix.query.sql.ReservedWords;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
@@ -64,9 +64,9 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 	        for(int i=0; i<args.length; i++) {
 	            // Special case for TIMESTAMPADD, TIMESTAMPDIFF. 
 	            if((i==1 && 
-	 	               (name.equalsIgnoreCase(ReservedWords.CAST) || name.equalsIgnoreCase(ReservedWords.CONVERT))) ||
+	 	               (name.equalsIgnoreCase(SQLConstants.Reserved.CAST) || name.equalsIgnoreCase(SQLConstants.Reserved.CONVERT))) ||
 	            		(i==0 && 
-	               (name.equalsIgnoreCase(ReservedWords.XMLPI) || name.equalsIgnoreCase(ReservedWords.TIMESTAMPADD)||name.equalsIgnoreCase(ReservedWords.TIMESTAMPDIFF))) ) {
+	               (name.equalsIgnoreCase(SQLConstants.Reserved.XMLPI) || name.equalsIgnoreCase(SQLConstants.NonReserved.TIMESTAMPADD)||name.equalsIgnoreCase(SQLConstants.NonReserved.TIMESTAMPDIFF))) ) {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,((Constant)args[i]).getValue()));
 	            } else {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,args[i]));
@@ -122,7 +122,7 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 
 			if(childNodeList.size() > 0) {
 				for(int i=0; i<childNodeList.size(); i++) {
-					if (i == 0 && name.equalsIgnoreCase(ReservedWords.XMLPI)) {
+					if (i == 0 && name.equalsIgnoreCase(SQLConstants.Reserved.XMLPI)) {
 						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,NAME));
 						displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 					}
@@ -135,7 +135,7 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 					if(i < (childNodeList.size()-1)) {
 						if (name.equalsIgnoreCase(FunctionLibrary.CAST)) {
 							displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-			                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.AS));
+			                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.AS));
 			                displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 						} else {
 							displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,COMMA+SPACE));

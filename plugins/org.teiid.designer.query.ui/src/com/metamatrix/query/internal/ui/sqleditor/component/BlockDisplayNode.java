@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.Statement;
 
@@ -67,7 +68,7 @@ public class BlockDisplayNode extends DisplayNode {
         int childIndent = (isVisible() ? this.getIndentLevel() + 1 : 0);
         
         List children = getChildren();
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.BEGIN));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.BEGIN));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
     	if (children.size() == 1) {
         	// Add the Statement
@@ -85,7 +86,7 @@ public class BlockDisplayNode extends DisplayNode {
         } else {
             // Shouldn't happen, but being tolerant
         }
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.END));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.END));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
 	}    
 

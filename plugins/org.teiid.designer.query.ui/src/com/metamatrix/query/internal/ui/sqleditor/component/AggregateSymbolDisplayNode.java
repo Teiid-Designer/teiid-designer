@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -69,7 +70,7 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
 
         if(aggregateSymbol.isDistinct()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.DISTINCT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.DISTINCT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
 
@@ -93,7 +94,7 @@ public class AggregateSymbolDisplayNode extends ExpressionDisplayNode {
               }
           }
         } else {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ALL_COLS));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Tokens.ALL_COLS));
         }
 
         

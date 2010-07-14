@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -90,10 +91,10 @@ public class MatchCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
 
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         if (matchCriteria.isNegated()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }        
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.LIKE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.LIKE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
 
         // If Right Expression has display nodes, add them to the list
@@ -108,7 +109,7 @@ public class MatchCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
 		// escape character if there is one
 		if(matchCriteria.getEscapeChar() != MatchCriteria.NULL_ESCAPE_CHAR) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ESCAPE));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ESCAPE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this," '"));   //$NON-NLS-1$
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,String.valueOf(matchCriteria.getEscapeChar())));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,"'"));    //$NON-NLS-1$

@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.WhileStatement;
@@ -75,7 +76,7 @@ public class WhileStatementDisplayNode extends StatementDisplayNode {
     private void createDisplayNodeList() {
         displayNodeList = new ArrayList();
 
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.WHILE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.WHILE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         
         // Add the Conditional Criteria

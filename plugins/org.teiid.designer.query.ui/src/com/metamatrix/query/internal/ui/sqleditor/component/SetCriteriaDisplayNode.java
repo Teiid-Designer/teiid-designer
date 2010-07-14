@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -97,10 +98,10 @@ public class SetCriteriaDisplayNode extends PredicateCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         // Check if the SetCriteria is negated
         if( ((SetCriteria)this.languageObject).isNegated() ) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IN));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IN));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE+LTPAREN));
 
         // value list

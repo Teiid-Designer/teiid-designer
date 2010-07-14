@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.symbol.Constant;
@@ -46,7 +47,7 @@ public class AssignmentStatementDisplayNode extends StatementDisplayNode {
     	AssignmentStatement statement = (AssignmentStatement)getLanguageObject();
         // Add the Element Symbol Child
         if (this.languageObject instanceof RaiseErrorStatement) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.ERROR));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.ERROR));
         } else {
         	Object var = statement.getVariable();
         	if(var!=null) {

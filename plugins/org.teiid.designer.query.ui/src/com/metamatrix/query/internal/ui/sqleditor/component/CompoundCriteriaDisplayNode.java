@@ -9,7 +9,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Criteria;
 
@@ -88,7 +89,7 @@ public class CompoundCriteriaDisplayNode extends LogicalCriteriaDisplayNode {
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,RTPAREN));
 
 	    // Criterias 2->n
-	    String opStr = (compoundCriteria.getOperator() == CompoundCriteria.AND) ? ReservedWords.AND : ReservedWords.OR;
+	    String opStr = (compoundCriteria.getOperator() == CompoundCriteria.AND) ? SQLConstants.Reserved.AND : SQLConstants.Reserved.OR;
 	    for ( int i = 1; i < compoundCriteria.getCriteriaCount(); i++ ) {
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,opStr));

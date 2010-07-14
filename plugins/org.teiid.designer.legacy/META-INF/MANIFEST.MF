@@ -37,6 +37,5 @@ Export-Package: com.metamatrix.common.api,
  com.metamatrix.modeler.core.util,
  com.metamatrix.modeler.internal.core.workspace,
  com.metamatrix.modeler.internal.transformation.util,
- com.metamatrix.modeler.transformation.metadata,
- com.metamatrix.query.sql
+ com.metamatrix.modeler.transformation.metadata
 Bundle-ActivationPolicy: lazy

@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 
@@ -67,13 +68,13 @@ public class CreateUpdateProcedureDisplayNode extends DisplayNode {
         displayNodeList = new ArrayList();
 
         // int indent = this.getIndentLevel();
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.CREATE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.CREATE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         if (!command.isUpdateProcedure()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.VIRTUAL));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.VIRTUAL));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         }
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.PROCEDURE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.PROCEDURE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, CR));
 

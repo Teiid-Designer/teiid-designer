@@ -10,7 +10,8 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
@@ -53,7 +54,7 @@ public class StoredProcedureDisplayNode extends DisplayNode {
         // int childIndex = 0;
 
         // int indent = this.getIndentLevel();
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, ReservedWords.EXEC));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.EXEC));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, storedProc.getProcedureName()));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, LTPAREN));

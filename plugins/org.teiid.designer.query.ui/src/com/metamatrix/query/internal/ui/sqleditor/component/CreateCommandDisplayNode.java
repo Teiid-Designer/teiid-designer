@@ -12,10 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.symbol.ElementSymbol;
-
-import com.metamatrix.query.sql.ReservedWords;
 
 /**
  * The <code>CreateCommandDisplayNode</code> class is used to represent a Create command.
@@ -52,13 +51,13 @@ public class CreateCommandDisplayNode extends DisplayNode {
 		//int childIndex = 0;
 		
         //int indent = this.getIndentLevel();
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.CREATE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.CREATE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.LOCAL));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.LOCAL));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.TEMPORARY));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.TEMPORARY));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.TABLE));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.TABLE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,create.getTable().getName()));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
@@ -90,7 +89,7 @@ public class CreateCommandDisplayNode extends DisplayNode {
     	if(string == null) {
     	    return false;
     	}
-   		return ReservedWords.isReservedWord(string);
+   		return SQLConstants.isReservedWord(string);
     }
 	   
 }

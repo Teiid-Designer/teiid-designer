@@ -8,7 +8,8 @@
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.ArrayList;
-import com.metamatrix.query.sql.ReservedWords;
+
+import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.symbol.Expression;
@@ -78,10 +79,10 @@ public class SubquerySetCriteriaDisplayNode extends CriteriaDisplayNode {
         // Keyword IN
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         if (subquerySetCriteria.isNegated()) {
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.NOT));
+            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.NOT));
             displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         }                
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,ReservedWords.IN));
+        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.IN));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
         displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,LTPAREN));
         
