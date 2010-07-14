@@ -53,6 +53,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 public final class VdbModelEntry extends VdbEntry {
 
     private static final String INDEX_FOLDER = "runtime-inf/"; //$NON-NLS-1$
+    private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
 
     private final String indexName;
     private final Set<Problem> problems = new HashSet<Problem>();
@@ -89,10 +90,16 @@ public final class VdbModelEntry extends VdbEntry {
                 source.set(defaultName);
                 ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
                 String translator = new ConnectionInfoHelper().getTranslatorName(mr);
-                this.translator.set(translator == null ? StringUtilities.EMPTY_STRING : translator);
+                this.translator.set(translator == null ? EMPTY_STR : translator);
                 jndiName.set(defaultName);
             }
         } else type = ModelType.TYPE_LITERAL;
+        if( this.translator.get() == null ) {
+        	this.translator.set(EMPTY_STR);
+        }
+        if( this.description.get() == null ) {
+        	this.description.set(EMPTY_STR);
+        }
     }
 
     VdbModelEntry( final Vdb vdb,
@@ -102,11 +109,17 @@ public final class VdbModelEntry extends VdbEntry {
         this.element = element;
         type = ModelType.get(element.getType());
         visible.set(element.isVisible());
-        for (final SourceElement source : element.getSources()) {
-            this.source.set(source.getName());
-            translator.set(source.getTranslatorName());
-            jndiName.set(source.getJndiName());
-            break; // TODO: support multi-source bindings
+        if( element.getSources() != null && !element.getSources().isEmpty()) {
+	        for (final SourceElement source : element.getSources()) {
+	            this.source.set(source.getName());
+	            this.translator.set(source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
+	            this.jndiName.set(source.getJndiName());
+	            break; // TODO: support multi-source bindings
+	        }
+        } else {
+        	this.translator.set(EMPTY_STR);
+        	//this.jndiName.set(EMPTY_STR);
+        	//this.source.set(EMPTY_STR);
         }
         for (final ProblemElement problem : element.getProblems())
             problems.add(new Problem(problem));
@@ -296,7 +309,6 @@ public final class VdbModelEntry extends VdbEntry {
      * @param translator
      */
     public final void setTranslator( String translator ) {
-        if (StringUtilities.isEmpty(translator)) translator = null;
         final String oldTranslator = getTranslator();
         if (StringUtilities.equals(translator, oldTranslator)) return;
         this.translator.set(translator);

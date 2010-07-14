@@ -412,11 +412,13 @@ public final class VdbEditor extends EditorPart {
                         return true;
                     }
                 };
+                ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
+                wsFilter.setShowHiddenProjects(true);
                 final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(ADD_FILE_DIALOG_TITLE,
                                                                                       ADD_FILE_DIALOG_MESSAGE,
                                                                                       true,
                                                                                       null,
-                                                                                      new ModelingResourceFilter(filter),
+                                                                                      wsFilter,
                                                                                       validator,
                                                                                       modelLabelProvider);
                 for (final Object model : models)

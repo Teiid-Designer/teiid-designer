@@ -47,7 +47,10 @@ public class EntryElement implements Serializable {
 
     EntryElement( final VdbEntry entry ) {
         path = entry.getName().toString();
-        description = entry.getDescription();
+        if( entry.getDescription() != null && !entry.getDescription().isEmpty() ) {
+        	description = entry.getDescription();
+        }
+        
         getProperties().add(new PropertyElement(CHECKSUM, Long.toString(entry.getChecksum())));
     }
 

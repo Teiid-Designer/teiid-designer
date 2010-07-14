@@ -61,7 +61,7 @@ public class VdbEntry {
         }
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
-        this.description.set(element.getDescription());
+        this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     }
 
     private VdbEntry( final Vdb vdb,
@@ -240,7 +240,6 @@ public class VdbEntry {
      * @param description (never <code>null</code>)
      */
     public final void setDescription( String description ) {
-        if (StringUtilities.isEmpty(description)) description = null;
         final String oldDescription = this.description.get();
         if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);

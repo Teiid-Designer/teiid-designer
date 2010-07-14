@@ -222,6 +222,15 @@ public class VdbEntryTest {
         // test
         assertThat(entry.getDescription(), is(description));
     }
+    
+    @Test
+    public void shouldSetDescriptionToNullWithEmptyString() {
+        final String description = "";
+        entry.setDescription(description);
+
+        // test
+        assertThat(entry.getDescription(), is(description));
+    }
 
     @Test
     public void shouldVerifyEqualityWhenSamePath() {
