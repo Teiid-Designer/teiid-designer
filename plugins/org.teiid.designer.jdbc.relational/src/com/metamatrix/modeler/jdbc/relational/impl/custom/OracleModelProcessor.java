@@ -271,7 +271,9 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
                                           final boolean forced ) {
 
         String nis = super.computeNameInSource(object, name, node, context, forced);
-        nis = nis.replace('@', '.');
+        if( nis != null ) {
+        	nis = nis.replace('@', '.');
+        }
         return nis;
     }
 
