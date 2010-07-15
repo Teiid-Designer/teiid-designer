@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### SEARCHING ######################################### -->
+
+<chapter id="searching-chapter">
+    <title>Searching</title>
+  
+  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	
+	<para>The Teiid Designer provides multiple search actions located in the main toolbar's 
+		<emphasis role="bold">Search</emphasis> menu. </para>
+	<figure>
+		<title>Search Options</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/screencaps/ED_MainMenus_Search.jpg"/>
+			</imageobject>
+		</mediaobject>
+	</figure>
+	
+	<itemizedlist>
+		<listitem>
+			<para>
+				The individual actions in the <emphasis role="bold">Search</emphasis> menu are described below: 
+				<itemizedlist>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/metadata_search.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Search...</emphasis> - Launches the 
+							standard Search dialog, which can be used to find resource containing specific
+							text or expressions and filter based on file name patterns. For standard Eclipse 
+							installations, the default search tile will be File Search. (See Eclipse documentation for details).
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/metadata_search.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">File...</emphasis> - Launches the 
+							standard Search dialog, which can be used to find resource containing specific
+							text or expressions and filter based on file name patterns. The File Search 
+							tab will be selected in the dialog. (See Eclipse documentation for details).
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/opentype.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
+							<emphasis role="bold">Find Model Object</emphasis> dialog, which can be used to locate an 
+							object in the workspace by specifying all or part of its name.  Selecting the object 
+							will open it in the appropriate editor.
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
+							Search dialog and auto-selects the Relationships tab.  Users can search for models in the workspace 
+							by specifying a relationship type, participant locations, and/or names containing specified
+							text.  Search results appear in 
+							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							and double-clicking a result will open that model in the appropriate editor.
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/search_transformation.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
+							Transformation Search dialog.  User can search models in 
+							the workspace for matching SQL text.  Search results appear in the 
+							dialog and user can select and view SQL as well as open desired transformations for editing.
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/metadata_search.gif"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Metadata...</emphasis> - Launches the 
+							Search dialog.  User can search for models in the workspace by 
+							specifying an Object Type, and/or a Data Type, and/or a property value.  
+							Search results appear in 
+							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							and double-clicking a result will open that model in the appropriate editor.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</itemizedlist>
+	
+	<!-- ####### FIND MODEL OBJECTS ######################################### -->
+	
+	<sect1 id="find-model-objects-section">
+		<title>Finding Model Objects</title>
+		<para>The Teiid Designer provides a name-based search capability to quickly locate and display model objects.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To find a model object:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Open the <emphasis role="bold">Find Model Object</emphasis> dialog 
+							by either selecting the <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/opentype.gif"/>
+								</imageobject>
+							</inlinemediaobject> action on the main Teiid Designer tool-bar.</para>
+							<figure>
+								<title>Find Model Object Action In Toolbar</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/FindModelObjectFromToolbar.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<para>or select the same action via the main menu's <emphasis role="bold">Search > Find Model Object</emphasis> <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/opentype.gif"/>
+								</imageobject>
+							</inlinemediaobject> action. </para>
+							<figure>
+								<title>Find Model Object Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/FindModelObjectDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Begin typing a word or partial word 
+								in the <emphasis role="bold">Type Object Name</emphasis> field. Wild-card (*) characters will be honored. 
+								As you type, the objects which match the desired name will be displayed in 
+								the <emphasis role="bold">Matching Model Objects</emphasis> list. If there are more than one 
+								objects with the same name, the locations or paths of the objects 
+								are displayed in the <emphasis role="bold">Locations</emphasis> list. </para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - If more than one object exists with the 
+								desired name, select the one of the locations.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Click <emphasis role="bold">OK</emphasis>. If editor 
+								is not open for the object's model, an editor will open. The desired object should end up 
+								displayed in a diagram (if applicable) and selected.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<!-- ####### SEARCH RELATIONSHIPS ######################################### -->
+	
+	<sect1 id="search-relationships-section">
+		<title>Search Models Via Relationship Properties</title>
+		<para>The Teiid Designer provides a search capability to find model objects that are characterized by one
+			or more relationship property values including relationship type, participants and name.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To search for relationships:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Relationships...</emphasis> 
+								action on the Teiid Designer main menu <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+								</imageobject>
+							</inlinemediaobject> which opens the <emphasis role="bold">Search</emphasis> dialog.</para>
+							<figure>
+								<title>Relationship Search Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SearchRelationships.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Specify desired search options for 
+								<emphasis role="bold">Object Type</emphasis>, location of
+								<emphasis role="bold">Participants</emphasis> and <emphasis role="bold">Name</emphasis>.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
+								The search will be performed and the results will be displayed in the 
+								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								If the view is not yet open, it will be opened automatically.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<!-- ####### SEARCH MODEL METADATA OBJECTS ######################################### -->
+	
+	<sect1 id="search-transformations-section">
+		<title>Search Transformation SQL</title>
+		<para>The Teiid Designer provides a search capability to string values present in transformation SQL text.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To search for string values in your transformations SQL:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Transformations...</emphasis> 
+								action on the Teiid Designer main menu <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/search_transformation.gif"/>
+								</imageobject>
+							</inlinemediaobject> which opens the <emphasis role="bold">Search Transformations</emphasis> dialog.</para>
+							<figure>
+								<title>Search Transformations Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SearchTransformationsDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Specify a string segment in the 
+								<emphasis role="bold">Find:</emphasis> field and specify/change your case sensitive preference.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">Perform Search</emphasis> button. Any 
+								transformation object containing SQL text which contains occurances of your 
+								string will be displayed in the results section.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>You can select individual objects and view the SQL. If a table or view supports updates 
+			and there is insert, update or delete SQL present, you can expand the object and 
+			select the individual SQL type as shown below.</para>
+		<figure>
+			<title>Insert SQL Example</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SearchTransformationsDialogInsertSQL.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>If you wish to view the selected object and its SQL in a <emphasis role="bold">Model Editor</emphasis>, 
+			you can click the <emphasis role="bold">Edit</emphasis> button.  An editor will be opened if not already open. If an
+			editor is open its tab will be selected. In addition, the <emphasis role="bold">Transformation Editor</emphasis> will
+			be opened and you can perform <emphasis role="bold">Find/Replace</emphasis> (Ctrl-F) actions to highlight your original
+			searched text string and edit your SQL if you wish.</para>
+	</sect1>
+	
+	<!-- ####### SEARCH MODEL METADATA OBJECTS ######################################### -->
+	
+	<sect1 id="search-metadata-section">
+		<title>Search Models Via Metadata Properties</title>
+		<para>The Teiid Designer provides a search capability to find model objects that are characterized by one
+			or more metadata property values.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To search your models using metadata:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Metadata...</emphasis> 
+								action on the main Teiid Designer toolbar <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/metadata_search.gif"/>
+								</imageobject>
+							</inlinemediaobject> which opens the <emphasis role="bold">Search</emphasis> dialog.</para>
+							<figure>
+								<title>Metadata Search Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SearchMetadata.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Specify desired search options for 
+								<emphasis role="bold">Object Type</emphasis>, <emphasis role="bold">Data Type</emphasis> and 
+								<emphasis role="bold">Properties</emphasis>.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
+								The search will be performed and the results will be displayed in the 
+								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								If the view is not yet open, it will be opened automatically.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+</chapter>

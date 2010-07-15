@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="edit-models-and-projects-chapter">
+  <title>Editing Models and Projects</title>
+  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	
+	<para>Teiid Designer offers three basic model edit actions: <emphasis role="bold">Rename</emphasis>, 
+		<emphasis role="bold">Move</emphasis> and 
+		<emphasis role="bold">Save As...</emphasis> and one project-related action, <emphasis role="bold">Clone Project</emphasis>. 
+		These actions are described below. </para>
+	
+	<sect1 id="rename-model-section">
+		<title>Rename A Model</title>
+		<para></para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To rename a model in your workspace:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view" />.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+								<emphasis role="bold">Refactor > Rename</emphasis> action.</para>
+							<figure>
+								<title>Refactor Rename Action In Model Explorer</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RenameActionInExplorer.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Specify unique model name in the 
+								<emphasis role="bold">Rename Model File</emphasis> dialog. Click <emphasis role="bold">OK</emphasis>.</para>
+							<figure>
+								<title>Rename Model File Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RenameModelFileDialog.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+					<note>
+						<para>Renaming a model that is a dependency to another model will automatically 
+							change the model imports for those models. If source model CustomerSource 
+							is renamed to OldCustomerSource, for instance, the import statement for the 
+							view model CustomerAccounts which imports CustomerSource will be 
+							changed to reflect the new name.</para>
+					</note>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<sect1 id="move-model-section">
+		<title>Move Model</title>
+		<para></para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To move a model in your workspace:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view" />.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+								<emphasis role="bold">Refactor > Move</emphasis> action.</para>
+							<figure>
+								<title>Refactor Move Action In Model Explorer</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/MoveActionInExplorer.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select a new location (i.e. Project or Folder) and 
+								click <emphasis role="bold">OK</emphasis>.</para>
+							<figure>
+								<title>Move Model Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/MoveToFolderSelectionDialog.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<sect1 id="save-as-modelsection">
+		<title>Save Copy of Model</title>
+		<para>The <emphasis role="bold">Save As...</emphasis> action performs a similar function as the 
+			<emphasis role="bold">Refactor Rename</emphasis> action except the renamed model a structural copy of the original model.</para>
+		<note>
+			<para>Each model object maintains it's own unique ID, so copying a model will result in a exact structural copy
+			of your original model but with re-generated unique object IDs. Be aware that locating and copying your models via 
+			your local file system may result in runtime errors within Designer. Each model is expected to be unique and duplicate
+			models are not permitted.</para>
+		</note>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To create a duplicate model using <emphasis role="bold">Save As...</emphasis>:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Open the model you wish to copy in a 
+								<emphasis role="bold">Model Editor</emphasis> by 
+								double-clicking the model in <xref linkend="model-explorer-view" /> or right-click select 
+								<emphasis role="bold">Open</emphasis> action.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the editor tab for the model you opened.</para>
+							<figure>
+								<title>Select Editor Tab</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ModelEditorTabSelected.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">File > Save As...</emphasis>
+								 action to open the <emphasis role="bold">Save Model As</emphasis> dialog. </para>
+							<figure>
+								<title>Save Model As Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SaveModelAsDialog.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Enter a unique model name in the new model name text field and click 
+								<emphasis role="bold">OK</emphasis>. </para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> -  If dependent models are detected, the 
+								<emphasis role="bold">Save Model As - Import References</emphasis> dialog is 
+								presented to give you the opportunity to change any of the dependent models 
+								imports to reference the new model or not.</para>
+							<figure>
+								<title>Save Model As Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SaveModelAsImportRefsDialog.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<sect1 id="clone-project-section">
+		<title>Clone Project</title>
+		<para>Because each instance of of a model contains a unique ID and each object in each model contains a unique ID,
+			copying a project is a delicate task. For this reason, the Clone Project action was created to manage the creation
+			of exact structural copies of all models in the source project.</para>
+			
+		<itemizedlist>
+			<listitem>
+				<para>The following lists specific rules and limitations for this action.
+					<itemizedlist>
+						<listitem>
+							<para>This action clones a complete model project containing any number of model (XMI or XSD) 
+								files organized in a user-defined directory structure.</para>
+						</listitem>
+						<listitem>
+							<para>All object references (UUIDs) within the original project will be replaced with 
+								new unique references. </para>
+						</listitem>
+						<listitem>
+							<para>Any model dependencies or internal object references are refactored to reflect the 
+								dependencies within the cloned project.</para>
+						</listitem>
+						<listitem>
+							<para>Any model references to models in projects external to the original project will NOT 
+								be replaced.</para>
+						</listitem>
+						<listitem>
+							<para>Only XMI and XSD files are cloned. All other file types in your project will NOT be 
+								processed nor copied into your newly cloned project including VDBs</para>
+						</listitem>
+						<listitem>
+							<para>If one or more editors that require "save" are open, the user will be asked to save 
+								them before continuing with the cloning process. </para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+ 
+		<itemizedlist>
+			<listitem>
+				<para>
+					To clone a model project::
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing model project in the <xref linkend="model-explorer-view" />.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+								<emphasis role="bold">Clone Project</emphasis> action or select the <emphasis role="bold">Project > Clone Project</emphasis> 
+								action located in the Teiid Designer’s main menu bar. </para>
+							<figure>
+								<title>Clone Project In Context Menu</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/CloneModelProjectOnMenu.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<figure>
+								<title>Clone Project In Project Menu</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ED_MainMenus_Project.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - On the <emphasis role="bold">Clone Project</emphasis>
+								wizard page, provide a name for your new project.</para>
+							<figure>
+								<title>Clone Project In Project Menu</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/CloneModelProjectDialog.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - (Optional) If you wish to create your 
+								cloned project in a location other than your default
+								workspace location, uncheck the <emphasis role="bold">Use default</emphasis> check-box 
+								and specify (type in or browse to) a new directory 
+								location on your local file system.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis> 
+								to generate your new project.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+</chapter>
+	

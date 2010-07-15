@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### GENERIC RELATIONSHIPS ######################################## -->
+
+<chapter id="relationships-chapter">
+	<title>Relationships</title>
+
+	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	
+	<bridgehead>Introduction</bridgehead>
+	<para>The Teiid Designer
+		includes the ability to create named relationships between almost any
+		two or more modeling elements. 
+	</para>
+	<para> The <emphasis role="bold">Relationship</emphasis> metamodel is one way to define arbitrary
+		associations between two or more metadata entities. Using the
+		Relationship metamodel, the Teiid Designer provides users the ability to
+		view, add, and edit associations between metadata entities.</para>
+	<para> But the <emphasis role="bold">Generic Relationships</emphasis> functionality can define
+		relationships between metadata entities from different metamodels. For
+		example, it is possible to create a generalized relationship between a
+		<emphasis role="bold">Relational Column</emphasis> and a <emphasis role="bold">UML Package</emphasis>.</para>
+	<para> Users can even define their own <link linkend="create-relationship-type-section"><emphasis role="bold">relationship types</emphasis></link> that
+		constrain the numbers and types (metaclasses) of objects that can be
+		related.</para>
+	<para> Once the existing relationships are defined, the Teiid Designer
+		provides a number of mechanisms that will make use of those
+		relationships. This includes navigating to a related object, searching
+		for relationships based on some criteria, or diagramming the
+		relationship of various sets of objects</para>
+	
+	<sect1 id="create-relationship-section">
+		<title>Creating Relationships</title>
+		<para></para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					To create a relationship in a diagram:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - First select the source element of the relationship.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Then Shift+Click on the second target element. 
+								Right-click and select <emphasis role="bold">New Association > Relationship</emphasis>.</para>
+							<figure>
+								<title>Create New Relationship Action in Diagram</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/CreateRelationshipInDiagramSelection.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+	
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Create Relationship</emphasis> dialog, supply a 
+								valid name for your relationship, <emphasis role="bold">Browse...</emphasis> and select a relationship type.</para>
+							<figure>
+								<title>New Relationships Wizard</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/CreateRelationshipDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Click the <emphasis role="bold">Browse...</emphasis> button adjacent 
+								to the <emphasis role="bold">Type</emphasis> field and open the <emphasis role="bold">Select Relationship Type</emphasis> dialog and select an 
+								existing relationship type that best describes your relationship.</para>
+							<figure>
+								<title>Select Relationship Type Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SelectRelationshipTypeDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Click the <emphasis role="bold">Browse...</emphasis> button adjacent to 
+								the <emphasis role="bold">Location</emphasis> field and open the <emphasis role="bold">Relationship Model Selector Dialog</emphasis>. If a 
+								relationship model already exists, you can select it and click <emphasis role="bold">OK</emphasis>. If not, 
+								select a valid project or folder and provide a valid name for a 
+								new relationship model which will be created for you, then click <emphasis role="bold">OK</emphasis>.</para>
+							<figure>
+								<title>Select Relationship Model Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipModelSelectorDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 6 </emphasis> - If you wish to add additional objects to 
+								either your source or target participants, click the <emphasis role="bold">Add...</emphasis> button to display 
+								the <emphasis role="bold">Model Object Finder</emphasis> dialog. You can either browse your workspace 
+								(<emphasis role="bold">Workspace</emphasis> tab) and select objects within models, or click on the 
+								<emphasis role="bold">Finder</emphasis> tab and type in known object names to search for specific 
+								objects by name. Click <emphasis role="bold">OK</emphasis> to add selected objects to the participant lists.</para>
+							<figure>
+								<title>Model Object Finder Dialog - Workspace Tab</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Workspace.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<figure>
+								<title>Model Object Finder Dialog - Finder Tab</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Finder.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 7 </emphasis> - You can also edit your relationship 
+							properties by selecting the <emphasis role="bold">Properties</emphasis> tab in the <emphasis role="bold">Create Relationship</emphasis> dialog.</para>
+							<figure>
+								<title>Create Relationship Dialog - Properties Tab</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Finder.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 8 </emphasis> - Click <emphasis role="bold">Finish</emphasis> to complete the 
+							relationship. The new relationship will be displayed in a relationship diagram.</para>
+							<figure>
+								<title>New Relationship In Diagram</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/NewRelationshipInDiagram.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>To create a relationship from the <xref linkend="model-explorer-view" /> tree, select two or more 
+			objects in the tree, right-click select <emphasis role="bold">New Association > Relationship</emphasis> action 
+			and follow <emphasis role="bold">Steps 3 thru 8</emphasis> described above.</para>
+		<figure>
+			<title>New Relationship Action in Model Explorer</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/CreateRelationshipInExplorerSelection.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+	
+	<sect1 id="create-relationship-type-section">
+		<title>Creating your own Relationship Type</title>
+		<para></para>
+				<itemizedlist>
+			<listitem>
+				<para>
+					To create a new relationship type:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing <emphasis role="bold">Relationship</emphasis> model 
+								in the <xref linkend="model-explorer-view" /> or a folder within the model. If a <emphasis role="bold">Relationship</emphasis> model 
+								does not yet exist, create one. 
+								See <link linkend="new-relationships-model"><emphasis role="bold">New Model Wizard</emphasis></link>.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+								<emphasis role="bold">New Child > Relationship Type</emphasis> action.</para>
+							<figure>
+								<title>New Relationship Type Action in Model Explorer</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/NewRelationshipTypeActionInExplorer.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+	
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Create Relationship Type</emphasis> dialog, 
+								supply a name for your new relationship type.</para>
+							<figure>
+								<title>Create Relationship Type Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipTypeDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Select on <emphasis role="bold">Role A</emphasis> and <emphasis role="bold">Role B</emphasis> tabs 
+							in the dialog and specify role names, <emphasis role="bold">Add..</emphasis>. any <emphasis role="bold">Metaclasses</emphasis> you wish to 
+							specifically <emphasis role="bold">Include</emphasis> as possible participants. You can also specifically 
+							<emphasis role="bold">Exclude</emphasis> metaclasses.</para>
+							<figure>
+								<title>Role A Panel</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipTypeDialog_RoleATab.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<figure>
+								<title>Role B Panel</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipTypeDialog_RoleBTab.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<para>You can also change role properties via the <emphasis role="bold">Role Properties...</emphasis> 
+								button which launches a properties editor dialog.</para>
+							<figure>
+								<title>Role Properties Panel</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipTypeModelObjectPropertiesDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Select the <emphasis role="bold">Inheritance</emphasis> tab.</para>
+							<figure>
+								<title>Inheritance Panel</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/RelationshipTypeDialog_InheritanceTab.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 6 </emphasis> - Launch the 
+								Select <emphasis role="bold">Relationship Type</emphasis> dialog via 
+								the <emphasis role="bold">Browse...</emphasis> button. Choose a base relationship type 
+								that best describes your category of relationship. Click <emphasis role="bold">OK</emphasis>.</para>
+							<figure>
+								<title>Relationship Type Selection Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SelectRelationshipTypeDialog.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 7 </emphasis> - Select the <emphasis role="bold">Properties</emphasis> 
+							tab and change/set relationship type property values.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 8 </emphasis> - Click <emphasis role="bold">Finish</emphasis> to 
+								create relationship type.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<sect1 id="relationship-navigator-section">
+		<title>Relationship Navigator </title>
+		<para>
+			A <emphasis role="bold">Relationship Navigator</emphasis>
+			view provides a unique way of viewing and navigating your
+	 		relationships. It can be very useful in understanding associations
+			between complex and visibly unrelated data.
+		</para>
+		<para>
+			To open the
+			<emphasis role="bold">Relationship Navigator</emphasis>
+			you can select the
+			<emphasis role="bold">Window > Show View > Relationship
+				Navigator</emphasis>
+			action (if available) or open the
+			<emphasis role="bold">Show View</emphasis>
+			dialog via
+			<emphasis role="bold">Window > Show View > Other...</emphasis>
+			and open the Teiid Designer
+			folder and select 
+			<emphasis role="bold">Relationship Navigator</emphasis>
+			.
+		</para>
+		<para>
+			You can also quick-launch the navigator by selecting any object in the <xref linkend="model-explorer-view" />
+			or a 
+			<emphasis role="bold">Model Editor</emphasis>
+			and right-click select the
+			<emphasis role="bold">Open in Relationship Navigator</emphasis>
+			action.
+		</para>
+		<figure>
+			<title>Open In Relationship Navigator Action</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/OpenInRelationshipNavigatorAction.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para> In the example presented here, the diagram below illustrates the
+			standard role-based relationships defined for a family.</para>
+		<figure>
+			<title>Sample Relationships Diagram</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/RelationshipDiagramExample.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>
+			This action opens the
+			<emphasis role="bold">Relationship Navigator</emphasis>
+			in the same panel as the
+			<emphasis role="bold">Properties</emphasis>
+			and
+			<emphasis role="bold">Description</emphasis>
+			views.
+		</para>
+		<figure>
+			<title>Relationship Navigator View</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/RelationshipNavigatorExample.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para> The visible detail in the navigator is limited in order to
+			simply navigation. You can, however, show detailed information about
+			the navigation/relationship nodes by hovering your mouse and showing
+			tooltips.</para>
+		<figure>
+			<title>Tool-tip Info in Navigator</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/RelationshipNavigatorTooltip.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para> At the center of the navigator is the focused node, which
+			represents the base or frame of reference for the displayed
+			navigation. In this sample above, George has a wife, a niece and 5
+			sons. The relationship diagram shown below illustrates the role based
+			view of these same relationships.</para>
+		<para> You can navigate to through your relationships by
+			double-clicking an end-node in one of the relationships. For instance,
+			double-click the Son Ron in the upper end-node and the navigator now
+			focuses on Ron and his relationships. You can also right-click and
+			select the Follow Relationships action.</para>
+		<figure>
+			<title>Navigating Relationships</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/RelationshipDiagramExample_2.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para> As you navigate, a blue ball will animate the direction of the
+			relationship flow first too the focused object then into the end of
+			the relationship containing the initial focused object.</para>
+		<para> The navigator also provides toolbar and right-click menu actions
+			to perform various functions in the navigator.</para>
+	</sect1>
+</chapter>

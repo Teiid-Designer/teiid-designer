@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="test-models-chapter">
+  <title>Testing Your Models</title>
+  
+  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	
+	<para>As described briefly in Chapter 1, you can test your models in Teiid Designer by using the 
+		Preview Data action <inlinemediaobject>
+			<imageobject>
+				<imagedata fileref="images/icons/previewData.gif"/>
+			</imageobject>
+		</inlinemediaobject>. You can also test your models via your deployable VDB. These two options will be described in detail in this chapter
+		as well as managing your required connectors. 
+	</para>
+	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
+	
+	<sect1 id="manage-bindings-section">
+		<title>Manage Connectors</title>
+		<para>In order to test your data, the Teiid Designer requires applicable connector information. This information is stored
+			in the properties of a Connector. The Teiid Designer provides a 
+			<link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view for managing your connectors
+			and this section summarizes its features and capabilities.</para>
+		
+		<sect2 id="edit-binding-properties-section">
+			<title>Manage Connectors</title>
+			<para>To edit properties of a connector, you can either select 
+				the connector and edit the properties in the <emphasis role="bold">Properties</emphasis> view, or 
+				select the Edit action and open the <emphasis role="bold">Connector Editor</emphasis> dialog presented below.
+				Select the applicable 'Value' to activate the individual value editor.</para>
+			<figure>
+				<title>Connector Editor Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/ConnectorBindingEditorDialog.jpg"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</sect2>
+		
+		<sect2 id="create-new-binding-section">
+			<title>Create New Connector</title>
+			<para>Create a new connector by either selecting the <emphasis role="bold">New
+				Connector</emphasis> action in the <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view
+				toolbar or right-click select the same action from the context menu. 
+				If connector types are displayed in 
+				the <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view, 
+				you can select a connector type first, then select the <emphasis role="bold">New Connector</emphasis> action. 
+				This will pre-select the type in the <emphasis role="bold">New Connector</emphasis> dialog.
+		
+				The action will launch the <emphasis role="bold">New Connector</emphasis> dialog shown below. 
+				Provide a valid connector name, select desired connector type, enter your custom
+				properties and click <emphasis role="bold">OK</emphasis> to create you new connector. </para>
+			<figure>
+				<title>Create New Connector Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/CreateNewConnectorBindingDialog.jpg"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</sect2>
+
+		<sect2 id="binding-sources-to-connectors-section">
+			<title>Binding Sources to Connectors</title>
+			<para>In order to preview your data, you'll need to bind your source
+				models to valid connectors. If you import your source from JDBC, your
+				connector will be created during the import process and your
+				source automatically bound to that connector.
+				</para>
+	
+			<para>You can bind, unbind or change source bindings in a couple of
+				ways.</para>
+	
+			<para>To bind a source, you can:</para>
+			<itemizedlist>
+				<listitem>
+					<para>Select a model in the <xref linkend="model-explorer-view" /> view select the
+						<emphasis role="bold">Modeling > Connector >> Bind</emphasis> action. This action presents a dialog
+						for selecting your desired existing Connector. Select a
+						binding and click <emphasis role="bold">OK</emphasis>.
+						</para>
+				</listitem>
+				<listitem>
+					<para>Select a model in the <xref linkend="model-explorer-view" /> view and drag the
+						model into the <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view and drop into the desired existing
+						Connector.
+						</para>
+				</listitem>
+			</itemizedlist>
+	
+			<para>To unbind a source:</para>
+			<itemizedlist>
+				<listitem>
+					<para>Select the source model in <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view and
+						right-click select the <emphasis role="bold">Unbind</emphasis> action.</para>
+				</listitem>
+				<listitem>
+					<para>Select the model in the <xref linkend="model-explorer-view" /> view and select
+						the <emphasis role="bold">Modeling > Connector >> Unbind</emphasis> action.</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<sect2 id="import-bindings-section">
+			<title>Importing Connectors and Types</title>
+			<para>You can import your custom connector types and connectors into Designer. 
+				These connectors can be in the form of a <emphasis role="bold">*.cdk</emphasis> file (i.e.
+				exported from Designer) or from a <emphasis role="bold">*.caf</emphasis> (connector archive file)
+				defined during connector development. </para>
+			
+		<itemizedlist>
+			<listitem>
+				<para>
+					To import connector types and/or connectors:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select 
+								the <emphasis role="bold">Import Connectors (*.cdk, *.caf)</emphasis> 
+								action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import_connectors.png"/>
+									</imageobject>
+								</inlinemediaobject> located in the <emphasis role="bold">Connectors</emphasis> view 
+								toolbar or in the right-click menu.</para>
+						</listitem>
+						<listitem>
+							<para>
+								<emphasis role="bold">Step 2 </emphasis>
+								- In the first wizard page, Select the <emphasis role="bold">Import...</emphasis> button to select
+								your <emphasis role="bold">*.cdk</emphasis> or <emphasis role="bold">*.caf</emphasis> file 
+								on your local file system. This page presents
+								a summary of the custom connector types defined in your cdk/caf file.
+								Use the check-boxes in the table to choose which types to import.
+								Select <emphasis role="bold">Next></emphasis> to view additional connector and jar import options or
+								click <emphasis role="bold">Finish</emphasis> (if enabled) to import selected types and all
+								associated connectors and connectors jars. 
+								<emphasis role="italic">Note: This wizard page contains a details panel which 
+								displays status messages for selected connector types</emphasis>.
+							</para>
+							<figure>
+								<title>Select Connector Types to Import Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ImportBindingsPage_1.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para>
+								<emphasis role="bold">Step 3 </emphasis>
+								- The second wizard page contains connector types defined in your
+								cdk/caf file. Use the check-boxes in the table to choose which
+								bindings to import. Select <emphasis role="bold">Next></emphasis> to view additional jar import
+								options or click <emphasis role="bold">Finish</emphasis> (if enabled) to import selected types,
+								bindings and all associated connectors jars.
+						
+								<emphasis role="italic">Note: Note: This wizard page contains a details panel which displays status
+								messages for selected connector types</emphasis>.
+							</para>
+							<figure>
+								<title>Select Connectors To Import Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ImportBindingsPage_2.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para>
+								<emphasis role="bold">Step 4 </emphasis>
+								- The last wizard page contains connector jars defined either in your
+								caf file or jars located in the same file system folder as the initial
+								cdk file. If while importing a cdk file the required jars are not
+								present in the selected file system folder, select the <emphasis role="bold">Find...</emphasis>
+								button to locate and select the required jar from your local file
+								system.
+						
+								
+							</para>
+							<note>
+								<title>Notes</title>
+								<para>1) This wizard page contains a details panel which displays status
+									messages for selected connector types.</para>
+								<para>
+									2) The <emphasis role="bold">Finish</emphasis> button will not enable until all custom connector
+									jars are identified and defined. These jar files are defined in the
+									<emphasis role="bold">classPath</emphasis> property for both connectors and connector types.</para>
+							</note>
+							<figure>
+								<title>Select Archive Files To Import Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/ImportBindingsPage_3.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis> to complete the import.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		</sect2>
+		
+		<sect2 id="export-bindings-section">
+			<title>Export Connectors</title>
+			<para>You can export your custom connectors from Teiid Designer into a *.cdk file.</para>
+				
+			<itemizedlist>
+				<listitem>
+					<para>
+						To export connectors:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select one or more 
+								<emphasis role="bold">Connectors</emphasis> in the <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Select 
+								the <emphasis role="bold">Export Connectors (*.cdk)</emphasis> 
+								action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/export_connectors.png"/>
+									</imageobject>
+								</inlinemediaobject> located in the <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view 
+								toolbar or in the right-click menu.</para>
+							</listitem>
+							<listitem>
+								<para>
+									<emphasis role="bold">Step 3 </emphasis>
+									- In the wizard, select a location on your local file system and
+									specify a *.cdk file name (default is: savedBindings.cdk)</para>
+								<figure>
+									<title>Save Connectors To File Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/ExportBindingsDialog.jpg"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Click <emphasis role="bold">Finish</emphasis> to complete the import.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+	</sect1>
+	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
+	
+	<sect1 id="test-preview-data-section">
+		<title>Previewing Data For a Model</title>
+		<para> After creating your models, you can test them by using the
+				<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/previewData.gif"/>
+						</imageobject>
+					</inlinemediaobject>. By selecting a desired table object and
+				executing the action, the results of a simple query will be displayed
+				in the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> results view. This 
+				action is accessible throughout the
+				Teiid Designer in various view toolbars and context menus.</para>
+		<para> There are two requirements for previewing your data: the
+			selected object must be one of several previewable model object types and
+			all source models within the model dependency tree must be bound to
+			connectors. Model objects that can be previewed include:  relational tables and views (including
+			tables involving access patterns), relational procedures, Web service operations and
+			XML document staging tables.</para>
+		<para> Note that any virtual table, view or procedure is previewable as
+			long as all "physical" source models are bound via connectors.
+			(See <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view )</para>
+				
+		<bridgehead>Testing Your Transformations</bridgehead>
+		<para>When editing transformation SQL in the Transformation Editor, a special <emphasis role="bold">Preview</emphasis> data action is provided in the
+			editor tool-bar <inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/previewVirtualData.png"/>
+					</imageobject>
+				</inlinemediaobject>.</para>
+		<para>You can change your transformation SQL, re-validate and preview your the data for your modified SQL.</para>
+		
+		<para>The following sections provide steps for previewing your data. Note that all steps assume that all
+			source models referenced by your models, either directly or through dependencies, are bound to connector
+			bindings.</para>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
+		
+		<sect2>
+			<title>Preview Relational Table or View</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational table, relational view or staging table:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational table or view in 
+									the <xref linkend="model-explorer-view" /> or diagram. The table or view can be in a view model as well as a 
+									source model. Staging tables are not visible in the <xref linkend="model-explorer-view" />, so you need to 
+									open the mapping diagram and select it there.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewData.gif"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Your query results will be displayed in
+									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
+									results view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW WITH ACCESS PATTERNS ######################################### -->
+		
+		<sect2>
+			<title>Preview Relational Table With Access Pattern</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational table or view with access pattern:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational table or view in 
+									the <xref linkend="model-explorer-view" /> or diagram that contains an access pattern. The table or view can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewData.gif"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - A column input dialog is presented. Select
+									each access pattern and enter a value for each required column. Note that if data entered does
+									not match the column datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Access Pattern Column Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/ParameterInputDialogAccessPattern.jpg"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
+									results view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL PROCEDURE ######################################### -->
+		
+		<sect2>
+			<title>Preview Relational Procedure</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational procedure:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational procedure in 
+									the <xref linkend="model-explorer-view" /> or diagram. The procedure can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewData.gif"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - An input parameter input dialog is presented. Enter
+									a valid value for each parameter. Note that if data entered does
+									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Procedure Parameter Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/ParameterInputDialogProcedure.jpg"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
+									results view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<!-- ####### PREVIEW DATA - WEB SERVICE OPERATION ######################################### -->
+		
+		<sect2>
+			<title>Preview Web Service Operation</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a Web service operation:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a Web service operation in 
+									the <xref linkend="model-explorer-view" /> or diagram. The operation can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewData.gif"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - An input parameter input dialog is presented. Enter
+									a valid value for each parameter. Note that if data entered does
+									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Procedure Parameter Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/ParameterInputDialogWSOperation.jpg"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
+									results view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+
+	</sect1>
+	
+	<!-- ####### TEST MODELS IN VDB ######################################### -->
+	
+	<sect1 id="test-vdb-section">
+		<title>Testing With Your VDB</title>
+		<para></para>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					To execute a query against your VDB:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - In the <xref linkend="model-explorer-view" />, double-click a VDB, or 
+								select one and choose <emphasis role="bold">Open</emphasis> action to open 
+								a <link linkend="vdb-editor-section"><emphasis role="bold">VDB Editor</emphasis></link>.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the <emphasis role="bold">Execute</emphasis> tab.
+								If connectors are missing for any source models, the <emphasis role="bold">Execute</emphasis> button will be disabled.
+								<emphasis role="bold">Edit</emphasis> your connectors to create/select connectors for your models.</para>
+							<figure>
+								<title>Connections View</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/VDBEditor_Execute.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select the <emphasis role="bold">Execute</emphasis> button to establish a 
+								connection and open the <link linkend="sql-explorer-perspective"><emphasis role="bold">SQL Explorer</emphasis></link> perspective. 
+								Your VDB should now be connected via the connectors defined previously. Verify the connection in 
+								the <emphasis role="bold">Connections</emphasis> view.</para>
+							<figure>
+								<title>Connections View</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/SQLExplorerConnectionsView.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - In the <emphasis role="bold">Database Structure</emphasis> view 
+								(upper left), expand the <emphasis role="bold">Table</emphasis> node to list the tables in your VDB.</para>
+							<figure>
+								<title>Database Structure View</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/databaseStructureView.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Select one of the tables and do a right click. 
+								Select the <emphasis role="bold">Generate Select in SQL Editor</emphasis> menu item.</para>
+							<figure>
+								<title>Generate SELECT SQL Action</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/generateSelectAction.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 6 </emphasis> - A <emphasis role="bold">SELECT</emphasis> statement will appear
+								in the <emphasis role="bold">SQL Editor</emphasis> (upper right).</para>
+							<figure>
+								<title>Generated SQL</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/generatedSql.jpg"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 7 </emphasis> - Click the <emphasis role="bold">Execute SQL</emphasis> icon <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/previewData.gif"/>
+									</imageobject>
+								</inlinemediaobject> to run the query.  The results will appear in the <emphasis role="bold">SQL Results</emphasis> tab (lower right).</para>
+							<figure>
+								<title>SQL Results View</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/sqlTableResults.jpg" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>When executing queries on XML View Documents, the results are displayed in XML format as shown below:</para>
+		<figure>
+			<title>XML SQL Results View</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SqlExplorerXmlResultsView.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>When each query is executed, the SQL is stored in the <emphasis role="bold">SQL History</emphasis> table so the queries 
+			can be re-submitted without re-typing it.</para>
+		<figure>
+			<title>SQL History View</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SqlExplorerSqlHistoryView.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>This content of this <emphasis role="bold">SQL History</emphasis> table can be edited via right-click menu shown below.</para>
+		<figure>
+			<title>SQL History View Action Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SqlExplorerSqlHistoryViewMenu.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<bridgehead>Saving Your Query Results</bridgehead>
+		
+		<para>Query results, both SQL and XML, can be saved to text files
+			in the <emphasis role="bold">SQL Explorer</emphasis> perspective.</para>
+		<para>The toolbars for <emphasis role="bold">SQL Results</emphasis> and <emphasis role="bold">XML Results</emphasis> views contains an
+			additional action/button (see below) which presents a file save
+			dialog. Note that the action can also be accessed via the right-click
+			menu on both views.</para>
+		<figure>
+			<title>Save SQL Results Action</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SE_SqlResultsSaveResults.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>In addition, this file save dialog is presented to the user
+			when the XML Document results exceed the character size limit defined
+			by a user preference property for the SQL Explorer.</para>
+		<figure>
+			<title>XML Document Query Character Limit</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SE_SqlResultsXmlDisplayLimitPref.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>When this limit is exceeded, the user is presented with a
+			dialog to either save the results to a file or continue displaying the
+			results and possibly incurring substantial runtime memory allocation.
+		</para>
+		<figure>
+			<title>Large XML Document Detected Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SE_SqlResultsLargeXmlDocDialog.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>When the Save option is accepted, the XML Query Results view
+			displays the file name and path of the exported file.</para>
+		<figure>
+			<title>Large XML Document Saved Results Message</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SE_SqlResultsXmlSavedToFilejpg.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+	
+</chapter>
