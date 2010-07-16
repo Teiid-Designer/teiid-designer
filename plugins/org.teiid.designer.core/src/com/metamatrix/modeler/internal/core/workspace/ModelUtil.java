@@ -547,18 +547,22 @@ public class ModelUtil {
      * @return true if model object is in virtual model.
      */
     public static boolean isVirtual( final Object obj ) {
-        if (obj != null && obj instanceof EObject) {
-            final EObject eObject = (EObject)obj;
-            final Resource resource = eObject.eResource();
-            if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
-            else if (resource == null && eObject.eIsProxy()) {
-                final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
-                if (theUri.isFile()) {
-                    final File newFile = new File(theUri.toFileString());
-                    final XMIHeader header = getXmiHeader(newFile);
-                    if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
-                }
-            }
+        if (obj != null ) {
+        	if( obj instanceof EObject) {
+	            final EObject eObject = (EObject)obj;
+	            final Resource resource = eObject.eResource();
+	            if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
+	            else if (resource == null && eObject.eIsProxy()) {
+	                final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
+	                if (theUri.isFile()) {
+	                    final File newFile = new File(theUri.toFileString());
+	                    final XMIHeader header = getXmiHeader(newFile);
+	                    if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
+	                }
+	            }
+        	} else if( obj instanceof EmfResource ) {
+        		return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
+        	}
         }
         return false;
     }
