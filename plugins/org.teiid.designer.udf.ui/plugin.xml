@@ -8,10 +8,10 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-
+<!-- User Defined Function (UDF) view 
   <extension
         point="org.eclipse.ui.views">
-<!-- User Defined Function (UDF) view -->
+
       <view
             name="%udfModelView"
             icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/FunctionModel.gif"
@@ -20,7 +20,8 @@
             id="udfModelView">
       </view>
   </extension>
-   <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+  -->
+   <!-- Extension to allow plugins to contribute to the Modeler Perspective. 
    <extension
          id="udfModelViewContributor"
          name="%udfModelViewContributor.name"
@@ -29,11 +30,13 @@
         name="org.teiid.designer.udf.ui.UdfViewPerspectiveContributor">
       </class>
    </extension>
+   -->
 <!-- Eclipse Import Wizards -->
+
+<!-- UDF Model Import Wizard
     <extension
         point="org.eclipse.ui.importWizards">
 
-        <!-- UDF Model Import Wizard -->
         <wizard
             name="%importUdfModelWizard.name"
             icon="icons/full/ctool16/importUDFModel.gif"
@@ -45,11 +48,10 @@
             </description>
         </wizard>
     </extension>
-<!-- Eclipse Export Wizards -->
+     -->
+<!-- UDF Model Export Wizard 
     <extension
         point="org.eclipse.ui.exportWizards">
-        
-        <!-- UDF Model Export Wizard -->
         <wizard
             name="%exportUdfModelWizard.name"
             icon="icons/full/ctool16/exportUDFModel.gif"
@@ -61,4 +63,5 @@
             </description>
         </wizard>
     </extension>
+    -->
 </plugin>

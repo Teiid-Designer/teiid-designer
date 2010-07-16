@@ -12,45 +12,27 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.teiid.designer.udf.UdfModelEvent.Type;
-import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.core.util.ModelType;
-import com.metamatrix.modeler.core.ModelEditor;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.validation.ValidationContext;
-import com.metamatrix.modeler.core.validation.ValidationProblem;
-import com.metamatrix.modeler.core.validation.ValidationResult;
-import com.metamatrix.modeler.core.workspace.ModelProject;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.validation.Validator;
-import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
-import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.function.FunctionTree;
 import org.teiid.query.function.SystemFunctionManager;
@@ -58,21 +40,21 @@ import org.teiid.query.function.UDFSource;
 import org.teiid.query.function.metadata.FunctionMetadataReader;
 import org.teiid.query.function.metadata.FunctionMethod;
 
+import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.ModelType;
+import com.metamatrix.modeler.core.ModelEditor;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.validation.ValidationContext;
+import com.metamatrix.modeler.core.validation.ValidationProblem;
+import com.metamatrix.modeler.core.validation.ValidationResult;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
+import com.metamatrix.modeler.internal.core.validation.Validator;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
+import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
+
 public final class UdfManager implements IResourceChangeListener {
-
-    /**
-     * The name of the default UDF model.
-     * 
-     * @since 6.0.0
-     */
-    public static final String UDF_MODEL_NAME = ModelerCore.UDF_MODEL_NAME;
-
-    /**
-     * The name of the project/folder where the default UDF model is contained.
-     * 
-     * @since 6.0.0
-     */
-    public static final String UDF_PROJECT_NAME = ModelerCore.UDF_PROJECT_NAME;
 
     public static final UdfManager INSTANCE = new UdfManager();
 
@@ -87,50 +69,6 @@ public final class UdfManager implements IResourceChangeListener {
     private Map<URL, UDFSource> functionModels;
 
     private boolean initialized;
-
-    /**
-     * The install location of the <code>modeler.transformation</code> plugin.
-     * 
-     * @since 6.0.0
-     */
-    private IPath installPath;
-
-    /**
-     * The project where the workspace UDF model is located.
-     * 
-     * @since 6.0.0
-     */
-    private ModelProject udfProject;
-
-    /**
-     * The workspace location of the <code>modeler.transformation</code> plugin.
-     * 
-     * @since 6.0.0
-     */
-    private IPath runtimePath;
-
-    /**
-     * Used in non-Eclipse environments to identify the install location of the <code>modeler.transformation</code> plugin.
-     * <strong>To be used for testing purposes only.</strong>
-     * 
-     * @since 6.0.0
-     */
-    public String testInstallPath;
-
-    /**
-     * Used in non-Eclipse environments to identify the workspace location of the <code>modeler.transformation</code> plugin.
-     * <strong>To be used for testing purposes only.</strong>
-     * 
-     * @since 6.0.0
-     */
-    public String testRuntimePath;
-
-    /**
-     * The location of the default UDF model being used.
-     * 
-     * @since 6.0.0
-     */
-    private IPath udfModelPath;
 
     /**
      * Don't allow public construction.
@@ -159,39 +97,6 @@ public final class UdfManager implements IResourceChangeListener {
         }
     }
 
-    /**
-     * @return the UDF model project
-     * @throws CoreException if there is a problem creating the project
-     * @since 6.0.0
-     */
-    private ModelProject createProject() throws CoreException {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IProject project = workspace.getRoot().getProject(UDF_PROJECT_NAME);
-
-        if (!project.exists()) {
-            IProjectDescription description = workspace.newProjectDescription(project.getName());
-            description.setLocation(getUdfModelPath());
-            description.setNatureIds(ModelerCore.NATURES);
-
-            project.create(description, null);
-            project.open(null);
-            ModelerCore.makeHidden(project);
-        }
-
-        // this will create the model project only if necessary
-        ModelProject modelProject = ModelerCore.create(project);
-
-        // adds the build command
-        if (modelProject instanceof IProjectNature) {
-            ((IProjectNature)modelProject).configure();
-        }
-
-        // now let the ModelWorkspaceManager know about the UDF model (will create if necessary)
-        ModelWorkspaceManager.create(project.findMember(UDF_MODEL_NAME), modelProject);
-
-        return modelProject;
-    }
-
     private UDFSource findUdfSource( File functionModel ) {
         URL url;
         try {
@@ -215,66 +120,24 @@ public final class UdfManager implements IResourceChangeListener {
         URI uri = URI.createFileURI(path);
         return (EmfResource)ModelerCore.getModelContainer().getResource(uri, false);
     }
+    
+    private void loadWorkspaceFunctionModels() {
+    	Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
+		try {
+			for( IResource next : allResources ) {
+				if( ModelUtil.isModelFile(next, true)) {
+					ModelResource mr = ModelUtil.getModelResource((IFile)next, true);
 
-    private IPath getPluginInstallPath() throws IOException {
-        if (this.installPath == null) {
-            if (this.testInstallPath == null) {
-                URL url = FileLocator.find(UdfPlugin.getInstance().getBundle(), new Path(""), null); //$NON-NLS-1$
-                url = FileLocator.toFileURL(url);
-                this.installPath = new Path(url.getFile());
-            } else {
-                this.installPath = new Path(this.testInstallPath);
-            }
-        }
-
-        return (IPath)this.installPath.clone();
-    }
-
-    private IPath getRuntimePath() {
-        if (this.runtimePath == null) {
-            if (this.testRuntimePath == null) {
-                this.runtimePath = UdfPlugin.getInstance().getStateLocation();
-            } else {
-                this.runtimePath = new Path(this.testRuntimePath);
-            }
-        }
-
-        return (IPath)this.runtimePath.clone();
-    }
-
-    /**
-     * @return the default UDF model
-     * @since 6.0.0
-     */
-    private File getUdfModel() {
-        return getUdfModelPath().append(UDF_MODEL_NAME).toFile();
-    }
-
-    /**
-     * @return the location of the default UDF model used at runtime
-     * @since 6.0.0
-     */
-    public IPath getUdfModelPath() {
-        if (this.udfModelPath == null) {
-            this.udfModelPath = getRuntimePath().append(UDF_PROJECT_NAME);
-
-            // make sure it exists
-            File dir = new File(this.udfModelPath.toOSString());
-
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-        }
-
-        return (IPath)this.udfModelPath.clone();
-    }
-
-    /**
-     * @return the workspace project where the UDF model is located (never <code>null</code>)
-     * @since 6.0.0
-     */
-    public IProject getUdfProject() {
-        return this.udfProject.getProject();
+					if( mr.getModelType().getValue() == ModelType.FUNCTION) {
+				        IPath path = mr.getUnderlyingResource().getLocation();
+				        registerFunctionModel(new File(path.toOSString()));
+					} 
+			    }
+			}
+		} catch (Exception err) {
+			UdfPlugin.UTIL.log(err);
+		}
+		
     }
 
     /**
@@ -285,34 +148,12 @@ public final class UdfManager implements IResourceChangeListener {
      * @since 6.0.0
      */
     public void initialize() throws Exception {
-        File udfModel = getUdfModel();
-
-        // if necessary copy over default UDF model from the install directory
-        if (!udfModel.exists()) {
-            IPath udfDir = getPluginInstallPath().append(UDF_PROJECT_NAME);
-            File originalUdfModel = udfDir.append(UDF_MODEL_NAME).toFile();
-            if( originalUdfModel.exists() ) {
-            	FileUtils.copy(originalUdfModel.getAbsolutePath(), udfModel.getAbsolutePath());
-            } else {
-                String msg = UdfPlugin.UTIL.getString(I18nUtil.getPropertyPrefix(UdfManager.class) + "functionModelNotInstalled", originalUdfModel.getAbsolutePath()); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.ERROR, UdfPlugin.PLUGIN_ID, msg);
-                throw new CoreException(status);
-            }
-        }
-
-        // make sure UDF model project exists
-        this.udfProject = createProject();
-
-        // make sure model is loaded
-        IFile file = this.udfProject.getProject().getFile(UDF_MODEL_NAME);
-        ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(file);
-        modelResource.getEmfResource().load(new HashMap());
-
-        // handle the default function model at startup as if it was a function model being added
-        notifyListeners(getUdfModel(), UdfModelEvent.Type.NEW);
 
         // register to receive resource events so that we can notify listeners when a function model changes
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+        
+        loadWorkspaceFunctionModels();
+        
         initialized = true;
     }
 
@@ -385,37 +226,15 @@ public final class UdfManager implements IResourceChangeListener {
         boolean remove = (udfSource != null);
         boolean add = !event.isDeleted();
 
-        // code FunctionLibraryManager-related code that is commented out below will be needed later when the
-        // query code is forked from Teiid and becomes Designer responsibility. The FunctionLibraryManager (FLM) is the
-        // UDF registry and is used during model validation. Currently one FLM is being shared
-        // by Teiid and Designer and when Designer informs Teiid of UDF model changes Teiid informs the FLM.
         if (remove) {
             this.functionModels.remove(url);
-            //
-            // final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-            //
-            // try {
-            // FunctionLibraryManager.deregisterSource(udfSource);
-            // } finally {
-            // if (startedTxn) {
-            // ModelerCore.commitTxn();
-            // }
-            // }
         }
 
         if (add) {
-            // final boolean startedTxn = ModelerCore.startTxn(false, false, null, this);
-            //
             try {
-                // udfSource = new UDFSource(url);
-                // FunctionLibraryManager.registerSource(udfSource);
                 this.functionModels.put(url, null);
             } catch (Exception e) {
                 UdfPlugin.UTIL.log(e);
-                // } finally {
-                // if (startedTxn) {
-                // ModelerCore.commitTxn();
-                // }
             }
         }
         
@@ -466,9 +285,10 @@ public final class UdfManager implements IResourceChangeListener {
                 for (int i = 0; i < children.length; i++) {
                     IResource resource = children[i].getResource();
 
+                    // Check to see if UDF model
+                    
                     // make sure we are in the UDF project
-                    if ((resource != null) && (resource instanceof IProject) && (resource.getParent() instanceof IWorkspaceRoot)
-                        && resource.getName().equals(UdfManager.UDF_PROJECT_NAME)) {
+                    if ((resource != null) && (resource instanceof IProject) && (resource.getParent() instanceof IWorkspaceRoot)) {
                         IResourceDelta[] udfFiles = children[i].getAffectedChildren();
 
                         for (int j = 0; j < udfFiles.length; j++) {
@@ -480,7 +300,7 @@ public final class UdfManager implements IResourceChangeListener {
                                     ModelResource modelResource = modelEditor.findModelResource((IFile)resource);
 
                                     // model resource will be null for non-model files (like .project)
-                                    if ((modelResource != null) && (modelResource.getItemType() == ModelType.FUNCTION)) {
+                                    if ((modelResource != null) && (modelResource.getModelType().getValue() == ModelType.FUNCTION)) {
                                         // only update if the UDF model was saved
                                         // DQP throws an exception if you send it a model that has errors.
                                         if ((udfFiles[j].getFlags() & IResourceDelta.CONTENT) != 0) {

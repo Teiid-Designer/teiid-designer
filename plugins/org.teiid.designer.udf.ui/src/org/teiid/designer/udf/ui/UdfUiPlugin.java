@@ -26,14 +26,6 @@ public final class UdfUiPlugin extends AbstractUiPlugin {
 
     static final PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
-    public static final String WIZBAN = "icons/full/wizban/"; //$NON-NLS-1$
-
-    static final String UDF_MODEL_VIEW = "udfModelView"; //$NON-NLS-1$
-    static final String UDF_MODEL_EXPORTER = "udfModelExportWizard"; //$NON-NLS-1$
-    static final String UDF_MODEL_IMPORTER = "udfModelImportWizard"; //$NON-NLS-1$
-    static final String UDF_EXPORT_WIZBAN = WIZBAN + "ExportUDFWizban.png"; //$NON-NLS-1$
-    static final String UDF_IMPORT_WIZBAN = WIZBAN + "ImportUDFWizban.png"; //$NON-NLS-1$
-
     private static UdfUiPlugin plugin;
 
     static UdfUiPlugin getInstance() {
