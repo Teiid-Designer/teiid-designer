@@ -32,7 +32,7 @@
             createAsPhysical="true"
             requiresProxies="false"
             supportsDiagrams="true"
-            createAsNewModel="false"
+            createAsNewModel="true"
             participatoryOnly="false"
             supportsExtension="true"
             createAsVirtual="false">

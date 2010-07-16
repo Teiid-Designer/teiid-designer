@@ -87,6 +87,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
     protected final static String XML_SCHEMA_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classXmlSchemaName"); //$NON-NLS-1$
     protected final static String WEB_SERVICE_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classWebServiceName"); //$NON-NLS-1$
     protected final static String MODEL_EXTENSION_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classModelExtensionName"); //$NON-NLS-1$
+    protected final static String FUNCTION_NAME = UiConstants.Util.getString("NewModelWIzardMetamodelPage.classFunctionName"); //$NON-NLS-1$
 
     final static List ORDERED_METAMODELS_LIST;
 
@@ -98,7 +99,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
          */
 
         String[] ORDERED_METAMODELS = new String[] {RELATIONAL_NAME, XML_NAME, XML_SCHEMA_NAME, WEB_SERVICE_NAME,
-            MODEL_EXTENSION_NAME};
+            FUNCTION_NAME, MODEL_EXTENSION_NAME};
 
         ORDERED_METAMODELS_LIST = Arrays.asList(ORDERED_METAMODELS);
     }
