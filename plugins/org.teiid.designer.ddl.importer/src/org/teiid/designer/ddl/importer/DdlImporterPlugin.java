@@ -1,50 +1,68 @@
 package org.teiid.designer.ddl.importer;
 
+import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class DdlImporterPlugin extends Plugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.teiid.designer.ddl.importer";
+    /**
+     * This plug-in's ID
+     */
+    public static final String ID = DdlImporterPlugin.class.getPackage().getName();
 
-	// The shared instance
-	private static DdlImporterPlugin plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public DdlImporterPlugin() {
-	}
+    private static final String I18N_NAME = ID + ".i18n"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+    /**
+     * This plug-in's utility for logging and internationalization
+     */
+    public static final PluginUtil UTIL = new PluginUtilImpl(ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
+    /**
+     * The singleton instance of this plug-in
+     */
+    private static DdlImporterPlugin singleton;
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static DdlImporterPlugin getDefault() {
-		return plugin;
-	}
+    /**
+     * Not intended for use by any class other than {@link DdlImporterI18n}.
+     * 
+     * @param key
+     * @return The i18n template associated with the supplied key
+     */
+    static String i18n( final String key ) {
+        return UTIL.getString(key);
+    }
 
+    /**
+     * @return the singleton instance of this type
+     */
+    public static DdlImporterPlugin singleton() {
+        return singleton;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void start( final BundleContext context ) throws Exception {
+        super.start(context);
+        singleton = this;
+        ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop( final BundleContext context ) throws Exception {
+        singleton = null;
+        super.stop(context);
+    }
 }
