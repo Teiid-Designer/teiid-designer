@@ -22,4 +22,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edit.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.teiid.designer.datatools.ui.actions
+Export-Package: org.teiid.designer.datatools.ui.actions,
+ org.teiid.designer.datatools.ui.jobs
