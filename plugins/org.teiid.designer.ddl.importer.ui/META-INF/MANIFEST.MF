@@ -6,9 +6,18 @@ Bundle-Version: 7.0.0.qualifier
 Bundle-Activator: org.teiid.designer.ddl.importer.ui.DdlImporterUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.teiid.designer.ddl.importer;bundle-version="7.0.0",
+ org.teiid.designer.compare.ui;bundle-version="7.0.0",
+ org.teiid.designer.compare;bundle-version="7.0.0",
+ org.teiid.designer.ui;bundle-version="7.0.0",
+ org.teiid.designer.ui.common;bundle-version="7.0.0",
+ org.teiid.designer.core;bundle-version="7.0.0",
+ org.teiid.designer.metamodels.core;bundle-version="7.0.0",
  org.teiid.core.designer;bundle-version="7.0.0",
  teiid_embedded_query;bundle-version="7.0.0",
+ org.eclipse.emf.ecore;bundle-version="2.5.0",
+ org.eclipse.emf.common;bundle-version="2.5.0",
  org.eclipse.ui,
+ org.eclipse.core.resources;bundle-version="3.5.1",
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

@@ -78,7 +78,7 @@ public class ModelBuildUtil {
     public static void buildResources( final IProgressMonitor monitor,
                                        final Collection iResources,
                                        final Container container,
-                                       boolean validateInContext ) {
+                                       final boolean validateInContext ) {
 
         // Get the list of "modified" EMF resources within the model container
         // prior to performing the build. Since indexing and validation are
@@ -108,11 +108,64 @@ public class ModelBuildUtil {
     // ############################################################################################################################
 
     /**
+     * Deletes all markers for the supplied list of IResources
+     * 
+     * @param iResources
+     * @since 5.0.2
+     */
+    public static void clearResourceMarkers( final Collection iResources ) {
+        try {
+            // clear all markers on this resource
+            final Iterator itr = iResources.iterator();
+
+            while (itr.hasNext()) {
+                final IResource iResource = (IResource)itr.next();
+                if (iResource.exists()) {
+                    iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                } // endif
+            }
+        } catch (final CoreException e) {
+            ModelerCore.Util.log(e);
+        }
+    }
+
+    /**
+     * Deletes all markers for the supplied IResource
+     * 
+     * @param iResource
+     * @since 5.0.2
+     */
+    public static void clearResourceMarkers( final IResource iResource ) {
+        try {
+            // clear all markers on this resource, as we are
+            // going to create fresh markets
+            // defect 16537 - make sure resource exists before deleting markers
+            if (iResource.exists()) {
+                iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+            } // endif
+        } catch (final CoreException e) {
+            ModelerCore.Util.log(e);
+        }
+    }
+
+    public static void createModelIndexes( final IProgressMonitor monitor,
+                                           final Collection resources ) {
+        final ModelIndexer modelIndexer = new ModelIndexer();
+        indexResources(monitor, resources, modelIndexer);
+    }
+
+    public static void createSearchIndexes( final IProgressMonitor monitor,
+                                            final Collection resources ) {
+        final ModelSearchIndexer searchIndexer = new ModelSearchIndexer();
+        indexResources(monitor, resources, searchIndexer);
+    }
+
+    /**
      * Create a new instance of ValidationContext to use during validation
      */
     public static ValidationContext createValidationContext() {
         ValidationContext context = null;
-        Plugin corePlugin = ModelerCore.getPlugin();
+        final Plugin corePlugin = ModelerCore.getPlugin();
         if (corePlugin != null && !ModelerCore.ignoreValidationPreferencesOnBuild()) {
             context = new ValidationContext(ModelerCore.PLUGIN_ID);
         } else {
@@ -122,168 +175,26 @@ public class ModelBuildUtil {
         return context;
     }
 
-    /**
-     * Validate the collection of {@link org.eclipse.emf.ecore.resource.Resource} instances returning the result in the supplied
-     * ValidationContext instance. After validation is complete the user should clear the ValidationContext to free up memory.
-     * 
-     * @param monitor The progressMonitor, may be null
-     * @param eResources the collection of resources to validate
-     * @param context the validation context to use
-     * @since 4.2
-     */
-    public static void validateResources( final IProgressMonitor monitor,
-                                          final Resource[] eResources,
-                                          final ValidationContext context ) {
-        CoreArgCheck.isNotNull(eResources);
-        CoreArgCheck.isNotNull(context);
-
-        // create a monitor if needed
-        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
-
-        // set the resources on the context since validation is in context of the resources.
-        context.setResourcesToValidate(eResources);
-
-        // get all validators and validate
-        for (int i = 0; i < eResources.length; ++i) {
-            validateResource(progresssMonitor, eResources[i], context);
-        }
-    }
-
-    /**
-     * Validate the {@link org.eclipse.emf.ecore.resource.Resource} returning the result in the supplied ValidationContext
-     * instance. After validation is complete the user should clear the ValidationContext to free up memory.
-     * 
-     * @param monitor The progressMonitor, may be null
-     * @param eResource the resource to validate
-     * @param context the validation context to use
-     * @since 4.2
-     */
-    public static void validateResource( final IProgressMonitor monitor,
-                                         final Resource eResource,
-                                         final ValidationContext context ) {
-        CoreArgCheck.isNotNull(eResource);
-        CoreArgCheck.isNotNull(context);
-
-        // get all validators and validate
-        for (final Iterator validateIter = VALIDATORS.iterator(); validateIter.hasNext();) {
-            final ResourceValidator validator = (ResourceValidator)validateIter.next();
-            validateResource(monitor, eResource, validator, context);
-        }
-    }
-
-    /**
-     * Validate the {@link org.eclipse.emf.ecore.resource.Resource} using the specified
-     * 
-     * @param monitor
-     * @param eResource
-     * @param validator
-     * @param context
-     * @since 4.2
-     */
-    private static void validateResource( final IProgressMonitor monitor,
-                                          final Resource eResource,
-                                          final ResourceValidator validator,
-                                          final ValidationContext context ) {
-        CoreArgCheck.isNotNull(eResource);
-        CoreArgCheck.isNotNull(validator);
-        CoreArgCheck.isNotNull(context);
-
-        // create a monitor if needed
-        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
-        if (monitor.isCanceled() || !validator.isValidatorForObject(eResource)) {
-            return;
-        }
-
-        monitor.setTaskName(MONITOR_RESOURCE_VALIDATION_MSG + eResource.getURI().lastSegment());
-        boolean isModified = eResource.isModified();
+    public static List getModifiedResources() {
         try {
-            Stopwatch totalWatch = new Stopwatch();
-            totalWatch.start();
-            validator.validate(progresssMonitor, eResource, context);
-            totalWatch.stop();
-        } catch (ModelerCoreException e) {
-            ModelerCore.Util.log(e);
-        } finally {
-            // Restore the "modified" state to what is was prior to validation
-            eResource.setModified(isModified);
+            return getModifiedResources(ModelerCore.getModelContainer().getResources());
+        } catch (final CoreException e) {
+            // do nothing - the method will return an empty list
         }
+        return Collections.EMPTY_LIST;
     }
 
-    /**
-     * Validate the collection of IResources being passed. Validation of the resources can be within the context of the resources
-     * being passed in. The validation rules that use the context may use this information.
-     * 
-     * @param monitor The progressMonitor, may be null
-     * @param resources Collection of IResouurces
-     * @param validateInContext If true the validationContext is updated with the collection of resources.
-     * @since 4.2
-     */
-    public static void validateResources( final IProgressMonitor monitor,
-                                          final Collection iResources,
-                                          final Container container,
-                                          final boolean validateInContext ) {
-        // create a monitor if needed
-        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
-
-        // Create the validation context to use
-        final ValidationContext context = createValidationContext();
-
-        // set the resource scope (all model resources in open model projects)
-        ModelWorkspace workspace = ModelerCore.getModelWorkspace();
-
-        try {
-            Resource[] resourcesInScope = getWorkspaceResourcesInScope(workspace);
-            context.setResourcesInScope(resourcesInScope);
-
-        } catch (CoreException theException) {
-            ModelerCore.Util.log(theException);
-        }
-
-        // set the resources on the context since validation
-        // is in context of the resources.
-        if (validateInContext && (iResources != null)) {
-            List temp = new ArrayList();
-            Iterator itr = iResources.iterator();
-
-            while (itr.hasNext()) {
-                IResource iResource = (IResource)itr.next();
-
-                if (ModelUtil.isModelFile(iResource)) {
-                    try {
-                        ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)iResource);
-
-                        if (modelResource != null) {
-                            temp.add(modelResource.getEmfResource());
-                        }
-                    } catch (ModelWorkspaceException theException) {
-                        ModelerCore.Util.log(theException);
-                    }
+    public static List getModifiedResources( final List eResources ) {
+        final List result = new ArrayList();
+        if (eResources != null) {
+            for (final Iterator iter = eResources.iterator(); iter.hasNext();) {
+                final Resource resource = (Resource)iter.next();
+                if (resource.isModified()) {
+                    result.add(resource);
                 }
             }
-
-            context.setResourcesToValidate((Resource[])temp.toArray(new Resource[temp.size()]));
         }
-
-        context.setResourceContainer(container); // may be null
-
-        clearResourceMarkers(iResources);
-
-        // get all validators and validate
-        for (final Iterator validateIter = VALIDATORS.iterator(); validateIter.hasNext();) {
-            ResourceValidator validator = (ResourceValidator)validateIter.next();
-            validator.validationStarted(iResources, context);
-            try {
-                for (final Iterator rsourceIter = iResources.iterator(); rsourceIter.hasNext();) {
-                    IResource resource = (IResource)rsourceIter.next();
-                    internalValidateResource(progresssMonitor, resource, validator, context, false);
-                }
-            } finally {
-                validator.validationEnded(context);
-            }
-        }
-
-        // clear the context after validation to free up memory
-        context.clearState();
+        return result;
     }
 
     /**
@@ -292,9 +203,9 @@ public class ModelBuildUtil {
      * @throws CoreException
      * @since 4.3
      */
-    private static Resource[] getWorkspaceResourcesInScope( ModelWorkspace workspace ) throws CoreException {
-        Resource[] wsEmfResources = workspace.getEmfResources();
-        Collection resourcesInScope = new ArrayList(Arrays.asList(wsEmfResources));
+    private static Resource[] getWorkspaceResourcesInScope( final ModelWorkspace workspace ) throws CoreException {
+        final Resource[] wsEmfResources = workspace.getEmfResources();
+        final Collection resourcesInScope = new ArrayList(Arrays.asList(wsEmfResources));
 
         // MyCode : 18565
         updateResource(resourcesInScope);
@@ -302,30 +213,79 @@ public class ModelBuildUtil {
         return (Resource[])resourcesInScope.toArray(new Resource[resourcesInScope.size()]);
     }
 
-    /**
-     * updates the collection if the systemVdbResources are not already in the collection
-     * 
-     * @param resourcesInScope
-     * @since 4.3
-     */
-    private static void updateResource( Collection resourcesInScope ) {
-        Resource[] systemVdbResources = ModelerCore.getSystemVdbResources();
-        for (int idx = 0; idx < systemVdbResources.length; idx++) {
-            if (systemVdbResources[idx] instanceof EmfResource) {
-                ObjectID objectID = ((EmfResource)systemVdbResources[idx]).getUuid();
-                try {
-                    Resource resrc = ModelerCore.getModelContainer().getResourceFinder().findByUUID(objectID, false);
-                    if (resrc != null && !resourcesInScope.contains(resrc)) {
-                        resourcesInScope.add(systemVdbResources[idx]);
-                    }
-                } catch (CoreException err) {
-                    ModelerCore.Util.log(err);
-                }
-            } else {
-                resourcesInScope.add(systemVdbResources[idx]);
+    public static void indexResource( IProgressMonitor monitor,
+                                      final IResource iResource,
+                                      final ResourceIndexer indexer ) {
+        // create a monitor if needed
+        monitor = monitor != null ? monitor : new NullProgressMonitor();
+        if (monitor.isCanceled()) {
+            return;
+        }
+        final String sTask = ModelerCore.Util.getString("ModelBuildUtil.Creating_{0}_for_{1}_1", indexer.getIndexType(), iResource.getFullPath()); //$NON-NLS-1$
+        //System.out.println("[ModelBuildUtil.indexResource TaskName is: " + sTask ); //$NON-NLS-1$
+        monitor.setTaskName(sTask);
+        try {
+            final Stopwatch totalWatch = new Stopwatch();
+            totalWatch.start();
+            indexer.indexResource(iResource, false, true);
+            totalWatch.stop();
+        } catch (final Throwable e) {
+            ModelerCore.Util.log(IStatus.ERROR,
+                                 e,
+                                 ModelerCore.Util.getString("ModelBuilder.Error_indexing_model_resource_3", iResource.getFullPath())); //$NON-NLS-1$
+        }
+    }
+
+    public static void indexResources( IProgressMonitor monitor,
+                                       final Collection resources ) {
+        // create a monitor if needed
+        monitor = monitor != null ? monitor : new NullProgressMonitor();
+        // get all indexers and index
+        for (final Iterator indexerIter = INDEXERS.iterator(); indexerIter.hasNext();) {
+            final ResourceIndexer indexer = (ResourceIndexer)indexerIter.next();
+            indexResources(monitor, resources, indexer);
+        }
+    }
+
+    public static void indexResources( final IProgressMonitor monitor,
+                                       final Collection resources,
+                                       final ResourceIndexer indexer ) {
+        for (final Iterator rsourceIter = resources.iterator(); rsourceIter.hasNext();) {
+            final IResource resource = (IResource)rsourceIter.next();
+            indexResource(monitor, resource, indexer);
+            if (monitor != null) {
+                monitor.worked(1);
             }
         }
     }
+
+    private static void initIndexers() {
+        // Find all extensions of the notifiers extension point
+        final String id = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.UNIQUE_ID;
+        final IExtension[] extensions = PluginUtilities.getExtensions(id);
+        // initialize the indexers array
+        INDEXERS = new ArrayList(extensions.length);
+        for (int i = 0; i < extensions.length; ++i) {
+            final IExtension extension = extensions[i];
+            final String element = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.ELEMENTS.CLASS;
+            final String attribute = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.ATTRIBUTES.NAME;
+            try {
+                final Object instance = PluginUtilities.createExecutableExtension(extension, element, attribute);
+                if (instance instanceof ResourceIndexer) {
+                    INDEXERS.add(instance);
+                } else {
+                    final String message = ModelerCore.Util.getString("ModelBuildUtil.Extension_class_not_instance_of_IIndexer_1"); //$NON-NLS-1$
+                    ModelerCore.Util.log(message);
+                }
+            } catch (final CoreException e) {
+                ModelerCore.Util.log(e);
+            }
+        }
+    }
+
+    // ############################################################################################################################
+    // # Indexing Methods #
+    // ############################################################################################################################
 
     private static void initValidators() {
         // Find all extensions of the notifiers extension point
@@ -346,58 +306,10 @@ public class ModelBuildUtil {
                     final String message = ModelerCore.Util.getString("ModelBuildUtil.Extension_class_not_instance_of_ResourceValidator_1"); //$NON-NLS-1$
                     ModelerCore.Util.log(message);
                 }
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 ModelerCore.Util.log(e);
             }
         }
-    }
-
-    /**
-     * Deletes all markers for the supplied IResource
-     * 
-     * @param iResource
-     * @since 5.0.2
-     */
-    public static void clearResourceMarkers( final IResource iResource ) {
-        try {
-            // clear all markers on this resource, as we are
-            // going to create fresh markets
-            // defect 16537 - make sure resource exists before deleting markers
-            if (iResource.exists()) {
-                iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-            } // endif
-        } catch (CoreException e) {
-            ModelerCore.Util.log(e);
-        }
-    }
-
-    /**
-     * Deletes all markers for the supplied list of IResources
-     * 
-     * @param iResources
-     * @since 5.0.2
-     */
-    public static void clearResourceMarkers( final Collection iResources ) {
-        try {
-            // clear all markers on this resource
-            Iterator itr = iResources.iterator();
-
-            while (itr.hasNext()) {
-                IResource iResource = (IResource)itr.next();
-                if (iResource.exists()) {
-                    iResource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-                } // endif
-            }
-        } catch (CoreException e) {
-            ModelerCore.Util.log(e);
-        }
-    }
-
-    public static void validateResource( final IProgressMonitor monitor,
-                                         final IResource iResource,
-                                         final ResourceValidator validator,
-                                         final ValidationContext context ) {
-        internalValidateResource(monitor, iResource, validator, context, true);
     }
 
     private static void internalValidateResource( final IProgressMonitor monitor,
@@ -419,7 +331,7 @@ public class ModelBuildUtil {
         Object duplicateOfModel = null;
         try {
             duplicateOfModel = iResource.getSessionProperty(ModelerCore.DUPLICATE_MODEL_OF_IPATH_KEY);
-        } catch (CoreException err) {
+        } catch (final CoreException err) {
             // Do nothing; treat as tho not a duplicate ...
         }
 
@@ -453,27 +365,27 @@ public class ModelBuildUtil {
                                 }
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // Do nothing. IResources that do not wrap an emf Resource will throw an exception here...
                         // Let the validator decide what to do if no emf Resource can be found.
                     }
                 }
-                Object objToValidate = (resource != null ? (Object)resource : (Object)iResource);
+                final Object objToValidate = (resource != null ? (Object)resource : (Object)iResource);
 
-                Stopwatch totalWatch = new Stopwatch();
+                final Stopwatch totalWatch = new Stopwatch();
                 totalWatch.start();
                 validator.validate(progresssMonitor, objToValidate, context);
                 totalWatch.stop();
 
                 validator.addMarkers(context, iResource);
                 context.clearResults();
-            } catch (ModelerCoreException e) {
+            } catch (final ModelerCoreException e) {
                 final Throwable underlyingException = e.getException();
                 if (underlyingException instanceof DuplicateResourceException) {
                     // Look again for the duplicate of model path ...
                     try {
                         duplicateOfModel = iResource.getSessionProperty(ModelerCore.DUPLICATE_MODEL_OF_IPATH_KEY);
-                    } catch (CoreException err) {
+                    } catch (final CoreException err) {
                         ModelerCore.Util.log(err);
                     }
                 } else {
@@ -489,165 +401,35 @@ public class ModelBuildUtil {
                 final Object[] params = new Object[] {duplicateOfModel};
                 final String msg = ModelerCore.Util.getString("ModelBuildUtil.ModelDuplicateOf_0", params); //$NON-NLS-1$
                 // The Model is a duplicate, so don't validate ...
-                IMarker marker = iResource.createMarker(IMarker.PROBLEM);
+                final IMarker marker = iResource.createMarker(IMarker.PROBLEM);
                 marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
                 marker.setAttribute(IMarker.LOCATION, duplicateOfModel);
                 marker.setAttribute(ModelerCore.MARKER_URI_PROPERTY, null);
                 marker.setAttribute(ModelerCore.TARGET_MARKER_URI_PROPERTY, null);
                 marker.setAttribute(IMarker.MESSAGE, msg);
-            } catch (CoreException e) {
+            } catch (final CoreException e) {
                 ModelerCore.Util.log(e);
             }
-        }
-    }
-
-    // ############################################################################################################################
-    // # Indexing Methods #
-    // ############################################################################################################################
-
-    public static void indexResources( IProgressMonitor monitor,
-                                       final Collection resources ) {
-        // create a monitor if needed
-        monitor = monitor != null ? monitor : new NullProgressMonitor();
-        // get all indexers and index
-        for (final Iterator indexerIter = INDEXERS.iterator(); indexerIter.hasNext();) {
-            ResourceIndexer indexer = (ResourceIndexer)indexerIter.next();
-            indexResources(monitor, resources, indexer);
-        }
-    }
-
-    private static void initIndexers() {
-        // Find all extensions of the notifiers extension point
-        final String id = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.UNIQUE_ID;
-        final IExtension[] extensions = PluginUtilities.getExtensions(id);
-        // initialize the indexers array
-        INDEXERS = new ArrayList(extensions.length);
-        for (int i = 0; i < extensions.length; ++i) {
-            final IExtension extension = extensions[i];
-            final String element = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.ELEMENTS.CLASS;
-            final String attribute = ModelerCore.EXTENSION_POINT.RESOURCE_INDEXER.ATTRIBUTES.NAME;
-            try {
-                final Object instance = PluginUtilities.createExecutableExtension(extension, element, attribute);
-                if (instance instanceof ResourceIndexer) {
-                    INDEXERS.add(instance);
-                } else {
-                    final String message = ModelerCore.Util.getString("ModelBuildUtil.Extension_class_not_instance_of_IIndexer_1"); //$NON-NLS-1$
-                    ModelerCore.Util.log(message);
-                }
-            } catch (CoreException e) {
-                ModelerCore.Util.log(e);
-            }
-        }
-    }
-
-    public static void createModelIndexes( IProgressMonitor monitor,
-                                           final Collection resources ) {
-        ModelIndexer modelIndexer = new ModelIndexer();
-        indexResources(monitor, resources, modelIndexer);
-    }
-
-    public static void createSearchIndexes( IProgressMonitor monitor,
-                                            final Collection resources ) {
-        ModelSearchIndexer searchIndexer = new ModelSearchIndexer();
-        indexResources(monitor, resources, searchIndexer);
-    }
-
-    public static void indexResources( IProgressMonitor monitor,
-                                       final Collection resources,
-                                       final ResourceIndexer indexer ) {
-        for (Iterator rsourceIter = resources.iterator(); rsourceIter.hasNext();) {
-            IResource resource = (IResource)rsourceIter.next();
-            indexResource(monitor, resource, indexer);
-            if (monitor != null) {
-                monitor.worked(1);
-            }
-        }
-    }
-
-    public static void indexResource( IProgressMonitor monitor,
-                                      final IResource iResource,
-                                      final ResourceIndexer indexer ) {
-        // create a monitor if needed
-        monitor = monitor != null ? monitor : new NullProgressMonitor();
-        if (monitor.isCanceled()) {
-            return;
-        }
-        String sTask = ModelerCore.Util.getString("ModelBuildUtil.Creating_{0}_for_{1}_1", indexer.getIndexType(), iResource.getFullPath()); //$NON-NLS-1$
-        //System.out.println("[ModelBuildUtil.indexResource TaskName is: " + sTask ); //$NON-NLS-1$
-        monitor.setTaskName(sTask);
-        try {
-            Stopwatch totalWatch = new Stopwatch();
-            totalWatch.start();
-            indexer.indexResource(iResource, false, true);
-            totalWatch.stop();
-        } catch (Throwable e) {
-            ModelerCore.Util.log(IStatus.ERROR,
-                                 e,
-                                 ModelerCore.Util.getString("ModelBuilder.Error_indexing_model_resource_3", iResource.getFullPath())); //$NON-NLS-1$
-        }
-    }
-
-    public static List getModifiedResources() {
-        try {
-            return getModifiedResources(ModelerCore.getModelContainer().getResources());
-        } catch (CoreException e) {
-            // do nothing - the method will return an empty list
-        }
-        return Collections.EMPTY_LIST;
-    }
-
-    public static List getModifiedResources( final List eResources ) {
-        final List result = new ArrayList();
-        if (eResources != null) {
-            for (Iterator iter = eResources.iterator(); iter.hasNext();) {
-                final Resource resource = (Resource)iter.next();
-                if (resource.isModified()) {
-                    result.add(resource);
-                }
-            }
-        }
-        return result;
-    }
-
-    public static void setModifiedResources( final List modifiedResources ) {
-        try {
-            final Container container = ModelerCore.getModelContainer();
-
-            for (Iterator iter = container.getResources().iterator(); iter.hasNext();) {
-                final Resource resource = (Resource)iter.next();
-                if (modifiedResources != null && modifiedResources.contains(resource)) {
-                    resource.setModified(true);
-                } else {
-                    resource.setModified(false);
-                }
-            }
-        } catch (CoreException theException) {
-            ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
         }
     }
 
     /**
-     * Basic Update Imports utility method. Recommend users use rebuildImports(ModelResource modelResource, Object source) instead
-     * because it wraps the method in a non-undoable transaction. Defect 23518 - calling utility method to be consistent rather
-     * than create own OrganizeImportCommand reduces and centralizes code, insures common behavior and wraps in non-undoable txn
-     * if needed.
+     * Basic Update Imports utility method.
      * 
      * @param modelResource
-     * @param source
      * @param includeDiagramReferences
      * @return
      * @throws ModelWorkspaceException
      * @since 5.0.2
      */
-    public static boolean rebuildImports( Resource resource,
-                                          Object source,
-                                          boolean includeDiagramReferences ) {
+    public static boolean rebuildImports( final Resource resource,
+                                          final boolean includeDiagramReferences ) {
         if (resource != null) {
-            ModelResource mr = ModelerCore.getModelEditor().findModelResource(resource);
+            final ModelResource mr = ModelerCore.getModelEditor().findModelResource(resource);
 
             if (mr != null && !mr.isReadOnly()) {
                 final OrganizeImportHandler handler = new OrganizeImportHandler() {
-                    public Object choose( List options ) {
+                    public Object choose( final List options ) {
                         return null;
                     }
                 };
@@ -670,6 +452,219 @@ public class ModelBuildUtil {
             }
         }
         return false;
+    }
+
+    public static void setModifiedResources( final List modifiedResources ) {
+        try {
+            final Container container = ModelerCore.getModelContainer();
+
+            for (final Object element : container.getResources()) {
+                final Resource resource = (Resource)element;
+                if (modifiedResources != null && modifiedResources.contains(resource)) {
+                    resource.setModified(true);
+                } else {
+                    resource.setModified(false);
+                }
+            }
+        } catch (final CoreException theException) {
+            ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
+        }
+    }
+
+    /**
+     * updates the collection if the systemVdbResources are not already in the collection
+     * 
+     * @param resourcesInScope
+     * @since 4.3
+     */
+    private static void updateResource( final Collection resourcesInScope ) {
+        final Resource[] systemVdbResources = ModelerCore.getSystemVdbResources();
+        for (final Resource systemVdbResource : systemVdbResources) {
+            if (systemVdbResource instanceof EmfResource) {
+                final ObjectID objectID = ((EmfResource)systemVdbResource).getUuid();
+                try {
+                    final Resource resrc = ModelerCore.getModelContainer().getResourceFinder().findByUUID(objectID, false);
+                    if (resrc != null && !resourcesInScope.contains(resrc)) {
+                        resourcesInScope.add(systemVdbResource);
+                    }
+                } catch (final CoreException err) {
+                    ModelerCore.Util.log(err);
+                }
+            } else {
+                resourcesInScope.add(systemVdbResource);
+            }
+        }
+    }
+
+    public static void validateResource( final IProgressMonitor monitor,
+                                         final IResource iResource,
+                                         final ResourceValidator validator,
+                                         final ValidationContext context ) {
+        internalValidateResource(monitor, iResource, validator, context, true);
+    }
+
+    /**
+     * Validate the {@link org.eclipse.emf.ecore.resource.Resource} using the specified
+     * 
+     * @param monitor
+     * @param eResource
+     * @param validator
+     * @param context
+     * @since 4.2
+     */
+    private static void validateResource( final IProgressMonitor monitor,
+                                          final Resource eResource,
+                                          final ResourceValidator validator,
+                                          final ValidationContext context ) {
+        CoreArgCheck.isNotNull(eResource);
+        CoreArgCheck.isNotNull(validator);
+        CoreArgCheck.isNotNull(context);
+
+        // create a monitor if needed
+        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
+        if (monitor.isCanceled() || !validator.isValidatorForObject(eResource)) {
+            return;
+        }
+
+        monitor.setTaskName(MONITOR_RESOURCE_VALIDATION_MSG + eResource.getURI().lastSegment());
+        final boolean isModified = eResource.isModified();
+        try {
+            final Stopwatch totalWatch = new Stopwatch();
+            totalWatch.start();
+            validator.validate(progresssMonitor, eResource, context);
+            totalWatch.stop();
+        } catch (final ModelerCoreException e) {
+            ModelerCore.Util.log(e);
+        } finally {
+            // Restore the "modified" state to what is was prior to validation
+            eResource.setModified(isModified);
+        }
+    }
+
+    /**
+     * Validate the {@link org.eclipse.emf.ecore.resource.Resource} returning the result in the supplied ValidationContext instance.
+     * After validation is complete the user should clear the ValidationContext to free up memory.
+     * 
+     * @param monitor The progressMonitor, may be null
+     * @param eResource the resource to validate
+     * @param context the validation context to use
+     * @since 4.2
+     */
+    public static void validateResource( final IProgressMonitor monitor,
+                                         final Resource eResource,
+                                         final ValidationContext context ) {
+        CoreArgCheck.isNotNull(eResource);
+        CoreArgCheck.isNotNull(context);
+
+        // get all validators and validate
+        for (final Iterator validateIter = VALIDATORS.iterator(); validateIter.hasNext();) {
+            final ResourceValidator validator = (ResourceValidator)validateIter.next();
+            validateResource(monitor, eResource, validator, context);
+        }
+    }
+
+    /**
+     * Validate the collection of IResources being passed. Validation of the resources can be within the context of the resources
+     * being passed in. The validation rules that use the context may use this information.
+     * 
+     * @param monitor The progressMonitor, may be null
+     * @param resources Collection of IResouurces
+     * @param validateInContext If true the validationContext is updated with the collection of resources.
+     * @since 4.2
+     */
+    public static void validateResources( final IProgressMonitor monitor,
+                                          final Collection iResources,
+                                          final Container container,
+                                          final boolean validateInContext ) {
+        // create a monitor if needed
+        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
+
+        // Create the validation context to use
+        final ValidationContext context = createValidationContext();
+
+        // set the resource scope (all model resources in open model projects)
+        final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
+
+        try {
+            final Resource[] resourcesInScope = getWorkspaceResourcesInScope(workspace);
+            context.setResourcesInScope(resourcesInScope);
+
+        } catch (final CoreException theException) {
+            ModelerCore.Util.log(theException);
+        }
+
+        // set the resources on the context since validation
+        // is in context of the resources.
+        if (validateInContext && (iResources != null)) {
+            final List temp = new ArrayList();
+            final Iterator itr = iResources.iterator();
+
+            while (itr.hasNext()) {
+                final IResource iResource = (IResource)itr.next();
+
+                if (ModelUtil.isModelFile(iResource)) {
+                    try {
+                        final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)iResource);
+
+                        if (modelResource != null) {
+                            temp.add(modelResource.getEmfResource());
+                        }
+                    } catch (final ModelWorkspaceException theException) {
+                        ModelerCore.Util.log(theException);
+                    }
+                }
+            }
+
+            context.setResourcesToValidate((Resource[])temp.toArray(new Resource[temp.size()]));
+        }
+
+        context.setResourceContainer(container); // may be null
+
+        clearResourceMarkers(iResources);
+
+        // get all validators and validate
+        for (final Iterator validateIter = VALIDATORS.iterator(); validateIter.hasNext();) {
+            final ResourceValidator validator = (ResourceValidator)validateIter.next();
+            validator.validationStarted(iResources, context);
+            try {
+                for (final Iterator rsourceIter = iResources.iterator(); rsourceIter.hasNext();) {
+                    final IResource resource = (IResource)rsourceIter.next();
+                    internalValidateResource(progresssMonitor, resource, validator, context, false);
+                }
+            } finally {
+                validator.validationEnded(context);
+            }
+        }
+
+        // clear the context after validation to free up memory
+        context.clearState();
+    }
+
+    /**
+     * Validate the collection of {@link org.eclipse.emf.ecore.resource.Resource} instances returning the result in the supplied
+     * ValidationContext instance. After validation is complete the user should clear the ValidationContext to free up memory.
+     * 
+     * @param monitor The progressMonitor, may be null
+     * @param eResources the collection of resources to validate
+     * @param context the validation context to use
+     * @since 4.2
+     */
+    public static void validateResources( final IProgressMonitor monitor,
+                                          final Resource[] eResources,
+                                          final ValidationContext context ) {
+        CoreArgCheck.isNotNull(eResources);
+        CoreArgCheck.isNotNull(context);
+
+        // create a monitor if needed
+        final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
+
+        // set the resources on the context since validation is in context of the resources.
+        context.setResourcesToValidate(eResources);
+
+        // get all validators and validate
+        for (int i = 0; i < eResources.length; ++i) {
+            validateResource(progresssMonitor, eResources[i], context);
+        }
     }
 
     // #############################################################################

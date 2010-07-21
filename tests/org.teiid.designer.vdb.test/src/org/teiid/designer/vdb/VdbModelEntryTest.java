@@ -56,7 +56,7 @@ public class VdbModelEntryTest {
         final IPath modelPath = Path.fromPortableString("project/folder/test.xmi");
         eclipseMock = vdbTest.getEclipseMock();
         final ModelWorkspaceMock modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
-        when(eclipseMock.getRootLocation().append(modelPath)).thenReturn(modelPath);
+        when(eclipseMock.workspaceRootLocation().append(modelPath)).thenReturn(modelPath);
         final EmfResource model = mock(EmfResource.class);
         when(modelWorkspaceMock.getFinder().findByURI(isA(URI.class), eq(false))).thenReturn(model);
         final ModelAnnotation annotation = mock(ModelAnnotation.class);

@@ -49,21 +49,77 @@ public abstract class BaseExtensionReplaceAction extends Action
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_ERROR_TSK));
     }
 
-    public abstract String getExtensionName();
+    public int compareTo( final Object o ) {
+        if (o instanceof String) {
+            return getText().compareTo((String)o);
+        }
+
+        if (o instanceof Action) {
+            return getText().compareTo(((Action)o).getText());
+        }
+        return 0;
+    }
 
     public abstract ExtensionManager getExtensionManager();
 
-    void replaceExtension( IProgressMonitor monitor ) {
+    public abstract String getExtensionName();
+
+    public boolean isApplicable( final ISelection selection ) {
+        boolean result = false;
+        final List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
+        if (!selectedObjs.isEmpty()) {
+            for (final Iterator iter = selectedObjs.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
+                if (obj instanceof IFile) {
+                    final IFile file = (IFile)obj;
+                    if (ModelUtilities.isModelFile(file)) {
+                        final ModelResource resource = ModelUtilities.getModelResource(file);
+                        try {
+                            if (ModelUtilities.isPhysical(resource) && ModelUtilities.isRelationalModel(resource)) {
+                                final List imports = resource.getModelImports();
+                                for (final Iterator impIter = imports.iterator(); impIter.hasNext();) {
+                                    final ModelImport imp = (ModelImport)impIter.next();
+                                    if (imp.getName().equals(getExtensionName())) {
+                                        if (!ModelUtilities.isModelInWorkspace(imp.getUuid())) {
+                                            result = true;
+                                        }
+                                    }
+                                }
+                            } else {
+                                result = false;
+                                break;
+                            }
+                        } catch (final ModelWorkspaceException e) {
+                            result = false;
+                            break;
+                        } catch (final CoreException e) {
+                            result = false;
+                            break;
+                        }
+                    } else {
+                        result = false;
+                        break;
+                    }
+                } else {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    void replaceExtension( final IProgressMonitor monitor ) {
         if (selectedModels != null) {
 
-            ArrayList<ModelResource> eventList = new ArrayList<ModelResource>();
-            ArrayList<ModelResource> modelsToSave = new ArrayList<ModelResource>();
+            final ArrayList<ModelResource> eventList = new ArrayList<ModelResource>();
+            final ArrayList<ModelResource> modelsToSave = new ArrayList<ModelResource>();
             ExtensionManager manager = null;
             // first, rebuild the models
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                IFile modelFile = (IFile)iter.next();
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final IFile modelFile = (IFile)iter.next();
                 try {
-                    ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
+                    final ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
                     try {
                         if (null == manager) {
                             manager = getExtensionManager();
@@ -71,10 +127,10 @@ public abstract class BaseExtensionReplaceAction extends Action
                         }
                         final ModelAnnotation modelAnnotation = modelResource.getModelAnnotation();
                         modelAnnotation.setExtensionPackage(manager.getPackage());
-                        ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), this, true);
-                    } catch (ModelWorkspaceException theException) {
+                        ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+                    } catch (final ModelWorkspaceException theException) {
                         UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
-                    } catch (ModelerCoreException e) {
+                    } catch (final ModelerCoreException e) {
                         UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                     }
                     eventList.add(modelResource);
@@ -83,23 +139,23 @@ public abstract class BaseExtensionReplaceAction extends Action
                     } else {
                     }
 
-                } catch (ModelWorkspaceException e) {
+                } catch (final ModelWorkspaceException e) {
                     UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                 }
             }
 
             // second, save all the models that are not open in editors, or else they may never get saved.
-            for (Iterator<ModelResource> iter = modelsToSave.iterator(); iter.hasNext();) {
+            for (final ModelResource modelResource : modelsToSave) {
                 try {
-                    iter.next().save(null, true);
-                } catch (ModelWorkspaceException e) {
+                    modelResource.save(null, true);
+                } catch (final ModelWorkspaceException e) {
                     UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                 }
             }
 
             // finally, fire events on all models so the gui can update their import lists
-            for (Iterator<ModelResource> iter = eventList.iterator(); iter.hasNext();) {
-                ModelResourceEvent event = new ModelResourceEvent(iter.next(), ModelResourceEvent.REBUILD_IMPORTS, this);
+            for (final ModelResource modelResource : eventList) {
+                final ModelResourceEvent event = new ModelResourceEvent(modelResource, ModelResourceEvent.REBUILD_IMPORTS, this);
                 UiPlugin.getDefault().getEventBroker().processEvent(event);
             }
 
@@ -107,50 +163,14 @@ public abstract class BaseExtensionReplaceAction extends Action
 
     }
 
-    /**
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        selectedModels = SelectionUtilities.getSelectedObjects(selection);
-        boolean enable = true;
-        if (selectedModels.isEmpty()) {
-            enable = false;
-        } else {
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
-                if (obj instanceof IFile) {
-                    if (!ModelUtilities.isModelFile((IFile)obj)) {
-                        enable = false;
-                        break;
-                    }
-                    try {
-                        ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
-                        if (modelResource == null || modelResource.isReadOnly()) {
-                            enable = false;
-                            break;
-                        }
-                    } catch (ModelWorkspaceException e) {
-                        UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-                    }
-                } else {
-                    enable = false;
-                    break;
-                }
-            }
-        }
-        setEnabled(enable);
-    }
-
     @Override
     public void run() {
         if (selectedModels != null) {
             final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
                 @Override
-                public void execute( IProgressMonitor theMonitor ) {
-                    String message = XmlImporterUiPlugin.getDefault().getPluginUtil().getString("ReplaceMissingExtensionsAction.TxnMessage"); //$NON-NLS-1$
-                    boolean started = ModelerCore.startTxn(true, true, message, this);
+                public void execute( final IProgressMonitor theMonitor ) {
+                    final String message = XmlImporterUiPlugin.getDefault().getPluginUtil().getString("ReplaceMissingExtensionsAction.TxnMessage"); //$NON-NLS-1$
+                    final boolean started = ModelerCore.startTxn(true, true, message, this);
                     boolean succeeded = false;
                     try {
                         replaceExtension(theMonitor);
@@ -172,66 +192,45 @@ public abstract class BaseExtensionReplaceAction extends Action
             };
             try {
                 new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
-            } catch (InterruptedException e) {
-            } catch (InvocationTargetException e) {
+            } catch (final InterruptedException e) {
+            } catch (final InvocationTargetException e) {
                 UiConstants.Util.log(e.getTargetException());
             }
         }
     }
 
-    public int compareTo( Object o ) {
-        if (o instanceof String) {
-            return getText().compareTo((String)o);
-        }
-
-        if (o instanceof Action) {
-            return getText().compareTo(((Action)o).getText());
-        }
-        return 0;
-    }
-
-    public boolean isApplicable( ISelection selection ) {
-        boolean result = false;
-        List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
-        if (!selectedObjs.isEmpty()) {
-            for (Iterator iter = selectedObjs.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
+    /**
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged( final IWorkbenchPart part,
+                                  final ISelection selection ) {
+        selectedModels = SelectionUtilities.getSelectedObjects(selection);
+        boolean enable = true;
+        if (selectedModels.isEmpty()) {
+            enable = false;
+        } else {
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
                 if (obj instanceof IFile) {
-                    IFile file = (IFile)obj;
-                    if (ModelUtilities.isModelFile(file)) {
-                        ModelResource resource = ModelUtilities.getModelResource(file);
-                        try {
-                            if (ModelUtilities.isPhysical(resource) && ModelUtilities.isRelationalModel(resource)) {
-                                List imports = resource.getModelImports();
-                                for (Iterator impIter = imports.iterator(); impIter.hasNext();) {
-                                    ModelImport imp = (ModelImport)impIter.next();
-                                    if (imp.getName().equals(getExtensionName())) {
-                                        if (!ModelUtilities.isModelInWorkspace(imp.getUuid())) {
-                                            result = true;
-                                        }
-                                    }
-                                }
-                            } else {
-                                result = false;
-                                break;
-                            }
-                        } catch (ModelWorkspaceException e) {
-                            result = false;
-                            break;
-                        } catch (CoreException e) {
-                            result = false;
-                            break;
-                        }
-                    } else {
-                        result = false;
+                    if (!ModelUtilities.isModelFile((IFile)obj)) {
+                        enable = false;
                         break;
                     }
+                    try {
+                        final ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
+                        if (modelResource == null || modelResource.isReadOnly()) {
+                            enable = false;
+                            break;
+                        }
+                    } catch (final ModelWorkspaceException e) {
+                        UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+                    }
                 } else {
-                    result = false;
+                    enable = false;
                     break;
                 }
             }
         }
-        return result;
+        setEnabled(enable);
     }
 }

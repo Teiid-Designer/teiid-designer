@@ -136,8 +136,10 @@ public class VdbEntry {
 
     final void fileChanged( final IResourceDelta delta ) {
         // TODO: Handle renames
-        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; //throw new UnsupportedOperationException(
-//                                                                                                                                                              toString(delta));
+        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; // throw
+                                                                                                                              // new
+                                                                                                                              // UnsupportedOperationException(
+        // toString(delta));
         final int kind = delta.getKind();
         if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
         else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
@@ -278,7 +280,7 @@ public class VdbEntry {
                                new File(vdb.getFolder(), name.toString()).getParentFile(),
                                true);
             } catch (final IOException error) {
-                CoreModelerPlugin.throwRuntimeException(error);
+                throw CoreModelerPlugin.toRuntimeException(error);
             }
         } finally {
             checksumLock.writeLock().unlock();

@@ -10,9 +10,9 @@ package com.metamatrix.core.modeler;
 import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.teiid.core.id.IDGenerator;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.aspects.DeclarativeTransactionManager;
-import org.teiid.core.id.IDGenerator;
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
@@ -48,6 +48,16 @@ public class CoreModelerPlugin extends Plugin {
     }
 
     /**
+     * Not intended for use by any class other than {@link org.teiid.core.CoreI18n}.
+     * 
+     * @param key
+     * @return The i18n template associated with the supplied key
+     */
+    static String i18n( final String key ) {
+        return Util.getString(key);
+    }
+
+    /**
      * Setter for the TransactionManager instance to be used by aspects for declarative txn management.
      * 
      * @param txnManager
@@ -59,9 +69,10 @@ public class CoreModelerPlugin extends Plugin {
     /**
      * @param error
      */
-    public static void throwRuntimeException( final Exception error ) {
-        if (error instanceof RuntimeException) throw (RuntimeException)error;
-        if (error != null) throw new RuntimeException(error);
+    public static RuntimeException toRuntimeException( final Exception error ) {
+        if (error instanceof RuntimeException) return (RuntimeException)error;
+        if (error != null) return new RuntimeException(error);
+        return null;
     }
 
     /**

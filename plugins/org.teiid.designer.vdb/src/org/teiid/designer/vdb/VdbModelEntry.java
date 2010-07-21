@@ -89,8 +89,8 @@ public final class VdbModelEntry extends VdbEntry {
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = name.removeFileExtension().lastSegment();
                 source.set(defaultName);
-                ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
-                String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
+                final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
                 this.translator.set(translator == null ? EMPTY_STR : translator);
                 jndiName.set(defaultName);
             }
@@ -173,8 +173,7 @@ public final class VdbModelEntry extends VdbEntry {
         try {
             return ModelerCore.getModelContainer().getResourceFinder();
         } catch (final Exception error) {
-            CoreModelerPlugin.throwRuntimeException(error);
-            return null;
+            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 
@@ -284,7 +283,7 @@ public final class VdbModelEntry extends VdbEntry {
                 marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
             }
         } catch (final Exception error) {
-            CoreModelerPlugin.throwRuntimeException(error);
+            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 
@@ -373,7 +372,7 @@ public final class VdbModelEntry extends VdbEntry {
             final Index index = IndexUtil.getIndexFile(indexName, IndexUtil.INDEX_PATH + indexName, getName().lastSegment());
             FileUtils.copy(index.getIndexFile(), getIndexFile().getParentFile(), true);
         } catch (final Exception error) {
-            CoreModelerPlugin.throwRuntimeException(error);
+            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 

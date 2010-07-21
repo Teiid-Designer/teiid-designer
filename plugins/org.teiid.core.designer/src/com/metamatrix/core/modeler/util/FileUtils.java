@@ -88,7 +88,7 @@ public class FileUtils {
             for (int len = source.read(buf); len >= 0; len = source.read(buf))
                 destination.write(buf, 0, len);
         } catch (final IOException error) {
-            CoreModelerPlugin.throwRuntimeException(error);
+            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 

@@ -47,7 +47,7 @@ public class ProblemElement implements Serializable {
             message = problem.getMessage();
             location = problem.getLocation();
         } catch (final Exception error) {
-            CoreModelerPlugin.throwRuntimeException(error);
+            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 

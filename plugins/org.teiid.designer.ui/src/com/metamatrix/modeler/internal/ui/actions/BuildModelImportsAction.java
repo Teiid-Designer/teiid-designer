@@ -42,22 +42,56 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.BUILD_MODEL_IMPORTS_ICON));
     }
 
+    public int compareTo( final Object o ) {
+        if (o instanceof String) {
+            return getText().compareTo((String)o);
+        }
+
+        if (o instanceof Action) {
+            return getText().compareTo(((Action)o).getText());
+        }
+        return 0;
+    }
+
+    public boolean isApplicable( final ISelection selection ) {
+        boolean result = true;
+        final List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
+        if (selectedObjs.isEmpty()) {
+            result = false;
+        }
+        if (result) {
+            for (final Iterator iter = selectedObjs.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
+                if (obj instanceof IFile) {
+                    if (!ModelUtilities.isModelFile((IFile)obj)) {
+                        result = false;
+                    }
+                } else {
+                    result = false;
+                }
+                if (!result) break;
+            }
+        }
+
+        return result;
+    }
+
     void rebuildImports() {
         if (selectedModels != null) {
 
-            ArrayList eventList = new ArrayList();
-            ArrayList modelsToSave = new ArrayList();
+            final ArrayList eventList = new ArrayList();
+            final ArrayList modelsToSave = new ArrayList();
 
             // first, rebuild the models
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                IFile modelFile = (IFile)iter.next();
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final IFile modelFile = (IFile)iter.next();
                 try {
-                    ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
+                    final ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
 
                     // Defect 23823 - switched to use a new Modeler Core utility.
                     try {
-                        ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), this, true);
-                    } catch (ModelWorkspaceException theException) {
+                        ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+                    } catch (final ModelWorkspaceException theException) {
                         UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
                     }
                     eventList.add(modelResource);
@@ -66,24 +100,24 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
                     } else {
                     }
 
-                } catch (ModelWorkspaceException e) {
+                } catch (final ModelWorkspaceException e) {
                     UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                 }
             }
 
             // second, save all the models that are not open in editors, or else they may never get saved.
-            for (Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
+            for (final Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
                 try {
                     ((ModelResource)iter.next()).save(null, true);
-                } catch (ModelWorkspaceException e) {
+                } catch (final ModelWorkspaceException e) {
                     UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                 }
             }
 
             // finally, fire events on all models so the gui can update their import lists
-            for (Iterator iter = eventList.iterator(); iter.hasNext();) {
-                ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(), ModelResourceEvent.REBUILD_IMPORTS,
-                                                                  this);
+            for (final Iterator iter = eventList.iterator(); iter.hasNext();) {
+                final ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(),
+                                                                        ModelResourceEvent.REBUILD_IMPORTS, this);
                 UiPlugin.getDefault().getEventBroker().processEvent(event);
             }
 
@@ -91,50 +125,15 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        selectedModels = SelectionUtilities.getSelectedObjects(selection);
-        boolean enable = true;
-        if (selectedModels.isEmpty()) {
-            enable = false;
-        } else {
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
-                if (obj instanceof IFile) {
-                    if (!ModelUtilities.isModelFile((IFile)obj)) {
-                        enable = false;
-                        break;
-                    }
-                    try {
-                        ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
-                        if (modelResource == null || modelResource.isReadOnly()) {
-                            enable = false;
-                            break;
-                        }
-                    } catch (ModelWorkspaceException e) {
-                        UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-                    }
-                } else {
-                    enable = false;
-                    break;
-                }
-            }
-        }
-        setEnabled(enable);
-    }
-
     @Override
     public void run() {
         if (selectedModels != null) {
             final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
                 @Override
-                public void execute( IProgressMonitor theMonitor ) {
+                public void execute( final IProgressMonitor theMonitor ) {
                     // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
                     // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
-                    boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
+                    final boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
                     boolean succeeded = false;
                     try {
                         rebuildImports();
@@ -156,44 +155,45 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
             };
             try {
                 new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
-            } catch (InterruptedException e) {
-            } catch (InvocationTargetException e) {
+            } catch (final InterruptedException e) {
+            } catch (final InvocationTargetException e) {
                 UiConstants.Util.log(e.getTargetException());
             }
         }
     }
 
-    public int compareTo( Object o ) {
-        if (o instanceof String) {
-            return getText().compareTo((String)o);
-        }
-
-        if (o instanceof Action) {
-            return getText().compareTo(((Action)o).getText());
-        }
-        return 0;
-    }
-
-    public boolean isApplicable( ISelection selection ) {
-        boolean result = true;
-        List selectedObjs = SelectionUtilities.getSelectedObjects(selection);
-        if (selectedObjs.isEmpty()) {
-            result = false;
-        }
-        if (result) {
-            for (Iterator iter = selectedObjs.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged( final IWorkbenchPart part,
+                                  final ISelection selection ) {
+        selectedModels = SelectionUtilities.getSelectedObjects(selection);
+        boolean enable = true;
+        if (selectedModels.isEmpty()) {
+            enable = false;
+        } else {
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
                 if (obj instanceof IFile) {
                     if (!ModelUtilities.isModelFile((IFile)obj)) {
-                        result = false;
+                        enable = false;
+                        break;
+                    }
+                    try {
+                        final ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
+                        if (modelResource == null || modelResource.isReadOnly()) {
+                            enable = false;
+                            break;
+                        }
+                    } catch (final ModelWorkspaceException e) {
+                        UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                     }
                 } else {
-                    result = false;
+                    enable = false;
+                    break;
                 }
-                if (!result) break;
             }
         }
-
-        return result;
+        setEnabled(enable);
     }
 }

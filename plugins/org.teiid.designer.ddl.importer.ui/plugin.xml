@@ -5,9 +5,13 @@
          point="org.eclipse.ui.importWizards">
       <wizard
             category="com.metamatrix.modeler.ui"
-            class="org.teiid.designer.ddl.importer.ui.DdlImportWizard"
+            class="org.teiid.designer.ddl.importer.ui.DdlImporterWizard"
+            icon="icons/importWizard16x16.gif"
             id="org.teiid.designer.ddl.importer.ui.ddlImportWizard"
-            name="%wizard.name">
+            name="%wizardName">
+         <description>
+            %wizardDescription
+         </description>
       </wizard>
    </extension>
 

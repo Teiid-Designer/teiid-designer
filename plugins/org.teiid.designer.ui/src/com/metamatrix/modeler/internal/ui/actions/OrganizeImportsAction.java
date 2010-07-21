@@ -39,14 +39,14 @@ public class OrganizeImportsAction extends ActionDelegate {
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
-    public void run(IAction action) {
-        ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(resource);
-        if ( modelResource != null ) { 
-            
+    public void run( final IAction action ) {
+        final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(resource);
+        if (modelResource != null) {
+
             // Defect 23823 - switched to use a new Modeler Core utility.
             try {
-                ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), this, true);
-            } catch (ModelWorkspaceException theException) {
+                ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+            } catch (final ModelWorkspaceException theException) {
                 UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
             }
         }
@@ -56,14 +56,14 @@ public class OrganizeImportsAction extends ActionDelegate {
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void selectionChanged( IAction action,
-                                  ISelection selection ) {
+    public void selectionChanged( final IAction action,
+                                  final ISelection selection ) {
         boolean enable = false;
-        Object o = SelectionUtilities.getSelectedObject(selection);
-        if ( o instanceof ImportContainer) {
-            resource = ((ImportContainer) o).getResource();
-                ModelResource mResource = ModelUtilities.getModelResource(resource, false);
-                enable = !mResource.isReadOnly();
+        final Object o = SelectionUtilities.getSelectedObject(selection);
+        if (o instanceof ImportContainer) {
+            resource = ((ImportContainer)o).getResource();
+            final ModelResource mResource = ModelUtilities.getModelResource(resource, false);
+            enable = !mResource.isReadOnly();
         }
         action.setEnabled(enable);
         // BML 9/13/03 - I added this line (and accompanying text property) because I couldn't

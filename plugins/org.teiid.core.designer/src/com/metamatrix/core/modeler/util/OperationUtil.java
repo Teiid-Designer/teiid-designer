@@ -15,35 +15,37 @@ import com.metamatrix.core.modeler.CoreModelerPlugin;
 public final class OperationUtil {
 
     public static <T> T perform( final ReturningUnreliable<T> unreliable ) {
-        Exception significantError = null;
+        Throwable significantError = null;
         try {
             return unreliable.tryToDo();
-        } catch (final Exception error) {
+        } catch (final Throwable error) {
             significantError = error;
             unreliable.doIfFails();
         } finally {
             try {
                 unreliable.finallyDo();
-            } catch (final Exception ignored) {
+            } catch (final Throwable error) {
+                if (significantError == null) significantError = error;
             }
-            CoreModelerPlugin.throwRuntimeException(significantError);
+            if (significantError instanceof Exception) throw CoreModelerPlugin.toRuntimeException((Exception)significantError);
         }
         return null; // Unreachable
     }
 
     public static void perform( final Unreliable unreliable ) {
-        Exception significantError = null;
+        Throwable significantError = null;
         try {
             unreliable.tryToDo();
-        } catch (final Exception error) {
+        } catch (final Throwable error) {
             significantError = error;
             unreliable.doIfFails();
         } finally {
             try {
                 unreliable.finallyDo();
-            } catch (final Exception ignored) {
+            } catch (final Throwable error) {
+                if (significantError == null) significantError = error;
             }
-            CoreModelerPlugin.throwRuntimeException(significantError);
+            if (significantError instanceof Exception) throw CoreModelerPlugin.toRuntimeException((Exception)significantError);
         }
     }
 

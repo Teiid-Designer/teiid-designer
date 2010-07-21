@@ -54,42 +54,37 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-     */
-    @Override
-    public void run( IAction action ) {
-        final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-            @Override
-            public void execute( IProgressMonitor theMonitor ) {
-                // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
-                // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
-                boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
-                boolean succeeded = false;
-                try {
-                    rebuildImports();
-                    succeeded = true;
-                } catch (final Exception err) {
-                    final String msg = UiConstants.Util.getString("RebuildImportsAllAction.errorMessage"); //$NON-NLS-1$
-                    UiConstants.Util.log(IStatus.ERROR, err, msg);
-                } finally {
-                    if (started) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
-                }
-                theMonitor.done();
+    private Collection getModelResourceList() {
+
+        final ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
+        for (final Iterator iter = selectedProjects.iterator(); iter.hasNext();) {
+            final IProject project = (IProject)iter.next();
+            try {
+                project.accept(visitor);
+            } catch (final CoreException e) {
+                UiConstants.Util.log(e);
             }
-        };
-        try {
-            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
-        } catch (InterruptedException e) {
-        } catch (InvocationTargetException e) {
-            UiConstants.Util.log(e.getTargetException());
         }
+
+        try {
+            return visitor.getModelResources();
+        } catch (final CoreException e) {
+            UiConstants.Util.log(e);
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+     */
+    public void init( final IViewPart view ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     */
+    public void init( final IWorkbenchWindow window ) {
     }
 
     void rebuildImports() {
@@ -101,17 +96,17 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
             final ArrayList errorModels = new ArrayList();
 
             // first, rebuild the models
-            for (Iterator iter = getModelResourceList().iterator(); iter.hasNext();) {
-                ModelResource modelResource = (ModelResource)iter.next();
+            for (final Iterator iter = getModelResourceList().iterator(); iter.hasNext();) {
+                final ModelResource modelResource = (ModelResource)iter.next();
                 if (modelResource != null && !modelResource.isReadOnly()) {
-                    IFile modelFile = (IFile)modelResource.getResource();
+                    final IFile modelFile = (IFile)modelResource.getResource();
 
                     boolean succeeded = false;
 
                     // Defect 23823 - switched to use a new Modeler Core utility.
                     try {
-                        succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), this, true);
-                    } catch (ModelWorkspaceException theException) {
+                        succeeded = ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+                    } catch (final ModelWorkspaceException theException) {
                         UiConstants.Util.log(IStatus.ERROR, theException, theException.getMessage());
                     }
                     if (succeeded) {
@@ -128,18 +123,18 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
             }
 
             // second, save all the models that are not open in editors, or else they may never get saved.
-            for (Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
+            for (final Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
                 try {
                     ((ModelResource)iter.next()).save(null, true);
-                } catch (ModelWorkspaceException e) {
+                } catch (final ModelWorkspaceException e) {
                     UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                 }
             }
 
             // fire events on all models so the gui can update their import lists
-            for (Iterator iter = eventList.iterator(); iter.hasNext();) {
-                ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(), ModelResourceEvent.REBUILD_IMPORTS,
-                                                                  this);
+            for (final Iterator iter = eventList.iterator(); iter.hasNext();) {
+                final ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(),
+                                                                        ModelResourceEvent.REBUILD_IMPORTS, this);
                 UiPlugin.getDefault().getEventBroker().processEvent(event);
             }
 
@@ -165,12 +160,7 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
                 final String message = UiConstants.Util.getString("RebuildImports.errorMessage"); //$NON-NLS-1$
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
-                        ListMessageDialog.openError(Display.getDefault().getActiveShell(),
-                                                    title,
-                                                    null,
-                                                    message,
-                                                    errorModels,
-                                                    null);
+                        ListMessageDialog.openError(Display.getDefault().getActiveShell(), title, null, message, errorModels, null);
                     }
                 });
             }
@@ -180,18 +170,56 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
     }
 
     /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     */
+    @Override
+    public void run( final IAction action ) {
+        final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+            @Override
+            public void execute( final IProgressMonitor theMonitor ) {
+                // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
+                // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
+                final boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
+                boolean succeeded = false;
+                try {
+                    rebuildImports();
+                    succeeded = true;
+                } catch (final Exception err) {
+                    final String msg = UiConstants.Util.getString("RebuildImportsAllAction.errorMessage"); //$NON-NLS-1$
+                    UiConstants.Util.log(IStatus.ERROR, err, msg);
+                } finally {
+                    if (started) {
+                        if (succeeded) {
+                            ModelerCore.commitTxn();
+                        } else {
+                            ModelerCore.rollbackTxn();
+                        }
+                    }
+                }
+                theMonitor.done();
+            }
+        };
+        try {
+            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
+        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException e) {
+            UiConstants.Util.log(e.getTargetException());
+        }
+    }
+
+    /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void selectionChanged( IAction action,
-                                  ISelection selection ) {
+    public void selectionChanged( final IAction action,
+                                  final ISelection selection ) {
         selectedProjects = SelectionUtilities.getSelectedObjects(selection);
         boolean enable = true;
         if (selectedProjects.isEmpty()) {
             enable = false;
         } else {
-            for (Iterator iter = selectedProjects.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
+            for (final Iterator iter = selectedProjects.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
                 if (obj instanceof IProject) {
                     if (!((IProject)obj).isOpen()) {
                         enable = false;
@@ -207,39 +235,6 @@ public class BuildImportsProjectAction extends ActionDelegate implements IWorkbe
             }
         }
         action.setEnabled(enable);
-    }
-
-    private Collection getModelResourceList() {
-
-        ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
-        for (Iterator iter = selectedProjects.iterator(); iter.hasNext();) {
-            IProject project = (IProject)iter.next();
-            try {
-                project.accept(visitor);
-            } catch (CoreException e) {
-                UiConstants.Util.log(e);
-            }
-        }
-
-        try {
-            return visitor.getModelResources();
-        } catch (CoreException e) {
-            UiConstants.Util.log(e);
-        }
-
-        return Collections.EMPTY_LIST;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-     */
-    public void init( IWorkbenchWindow window ) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-     */
-    public void init( IViewPart view ) {
     }
 
 }

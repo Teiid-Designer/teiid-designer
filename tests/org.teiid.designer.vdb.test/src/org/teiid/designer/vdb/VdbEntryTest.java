@@ -67,7 +67,7 @@ public class VdbEntryTest {
         when(iFile.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()));
 
         // put file in workspace
-        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
@@ -89,7 +89,7 @@ public class VdbEntryTest {
                                              new ByteArrayInputStream("xyz".getBytes()));
 
         // put file in workspace
-        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
@@ -176,7 +176,7 @@ public class VdbEntryTest {
                                              new ByteArrayInputStream("xyz".getBytes()));
 
         // put file in workspace
-        final IWorkspaceRoot mockRoot = eclipseMock.getRoot();
+        final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed

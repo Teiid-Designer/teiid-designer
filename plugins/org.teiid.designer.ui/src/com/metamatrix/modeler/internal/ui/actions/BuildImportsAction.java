@@ -50,16 +50,79 @@ public class BuildImportsAction extends ActionDelegate implements IWorkbenchWind
     }
 
     /* (non-Javadoc)
+     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+     */
+    public void init( final IViewPart view ) {
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     */
+    public void init( final IWorkbenchWindow window ) {
+
+    }
+
+    void rebuildImports() {
+        if (selectedModels != null) {
+
+            final ArrayList eventList = new ArrayList();
+            final ArrayList modelsToSave = new ArrayList();
+
+            // first, rebuild the models
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final IFile modelFile = (IFile)iter.next();
+                try {
+                    final ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
+                    rebuildImports(modelResource);
+                    eventList.add(modelResource);
+                    if (!ModelEditorManager.isOpen(modelFile)) {
+                        modelsToSave.add(modelResource);
+                    } else {
+                    }
+
+                } catch (final ModelWorkspaceException e) {
+                    UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+                }
+            }
+
+            // second, save all the models that are not open in editors, or else they may never get saved.
+            for (final Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
+                try {
+                    ((ModelResource)iter.next()).save(null, true);
+                } catch (final ModelWorkspaceException e) {
+                    UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+                }
+            }
+
+            // finally, fire events on all models so the gui can update their import lists
+            for (final Iterator iter = eventList.iterator(); iter.hasNext();) {
+                final ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(),
+                                                                        ModelResourceEvent.REBUILD_IMPORTS, this);
+                UiPlugin.getDefault().getEventBroker().processEvent(event);
+            }
+
+        }
+
+    }
+
+    private void rebuildImports( final ModelResource modelResource ) throws ModelWorkspaceException {
+        if (modelResource != null && !modelResource.isReadOnly()) {
+            // Defect 23823 - switched to use a new Modeler Core utility.
+            ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), true);
+        }
+    }
+
+    /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
-    public void run( IAction action ) {
+    public void run( final IAction action ) {
         final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             @Override
-            public void execute( IProgressMonitor theMonitor ) {
+            public void execute( final IProgressMonitor theMonitor ) {
                 // In order for the notifications caused by "opening models" for validation, to be swallowed, the validation
                 // call needs to be wrapped in a transaction. This was discovered and relayed by Goutam on 2/14/05.
-                boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
+                final boolean started = ModelerCore.startTxn(false, false, "Rebuild All Imports", this); //$NON-NLS-1$
                 boolean succeeded = false;
                 try {
                     rebuildImports();
@@ -81,80 +144,37 @@ public class BuildImportsAction extends ActionDelegate implements IWorkbenchWind
         };
         try {
             new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
-        } catch (InterruptedException e) {
-        } catch (InvocationTargetException e) {
+        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException e) {
             UiConstants.Util.log(e.getTargetException());
         }
-    }
-
-    void rebuildImports() {
-        if (selectedModels != null) {
-
-            ArrayList eventList = new ArrayList();
-            ArrayList modelsToSave = new ArrayList();
-
-            // first, rebuild the models
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                IFile modelFile = (IFile)iter.next();
-                try {
-                    ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
-                    rebuildImports(modelResource);
-                    eventList.add(modelResource);
-                    if (!ModelEditorManager.isOpen(modelFile)) {
-                        modelsToSave.add(modelResource);
-                    } else {
-                    }
-
-                } catch (ModelWorkspaceException e) {
-                    UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-                }
-            }
-
-            // second, save all the models that are not open in editors, or else they may never get saved.
-            for (Iterator iter = modelsToSave.iterator(); iter.hasNext();) {
-                try {
-                    ((ModelResource)iter.next()).save(null, true);
-                } catch (ModelWorkspaceException e) {
-                    UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-                }
-            }
-
-            // finally, fire events on all models so the gui can update their import lists
-            for (Iterator iter = eventList.iterator(); iter.hasNext();) {
-                ModelResourceEvent event = new ModelResourceEvent((ModelResource)iter.next(), ModelResourceEvent.REBUILD_IMPORTS,
-                                                                  this);
-                UiPlugin.getDefault().getEventBroker().processEvent(event);
-            }
-
-        }
-
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void selectionChanged( IAction action,
-                                  ISelection selection ) {
+    public void selectionChanged( final IAction action,
+                                  final ISelection selection ) {
         selectedModels = SelectionUtilities.getSelectedObjects(selection);
         boolean enable = true;
         if (selectedModels.isEmpty()) {
             enable = false;
         } else {
-            for (Iterator iter = selectedModels.iterator(); iter.hasNext();) {
-                Object obj = iter.next();
+            for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
+                final Object obj = iter.next();
                 if (obj instanceof IFile) {
                     if (!ModelUtilities.isModelFile((IFile)obj)) {
                         enable = false;
                         break;
                     }
                     try {
-                        ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
+                        final ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
                         if (modelResource == null || modelResource.isReadOnly()) {
                             enable = false;
                             break;
                         }
-                    } catch (ModelWorkspaceException e) {
+                    } catch (final ModelWorkspaceException e) {
                         UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
                     }
                 } else {
@@ -166,27 +186,7 @@ public class BuildImportsAction extends ActionDelegate implements IWorkbenchWind
         action.setEnabled(enable);
     }
 
-    private void rebuildImports( ModelResource modelResource ) throws ModelWorkspaceException {
-        if (modelResource != null && !modelResource.isReadOnly()) {
-            // Defect 23823 - switched to use a new Modeler Core utility.
-            ModelBuildUtil.rebuildImports(modelResource.getEmfResource(), this, true);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-     */
-    public void init( IWorkbenchWindow window ) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-     */
-    public void init( IViewPart view ) {
-    }
-
-    public void setSelectedModels( List selectedModels ) {
+    public void setSelectedModels( final List selectedModels ) {
         this.selectedModels = selectedModels;
     }
 

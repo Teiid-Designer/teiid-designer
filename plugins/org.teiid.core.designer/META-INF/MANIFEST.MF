@@ -16,7 +16,9 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.core.selection,
  com.metamatrix.core.util,
  com.metamatrix.internal.core.xml,
- com.metamatrix.modeler.core
+ com.metamatrix.modeler.core,
+ org.teiid.core,
+ org.teiid.core.exception
 Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
  net.sf.saxon

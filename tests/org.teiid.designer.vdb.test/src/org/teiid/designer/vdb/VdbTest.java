@@ -68,7 +68,7 @@ public class VdbTest {
         when(vdbPath.removeFileExtension()).thenReturn(vdbName);
 
         eclipseMock = new EclipseMock();
-        when(eclipseMock.getRoot().findMember(vdbPath)).thenReturn(vdbFile);
+        when(eclipseMock.workspaceRoot().findMember(vdbPath)).thenReturn(vdbFile);
 
         mockStatic(JAXBContext.class);
         final JAXBContext context = PowerMockito.mock(JAXBContext.class);
