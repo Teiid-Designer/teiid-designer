@@ -40,10 +40,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -101,6 +101,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         this.importManager = importManager;
     }
 
+    @Override
     public void createControl( Composite theParent ) {
         final int COLUMNS = 1;
 
@@ -142,6 +143,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             textFieldTargetModelName.setText(importManager.getTargetModelName());
         }
         this.textFieldTargetModelName.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText( final ModifyEvent event ) {
                 setPageStatus();
             }
@@ -176,6 +178,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             textFieldTargetModelLocation.setText(name);
         }
         this.textFieldTargetModelLocation.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText( final ModifyEvent event ) {
                 setPageStatus();
             }
@@ -389,6 +392,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         getContainer().updateButtons();
     }
 
+    @Override
     public void handleEvent( Event event ) {
         if (event.widget == this.buttonSelectTargetModel) {
             handleBrowseWorkspaceForTargetModel();

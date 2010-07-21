@@ -7,11 +7,13 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
-import java.net.URL;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.datatools.connectivity.IConnection;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import com.metamatrix.modeler.compare.DifferenceProcessor;
@@ -23,7 +25,6 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
-import com.metamatrix.modeler.modelgenerator.salesforce.connection.impl.Connection;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.impl.DataModelImpl;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
@@ -38,15 +39,11 @@ public class SalesforceImportWizardManager {
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private DataModel dataModel;
-
+    private IConnectionProfile connectionProfile;
     private String targetModelName;
     private IContainer targetModelLocation;
-    private String username;
-    private String password;
-    private URL connectionURL;
     private boolean modelAuditFields;
     private boolean credentialsValid;
-    private boolean hasCredentialChanges;
     private ModelResource updateModel;
     private boolean canFinish = false;
     private DifferenceReport diffReport;
@@ -116,57 +113,47 @@ public class SalesforceImportWizardManager {
         this.targetModelName = targetModelName;
     }
 
-    public URL getConnectionURL() {
-        return connectionURL;
+    /**
+     * @return connectionProfile
+     */
+    public IConnectionProfile getConnectionProfile() {
+        return connectionProfile;
     }
 
-    public void setConnectionURL( URL connectionURL ) {
-        this.connectionURL = connectionURL;
-        setCredentialChanges(true);
-    }
-
-    public void setUsername( String username ) {
-        this.username = username;
-        setCredentialChanges(true);
-    }
-
-    public void setPassword( String password ) {
-        this.password = password;
-        setCredentialChanges(true);
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
+    /**
+     * @param connectionProfile Sets connectionProfile to the specified value.
+     */
+    public void setConnectionProfile( IConnectionProfile connectionProfile ) {
+        this.connectionProfile = connectionProfile;
     }
 
     public void clear() {
         dataModel = null;
         targetModelName = null;
         targetModelLocation = null;
-        username = null;
-        password = null;
     }
 
-    public boolean validateCredentials( IProgressMonitor monitor ) throws Exception {
+    public boolean validateCredentials( IProgressMonitor monitor ) throws Throwable {
         monitor.beginTask(Messages.getString("SalesforceImportWizardManager.validating.credentials"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
         SalesforceConnection conn = getConnection();
         return null != conn;
     }
 
-    public SalesforceConnection getConnection() throws Exception {
+    public SalesforceConnection getConnection() throws Throwable {
         if (null == connection) {
-            connection = new Connection();
+
             try {
-				connection.login(username, password, connectionURL);
-			} catch (Exception e) {
-				connection = null;
-				throw e;
-			}
-            
+                IStatus status = connectionProfile.connect();
+                if (!status.isOK()) {
+                    throw status.getException();
+                }
+                IConnection conn = connectionProfile.createConnection("org.teiid.designer.datatools.salesforce.ConnectionFactory"); //$NON-NLS-1$
+                connection = (SalesforceConnection)conn.getRawConnection();
+            } catch (Exception e) {
+                connection = null;
+                throw e;
+            }
+
         }
         return connection;
     }
@@ -215,13 +202,13 @@ public class SalesforceImportWizardManager {
         return modelResource;
     }
 
-    public DataModel createDataModel( IProgressMonitor monitor ) throws Exception {
-        if (null == dataModel || hasCredentialChanges()) {
+    public DataModel createDataModel( IProgressMonitor monitor ) throws Throwable {
+        if (null == dataModel) {
+            monitor.setTaskName(Messages.getString("SalesforceImportWizardManager.connecting")); //$NON-NLS-1$
             SalesforceConnection conn = getConnection();
             dataModel = new DataModelImpl();
             monitor.setTaskName(Messages.getString("SalesforceImportWizardManager.gathering.metadata")); //$NON-NLS-1$
             dataModel.load(conn, monitor);
-            hasCredentialChanges = false;
         }
         return dataModel;
     }
@@ -240,14 +227,6 @@ public class SalesforceImportWizardManager {
 
     public boolean hasValidCredentials() {
         return credentialsValid;
-    }
-
-    public boolean hasCredentialChanges() {
-        return hasCredentialChanges;
-    }
-
-    private void setCredentialChanges( boolean changed ) {
-        hasCredentialChanges = changed;
     }
 
     public DifferenceReport getDifferenceReport( IProgressMonitor monitor ) throws ModelBuildingException, Exception {

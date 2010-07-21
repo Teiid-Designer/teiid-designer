@@ -60,6 +60,7 @@ public class ShowDifferencesPage extends AbstractWizardPage
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
+    @Override
     public void createControl( Composite parent ) {
 
         // Create page
@@ -82,6 +83,7 @@ public class ShowDifferencesPage extends AbstractWizardPage
         TableViewer tableViewer = pnlDiffReport.getTableViewer();
         if (tableViewer instanceof CheckboxTableViewer) {
             ((CheckboxTableViewer)tableViewer).addCheckStateListener(new ICheckStateListener() {
+                @Override
                 public void checkStateChanged( CheckStateChangedEvent theEvent ) {
                     Object checkedObject = theEvent.getElement();
                     boolean isChecked = theEvent.getChecked();
@@ -100,6 +102,7 @@ public class ShowDifferencesPage extends AbstractWizardPage
 
         if (bIsVisible) {
             IRunnableWithProgress op = new IRunnableWithProgress() {
+                @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         shuntDiffReport = importManager.getDifferenceReport(monitor);

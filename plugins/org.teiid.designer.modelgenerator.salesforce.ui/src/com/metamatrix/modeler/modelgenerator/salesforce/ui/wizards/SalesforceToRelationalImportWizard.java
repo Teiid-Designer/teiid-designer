@@ -72,6 +72,7 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
     /**
      * Method declared on IWorkbenchWizard.
      */
+    @Override
     public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
 
@@ -124,9 +125,8 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
 
         final IRunnableWithProgress op = new IRunnableWithProgress() {
 
+            @Override
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
-                // Wrap in transaction so it doesn't result in Significant
-                // Undoable
                 boolean started = ModelerCore.startTxn(false, false, "Creating Salesforce model", //$NON-NLS-1$
                                                        new Object());
                 boolean succeeded = false;

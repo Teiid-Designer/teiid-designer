@@ -14,95 +14,110 @@ import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PicklistEntry;
 
 public class SalesforceFieldImpl implements SalesforceField {
-	
-	public Field salesforceField;
 
-	public SalesforceFieldImpl(Field field) {
-		salesforceField = field;
-	}
+    public Field salesforceField;
 
-	public String getLabel() {
-		return salesforceField.getLabel();
-	}
+    public SalesforceFieldImpl( Field field ) {
+        salesforceField = field;
+    }
 
-	public int getLength() {
-		return salesforceField.getLength();
-	}
+    @Override
+    public String getLabel() {
+        return salesforceField.getLabel();
+    }
 
-	public String getName() {
-		return salesforceField.getName();
-	}
-	
-	public String getType() {
-		return salesforceField.getType().getValue();
-	}
-	
-	public boolean isPrimaryKey() {
-		return salesforceField.getType().getValue() == "id"; //$NON-NLS-1$
-	}
+    @Override
+    public int getLength() {
+        return salesforceField.getLength();
+    }
 
-	public int getDigits() {
-		return salesforceField.getDigits();
-	}
+    @Override
+    public String getName() {
+        return salesforceField.getName();
+    }
 
-	public int getPrecision() {
-		return salesforceField.getPrecision();
-	}
+    @Override
+    public String getType() {
+        return salesforceField.getType().getValue();
+    }
 
-	public int getScale() {
-		return salesforceField.getScale();
-	}
-	
-	public boolean isUpdateable() {
-		return salesforceField.isUpdateable();
-	}
+    @Override
+    public boolean isPrimaryKey() {
+        return salesforceField.getType().getValue() == "id"; //$NON-NLS-1$
+    }
 
-	public boolean isAuditField() {
-		return isAuditField(salesforceField.getName());
-	}
-	
-	public static boolean isAuditField(String name) {
-		boolean result = false;
-		if(name.equals(SalesforceField.AUDIT_FIELD_CREATED_BY_ID) ||
-				name.equals(SalesforceField.AUDIT_FIELD_CREATED_DATE) ||
-				name.equals(SalesforceField.AUDIT_FIELD_LAST_MODIFIED_BY_ID) ||
-				name.equals(SalesforceField.AUDIT_FIELD_LAST_MODIFIED_DATE) ||
-				name.equals(SalesforceField.AUDIT_FIELD_SYSTEM_MOD_STAMP)) {
-			result = true;
-		}
-		return result;
-	}
-	
-	public List<String> getAllowedValues() {
-		List<String> result = new ArrayList<String>();
-		PicklistEntry[] entries = salesforceField.getPicklistValues();
-		if(null != entries) {
-			for(int i = 0; i < entries.length; i++) {
-				PicklistEntry entry = entries[i];
-				result.add(entry.getValue());
-			}
-		}
-		return result;
-	}
+    @Override
+    public int getDigits() {
+        return salesforceField.getDigits();
+    }
 
-	public boolean isSearchable() {
-		return salesforceField.isFilterable();
-	}
-	
-	public boolean isCalculated() {
-		return salesforceField.isCalculated();
-	}
-	
-	public boolean isCustom() {
-		return salesforceField.isCustom();
-	}
-	
-	public boolean isDefaultedOnCreate() {
-		return salesforceField.isDefaultedOnCreate();
-	}
-	
-	public boolean isRestrictedPicklist() {
-		return salesforceField.isRestrictedPicklist();
-	}
+    @Override
+    public int getPrecision() {
+        return salesforceField.getPrecision();
+    }
+
+    @Override
+    public int getScale() {
+        return salesforceField.getScale();
+    }
+
+    @Override
+    public boolean isUpdateable() {
+        return salesforceField.isUpdateable();
+    }
+
+    @Override
+    public boolean isAuditField() {
+        return isAuditField(salesforceField.getName());
+    }
+
+    public static boolean isAuditField( String name ) {
+        boolean result = false;
+        if (name.equals(SalesforceField.AUDIT_FIELD_CREATED_BY_ID) || name.equals(SalesforceField.AUDIT_FIELD_CREATED_DATE)
+            || name.equals(SalesforceField.AUDIT_FIELD_LAST_MODIFIED_BY_ID)
+            || name.equals(SalesforceField.AUDIT_FIELD_LAST_MODIFIED_DATE)
+            || name.equals(SalesforceField.AUDIT_FIELD_SYSTEM_MOD_STAMP)) {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getAllowedValues() {
+        List<String> result = new ArrayList<String>();
+        PicklistEntry[] entries = salesforceField.getPicklistValues();
+        if (null != entries) {
+            for (int i = 0; i < entries.length; i++) {
+                PicklistEntry entry = entries[i];
+                result.add(entry.getValue());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return salesforceField.isFilterable();
+    }
+
+    @Override
+    public boolean isCalculated() {
+        return salesforceField.isCalculated();
+    }
+
+    @Override
+    public boolean isCustom() {
+        return salesforceField.isCustom();
+    }
+
+    @Override
+    public boolean isDefaultedOnCreate() {
+        return salesforceField.isDefaultedOnCreate();
+    }
+
+    @Override
+    public boolean isRestrictedPicklist() {
+        return salesforceField.isRestrictedPicklist();
+    }
 
 }

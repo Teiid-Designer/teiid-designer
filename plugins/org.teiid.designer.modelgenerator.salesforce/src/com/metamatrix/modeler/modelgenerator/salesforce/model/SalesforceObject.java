@@ -41,4 +41,8 @@ public interface SalesforceObject {
 
     public boolean isRetrieveable();
 
+    public abstract boolean isMergeable();
+
+    public abstract boolean isCustom();
+
 }

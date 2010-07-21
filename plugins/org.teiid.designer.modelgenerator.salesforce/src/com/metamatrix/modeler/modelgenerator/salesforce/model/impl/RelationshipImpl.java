@@ -11,44 +11,52 @@ import com.metamatrix.modeler.modelgenerator.salesforce.model.Relationship;
 
 public class RelationshipImpl implements Relationship {
 
-	private boolean cascadeDelete;
-	public String childTablename;
-	public String parentTableName;
-	public String foreignKeyField;
-	
-	public void setCascadeDelete(boolean delete) {
-		cascadeDelete = delete;
-	}
+    private boolean cascadeDelete;
+    public String childTablename;
+    public String parentTableName;
+    public String foreignKeyField;
 
-	public boolean isCascadeDelete() {
-		return cascadeDelete;
-	}
+    @Override
+    public void setCascadeDelete( boolean delete ) {
+        cascadeDelete = delete;
+    }
 
-	public void setChildTable(String childTable) {
-		childTablename = childTable;
-	}
+    public boolean isCascadeDelete() {
+        return cascadeDelete;
+    }
 
-	public String getChildTable() {
-		return childTablename;
-	}
+    @Override
+    public void setChildTable( String childTable ) {
+        childTablename = childTable;
+    }
 
-	public String getForeignKeyField() {
-		return foreignKeyField;
-	}
+    @Override
+    public String getChildTable() {
+        return childTablename;
+    }
 
-	public void setForeignKeyField(String foreignKeyField) {
-		this.foreignKeyField = foreignKeyField;
-	}
+    @Override
+    public String getForeignKeyField() {
+        return foreignKeyField;
+    }
 
-	public String getParentTable() {
-		return parentTableName;
-	}
+    @Override
+    public void setForeignKeyField( String foreignKeyField ) {
+        this.foreignKeyField = foreignKeyField;
+    }
 
-	public void setParentTable(String parentTableName) {
-		this.parentTableName = parentTableName;
-	}
-	
-	public boolean relatesToAuditField() {
-		return SalesforceFieldImpl.isAuditField(foreignKeyField);
-	}
+    @Override
+    public String getParentTable() {
+        return parentTableName;
+    }
+
+    @Override
+    public void setParentTable( String parentTableName ) {
+        this.parentTableName = parentTableName;
+    }
+
+    @Override
+    public boolean relatesToAuditField() {
+        return SalesforceFieldImpl.isAuditField(foreignKeyField);
+    }
 }

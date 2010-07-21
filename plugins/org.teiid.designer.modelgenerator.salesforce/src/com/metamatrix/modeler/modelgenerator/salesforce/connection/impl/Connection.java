@@ -40,10 +40,12 @@ public class Connection implements SalesforceConnection {
     /**
      * @see com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection#getBinding()
      */
+    @Override
     public SoapBindingStub getBinding() {
         return binding;
     }
 
+    @Override
     public void login( String username,
                        String password,
                        URL connectionURL ) throws Exception {

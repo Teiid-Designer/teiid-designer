@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceImportWizardManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;
@@ -94,6 +94,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
     public void setVisible( boolean visible ) {
         if (visible) {
             IRunnableWithProgress op = new IRunnableWithProgress() {
+                @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         DataModel model = importManager.createDataModel(monitor);
@@ -103,7 +104,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
                         } else {
                             updateUI = false;
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         throw new InvocationTargetException(e);
                     } finally {
                         monitor.done();
@@ -145,6 +146,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         super.setVisible(visible);
     }
 
+    @Override
     public void createControl( Composite theParent ) {
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
         helpSystem.setHelp(theParent, OBJECT_SELECTION_PAGE);
@@ -287,6 +289,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
      * 
      * @param event the Event
      */
+    @Override
     public void handleEvent( Event event ) {
         if (!initializing) {
 
@@ -335,6 +338,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         }
     }
 
+    @Override
     public void selectionChanged( SelectionChangedEvent event ) {
         Object obj;
         if (event.getSelection() instanceof IStructuredSelection) {
@@ -348,6 +352,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         }
     }
 
+    @Override
     public void checkStateChanged( CheckStateChangedEvent event ) {
         SalesforceObject obj = (SalesforceObject)event.getElement();
         boolean checked = event.getChecked();
@@ -367,9 +372,11 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
     static class ListContentProvider implements IStructuredContentProvider {
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public Object[] getElements( final Object node ) {
             if (node instanceof DataModel) {
                 return ((DataModel)node).getSalesforceObjects();
@@ -377,6 +384,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
             return EMPTY_STRING_ARRAY;
         }
 
+        @Override
         public void inputChanged( final Viewer viewer,
                                   final Object oldInput,
                                   final Object newInput ) {
@@ -405,6 +413,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
     class TableContentProvider implements IStructuredContentProvider {
 
+        @Override
         public Object[] getElements( Object inputElement ) {
             Object[] result = null;
             if (inputElement instanceof SalesforceObject) {
@@ -427,9 +436,11 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
             return result;
         }
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public void inputChanged( Viewer viewer,
                                   Object oldInput,
                                   Object newInput ) {
@@ -439,6 +450,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
 
     static class TableLabelProvider implements ITableLabelProvider {
 
+        @Override
         public void dispose() {
         }
 
@@ -447,11 +459,13 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
                                   Object newInput ) {
         }
 
+        @Override
         public Image getColumnImage( Object element,
                                      int columnIndex ) {
             return null;
         }
 
+        @Override
         public String getColumnText( Object element,
                                      int columnIndex ) {
 
@@ -482,14 +496,17 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
             return result;
         }
 
+        @Override
         public void addListener( ILabelProviderListener listener ) {
         }
 
+        @Override
         public boolean isLabelProperty( Object element,
                                         String property ) {
             return false;
         }
 
+        @Override
         public void removeListener( ILabelProviderListener listener ) {
         }
     }
