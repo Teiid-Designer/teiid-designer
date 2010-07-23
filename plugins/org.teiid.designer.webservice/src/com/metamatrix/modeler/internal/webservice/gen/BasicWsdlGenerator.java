@@ -51,6 +51,7 @@ import com.metamatrix.metamodels.webservice.Interface;
 import com.metamatrix.metamodels.webservice.Output;
 import com.metamatrix.metamodels.webservice.WebServiceComponent;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
+import com.metamatrix.metamodels.webservice.impl.OperationImpl;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingInput;
 import com.metamatrix.metamodels.wsdl.BindingOperation;
@@ -114,6 +115,9 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      */
     public static final String SOAP_ACTION_PREFIX = "mm:&"; //$NON-NLS-1$
 
+    private Map operationToProcedureMap;
+
+    private final List ports;
     private final List webServiceModels;
     private final List xmlSchemas;
     private final List webServiceModelsUnmodifiable;
@@ -149,7 +153,9 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
     public BasicWsdlGenerator( final URI uri ) {
         CoreArgCheck.isNotNull(uri);
 
+        this.operationToProcedureMap = new HashMap();
         this.webServiceModels = new ArrayList();
+        this.ports = new ArrayList();
         this.xmlSchemas = new ArrayList();
         this.xmlSchemasToLocationPath = new HashMap();
         this.webServiceModelsUnmodifiable = Collections.unmodifiableList(this.webServiceModels);
@@ -258,6 +264,20 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
      */
     public void setDefaultNamespaceUri( String namespaceUri ) {
         this.defaultNamespaceUri = namespaceUri;
+    }
+
+    /**
+     * @return ports
+     */
+    public List getPorts() {
+        return ports;
+    }
+
+    /**
+     * @return operationToProcedureMap
+     */
+    public Map getOperationToProcedureMap() {
+        return operationToProcedureMap;
     }
 
     /**
@@ -556,6 +576,8 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             visitor.doGenerateTargetNamespaceNamespaceDeclaration();
 
+            operationToProcedureMap = visitor.operationToProcedureMap;
+
             // Signal the generator to complete the WSDL (adding any binding information, etc.)
             visitor.complete();
         }
@@ -572,6 +594,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
         private final WsdlFactory factory;
         private final SoapFactory soapFactory;
         private final XSDFactory xsdFactory;
+        final Map operationToProcedureMap;
         private Definitions definitions; // the one created ...
         private Service service; // the one created ...
         private PortType portType; // the last one created ...
@@ -616,6 +639,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             this.urlService = urlService;
             this.messagePartNameByWebServiceMessage = new HashMap();
             this.defaultNamespace = defaultNamespace;
+            this.operationToProcedureMap = new HashMap<String, String>();
         }
 
         public Definitions getDefinitions() {
@@ -756,6 +780,21 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
                 sb.append(segment);
             }
             return sb.toString();
+        }
+
+        private void addToOperationToProcedureMap( final EObject object ) {
+            final IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(object);
+            final StringBuffer sb = new StringBuffer();
+            final String[] segments = path.segments();
+            for (int i = 0; i < segments.length; i++) {
+                if (i != 0) {
+                    sb.append('.');
+                }
+                final String segment = segments[i];
+                sb.append(segment);
+            }
+
+            this.operationToProcedureMap.put(((OperationImpl)object).getName(), sb.toString());
         }
 
         protected String doGetFullyQualifiedName( final WsdlNameRequiredEntity object ) {
@@ -1030,6 +1069,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
          */
         public Object caseInterface( Interface object ) {
             final String interfaceName = object.getName();
+            ports.add(interfaceName);
 
             // Create a WSDL port type
             this.portType = this.factory.createPortType();
@@ -1106,6 +1146,9 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
+            final String action = doGetFullyQualifiedName(object);
+            soapOp.setAction(action);
+            addToOperationToProcedureMap(object);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
             soapOp.setBindingOperation(this.bindingOp);
 
