@@ -47,7 +47,6 @@ import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.webservice.gen.BasicWsdlGenerator;
@@ -76,7 +75,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     private static final String TASK_CREATING_WAR_ARCHIVE = getString("taskCreatingWarArchive"); //$NON-NLS-1$
     private static final String TASK_COPYING_WAR_FILE = getString("taskCopyingWarFile"); //$NON-NLS-1$
     private static final String TASK_CLEANUP = getString("taskCleanup"); //$NON-NLS-1$
-    private static final String TEIID_CLIENT_JAR = "teiid-7.0.0-client.jar"; //$NON-NLS-1$
 
     /**
      * This constructor is package protected, so that only the factory can call it.
@@ -209,14 +207,10 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             final String webInfDirectoryName = contextDirectoryName + File.separator + "WEB-INF"; //$NON-NLS-1$
             final File webInfDirectory = new File(webInfDirectoryName);
             webInfDirectory.mkdir();
-            // Create the lib directory.
-            final String webInfLibDirectoryName = webInfDirectoryName + File.separator + "lib"; //$NON-NLS-1$
-            final File webInfLibDirectory = new File(webInfLibDirectoryName);
-            // Create the lib directory.
+            // Create the classes directory.
             final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + "classes"; //$NON-NLS-1$
             final File webInfClassesDirectory = new File(webInfClassesDirectoryName);
             webInfClassesDirectory.mkdir();
-            webInfLibDirectory.mkdir();
             monitor.worked(10);
 
             monitor.subTask(TASK_CREATING_WSDL_FILE);
@@ -225,7 +219,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             monitor.subTask(TASK_COPYING_FILES);
             // Copy the Web files.
-            getWebFiles(contextDirectory, imagesDirectory, webInfDirectory);
+            getWebFiles(contextDirectory, webInfDirectory);
             // Replace the variables in the web.xml file.
             replaceWebXmlVariables(webInfDirectoryName, properties, contextName);
             // Replace the variables in the jbossws-cxf.xml file.
@@ -365,15 +359,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     }
 
     /**
-     * Copies Web files into the WAR build directory stucture.
+     * Copies Web files into the WAR build directory structure.
      * 
      * @param contextDirectory
-     * @param imagesDirectory
      * @param webInfDirectory
      * @since 7.1
      */
     private void getWebFiles( File contextDirectory,
-                              File imagesDirectory,
                               File webInfDirectory ) throws Exception {
 
         // Copy all of the Web files
@@ -512,34 +504,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         CompilationTask task = compilerTool.getTask(null, fileManager, null, compilerOptions, null, compilationUnits);
         task.call();
         fileManager.close();
-    }
-
-    /**
-     * @return
-     * @throws Error
-     */
-    private String getClientJarPath() throws Error {
-        IPath jarPath;
-        try {
-            jarPath = DqpPath.getEmbeddedInstallPath().addTrailingSeparator().append(TEIID_CLIENT_JAR);
-        } catch (IOException e) {
-            throw new Error(e);
-        }
-        String driverPath = jarPath.toOSString();
-        return driverPath;
-    }
-
-    /**
-     * Copy the lib files into the WAR directory structure.
-     * 
-     * @param webInfLibDirectory
-     * @throws Exception
-     * @since 7.1
-     */
-    private void getLibFiles( File webInfLibDirectory ) throws Exception {
-
-        // FileUtils.copyFile(DqpPath.getEmbeddedInstallPath().toOSString(), webInfLibDirectory.getPath(), TEIID_CLIENT_JAR);
-
     }
 
     /**
