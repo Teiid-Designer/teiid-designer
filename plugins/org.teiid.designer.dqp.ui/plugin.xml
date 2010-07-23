@@ -95,6 +95,15 @@
       </resourceAction>
    </extension>
    <extension
+        id="GenerateWarAction"
+        name="%generateWarAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.GenerateWarAction"
+         label="%generateWarAction.label">
+      </resourceAction>
+   </extension>
+   <extension
         id="CreateDataSourceAction"
         name="%createDataSourceAction.name"
         point="org.teiid.designer.ui.modelResourceAction">

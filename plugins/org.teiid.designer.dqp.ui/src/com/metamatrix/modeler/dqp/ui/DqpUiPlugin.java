@@ -9,10 +9,10 @@ package com.metamatrix.modeler.dqp.ui;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -20,10 +20,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
+import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
 
@@ -33,6 +33,34 @@ import com.metamatrix.ui.actions.ActionService;
 public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(DqpUiPlugin.class);
+    /**
+     * The install location of the <code>modeler.transformation</code> plugin.
+     * 
+     * @since 6.0.0
+     */
+    private IPath installPath;
+
+    /**
+     * The project where the workspace UDF model is located.
+     * 
+     * @since 6.0.0
+     */
+    private ModelProject udfProject;
+
+    /**
+     * The workspace location of the <code>modeler.transformation</code> plugin.
+     * 
+     * @since 6.0.0
+     */
+    private IPath runtimePath;
+
+    /**
+     * Used in non-Eclipse environments to identify the install location of the <code>modeler.transformation</code> plugin.
+     * <strong>To be used for testing purposes only.</strong>
+     * 
+     * @since 6.0.0
+     */
+    public String testInstallPath;
 
     private static String getString( String theKey ) {
         return UTIL.getStringOrKey(PREFIX + theKey);
