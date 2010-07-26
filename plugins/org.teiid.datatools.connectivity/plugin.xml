@@ -79,14 +79,4 @@
           providerID="org.teiid.datatools.connectivity.connectionProfile">
        </providerIDtoDriverCategoryID>
     </extension>
-   <extension
-         point="org.eclipse.datatools.connectivity.sqm.core.catalog">
-      <overrideLoader
-            eclass="org.eclipse.datatools.modelbase.sql.schema.Catalog"
-            product="Teiid.org"
-            provider="org.teiid.datatools.connectivity.sql.schema.CatalogLoader"
-            version="7.0">
-      </overrideLoader>
-   </extension>
-
 </plugin>
