@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.WordEntry;
@@ -620,41 +622,12 @@ public class RuntimeAdapter extends RecordFactory {
         final String fullName = aspect.getFullName(eObject);
         final String primaryKeyID = getObjectIdString(aspect.getPrimaryKey(eObject));
         String materializedTableID = null;
-        String materializedStageTableID = null;
         final boolean isMaterialized = aspect.isMaterialized(eObject);
 
         // Append the UUIDs of the materialized table references
-        if (isMaterialized && context != null) {
-            final Collection tables = context.getMaterializedTables(eObject);
-            if (tables != null) {
-                // Issue 236831 - the original logic broke down for materialized tables ending in 'ST'.
-                // Modified the stageTable / matTable logic - now uses the longest name for the ST id.
-
-                // Get the materialized tables
-                final Iterator iter = tables.iterator();
-                EObject matTable1 = (EObject)iter.next();
-                EObject matTable2 = null;
-                if (iter.hasNext()) {
-                    matTable2 = (EObject)iter.next();
-                }
-
-                // longest name (appended with ST) is the stageTable
-                if (matTable1 != null && matTable2 != null) {
-                    String matTable1Name = aspect.getNameInSource(matTable1);
-                    String matTable2Name = aspect.getNameInSource(matTable2);
-                    if (matTable1Name != null && matTable2Name != null) {
-                        int matTable1Len = matTable1Name.length();
-                        int matTable2Len = matTable2Name.length();
-                        if (matTable1Len > matTable2Len) {
-                            materializedStageTableID = aspect.getObjectID(matTable1).toString();
-                            materializedTableID = aspect.getObjectID(matTable2).toString();
-                        } else {
-                            materializedStageTableID = aspect.getObjectID(matTable2).toString();
-                            materializedTableID = aspect.getObjectID(matTable1).toString();
-                        }
-                    }
-                }
-            }
+        if (isMaterialized ) {
+        	// Check for an annotation for this EObject
+        	materializedTableID = aspect.getMaterializedTableId(eObject);
         }
 
         addTableWord(objectID,
@@ -674,7 +647,6 @@ public class RuntimeAdapter extends RecordFactory {
                      aspect.getUniqueKeys(eObject),
                      aspect.getAccessPatterns(eObject),
                      materializedTableID,
-                     materializedStageTableID,
                      modelPath,
                      name,
                      wordEntries);
@@ -703,7 +675,6 @@ public class RuntimeAdapter extends RecordFactory {
                               final Collection uniqueKeyIDs,
                               final Collection accessPatternIDs,
                               final String materializedTableID,
-                              final String materializedStageTableID,
                               final String modelPath,
                               final String name,
                               final Collection wordEntries ) {
@@ -762,7 +733,7 @@ public class RuntimeAdapter extends RecordFactory {
         sb.append(IndexConstants.RECORD_STRING.RECORD_DELIMITER);
 
         // Append the UUIDs of the materialized stage table reference
-        appendID(materializedStageTableID, sb);
+        appendID(null, sb);
         sb.append(IndexConstants.RECORD_STRING.RECORD_DELIMITER);
 
         // Append the footer

@@ -54,6 +54,8 @@ public class FakeSqlTableAspect implements SqlTableAspect {
     public boolean isVirtual(EObject eObject) { return virtual; }
 
     public boolean isMaterialized(EObject eObject) { return materialized; }
+    
+    public String getMaterializedTableId(EObject eObject) { return null; } 
 
     public boolean isSystem(EObject eObject) { return system; }
 

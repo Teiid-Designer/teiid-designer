@@ -8,14 +8,17 @@
 package com.metamatrix.metamodels.relational.impl;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.Schema;
+import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.View;
 
 /**
@@ -155,6 +158,9 @@ public class ViewImpl extends TableImpl implements View {
                 return getCatalog();
             case RelationalPackage.VIEW__LOGICAL_RELATIONSHIPS:
                 return getLogicalRelationships();
+            case RelationalPackage.VIEW__MATERIALIZED_TABLE:
+                if (resolve) return getMaterializedTable();
+                return basicGetMaterializedTable();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -203,6 +209,9 @@ public class ViewImpl extends TableImpl implements View {
                 getLogicalRelationships().clear();
                 getLogicalRelationships().addAll((Collection)newValue);
                 return;
+            case RelationalPackage.VIEW__MATERIALIZED_TABLE:
+                setMaterializedTable((Table)newValue);
+                return;
         }
         eDynamicSet(eFeature, newValue);
     }
@@ -248,6 +257,10 @@ public class ViewImpl extends TableImpl implements View {
             case RelationalPackage.VIEW__LOGICAL_RELATIONSHIPS:
                 getLogicalRelationships().clear();
                 return;
+            case RelationalPackage.VIEW__MATERIALIZED_TABLE:
+            	setMaterializedTable((Table)null);
+                return;
+                
         }
         eDynamicUnset(eFeature);
     }
@@ -282,6 +295,9 @@ public class ViewImpl extends TableImpl implements View {
                 return getCatalog() != null;
             case RelationalPackage.VIEW__LOGICAL_RELATIONSHIPS:
                 return logicalRelationships != null && !logicalRelationships.isEmpty();
+            case RelationalPackage.VIEW__MATERIALIZED_TABLE:
+                return materalizedTable != null;
+
         }
         return eDynamicIsSet(eFeature);
     }

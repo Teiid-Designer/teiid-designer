@@ -57,6 +57,12 @@ public interface SqlTableAspect extends SqlColumnSetAspect {
      * @return a int value from the available table types
      */
     int getTableType(EObject eObject);
+    
+    /**
+     * Get the materialized view table reference ID
+     * @return the string ID
+     */
+    String getMaterializedTableId(EObject eObject);    
 
     /**
      * Get a list of <code>EObject</code>s objects for the indexes in the table

@@ -14,6 +14,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -21,6 +22,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.Column;
@@ -149,6 +151,16 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
      * @ordered
      */
     protected EList logicalRelationships = null;
+    
+    /**
+     * The cached value of the '{@link #getMaterializedTable() <em>Materialized Table</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMaterializedTable()
+     * @generated
+     * @ordered
+     */
+    protected Table materalizedTable = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -370,6 +382,44 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
         }
         return logicalRelationships;
     }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Table getMaterializedTable() {
+        if (materalizedTable != null && materalizedTable.eIsProxy()) {
+            Table oldMateralizedTable = materalizedTable;
+            materalizedTable = (Table)eResolveProxy((InternalEObject)materalizedTable);
+            if (materalizedTable != oldMateralizedTable) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RelationalPackage.TABLE__MATERIALIZED_TABLE, oldMateralizedTable, materalizedTable));
+            }
+        }
+        return materalizedTable;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EObject basicGetMaterializedTable() {
+        return materalizedTable;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setMaterializedTable(Table newMateralizedTable) {
+        Table oldMateralizedTable = materalizedTable;
+        materalizedTable = newMateralizedTable;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__MATERIALIZED_TABLE, oldMateralizedTable, materalizedTable));
+    }
 
     /**
      * <!-- begin-user-doc -->
@@ -479,6 +529,9 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
                 return getCatalog();
             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
                 return getLogicalRelationships();
+            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
+                if (resolve) return getMaterializedTable();
+                return basicGetMaterializedTable();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -527,6 +580,9 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
                 getLogicalRelationships().clear();
                 getLogicalRelationships().addAll((Collection)newValue);
                 return;
+            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
+                setMaterializedTable((Table)newValue);
+                return;
         }
         eDynamicSet(eFeature, newValue);
     }
@@ -572,6 +628,9 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
                 getLogicalRelationships().clear();
                 return;
+            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
+            	setMaterializedTable((Table)null);
+                return;
         }
         eDynamicUnset(eFeature);
     }
@@ -606,6 +665,8 @@ public abstract class TableImpl extends ColumnSetImpl implements Table {
                 return getCatalog() != null;
             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
                 return logicalRelationships != null && !logicalRelationships.isEmpty();
+            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
+                return materalizedTable != null;
         }
         return eDynamicIsSet(eFeature);
     }

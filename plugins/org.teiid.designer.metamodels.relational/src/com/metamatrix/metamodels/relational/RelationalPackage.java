@@ -251,6 +251,15 @@ public interface RelationalPackage extends EPackage{
      * @ordered
      */
     int TABLE__LOGICAL_RELATIONSHIPS = COLUMN_SET_FEATURE_COUNT + 7;
+    
+    /**
+     * The feature id for the '<em><b>Materialized Table</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE__MATERIALIZED_TABLE = COLUMN_SET_FEATURE_COUNT + 8;
 
     /**
      * The number of structural features of the the '<em>Table</em>' class.
@@ -259,7 +268,7 @@ public interface RelationalPackage extends EPackage{
      * @generated
      * @ordered
      */
-    int TABLE_FEATURE_COUNT = COLUMN_SET_FEATURE_COUNT + 8;
+    int TABLE_FEATURE_COUNT = COLUMN_SET_FEATURE_COUNT + 9;
 
     /**
      * The meta object id for the '{@link com.metamatrix.metamodels.relational.impl.ColumnImpl <em>Column</em>}' class.
@@ -978,7 +987,15 @@ public interface RelationalPackage extends EPackage{
      * @ordered
      */
     int VIEW__LOGICAL_RELATIONSHIPS = TABLE__LOGICAL_RELATIONSHIPS;
-
+    
+    /**
+     * The feature id for the '<em><b>Materialized Table</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+	int VIEW__MATERIALIZED_TABLE = TABLE__MATERIALIZED_TABLE;
     /**
      * The number of structural features of the the '<em>View</em>' class.
      * <!-- begin-user-doc -->
@@ -1743,6 +1760,15 @@ public interface RelationalPackage extends EPackage{
      * @ordered
      */
     int BASE_TABLE__LOGICAL_RELATIONSHIPS = TABLE__LOGICAL_RELATIONSHIPS;
+    
+    /**
+     * The feature id for the '<em><b>Materialized Table</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+	int BASE_TABLE__MATERIALIZED_TABLE = TABLE__MATERIALIZED_TABLE;
 
     /**
      * The feature id for the '<em><b>Foreign Keys</b></em>' containment reference list.
@@ -1983,6 +2009,17 @@ public interface RelationalPackage extends EPackage{
      * @generated
      */
     EReference getTable_LogicalRelationships();
+    
+    /**
+     * Returns the meta object for the reference list '{@link com.metamatrix.metamodels.relational.Table#getMaterializedTable <em>Materialized Table</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference list '<em>Materialized Table</em>'.
+     * @see com.metamatrix.metamodels.relational.Table#getMaterializedTable()
+     * @see #getTable()
+     * @generated
+     */
+    EReference getTable_MaterializedTable();
 
     /**
      * Returns the meta object for class '{@link com.metamatrix.metamodels.relational.Column <em>Column</em>}'.

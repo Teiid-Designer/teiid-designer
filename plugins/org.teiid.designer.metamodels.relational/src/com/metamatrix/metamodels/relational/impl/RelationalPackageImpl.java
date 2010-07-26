@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.impl.EcorePackageImpl;
+
 import com.metamatrix.metamodels.core.extension.impl.ExtensionPackageImpl;
 import com.metamatrix.metamodels.core.impl.CorePackageImpl;
 import com.metamatrix.metamodels.relational.AccessPattern;
@@ -379,6 +380,15 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
      */
     public EReference getTable_LogicalRelationships() {
         return (EReference)tableEClass.getEStructuralFeatures().get(7);
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTable_MaterializedTable() {
+        return (EReference)tableEClass.getEStructuralFeatures().get(8);
     }
 
     /**
@@ -1399,6 +1409,7 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
         createEReference(tableEClass, TABLE__ACCESS_PATTERNS);
         createEReference(tableEClass, TABLE__CATALOG);
         createEReference(tableEClass, TABLE__LOGICAL_RELATIONSHIPS);
+        createEReference(tableEClass, TABLE__MATERIALIZED_TABLE);
 
         columnEClass = createEClass(COLUMN);
         createEAttribute(columnEClass, COLUMN__NATIVE_TYPE);
@@ -1588,7 +1599,9 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
         initEReference(getTable_AccessPatterns(), this.getAccessPattern(), this.getAccessPattern_Table(), "accessPatterns", null, 0, -1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEReference(getTable_Catalog(), this.getCatalog(), this.getCatalog_Tables(), "catalog", null, 0, 1, Table.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEReference(getTable_LogicalRelationships(), this.getLogicalRelationshipEnd(), this.getLogicalRelationshipEnd_Table(), "logicalRelationships", null, 0, -1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+        initEReference(getTable_MaterializedTable(), this.getTable(), null, "materializedTable", null, 0, 1, Table.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
+        
         initEClass(columnEClass, Column.class, "Column", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
         initEAttribute(getColumn_NativeType(), ecorePackage.getEString(), "nativeType", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
         initEAttribute(getColumn_Length(), ecorePackage.getEInt(), "length", null, 0, 1, Column.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$

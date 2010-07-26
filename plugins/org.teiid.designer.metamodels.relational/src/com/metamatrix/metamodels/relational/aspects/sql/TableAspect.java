@@ -84,13 +84,20 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
     }
 
     /** 
-     * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isMaterialized(org.eclipse.emf.ecore.EObject)
+     * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getMaterializedTableId(org.eclipse.emf.ecore.EObject)
      * @since 4.2
      */
-    public boolean isMaterialized(EObject eObject) {
+    public String getMaterializedTableId(EObject eObject) {
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
-        Table table = (Table) eObject;       
-        return table.isMaterialized();
+        Table table = (Table) eObject;
+        if( table != null ) {
+        	Table materializedTable = table.getMaterializedTable();
+        	if( materializedTable != null ) {
+        		return ModelerCore.getObjectId(materializedTable).toString();
+        	}
+        }
+        
+        return null;
     }    
 
     /* (non-Javadoc)
@@ -108,6 +115,16 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
 
     	return false;
     }
+    
+    /** 
+     * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#isMaterialized(org.eclipse.emf.ecore.EObject)
+     * @since 4.2
+     */
+    public boolean isMaterialized(EObject eObject) {
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
+        Table table = (Table) eObject;       
+        return table.isMaterialized();
+    }   
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlBaseTableAspect#getColumns(org.eclipse.emf.ecore.EObject)

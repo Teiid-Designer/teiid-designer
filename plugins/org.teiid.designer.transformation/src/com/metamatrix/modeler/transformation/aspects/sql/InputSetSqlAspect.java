@@ -10,7 +10,9 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
+
 import com.metamatrix.common.vdb.SystemVdbUtility;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -57,6 +59,15 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
     public boolean isMaterialized(EObject eObject) {
         return false;
     }
+    
+    /** 
+     * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getMaterializedTableId(org.eclipse.emf.ecore.EObject)
+     * @since 4.2
+     */
+    public String getMaterializedTableId(EObject eObject) {
+        return null;
+    } 
+    
     /**
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#supportsUpdate(org.eclipse.emf.ecore.EObject)
      */

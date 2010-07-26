@@ -9,6 +9,7 @@ package com.metamatrix.metamodels.relational.provider;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -17,6 +18,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalFactory;
@@ -62,6 +64,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
             addSupportsUpdatePropertyDescriptor(object);
             addMaterializedPropertyDescriptor(object);
             addLogicalRelationshipsPropertyDescriptor(object);
+            addMaterializedTablePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -273,6 +276,40 @@ public class TableItemProvider extends ColumnSetItemProvider {
                                                                  getString("_UI_Table_logicalRelationships_feature"), //$NON-NLS-1$
                                                                  getString("_UI_PropertyDescriptor_description", "_UI_Table_logicalRelationships_feature", "_UI_Table_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                                                                  RelationalPackage.eINSTANCE.getTable_LogicalRelationships(),
+                                                                 true,
+                                                                 null,
+                                                                 null,
+                                                                 null));
+    }
+    
+    /**
+     * This adds a property descriptor for the Materialized Table feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    protected void addMaterializedTablePropertyDescriptor( Object object ) {
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_Table_materializedTable_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_Table_materializedTable_feature", "_UI_Table_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 RelationalPackage.eINSTANCE.getTable_MaterializedTable(),
+                                                                 true,
+                                                                 null,
+                                                                 null,
+                                                                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Materialized Table feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected void addMaterializedTablePropertyDescriptorGen( Object object ) { // NO_UCD
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                                                                 getResourceLocator(),
+                                                                 getString("_UI_Table_materializedTable_feature"), //$NON-NLS-1$
+                                                                 getString("_UI_PropertyDescriptor_description", "_UI_Table_materializedTable_feature", "_UI_Table_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                                 RelationalPackage.eINSTANCE.getTable_MaterializedTable(),
                                                                  true,
                                                                  null,
                                                                  null,

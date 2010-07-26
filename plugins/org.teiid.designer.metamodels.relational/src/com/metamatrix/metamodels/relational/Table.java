@@ -8,6 +8,7 @@
 package com.metamatrix.metamodels.relational;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -139,6 +140,33 @@ public interface Table extends ColumnSet{
      * @generated
      */
 	void setMaterialized(boolean value);
+	
+    /**
+     * Returns the value of the '<em><b>Materialized Table</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Materialized Table</em>' reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Materialized Table</em>' reference.
+     * @see #setMaterializedTable(EObject)
+     * @see com.metamatrix.metamodels.relational.Table#getTable_MaterializedTable()
+     * @model
+     * @generated
+     */
+    Table getMaterializedTable();
+	
+    /**
+     * Sets the value of the '{@link com.metamatrix.metamodels.relational.Table#getMaterializedTable <em>Materialized Table</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Materialized Table</em>' reference.
+     * @see #getMaterializedTable()
+     * @generated
+     */
+    void setMaterializedTable(Table value);
+
 
     /**
      * Returns the value of the '<em><b>Schema</b></em>' container reference.

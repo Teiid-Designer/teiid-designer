@@ -115,6 +115,22 @@ public class TableMaterializedRule implements StructuralFeatureValidationRule {
                             }
                         }
                     }
+                    
+                    // Make sure that the materializedTable reference is set correctly
+                    // 1) Table reference is NOT NULL
+                    // 2) Table is Physical and NOT a View
+                    
+                    final Table materializedTable = table.getMaterializedTable();
+                    
+                    if( materializedTable == null ) {
+                    	result = new ValidationResultImpl(eObject);
+                    	
+                    	// create validation problem and add it to the result
+                        final String msg = RelationalPlugin.Util.getString("TableMaterializedRule.MaterializedTableReferenceUndefined"); //$NON-NLS-1$
+                        final ValidationProblem problem = new ValidationProblemImpl(0, IStatus.WARNING, msg);
+                        result.addProblem(problem);
+                        context.addResult(result);
+                    }
                 }
             }
 

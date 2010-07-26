@@ -70,6 +70,14 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
     public boolean isMaterialized(EObject eObject) {
         return false;
     }
+    
+    /** 
+     * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect#getMaterializedTableId(org.eclipse.emf.ecore.EObject)
+     * @since 4.2
+     */
+    public String getMaterializedTableId(EObject eObject) {
+        return null;
+    } 
 
     /**
      * @see com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect#getRecordType()

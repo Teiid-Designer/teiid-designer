@@ -8,6 +8,7 @@
 package com.metamatrix.metamodels.relational.impl;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -17,12 +18,14 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.PrimaryKey;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.Schema;
+import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.UniqueConstraint;
 
 /**
@@ -285,6 +288,9 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
                 return getPrimaryKey();
             case RelationalPackage.BASE_TABLE__UNIQUE_CONSTRAINTS:
                 return getUniqueConstraints();
+            case RelationalPackage.BASE_TABLE__MATERIALIZED_TABLE:
+                if (resolve) return getMaterializedTable();
+                return basicGetMaterializedTable();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -344,6 +350,9 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
                 getUniqueConstraints().clear();
                 getUniqueConstraints().addAll((Collection)newValue);
                 return;
+            case RelationalPackage.BASE_TABLE__MATERIALIZED_TABLE:
+                setMaterializedTable((Table)newValue);
+                return;
         }
         eDynamicSet(eFeature, newValue);
     }
@@ -398,6 +407,9 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
             case RelationalPackage.BASE_TABLE__UNIQUE_CONSTRAINTS:
                 getUniqueConstraints().clear();
                 return;
+            case RelationalPackage.BASE_TABLE__MATERIALIZED_TABLE:
+            	setMaterializedTable((Table)null);
+                return;
         }
         eDynamicUnset(eFeature);
     }
@@ -438,6 +450,8 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
                 return primaryKey != null;
             case RelationalPackage.BASE_TABLE__UNIQUE_CONSTRAINTS:
                 return uniqueConstraints != null && !uniqueConstraints.isEmpty();
+            case RelationalPackage.BASE_TABLE__MATERIALIZED_TABLE:
+                return materalizedTable != null;
         }
         return eDynamicIsSet(eFeature);
     }
