@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -30,8 +31,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.Select;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
+import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -69,10 +76,6 @@ import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.Select;
 import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.dialog.RadioMessageDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -678,6 +681,18 @@ public class TransformationNotificationListener implements INotifyChangedListene
         while (iter.hasNext()) {
             Notification notification = (Notification)iter.next();
             if (TransformationHelper.isSupportsUpdateTableChangeNotification(notification)) {
+                return notification;
+            }
+        }
+
+        return null;
+    }
+    
+    private Notification getTableMaterializedViewChange( Collection notifications ) {
+        Iterator iter = notifications.iterator();
+        while (iter.hasNext()) {
+            Notification notification = (Notification)iter.next();
+            if (TransformationHelper.isSetMaterializedTableChangeNotification(notification)) {
                 return notification;
             }
         }
@@ -1335,6 +1350,19 @@ public class TransformationNotificationListener implements INotifyChangedListene
                         }
                     }
                 }
+            }
+            
+            notif = getTableMaterializedViewChange(notifications);
+            if( notif != null ) {
+            	boolean isMaterialized = notif.getNewBooleanValue();
+            	if( !isMaterialized ) {
+            		// Need to remove the reference
+                    Object table = notif.getNotifier();
+                    if( TransformationHelper.isVirtualSqlTable(table) ) {
+                    	((Table)table).setMaterializedTable(null);
+                    }
+            	}
+            	
             }
 
             SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);

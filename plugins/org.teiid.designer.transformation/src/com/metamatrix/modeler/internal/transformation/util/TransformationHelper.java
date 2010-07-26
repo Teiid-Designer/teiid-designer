@@ -2203,6 +2203,24 @@ public class TransformationHelper implements SqlConstants {
     public static boolean isOperation( Object obj ) {
         return (obj != null && obj instanceof Operation);
     }
+    
+    /**
+     * Determine if the supplied notification is a table 'isMaterialized' feature change.
+     * 
+     * @param notification the notification to test.
+     * @return 'true' if notification is table 'isMaterialized' change, 'false' if not.
+     */
+    public static boolean isSetMaterializedTableChangeNotification( Notification notification ) {
+        if (NotificationUtilities.isChanged(notification)) {
+            if (notification.getFeature() instanceof EStructuralFeature) {
+                EStructuralFeature esf = (EStructuralFeature)notification.getFeature();
+                if (esf.getFeatureID() == RelationalPackage.TABLE__MATERIALIZED) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Determine if the supplied notification is a table 'supportsUpdate' feature change.

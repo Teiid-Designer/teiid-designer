@@ -181,7 +181,7 @@ public class TestTransformationMetadata extends TestCase {
                                               String uuid,
                                               String pkID,
                                               String[] columnIDs,
-                                              String[] foreignKeyIDs ) {
+                                              String[] foreignKeyIDs) {
         FakeSqlTableAspect aspect = new FakeSqlTableAspect();
         aspect.name = name;
         aspect.nameInSource = alias;

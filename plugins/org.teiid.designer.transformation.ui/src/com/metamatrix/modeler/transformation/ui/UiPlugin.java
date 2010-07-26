@@ -146,5 +146,9 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
         ModelUtilities.removeNotifyChangedListener(notificationListener);
         super.stop(context);
     }
+    
+    public String getString(final String prefix, final String id) {
+        return Util.getString(prefix + id);
+    }
 
 }
