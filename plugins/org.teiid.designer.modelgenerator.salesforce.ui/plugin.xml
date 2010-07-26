@@ -21,6 +21,16 @@
          </description>
       </wizard>
    </extension>
+   
+   <extension
+        id="CreateSalesForceFunctionsAction"
+        name="%CreateSalesForceFunctionsAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.modelgenerator.salesforce.ui.actions.CreateSalesForceFunctionsAction"
+         label="%CreateSalesForceFunctionsAction.label">
+   </resourceAction>
+   </extension>
 
 </plugin>
 

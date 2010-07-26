@@ -215,7 +215,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         Composite tableComposite = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
         GridLayout layout = new GridLayout(1, false);
         tableComposite.setLayout(layout);
-        Group group = WidgetFactory.createGroup(tableComposite, Messages.getString("SelectSalesforceObjectsPage.column.details"), //$NON-NLS-1$
+        Group group = WidgetFactory.createGroup(tableComposite, getString("column.details"), //$NON-NLS-1$
                                                 GridData.FILL_BOTH,
                                                 1,
                                                 2);
@@ -233,27 +233,27 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         table.setHeaderVisible(true);
 
         TableColumn column = new TableColumn(table, SWT.LEFT, 0);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.visible.name")); //$NON-NLS-1$
+        column.setText(getString("visible.name")); //$NON-NLS-1$
         column.setWidth(100);
 
         column = new TableColumn(table, SWT.LEFT, 1);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.name.in.src")); //$NON-NLS-1$
+        column.setText(getString("name.in.src")); //$NON-NLS-1$
         column.setWidth(100);
 
         column = new TableColumn(table, SWT.LEFT, 2);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.type")); //$NON-NLS-1$
+        column.setText(getString("type")); //$NON-NLS-1$
         column.setWidth(100);
 
         column = new TableColumn(table, SWT.LEFT, 3);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.searchable")); //$NON-NLS-1$
+        column.setText(getString("searchable")); //$NON-NLS-1$
         column.setWidth(100);
 
         column = new TableColumn(table, SWT.LEFT, 4);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.updatable")); //$NON-NLS-1$
+        column.setText(getString("updatable")); //$NON-NLS-1$
         column.setWidth(100);
 
         column = new TableColumn(table, SWT.LEFT, 5);
-        column.setText(Messages.getString("SelectSalesforceObjectsPage.audit.field")); //$NON-NLS-1$
+        column.setText(getString("audit.field")); //$NON-NLS-1$
         column.setWidth(100);
 
         tableViewer = new TableViewer(table);
@@ -262,7 +262,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
         tableViewer.setLabelProvider(new TableLabelProvider());
 
         tableViewer.setColumnProperties(new String[] {
-            Messages.getString("SelectSalesforceObjectsPage.visible.name"), Messages.getString("SelectSalesforceObjectsPage.name.in.src"), Messages.getString("SelectSalesforceObjectsPage.type"), Messages.getString("SelectSalesforceObjectsPage.searchable"), Messages.getString("SelectSalesforceObjectsPage.updatable"), Messages.getString("SelectSalesforceObjectsPage.audit.field")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+            getString("visible.name"), getString("name.in.src"), getString("type"), getString("searchable"), getString("updatable"), getString("audit.field")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
     }
 
@@ -348,7 +348,7 @@ public class SelectSalesforceObjectsPage extends AbstractWizardPage
                 tableViewer.setInput(obj);
             }
         } else {
-            throw new RuntimeException(Messages.getString("SelectSalesforceObjectsPage.unsupported.type")); //$NON-NLS-1$
+            throw new RuntimeException(getString("unsupported.type")); //$NON-NLS-1$
         }
     }
 

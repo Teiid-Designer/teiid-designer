@@ -167,11 +167,12 @@ public class CredentialsPage extends AbstractWizardPage
         if (null == profileCombo.getItems() || 0 == profileCombo.getItems().length) {
             IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.teiid.designer.import.category"); //$NON-NLS-1$
             if (sfProfiles.length == 0) {
-                setErrorMessage(getString("define.profile")); //$NON-NLS-1$
+                setErrorMessage(getString("no.profile")); //$NON-NLS-1$
                 textFieldUsername.setText(EMPTY_STR);
                 textFieldPassword.setText(EMPTY_STR);
                 textFieldURL.setText(EMPTY_STR);
                 validateButton.setEnabled(false);
+                return;
             } else {
                 List<String> profileNames = new ArrayList();
                 for (int i = 0; i < sfProfiles.length; i++) {

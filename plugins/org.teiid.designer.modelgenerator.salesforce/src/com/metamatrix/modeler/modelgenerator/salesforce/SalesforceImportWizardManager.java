@@ -16,6 +16,8 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.MergeProcessor;
@@ -178,7 +180,8 @@ public class SalesforceImportWizardManager {
                     throw mbe;
                 }
                 monitor.subTask(Messages.getString("SalesforceImportWizardManager.binding")); //$NON-NLS-1$
-                BindingGenerator.createConnectorBinding(this, modelResource);
+
+                BindingGenerator.createConnectorBinding(connectionProfile, modelResource);
             }
         }
     }
@@ -211,6 +214,17 @@ public class SalesforceImportWizardManager {
             dataModel.load(conn, monitor);
         }
         return dataModel;
+    }
+
+    public static void createConnectorBinding( IConnectionProfile connectionProfile,
+                                               ModelResource modelResource ) {
+
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
+
+        ConnectionInfoHelper helper = new ConnectionInfoHelper();
+        helper.setConnectionInfo(modelResource, connectionProfile);
+
     }
 
     public boolean isModelAuditFields() {
