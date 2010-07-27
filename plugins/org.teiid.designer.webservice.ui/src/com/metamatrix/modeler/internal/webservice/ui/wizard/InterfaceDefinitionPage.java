@@ -461,7 +461,7 @@ public class InterfaceDefinitionPage extends WizardPage
                 modelNameField.setText(""); //$NON-NLS-1$
                 boolean exceptionOccurred = false;
                 try {
-                    selectedModel = ModelUtilities.getModelResource(sourceFile, true);
+                    selectedModel = ModelUtil.getModelResource(sourceFile, true);
                     // Update the location path to coincide with the parent of the selected model
                     updateLocationPath(selectedModel);
                 } catch (Exception ex) {
@@ -495,7 +495,7 @@ public class InterfaceDefinitionPage extends WizardPage
                     } else if (theElement instanceof IFile && ModelUtil.isModelFile((IFile)theElement)) {
                         ModelResource theModel = null;
                         try {
-                            theModel = ModelUtilities.getModelResource((IFile)theElement, true);
+                            theModel = ModelUtil.getModelResource((IFile)theElement, true);
                         } catch (Exception ex) {
                             ModelerCore.Util.log(ex);
                         }
@@ -557,7 +557,7 @@ public class InterfaceDefinitionPage extends WizardPage
                     } else if (element instanceof IFile && ModelUtil.isModelFile((IFile)element)) {
                         ModelResource theModel = null;
                         try {
-                            theModel = ModelUtilities.getModelResource((IFile)element, true);
+                            theModel = ModelUtil.getModelResource((IFile)element, true);
                         } catch (Exception ex) {
                             ModelerCore.Util.log(ex);
                         }

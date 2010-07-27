@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.viewsupport.ModelWorkspaceTreeProvider;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
@@ -308,7 +308,7 @@ public class CheckboxTreeViewerWizardPanel extends Composite implements UiConsta
                 fileNameText.setText(""); //$NON-NLS-1$
                 boolean exceptionOccurred = false;
                 try {
-                    selectorDialogResult = ModelUtilities.getModelResource(sourceFile, true);
+                    selectorDialogResult = ModelUtil.getModelResource(sourceFile, true);
                 } catch (Exception ex) {
                     Util.log(ex);
                     exceptionOccurred = true;

@@ -54,6 +54,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.xml.factory.IDocumentsAndFragmentsPopulator;
 import com.metamatrix.modeler.internal.xml.factory.VirtualDocumentModelPopulator;
@@ -301,7 +302,7 @@ public class XMLDocumentWizard extends AbstractWizard implements INewModelObject
                         // to let us convert them.
                         if (simpleTypeMap.size() > 0) {
                             Set resources = new HashSet();
-                            ModelResource modelResrc = ModelUtilities.getModelResource((IFile)populator.getItem(), true);
+                            ModelResource modelResrc = ModelUtil.getModelResource((IFile)populator.getItem(), true);
                             if (modelResrc != null) {
                                 Resource xsdResource = modelResrc.getEmfResource();
                                 resources.add(xsdResource);

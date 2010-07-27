@@ -37,6 +37,7 @@ import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.util.RelationalUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
@@ -67,7 +68,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             if (!SelectionUtilities.isMultiSelection(selection)) {
                 Object obj = SelectionUtilities.getSelectedObject(selection);
                 if (obj instanceof IFile && ModelUtilities.isModelFile((IFile)obj)) {
-                    ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, false);
+                    ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
                     if (ModelUtilities.hasJdbcSource(modelResource)) {
                         this.selectedModel = (IFile)obj;
                         enable = true;
@@ -95,7 +96,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         if (isEnabled()) {
             final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
             try {
-                ModelResource modelResource = ModelUtilities.getModelResource(this.selectedModel, false);
+                ModelResource modelResource = ModelUtil.getModelResource(this.selectedModel, false);
                 if (modelResource != null) {
                     final Resource resource = modelResource.getEmfResource();
                     if (resource != null) {
@@ -310,7 +311,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             if (!SelectionUtilities.isMultiSelection(selection)) {
                 Object obj = SelectionUtilities.getSelectedObject(selection);
                 if (obj instanceof IFile && ModelUtilities.isModelFile((IFile)obj)) {
-                    ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, false);
+                    ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
                     if (ModelUtilities.hasJdbcSource(modelResource)) {
                         this.selectedModel = (IFile)obj;
                         result = true;

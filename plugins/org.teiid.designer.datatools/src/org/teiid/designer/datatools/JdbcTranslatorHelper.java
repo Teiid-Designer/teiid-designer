@@ -23,6 +23,12 @@ public class JdbcTranslatorHelper {
 	public static final String DERBY = "derby"; //$NON-NLS-1$
 
 
+    /**
+     * Returns the JDBC Simple translator if a vendor-specific one cannot be determined.
+     * 
+     * @param connectionProfile the {@link IConnectionProfile} whose translator is being requested
+     * @return the translator name (never <code>null</code>)
+     */
 	public static String getTranslator(IConnectionProfile connectionProfile) {
 		
 		String vendor = connectionProfile.getBaseProperties().getProperty(VENDOR_KEY);

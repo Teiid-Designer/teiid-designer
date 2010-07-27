@@ -25,6 +25,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -86,7 +87,7 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
             for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
                 final IFile modelFile = (IFile)iter.next();
                 try {
-                    final ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
+                    final ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
 
                     // Defect 23823 - switched to use a new Modeler Core utility.
                     try {
@@ -180,7 +181,7 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
                         break;
                     }
                     try {
-                        final ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
+                        final ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, true);
                         if (modelResource == null || modelResource.isReadOnly()) {
                             enable = false;
                             break;

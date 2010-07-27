@@ -38,14 +38,15 @@ import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.ui.views.properties.PropertySheet;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -631,7 +632,7 @@ public class DescriptionView extends ModelerView
                     this.currentModel = ModelUtilities.getModelResourceForModelObject(eObj);
                 }
             } else if ((object instanceof IFile) && ModelUtilities.supportsModelDescription((IResource)object)) {
-                this.currentModel = ModelUtilities.getModelResource((IFile)object, false);
+                this.currentModel = ModelUtil.getModelResource((IFile)object, false);
                 this.currentObject = this.currentModel;
             } else {
                 // jh Defect 22197 - support selection of a VDB

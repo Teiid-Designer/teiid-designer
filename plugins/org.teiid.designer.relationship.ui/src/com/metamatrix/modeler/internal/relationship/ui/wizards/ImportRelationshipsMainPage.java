@@ -44,6 +44,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.relationship.ui.textimport.RelationshipTextImportModelSelectorDialog;
 import com.metamatrix.modeler.internal.relationship.ui.textimport.RelationshipsLocationSelectionValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -433,7 +434,7 @@ public class ImportRelationshipsMainPage extends WizardDataTransferPage
             // Let's get the model resource and work from there...
             this.modelFolderNameField.setText(((IFile)oLocation).getName());
             try {
-                targetResource = ModelUtilities.getModelResource((IFile)oLocation, false);
+                targetResource = ModelUtil.getModelResource((IFile)oLocation, false);
                 targetLocation = targetResource;
             } catch (ModelWorkspaceException err) {
             }

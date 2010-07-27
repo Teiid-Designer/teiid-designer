@@ -22,6 +22,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramAction;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -115,7 +116,7 @@ public class NewCustomDiagramAction extends DiagramAction implements DiagramUiCo
     
     private void createDiagram(Object selectedObject) throws ModelWorkspaceException {
         if( (selectedObject instanceof IResource) && ModelUtilities.isModelFile((IResource)selectedObject) ) {
-            ModelResource modelResource = ModelUtilities.getModelResource((IFile)selectedObject, false);
+            ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObject, false);
 
             if( modelResource != null ) {
                 Diagram result = modelResource.getModelDiagrams().createNewDiagram(null, PERSIST_CUSTOM_DIAGRAMS);
@@ -147,7 +148,7 @@ public class NewCustomDiagramAction extends DiagramAction implements DiagramUiCo
             ModelResource modelResource = null;
             try {
             	
-                modelResource = ModelUtilities.getModelResource((IFile)selectedObject, false);
+                modelResource = ModelUtil.getModelResource((IFile)selectedObject, false);
             } catch (ModelWorkspaceException e) {
                 String message = Util.getString("NewCustomDiagramAction.createCustomDiagramError", selectedObject.toString());  //$NON-NLS-1$
                     Util.log(IStatus.ERROR, e, message);
@@ -188,7 +189,7 @@ public class NewCustomDiagramAction extends DiagramAction implements DiagramUiCo
 			if( (selectedObject instanceof IResource) && ModelUtilities.isModelFile((IResource)selectedObject) ) {
 
 				try {
-					modelResource = ModelUtilities.getModelResource((IFile)selectedObject, false);
+					modelResource = ModelUtil.getModelResource((IFile)selectedObject, false);
 				} catch (ModelWorkspaceException e) {
 					String message = Util.getString("NewCustomDiagramAction.createCustomDiagramError", selectedObject.toString());  //$NON-NLS-1$
 						Util.log(IStatus.ERROR, e, message);

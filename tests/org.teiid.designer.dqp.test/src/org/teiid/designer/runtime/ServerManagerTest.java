@@ -55,8 +55,8 @@ public class ServerManagerTest {
     }
 
     @Test
-    public void shouldAllowSaveState() {
-        this.mgr.saveState();
+    public void shouldAllowShutdown() {
+        this.mgr.shutdown();
     }
 
     @Test

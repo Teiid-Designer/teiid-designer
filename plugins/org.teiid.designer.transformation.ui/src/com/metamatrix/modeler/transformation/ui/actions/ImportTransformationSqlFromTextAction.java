@@ -36,6 +36,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
@@ -97,7 +98,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
             if (selectedObj != null && selectedObj instanceof IFile) {
                 ModelResource modelResource = null;
                 try {
-                    modelResource = ModelUtilities.getModelResource(((IFile)selectedObj), false);
+                    modelResource = ModelUtil.getModelResource(((IFile)selectedObj), false);
                     if (modelResource != null) {
                         String fileName = askUserForInputFilename();
                         if (fileName != null) {

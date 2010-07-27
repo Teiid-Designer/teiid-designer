@@ -194,7 +194,7 @@ public class DqpPlugin extends Plugin {
         super.stop(context);
 
         // restore registry
-        final IStatus status = this.serverMgr.saveState();
+        final IStatus status = this.serverMgr.shutdown();
 
         if (!status.isOK()) {
             Util.log(status);

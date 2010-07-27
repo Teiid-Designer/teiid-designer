@@ -621,7 +621,12 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public void propertyChange( final PropertyChangeEvent event ) {
-                vdbNotification(event.getPropertyName());
+                UiUtil.runInSwtThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        vdbNotification(event.getPropertyName());
+                    }
+                }, true);
             }
         };
         vdb.addChangeListener(vdbListener);

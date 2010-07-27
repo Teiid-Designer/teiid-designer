@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 
@@ -39,7 +40,7 @@ public class ModelLabelProvider extends LabelProvider implements PluginConstants
         if ( element instanceof IFile && ModelUtilities.isModelFile((IFile) element) ) {
             ModelResource modelResource;
             try {
-                modelResource = ModelUtilities.getModelResource((IFile)element, false);
+                modelResource = ModelUtil.getModelResource((IFile)element, false);
                 if ( modelResource == null ) {
                     return workbenchProvider.getImage(element);
                 }

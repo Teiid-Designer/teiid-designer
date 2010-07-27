@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
@@ -57,7 +57,7 @@ public class EditTransformationAction extends SortableSelectionAction implements
             if( selectedObj != null && selectedObj instanceof IFile) {
                 ModelResource modelResource = null;
                 try {
-                    modelResource = ModelUtilities.getModelResource(((IFile) selectedObj), false);
+                    modelResource = ModelUtil.getModelResource(((IFile) selectedObj), false);
                     if( modelResource != null ) {
                         EditTransformationHelper helper = new EditTransformationHelper(modelResource);
                         

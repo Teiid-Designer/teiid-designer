@@ -21,6 +21,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.relationship.ui.wizards.GenerateSqlRelationshipsWizard;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -89,7 +90,7 @@ public class GenerateSqlRelationshipsAction extends SortableSelectionAction impl
 			// First check selected Resources
 			List resourceObjects = SelectionUtilities.getSelectedIResourceObjects(cachedSelection);
 			for( Iterator iter = resourceObjects.iterator(); iter.hasNext(); ) {
-				Collection vTables = getVirtualTablesForResource(ModelUtilities.getModelResource(((IFile) iter.next()), false));
+				Collection vTables = getVirtualTablesForResource(ModelUtil.getModelResource(((IFile) iter.next()), false));
 				if( !vTables.isEmpty() ) {
 					tableList.addAll(vTables);
 				}
@@ -126,7 +127,7 @@ public class GenerateSqlRelationshipsAction extends SortableSelectionAction impl
     			} else if( nextObj instanceof IFile && ModelUtilities.isModelFile((IResource) nextObj) ) {
     				if (  ModelUtilities.isModelFile((IResource) nextObj) ) {
     		            try {
-    		                ModelResource modelResource = ModelUtilities.getModelResource(((IFile) nextObj), false);
+    		                ModelResource modelResource = ModelUtil.getModelResource(((IFile) nextObj), false);
     		                if ( !ModelUtilities.isVirtual(modelResource) ) {
     		                	result = false;
     		                }

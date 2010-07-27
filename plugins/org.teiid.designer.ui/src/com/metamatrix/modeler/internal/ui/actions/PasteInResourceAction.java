@@ -26,6 +26,7 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.ui.part.ResourceTransfer;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -272,7 +273,7 @@ public class PasteInResourceAction extends ModelObjectAction implements UiConsta
                         ModelResource mr = null;
 
                         try {
-                            mr = ModelUtilities.getModelResource((IFile)selectedObject, false);
+                            mr = ModelUtil.getModelResource((IFile)selectedObject, false);
                         } catch (ModelWorkspaceException err) {
                             Util.log(err);
                         } finally {

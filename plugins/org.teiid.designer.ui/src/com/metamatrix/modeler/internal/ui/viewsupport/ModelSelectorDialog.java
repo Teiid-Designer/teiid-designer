@@ -38,6 +38,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -466,7 +467,7 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
                 IResource resource = (IResource)oSelection;
 
                 if (ModelUtilities.isModelFile(resource)) {
-                    ModelResource mr = ModelUtilities.getModelResource((IFile)resource, true);
+                    ModelResource mr = ModelUtil.getModelResource((IFile)resource, true);
                     if (mr.getModelType() != null) {
                         if (mr.getModelType().equals(newModelInfo.getModelType())) {
                             if (mr.getPrimaryMetamodelDescriptor() != null) {

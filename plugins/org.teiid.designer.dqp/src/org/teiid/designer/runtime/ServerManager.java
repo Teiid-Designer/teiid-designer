@@ -25,15 +25,17 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.core.util.Base64;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import com.metamatrix.core.util.CoreArgCheck;
-import org.teiid.core.util.Base64;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
@@ -84,6 +86,11 @@ public final class ServerManager implements EventManager {
     private final CopyOnWriteArrayList<IExecutionConfigurationListener> listeners;
 
     /**
+     * The manager responsible for the maintenace of the Preview VDBs,
+     */
+    private final PreviewManager previewManager;
+
+    /**
      * The path where the server registry is persisted or <code>null</code> if not persisted.
      */
     private final String stateLocationPath;
@@ -115,6 +122,21 @@ public final class ServerManager implements EventManager {
         this.servers = new ArrayList<Server>();
         this.stateLocationPath = stateLocationPath;
         this.listeners = new CopyOnWriteArrayList<IExecutionConfigurationListener>();
+
+        // construct Preview VDB Manager
+        PreviewManager tempPreviewManager = null;
+
+        if (stateLocationPath != null) {
+            try {
+                tempPreviewManager = new PreviewManager();
+                ResourcesPlugin.getWorkspace().addResourceChangeListener(tempPreviewManager); // TODO need to unregister
+                addListener(tempPreviewManager);
+            } catch (Exception e) {
+                // TODO preview is not enabled
+            }
+        }
+
+        this.previewManager = tempPreviewManager;
     }
 
     // ===========================================================================================================================
@@ -148,6 +170,13 @@ public final class ServerManager implements EventManager {
      */
     public Server getDefaultServer() {
         return defaultServer;
+    }
+
+    /**
+     * @return the preview VDB manager (may be <code>null</code> if preview not enabled because of no state space folder)
+     */
+    public PreviewManager getPreviewManager() {
+        return this.previewManager;
     }
 
     /**
@@ -321,24 +350,6 @@ public final class ServerManager implements EventManager {
     }
 
     /**
-     * Attempts to establish communication with the specified server.
-     * 
-     * @param server the server being checked (never <code>null</code>)
-     * @return a status if the server connection can be established
-     */
-    public IStatus ping( Server server ) {
-        CoreArgCheck.isNotNull(server, "server"); //$NON-NLS-1$
-        try {
-            server.getAdmin().getAdminApi().getSessions();
-        } catch (Exception e) {
-            String msg = Util.getString("cannotConnectToServer", server.getUrl()); //$NON-NLS-1$
-            return new Status(IStatus.WARNING, PLUGIN_ID, msg, e);
-        }
-
-        return Status.OK_STATUS;
-    }
-
-    /**
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.runtime.EventManager#removeListener(org.teiid.designer.runtime.IExecutionConfigurationListener)
@@ -401,11 +412,12 @@ public final class ServerManager implements EventManager {
     }
 
     /**
-     * Saves the {@link Server} registry to the file system.
+     * Saves the {@link Server} registry to the file system, shuts down the {@link PreviewManager}, and performs any other tasks
+     * needed to shutdown.
      * 
-     * @return a status indicating if the registry was successfully saved
+     * @return a status indicating if shutdown was successful
      */
-    public IStatus saveState() {
+    public IStatus shutdown() {
         if ((this.stateLocationPath != null) && !getServers().isEmpty()) {
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -444,6 +456,14 @@ public final class ServerManager implements EventManager {
             }
         }
 
+        // shutdown PreviewManager
+        try {
+            // TODO needs a progress monitor to pass in so that user can see shutdown progress
+            this.previewManager.shutdown(null);
+        } catch (Exception e) {
+            return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
+        }
+
         return Status.OK_STATUS;
     }
 
@@ -458,10 +478,11 @@ public final class ServerManager implements EventManager {
             notify = defaultServer != null;
         }
 
+        Server oldDefaultServer = this.defaultServer;
         this.defaultServer = server;
 
         if (notify) {
-            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(defaultServer));
+            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
         }
     }
 

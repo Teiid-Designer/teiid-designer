@@ -233,7 +233,7 @@ public class AddToNewCustomDiagramAction extends DiagramAction implements Diagra
             if ((targetContainer instanceof IResource) && ModelUtilities.isModelFile((IResource)targetContainer)) {
 
                 try {
-                    modelResource = ModelUtilities.getModelResource((IFile)targetContainer, false);
+                    modelResource = ModelUtil.getModelResource((IFile)targetContainer, false);
                 } catch (ModelWorkspaceException e) {
                     String message = Util.getString("AddToNewCustomDiagramAction.createCustomDiagramError", selectedObject.toString()); //$NON-NLS-1$
                     Util.log(IStatus.ERROR, e, message);
@@ -251,7 +251,7 @@ public class AddToNewCustomDiagramAction extends DiagramAction implements Diagra
     private Diagram createDiagram( Object targetContainer ) throws ModelWorkspaceException {
         Diagram result = null;
         if ((targetContainer instanceof IResource) && ModelUtilities.isModelFile((IResource)targetContainer)) {
-            ModelResource modelResource = ModelUtilities.getModelResource((IFile)targetContainer, false);
+            ModelResource modelResource = ModelUtil.getModelResource((IFile)targetContainer, false);
 
             if (modelResource != null) {
                 result = modelResource.getModelDiagrams().createNewDiagram(null, PERSIST_CUSTOM_DIAGRAMS);
@@ -310,7 +310,7 @@ public class AddToNewCustomDiagramAction extends DiagramAction implements Diagra
                         if (ModelUtilities.isModelFile((IResource)selection[0]) && !ModelUtil.isXsdFile((IResource)selection[0])) {
                             ModelResource mr = null;
                             try {
-                                mr = ModelUtilities.getModelResource((IFile)selection[0], false);
+                                mr = ModelUtil.getModelResource((IFile)selection[0], false);
                             } catch (ModelWorkspaceException err) {
                                 String message = Util.getString("AddToNewCustomDiagramAction.findModelResourceError", selection[0].toString()); //$NON-NLS-1$
                                 Util.log(IStatus.ERROR, err, message);

@@ -850,7 +850,7 @@ public final class ModelerActionService extends AbstractActionService
                 } else if (obj instanceof IFile) {
                     try {
                         // models are files
-                        ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, false);
+                        ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
                         if (modelResource != null && !modelResource.hasErrors()) {
                             Resource resource = modelResource.getEmfResource();
                             descriptors = ModelerCore.getModelEditor().getNewRootObjectCommands(resource);

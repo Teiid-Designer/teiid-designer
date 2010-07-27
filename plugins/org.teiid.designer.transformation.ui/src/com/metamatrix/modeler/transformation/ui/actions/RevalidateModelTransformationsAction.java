@@ -34,6 +34,7 @@ import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.internal.transformation.util.SqlMappingRootCache;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -69,7 +70,7 @@ public class RevalidateModelTransformationsAction extends Action implements ISel
         boolean enable = false;
         if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
             try {
-                this.modelResource = ModelUtilities.getModelResource(((IFile)selectedObject), false);
+                this.modelResource = ModelUtil.getModelResource(((IFile)selectedObject), false);
                 if (ModelUtilities.isVirtual(this.modelResource)) {
                     enable = true;
                 }
@@ -311,7 +312,7 @@ public class RevalidateModelTransformationsAction extends Action implements ISel
         Object selectedObject = SelectionUtilities.getSelectedObject(selection);
         if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
             try {
-                this.modelResource = ModelUtilities.getModelResource(((IFile)selectedObject), false);
+                this.modelResource = ModelUtil.getModelResource(((IFile)selectedObject), false);
                 if (ModelUtilities.isVirtual(this.modelResource)) {
                     result = true;
                 }

@@ -141,7 +141,7 @@ public class DqpConnectionInfoHelper {
 	 * <code>ExecutionAdmin</code>'s getOrCreateDataSource(String name, String typeName, Properties properties) method.
 	 * 
 	 * @param modelResource
-	 * @return
+	 * @return the properties (never <code>null</code>)
 	 * @throws ModelWorkspaceException
 	 */
     public Properties getDataSourceProperties( ModelResource modelResource ) throws ModelWorkspaceException {
@@ -207,6 +207,18 @@ public class DqpConnectionInfoHelper {
             builder.append(segment).append('_');
 
         return builder.append(name).toString();
+    }
+
+    /**
+     * @param model the model whose JNDI data source name is being requested
+     * @param uuid the workspace UUID
+     * @return the JNDI name (never <code>null</code>)
+     */
+    public String generateUniqueConnectionJndiName( IFile model,
+                                                    String uuid ) {
+        return generateUniqueConnectionJndiName(model.getFullPath().removeFileExtension().lastSegment(),
+                                                model.getFullPath(),
+                                                DqpPlugin.workspaceUuid().toString());
     }
 	
     /**

@@ -16,13 +16,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -40,16 +40,19 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
-
+import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -96,28 +99,16 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     	// enablement has changed. Now the binding check is moved to the run() method which performs the check
     	// and queries the user for any additional info that's needed to execute the preview, including creating
     	// a source binding if necessary.
+        
+        // first must have a Teiid to run preview on
+        if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) return false;
     	
-        boolean isValid = true;
-        if (SelectionUtilities.isEmptySelection(selection)) {
-            isValid = false;
-        }
+        // must have one and only one EObject selected
+        EObject eObj = SelectionUtilities.getSelectedEObject(selection);
+        if (eObj == null) return false;
 
-        if (isValid && SelectionUtilities.isSingleSelection(selection)) {
-            final EObject eObj = SelectionUtilities.getSelectedEObject(selection);
-
-            if (eObj != null) {
-                boolean executable = ModelObjectUtilities.isExecutable(eObj);
-                //boolean hasBinding = hasModelBinding(eObj);
-                isValid = executable; //(executable && hasBinding);
-            } else {
-                isValid = false;
-            }
-
-        } else {
-            isValid = false;
-        }
-
-        return isValid;
+        // eObj must be previewable
+        return ModelObjectUtilities.isExecutable(eObj);
     }
 
     private boolean connectionInfoExists( EObject obj ) {
@@ -151,11 +142,23 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @Override
     public void run() {
-    	final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
-    	
-    	if( connectionInfoExists(selected) ) {
-    		internalRun();
-    	}
+      EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
+//    
+//    if( connectionInfoExists(selected) ) {
+//        internalRun();
+//    }
+
+        try {
+            // TODO need a progress monitor
+            Job job = DqpPlugin.getInstance().getServerManager().getPreviewManager().previewSetup(eObj, null);
+            IProgressService progressService = PlatformUI.getWorkbench().getProgressService(); 
+            progressService.showInDialog(getShell(), job); 
+        } catch (Exception e) {
+            // TODO show error message dialog
+        }
+        
+        // setup successful so run preview
+        internalRun();
     }
 
     /**
@@ -164,12 +167,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     @Override
     public boolean isApplicable( ISelection selection ) {
         return isValidSelection(selection);
-    }
-
-    
-     private boolean isShowingMaxPreviews( EObject eObject ) {
-
-        return false;
     }
 
     /**

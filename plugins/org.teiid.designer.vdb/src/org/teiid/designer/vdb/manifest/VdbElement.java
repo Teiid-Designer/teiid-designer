@@ -33,14 +33,21 @@ public class VdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     */
+    public static final String PREVIEW = "preview"; //$NON-NLS-1$
+
     @XmlAttribute( name = "name", required = true )
     private String name;
+
+    @XmlAttribute( name = "version", required = true )
+    private int version;
 
     @XmlElement( name = "description" )
     private String description;
 
-    @XmlAttribute( name = "version", required = true )
-    private int version;
+    @XmlElement( name = "property", type = PropertyElement.class )
+    private List<PropertyElement> properties;
 
     @XmlElement( name = "model", required = true, type = ModelElement.class )
     private List<ModelElement> models;
@@ -65,6 +72,7 @@ public class VdbElement implements Serializable {
             getEntries().add(new EntryElement(entry));
         for (final VdbModelEntry modelEntry : vdb.getModelEntries())
             getModels().add(new ModelElement(modelEntry));
+        getProperties().add(new PropertyElement(PREVIEW, Boolean.toString(vdb.isPreview())));
     }
 
     /**
@@ -95,6 +103,14 @@ public class VdbElement implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return The list of properties for this entry; never <code>null</code>
+     */
+    public List<PropertyElement> getProperties() {
+        if (properties == null) properties = new ArrayList<PropertyElement>();
+        return properties;
     }
 
     /**

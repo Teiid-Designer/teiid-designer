@@ -378,7 +378,7 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                success[0] = getServerManager().ping(server).isOK();
+                success[0] = server.ping().isOK();
             }
         });
 

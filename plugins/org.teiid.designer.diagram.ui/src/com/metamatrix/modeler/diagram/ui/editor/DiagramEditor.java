@@ -245,7 +245,7 @@ public class DiagramEditor extends GraphicalEditor
 
             if (ModelUtil.isXsdFile(modelFile)) result = false;
             else try {
-                mr = ModelUtilities.getModelResource(modelFile, true);
+                mr = ModelUtil.getModelResource(modelFile, true);
             } catch (final ModelWorkspaceException e) {
                 final String message = this.getClass().getName()
                                        + ":  canDisplay() error finding model resource for file = " + modelFile; //$NON-NLS-1$
@@ -881,7 +881,7 @@ public class DiagramEditor extends GraphicalEditor
                                     if (ModelUtilities.isModelFile(eventResource)) {
                                         ModelResource mr = null;
                                         try {
-                                            mr = ModelUtilities.getModelResource((IFile)eventResource, false);
+                                            mr = ModelUtil.getModelResource((IFile)eventResource, false);
                                         } catch (final ModelWorkspaceException e) {
                                             DiagramUiConstants.Util.log(e);
                                             WidgetUtil.showError(e);
@@ -933,7 +933,7 @@ public class DiagramEditor extends GraphicalEditor
 
                     ModelResource mr = null;
                     try {
-                        mr = ModelUtilities.getModelResource(modelFile, true);
+                        mr = ModelUtil.getModelResource(modelFile, true);
                     } catch (final ModelWorkspaceException e) {
                         final String message = this.getClass().getName()
                                                + ":  initializeDiagram() error finding model resource for file = " + modelFile; //$NON-NLS-1$
@@ -1041,7 +1041,7 @@ public class DiagramEditor extends GraphicalEditor
             } else if (nextElement instanceof IResource) if (ModelUtilities.isModelFile((IResource)nextElement)) {
                 ModelResource modelResource = null;
                 try {
-                    modelResource = ModelUtilities.getModelResource((IFile)nextElement, false);
+                    modelResource = ModelUtil.getModelResource((IFile)nextElement, false);
                 } catch (final ModelWorkspaceException e) {
                     DiagramUiConstants.Util.log(IStatus.ERROR,
                                                 e,

@@ -23,6 +23,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 import com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin;
@@ -102,7 +103,7 @@ public final class RefreshVirtualModelWizard extends AbstractWizard
         this.targetModelResource = null;
         if (selectedObj instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObj)) {
             try {
-                this.targetModelResource = ModelUtilities.getModelResource((IFile)selectedObj, false);
+                this.targetModelResource = ModelUtil.getModelResource((IFile)selectedObj, false);
             } catch (Exception e) {
                 ModelGeneratorUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
             }

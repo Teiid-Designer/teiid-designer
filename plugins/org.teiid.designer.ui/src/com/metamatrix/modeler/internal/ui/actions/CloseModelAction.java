@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -104,7 +105,7 @@ public class CloseModelAction extends ActionDelegate implements IWorkbenchWindow
                     // must be a model
                     if ( obj instanceof IResource && ModelUtilities.isModelFile((IResource) obj)) {
                         try {
-                            ModelResource modelResource = ModelUtilities.getModelResource((IFile) obj, false);
+                            ModelResource modelResource = ModelUtil.getModelResource((IFile) obj, false);
                             // defect 11675 -  ModelResource does not need to be open, just present
                             if ( modelResource!=null ) {
                                 selectedModelResources.add(modelResource);

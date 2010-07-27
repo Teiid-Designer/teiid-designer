@@ -7,6 +7,10 @@
  */
 package org.teiid.designer.runtime;
 
+import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.AdminFactory;
 import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
@@ -186,6 +190,22 @@ public class Server {
      */
     public boolean isPasswordBeingPersisted() {
         return this.persistPassword;
+    }
+
+    /**
+     * Attempts to establish communication with the specified server.
+     * 
+     * @return a status if the server connection can be established
+     */
+    public IStatus ping() {
+        try {
+            getAdmin().getAdminApi().getSessions();
+        } catch (Exception e) {
+            String msg = Util.getString("cannotConnectToServer", getUrl()); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
+        }
+
+        return Status.OK_STATUS;
     }
 
     /**

@@ -43,6 +43,7 @@ import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlPackage;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.relational.ui.wizards.RelationalObjectProcessor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
@@ -455,7 +456,7 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
                 IResource resource = (IResource)oSelection;
 
                 if (ModelUtilities.isModelFile(resource)) {
-                    ModelResource mr = ModelUtilities.getModelResource((IFile)resource, true);
+                    ModelResource mr = ModelUtil.getModelResource((IFile)resource, true);
 
                     if (mr != null && mr.getModelType().getValue() == ModelType.TYPE) {
                         bResult = true;
@@ -481,7 +482,7 @@ public class DatatypeModelSelectorDialog extends ModelWorkspaceDialog implements
                 IResource resource = (IResource)oSelection;
 
                 if (ModelUtilities.isModelFile(resource)) {
-                    ModelResource mr = ModelUtilities.getModelResource((IFile)resource, true);
+                    ModelResource mr = ModelUtil.getModelResource((IFile)resource, true);
                     if (mr.getPrimaryMetamodelDescriptor() != null) {
                         bResult = true;
                     }

@@ -128,7 +128,7 @@ public class DatatypeLocationSelectionValidator  implements ISelectionStatusVali
                 IResource resource = (IResource)oSelection;                                            
             
                 if ( ModelUtilities.isModelFile( resource ) ) {
-                    ModelResource mr = ModelUtilities.getModelResource( (IFile)resource, true );
+                    ModelResource mr = ModelUtil.getModelResource( (IFile)resource, true );
                     if (mr != null) {
                         if(mr.getModelType().getValue() == ModelType.TYPE) {
                             bResult = true;
@@ -153,7 +153,7 @@ public class DatatypeLocationSelectionValidator  implements ISelectionStatusVali
         
         if ( isDatatypeModelResource( oSelection ) ) {
             try {
-                mr = ModelUtilities.getModelResource( (IFile)oSelection, true );
+                mr = ModelUtil.getModelResource( (IFile)oSelection, true );
             } catch( ModelWorkspaceException mwe ) {
                 ModelerCore.Util.log(IStatus.ERROR, mwe, mwe.getMessage());                       
             }

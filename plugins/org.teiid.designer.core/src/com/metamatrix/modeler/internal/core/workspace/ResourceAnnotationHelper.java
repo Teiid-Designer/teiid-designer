@@ -93,7 +93,7 @@ public class ResourceAnnotationHelper {
 	 * 
 	 * @param modelResource
 	 * @param namespacePrefix
-	 * @return
+	 * @return the properties (never <code>null</code>)
 	 * @throws ModelWorkspaceException
 	 */
 	public Properties getProperties(final ModelResource modelResource, final String namespacePrefix) throws ModelWorkspaceException {

@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
@@ -145,7 +146,7 @@ public class ModelResourceSelectionValidator implements ISelectionStatusValidato
             boolean exceptionOccurred = false;
             ModelResource modelResource = null;
             try {
-                modelResource = ModelUtilities.getModelResource((IFile) obj, true);
+                modelResource = ModelUtil.getModelResource((IFile) obj, true);
             } catch (Exception ex) {
                 UiConstants.Util.log(IStatus.ERROR, ex, ex.getClass().getName());
                 if ( generateMultiSelectMessage ) {

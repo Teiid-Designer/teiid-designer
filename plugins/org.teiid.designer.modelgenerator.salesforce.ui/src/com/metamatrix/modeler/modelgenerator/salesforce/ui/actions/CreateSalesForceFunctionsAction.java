@@ -30,6 +30,7 @@ import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.ExtensionManager;
@@ -89,7 +90,7 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
             if (nextObj instanceof IFile && ModelIdentifier.isRelationalSourceModel((IFile)nextObj)) {
                 try {
                     IFile file = ((IFile)nextObj);
-                    ModelResource model = ModelUtilities.getModelResource((IFile)nextObj, false);
+                    ModelResource model = ModelUtil.getModelResource((IFile)nextObj, false);
                     XPackage extension = model.getModelAnnotation().getExtensionPackage();
                     if (null != extension && extension.getName().equals(ExtensionManager.PACKAGE_NAME)) {
                         if (!file.getParent().getFile(new Path("SalesforceFunctions.xmi")).exists()) { //$NON-NLS-1$

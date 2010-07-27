@@ -484,7 +484,7 @@ public class RelationshipOptionsWizardPanel extends Composite implements ModelGe
                 modelChooserNameText.setText(""); //$NON-NLS-1$
                 boolean exceptionOccurred = false;
                 try {
-                    selectedRelationshipsModel = ModelUtilities.getModelResource(sourceFile, true);
+                    selectedRelationshipsModel = ModelUtil.getModelResource(sourceFile, true);
                 } catch (Exception ex) {
                     Util.log(ex);
                     exceptionOccurred = true;

@@ -31,6 +31,7 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -119,7 +120,7 @@ public abstract class BaseExtensionReplaceAction extends Action
             for (final Iterator iter = selectedModels.iterator(); iter.hasNext();) {
                 final IFile modelFile = (IFile)iter.next();
                 try {
-                    final ModelResource modelResource = ModelUtilities.getModelResource(modelFile, true);
+                    final ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
                     try {
                         if (null == manager) {
                             manager = getExtensionManager();
@@ -217,7 +218,7 @@ public abstract class BaseExtensionReplaceAction extends Action
                         break;
                     }
                     try {
-                        final ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, true);
+                        final ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, true);
                         if (modelResource == null || modelResource.isReadOnly()) {
                             enable = false;
                             break;

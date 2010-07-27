@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.ui.wizards;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -16,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -70,7 +72,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
             if ( obj instanceof IFile ) {
                 if ( ModelUtilities.isModelFile((IFile) obj) ) {
                     try {
-                        selectedResource = ModelUtilities.getModelResource((IFile) obj, false);
+                        selectedResource = ModelUtil.getModelResource((IFile) obj, false);
                         if ( ! selectedResource.getPrimaryMetamodelDescriptor().equals(this.metamodelDescriptor) ) {
                             selectedResource = null;
                         } else {

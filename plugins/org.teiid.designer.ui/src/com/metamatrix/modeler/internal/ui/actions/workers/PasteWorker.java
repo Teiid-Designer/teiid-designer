@@ -21,6 +21,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.DiagramHelperManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -65,7 +66,7 @@ public class PasteWorker extends ModelObjectWorker {
                 pasteInName = ModelerCore.getModelEditor().getName((EObject)selectedObject);
             } else if ((selectedObject instanceof IResource) && ModelUtilities.isModelFile((IResource)selectedObject)) {
                 try {
-                    ModelResource modelResource = ModelUtilities.getModelResource((IFile)selectedObject, false);
+                    ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObject, false);
 
                     if (modelResource == null) {
                         // log exception

@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -103,7 +104,7 @@ public class PasteSpecialAction
                         
                 } else if ( (o instanceof IFile) && ModelUtilities.isModelFile((IFile) o)) {
                     try {
-                        modelResource = ModelUtilities.getModelResource((IFile) o, false);
+                        modelResource = ModelUtil.getModelResource((IFile) o, false);
                     } catch (ModelWorkspaceException e) {
                         UiConstants.Util.log(e);
                     }

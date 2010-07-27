@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
+import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
 import com.metamatrix.core.modeler.util.FileUtils;
@@ -144,6 +145,8 @@ public final class Vdb {
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
     final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
+    private final boolean preview;
+    private final int version;
 
     /**
      * @param file
@@ -151,12 +154,30 @@ public final class Vdb {
      */
     public Vdb( final IFile file,
                 final IProgressMonitor monitor ) {
+        this(file, false, monitor);
+    }
+
+    /**
+     * @param file
+     * @param preview indicates if this is a Preview VDB
+     * @param monitor
+     */
+    public Vdb( final IFile file,
+                final boolean preview,
+                final IProgressMonitor monitor ) {
         this.file = file;
         // Create folder for VDB in state folder
         folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
         folder.mkdirs();
         // Open archive and populate model entries
-        if (file.getLocation().toFile().length() == 0L) return;
+        if (file.getLocation().toFile().length() == 0L) {
+            this.preview = preview;
+            this.version = 1;
+            return;
+        }
+
+        final boolean[] previewable = new boolean[1];
+        final int[] vdbVersion = new int[1];
         OperationUtil.perform(new Unreliable() {
 
             ZipFile archive = null;
@@ -184,6 +205,13 @@ public final class Vdb {
                         unmarshaller.setSchema(getManifestSchema());
                         final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
                         setDescription(manifest.getDescription());
+                        vdbVersion[0] = manifest.getVersion();
+                        // VDB properties
+                        for (final PropertyElement property : manifest.getProperties()) {
+                            final String name = property.getName();
+                            if (VdbElement.PREVIEW.equals(name)) previewable[0] = Boolean.parseBoolean(property.getValue());
+                            else assert false;
+                        }
                         for (final EntryElement element : manifest.getEntries())
                             entries.add(new VdbEntry(Vdb.this, element, monitor));
                         for (final ModelElement element : manifest.getModels())
@@ -196,6 +224,8 @@ public final class Vdb {
                 modified.set(false);
             }
         });
+        this.preview = previewable[0];
+        this.version = vdbVersion[0];
     }
 
     /**
@@ -308,6 +338,28 @@ public final class Vdb {
      */
     public final boolean isModified() {
         return modified.get();
+    }
+    
+    /**
+     * @return <code>true</code> if this is a Preview VDB
+     */
+    public final boolean isPreview() {
+        return preview;
+    }
+    
+    /**
+     * @return the problem markers (never <code>null</code>)
+     * @throws Exception if there is a problem obtaining the problem markers
+     */
+    public IMarker[] getProblems() throws Exception {
+        return file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+    }
+    
+    /**
+     * @return the VDB version
+     */
+    public int getVersion() {
+        return version;
     }
 
     /**

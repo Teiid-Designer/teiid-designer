@@ -27,6 +27,7 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
 import com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin;
@@ -99,7 +100,7 @@ public class Uml2RelationalPasteContributor implements IPasteSpecialContributor,
         if ( ( obj instanceof IFile ) ) {
             if ( ! ((IFile) obj).isReadOnly() && ModelUtilities.isModelFile((IFile) obj) ) {
                 try {
-                    ModelResource modelResource = ModelUtilities.getModelResource((IFile)obj, false);
+                    ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
                     MetamodelDescriptor descriptor = modelResource.getPrimaryMetamodelDescriptor();
                     if ( descriptor != null ) {
                         final String uri = descriptor.getNamespaceURI();

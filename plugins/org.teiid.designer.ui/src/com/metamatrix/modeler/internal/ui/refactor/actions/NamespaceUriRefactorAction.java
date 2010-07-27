@@ -21,7 +21,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.refactor.NamespaceUriRenameDialog;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 
 
@@ -58,7 +57,7 @@ public final class NamespaceUriRefactorAction extends RefactorAction
     @Override
     public void run(IAction theAction) {
         try {
-            ModelResource model = ModelUtilities.getModelResource((IFile)this.resSelectedResource, true);
+            ModelResource model = ModelUtil.getModelResource((IFile)this.resSelectedResource, true);
             
             if (model == null) {
                 MessageDialog.openError(getShell(),

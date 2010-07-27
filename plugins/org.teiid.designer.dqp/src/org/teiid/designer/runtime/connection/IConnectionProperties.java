@@ -14,6 +14,8 @@ public interface IConnectionProperties {
 
     String CONNECTOR_TYPE = "rar-name"; //$NON-NLS-1$
     
+    String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$
+    
     String JNDI_NAME = "connection-jndi-name"; ////$NON-NLS-1$
     
     String NAME = "name"; //$NON-NLS-1$

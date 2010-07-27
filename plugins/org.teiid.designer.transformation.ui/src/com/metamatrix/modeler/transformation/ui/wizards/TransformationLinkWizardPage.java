@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.wizards.IStructuralCopyTreePopulator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
@@ -67,7 +68,7 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
             if ( obj instanceof IFile ) {
                 if ( ModelUtilities.isModelFile((IFile) obj) ) {
                     try {
-                        selectedResource = ModelUtilities.getModelResource((IFile) obj, false);
+                        selectedResource = ModelUtil.getModelResource((IFile) obj, false);
                         if ( ! selectedResource.getPrimaryMetamodelDescriptor().equals(this.metamodelDescriptor) ) {
                             selectedResource = null;
                         }

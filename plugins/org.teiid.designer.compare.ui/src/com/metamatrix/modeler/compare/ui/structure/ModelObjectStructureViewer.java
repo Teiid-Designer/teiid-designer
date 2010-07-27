@@ -239,7 +239,7 @@ public class ModelObjectStructureViewer extends StructuredViewer /*StructureDiff
 
         // Find the ModelProject
         final ModelProject modelProject = ModelerCore.getModelWorkspace().getModelProject(proj);
-        ModelUtilities.getModelResource((IFile)resource, false);
+        ModelUtil.getModelResource((IFile)resource, false);
 
         // Iterate over the segments, finding the corresponding model folder(s) and model resource
         ModelWorkspaceItem parent = modelProject;

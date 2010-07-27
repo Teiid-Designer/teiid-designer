@@ -44,6 +44,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.transformation.util.SqlMappingRootCache;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
@@ -438,7 +439,7 @@ public class ImportVirtualTablesMainPage extends WizardDataTransferPage implemen
             // Let's get the model resource and work from there...
             this.modelFolderNameField.setText(((IFile)oLocation).getName());
             try {
-                targetResource = ModelUtilities.getModelResource((IFile)oLocation, false);
+                targetResource = ModelUtil.getModelResource((IFile)oLocation, false);
                 targetLocation = targetResource;
             } catch (ModelWorkspaceException err) {
             }

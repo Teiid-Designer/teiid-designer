@@ -294,7 +294,7 @@ public class ModelExplorerContentProvider extends WorkbenchContentProvider imple
                 IResource resource = (IResource)parentElement;
                 if (ModelUtilities.isModelFile(resource)) {
                     try {
-                        ModelResource modelResource = ModelUtilities.getModelResource((IFile)resource, true);
+                        ModelResource modelResource = ModelUtil.getModelResource((IFile)resource, true);
 
                         if (showModelContent && modelResource != null) {
                             if (this.enableModelSorting && this.sortModelContent) {

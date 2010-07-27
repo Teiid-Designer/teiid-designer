@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -91,7 +92,7 @@ public class ModelObjectWorker implements
                         if ((obj instanceof IResource) && ModelUtilities.isModelFile((IResource)obj)) {
                             
                             try {
-                                if (ModelUtilities.getModelResource(((IFile)obj), false) == null) {
+                                if (ModelUtil.getModelResource(((IFile)obj), false) == null) {
                                     canEdit = false;
                                     break;
                                 }

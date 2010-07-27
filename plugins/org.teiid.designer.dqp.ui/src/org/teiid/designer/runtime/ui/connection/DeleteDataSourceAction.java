@@ -3,22 +3,20 @@ package org.teiid.designer.runtime.ui.connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
@@ -137,7 +135,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     	ModelResource modelResource = null;
     	
     	try {
-    		modelResource = ModelUtilities.getModelResource(model, true);
+    		modelResource = ModelUtil.getModelResource(model, true);
 		} catch (ModelWorkspaceException e) {
 			DqpUiConstants.UTIL.log(IStatus.ERROR, 
 					DqpUiConstants.UTIL.getString("DeleteDataSourceAction.errorFindingModelResource", model.getName())); //$NON-NLS-1$

@@ -2,7 +2,6 @@ package org.teiid.designer.datatools.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -14,13 +13,12 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.SelectConnectionProfileDialog;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -152,7 +150,7 @@ public class SetConnectionProfileAction  extends SortableSelectionAction {
     	ModelResource mr = null;
     	
     	try {
-			mr = ModelUtilities.getModelResource(model, true);
+			mr = ModelUtil.getModelResource(model, true);
 		} catch (ModelWorkspaceException e) {
 			// TODO LOG THIS EXCEPTION
 			e.printStackTrace();

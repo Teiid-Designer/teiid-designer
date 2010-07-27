@@ -19,6 +19,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.properties.udp.ExtensionPropertySource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -61,7 +62,7 @@ public class ModelPropertySource implements IPropertySource {
         boolean succeeded = false;
         
         try {
-            this.modelResource = ModelUtilities.getModelResource(modelFile, false);
+            this.modelResource = ModelUtil.getModelResource(modelFile, false);
             if ( modelResource != null && modelResource.isOpen() ) {
                 try {
                     this.annotation = modelResource.getModelAnnotation();

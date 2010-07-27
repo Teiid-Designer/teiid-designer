@@ -45,6 +45,7 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.xsd.ui.textimport.DatatypeLocationSelectionValidator;
@@ -430,7 +431,7 @@ public class ImportDatatypesMainPage extends WizardDataTransferPage implements I
             // Let's get the model resource and work from there...
             this.modelFolderNameField.setText(((IFile)oLocation).getName());
             try {
-                targetResource = ModelUtilities.getModelResource((IFile)oLocation, false);
+                targetResource = ModelUtil.getModelResource((IFile)oLocation, false);
             } catch (ModelWorkspaceException err) {
             }
 

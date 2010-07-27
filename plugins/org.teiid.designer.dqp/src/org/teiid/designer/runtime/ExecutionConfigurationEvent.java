@@ -44,12 +44,9 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, server);
     }
 
-    public static ExecutionConfigurationEvent createSetDefaultServerEvent( Server server ) {
-        if (server == null) {
-            return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, null, null);
-        }
-
-        return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, server);
+    public static ExecutionConfigurationEvent createSetDefaultServerEvent( Server oldDefaultServer,
+                                                                           Server newDefaultServer ) {
+        return new ExecutionConfigurationEvent(EventType.DEFAULT, TargetType.SERVER, oldDefaultServer, newDefaultServer);
     }
 
     public static ExecutionConfigurationEvent createUpdateServerEvent( Server server,
@@ -80,7 +77,7 @@ public final class ExecutionConfigurationEvent {
     public static ExecutionConfigurationEvent createRemoveSourceBindingEvent( SourceConnectionBinding binding ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SOURCE_BINDING, binding);
     }
-    
+
     public static ExecutionConfigurationEvent createDeployVDBEvent( VDB vdb ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.VDB, vdb);
     }
@@ -150,7 +147,7 @@ public final class ExecutionConfigurationEvent {
 
         return (TeiidTranslator)this.target;
     }
-    
+
     /**
      * @return the connector involved in the event
      * @throws IllegalStateException if method is called for a server event
@@ -173,7 +170,9 @@ public final class ExecutionConfigurationEvent {
     }
 
     /**
-     * @return the server involved in the event
+     * When changing the default server, this returns the old default server.
+     * 
+     * @return the server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
     public Server getServer() {
@@ -194,7 +193,9 @@ public final class ExecutionConfigurationEvent {
     }
 
     /**
-     * @return the server involved in the event
+     * When changing the default server, this returns the new default server.
+     * 
+     * @return the updated server involved in the event (may be <code>null</code>)
      * @throws IllegalStateException if method is called for a connector event
      */
     public Server getUpdatedServer() {

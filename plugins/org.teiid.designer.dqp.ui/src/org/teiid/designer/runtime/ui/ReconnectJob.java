@@ -14,8 +14,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ServerManager;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 /**
@@ -66,13 +64,12 @@ public final class ReconnectJob extends Job {
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
         IStatus result = null;
-        ServerManager serverManager = DqpPlugin.getInstance().getServerManager();
 
         try {
             String taskName = UTIL.getString("reconnectJobTaskName", this.server.getUrl()); //$NON-NLS-1$
             monitor.beginTask(taskName, 1);
             monitor.setTaskName(taskName);
-            IStatus status = serverManager.ping(this.server);
+            IStatus status = this.server.ping();
             // TODO: Convert status from ping into successful Reconnect message?
             result = status;
             // result = Utils.convert(status);

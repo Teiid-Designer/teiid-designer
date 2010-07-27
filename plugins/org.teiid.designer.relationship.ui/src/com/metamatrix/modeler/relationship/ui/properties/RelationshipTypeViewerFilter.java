@@ -15,6 +15,7 @@ import com.metamatrix.metamodels.relationship.RelationshipFolder;
 import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
 
@@ -43,7 +44,7 @@ public class RelationshipTypeViewerFilter extends ViewerFilter {
         if ( element instanceof IFile ) {
             if ( ModelUtilities.isModelFile((IFile) element) ) {
                 try {
-                    ModelResource resource = ModelUtilities.getModelResource((IFile) element, false);
+                    ModelResource resource = ModelUtil.getModelResource((IFile) element, false);
                     if ( resource != null && resource.getPrimaryMetamodelDescriptor() != null ) {
                         if ( RelationshipPackage.eNS_URI.equals(resource.getPrimaryMetamodelDescriptor().getNamespaceURI()) ) {
                             return true;

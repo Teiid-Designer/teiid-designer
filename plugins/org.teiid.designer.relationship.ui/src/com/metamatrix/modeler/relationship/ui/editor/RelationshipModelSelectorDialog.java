@@ -39,6 +39,7 @@ import com.metamatrix.metamodels.relationship.RelationshipPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -422,7 +423,7 @@ public class RelationshipModelSelectorDialog extends ModelWorkspaceDialog implem
                 IResource resource = (IResource)oSelection;
 
                 if (ModelUtilities.isModelFile(resource)) {
-                    ModelResource mr = ModelUtilities.getModelResource((IFile)resource, true);
+                    ModelResource mr = ModelUtil.getModelResource((IFile)resource, true);
 
                     if (mr.getPrimaryMetamodelDescriptor() != null) {
                         if (mr.getPrimaryMetamodelDescriptor().getNamespaceURI().equals(RelationshipPackage.eNS_URI)) {

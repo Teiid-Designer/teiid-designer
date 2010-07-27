@@ -65,6 +65,7 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertySheetPage;
 import com.metamatrix.modeler.internal.ui.search.ModelObjectFinderDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -310,7 +311,7 @@ public class RelationshipPanel extends Composite
                         mr = (ModelResource)oLocation;
                     } else {
                         IResource resource = (IResource)oLocation;
-                        mr = ModelUtilities.getModelResource((IFile)resource, true);
+                        mr = ModelUtil.getModelResource((IFile)resource, true);
                     }
 
                     ModelerCore.getModelEditor().addValue(mr.getEmfResource(),

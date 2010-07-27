@@ -609,7 +609,7 @@ public class ModelEditor extends MultiPageModelEditor
 
         // get the ModelResource.
         try {
-            modelResource = ModelUtilities.getModelResource(((IFileEditorInput)input).getFile(), false);
+            modelResource = ModelUtil.getModelResource(((IFileEditorInput)input).getFile(), false);
             if (modelResource == null) {
                 String message = UiConstants.Util.getString("ModelEditor.modelResourceError", input.getName()); //$NON-NLS-1$
                 throw new PartInitException(message);
@@ -1481,7 +1481,7 @@ public class ModelEditor extends MultiPageModelEditor
                             IFile file = (IFile)models[i];
                             if (file.exists()) {
                                 try {
-                                    modelList.add(ModelUtilities.getModelResource(file, true));
+                                    modelList.add(ModelUtil.getModelResource(file, true));
                                 } catch (ModelWorkspaceException e) {
                                     String message = UiConstants.Util.getString("ModelEditor.modelResourceError", file.getName()); //$NON-NLS-1$
                                     UiConstants.Util.log(IStatus.ERROR, e, message);

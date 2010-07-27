@@ -23,6 +23,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -76,7 +77,7 @@ public class RevalidateModelAction extends ActionDelegate implements IWorkbenchW
         boolean enable = false;
         if (selectedObject instanceof IResource && ModelUtilities.isModelFile((IResource)selectedObject)) {
             try {
-                this.modelResource = ModelUtilities.getModelResource(((IFile)selectedObject), false);
+                this.modelResource = ModelUtil.getModelResource(((IFile)selectedObject), false);
                 if (ModelUtilities.isVirtual(this.modelResource)) {
                     enable = true;
                 }

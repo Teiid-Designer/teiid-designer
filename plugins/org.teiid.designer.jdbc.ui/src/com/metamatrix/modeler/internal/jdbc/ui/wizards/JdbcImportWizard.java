@@ -530,7 +530,7 @@ public class JdbcImportWizard extends AbstractWizard
         boolean isSourceModel = false;
         try {
             if (seletedObj instanceof IFile) {
-                ModelResource modelResource = ModelUtilities.getModelResource((IFile)seletedObj, false);
+                ModelResource modelResource = ModelUtil.getModelResource((IFile)seletedObj, false);
                 isSourceModel = ModelUtilities.isPhysical(modelResource);
             }
         } catch (Exception e) {

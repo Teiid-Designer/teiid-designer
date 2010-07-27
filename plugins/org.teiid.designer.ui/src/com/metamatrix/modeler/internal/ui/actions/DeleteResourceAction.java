@@ -169,7 +169,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
         ModelResource model = null;
         if (ModelUtilities.isModelFile(theFile)) {
             try {
-                model = ModelUtilities.getModelResource(theFile, false);
+                model = ModelUtil.getModelResource(theFile, false);
 
                 if (model != null) if (model.isLoaded()) {
                     // see if the model is open, in an initialized ModelEditor
@@ -524,7 +524,7 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
         ModelResource model = null;
         if (ModelUtilities.isModelFile(theFile)) try {
-            model = ModelUtilities.getModelResource(theFile, false);
+            model = ModelUtil.getModelResource(theFile, false);
             if (model != null && model.isLoaded() && model.getEmfResource().isModified()) {
                 // first, see if the model has pending changes that need to be saved.
                 final String title = UiConstants.Util.getString("DeleteResourceAction.pendingChangesTitle"); //$NON-NLS-1$

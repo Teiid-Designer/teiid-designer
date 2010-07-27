@@ -14,8 +14,8 @@ import com.metamatrix.modeler.core.util.ModelStatisticsVisitor;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.util.PrimaryMetamodelStatisticsVisitor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelStatisticsDialog;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 
@@ -34,7 +34,7 @@ public class ModelStatisticsReporter {
         final ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor,mode);
         final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
         try {
-            ModelResource resource = ModelUtilities.getModelResource(modelFile, true);
+            ModelResource resource = ModelUtil.getModelResource(modelFile, true);
             if ( resource != null ) {
                 processor.walk(resource, ModelVisitorProcessor.DEPTH_INFINITE);
 

@@ -372,7 +372,7 @@ public class CreateXmlViewFromXsdMainPage extends WizardDataTransferPage impleme
 
                 if (theFile != null) {
                     try {
-                        targetXmlStructureModel = ModelUtilities.getModelResource(theFile, false);
+                        targetXmlStructureModel = ModelUtil.getModelResource(theFile, false);
                     } catch (ModelWorkspaceException theException) {
                         Util.log(theException);
                     }

@@ -179,7 +179,7 @@ public abstract class ModelObjectAction extends AbstractModelerAction {
                     if ((obj instanceof IResource) && ModelUtilities.isModelFile((IResource)obj)) {
                         
                         try {
-                            if (ModelUtilities.getModelResource(((IFile)obj), false) == null) {
+                            if (ModelUtil.getModelResource(((IFile)obj), false) == null) {
                                 canEdit = false;
                                 break;
                             }

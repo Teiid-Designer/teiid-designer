@@ -26,8 +26,8 @@ import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelSelectorInfo;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.xml.ui.wizards.VirtualDocumentWizardContributor;
 import com.metamatrix.modeler.mapping.factory.MappingClassBuilderStrategy;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -115,7 +115,7 @@ public class ViewXmlMessageStructureAction extends CreateXmlViewFromXsdAction {
             IResource modelFile = modelContainer.getProject().findMember(modelPath);
             if( modelFile != null ) {
                 try {
-                    modelResource = ModelUtilities.getModelResource((IFile)modelFile, false);
+                    modelResource = ModelUtil.getModelResource((IFile)modelFile, false);
                 } catch (ModelWorkspaceException theException) {
                     theException.printStackTrace();
                 }

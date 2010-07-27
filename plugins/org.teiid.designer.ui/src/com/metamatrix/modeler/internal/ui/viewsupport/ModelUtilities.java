@@ -312,23 +312,6 @@ public abstract class ModelUtilities implements UiConstants {
      * @param forceOpen true if the ModelResource should open in responce to this call, false if it is okay to lazily open the
      *        resource.
      * @return the <code>ModelResource</code>; null only if the resource is not known
-     * @throws ModelWorkspaceException
-     */
-    public static ModelResource getModelResource( IFile modelFile,
-                                                  boolean forceOpen ) throws ModelWorkspaceException {
-        if (modelFile == null) {
-            return null;
-        }
-        return ModelerCore.getModelEditor().findModelResource(modelFile);
-    }
-
-    /**
-     * Get a ModelResource for a model file.
-     * 
-     * @param modelFile
-     * @param forceOpen true if the ModelResource should open in responce to this call, false if it is okay to lazily open the
-     *        resource.
-     * @return the <code>ModelResource</code>; null only if the resource is not known
      */
     public static ModelResource getModelResourceForIFile( IFile modelFile,
                                                           boolean forceOpen ) {
@@ -339,7 +322,7 @@ public abstract class ModelUtilities implements UiConstants {
         ModelResource mr = null;
 
         try {
-            mr = getModelResource(modelFile, forceOpen);
+            mr = ModelUtil.getModelResource(modelFile, forceOpen);
         } catch (ModelWorkspaceException err1) {
             String message = UiConstants.Util.getString("ModelUtilities.errorFindingModelResource", modelFile);//$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, err1, message);
@@ -441,7 +424,7 @@ public abstract class ModelUtilities implements UiConstants {
                 if ((resources != null) && (resources.length > 0)) {
                     for (int j = 0; j < resources.length; j++) {
                         if (isModelFile(resources[j])) {
-                            ModelResource modelResource = getModelResource((IFile)resources[j], false);
+                            ModelResource modelResource = ModelUtil.getModelResource((IFile)resources[j], false);
                             String uuid = modelResource.getUuid();
 
                             if ((uuid != null) && uuid.equals(theUuid)) {
@@ -696,7 +679,7 @@ public abstract class ModelUtilities implements UiConstants {
                 } else if (input instanceof ModelResource) {
                     md = (MetamodelDescriptor)input;
                 } else if (input instanceof IFile) {
-                    ModelResource mr = getModelResource((IFile)input, false);
+                    ModelResource mr = ModelUtil.getModelResource((IFile)input, false);
                     if (mr != null) md = mr.getPrimaryMetamodelDescriptor();
                 } else if (input instanceof Resource) {
                     ModelResource mr = getModelResource((Resource)input, false);
@@ -840,7 +823,7 @@ public abstract class ModelUtilities implements UiConstants {
         ModelResource targetModelResource = null;
         try {
             // Find Model Resource
-            targetModelResource = getModelResource((IFile)targetIFile, false);
+            targetModelResource = ModelUtil.getModelResource((IFile)targetIFile, false);
             if (targetModelResource != null) {
                 modelImports = targetModelResource.getModelImports();
             }
@@ -931,7 +914,7 @@ public abstract class ModelUtilities implements UiConstants {
 
                 if (resource != null) {
                     try {
-                        mr = getModelResource((IFile)resource, false);
+                        mr = ModelUtil.getModelResource((IFile)resource, false);
                     } catch (ModelWorkspaceException err1) {
                         String message = Util.getString("ModelUtilities.errorFindingModelResource", resource);//$NON-NLS-1$
                         UiConstants.Util.log(IStatus.ERROR, err1, message);
@@ -996,7 +979,7 @@ public abstract class ModelUtilities implements UiConstants {
 
                 if (resource != null) {
                     try {
-                        mr = getModelResource((IFile)resource, false);
+                        mr = ModelUtil.getModelResource((IFile)resource, false);
                     } catch (ModelWorkspaceException err1) {
                         String message = "[ModelUtilities.allDependenciesOpenInWorkspace()] ERROR: finding model resource.  IFile = " + resource; //$NON-NLS-1$
                         UiConstants.Util.log(IStatus.ERROR, err1, message);
@@ -1262,7 +1245,7 @@ public abstract class ModelUtilities implements UiConstants {
 
         try {
             // first, check that all dependencies are in the workspace:
-            boolean allDepsPresent = allDependenciesOpenInWorkspace(getModelResource(iFile, true));
+            boolean allDepsPresent = allDependenciesOpenInWorkspace(ModelUtil.getModelResource(iFile, true));
             if (!allDepsPresent) {
                 final String message = getString(MODEL_IMPORTED_NOT_FOUND_MSG_KEY,
                                                  instigator.getFullPath().makeRelative().toString())
@@ -1375,7 +1358,7 @@ public abstract class ModelUtilities implements UiConstants {
         try {
             while (it.hasNext()) {
                 nextRes = (IResource)it.next();
-                mo = ModelUtilities.getModelResource((IFile)nextRes, true);
+                mo = ModelUtil.getModelResource((IFile)nextRes, true);
                 if (mo != null) {
                     if (result.isEmpty()) {
                         result = new ArrayList();
@@ -1393,36 +1376,7 @@ public abstract class ModelUtilities implements UiConstants {
 
     public static void getDependentPhysicalModelResources( ModelResource modelResource,
                                                            Collection resources ) throws ModelWorkspaceException {
-        getDependentPhysicalModelResources(modelResource, resources, new ArrayList());
-    }
-
-    /**
-     * @param modelResource the model whose dependent physical sources are being requested
-     * @param resources the recursive resultant physical source model resources
-     * @param modelsProcessed the list of models already processed
-     * @throws ModelWorkspaceException if there is a problem working with the dependent models
-     * @since 5.5.3
-     */
-    private static void getDependentPhysicalModelResources( ModelResource modelResource,
-                                                            Collection<ModelResource> resources,
-                                                            Collection<ModelResource> modelsProcessed )
-        throws ModelWorkspaceException {
-        if (!modelsProcessed.contains(modelResource)) {
-            modelsProcessed.add(modelResource);
-            Collection dependents = getDependentResources(modelResource);
-
-            for (Iterator i = dependents.iterator(); i.hasNext();) {
-                ModelResource model = (ModelResource)i.next();
-
-                if (model.getModelType().getValue() == ModelType.PHYSICAL) {
-                    if (!resources.contains(model)) {
-                        resources.add(model);
-                    }
-                } else if (model.getModelType().getValue() == ModelType.VIRTUAL) {
-                    getDependentPhysicalModelResources(model, resources, modelsProcessed);
-                }
-            }
-        }
+        ModelUtil.getDependentModelResources(modelResource, resources, false);
     }
 
     /**
@@ -1433,25 +1387,7 @@ public abstract class ModelUtilities implements UiConstants {
      * @since 4.2
      */
     public static Collection getDependentResources( ModelResource resource ) throws ModelWorkspaceException {
-        Collection result = Collections.EMPTY_LIST;
-
-        IResource theResource = resource.getResource();
-
-        // Get the array of resources that this resource depends upon
-        IResource[] dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
-
-        ModelResource mo = null;
-        for (int i = 0; i != dependents.length; ++i) {
-            mo = ModelUtilities.getModelResource((IFile)dependents[i], true);
-            if (mo != null) {
-                if (result.isEmpty()) {
-                    result = new ArrayList();
-                }
-                result.add(mo);
-            }
-        }
-
-        return result;
+        return ModelUtil.getDependentResources(resource);
     }
 
     /**
@@ -1467,7 +1403,7 @@ public abstract class ModelUtilities implements UiConstants {
 
         // Find Model Resource
         try {
-            mr = ModelUtilities.getModelResource(file, false);
+            mr = ModelUtil.getModelResource(file, false);
         } catch (ModelWorkspaceException err) {
             String message = getString(MODEL_RESOURCE_NOT_FOUND_MSG_KEY, file.toString());
             UiConstants.Util.log(IStatus.ERROR, err, message);
@@ -1534,7 +1470,7 @@ public abstract class ModelUtilities implements UiConstants {
         boolean foundError = false;
         // Find Model Resource
         try {
-            mr = ModelUtilities.getModelResource(file, false);
+            mr = ModelUtil.getModelResource(file, false);
         } catch (ModelWorkspaceException err) {
             String message = getString(MODEL_RESOURCE_NOT_FOUND_MSG_KEY, file.toString());
             UiConstants.Util.log(IStatus.ERROR, err, message);

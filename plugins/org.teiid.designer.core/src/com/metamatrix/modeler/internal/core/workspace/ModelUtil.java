@@ -8,7 +8,9 @@
 package com.metamatrix.modeler.internal.core.workspace;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +18,9 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -27,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.teiid.core.TeiidException;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.logging.LogManager;
@@ -34,7 +39,6 @@ import com.metamatrix.common.vdb.VdbHeader;
 import com.metamatrix.common.vdb.VdbHeaderReader;
 import com.metamatrix.common.xsd.XsdHeader;
 import com.metamatrix.common.xsd.XsdHeaderReader;
-import org.teiid.core.TeiidException;
 import com.metamatrix.core.modeler.util.FileUtil;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -107,8 +111,8 @@ public class ModelUtil {
      * Returns the file extension portion of this file, or an empty string if there is none.
      * <p>
      * The file extension portion is defined as the string following the last period (".") character in the file name. If there is
-     * no period in the file name, the file has no file extension portion. If the name ends in a period, the file extension portion
-     * is the empty string.
+     * no period in the file name, the file has no file extension portion. If the name ends in a period, the file extension
+     * portion is the empty string.
      * </p>
      * 
      * @param resource
@@ -120,8 +124,8 @@ public class ModelUtil {
     }
 
     /**
-     * Returns the model for the specified object, which may be the object itself. The model can only be determined if the specified
-     * object is a {@link ModelResource}, {@link EObject}, {@link IFile} or {@link Resource}.
+     * Returns the model for the specified object, which may be the object itself. The model can only be determined if the
+     * specified object is a {@link ModelResource}, {@link EObject}, {@link IFile} or {@link Resource}.
      * 
      * @param object The object whose hierarchy is to be searched for a model; may not be null.
      * @return The model for the specified object, or null if the model cannot be determined.
@@ -150,6 +154,67 @@ public class ModelUtil {
                                                   final boolean forceOpen ) throws ModelWorkspaceException {
         if (modelFile == null) return null;
         return ModelerCore.getModelEditor().findModelResource(modelFile);
+    }
+    
+    private static void getDependentModelResources( ModelResource modelResource,
+                                                    Collection<ModelResource> resources,
+                                                    Collection<ModelResource> modelsProcessed,
+                                                    boolean includeVirtualModels ) throws ModelWorkspaceException {
+        if (!modelsProcessed.contains(modelResource)) {
+            modelsProcessed.add(modelResource);
+            Collection dependents = getDependentResources(modelResource);
+
+            for (Iterator i = dependents.iterator(); i.hasNext();) {
+                ModelResource model = (ModelResource)i.next();
+
+                if (model.getModelType().getValue() == ModelType.PHYSICAL) {
+                    if (!resources.contains(model)) {
+                        resources.add(model);
+                    }
+                } else if (model.getModelType().getValue() == ModelType.VIRTUAL) {
+                    if (includeVirtualModels && !resources.contains(model)) {
+                        resources.add(model);
+                    }
+
+                    getDependentModelResources(model, resources, modelsProcessed, includeVirtualModels);
+                }
+            }
+        }
+    }
+
+    public static void getDependentModelResources( ModelResource modelResource,
+                                                   Collection<ModelResource> resources,
+                                                   boolean includeVirtualModels ) throws ModelWorkspaceException {
+        getDependentModelResources(modelResource, resources, new ArrayList(), includeVirtualModels);
+    }
+
+    /**
+     * Convenience method to obtain a list of ModelResource instances which the input model resource depends upon
+     * 
+     * @param resource
+     * @return Collection of ModelResource's
+     * @since 4.2
+     */
+    public static Collection getDependentResources( ModelResource resource ) throws ModelWorkspaceException {
+        Collection result = Collections.EMPTY_LIST;
+
+        IResource theResource = resource.getResource();
+
+        // Get the array of resources that this resource depends upon
+        IResource[] dependents = WorkspaceResourceFinderUtil.getDependentResources(theResource);
+
+        ModelResource mo = null;
+        for (int i = 0; i != dependents.length; ++i) {
+            mo = getModelResource((IFile)dependents[i], true);
+            if (mo != null) {
+                if (result.isEmpty()) {
+                    result = new ArrayList();
+                }
+                result.add(mo);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -481,8 +546,8 @@ public class ModelUtil {
                     if (header != null && ModelType.PHYSICAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                 }
             }
-        } else if( obj != null && obj instanceof EmfResource ) {
-        	return ModelType.PHYSICAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
+        } else if (obj != null && obj instanceof EmfResource) {
+            return ModelType.PHYSICAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
         }
         return false;
     }
@@ -549,17 +614,17 @@ public class ModelUtil {
     public static boolean isVirtual( final Object obj ) {
         if (obj != null ) {
         	if( obj instanceof EObject) {
-	            final EObject eObject = (EObject)obj;
-	            final Resource resource = eObject.eResource();
-	            if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
-	            else if (resource == null && eObject.eIsProxy()) {
-	                final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
-	                if (theUri.isFile()) {
-	                    final File newFile = new File(theUri.toFileString());
-	                    final XMIHeader header = getXmiHeader(newFile);
-	                    if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
-	                }
-	            }
+                final EObject eObject = (EObject)obj;
+                final Resource resource = eObject.eResource();
+                if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
+                else if (resource == null && eObject.eIsProxy()) {
+                    final URI theUri = ((InternalEObject)eObject).eProxyURI().trimFragment();
+                    if (theUri.isFile()) {
+                        final File newFile = new File(theUri.toFileString());
+                        final XMIHeader header = getXmiHeader(newFile);
+                        if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
+                    }
+                }
         	} else if( obj instanceof EmfResource ) {
         		return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
         	}
@@ -709,8 +774,8 @@ public class ModelUtil {
     }
 
     /**
-     * Method returns a boolean value (true or false) for whether or not a model resource requires validation. The model may be have
-     * been saved with auto-build off.
+     * Method returns a boolean value (true or false) for whether or not a model resource requires validation. The model may be
+     * have been saved with auto-build off.
      * 
      * @param targetModelResource
      * @return true if requires validation, false if not.

@@ -44,6 +44,7 @@ import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.relationship.ui.textimport.RelationshipTextImportModelSelectorDialog;
 import com.metamatrix.modeler.internal.relationship.ui.textimport.RelationshipsLocationSelectionValidator;
 import com.metamatrix.modeler.internal.relationship.ui.util.SqlDependencyRelationshipHelper;
@@ -570,7 +571,7 @@ public class GenerateSqlRelationshipsMainPage extends WizardDataTransferPage imp
             // Let's get the model resource and work from there...
             try {
                 targetProject = ((IFile)oLocation).getProject();
-                targetResource = ModelUtilities.getModelResource((IFile)oLocation, false);
+                targetResource = ModelUtil.getModelResource((IFile)oLocation, false);
                 targetLocation = targetResource;
             } catch (ModelWorkspaceException err) {
             }

@@ -37,7 +37,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 
@@ -222,7 +222,7 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
                             ModelResource mrDirtyFile = null;
                             try {
                             
-                                mrDirtyFile = ModelUtilities.getModelResource( dirtyFile, false );
+                                mrDirtyFile = ModelUtil.getModelResource( dirtyFile, false );
                             } catch ( ModelWorkspaceException mwe ) {
                                 ModelerCore.Util.log(IStatus.ERROR, mwe, mwe.getMessage());                                                                                  
                             }

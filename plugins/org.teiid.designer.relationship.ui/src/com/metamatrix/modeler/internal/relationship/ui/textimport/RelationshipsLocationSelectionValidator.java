@@ -138,7 +138,7 @@ public class RelationshipsLocationSelectionValidator  implements ISelectionStatu
                 IResource resource = (IResource)oSelection;                                            
             
                 if ( ModelUtilities.isModelFile( resource ) ) {
-                    ModelResource mr = ModelUtilities.getModelResource( (IFile)resource, true );
+                    ModelResource mr = ModelUtil.getModelResource( (IFile)resource, true );
                     
                     if (mr != null&& ModelUtilities.isVirtual(mr) ) {
                         MetamodelDescriptor descriptor = mr.getPrimaryMetamodelDescriptor();
@@ -166,7 +166,7 @@ public class RelationshipsLocationSelectionValidator  implements ISelectionStatu
         
         if ( isRelationshipModelResource( oSelection ) ) {
             try {
-                mr = ModelUtilities.getModelResource( (IFile)oSelection, true );
+                mr = ModelUtil.getModelResource( (IFile)oSelection, true );
             } catch( ModelWorkspaceException mwe ) {
                 ModelerCore.Util.log(IStatus.ERROR, mwe, mwe.getMessage());                       
             }

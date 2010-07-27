@@ -48,6 +48,18 @@ public class ConnectionInfoHelper {
     public static final String JDBC_IMPORT_USERNAME = "com.metamatrix.modeler.jdbc.JdbcSource.username"; //$NON-NLS-1$
     public static final String JDBC_IMPORT_DRIVER_NAME = "com.metamatrix.modeler.jdbc.JdbcSource.driverName"; //$NON-NLS-1$
 
+    /**
+     * Indicates if the model resource has connection information.
+     * 
+     * @param modelResource the model resource whose connection information is being checked (may not be <code>null</code>)
+     * @return <code>true</code> if the model resource contains connection info
+     */
+    public static boolean connectionInfoExists( ModelResource modelResource ) throws Exception {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        ConnectionInfoHelper helper = new ConnectionInfoHelper();
+        return helper.hasConnectionInfo(modelResource);
+    }
+
     private ResourceAnnotationHelper resourceAnnotationHelper;
 
     private ConnectionProfileFactory connectionProfileFactory;

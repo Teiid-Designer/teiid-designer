@@ -23,6 +23,7 @@ import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.ui.ModelGeneratorUiConstants;
@@ -112,7 +113,7 @@ public class RefreshVirtualModelContributor implements IRefreshContributor, Mode
         Object obj = SelectionUtilities.getSelectedObject(selection);
         if ((obj instanceof IFile) && ModelUtilities.isModelFile((IFile)obj) && ((IFile)obj).exists()) {
             try {
-                modelResource = ModelUtilities.getModelResource((IFile)obj, false);
+                modelResource = ModelUtil.getModelResource((IFile)obj, false);
 
                 // Can refresh a physical or virtual relational model if there is a relationship model in the
                 // workspace and references this relational model and a UML model. We need the relationship

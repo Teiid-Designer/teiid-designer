@@ -46,6 +46,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.relational.ui.textimport.RelationalModelSelectorDialog;
 import com.metamatrix.modeler.internal.relational.ui.textimport.RelationalTableLocationSelectionValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -464,7 +465,7 @@ public class ImportRelationalTablesMainPage extends WizardDataTransferPage imple
             // Let's get the model resource and work from there...
             this.modelFolderNameField.setText(((IFile)oLocation).getName());
             try {
-                targetResource = ModelUtilities.getModelResource((IFile)oLocation, false);
+                targetResource = ModelUtil.getModelResource((IFile)oLocation, false);
                 targetLocation = targetResource;
             } catch (ModelWorkspaceException err) {
             }

@@ -67,11 +67,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
@@ -657,7 +658,7 @@ public class ModelTableEditor extends NavigableEditor
         setInput(input);
         try {
             IFileEditorInput fileInput = (IFileEditorInput)input;
-            modelResource = ModelUtilities.getModelResource(fileInput.getFile(), true);
+            modelResource = ModelUtil.getModelResource(fileInput.getFile(), true);
             if (modelResource != null) {
                 emfResource = modelResource.getEmfResource();
             }

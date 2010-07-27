@@ -20,6 +20,7 @@ import com.metamatrix.metamodels.relationship.RelationshipFolder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relationship.ui.actions.RelationshipAction;
 import com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramUtil;
@@ -79,7 +80,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
 				ModelResource mr = null;
 			            	
 				try {
-					mr = ModelUtilities.getModelResource((IFile)selectedObject, false);
+					mr = ModelUtil.getModelResource((IFile)selectedObject, false);
 				} catch (ModelWorkspaceException e) {
 					e.printStackTrace();
 				}

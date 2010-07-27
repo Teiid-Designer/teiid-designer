@@ -131,7 +131,7 @@ public class CreateXmlViewFromXsdAction extends SortableSelectionAction implemen
 
                 if (theFile != null) {
                     try {
-                        xmlDocModel = ModelUtilities.getModelResource(theFile, false);
+                        xmlDocModel = ModelUtil.getModelResource(theFile, false);
                     } catch (ModelWorkspaceException theException) {
                         Util.log(theException);
                     }
