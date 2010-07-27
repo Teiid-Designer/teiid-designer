@@ -344,7 +344,7 @@ public final class ServerManager implements EventManager {
                 l.configurationChanged(event);
             } catch (Exception e) {
                 removeListener(l);
-                Util.log(IStatus.WARNING, e, Util.getString("unexpectedErrorInExecutionConfigurationListener")); //$NON-NLS-1$
+                Util.log(IStatus.WARNING, e, Util.getString("unexpectedErrorInExecutionConfigurationListener", l)); //$NON-NLS-1$
             }
         }
     }

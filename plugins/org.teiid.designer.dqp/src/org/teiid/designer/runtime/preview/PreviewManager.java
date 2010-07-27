@@ -67,6 +67,7 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -302,10 +303,21 @@ public final class PreviewManager extends JobChangeAdapter
                                                 Server previewServer ) throws Exception {
         assert (previewServer != null) : "Preview server is null"; //$NON-NLS-1$
 
+        
+        if(previewVdb.getModelEntries().isEmpty() ) {
+        	return Status.OK_STATUS;
+        }
+        
         // PVDB has only one model
         VdbModelEntry modelEntry = previewVdb.getModelEntries().iterator().next();
         IFile model = modelEntry.findFileInWorkspace();
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
+        
+        boolean isSourceModel = modelResource.getModelType() == ModelType.PHYSICAL_LITERAL;
+        
+        if( !isSourceModel ) {
+        	return Status.OK_STATUS; 
+        }
 
         int errors = 0;
         IStatus connectionInfoError = null;
@@ -489,6 +501,13 @@ public final class PreviewManager extends JobChangeAdapter
             name.append(projectOrModel.getName()).append(".project"); //$NON-NLS-1$
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
+            
+            if( projectOrModel.getFileExtension().equalsIgnoreCase("vdb")) {
+            	String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
+            	if( vdbName.startsWith(ModelerCore.workspaceUuid().toString()) ) {
+            		return projectOrModel.getFullPath().lastSegment();
+            	}
+            }
             IPath modelPath = projectOrModel.getFullPath().removeFileExtension();
 
             for (String segment : modelPath.segments()) {
@@ -785,6 +804,7 @@ public final class PreviewManager extends JobChangeAdapter
                              IProgressMonitor monitor ) throws Exception {
         Server previewServer = getPreviewServer();
         ModelResource model = ModelUtil.getModel(objectToPreview);
+        boolean isSourceModel = model.getModelType() == ModelType.PHYSICAL_LITERAL;
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
         IFile pvdbFile = this.context.getPreviewVdb(modelToPreview);
         Vdb pvdb = new Vdb(pvdbFile, true, monitor);
@@ -806,11 +826,13 @@ public final class PreviewManager extends JobChangeAdapter
 
         // deploy model's PVDB if necessary
         if (needsToBeDeployed(pvdbFile)) {
-            status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                throw new CoreException(status);
-            }
+        	if( isSourceModel ) {
+	            status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
+	
+	            if (status.getSeverity() == IStatus.ERROR) {
+	                throw new CoreException(status);
+	            }
+        	}
 
             setupJob.deploy(pvdbFile);
             parents.add(pvdbFile.getParent());

@@ -77,7 +77,9 @@ public final class PreviewSetupJob extends CompositePreviewJob {
 
             // add merge jobs last
             for (IFile pvdbToMerge : this.pvdbsToDeploy) {
-                add(new MergePreviewVdbJob(pvdbToMerge.getName(), 1, this.projectPreviewVdbName, 1, context, getPreviewServer()));
+            	if( ! pvdbToMerge.getName().equals(this.projectPreviewVdbName) ) {
+            		add(new MergePreviewVdbJob(pvdbToMerge.getName(), 1, this.projectPreviewVdbName, 1, context, getPreviewServer()));
+            	}
             }
 
             // now ready to run

@@ -34,6 +34,7 @@ import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfi
 import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -155,6 +156,9 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             progressService.showInDialog(getShell(), job); 
         } catch (Exception e) {
             // TODO show error message dialog
+        	MessageDialog.openError(getShell(), "Preview Data Error", e.getMessage()); //$NON-NLS-1$
+        	System.out.print(e);
+        	return;
         }
         
         // setup successful so run preview

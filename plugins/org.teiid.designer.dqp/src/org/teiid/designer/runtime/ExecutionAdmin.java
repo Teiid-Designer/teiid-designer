@@ -258,7 +258,9 @@ public class ExecutionAdmin {
                              int vdbVersion ) throws Exception {
         this.admin.deleteVDB(vdbName, vdbVersion);
         VDB vdb = getVdb(vdbName);
-
+        
+        refreshVDBs();
+        
         if (vdb == null) {
 
         } else {
