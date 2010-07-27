@@ -69,7 +69,26 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
      */
     @Override
     public List<DifferenceReport> getDifferenceReports() {
-        // TODO: Implement getDifferenceReports for DdlImportWizard
+        final List<String> msgs = new ArrayList<String>();
+        class Task implements IRunnableWithProgress {
+
+            DifferenceReport report;
+
+            @Override
+            public void run( final IProgressMonitor monitor ) {
+                monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
+                report = importer.importDdl2(msgs, monitor, 100);
+                monitor.done();
+            }
+        }
+        try {
+            final Task task = new Task();
+            new ProgressMonitorDialog(getShell()).run(true, true, task);
+            return Collections.singletonList(task.report);
+        } catch (final Exception error) {
+            error.printStackTrace();
+            WidgetUtil.showError(error);
+        }
         return Collections.singletonList(null);
     }
 
@@ -121,8 +140,10 @@ public class DdlImporterWizard extends Wizard implements IDifferencingWizard {
                 });
                 // Select model in workspace
                 UiUtil.getViewPart(UiConstants.Extensions.Explorer.VIEW).getSite().getSelectionProvider().setSelection(new StructuredSelection(
-                                                                                                                                               importer.model()));
+                                                                                                                                               importer.modelFile()));
             }
+        } catch (final InterruptedException error) {
+            return false;
         } catch (final Exception error) {
             error.printStackTrace();
             WidgetUtil.showError(error);

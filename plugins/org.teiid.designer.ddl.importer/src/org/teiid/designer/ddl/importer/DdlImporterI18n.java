@@ -10,6 +10,7 @@ package org.teiid.designer.ddl.importer;
 import static org.teiid.designer.ddl.importer.DdlImporterPlugin.i18n;
 
 class DdlImporterI18n {
+    static final String CREATING_CHANGE_REPORT_MSG = i18n("creatingChangeReportMsg"); //$NON-NLS-1$
     static final String CREATING_MODEL_MSG = i18n("creatingModelMsg"); //$NON-NLS-1$
     static final String DDL_FILE_NOT_FOUND_MSG = i18n("ddlFileNotFoundMsg"); //$NON-NLS-1$
     static final String ENTITY_NOT_FOUND_MSG = i18n("entityNotFoundMsg"); //$NON-NLS-1$
@@ -21,6 +22,7 @@ class DdlImporterI18n {
     static final String MODEL_FOLDER_IS_FILE_MSG = i18n("modelFolderIsFileMsg"); //$NON-NLS-1$
     static final String MODEL_NAME_IS_FOLDER_MSG = i18n("modelNameIsFolderMsg"); //$NON-NLS-1$
     static final String MODEL_NAME_IS_NON_MODEL_FILE_MSG = i18n("modelNameIsNonModelFileMsg"); //$NON-NLS-1$
+    static final String MODEL_NAME_IS_NON_RELATIONAL_MODEL_MSG = i18n("modelNameIsNonRelationalModelMsg"); //$NON-NLS-1$
     static final String PARSING_DDL_MSG = i18n("parsingDdlMsg"); //$NON-NLS-1$
     static final String SAVING_MODEL_MSG = i18n("savingModelMsg"); //$NON-NLS-1$
 

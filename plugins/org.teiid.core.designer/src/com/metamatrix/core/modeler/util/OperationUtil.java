@@ -27,7 +27,7 @@ public final class OperationUtil {
             } catch (final Throwable error) {
                 if (significantError == null) significantError = error;
             }
-            if (significantError instanceof Exception) throw CoreModelerPlugin.toRuntimeException((Exception)significantError);
+            if (significantError != null) throw CoreModelerPlugin.toRuntimeException(significantError);
         }
         return null; // Unreachable
     }
@@ -45,7 +45,7 @@ public final class OperationUtil {
             } catch (final Throwable error) {
                 if (significantError == null) significantError = error;
             }
-            if (significantError instanceof Exception) throw CoreModelerPlugin.toRuntimeException((Exception)significantError);
+            if (significantError != null) throw CoreModelerPlugin.toRuntimeException(significantError);
         }
     }
 

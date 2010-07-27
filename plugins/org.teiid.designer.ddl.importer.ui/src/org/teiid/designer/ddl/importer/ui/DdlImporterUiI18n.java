@@ -10,7 +10,15 @@ package org.teiid.designer.ddl.importer.ui;
 import static org.teiid.designer.ddl.importer.ui.DdlImporterUiPlugin.i18n;
 
 class DdlImporterUiI18n {
-    static final String BROWSE_BUTTON = i18n("browseButton"); //$NON-NLS-1$
+    static final String CHOOSE_BUTTON = i18n("chooseButton"); //$NON-NLS-1$
+    static final String CHOOSE_DDL_FILE_DIALOG_MSG = i18n("chooseDdlFileDialogMsg"); //$NON-NLS-1$
+    static final String CHOOSE_DDL_FILE_DIALOG_TITLE = i18n("chooseDdlFileDialogTitle"); //$NON-NLS-1$
+    static final String CHOOSE_FROM_FILE_SYSTEM_BUTTON = i18n("chooseFromFileSystemButton"); //$NON-NLS-1$
+    static final String CHOOSE_FROM_WORKSPACE_BUTTON = i18n("chooseFromWorkspaceButton"); //$NON-NLS-1$
+    static final String CHOOSE_MODEL_FOLDER_DIALOG_MSG = i18n("chooseModelFolderDialogMsg"); //$NON-NLS-1$
+    static final String CHOOSE_MODEL_FOLDER_DIALOG_TITLE = i18n("chooseModelFolderDialogTitle"); //$NON-NLS-1$
+    static final String CHOOSE_MODEL_FILE_DIALOG_MSG = i18n("chooseModelFileDialogMsg"); //$NON-NLS-1$
+    static final String CHOOSE_MODEL_FILE_DIALOG_TITLE = i18n("chooseModelFileDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_DIALOG_TITLE = i18n("confirmDialogTitle"); //$NON-NLS-1$
     static final String CONTINUE_IMPORT_MSG = i18n("continueImportMsg"); //$NON-NLS-1$
     static final String CREATE_MSG_PART = i18n("createMsgPart"); //$NON-NLS-1$
@@ -18,13 +26,14 @@ class DdlImporterUiI18n {
     static final String DDL_FILE_CONTENTS_TITLE = i18n("ddlFileContentsTitle"); //$NON-NLS-1$
     static final String DDL_FILE_LABEL = i18n("ddlFileLabel"); //$NON-NLS-1$
     static final String DDL_FILE_MSG = i18n("ddlFileMsg"); //$NON-NLS-1$
+    static final String IMPORTING_DDL_MSG = i18n("importingDdlMsg"); //$NON-NLS-1$
     static final String MODEL_FOLDER_LABEL = i18n("modelFolderLabel"); //$NON-NLS-1$
     static final String MODEL_FOLDER_MSG = i18n("modelFolderMsg"); //$NON-NLS-1$
-    static final String MODEL_FOLDER_SELECTION_DIALOG_MSG = i18n("modelFolderSelectionDialogMsg"); //$NON-NLS-1$
-    static final String MODEL_FOLDER_SELECTION_DIALOG_TITLE = i18n("modelFolderSelectionDialogTitle"); //$NON-NLS-1$
     static final String MODEL_MSG = i18n("modelMsg"); //$NON-NLS-1$
     static final String MODEL_NAME_LABEL = i18n("modelNameLabel"); //$NON-NLS-1$
     static final String MODEL_TYPE_LABEL = i18n("modelTypeLabel"); //$NON-NLS-1$
+    static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL = i18n("optToCreateModelEntitiesForUnsupportedDdlLabel"); //$NON-NLS-1$
+    static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL = i18n("optToSetModelEntityDescriptionLabel"); //$NON-NLS-1$
     static final String PAGE_DESCRIPTION = i18n("pageDescription"); //$NON-NLS-1$
     static final String PAGE_TITLE = i18n("pageTitle"); //$NON-NLS-1$
     static final String PATH_MSG_PART = i18n("pathMsgPart"); //$NON-NLS-1$

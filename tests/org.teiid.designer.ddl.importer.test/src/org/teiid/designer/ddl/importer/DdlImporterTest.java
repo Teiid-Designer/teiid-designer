@@ -48,7 +48,7 @@ public class DdlImporterTest {
         final IFile model = mock(IFile.class);
         when(eclipseMock.workspaceRoot().getFile((IPath)anyObject())).thenReturn(model);
         final DdlImporter importer = new DdlImporter(null);
-        importer.setModel("model");
+        importer.setModelName("model");
     }
 
     @Test( expected = IllegalArgumentException.class )
@@ -116,13 +116,13 @@ public class DdlImporterTest {
     @Test( expected = EmptyArgumentException.class )
     public void shouldFailIfModelNameIsEmpty() {
         final DdlImporter importer = new DdlImporter(null);
-        importer.setModel(" ");
+        importer.setModelName(" ");
     }
 
     @Test( expected = EmptyArgumentException.class )
     public void shouldFailIfModelNameIsNull() {
         final DdlImporter importer = new DdlImporter(null);
-        importer.setModel(null);
+        importer.setModelName(null);
     }
 
     @Test
@@ -136,16 +136,19 @@ public class DdlImporterTest {
     public void shouldProvideModel() {
         final EclipseMock eclipseMock = new EclipseMock();
         when(eclipseMock.workspace().validateName(anyString(), eq(IResource.FILE))).thenReturn(Status.OK_STATUS);
-        final IFile model = mock(IFile.class);
-        when(eclipseMock.workspaceRoot().getFile((IPath)anyObject())).thenReturn(model);
+        final IFile modelFile = mock(IFile.class);
+        final IPath modelPath = mock(IPath.class);
+        when(modelPath.removeFileExtension()).thenReturn(modelPath);
+        when(modelFile.getFullPath()).thenReturn(modelPath);
+        when(eclipseMock.workspaceRoot().getFile((IPath)anyObject())).thenReturn(modelFile);
         final IFolder folder = mock(IFolder.class);
-        final IPath path = mock(IPath.class);
-        when(folder.getFullPath()).thenReturn(path);
-        when(path.append(anyString())).thenReturn(path);
+        final IPath folderPath = mock(IPath.class);
+        when(folder.getFullPath()).thenReturn(folderPath);
+        when(folderPath.append(anyString())).thenReturn(folderPath);
         final DdlImporter importer = new DdlImporter(null);
         importer.setModelFolder(folder);
-        importer.setModel("model");
-        assertThat(importer.model(), notNullValue());
+        importer.setModelName("model");
+        assertThat(importer.modelFile(), notNullValue());
     }
 
     @Test
