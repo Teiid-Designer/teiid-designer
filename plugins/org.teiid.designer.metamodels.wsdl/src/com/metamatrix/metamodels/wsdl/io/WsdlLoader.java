@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLDefaultHandler;
@@ -34,8 +35,9 @@ import org.jdom.input.DOMBuilder;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import com.metamatrix.common.xml.JdomHelper;
 import com.metamatrix.core.util.CoreArgCheck;
-import org.teiid.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Attribute;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;
@@ -68,6 +70,8 @@ import com.metamatrix.metamodels.wsdl.http.HttpAddress;
 import com.metamatrix.metamodels.wsdl.http.HttpBinding;
 import com.metamatrix.metamodels.wsdl.http.HttpFactory;
 import com.metamatrix.metamodels.wsdl.http.HttpOperation;
+import com.metamatrix.metamodels.wsdl.http.HttpPackage;
+import com.metamatrix.metamodels.wsdl.mime.MimePackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapAddress;
 import com.metamatrix.metamodels.wsdl.soap.SoapBinding;
 import com.metamatrix.metamodels.wsdl.soap.SoapBody;
@@ -76,6 +80,7 @@ import com.metamatrix.metamodels.wsdl.soap.SoapFault;
 import com.metamatrix.metamodels.wsdl.soap.SoapHeader;
 import com.metamatrix.metamodels.wsdl.soap.SoapHeaderFault;
 import com.metamatrix.metamodels.wsdl.soap.SoapOperation;
+import com.metamatrix.metamodels.wsdl.soap.SoapPackage;
 import com.metamatrix.metamodels.wsdl.soap.SoapStyleType;
 import com.metamatrix.metamodels.wsdl.soap.SoapUseType;
 

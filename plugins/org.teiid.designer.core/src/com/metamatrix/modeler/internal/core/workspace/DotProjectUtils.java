@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,7 +25,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.teiid.internal.core.xml.JdomHelper;
+
+import com.metamatrix.common.xml.JdomHelper;
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**

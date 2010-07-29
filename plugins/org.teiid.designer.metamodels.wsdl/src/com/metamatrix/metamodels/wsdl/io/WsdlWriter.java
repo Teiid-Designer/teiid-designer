@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.xmi.DOMHandler;
@@ -31,9 +32,10 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.w3c.dom.NodeList;
+
+import com.metamatrix.common.xml.JdomHelper;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
-import org.teiid.internal.core.xml.JdomHelper;
 import com.metamatrix.metamodels.wsdl.Binding;
 import com.metamatrix.metamodels.wsdl.BindingFault;
 import com.metamatrix.metamodels.wsdl.BindingInput;

@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,11 +27,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.teiid.logging.Logger;
+
+import com.metamatrix.common.xml.JdomHelper;
 import com.metamatrix.core.log.NullLogger;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.xslt.Style;
 import com.metamatrix.core.xslt.XsltTransform;
-import org.teiid.internal.core.xml.JdomHelper;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.util.ModelContents;

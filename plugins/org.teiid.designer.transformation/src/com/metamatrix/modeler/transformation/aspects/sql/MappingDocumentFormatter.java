@@ -819,7 +819,7 @@ public class MappingDocumentFormatter {
             moStream = new ByteArrayOutputStream();
             final PrintWriter pw = new PrintWriter(moStream, true);
             final MappingOutputter outputter = new MappingOutputter();
-            outputter.write(mapping, pw, isNewlines(), isIndent());
+            outputter.write(mapping, pw); // TODO FIX/REPLACE??? , isNewlines(), isIndent());
             pw.flush();
 
             result = moStream.toString();

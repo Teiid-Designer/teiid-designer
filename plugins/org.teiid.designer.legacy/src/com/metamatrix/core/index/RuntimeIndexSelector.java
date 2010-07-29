@@ -22,12 +22,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.teiid.logging.LogManager;
+
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;
-import org.teiid.core.util.FileUtil;
 import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
+import org.teiid.logging.LogManager;
+
+import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;

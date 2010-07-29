@@ -13,10 +13,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.jdom.Document;
-import org.jdom.output.XMLOutputter;
 import org.jdom.JDOMException;
-
-import org.teiid.internal.core.xml.JdomHelper;
+import org.jdom.output.XMLOutputter;
 
 
 /** 

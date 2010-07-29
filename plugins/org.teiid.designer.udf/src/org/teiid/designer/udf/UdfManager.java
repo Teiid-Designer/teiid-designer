@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -362,7 +364,10 @@ public final class UdfManager implements IResourceChangeListener {
                         methods.addAll(FunctionMetadataReader.loadFunctionMethods(url.openStream()));
                     } catch (IOException e) {
                         //
-                    }
+                    } catch (JAXBException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }
             }
             functionLibrary = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
