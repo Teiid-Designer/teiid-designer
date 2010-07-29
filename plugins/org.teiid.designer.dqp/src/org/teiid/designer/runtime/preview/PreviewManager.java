@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +22,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -52,6 +55,7 @@ import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
@@ -65,6 +69,7 @@ import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
@@ -91,6 +96,10 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 @ThreadSafe
 public final class PreviewManager extends JobChangeAdapter
     implements IExecutionConfigurationListener, IResourceChangeListener, INotifyChangedListener, PreviewContext {
+	
+	public static final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$
+	public static final String DEFAULT_PASSWORD = "teiid"; //$NON-NLS-1$
+	private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
     /**
      * @param file the file being checked (may not be <code>null</code>)
@@ -493,18 +502,27 @@ public final class PreviewManager extends JobChangeAdapter
         return getPreviewVdbDeployedName(pvdbPath);
     }
 
-    private String getPreviewVdbName( IResource projectOrModel ) {
+    public static String getPreviewProjectVdbName( IProject project ) {
         char delim = '_';
         StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
 
+        name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
+
+        return name.toString();
+    }
+    
+    private String getPreviewVdbName( IResource projectOrModel ) {
+        char delim = '_';
+        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim); 
+
         if (projectOrModel instanceof IProject) {
-            name.append(projectOrModel.getName()).append(".project"); //$NON-NLS-1$
+            name = new StringBuilder(PreviewManager.getPreviewProjectVdbName((IProject)projectOrModel));
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
             
-            if( projectOrModel.getFileExtension().equalsIgnoreCase("vdb")) {
+            if( projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
             	String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
-            	if( vdbName.startsWith(ModelerCore.workspaceUuid().toString()) ) {
+            	if( vdbName.startsWith(ModelerCore.workspaceUuid().toString()) ) { 
             		return projectOrModel.getFullPath().lastSegment();
             	}
             }
@@ -517,12 +535,12 @@ public final class PreviewManager extends JobChangeAdapter
             // remove last delimiter
             name.deleteCharAt(name.length() - 1);
         }
-
+        
         name.append(Vdb.FILE_EXTENSION);
         return name.toString();
     }
 
-    private int getPreviewVdbVersion( IFile pvdbFile ) {
+    public static int getPreviewVdbVersion( IFile pvdbFile ) {
         assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
 
@@ -818,7 +836,7 @@ public final class PreviewManager extends JobChangeAdapter
 
         // construct job to run the setup
         PreviewSetupJob setupJob = new PreviewSetupJob(getPreviewVdbDeployedName(modelToPreview),
-                                                       getPreviewVdbName(modelToPreview.getProject()), this.context,
+        											   getPreviewProjectVdbName(modelToPreview.getProject()), this.context,
                                                        previewServer);
 
         // collect all the Preview VDB parent folders so that we can make sure workspace is in sync with file system
@@ -840,6 +858,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : findProjectPvdbs(modelToPreview.getProject(), true)) {
+        	if( pvdbFile.equals(projectPvdbFile)) {
+        		continue;
+        	}
+        	
             Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, monitor);
 
             // make sure no errors
@@ -1044,7 +1066,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         if (getPreviewServer() != null) {
             for (IProject project : getAllProjects()) {
-                modelProjectDeleted(project, this.context);
+            	// Exception thrown if project is already closed.
+            	if( project.isOpen() ) {
+            		modelProjectDeleted(project, this.context);
+            	}
             }
         }
     }

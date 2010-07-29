@@ -11,8 +11,8 @@ import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidDataSource;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
@@ -68,7 +68,7 @@ public class ModelConnectionMatcher {
 	            final IFile modelFile = (IFile)itor.next();
 	            if( ModelUtil.EXTENSION_XMI.equalsIgnoreCase(modelFile.getFileExtension()) ) {
 			    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-		    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+		    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), ModelerCore.workspaceUuid().toString());
 		    		// generate JNDI Name, see if it exists in admin
 		    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
 		    		
@@ -110,7 +110,7 @@ public class ModelConnectionMatcher {
 	            final IFile modelFile = (IFile)itor.next();
 	            if( ModelUtil.EXTENSION_XMI.equalsIgnoreCase(modelFile.getFileExtension()) ) {
 			    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-		    		String localJndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+		    		String localJndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), ModelerCore.workspaceUuid().toString());
 	
 		    		if( jndiName.equalsIgnoreCase(localJndiName)) {
 			    		TeiidDataSource tds = createTeiidDataSource(modelFile, jndiName, admin);
@@ -143,7 +143,7 @@ public class ModelConnectionMatcher {
 	        while (itor.hasNext()) {
 	            final IFile modelFile = (IFile)itor.next();
 		    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-	    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+	    		String jndiName = this.connectionHelper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), ModelerCore.workspaceUuid().toString());
 	    		if( !this.admin.dataSourceExists(jndiName) ) {
 	    			staleDataSourceNames.add(jndiName);
 	    		}

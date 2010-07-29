@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
@@ -218,7 +219,7 @@ public class DqpConnectionInfoHelper {
                                                     String uuid ) {
         return generateUniqueConnectionJndiName(model.getFullPath().removeFileExtension().lastSegment(),
                                                 model.getFullPath(),
-                                                DqpPlugin.workspaceUuid().toString());
+                                                ModelerCore.workspaceUuid().toString());
     }
 	
     /**

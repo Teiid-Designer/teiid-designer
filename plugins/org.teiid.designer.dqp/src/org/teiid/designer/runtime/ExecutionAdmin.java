@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -28,10 +30,11 @@ import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
-import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
@@ -106,7 +109,7 @@ public class ExecutionAdmin {
                                                   String jndiName ) throws Exception {
         String displayName = model.getFullPath().removeFileExtension().lastSegment();
         DqpConnectionInfoHelper dqpConnectionHelper = new DqpConnectionInfoHelper();
-        String dsName = dqpConnectionHelper.generateUniqueConnectionJndiName(model, DqpPlugin.workspaceUuid().toString());
+        String dsName = dqpConnectionHelper.generateUniqueConnectionJndiName(model, ModelerCore.workspaceUuid().toString());
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
         Properties props = dqpConnectionHelper.getDataSourceProperties(modelResource);
 
@@ -342,9 +345,9 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param sourceVdbName the name of the VDB being merged into the target VDB
+     * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
      * @param sourceVdbVersion the version of the source VDB
-     * @param targetVdbName the name of the VDB being merged into
+     * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
      * @param targetVdbVersion the version of the target VDB
      * @throws Exception if there is a problem with the merge
      */

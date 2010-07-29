@@ -6,6 +6,8 @@ import org.teiid.adminapi.VDB;
 import com.metamatrix.core.util.CoreArgCheck;
 
 public class TeiidVdb  implements Comparable<TeiidVdb> {
+	public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+	public static final String VDB_DOT_EXTENSION = ".vdb"; //$NON-NLS-1$
 
 	private final VDB vdb;
 

@@ -9,6 +9,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
+
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
@@ -68,7 +70,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
     	if( properties != null && !properties.isEmpty() ) {
     		ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
     		String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-    		String jndiName = this.helper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), DqpPlugin.workspaceUuid().toString());
+    		String jndiName = this.helper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), ModelerCore.workspaceUuid().toString());
 
 	    	boolean enoughProps = true;
         	

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.runtime.preview.PreviewManager;
 
 /**
  *
@@ -77,8 +78,10 @@ public final class PreviewSetupJob extends CompositePreviewJob {
 
             // add merge jobs last
             for (IFile pvdbToMerge : this.pvdbsToDeploy) {
-            	if( ! pvdbToMerge.getName().equals(this.projectPreviewVdbName) ) {
-            		add(new MergePreviewVdbJob(pvdbToMerge.getName(), 1, this.projectPreviewVdbName, 1, context, getPreviewServer()));
+            	// REMOVE the .vdb extension for the source vdb
+            	String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
+            	if( ! sourceVdbName.equals(this.projectPreviewVdbName) ) {
+            		add(new MergePreviewVdbJob(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), this.projectPreviewVdbName, 1, context, getPreviewServer()));
             	}
             }
 

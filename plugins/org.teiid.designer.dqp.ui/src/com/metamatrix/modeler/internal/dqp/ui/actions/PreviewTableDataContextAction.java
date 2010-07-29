@@ -16,7 +16,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -46,7 +48,9 @@ import org.eclipse.ui.progress.IProgressService;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
-import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
+import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.preview.PreviewManager;
+
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -153,7 +157,10 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             // TODO need a progress monitor
             Job job = DqpPlugin.getInstance().getServerManager().getPreviewManager().previewSetup(eObj, null);
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService(); 
-            progressService.showInDialog(getShell(), job); 
+            progressService.showInDialog(getShell(), job);
+            
+            // setup successful so run preview
+            internalRun();
         } catch (Exception e) {
             // TODO show error message dialog
         	MessageDialog.openError(getShell(), "Preview Data Error", e.getMessage()); //$NON-NLS-1$
@@ -161,8 +168,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         	return;
         }
         
-        // setup successful so run preview
-        internalRun();
+        
     }
 
     /**
@@ -175,13 +181,18 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
     /**
      * Open the launch configuration dialog, passing in the current workbench selection.
+     * @throws ModelWorkspaceException 
      */
-    private void internalRun() {
+    private void internalRun() throws ModelWorkspaceException {
         String sql = null;
         List<String> paramValues = null;
         final Shell shell = getShell();
         final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
-
+        
+        ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
+        
+        IProject project = mr.getCorrespondingResource().getProject();
+        
         List accessPatternsColumns = null;
         if (SqlAspectHelper.isTable(selected)) {
             SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(selected);
@@ -263,10 +274,14 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 				// TODO: All of these values should be taken from the deployed
 				// pvdb. I have hardcoded them here so that I can test with
 				// a fully depolyed VDB, see the Teiid download for this VDB.
-				String username = "admin";
-				String password = "teiid";
-				String vdbName = "DynamicPortfolio";
-				String connectionURL = "jdbc:teiid:DynamicPortfolio@mm://localhost:31000;version=1";// "jdbc:teiid:Qt_Ora10ds_Push@mm://localhost:31000";
+				String username = PreviewManager.DEFAULT_USERNAME;
+				String password = PreviewManager.DEFAULT_PASSWORD;
+				String vdbName = PreviewManager.getPreviewProjectVdbName(project);
+				if( vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
+					vdbName = vdbName.substring(0, vdbName.length()-4);
+				}
+				String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
+				String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
 
 				// Note that this is a Transient profile, it is not visible in
 				// the
@@ -385,7 +400,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 	private ILaunchConfigurationWorkingCopy creatLaunchConfig(String sql,
 			DatabaseIdentifier ID) throws CoreException {
 		ILaunchConfigurationWorkingCopy config = LaunchHelper
-				.createExternalClientConfiguration(ID, "pvdb");
+				.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
 		config.setAttribute(
 				RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
 		// ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
@@ -414,7 +429,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 		if (null == sqlConnection || sqlConnection.isClosed()) {
 			final Throwable e = connection.getConnectException();
 			throw new JdbcException(e == null
-					? "Unspecified connection error"
+					? "Unspecified connection error" //$NON-NLS-1$
 					: e.getMessage());
 		}
 		return sqlConnection;
@@ -435,12 +450,12 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 			// TODO: has to be a better way to do this, this breaks with
 			// every API change
 			jarPath = DqpPath.getInstallLibPath().addTrailingSeparator()
-					.append("teiid-7.0.0-client.jar");
+					.append("teiid-7.1.0-SNAPSHOT-client.jar");
 		} catch (IOException e) {
 			throw new Error(e);
 		}
 		// String driverPath = jarPath.toOSString();
-		String driverPath = "/home/jdoyle/NotBackedUp/workspaces/Designer_features/teiid-designer-trunk/plugins/teiid_embedded_query/teiid-7.0.0-CR1-client.jar";
+		String driverPath = "/home/blafond/TeiidDesigner/trunk/plugins/teiid_embedded_query/teiid-7.1.0-SNAPSHOT-client.jar";
 		return driverPath;
 	}
 

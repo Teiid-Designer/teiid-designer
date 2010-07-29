@@ -28,6 +28,7 @@ import org.teiid.designer.vdb.connections.VdbSourceConnection;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -64,7 +65,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         
         ExecutionAdmin defaultAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
         
-        String uuid = DqpPlugin.workspaceUuid().toString();
+        String uuid = ModelerCore.workspaceUuid().toString();
         
         try {
 			vdbSourceConnection = mapper.getVdbSourceConnection(defaultAdmin, uuid);
