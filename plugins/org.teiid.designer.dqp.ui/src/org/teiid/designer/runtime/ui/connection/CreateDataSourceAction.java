@@ -3,7 +3,10 @@ package org.teiid.designer.runtime.ui.connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -12,7 +15,10 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
+
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -26,8 +32,7 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.widget.Dialog;
 
 public class CreateDataSourceAction  extends SortableSelectionAction implements DqpUiConstants {
-    private static final String label = "Create Teiid Data Source"; //$NON-NLS-1$
-    public static final String JDBC_DS_TYPE = "connector-jdbc"; //$NON-NLS-1$
+    private static final String label = DqpUiConstants.UTIL.getString("CreateDataSourceAction.label"); //$NON-NLS-1$
     
     private DqpConnectionInfoHelper helper;
     
@@ -69,66 +74,85 @@ public class CreateDataSourceAction  extends SortableSelectionAction implements 
     	try {
 			createDataSource(modelFile);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelFile.getName())); //$NON-NLS-1$
 		}
     }
     
     public boolean createDataSource(IFile modelFile ) throws Exception {
-        ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
+    	Shell sh = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+    	
+    	ModelResource modelResource = ModelUtil.getModelResource(modelFile, true);
+    	
         Properties properties = this.helper.getDataSourceProperties(modelResource);
 
-        if (properties != null && !properties.isEmpty()) {
-            ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
-            boolean enoughProps = true;
+    	
+    	if( properties != null && !properties.isEmpty() ) {
+    		ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+	    	String name = modelFile.getFullPath().removeFileExtension().lastSegment();
+    		String jndiName = this.helper.generateUniqueConnectionJndiName(name, modelFile.getFullPath(), ModelerCore.workspaceUuid().toString());
 
-            if (properties.get(DataSourceConnectionConstants.DRIVER_CLASS) == null) {
-                enoughProps = false;
-            }
+	    	
+//	    	NewDataSourceDialog dsDialog = new NewDataSourceDialog(sh, label, jndiName) ;
+//	    	
+//	    	dsDialog.open();
+//	    	
+//	    	if( dsDialog.getReturnCode() == Dialog.OK ) {
+//	    		String result = dsDialog.getDataSourceName();
+//	    		if( result != null ) {
+//	    			jndiName = result;
+//	    		}
+//	    	} else {
+//	    		return false;
+//	    	}
 
-            if (enoughProps && properties.get(DataSourceConnectionConstants.URL) == null) {
-                enoughProps = false;
-            }
-
-            if (enoughProps && properties.get(DataSourceConnectionConstants.USERNAME) == null) {
-                enoughProps = false;
-            }
-
-            if (enoughProps && properties.get(DataSourceConnectionConstants.PASSWORD) == null) {
-                Shell sh = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+	    	boolean enoughProps = true;
+        	
+			if ( properties.get(DataSourceConnectionConstants.DRIVER_CLASS) == null ) {
+				enoughProps = false;
+			}
+			
+			if ( properties.get(DataSourceConnectionConstants.URL) == null ) {
+				enoughProps = false;
+			}
+			
+			if (properties.get(DataSourceConnectionConstants.USERNAME) == null) {
+				enoughProps = false;
+			}
+			
+			if( properties.get(DataSourceConnectionConstants.PASSWORD) == null) {
+                
 
                 int result = new AbstractPasswordDialog(sh) {
                     @Override
                     protected boolean isPasswordValid( final String password ) {
-                        pwd = password;
+                    	pwd = password;
                         return true;
                     }
                 }.open();
-                if (result == Dialog.OK) {
-                    properties.put(DataSourceConnectionConstants.PASSWORD, this.pwd);
-                } else {
-                    enoughProps = false;
+                if( result == Dialog.OK) {
+                	properties.put(DataSourceConnectionConstants.PASSWORD, this.pwd);
                 }
-
-            }
-
-            if (enoughProps) {
-                // Insure this name exists as data source on server
-                String jndiName = this.helper.generateUniqueConnectionJndiName(modelFile, DqpPlugin.workspaceUuid().toString());
-                TeiidDataSource tds = executionAdmin.getOrCreateDataSource(modelFile.getProjectRelativePath().lastSegment(),
-                                                                           jndiName,
-                                                                           IConnectionProperties.JDBC_DS_TYPE,
-                                                                           properties);
-
-                if (tds != null) {
-                    DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
+				
+			}
+			
+			if( enoughProps ) {
+		    	// Insure this name exists as data source on server
+		    	TeiidDataSource tds = executionAdmin.getOrCreateDataSource(modelFile.getProjectRelativePath().lastSegment(), jndiName, IConnectionProperties.JDBC_DS_TYPE, properties);
+		    	
+		    	if( tds != null ) {
+		    		DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
+		    		return true;
+		    	}
+			}
+    		
+    	} else {
+    		MessageDialog.openWarning(sh, 
+    				DqpUiConstants.UTIL.getString("CreateDataSourceAction.noConnectionProperties.title"),  //$NON-NLS-1$
+    				DqpUiConstants.UTIL.getString("CreateDataSourceAction.noConnectionProperties.message", modelFile.getName())); //$NON-NLS-1$
+    	}
+		
+		return false;
     }
     /**
      * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
@@ -159,26 +183,28 @@ public class CreateDataSourceAction  extends SortableSelectionAction implements 
 
         return result;
     }
-//    
-//    public Properties getConnectionProperties(IFile model) throws ModelWorkspaceException {
-//    	DqpConnectionInfoHelper helper = new DqpConnectionInfoHelper();
-//    	
-//    	ModelResource modelResource = null;
-//    	
-//    	try {
-//    		modelResource = ModelUtil.getModelResource(model, true);
-//		} catch (ModelWorkspaceException e) {
-//			// TODO LOG THIS EXCEPTION
-//			e.printStackTrace();
-//		}
-//    	
-//		if( modelResource != null ) {
-//			return helper.getDataSourceProperties(modelResource);
-//		} else {
-//			// TODO: THROW EXCEPTION OR LOG ERROR HERE!!!
-//		}
-//		
-//		return null;
-//    }
+    
+    public Properties getConnectionProperties(IFile model) throws ModelWorkspaceException {
+    	DqpConnectionInfoHelper helper = new DqpConnectionInfoHelper();
+    	
+    	ModelResource modelResource = null;
+    	
+    	try {
+    		modelResource = ModelUtil.getModelResource(model, true);
+		} catch (ModelWorkspaceException e) {
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorFindingModelResource", model.getName())); //$NON-NLS-1$
+		}
+    	
+		if( modelResource != null ) {
+			return helper.getDataSourceProperties(modelResource);
+		} else {
+			DqpUiConstants.UTIL.log(IStatus.ERROR, 
+					DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCannotFindDataSourceProperties", model.getName() )); //$NON-NLS-1$
+
+		}
+		
+		return null;
+    }
     
 }
