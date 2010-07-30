@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="saxon9-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-dom4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-jdom.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-s9api.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-sql.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-xom.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-xpath.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9-xqj.jar"/>
+	<classpathentry exported="true" kind="lib" path="saxon9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="saxon8.jar" sourcepath="source.zip"/>
-	<classpathentry exported="true" kind="lib" path="saxon8-dom.jar" sourcepath="net.sf.saxonsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="saxon8-jdom.jar" sourcepath="net.sf.saxonsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="saxon8-sql.jar" sourcepath="net.sf.saxonsrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="saxon8-xpath.jar" sourcepath="net.sf.saxonsrc.zip"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
