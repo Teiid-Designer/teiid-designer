@@ -7,29 +7,22 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -45,16 +38,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.adminapi.Model;
-import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
@@ -71,15 +61,12 @@ import org.teiid.designer.runtime.ui.SetDefaultServerAction;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.Label;
@@ -88,14 +75,9 @@ import com.metamatrix.ui.internal.widget.Label;
  * The ConnectorsView provides a tree view of workspace connector bindings which are stored in a configuration.xml file and
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
  */
-public class TeiidView extends ViewPart implements ISelectionListener, IExecutionConfigurationListener {
+public class TeiidView extends ViewPart implements IExecutionConfigurationListener {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidView.class);
-    private static final String OPEN_ACTION_LABEL = getString("openAction.text"); //$NON-NLS-1$
-    private static final String SOURCE_BINDING_STATUS_OK = "statusBarUpdater.statusLabel"; //$NON-NLS-1$
-    private static final String SOURCE_BINDING_STATUS_MULTIPLE = "statusBarUpdater.statusLabelMultipleConnectors"; //$NON-NLS-1$
-    private static final String SOURCE_BINDING_STATUS_NONE = "statusBarUpdater.statusLabelNotBound"; //$NON-NLS-1$
-    private static final String CONNECTOR_BINDING_STATUS_LABEL = "statusBarUpdater.connectorBindingStatusLabel"; //$NON-NLS-1$
 
     static final String SHOW_TRANSLATORS_LABEL = getString("showTranslators.tooltip"); //$NON-NLS-1$
     static final String HIDE_TRANSLATORS_LABEL = getString("hideTranslators.tooltip"); //$NON-NLS-1$
@@ -105,14 +87,17 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     static String getString( final String stringId ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId);
     }
+    
+    static String getString( final String stringId, final Object param) {
+        return DqpUiConstants.UTIL.getString(PREFIX + stringId, param);
+    }
 
     TreeViewer viewer;
     TeiidViewTreeProvider treeProvider;
 
     Action showTranslatorsToggleAction;
     Action showDataSourcesAction;
-    
-    private Action openModelAction;
+
     /**
      * Collapses all tree nodes.
      */
@@ -149,8 +134,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
 
-    private StatusBarUpdater statusBarListener;
-
     private IPropertySourceProvider propertySourceProvider;
 
     class NameSorter extends ViewerSorter {
@@ -172,28 +155,28 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
     public void createPartControl( Composite parent ) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        viewer.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select( Viewer viewer,
-                                   Object parentElement,
-                                   Object element ) {
-                if (element instanceof SourceConnectionBinding) {
-                    SourceConnectionBinding binding = (SourceConnectionBinding)element;
-
-                    // Check to see if model in closed project or not?
-                    String modelName = binding.getModelName();
-                    IResource openModel = ModelUtilities.findModelByName(modelName);
-                    if (openModel != null) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-
-                return false;
-            }
-        });
+//        viewer.addFilter(new ViewerFilter() {
+//
+//            @Override
+//            public boolean select( Viewer viewer,
+//                                   Object parentElement,
+//                                   Object element ) {
+//                if (element instanceof SourceConnectionBinding) {
+//                    SourceConnectionBinding binding = (SourceConnectionBinding)element;
+//
+//                    // Check to see if model in closed project or not?
+//                    String modelName = binding.getModelName();
+//                    IResource openModel = ModelUtilities.findModelByName(modelName);
+//                    if (openModel != null) {
+//                        return true;
+//                    }
+//                } else {
+//                    return true;
+//                }
+//
+//                return false;
+//            }
+//        });
 
         initDragAndDrop();
 
@@ -223,13 +206,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
 
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(this);
-
-        // hook up our status bar manager for EObjects
-        IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
-        statusBarListener = new MyStatusBarUpdater(slManager);
-        viewer.addSelectionChangedListener(statusBarListener);
-
-        getViewSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 
         // hook up this view's selection provider to this site
         getViewSite().setSelectionProvider(viewer);
@@ -263,30 +239,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
 
         // Refresh the Model Explorer too
         ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
-        //
-        // if (event.getTargetType() == TargetType.SERVER) {
-        // switch (event.getEventType()) {
-        // case UPDATE: {
-        //
-        // }
-        // break;
-        // case REFRESH: {
-        //
-        // }
-        // break;
-        // case ADD: {
-        // this.viewer.getInput();
-        // }
-        // break;
-        // case REMOVE: {
-        //
-        // }
-        // break;
-        //
-        // }
-        //
-        // }
-        // TODO is specific code for each event type needed instead of refreshing entire view?
     }
 
     void handleSelectionChanged( SelectionChangedEvent event ) {
@@ -489,10 +441,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
                 	manager.add(this.undeployVdbAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
-                } else {
-                    manager.add(this.openModelAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
                 }
         	} else {
         		boolean allDataSources = true;
@@ -550,33 +498,6 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
      *  Initialize view actions, set icons and action text.
      */
     private void initActions() {
-
-        this.openModelAction = new Action(OPEN_ACTION_LABEL) {
-            @Override
-            public void run() {
-                SourceConnectionBinding binding = getSelectedBinding();
-                if (binding != null) {
-                    String modelName = binding.getModelName();
-
-                    IResource theModel = ModelUtilities.findModelByName(modelName);
-                    if (theModel != null) {
-                        ModelEditor mEditor = ModelEditorManager.getModelEditorForFile((IFile)theModel, false);
-                        if (mEditor != null) {
-                            // Editor already open, just activite to bring to top.
-                            ModelEditorManager.activate(mEditor);
-                        } else {
-                            // Editor not open, activate and force to open
-                            ModelEditorManager.activate((IFile)theModel, true);
-                        }
-                    } else {
-                        final String title = getString("openModelAction.title"); //$NON-NLS-1$
-                        final String message = DqpUiConstants.UTIL.getString(PREFIX + "openModelAction.noModelFoundMessage", modelName, binding.getModelLocation()); //$NON-NLS-1$
-                        MessageDialog.openInformation(UiUtil.getWorkbenchShellOnlyIfUiThread(), title, message);
-                    }
-                }
-            }
-        };
-        this.openModelAction.setEnabled(true);
 
         this.showDataSourcesAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
             @Override
@@ -770,96 +691,27 @@ public class TeiidView extends ViewPart implements ISelectionListener, IExecutio
         return DqpPlugin.getInstance().getServerManager();
     }
 
-    public void selectionChanged( IWorkbenchPart thePart,
-                                  ISelection theSelection ) {
-        if (theSelection instanceof StructuredSelection) {
-            StructuredSelection sel = (StructuredSelection)theSelection;
-
-            if (sel.size() == 1) {
-                Object selObj = sel.getFirstElement();
-
-                if (selObj instanceof IResource && ModelUtilities.isModelFile((IResource)selObj)) {
-                	viewer.setSelection(StructuredSelection.EMPTY);
-                	
-                    @SuppressWarnings("unused")
-					ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
-                    // TODO: Replace this?
-//                    Collection<SourceConnectionBinding> bindings = serverMgr.getSourceBindingsForModel(((IResource)selObj).getName());
-//
-//                    if (bindings.isEmpty()) {
-//                        viewer.setSelection(StructuredSelection.EMPTY);
-//                    } else {
-//                        viewer.setSelection(new StructuredSelection(bindings.toArray()), true);
-//                    }
-                }
-            }
-        }
-    }
-
     /**
      * @param selection the current viewer selection (never <code>null</code>)
      */
     private void updateStatusLine( IStructuredSelection selection ) {
-        assert (selection.size() < 2);
-
-        String msg = ""; //$NON-NLS-1$
-        Object selectedObject = selection.getFirstElement();
-
-        if (selectedObject instanceof Server) {
-            msg = selectedObject.toString();
-        } else if (selectedObject instanceof TeiidTranslator) {
-            msg = selectedObject.toString();
-        } else if (selectedObject instanceof VDB) {
-            msg = selectedObject.toString();
-        } else if (selectedObject instanceof SourceConnectionBinding) {
-            msg = selectedObject.toString();
+    	// If no selection or mutli-selection 
+        String msg = StringUtilities.EMPTY_STRING;
+        
+        if( selection.size() == 1 ) {
+	        Object selectedObject = selection.getFirstElement();
+	
+	        if (selectedObject instanceof Server) {
+	        	msg = getString("statusBar.server.label", ((Server)selectedObject).toString()); //$NON-NLS-1$
+	        } else if (selectedObject instanceof TeiidTranslator) {
+	        	msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
+	        } else if (selectedObject instanceof TeiidVdb) {
+	        	msg = getString("statusBar.vdb.label", ((TeiidVdb)selectedObject).getName()); //$NON-NLS-1$
+	        } else if (selectedObject instanceof TeiidDataSource) {
+	        	msg = getString("statusBar.datasource.label", ((TeiidDataSource)selectedObject).getDisplayName()); //$NON-NLS-1$
+	        }
         }
-
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
-    }
-
-    /**
-     * Inner class required to provide status label for selected ConnectorBinding and ModelInfo objects in ConnectorsView
-     * 
-     * @since 5.0
-     */
-    class MyStatusBarUpdater extends StatusBarUpdater {
-
-        public MyStatusBarUpdater( IStatusLineManager statusLineManager ) {
-            super(statusLineManager);
-        }
-
-        @Override
-        protected String formatMessage( ISelection theSel ) {
-            if (theSel instanceof IStructuredSelection && !theSel.isEmpty()) {
-                IStructuredSelection selection = (IStructuredSelection)theSel;
-
-                int nElements = selection.size();
-                if (nElements == 1) {
-                    Object elem = selection.getFirstElement();
-                    if (elem instanceof TeiidTranslator) {
-                        return DqpUiConstants.UTIL.getString(PREFIX + CONNECTOR_BINDING_STATUS_LABEL, ((TeiidTranslator)elem).getName());
-                    } else if (elem instanceof SourceConnectionBinding) {
-                        // Check for Connector Bindings
-                        SourceConnectionBinding binding = (SourceConnectionBinding)elem;
-                        Collection<TeiidTranslator> connectors = binding.getTranslators();
-                        if (connectors.isEmpty()) {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_NONE, binding.getModelName());
-                        } else if (connectors.size() == 1) {
-                            String firstConnectorName = connectors.iterator().next().getName();
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_OK,
-                                                                 binding.getModelName(),
-                                                                 firstConnectorName);
-                        } else {
-                            return DqpUiConstants.UTIL.getString(PREFIX + SOURCE_BINDING_STATUS_MULTIPLE, binding.getModelName());
-                        }
-                    }
-                }
-            }
-
-            return super.formatMessage(theSel);
-        }
-
     }
 
 }
