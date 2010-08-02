@@ -351,21 +351,23 @@ public final class VdbModelEntry extends VdbEntry {
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
                 problems.add(new Problem(marker));
-            // Also add imported models
-            final Resource model = findModel();
-            final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-            for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
-                // TODO: Does this work for the datatypes model?
-                final IPath name = Path.fromOSString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
-                VdbModelEntry importedEntry = null;
-                for (final VdbModelEntry entry : getVdb().getModelEntries())
-                    if (name.equals(entry.getName())) {
-                        importedEntry = entry;
-                        break;
-                    }
-                if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
-                imports.add(importedEntry);
-                importedEntry.importedBy.add(this);
+            // Also add imported models if not a preview
+            if (!getVdb().isPreview()) {
+                final Resource model = findModel();
+                final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+                for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
+                    // TODO: Does this work for the datatypes model?
+                    final IPath name = Path.fromOSString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
+                    VdbModelEntry importedEntry = null;
+                    for (final VdbModelEntry entry : getVdb().getModelEntries())
+                        if (name.equals(entry.getName())) {
+                            importedEntry = entry;
+                            break;
+                        }
+                    if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
+                    imports.add(importedEntry);
+                    importedEntry.importedBy.add(this);
+                }
             }
             // Copy snapshot of workspace file index to VDB folder
             // TODO: If index name of workspace file can change (?), we have to delete the old index and update our index name
