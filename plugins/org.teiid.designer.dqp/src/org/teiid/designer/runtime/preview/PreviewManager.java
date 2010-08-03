@@ -51,11 +51,11 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
@@ -326,8 +326,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         int errors = 0;
         IStatus connectionInfoError = null;
-        IConnectionInfoHelper helper = new ConnectionInfoHelper();
+
         // if we have a preview server and connection information on the model then assign a data source
+        IConnectionInfoHelper helper = new ConnectionInfoHelper();
+
         if (helper.hasConnectionInfo(modelResource)) {
             String jndiName = this.context.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
             ExecutionAdmin execAdmin = previewServer.getAdmin();
@@ -408,12 +410,24 @@ public final class PreviewManager extends JobChangeAdapter
     private List<IFile> findProjectPvdbs( IProject project,
                                           boolean onlyThoseNeedingToBeDeployed ) {
         List<IFile> pvdbsToDeploy = new ArrayList<IFile>();
+        Collection<PreviewVdbStatus> statuses = null;
 
-        for (PreviewVdbStatus status : this.deploymentStatusMap.get(project.getFullPath())) {
+        try {
+            this.statusLock.readLock().lock();
+            statuses = this.deploymentStatusMap.get(project.getFullPath());
+        } finally {
+            this.statusLock.readLock().unlock();
+        }
+
+        for (PreviewVdbStatus status : statuses) {
             if (!onlyThoseNeedingToBeDeployed) {
                 pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
-            } else if (status.shouldDeploy()) {
-                pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
+            } else {
+                IFile pvdbFile = status.getFile();
+
+                if (needsToBeDeployed(pvdbFile)) {
+                    pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+                }
             }
         }
 
@@ -548,7 +562,14 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     private PreviewVdbStatus getStatus( IPath pvdbPath ) {
-        Collection<PreviewVdbStatus> statuses = this.deploymentStatusMap.get(getProjectPath(pvdbPath));
+        Collection<PreviewVdbStatus> statuses = null;
+
+        try {
+            this.statusLock.readLock().lock();
+            statuses = this.deploymentStatusMap.get(getProjectPath(pvdbPath));
+        } finally {
+            this.statusLock.readLock().unlock();
+        }
 
         for (PreviewVdbStatus status : statuses) {
             if (status.getPath().equals(pvdbPath)) return status;
@@ -619,9 +640,15 @@ public final class PreviewManager extends JobChangeAdapter
                 CompositePreviewJob batchJob = new CompositePreviewJob(Messages.bind(Messages.DeleteOrphanedPreviewVdbsJob,
                                                                                      project.getName()), this.context,
                                                                        getPreviewServer());
+                Collection<PreviewVdbStatus> statuses = null;
 
-                // these are the PVDBs that have associated models
-                Collection<PreviewVdbStatus> statuses = this.deploymentStatusMap.get(project.getFullPath());
+                try {
+                    this.statusLock.readLock().lock();
+                    // these are the PVDBs that have associated models
+                    statuses = this.deploymentStatusMap.get(project.getFullPath());
+                } finally {
+                    this.statusLock.readLock().unlock();
+                }
 
                 for (IPath pvdbPath : pvdbPaths) {
                     boolean delete = true;
@@ -633,9 +660,11 @@ public final class PreviewManager extends JobChangeAdapter
                         }
                     }
 
-                    // delete PVDB is there is no associated model
+                    // delete PVDB if there is no associated model
                     if (delete) {
-                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(project.getFile(pvdbPath), this.context);
+                        // remove project part of path because it gets added back in
+                        IPath path = pvdbPath.removeFirstSegments(1);
+                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(project.getFile(path), this.context);
                         batchJob.add(deletePvdbJob);
                     }
                 }
@@ -796,7 +825,26 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.readLock().lock();
             PreviewVdbStatus status = getStatus(pvdbFile.getFullPath());
             assert (status != null) : "PVDB status not found in status map:" + pvdbFile.getFullPath(); //$NON-NLS-1$
-            return status.shouldDeploy();
+            boolean deploy = status.shouldDeploy();
+
+            if (!deploy) {
+                // make sure server has a copy of the Preview VDB
+                if (getPreviewServer() != null) {
+                    try {
+                        ExecutionAdmin admin = getPreviewServer().getAdmin();
+                        deploy = (admin.getVdb(getPreviewVdbDeployedName(pvdbFile)) == null);
+
+                        // server does not have a copy. update status map.
+                        if (deploy) {
+                            setNeedsToBeDeployedStatus(pvdbFile, true);
+                        }
+                    } catch (Exception e) {
+                        Util.log(e);
+                    }
+                }
+            }
+
+            return deploy;
         } finally {
             this.statusLock.readLock().unlock();
         }
@@ -813,9 +861,11 @@ public final class PreviewManager extends JobChangeAdapter
         // name, create new data source on server. The event target eObject should be the ModelAnnotation.
     }
 
-    public Job previewSetup( Object objectToPreview,
-                             IProgressMonitor monitor ) throws Exception {
+    public PreviewSetupJob previewSetup( Object objectToPreview,
+                                         IProgressMonitor monitor ) throws Exception {
         Server previewServer = getPreviewServer();
+        assert (previewServer != null) : "Should not be called when preview server is null"; //$NON-NLS-1$
+
         ModelResource model = ModelUtil.getModel(objectToPreview);
         boolean isSourceModel = model.getModelType() == ModelType.PHYSICAL_LITERAL;
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
@@ -829,10 +879,11 @@ public final class PreviewManager extends JobChangeAdapter
             throw new CoreException(status);
         }
 
-        // construct job to run the setup
+        // construct job to run the setup and register to receive job events
         PreviewSetupJob setupJob = new PreviewSetupJob(getPreviewVdbDeployedName(modelToPreview),
                                                        getPreviewProjectVdbName(modelToPreview.getProject()), this.context,
                                                        previewServer);
+        setupJob.addChildJobChangeListener(this);
 
         // collect all the Preview VDB parent folders so that we can make sure workspace is in sync with file system
         Set<IContainer> parents = new HashSet<IContainer>();
@@ -885,7 +936,6 @@ public final class PreviewManager extends JobChangeAdapter
             throw e;
         }
 
-        setupJob.schedule();
         return setupJob;
     }
 
@@ -993,15 +1043,8 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void setNeedsToBeDeployedStatus( IPath pvdbPath,
                                              boolean deploy ) {
-        assert this.deploymentStatusMap.containsKey(pvdbPath) : "PVDB not found in map: " + pvdbPath; //$NON-NLS-1$
-
-        try {
-            this.statusLock.writeLock().lock();
-            PreviewVdbStatus status = getStatus(pvdbPath);
-            status.setDeploy(deploy);
-        } finally {
-            this.statusLock.writeLock().unlock();
-        }
+        PreviewVdbStatus status = getStatus(pvdbPath);
+        status.setDeploy(deploy);
     }
 
     private void setPreviewServer( Server server ) {

@@ -167,8 +167,8 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
         assert (!this.jobs.isEmpty());
-        monitor = Job.getJobManager().createProgressGroup();
-        monitor.beginTask(getName(), this.jobs.size());
+        
+        monitor.beginTask(getName(), getJobs().size());
 
         try {
             for (PreviewVdbJob previewJob : this.jobs) {

@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -50,6 +51,8 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
+import org.teiid.designer.runtime.preview.jobs.PreviewVdbJob;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -59,8 +62,8 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Preferences;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Preferences;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.AccessPatternColumnsDialog;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDialog;
@@ -152,26 +155,28 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     @Override
     public void run() {
         EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
-        //
-        // if( connectionInfoExists(selected) ) {
-        // internalRun();
-        // }
+        PreviewSetupJob job = null;
 
         try {
-            // TODO need a progress monitor
-            Job job = DqpPlugin.getInstance().getServerManager().getPreviewManager().previewSetup(eObj, null);
+            job = DqpPlugin.getInstance().getServerManager().getPreviewManager().previewSetup(eObj, null);
+            IProgressMonitor monitor = Job.getJobManager().createProgressGroup();
+            job.setProgressGroup(monitor, job.getJobs().size());
+            job.schedule();
+            Job.getJobManager().join(PreviewVdbJob.PREVIEW_FAMILY, monitor);
+
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.showInDialog(getShell(), job);
 
             // setup successful so run preview
             internalRun();
         } catch (Exception e) {
-            // TODO show error message dialog
-            MessageDialog.openError(getShell(), "Preview Data Error", e.getMessage()); //$NON-NLS-1$
-            System.out.print(e);
-            return;
-        }
+            if (job != null) job.cancel();
+            DqpUiConstants.UTIL.log(e);
+            MessageDialog.openError(getShell(),
+                                    null,
+                                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
 
+        }
     }
 
     /**
@@ -425,7 +430,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         if (null == sqlConnection || sqlConnection.isClosed()) {
             final Throwable e = connection.getConnectException();
             throw new JdbcException(e == null ? "Unspecified connection error" //$NON-NLS-1$
-            : e.getMessage());
+                                             : e.getMessage());
         }
         return sqlConnection;
     }
@@ -449,7 +454,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             throw new Error(e);
         }
         // String driverPath = jarPath.toOSString();
-        String driverPath = "/home/blafond/TeiidDesigner/trunk/plugins/teiid_embedded_query/teiid-7.1.0-SNAPSHOT-client.jar";
+        String driverPath = "/Users/dan/Work/Workspaces/teiid-designer/trunk/plugins/teiid_embedded_query/teiid-7.1.0-SNAPSHOT-client.jar";
         return driverPath;
     }
 
