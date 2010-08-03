@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,10 +21,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -51,13 +48,14 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
@@ -69,7 +67,6 @@ import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
@@ -96,10 +93,10 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 @ThreadSafe
 public final class PreviewManager extends JobChangeAdapter
     implements IExecutionConfigurationListener, IResourceChangeListener, INotifyChangedListener, PreviewContext {
-	
-	public static final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$
-	public static final String DEFAULT_PASSWORD = "teiid"; //$NON-NLS-1$
-	private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
+
+    public static final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$
+    public static final String DEFAULT_PASSWORD = "teiid"; //$NON-NLS-1$
+    private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
     /**
      * @param file the file being checked (may not be <code>null</code>)
@@ -312,27 +309,26 @@ public final class PreviewManager extends JobChangeAdapter
                                                 Server previewServer ) throws Exception {
         assert (previewServer != null) : "Preview server is null"; //$NON-NLS-1$
 
-        
-        if(previewVdb.getModelEntries().isEmpty() ) {
-        	return Status.OK_STATUS;
+        if (previewVdb.getModelEntries().isEmpty()) {
+            return Status.OK_STATUS;
         }
-        
+
         // PVDB has only one model
         VdbModelEntry modelEntry = previewVdb.getModelEntries().iterator().next();
         IFile model = modelEntry.findFileInWorkspace();
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
-        
+
         boolean isSourceModel = modelResource.getModelType() == ModelType.PHYSICAL_LITERAL;
-        
-        if( !isSourceModel ) {
-        	return Status.OK_STATUS; 
+
+        if (!isSourceModel) {
+            return Status.OK_STATUS;
         }
 
         int errors = 0;
         IStatus connectionInfoError = null;
-
+        IConnectionInfoHelper helper = new ConnectionInfoHelper();
         // if we have a preview server and connection information on the model then assign a data source
-        if (ConnectionInfoHelper.connectionInfoExists(modelResource)) {
+        if (helper.hasConnectionInfo(modelResource)) {
             String jndiName = this.context.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
             ExecutionAdmin execAdmin = previewServer.getAdmin();
 
@@ -355,7 +351,6 @@ public final class PreviewManager extends JobChangeAdapter
 
         // if no translator name see if we can get one
         if (StringUtilities.isEmpty(modelEntry.getTranslator())) {
-            ConnectionInfoHelper helper = new ConnectionInfoHelper();
             IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
 
             // get translator
@@ -510,21 +505,21 @@ public final class PreviewManager extends JobChangeAdapter
 
         return name.toString();
     }
-    
+
     private String getPreviewVdbName( IResource projectOrModel ) {
         char delim = '_';
-        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim); 
+        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
 
         if (projectOrModel instanceof IProject) {
             name = new StringBuilder(PreviewManager.getPreviewProjectVdbName((IProject)projectOrModel));
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
-            
-            if( projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
-            	String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
-            	if( vdbName.startsWith(ModelerCore.workspaceUuid().toString()) ) { 
-            		return projectOrModel.getFullPath().lastSegment();
-            	}
+
+            if (projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
+                String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
+                if (vdbName.startsWith(ModelerCore.workspaceUuid().toString())) {
+                    return projectOrModel.getFullPath().lastSegment();
+                }
             }
             IPath modelPath = projectOrModel.getFullPath().removeFileExtension();
 
@@ -535,7 +530,7 @@ public final class PreviewManager extends JobChangeAdapter
             // remove last delimiter
             name.deleteCharAt(name.length() - 1);
         }
-        
+
         name.append(Vdb.FILE_EXTENSION);
         return name.toString();
     }
@@ -836,7 +831,7 @@ public final class PreviewManager extends JobChangeAdapter
 
         // construct job to run the setup
         PreviewSetupJob setupJob = new PreviewSetupJob(getPreviewVdbDeployedName(modelToPreview),
-        											   getPreviewProjectVdbName(modelToPreview.getProject()), this.context,
+                                                       getPreviewProjectVdbName(modelToPreview.getProject()), this.context,
                                                        previewServer);
 
         // collect all the Preview VDB parent folders so that we can make sure workspace is in sync with file system
@@ -844,13 +839,13 @@ public final class PreviewManager extends JobChangeAdapter
 
         // deploy model's PVDB if necessary
         if (needsToBeDeployed(pvdbFile)) {
-        	if( isSourceModel ) {
-	            status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
-	
-	            if (status.getSeverity() == IStatus.ERROR) {
-	                throw new CoreException(status);
-	            }
-        	}
+            if (isSourceModel) {
+                status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
+
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new CoreException(status);
+                }
+            }
 
             setupJob.deploy(pvdbFile);
             parents.add(pvdbFile.getParent());
@@ -858,10 +853,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : findProjectPvdbs(modelToPreview.getProject(), true)) {
-        	if( pvdbFile.equals(projectPvdbFile)) {
-        		continue;
-        	}
-        	
+            if (pvdbFile.equals(projectPvdbFile)) {
+                continue;
+            }
+
             Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, monitor);
 
             // make sure no errors
@@ -1066,10 +1061,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         if (getPreviewServer() != null) {
             for (IProject project : getAllProjects()) {
-            	// Exception thrown if project is already closed.
-            	if( project.isOpen() ) {
-            		modelProjectDeleted(project, this.context);
-            	}
+                // Exception thrown if project is already closed.
+                if (project.isOpen()) {
+                    modelProjectDeleted(project, this.context);
+                }
             }
         }
     }

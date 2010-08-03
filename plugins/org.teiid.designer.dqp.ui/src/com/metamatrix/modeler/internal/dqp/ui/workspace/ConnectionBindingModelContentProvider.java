@@ -9,14 +9,13 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.TeiidTranslator;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
@@ -34,15 +33,12 @@ public class ConnectionBindingModelContentProvider implements ITreeContentProvid
     // Static
 
     private static final Object[] NO_CHILDREN = new Object[0];
-    
-    private ConnectionInfoHelper connectionInfoHelper;
 
     /**
      * @since 5.0
      */
     public ConnectionBindingModelContentProvider() {
         super();
-        this.connectionInfoHelper = new ConnectionInfoHelper();
     }
 
     /* (non-Javadoc)
@@ -73,21 +69,27 @@ public class ConnectionBindingModelContentProvider implements ITreeContentProvid
             ModelResource mr = ModelUtilities.getModelResource(parentElement);
 
             if (mr != null) {
-            	IConnectionProfile profile = this.connectionInfoHelper.getConnectionProfile(mr);
-            	// TODO: Replace with code that looks at model, to find ConnectionInfo annotation and shows properties.
-            	if( profile != null ) {
-	                Collection<TeiidTranslator> connectors = new ArrayList<TeiidTranslator>(); //.getInstance().getServerManager().getConnectorsForModel(mr.getItemName());
-	
-	                if (!connectors.isEmpty()) {
-	                    Collection<ConnectionBindingSourceWrapper> wrappedCBs = new ArrayList<ConnectionBindingSourceWrapper>();
-	
-	                    for (TeiidTranslator connector : connectors) {
-	                        wrappedCBs.add(new ConnectionBindingSourceWrapper(connector, (JdbcSource)parentElement));
-	                    }
-	
-	                    children = wrappedCBs.toArray();
-	                }
-            	}
+                IConnectionInfoHelper connectionInfoHelper = null;
+                try {
+                    ConnectionInfoProviderFactory factory = new ConnectionInfoProviderFactory();
+                    connectionInfoHelper = factory.getProvider(mr);
+                } catch (Exception e) {
+                }
+                IConnectionProfile profile = connectionInfoHelper.getConnectionProfile(mr);
+                // TODO: Replace with code that looks at model, to find ConnectionInfo annotation and shows properties.
+                if (profile != null) {
+                    Collection<TeiidTranslator> connectors = new ArrayList<TeiidTranslator>(); // .getInstance().getServerManager().getConnectorsForModel(mr.getItemName());
+
+                    if (!connectors.isEmpty()) {
+                        Collection<ConnectionBindingSourceWrapper> wrappedCBs = new ArrayList<ConnectionBindingSourceWrapper>();
+
+                        for (TeiidTranslator connector : connectors) {
+                            wrappedCBs.add(new ConnectionBindingSourceWrapper(connector, (JdbcSource)parentElement));
+                        }
+
+                        children = wrappedCBs.toArray();
+                    }
+                }
             }
         }
 

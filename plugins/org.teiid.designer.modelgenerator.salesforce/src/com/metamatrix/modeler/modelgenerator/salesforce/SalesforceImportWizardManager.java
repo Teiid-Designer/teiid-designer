@@ -16,8 +16,6 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.MergeProcessor;
@@ -30,6 +28,7 @@ import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceCon
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.impl.DataModelImpl;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
+import com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider;
 
 public class SalesforceImportWizardManager {
 
@@ -180,8 +179,8 @@ public class SalesforceImportWizardManager {
                     throw mbe;
                 }
                 monitor.subTask(Messages.getString("SalesforceImportWizardManager.binding")); //$NON-NLS-1$
-
-                BindingGenerator.createConnectorBinding(connectionProfile, modelResource);
+                SalesForceConnectionInfoProvider helper = new SalesForceConnectionInfoProvider();
+                helper.setConnectionInfo(modelResource, connectionProfile);
             }
         }
     }
@@ -214,17 +213,6 @@ public class SalesforceImportWizardManager {
             dataModel.load(conn, monitor);
         }
         return dataModel;
-    }
-
-    public static void createConnectorBinding( IConnectionProfile connectionProfile,
-                                               ModelResource modelResource ) {
-
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
-
-        ConnectionInfoHelper helper = new ConnectionInfoHelper();
-        helper.setConnectionInfo(modelResource, connectionProfile);
-
     }
 
     public boolean isModelAuditFields() {

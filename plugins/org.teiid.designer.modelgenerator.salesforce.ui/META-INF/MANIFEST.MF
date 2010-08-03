@@ -24,10 +24,10 @@ Require-Bundle: org.teiid.designer.modelgenerator.salesforce,
  org.teiid.designer.compare,
  org.eclipse.emf.ecore,
  org.eclipse.datatools.connectivity,
- org.teiid.designer.datatools.salesforce,
  org.eclipse.datatools.connectivity.ui,
  org.teiid.designer.datatools.ui,
- org.teiid.designer.metamodels.function
+ org.teiid.designer.metamodels.function,
+ org.eclipse.datatools.help;bundle-version="1.5.0"
 Bundle-ActivationPolicy: lazy
 Export-Package:  com.metamatrix.modeler.modelgenerator.salesforce.ui,
  com.metamatrix.modeler.modelgenerator.salesforce.ui.util,

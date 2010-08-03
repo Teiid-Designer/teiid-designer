@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.sqltools.sqleditor,
  org.eclipse.datatools.sqltools.data.core,
  org.eclipse.datatools.sqltools.sql,
- org.teiid.datatools.connectivity
+ org.teiid.datatools.connectivity,
+ org.eclipse.datatools.sqltools.result.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.datatools.sqltools.core,

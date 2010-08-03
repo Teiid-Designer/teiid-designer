@@ -31,6 +31,29 @@
          label="%CreateSalesForceFunctionsAction.label">
    </resourceAction>
    </extension>
+   
+      <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.salesforce.ui.ConnectionProfileWizard"
+         description="Create a SalesForce connection profile."
+         icon="icons/salesforce_wiz.gif"
+         id="org.teiid.designer.datatools.salesforce.ui.ConnectionProfileWizard"
+         name="SalesForce"
+         profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.salesforce.ui.PropertyPage"
+            id="org.teiid.designer.datatools.salesforce.ui.profileProperties"
+            name="Connection Properties">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+      </page>
+   </extension>
 
 </plugin>
 

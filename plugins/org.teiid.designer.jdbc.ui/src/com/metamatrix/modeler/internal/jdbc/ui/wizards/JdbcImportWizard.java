@@ -38,15 +38,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.core.util.FileUtils;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreArgCheck;
-import org.teiid.core.util.FileUtils;
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
@@ -119,8 +118,8 @@ public class JdbcImportWizard extends AbstractWizard
     boolean controlsHaveBeenCreated = false;
 
     private IJdbcImportPostProcessor[] postProcessors;
-    
-    // Need to cash the profile when connection is selected so we can use it in Finish method to 
+
+    // Need to cash the profile when connection is selected so we can use it in Finish method to
     // inject the connection info into model.
     private IConnectionProfile connectionProfile;
 
@@ -657,12 +656,12 @@ public class JdbcImportWizard extends AbstractWizard
                 }
                 // Moved this call to AFTER the MODEL TYPE has been set.
                 ModelUtilities.initializeModelContainers(resrc, "Jdbc Import", this); //$NON-NLS-1$
-                
-                // If connection profile is cached, which it should, go ahead and inject the data into the 
+
+                // If connection profile is cached, which it should, go ahead and inject the data into the
                 // model resource.
-                if( this.connectionProfile != null ) {
-	                ConnectionInfoHelper helper = new ConnectionInfoHelper();
-	                helper.setJdbcConnectionInfo(resrc, this.connectionProfile);
+                if (this.connectionProfile != null) {
+                    IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
+                    provider.setConnectionInfo(resrc, this.connectionProfile);
                 }
                 JdbcImportWizard.this.status = processor.execute(resrc, getDatabase(), src.getImportSettings(), monitor);
 
@@ -818,7 +817,7 @@ public class JdbcImportWizard extends AbstractWizard
                         }
                     }
                 }
-                
+
                 // Cache the CP so it can be used during Finish method
                 this.connectionProfile = page.getConnectionProfile();
                 connectionEstablished();

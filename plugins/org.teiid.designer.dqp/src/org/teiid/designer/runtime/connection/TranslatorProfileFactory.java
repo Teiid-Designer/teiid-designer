@@ -3,7 +3,7 @@ package org.teiid.designer.runtime.connection;
 import java.util.Properties;
 import java.util.Set;
 
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 
 import com.metamatrix.core.util.CoreArgCheck;
 
@@ -44,12 +44,12 @@ public class TranslatorProfileFactory {
 		
 		Properties translatorProps = translatorProfile.getProperties();
 		Properties allProps = new Properties();
-		allProps.put(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + ConnectionInfoHelper.TRANSLATOR_NAME_KEY, translatorProfile.getName());
-		allProps.put(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + ConnectionInfoHelper.TRANSLATOR_TYPE_KEY, translatorProfile.getType());
+		allProps.put(IConnectionInfoHelper.TRANSLATOR_NAMESPACE + IConnectionInfoHelper.TRANSLATOR_NAME_KEY, translatorProfile.getName());
+		allProps.put(IConnectionInfoHelper.TRANSLATOR_NAMESPACE + IConnectionInfoHelper.TRANSLATOR_TYPE_KEY, translatorProfile.getType());
 		
 		Set<Object> keys = translatorProps.keySet();
 		for(Object  nextKey : keys ) {
-			allProps.put(ConnectionInfoHelper.TRANSLATOR_NAMESPACE + nextKey, translatorProps.get(nextKey));
+			allProps.put(IConnectionInfoHelper.TRANSLATOR_NAMESPACE + nextKey, translatorProps.get(nextKey));
 		}
 		return allProps;
 	}

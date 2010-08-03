@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+       id="org.teiid.designer.datatools.salesforce.ConnectionInfoProvider"
+       name="SalesForceConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoHelper
+            profile="org.teiid.designer.datatools.salesforce.connectionProfile"
+            class="com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider"/>
+   </extension>
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+         <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            icon="icons/salesforce_16.gif"
+            id="org.teiid.designer.datatools.salesforce.connectionProfile"
+            name="SalesForce"
+            pingFactory="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            propertiesPersistenceHook="org.teiid.designer.datatools.salesforce.PersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            id="org.teiid.designer.datatools.salesforce.ConnectionFactory"
+            name="SalesForce Connection"
+            profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+   </extension>
+
+</plugin>

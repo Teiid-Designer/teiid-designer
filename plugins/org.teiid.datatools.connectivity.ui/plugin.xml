@@ -67,5 +67,14 @@
             supportsDebugging="false"
             version="7.0">
       </dbConfiguration>
+   </extension> 
+   <extension
+         point="org.eclipse.datatools.sqltools.result.ui.resultSetViewer"
+         id="org.teiid.datatools.data.extensions.externalResultSetViewer ">
+         <externalViewer
+         vendor="Teiid.org"
+         id="Teiid Result Set Viewer"
+         default_viewer_name="Teiid Result Set Viewer"
+         class="org.teiid.datatools.results.view.TeiidResultViewerProvider"/>
    </extension>
    </plugin>

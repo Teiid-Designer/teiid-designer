@@ -26,7 +26,9 @@ import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.runtime.connection.DqpConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.connection.IConnectionProperties;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
@@ -34,8 +36,9 @@ import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.dqp.DataSourceConnectionConstants;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 
 /**
  *
@@ -108,15 +111,15 @@ public class ExecutionAdmin {
     public TeiidDataSource getOrCreateDataSource( IFile model,
                                                   String jndiName ) throws Exception {
         String displayName = model.getFullPath().removeFileExtension().lastSegment();
-        DqpConnectionInfoHelper dqpConnectionHelper = new DqpConnectionInfoHelper();
-        String dsName = dqpConnectionHelper.generateUniqueConnectionJndiName(model, ModelerCore.workspaceUuid().toString());
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
-        Properties props = dqpConnectionHelper.getDataSourceProperties(modelResource);
+        ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+        IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
+        Properties props = connInfoProvider.getConnectionProperties(modelResource);
+        String dsName = connInfoProvider.getDataSourceType();
 
         // make sure the password property is there. if not get from connection profile.
-        if (!props.isEmpty() && props.getProperty(DataSourceConnectionConstants.PASSWORD) == null) {
-            ConnectionInfoHelper helper = new ConnectionInfoHelper();
-            IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
+        if (!props.isEmpty() && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+            IConnectionProfile connectionProfile = connInfoProvider.getConnectionProfile(modelResource);
 
             if (connectionProfile == null) {
                 throw new Exception(Util.getString("errorCreatingDataSource", //$NON-NLS-1$
@@ -128,9 +131,9 @@ public class ExecutionAdmin {
             connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
             
             if (connectionProfile != null) {
-                connectionProfile.getBaseProperties().getProperty(ConnectionInfoHelper.PASSWORD_KEY);
-                props.setProperty(ConnectionInfoHelper.PASSWORD_KEY,
-                                  connectionProfile.getBaseProperties().getProperty(ConnectionInfoHelper.PASSWORD_KEY));
+                connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                props.setProperty(connInfoProvider.getPasswordPropertyKey(),
+                                  connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey()));
                 return getOrCreateDataSource(displayName, dsName, IConnectionProperties.JDBC_DS_TYPE, props);
             }
         }

@@ -1,64 +1,23 @@
 package org.teiid.designer.datatools.connection;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.datatools.DatatoolsPlugin;
-import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 
-public class ConnectionInfoHelper {
-    /*
-     * === Static Property Keys for IConnectionProfile property storage
-     * values based on plugin.xml extension contributions within the datatools connectivity plugins
-     */
-    public static final String PROFILE_NAME_KEY = "connectionProfileName"; //$NON-NLS-1$
-    public static final String PROFILE_PROVIDER_ID_KEY = "connectionProfileProviderId"; //$NON-NLS-1$
-    public static final String PROFILE_DESCRIPTION_KEY = "connectionProfileDescription"; //$NON-NLS-1$
-    public static final String SAVE_PWD_KEY = "org.eclipse.datatools.connectivity.db.savePWD"; //$NON-NLS-1$
-    public static final String DRIVER_DEFN_TYPE_KEY = "org.eclipse.datatools.connectivity.drivers.defnType"; //$NON-NLS-1$
-    public static final String USERNAME_KEY = "org.eclipse.datatools.connectivity.db.username"; //$NON-NLS-1$
-    public static final String DRIVER_CLASS_KEY = "org.eclipse.datatools.connectivity.db.driverClass"; //$NON-NLS-1$
-    public static final String DRIVER_DEFN_ID_KEY = "org.eclipse.datatools.connectivity.db.driverDefinitionID"; //$NON-NLS-1$
-    public static final String DATABASE_NAME_KEY = "org.eclipse.datatools.connectivity.db.databaseName"; //$NON-NLS-1$
-    public static final String PASSWORD_KEY = "org.eclipse.datatools.connectivity.db.password"; //$NON-NLS-1$
-    public static final String URL_KEY = "org.eclipse.datatools.connectivity.db.URL"; //$NON-NLS-1$
-    public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version"; //$NON-NLS-1$
-    public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor"; //$NON-NLS-1$
-
-    public static final String CONNECTION_PROFILE_NAMESPACE = "connection:"; //$NON-NLS-1$
-
-    public static final String TRANSLATOR_NAMESPACE = "translator:"; //$NON-NLS-1$
-
-    public static final String TRANSLATOR_NAME_KEY = "name"; //$NON-NLS-1$
-    public static final String TRANSLATOR_TYPE_KEY = "type"; //$NON-NLS-1$
-
-    /**
-     * These are the property keys used for the jdbc source settings of physical models that were created in the legacy MMX JDBC
-     * Import Wizard
-     */
-    public static final String JDBC_IMPORT_DRIVER_CLASS = "com.metamatrix.modeler.jdbc.JdbcSource.driverClass"; //$NON-NLS-1$
-    public static final String JDBC_IMPORT_URL = "com.metamatrix.modeler.jdbc.JdbcSource.url"; //$NON-NLS-1$  
-    public static final String JDBC_IMPORT_USERNAME = "com.metamatrix.modeler.jdbc.JdbcSource.username"; //$NON-NLS-1$
-    public static final String JDBC_IMPORT_DRIVER_NAME = "com.metamatrix.modeler.jdbc.JdbcSource.driverName"; //$NON-NLS-1$
-
-    /**
-     * Indicates if the model resource has connection information.
-     * 
-     * @param modelResource the model resource whose connection information is being checked (may not be <code>null</code>)
-     * @return <code>true</code> if the model resource contains connection info
-     */
-    public static boolean connectionInfoExists( ModelResource modelResource ) throws Exception {
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        ConnectionInfoHelper helper = new ConnectionInfoHelper();
-        return helper.hasConnectionInfo(modelResource);
-    }
+public class ConnectionInfoHelper implements IConnectionInfoHelper {
 
     private ResourceAnnotationHelper resourceAnnotationHelper;
 
@@ -91,40 +50,38 @@ public class ConnectionInfoHelper {
      * @param modelResource
      * @return
      */
+    @Override
     public IConnectionProfile getConnectionProfile( ModelResource modelResource ) {
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 
-        Properties props = null;
+        Properties connectionProps = null;
+        Properties profileProps = null;
 
         try {
-            props = getHelper().getProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
+            profileProps = getHelper().getProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
+            connectionProps = getHelper().getProperties(modelResource, CONNECTION_NAMESPACE);
         } catch (Exception e) {
             DatatoolsPlugin.Util.log(IStatus.ERROR,
                                      e,
                                      DatatoolsPlugin.Util.getString("errorFindingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
                                                                     modelResource.getItemName()));
         }
-        if (props == null || props.isEmpty()) {
+        if (connectionProps == null || connectionProps.isEmpty() || profileProps == null || profileProps.isEmpty()) {
             return null;
         }
 
         // Now we need to
         // cache non-base-property values
-        String name = props.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_NAME_KEY);
-        String desc = props.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_DESCRIPTION_KEY);
-        String id = props.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_PROVIDER_ID_KEY);
-
-        // Remove these from stored props
-        props.remove(CONNECTION_PROFILE_NAMESPACE + PROFILE_NAME_KEY);
-        props.remove(CONNECTION_PROFILE_NAMESPACE + PROFILE_DESCRIPTION_KEY);
-        props.remove(CONNECTION_PROFILE_NAMESPACE + PROFILE_PROVIDER_ID_KEY);
+        String name = profileProps.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_NAME_KEY);
+        String desc = profileProps.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_DESCRIPTION_KEY);
+        String id = profileProps.getProperty(CONNECTION_PROFILE_NAMESPACE + PROFILE_PROVIDER_ID_KEY);
 
         // Reconstruct the set of base-properties for the ConnectionProfile
         // Need to swap out the property keys
         Properties baseProps = new Properties();
-        Set<Object> keys = props.keySet();
+        Set<Object> keys = connectionProps.keySet();
         for (Object nextKey : keys) {
-            baseProps.put(removeNamespace((String)nextKey), props.getProperty((String)nextKey));
+            baseProps.put(removeNamespace((String)nextKey), connectionProps.getProperty((String)nextKey));
         }
 
         return createConnectionProfile(name, desc, id, baseProps);
@@ -139,6 +96,7 @@ public class ConnectionInfoHelper {
      * @param props the base properties
      * @return the connection profile
      */
+    @Override
     public ConnectionProfile createConnectionProfile( String name,
                                                       String description,
                                                       String id,
@@ -150,7 +108,7 @@ public class ConnectionInfoHelper {
         return this.connectionProfileFactory.createConnectionProfile(name, description, id, props);
     }
 
-    private String removeNamespace( String str ) {
+    protected String removeNamespace( String str ) {
 
         int semiColonIndex = str.indexOf(':') + 1;
         if (semiColonIndex > 0) {
@@ -160,19 +118,29 @@ public class ConnectionInfoHelper {
         return str;
     }
 
+    protected Properties removeNamespaces( Properties props ) {
+        Properties result = new Properties();
+        Set<Object> keys = props.keySet();
+        for (Object nextKey : keys) {
+            result.put(removeNamespace((String)nextKey), props.getProperty((String)nextKey));
+        }
+        return result;
+    }
+
     /**
      * Verifies if a <code>ModelResource</code> contains a model that contains connection information
      * 
      * @param modelResource the <code>ModelResource</code>
      * @return true if model resource contains connection info. false if not.
      */
+    @Override
     public boolean hasConnectionInfo( ModelResource modelResource ) {
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 
         Properties props = null;
 
         try {
-            props = getHelper().getProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
+            props = getHelper().getProperties(modelResource, CONNECTION_NAMESPACE);
         } catch (Exception e) {
             DatatoolsPlugin.Util.log(IStatus.ERROR,
                                      e,
@@ -187,67 +155,6 @@ public class ConnectionInfoHelper {
     }
 
     /**
-     * Stores the critical connection profile information within a model resource.
-     * 
-     * @param modelResource the <code>ModelResource</code>
-     * @param connectionProfile the connection profile
-     */
-    public void setConnectionInfo( ModelResource modelResource,
-                                   IConnectionProfile connectionProfile ) {
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
-
-        try {
-            // get name-spaced properties
-            Properties props = getProperties(connectionProfile);
-            props.remove(CONNECTION_PROFILE_NAMESPACE + PASSWORD_KEY);
-
-            // Remove old connection properties
-            getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
-            // Add new connection properties
-            getHelper().setProperties(modelResource, props);
-
-        } catch (ModelWorkspaceException e) {
-            DatatoolsPlugin.Util.log(IStatus.ERROR,
-                                     e,
-                                     DatatoolsPlugin.Util.getString("errorSettingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
-                                                                    modelResource.getItemName()));
-        }
-    }
-
-    /**
-     * Stores the critical connection profile information within a model resource.
-     * 
-     * @param modelResource the <code>ModelResource</code>
-     * @param connectionProfile the connection profile
-     */
-    public void setJdbcConnectionInfo( ModelResource modelResource,
-                                       IConnectionProfile connectionProfile ) {
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
-
-        try {
-            // get name-spaced properties
-            Properties props = getProperties(connectionProfile);
-
-            props.remove(CONNECTION_PROFILE_NAMESPACE + PASSWORD_KEY);
-            // Remove old connection properties
-            getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
-
-            // Add JDBC translator
-            props.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, JdbcTranslatorHelper.getTranslator(connectionProfile));
-            // Add new connection properties
-            getHelper().setProperties(modelResource, props);
-
-        } catch (ModelWorkspaceException e) {
-            DatatoolsPlugin.Util.log(IStatus.ERROR,
-                                     e,
-                                     DatatoolsPlugin.Util.getString("errorSettingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
-                                                                    modelResource.getItemName()));
-        }
-    }
-
-    /**
      * Returns the collective properties of a <code>ConnectionProfile</code> to include name, description and provider id in
      * addition to it's base properties. These properties are also prefixed with a custom namespace for storage in a model
      * resource "annotation"
@@ -255,6 +162,7 @@ public class ConnectionInfoHelper {
      * @param connectionProfile the connection profile
      * @return the name-spaced properties for the connection profile
      */
+    @Override
     public Properties getProperties( IConnectionProfile connectionProfile ) {
         CoreArgCheck.isNotNull(connectionProfile, "connectionProfile"); //$NON-NLS-1$
 
@@ -264,6 +172,43 @@ public class ConnectionInfoHelper {
         return this.connectionProfileFactory.getNamespacedProperties(connectionProfile);
     }
 
+    @Override
+    public Properties getCommonProfileProperties( IConnectionProfile profile ) {
+        Properties commonProps = new Properties();
+        commonProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_NAME_KEY,
+                        profile.getName());
+        commonProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_DESCRIPTION_KEY,
+                        profile.getDescription());
+        commonProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY,
+                        profile.getProviderId());
+        commonProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_ID_KEY,
+                        profile.getInstanceID());
+        commonProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.CATEGORY_ID_KEY,
+                        profile.getCategory().getId());
+        return commonProps;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     */
+    @Override
+    public Properties getConnectionProperties( ModelResource modelResource ) throws ModelWorkspaceException {
+        return removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_NAMESPACE));
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     */
+    @Override
+    public Properties getProfileProperties( ModelResource modelResource ) throws ModelWorkspaceException {
+        return removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_PROFILE_NAMESPACE));
+    }
+
+    @Override
     public String getTranslatorName( ModelResource modelResource ) {
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 
@@ -281,4 +226,127 @@ public class ConnectionInfoHelper {
         return props.getProperty(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, StringUtil.Constants.EMPTY_STRING);
     }
 
+    /**
+     * @param model the model whose JNDI data source name is being requested
+     * @param uuid the workspace UUID
+     * @return the JNDI name (never <code>null</code>)
+     */
+    public String generateUniqueConnectionJndiName( IFile model,
+                                                    String uuid ) {
+        return generateUniqueConnectionJndiName(model.getFullPath().removeFileExtension().lastSegment(),
+                                                model.getFullPath(),
+                                                ModelerCore.workspaceUuid().toString());
+    }
+
+    /**
+     * Creates a unique JNDI name for a source model based on a <code>ModelResource</code>
+     * 
+     * @param modelResource
+     * @return the JNDI name
+     */
+    @Override
+    public String generateUniqueConnectionJndiName( ModelResource modelResource,
+                                                    String uuid ) {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(uuid, "uuid"); //$NON-NLS-1$
+        return generateUniqueConnectionJndiName(modelResource.getItemName(),
+                                                modelResource.getPath(),
+                                                ModelerCore.workspaceUuid().toString());
+    }
+
+    /**
+     * Creates a unique JNDI name for a source model based on a name and path in the workspace
+     * 
+     * @param name
+     * @param path
+     * @return
+     */
+    @Override
+    public String generateUniqueConnectionJndiName( String name,
+                                                    IPath path,
+                                                    String uuid ) {
+
+        CoreArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(path, "path"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(uuid, "uuid"); //$NON-NLS-1$
+
+        final StringBuilder builder = new StringBuilder(uuid + "__"); //$NON-NLS-1$
+        for (final String segment : path.removeLastSegments(1).segments())
+            builder.append(segment).append('_');
+
+        return builder.append(name).toString();
+    }
+
+    public String findTranslatorName( ModelResource modelResource ) throws ModelWorkspaceException {
+        String translator = getTranslatorName(modelResource);
+        for (String translatorName : DataSourceConnectionConstants.Translators.JDBC_TRANSLATORS) {
+            if (translator.toUpperCase().contains(translatorName.toUpperCase())) {
+                return translatorName;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Given a set of properties, find a suitable translator name.
+     * 
+     * @param matchableStrings
+     * @param translators
+     * @return
+     */
+    public String findTranslatorName( Properties properties ) {
+        Collection<String> matchableStrings = new ArrayList<String>();
+        matchableStrings.add(properties.getProperty(IConnectionInfoHelper.TRANSLATOR_NAME_KEY));
+
+        for (String translatorName : DataSourceConnectionConstants.Translators.ALL_TRANSLATORS) {
+            for (String keyword : matchableStrings) {
+                if (keyword.toUpperCase().contains(translatorName.toUpperCase())) {
+                    return translatorName;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Given a set of matchable strings and a set of data source type strings, find a suitable match. If a match isn't found, then
+     * <unknown> string is returned.
+     * 
+     * @param matchableStrings
+     * @param dataSourceTypeNames
+     * @return
+     */
+    @Override
+    public String findMatchingDataSourceTypeName( Collection<String> matchableStrings,
+                                                  Set<String> dataSourceTypeNames ) {
+        for (String dsTypeName : dataSourceTypeNames) {
+            for (String keyword : matchableStrings) {
+                if (keyword.toUpperCase().contains(dsTypeName.toUpperCase())) {
+                    return dsTypeName;
+                }
+            }
+        }
+
+        return DataSourceConnectionConstants.Translators.UNKNOWN;
+    }
+
+    @Override
+    public String findMatchingDataSourceTypeName( ModelResource modelResource ) throws ModelWorkspaceException {
+        ResourceAnnotationHelper helper = new ResourceAnnotationHelper();
+        Properties properties = helper.getProperties(modelResource, IConnectionInfoHelper.TRANSLATOR_NAMESPACE);
+        return findMatchingDataSourceTypeName(properties);
+    }
+
+    @Override
+    public String findMatchingDataSourceTypeName( Properties properties ) {
+        for (String translatorName : DataSourceConnectionConstants.Translators.ALL_TRANSLATORS) {
+            String translator = properties.getProperty(IConnectionInfoHelper.TRANSLATOR_NAME_KEY);
+            if (translator.toUpperCase().contains(translatorName.toUpperCase())) {
+                return translator;
+            }
+
+        }
+        return DataSourceConnectionConstants.DataSource.UNKNOWN;
+    }
 }

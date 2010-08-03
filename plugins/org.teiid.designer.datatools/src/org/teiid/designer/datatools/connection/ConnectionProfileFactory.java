@@ -46,12 +46,12 @@ public class ConnectionProfileFactory {
 		
 		Properties baseProps = connectionProfile.getBaseProperties();
 		Properties connProps = new Properties();
-		connProps.put(ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + ConnectionInfoHelper.PROFILE_NAME_KEY, connectionProfile.getName());
-		connProps.put(ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + ConnectionInfoHelper.PROFILE_DESCRIPTION_KEY, connectionProfile.getDescription());
-		connProps.put(ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + ConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
+		connProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_NAME_KEY, connectionProfile.getName());
+		connProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_DESCRIPTION_KEY, connectionProfile.getDescription());
+		connProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
 		Set<Object> keys = baseProps.keySet();
 		for(Object  nextKey : keys ) {
-			connProps.put(ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + nextKey, baseProps.get(nextKey));
+			connProps.put(IConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE + nextKey, baseProps.get(nextKey));
 		}
 		return connProps;
 	}

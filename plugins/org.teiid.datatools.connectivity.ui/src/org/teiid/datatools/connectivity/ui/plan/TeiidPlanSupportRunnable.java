@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 import org.eclipse.datatools.sqltools.core.SQLToolsFacade;
 import org.eclipse.datatools.sqltools.core.services.ConnectionService;
@@ -27,7 +26,9 @@ public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
         String result = Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"); //$NON-NLS-1$
         try {
             String sql = this._request.getSql();
-			ResultSet resultSet = stmt.executeQuery(sql + " OPTION PLANONLY"); //$NON-NLS-1$
+            stmt.execute("set showplan debug");
+            ResultSet resultSet = stmt.executeQuery(sql); //$NON-NLS-1$
+
             result = resultSet.getString(0);
         } catch (SQLException e) {
             result += e.getMessage();
