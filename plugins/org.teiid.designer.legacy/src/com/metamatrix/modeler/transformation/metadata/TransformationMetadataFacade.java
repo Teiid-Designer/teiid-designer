@@ -1078,4 +1078,10 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         return null;
     }
 
+	@Override
+	public Object getPrimaryKey(Object arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
