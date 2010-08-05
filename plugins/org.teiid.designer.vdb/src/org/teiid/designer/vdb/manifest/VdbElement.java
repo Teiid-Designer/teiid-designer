@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.vdb.manifest;
 
+import static org.teiid.designer.vdb.Vdb.Xml.PREVIEW;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +33,6 @@ import org.teiid.designer.vdb.VdbModelEntry;
 public class VdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     */
-    public static final String PREVIEW = "preview"; //$NON-NLS-1$
 
     @XmlAttribute( name = "name", required = true )
     private String name;

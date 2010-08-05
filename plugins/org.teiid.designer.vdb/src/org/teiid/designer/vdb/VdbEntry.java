@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.vdb;
 
+import static org.teiid.designer.vdb.Vdb.Event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -245,14 +246,14 @@ public class VdbEntry {
         final String oldDescription = this.description.get();
         if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);
-        vdb.setModified(this, Vdb.ENTRY_DESCRIPTION, oldDescription, description);
+        vdb.setModified(this, ENTRY_DESCRIPTION, oldDescription, description);
     }
 
     void setSynchronization( final Synchronization synchronization ) {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
-        vdb.notifyChangeListeners(this, Vdb.ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
+        vdb.notifyChangeListeners(this, ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
     }
 
     /**
@@ -285,7 +286,7 @@ public class VdbEntry {
         } finally {
             checksumLock.writeLock().unlock();
         }
-        vdb.setModified(this, Vdb.ENTRY_CHECKSUM, oldChecksum, checksum);
+        vdb.setModified(this, ENTRY_CHECKSUM, oldChecksum, checksum);
         return Synchronization.Synchronized;
     }
 

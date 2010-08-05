@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.vdb;
 
+import static org.teiid.designer.vdb.Vdb.Event.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
@@ -297,7 +298,7 @@ public final class VdbModelEntry extends VdbEntry {
         final String oldName = getJndiName();
         if (StringUtilities.equals(name, oldName)) return;
         this.jndiName.set(name);
-        getVdb().setModified(this, Vdb.MODEL_JNDI_NAME, oldName, name);
+        getVdb().setModified(this, MODEL_JNDI_NAME, oldName, name);
     }
 
     /**
@@ -308,7 +309,7 @@ public final class VdbModelEntry extends VdbEntry {
         final String oldName = getSourceName();
         if (StringUtilities.equals(name, oldName)) return;
         this.source.set(name);
-        getVdb().setModified(this, Vdb.MODEL_SOURCE_NAME, oldName, name);
+        getVdb().setModified(this, MODEL_SOURCE_NAME, oldName, name);
     }
 
     /**
@@ -318,7 +319,7 @@ public final class VdbModelEntry extends VdbEntry {
         final String oldTranslator = getTranslator();
         if (StringUtilities.equals(translator, oldTranslator)) return;
         this.translator.set(translator);
-        getVdb().setModified(this, Vdb.MODEL_TRANSLATOR, oldTranslator, translator);
+        getVdb().setModified(this, MODEL_TRANSLATOR, oldTranslator, translator);
     }
 
     /**
@@ -328,7 +329,7 @@ public final class VdbModelEntry extends VdbEntry {
         final boolean oldVisible = isVisible();
         if (oldVisible == visible) return;
         this.visible.set(visible);
-        getVdb().setModified(this, Vdb.MODEL_VISIBLE, oldVisible, visible);
+        getVdb().setModified(this, MODEL_VISIBLE, oldVisible, visible);
     }
 
     /**

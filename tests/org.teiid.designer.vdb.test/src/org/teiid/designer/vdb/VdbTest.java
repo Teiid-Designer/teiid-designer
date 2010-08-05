@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.teiid.designer.vdb.Vdb.Event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -176,7 +177,7 @@ public class VdbTest {
         // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
-        assertThat(arg.getValue().getPropertyName(), is(Vdb.DESCRIPTION));
+        assertThat(arg.getValue().getPropertyName(), is(DESCRIPTION));
         assertThat((String)arg.getValue().getOldValue(), is(oldDescription));
         assertThat((String)arg.getValue().getNewValue(), is(newDescription));
     }
@@ -188,7 +189,7 @@ public class VdbTest {
         vdb.setDescription("test");
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
-        assertThat(arg.getValue().getPropertyName(), is(Vdb.DESCRIPTION));
+        assertThat(arg.getValue().getPropertyName(), is(DESCRIPTION));
         vdb.removeChangeListener(listener);
         vdb.setDescription("test1");
         verify(listener).propertyChange(isA(PropertyChangeEvent.class));
@@ -201,7 +202,7 @@ public class VdbTest {
         vdb.setDescription("test");
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
-        assertThat(arg.getValue().getPropertyName(), is(Vdb.DESCRIPTION));
+        assertThat(arg.getValue().getPropertyName(), is(DESCRIPTION));
         vdb.setDescription("test");
         verify(listener).propertyChange(isA(PropertyChangeEvent.class));
     }

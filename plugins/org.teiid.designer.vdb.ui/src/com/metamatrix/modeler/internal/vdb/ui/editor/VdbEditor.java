@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
 import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
+import static org.teiid.designer.vdb.Vdb.Event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
@@ -673,9 +674,9 @@ public final class VdbEditor extends EditorPart {
     }
 
     void vdbNotification( final String property ) {
-        if (Vdb.CLOSED.equals(property)) return;
-        if (Vdb.ENTRY_SYNCHRONIZATION.equals(property) || Vdb.MODEL_TRANSLATOR.equals(property)
-            || Vdb.MODEL_JNDI_NAME.equals(property)) {
+        if (CLOSED.equals(property)) return;
+        if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property)
+            || MODEL_JNDI_NAME.equals(property)) {
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
         }

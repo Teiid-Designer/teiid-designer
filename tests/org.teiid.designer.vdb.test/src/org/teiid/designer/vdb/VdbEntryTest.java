@@ -15,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.teiid.designer.vdb.Vdb.Event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -157,7 +158,7 @@ public class VdbEntryTest {
         // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
-        assertThat(arg.getValue().getPropertyName(), is(Vdb.ENTRY_DESCRIPTION));
+        assertThat(arg.getValue().getPropertyName(), is(ENTRY_DESCRIPTION));
         assertThat((String)arg.getValue().getOldValue(), is(oldDescription));
         assertThat((String)arg.getValue().getNewValue(), is(newDescription));
     }
@@ -196,8 +197,8 @@ public class VdbEntryTest {
 
         // expect 2 events
         final List<PropertyChangeEvent> values = arg.getAllValues();
-        assertThat(values.get(0).getPropertyName(), is(Vdb.ENTRY_CHECKSUM));
-        assertThat(values.get(1).getPropertyName(), is(Vdb.ENTRY_SYNCHRONIZATION));
+        assertThat(values.get(0).getPropertyName(), is(ENTRY_CHECKSUM));
+        assertThat(values.get(1).getPropertyName(), is(ENTRY_SYNCHRONIZATION));
     }
 
     @Test
@@ -211,7 +212,7 @@ public class VdbEntryTest {
         // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
         verify(listener).propertyChange(arg.capture());
-        assertThat(arg.getValue().getPropertyName(), is(Vdb.ENTRY_SYNCHRONIZATION));
+        assertThat(arg.getValue().getPropertyName(), is(ENTRY_SYNCHRONIZATION));
     }
 
     @Test

@@ -9,7 +9,7 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.Collections;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -21,7 +21,7 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
-
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
@@ -37,11 +37,12 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
 
     private ServerManager serverMgr;
 
-//    private boolean showWorkspaceItems = false;
+    // private boolean showWorkspaceItems = false;
     private boolean showTranslators = false;
     private boolean showVDBs = false;
     private boolean showDataSources = false;
     private boolean showAllDataSources = false;
+    private boolean showPreviewVdbs = false;
 
     /**
      * @since 5.0
@@ -49,147 +50,24 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public TeiidViewTreeProvider() {
         super();
     }
-    
+
     /**
      * @since 5.0
      */
-    public TeiidViewTreeProvider(boolean showVDBs, boolean showTranslators, boolean showDataSources) {
+    public TeiidViewTreeProvider( boolean showVDBs,
+                                  boolean showTranslators,
+                                  boolean showDataSources ) {
         super();
         this.showVDBs = showVDBs;
         this.showTranslators = showTranslators;
         this.showDataSources = showDataSources;
     }
-    /**
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-     * @since 4.2
-     */
-    public Object[] getChildren( Object parentElement ) {
-
-        if (parentElement instanceof Server) {
-            Object[] result = null;
-
-            try {
-                Collection<TeiidTranslator> translators = new ArrayList<TeiidTranslator>();
-                Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
-                Collection<TeiidVdb> vdbs  = new ArrayList<TeiidVdb>(); 
-                
-                if( this.showDataSources ) {
-                	if( this.showAllDataSources ) {
-                		dataSources = ((Server)parentElement).getAdmin().getDataSources();
-                	} else {
-                		dataSources = ((Server)parentElement).getAdmin().getWorkspaceDataSources();
-                	}
-                }
-                
-                if( this.showVDBs ) {
-                	vdbs = ((Server)parentElement).getAdmin().getVdbs();
-                }
-                
-                if( showTranslators ) {
-                	translators = ((Server)parentElement).getAdmin().getTranslators();
-                }
-                
-                
-                Collection<Object> allObjects = new ArrayList<Object>();
-                allObjects.addAll(translators);
-                allObjects.addAll(dataSources);
-                allObjects.addAll(vdbs);
-                
-                result = allObjects.toArray();
-                
-            } catch (AdminComponentException ace) {
-                return new Object[0];
-            } catch (Exception e) {
-                DqpPlugin.Util.log(e);
-                return new Object[0];
-            }
-   
-            return result;
-
-        } else if (parentElement instanceof SourceConnectionBinding) {
-            return new Object[0];
-        } 
-
-        return new Object[0];
-    }
 
     /**
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
-    public Object getParent( Object element ) {
-        return null;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-     * @since 4.2
-     */
-    public boolean hasChildren( Object element ) {
-        return getChildren(element).length > 0;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     * @since 4.2
-     */
-    public Image getImage( Object element ) {
-        if (element instanceof Server) {
-        	if (this.serverMgr != null) {
-	            if (this.serverMgr.isDefaultServer((Server)element)) {
-	                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
-	            }
-        	}
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
-        }
-        if (element instanceof TeiidTranslator) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
-        }
-        
-        if (element instanceof TeiidDataSource) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
-        }
-        
-        
-        if (element instanceof TeiidVdb) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
-        }
-
-        if (element instanceof SourceConnectionBinding) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
-        }
-        return null;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     * @since 4.2
-     */
-    public String getText( Object element ) {
-        if (element instanceof Server) {
-            return ((Server)element).getUrl();
-        }
-        if (element instanceof TeiidTranslator) {
-            return ((TeiidTranslator)element).getName();
-        }
-        
-        if (element instanceof TeiidDataSource) {
-            return ((TeiidDataSource)element).getDisplayName();
-        }
-        
-        if (element instanceof TeiidVdb) {
-            return ((TeiidVdb)element).getName();
-        }
-        
-        if (element instanceof SourceConnectionBinding) {
-            SourceConnectionBinding binding = (SourceConnectionBinding)element;
-            return binding.getModelName();
-        }
-        if (element instanceof String) {
-            return (String)element;
-        }
-        return DqpUiConstants.UTIL.getString(I18nUtil.getPropertyPrefix(TeiidViewTreeProvider.class), new Object[] {
-            element.toString(), element.getClass().getName()});
+    public void addListener( ILabelProviderListener listener ) {
     }
 
     /**
@@ -218,6 +96,82 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     * @since 4.2
+     */
+    public void dispose() {
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+     * @since 4.2
+     */
+    public Object[] getChildren( Object parentElement ) {
+
+        if (parentElement instanceof Server) {
+            Object[] result = null;
+
+            try {
+                Collection<TeiidTranslator> translators = new ArrayList<TeiidTranslator>();
+                Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
+
+                if (this.showDataSources) {
+                    if (this.showAllDataSources) {
+                        dataSources = ((Server)parentElement).getAdmin().getDataSources();
+                    } else {
+                        dataSources = ((Server)parentElement).getAdmin().getWorkspaceDataSources();
+                    }
+                }
+
+                Collection<TeiidVdb> vdbs = null;
+
+                if (this.showVDBs) {
+                    vdbs = new ArrayList<TeiidVdb>(((Server)parentElement).getAdmin().getVdbs());
+                    Collection<TeiidVdb> previewVdbs = new ArrayList<TeiidVdb>();
+
+                    if (!this.showPreviewVdbs) {
+                        for (TeiidVdb vdb : vdbs) {
+                            boolean isPreviewVdb = Boolean.parseBoolean(vdb.getVdb().getProperties().getProperty(Vdb.Xml.PREVIEW));
+
+                            if (isPreviewVdb) {
+                                previewVdbs.add(vdb);
+                            }
+                        }
+
+                        vdbs.removeAll(previewVdbs);
+                    }
+                } else {
+                    vdbs = Collections.emptyList();
+                }
+
+                if (showTranslators) {
+                    translators = ((Server)parentElement).getAdmin().getTranslators();
+                }
+
+                Collection<Object> allObjects = new ArrayList<Object>();
+                allObjects.addAll(translators);
+                allObjects.addAll(dataSources);
+                allObjects.addAll(vdbs);
+
+                result = allObjects.toArray();
+
+            } catch (AdminComponentException ace) {
+                return new Object[0];
+            } catch (Exception e) {
+                DqpPlugin.Util.log(e);
+                return new Object[0];
+            }
+
+            return result;
+
+        } else if (parentElement instanceof SourceConnectionBinding) {
+            return new Object[0];
+        }
+
+        return new Object[0];
+    }
+
+    /**
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
@@ -231,10 +185,81 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      * @since 4.2
      */
-    public void dispose() {
+    public Image getImage( Object element ) {
+        if (element instanceof Server) {
+            if (this.serverMgr != null) {
+                if (this.serverMgr.isDefaultServer((Server)element)) {
+                    return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
+                }
+            }
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
+        }
+        if (element instanceof TeiidTranslator) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
+        }
+
+        if (element instanceof TeiidDataSource) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTION_SOURCE_ICON);
+        }
+
+        if (element instanceof TeiidVdb) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+        }
+
+        if (element instanceof SourceConnectionBinding) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SOURCE_CONNECTOR_BINDING_ICON);
+        }
+        return null;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+     * @since 4.2
+     */
+    public Object getParent( Object element ) {
+        return null;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+     * @since 4.2
+     */
+    public String getText( Object element ) {
+        if (element instanceof Server) {
+            return ((Server)element).getUrl();
+        }
+        if (element instanceof TeiidTranslator) {
+            return ((TeiidTranslator)element).getName();
+        }
+
+        if (element instanceof TeiidDataSource) {
+            return ((TeiidDataSource)element).getDisplayName();
+        }
+
+        if (element instanceof TeiidVdb) {
+            return ((TeiidVdb)element).getName();
+        }
+
+        if (element instanceof SourceConnectionBinding) {
+            SourceConnectionBinding binding = (SourceConnectionBinding)element;
+            return binding.getModelName();
+        }
+        if (element instanceof String) {
+            return (String)element;
+        }
+        return DqpUiConstants.UTIL.getString(I18nUtil.getPropertyPrefix(TeiidViewTreeProvider.class), new Object[] {
+            element.toString(), element.getClass().getName()});
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+     * @since 4.2
+     */
+    public boolean hasChildren( Object element ) {
+        return getChildren(element).length > 0;
     }
 
     /**
@@ -248,13 +273,6 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     * @since 4.2
-     */
-    public void addListener( ILabelProviderListener listener ) {
-    }
-
-    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      * @since 4.2
      */
@@ -264,28 +282,37 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
+     * @return <code>true</code> if Preview VDBs are being shown
+     */
+    public boolean isShowingPreviewVdbs() {
+        return this.showPreviewVdbs;
+    }
+
+    /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      * @since 4.2
      */
     public void removeListener( ILabelProviderListener listener ) {
     }
 
-    public void setShowTranslators( boolean value ) {
-        this.showTranslators = value;
+    public void setShowAllDataSources( boolean value ) {
+        this.showAllDataSources = value;
     }
-    
-
-    public void setShowVDBs( boolean value ) {
-        this.showVDBs = value;
-    }
-    
 
     public void setShowDataSources( boolean value ) {
         this.showDataSources = value;
     }
-    
-    public void setShowAllDataSources( boolean value ) {
-    	this.showAllDataSources = value;
+
+    public void setShowPreviewVdbs( boolean value ) {
+        this.showPreviewVdbs = value;
+    }
+
+    public void setShowTranslators( boolean value ) {
+        this.showTranslators = value;
+    }
+
+    public void setShowVDBs( boolean value ) {
+        this.showVDBs = value;
     }
 
 }

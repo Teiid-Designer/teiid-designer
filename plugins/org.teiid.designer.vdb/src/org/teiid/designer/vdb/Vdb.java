@@ -61,84 +61,10 @@ public final class Vdb {
      */
     public static final String FILE_EXTENSION = ".vdb"; //$NON-NLS-1$
 
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the
-     * {@link #getDescription() description} in a VDB is changed
-     */
-    public static final String DESCRIPTION = "description"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an entry is
-     * added to a VDB
-     * 
-     * @see #addEntry(IPath, IProgressMonitor)
-     * @see #addModelEntry(IPath, IProgressMonitor)
-     */
-    public static final String ENTRY_ADDED = "entryAdded"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
-     * {@link #removeEntry(VdbEntry) entry is removed} from a VDB
-     */
-    public static final String ENTRY_REMOVED = "entryRemoved"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB entry's
-     * {@link VdbEntry#getChecksum() checksum} changes
-     */
-    public static final String ENTRY_CHECKSUM = "entry.checksum"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB entry's
-     * {@link VdbEntry#getSynchronization() synchronization} changes
-     */
-    public static final String ENTRY_SYNCHRONIZATION = "entry.synchronization"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB entry's
-     * {@link VdbEntry#getDescription() description} changes
-     */
-    public static final String ENTRY_DESCRIPTION = "entry.description"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB model
-     * entry's {@link VdbModelEntry#isVisible() visibility} changes
-     */
-    public static final String MODEL_VISIBLE = "modelentry.visible"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
-     * model entry's {@link VdbModelEntry#getSourceName() source name} changes
-     */
-    public static final String MODEL_SOURCE_NAME = "modelentry.sourceName"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
-     * model entry's {@link VdbModelEntry#getTranslator() translator} changes
-     */
-    public static final String MODEL_TRANSLATOR = "modelEntry.translator"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB physical
-     * model entry's {@link VdbModelEntry#getJndiName() JNDI name} changes
-     */
-    public static final String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
-     * {@link #close() closed}
-     */
-    public static final String CLOSED = "closed"; //$NON-NLS-1$
-
-    /**
-     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
-     * {@link #save(IProgressMonitor) save}
-     */
-    public static final String SAVED = "saved"; //$NON-NLS-1$
-
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 
     final IFile file;
+
     private final File folder;
     final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
@@ -147,15 +73,6 @@ public final class Vdb {
     private final AtomicReference<String> description = new AtomicReference<String>();
     private final boolean preview;
     private final int version;
-
-    /**
-     * @param file
-     * @param monitor
-     */
-    public Vdb( final IFile file,
-                final IProgressMonitor monitor ) {
-        this(file, false, monitor);
-    }
 
     /**
      * @param file
@@ -209,7 +126,7 @@ public final class Vdb {
                         // VDB properties
                         for (final PropertyElement property : manifest.getProperties()) {
                             final String name = property.getName();
-                            if (VdbElement.PREVIEW.equals(name)) previewable[0] = Boolean.parseBoolean(property.getValue());
+                            if (Xml.PREVIEW.equals(name)) previewable[0] = Boolean.parseBoolean(property.getValue());
                             else assert false;
                         }
                         for (final EntryElement element : manifest.getEntries())
@@ -226,6 +143,15 @@ public final class Vdb {
         });
         this.preview = previewable[0];
         this.version = vdbVersion[0];
+    }
+
+    /**
+     * @param file
+     * @param monitor
+     */
+    public Vdb( final IFile file,
+                final IProgressMonitor monitor ) {
+        this(file, false, monitor);
     }
 
     /**
@@ -252,7 +178,7 @@ public final class Vdb {
         if (!entries.add(entry)) for (final T existingEntry : entries)
             if (existingEntry.equals(entry)) return existingEntry;
         // Mark VDB as modified
-        setModified(this, ENTRY_ADDED, null, entry);
+        setModified(this, Event.ENTRY_ADDED, null, entry);
         return entry;
     }
 
@@ -279,7 +205,7 @@ public final class Vdb {
         // Mark VDB as unmodified
         if (isModified()) modified.set(false);
         // Notify change listeners VDB is closed
-        notifyChangeListeners(this, CLOSED, null, null);
+        notifyChangeListeners(this, Event.CLOSED, null, null);
     }
 
     /**
@@ -334,32 +260,32 @@ public final class Vdb {
     }
 
     /**
-     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
-     */
-    public final boolean isModified() {
-        return modified.get();
-    }
-    
-    /**
-     * @return <code>true</code> if this is a Preview VDB
-     */
-    public final boolean isPreview() {
-        return preview;
-    }
-    
-    /**
      * @return the problem markers (never <code>null</code>)
      * @throws Exception if there is a problem obtaining the problem markers
      */
     public IMarker[] getProblems() throws Exception {
         return file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
     }
-    
+
     /**
      * @return the VDB version
      */
     public int getVersion() {
         return version;
+    }
+
+    /**
+     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
+     */
+    public final boolean isModified() {
+        return modified.get();
+    }
+
+    /**
+     * @return <code>true</code> if this is a Preview VDB
+     */
+    public final boolean isPreview() {
+        return preview;
     }
 
     /**
@@ -399,7 +325,7 @@ public final class Vdb {
         entry.dispose();
         if (entry instanceof VdbModelEntry) modelEntries.remove(entry);
         else entries.remove(entry);
-        setModified(this, ENTRY_REMOVED, entry, null);
+        setModified(this, Event.ENTRY_REMOVED, entry, null);
     }
 
     /**
@@ -464,7 +390,7 @@ public final class Vdb {
                 // Mark as unmodified
                 if (isModified()) modified.set(false);
                 // Notify change listeners
-                notifyChangeListeners(this, SAVED, null, null);
+                notifyChangeListeners(this, Event.SAVED, null, null);
             }
         });
     }
@@ -477,7 +403,7 @@ public final class Vdb {
         final String oldDescription = this.description.get();
         if (StringUtilities.equals(description, oldDescription)) return;
         this.description.set(description);
-        setModified(this, DESCRIPTION, oldDescription, description);
+        setModified(this, Event.DESCRIPTION, oldDescription, description);
     }
 
     void setModified( final Object source,
@@ -500,5 +426,96 @@ public final class Vdb {
     public final void synchronize( final IProgressMonitor monitor ) {
         synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
         synchronize(entries, monitor);
+    }
+
+    /**
+     *
+     */
+    public static class Event {
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the
+         * {@link #getDescription() description} in a VDB is changed
+         */
+        public static final String DESCRIPTION = "description"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an entry
+         * is added to a VDB
+         * 
+         * @see #addEntry(IPath, IProgressMonitor)
+         * @see #addModelEntry(IPath, IProgressMonitor)
+         */
+        public static final String ENTRY_ADDED = "entryAdded"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
+         * {@link #removeEntry(VdbEntry) entry is removed} from a VDB
+         */
+        public static final String ENTRY_REMOVED = "entryRemoved"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * entry's {@link VdbEntry#getChecksum() checksum} changes
+         */
+        public static final String ENTRY_CHECKSUM = "entry.checksum"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * entry's {@link VdbEntry#getSynchronization() synchronization} changes
+         */
+        public static final String ENTRY_SYNCHRONIZATION = "entry.synchronization"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB
+         * entry's {@link VdbEntry#getDescription() description} changes
+         */
+        public static final String ENTRY_DESCRIPTION = "entry.description"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * model entry's {@link VdbModelEntry#isVisible() visibility} changes
+         */
+        public static final String MODEL_VISIBLE = "modelentry.visible"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * physical model entry's {@link VdbModelEntry#getSourceName() source name} changes
+         */
+        public static final String MODEL_SOURCE_NAME = "modelentry.sourceName"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * physical model entry's {@link VdbModelEntry#getTranslator() translator} changes
+         */
+        public static final String MODEL_TRANSLATOR = "modelEntry.translator"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
+         * physical model entry's {@link VdbModelEntry#getJndiName() JNDI name} changes
+         */
+        public static final String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
+         * {@link #close() closed}
+         */
+        public static final String CLOSED = "closed"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
+         * {@link #save(IProgressMonitor) save}
+         */
+        public static final String SAVED = "saved"; //$NON-NLS-1$
+    }
+
+    /**
+     * Constants relating to the vdb.xml file.
+     */
+    public static class Xml {
+
+        /**
+         */
+        public static final String PREVIEW = "preview"; //$NON-NLS-1$
     }
 }

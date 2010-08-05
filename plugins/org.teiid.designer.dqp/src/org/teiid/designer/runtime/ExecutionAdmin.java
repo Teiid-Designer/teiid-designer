@@ -115,26 +115,24 @@ public class ExecutionAdmin {
         ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
         IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
         Properties props = connInfoProvider.getConnectionProperties(modelResource);
-        String dsName = connInfoProvider.getDataSourceType();
+        String dataSourceType = connInfoProvider.getDataSourceType();
 
-        // make sure the password property is there. if not get from connection profile.
-        if (!props.isEmpty() && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+        if (!props.isEmpty()) {
             IConnectionProfile connectionProfile = connInfoProvider.getConnectionProfile(modelResource);
 
-            if (connectionProfile == null) {
-                throw new Exception(Util.getString("errorCreatingDataSource", //$NON-NLS-1$
-                                                   jndiName,
-                                                   IConnectionProperties.JDBC_DS_TYPE,
-                                                   getServer().getUrl()));
-            }
-
-            connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
-            
             if (connectionProfile != null) {
-                connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-                props.setProperty(connInfoProvider.getPasswordPropertyKey(),
-                                  connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey()));
-                return getOrCreateDataSource(displayName, dsName, IConnectionProperties.JDBC_DS_TYPE, props);
+                connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
+    
+                if (connectionProfile != null) {
+                    // make sure the password property is there. if not get from connection profile.
+                    if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+                        connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                        props.setProperty(connInfoProvider.getPasswordPropertyKey(),
+                                          connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey()));
+                    }
+
+                    return getOrCreateDataSource(displayName, jndiName, dataSourceType, props);
+                }
             }
         }
 

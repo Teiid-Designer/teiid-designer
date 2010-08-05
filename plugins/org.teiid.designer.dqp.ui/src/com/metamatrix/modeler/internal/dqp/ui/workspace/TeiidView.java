@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -58,7 +57,6 @@ import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -87,8 +85,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     static String getString( final String stringId ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId);
     }
-    
-    static String getString( final String stringId, final Object param) {
+
+    static String getString( final String stringId,
+                             final Object param ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId, param);
     }
 
@@ -126,18 +125,15 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * Sets the selected Server as the default server for preview and execution
      */
     private SetDefaultServerAction setDefaultServerAction;
-    
+
     private Action deleteDataSourceAction;
-    
+
     private Action undeployVdbAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
 
     private IPropertySourceProvider propertySourceProvider;
-
-    class NameSorter extends ViewerSorter {
-    }
 
     /**
      * The constructor.
@@ -149,34 +145,70 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
+     */
+    @Override
+    public void configurationChanged( ExecutionConfigurationEvent event ) {
+        if (viewer.getTree().isDisposed()) {
+            return;
+        }
+
+        UiUtil.runInSwtThread(new Runnable() {
+            public void run() {
+                if (!viewer.getTree().isDisposed()) {
+                    viewer.refresh();
+                    viewer.expandToLevel(2);
+                    // Get Selected Index
+                    if (viewer.getTree().getSelectionCount() == 1) {
+                        ISelection currentSelection = viewer.getSelection();
+                        viewer.setSelection(new StructuredSelection());
+                        viewer.setSelection(currentSelection);
+                    }
+                }
+            }
+        }, false);
+
+        // Refresh the Model Explorer too
+        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+    }
+
+    private void contributeToActionBars() {
+        IActionBars bars = getViewSite().getActionBars();
+        fillLocalPullDown(bars.getMenuManager());
+        fillLocalToolBar(bars.getToolBarManager());
+    }
+
+    /**
      * This is a callback that will allow us to create the viewer and initialize it.
      */
     @Override
     public void createPartControl( Composite parent ) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 
-//        viewer.addFilter(new ViewerFilter() {
-//
-//            @Override
-//            public boolean select( Viewer viewer,
-//                                   Object parentElement,
-//                                   Object element ) {
-//                if (element instanceof SourceConnectionBinding) {
-//                    SourceConnectionBinding binding = (SourceConnectionBinding)element;
-//
-//                    // Check to see if model in closed project or not?
-//                    String modelName = binding.getModelName();
-//                    IResource openModel = ModelUtilities.findModelByName(modelName);
-//                    if (openModel != null) {
-//                        return true;
-//                    }
-//                } else {
-//                    return true;
-//                }
-//
-//                return false;
-//            }
-//        });
+        // viewer.addFilter(new ViewerFilter() {
+        //
+        // @Override
+        // public boolean select( Viewer viewer,
+        // Object parentElement,
+        // Object element ) {
+        // if (element instanceof SourceConnectionBinding) {
+        // SourceConnectionBinding binding = (SourceConnectionBinding)element;
+        //
+        // // Check to see if model in closed project or not?
+        // String modelName = binding.getModelName();
+        // IResource openModel = ModelUtilities.findModelByName(modelName);
+        // if (openModel != null) {
+        // return true;
+        // }
+        // } else {
+        // return true;
+        // }
+        //
+        // return false;
+        // }
+        // });
 
         initDragAndDrop();
 
@@ -211,53 +243,181 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         getViewSite().setSelectionProvider(viewer);
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
-     */
     @Override
-    public void configurationChanged( ExecutionConfigurationEvent event ) {
-        if (viewer.getTree().isDisposed()) {
-            return;
-        }
+    public void dispose() {
+        DqpPlugin.getInstance().getServerManager().removeListener(this);
+        super.dispose();
+    }
 
-        UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
-                if (!viewer.getTree().isDisposed()) {
-                    viewer.refresh();
-                    viewer.expandToLevel(2);
-                    // Get Selected Index
-                    if (viewer.getTree().getSelectionCount() == 1) {
-                        ISelection currentSelection = viewer.getSelection();
-                        viewer.setSelection(new StructuredSelection());
-                        viewer.setSelection(currentSelection);
+    void fillContextMenu( IMenuManager manager ) {
+        List<Object> selectedObjs = getSelectedObjects();
+
+        if (selectedObjs != null && !selectedObjs.isEmpty()) {
+            if (selectedObjs.size() == 1) {
+                Object selection = selectedObjs.get(0);
+                if (selection instanceof Server) {
+                    manager.add(this.editServerAction);
+                    manager.add(this.deleteServerAction);
+                    if (this.setDefaultServerAction.isEnabled()) {
+                        manager.add(this.setDefaultServerAction);
+                    }
+                    manager.add(this.reconnectAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                } else if (selection instanceof TeiidTranslator) {
+                    manager.add(this.newServerAction);
+                } else if (selection instanceof TeiidDataSource) {
+                    manager.add(this.deleteDataSourceAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                } else if (selection instanceof TeiidVdb) {
+                    manager.add(this.undeployVdbAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                }
+            } else {
+                boolean allDataSources = true;
+
+                for (Object obj : selectedObjs) {
+                    if (!(obj instanceof TeiidDataSource)) {
+                        allDataSources = false;
+                        break;
                     }
                 }
-            }
-        }, false);
+                if (allDataSources) {
+                    manager.add(this.deleteDataSourceAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                    return;
+                }
 
-        // Refresh the Model Explorer too
-        ModelerUiViewUtils.refreshModelExplorerResourceNavigatorTree();
+                boolean allVdbs = true;
+
+                for (Object obj : selectedObjs) {
+                    if (!(obj instanceof TeiidVdb)) {
+                        allVdbs = false;
+                        break;
+                    }
+                }
+                if (allVdbs) {
+                    manager.add(this.undeployVdbAction);
+                    manager.add(new Separator());
+                    manager.add(this.newServerAction);
+                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+                    return;
+                }
+
+                manager.add(this.newServerAction);
+                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+            }
+
+        } else {
+            manager.add(this.newServerAction);
+        }
+
+        // Other plug-ins can contribute there actions here
+        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    }
+
+    private void fillLocalPullDown( IMenuManager menuMgr ) {
+        IAction action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewVdbsMenuItem", SWT.TOGGLE)) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                TeiidView.this.treeProvider.setShowPreviewVdbs(!TeiidView.this.treeProvider.isShowingPreviewVdbs());
+                TeiidView.this.viewer.refresh(false);
+                TeiidView.this.viewer.expandAll();
+            }
+        };
+
+        menuMgr.add(action);
+    }
+
+    private void fillLocalToolBar( IToolBarManager manager ) {
+        manager.add(this.showDataSourcesAction);
+        manager.add(this.showTranslatorsToggleAction);
+        manager.add(new Separator());
+        manager.add(this.collapseAllAction);
+    }
+
+    @Override
+    public Object getAdapter( Class adapter ) {
+        if (adapter.equals(IPropertySheetPage.class)) {
+            propertySourceProvider = new RuntimePropertySourceProvider();
+            ((RuntimePropertySourceProvider)propertySourceProvider).setEditable(true, false);
+            PropertySheetPage page = new PropertySheetPage();
+            page.setPropertySourceProvider(propertySourceProvider);
+            return page;
+        }
+        return super.getAdapter(adapter);
+    }
+
+    String getConnectorToolTip( TeiidTranslator connector ) {
+        return connector.getName();
+    }
+
+    SourceConnectionBinding getSelectedBinding() {
+        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceConnectionBinding) {
+            return (SourceConnectionBinding)selection.getFirstElement();
+        }
+
+        return null;
+    }
+
+    List<Object> getSelectedObjects() {
+        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+        if (!selection.isEmpty()) {
+            return SelectionUtilities.getSelectedObjects(selection);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return the server manager being used by this view
+     */
+    private ServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
+    }
+
+    String getVDBToolTip( TeiidVdb vdb ) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(vdb.getName()).append("  contains:"); //$NON-NLS-1$
+        for (Model model : vdb.getVdb().getModels()) {
+            builder.append("\n   ").append(model.getName()); //$NON-NLS-1$
+        }
+        return builder.toString();
+    }
+
+    /**
+     * On certain keys execute certain actions
+     */
+    void handleKeyEvent( KeyEvent event ) {
+        if (event.stateMask != 0) return;
+
+        if (event.character == SWT.DEL) {
+            // if (deleteConnectorBindingAction != null && deleteConnectorBindingAction.isEnabled()) {
+            // deleteConnectorBindingAction.run();
+            // }
+        }
     }
 
     void handleSelectionChanged( SelectionChangedEvent event ) {
         updateStatusLine((IStructuredSelection)event.getSelection());
     }
 
-    /**
-     * @see org.eclipse.ui.views.navigator.ResourceNavigator#initDragAndDrop()
-     */
-    private void initDragAndDrop() {
-        // code copied from superclass. only change is to the drag adapter
-        int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] {ResourceTransfer.getInstance()};
-
-        // drop support
-        TeiidViewDropAdapter adapter = new TeiidViewDropAdapter(this.viewer);
-        adapter.setFeedbackEnabled(false);
-
-        viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
+    private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+            public void menuAboutToShow( IMenuManager manager ) {
+                TeiidView.this.fillContextMenu(manager);
+            }
+        });
+        Menu menu = menuMgr.createContextMenu(viewer.getControl());
+        viewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, viewer);
     }
 
     /**
@@ -326,8 +486,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                 String tooltip = CoreStringUtil.Constants.EMPTY_STRING;
                                 if (data instanceof TeiidTranslator) {
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
-                                } else if( data instanceof TeiidVdb ) { 
-                                	tooltip = getVDBToolTip((TeiidVdb)data);
+                                } else if (data instanceof TeiidVdb) {
+                                    tooltip = getVDBToolTip((TeiidVdb)data);
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -363,137 +523,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         viewer.getTree().addListener(SWT.MouseHover, treeListener);
     }
 
-    String getConnectorToolTip( TeiidTranslator connector ) {
-        return connector.getName();
-    }
-    
-    String getVDBToolTip( TeiidVdb vdb ) {
-    	StringBuilder builder = new StringBuilder();
-    	builder.append(vdb.getName()).append("  contains:"); //$NON-NLS-1$
-    	for( Model model : vdb.getVdb().getModels()) {
-    		builder.append("\n   ").append(model.getName()); //$NON-NLS-1$
-    	}
-        return builder.toString();
-    }
-    
-
-    private void hookContextMenu() {
-        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-        menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            public void menuAboutToShow( IMenuManager manager ) {
-                TeiidView.this.fillContextMenu(manager);
-            }
-        });
-        Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
-    }
-
-    private void contributeToActionBars() {
-        IActionBars bars = getViewSite().getActionBars();
-        bars.getMenuManager().setVisible(false);
-        // fillLocalPullDown(bars.getMenuManager());
-        fillLocalToolBar(bars.getToolBarManager());
-    }
-
-    private List<Object> getSelectedObjects() {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty()) {
-            return SelectionUtilities.getSelectedObjects(selection);
-        }
-        
-        return null;
-    }
-
-    SourceConnectionBinding getSelectedBinding() {
-        StructuredSelection selection = (StructuredSelection)viewer.getSelection();
-        if (!selection.isEmpty() && selection.getFirstElement() instanceof SourceConnectionBinding) {
-            return (SourceConnectionBinding)selection.getFirstElement();
-        }
-
-        return null;
-    }
-
-    void fillContextMenu( IMenuManager manager ) {
-        List<Object> selectedObjs = getSelectedObjects();
-        
-        
-        if (selectedObjs != null && !selectedObjs.isEmpty()) {
-        	if( selectedObjs.size() == 1 ) {
-        		Object selection = selectedObjs.get(0);
-                if (selection instanceof Server) {
-                    manager.add(this.editServerAction);
-                    manager.add(this.deleteServerAction);
-                    if (this.setDefaultServerAction.isEnabled()) {
-                        manager.add(this.setDefaultServerAction);
-                    }
-                    manager.add(this.reconnectAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                } else if (selection instanceof TeiidTranslator) {
-                    manager.add(this.newServerAction);
-                } else if (selection instanceof TeiidDataSource ) {
-                	manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                } else if( selection instanceof TeiidVdb) { 
-                	manager.add(this.undeployVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                }
-        	} else {
-        		boolean allDataSources = true;
-        		
-        		for(Object obj : selectedObjs ) {
-            		if( !(obj instanceof TeiidDataSource) ) {
-            			allDataSources = false;
-            			break;
-            		} 
-        		}
-        		if( allDataSources ) {
-                	manager.add(this.deleteDataSourceAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-        		}
-        		
-        		boolean allVdbs = true;
-        		
-        		for(Object obj : selectedObjs ) {
-            		if( !(obj instanceof TeiidVdb) ) {
-            			allVdbs = false;
-            			break;
-            		} 
-        		}
-        		if( allVdbs ) {
-                	manager.add(this.undeployVdbAction);
-                    manager.add(new Separator());
-                    manager.add(this.newServerAction);
-                    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-                    return;
-        		}
-        		
-                manager.add(this.newServerAction);
-                manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        	}
-
-        } else {
-            manager.add(this.newServerAction);
-        }
-
-        // Other plug-ins can contribute there actions here
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-
-    private void fillLocalToolBar( IToolBarManager manager ) {
-    	manager.add(this.showDataSourcesAction);
-        manager.add(this.showTranslatorsToggleAction);
-        manager.add(new Separator());
-        manager.add(this.collapseAllAction);
-    }
-
     /*
      *  Initialize view actions, set icons and action text.
      */
@@ -505,11 +534,11 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                 treeProvider.setShowAllDataSources(showDataSourcesAction.isChecked());
                 // Set Tooltip based on toggle state
                 if (showDataSourcesAction.isChecked()) {
-                	showDataSourcesAction.setToolTipText(SHOW_MY_DATA_SOURCES_LABEL);
+                    showDataSourcesAction.setToolTipText(SHOW_MY_DATA_SOURCES_LABEL);
                     viewer.refresh();
                     viewer.expandAll();
                 } else {
-                	showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
+                    showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
                     viewer.refresh();
                     viewer.expandAll();
                 }
@@ -521,18 +550,17 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         this.showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
         this.showDataSourcesAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CONNECTION_SOURCE_ICON));
 
-        
         this.showTranslatorsToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
                 treeProvider.setShowTranslators(showTranslatorsToggleAction.isChecked());
                 // Set Tooltip based on toggle state
                 if (showTranslatorsToggleAction.isChecked()) {
-                	showTranslatorsToggleAction.setToolTipText(HIDE_TRANSLATORS_LABEL);
+                    showTranslatorsToggleAction.setToolTipText(HIDE_TRANSLATORS_LABEL);
                     viewer.refresh();
                     viewer.expandAll();
                 } else {
-                	showTranslatorsToggleAction.setToolTipText(SHOW_TRANSLATORS_LABEL);
+                    showTranslatorsToggleAction.setToolTipText(SHOW_TRANSLATORS_LABEL);
                     viewer.refresh();
                     viewer.expandAll();
                 }
@@ -554,26 +582,28 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         this.collapseAllAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.COLLAPSE_ALL_ICON));
         this.collapseAllAction.setToolTipText(getString("collapseAllAction.tooltip")); //$NON-NLS-1$
         this.collapseAllAction.setEnabled(true);
-        
+
         this.deleteDataSourceAction = new Action(getString("deleteTeiidDataSourceAction")) { //$NON-NLS-1$
             @Override
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
-                for( Object obj : selectedObjs ) {
-	            	TeiidDataSource tds = (TeiidDataSource)obj;
-	            	ExecutionAdmin admin = tds.getAdmin();
-	            	if( admin != null ) {
-	            		try {
-							admin.deleteDataSource(tds.getName());
-						} catch (Exception e) {
-							DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
-						}
-	            	}
+                for (Object obj : selectedObjs) {
+                    TeiidDataSource tds = (TeiidDataSource)obj;
+                    ExecutionAdmin admin = tds.getAdmin();
+                    if (admin != null) {
+                        try {
+                            admin.deleteDataSource(tds.getName());
+                        } catch (Exception e) {
+                            DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                                    e,
+                                                    DqpUiConstants.UTIL.getString(PREFIX + "errorDeletingDataSource", tds.getDisplayName())); //$NON-NLS-1$
+                        }
+                    }
                 }
-            	
+
             }
         };
-        
+
         this.deleteDataSourceAction.setToolTipText(getString("deleteDataSourceAction.tooltip")); //$NON-NLS-1$
         this.deleteDataSourceAction.setEnabled(true);
 
@@ -581,25 +611,27 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             @Override
             public void run() {
                 List<Object> selectedObjs = getSelectedObjects();
-                for( Object obj : selectedObjs ) {
-	            	TeiidVdb vdb = (TeiidVdb)obj;
-	
-	            	ExecutionAdmin admin = vdb.getAdmin();
-	            	if( admin != null ) {
-	            		try {
-							admin.undeployVdb(vdb.getVdb());
-						} catch (Exception e) {
-							DqpUiConstants.UTIL.log(IStatus.WARNING, e, DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
-						}
-	            	}
+                for (Object obj : selectedObjs) {
+                    TeiidVdb vdb = (TeiidVdb)obj;
+
+                    ExecutionAdmin admin = vdb.getAdmin();
+                    if (admin != null) {
+                        try {
+                            admin.undeployVdb(vdb.getVdb());
+                        } catch (Exception e) {
+                            DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                                    e,
+                                                    DqpUiConstants.UTIL.getString(PREFIX + "errorUndeployingVdb", vdb.getName())); //$NON-NLS-1$
+                        }
+                    }
                 }
-            	
+
             }
         };
-        
+
         this.undeployVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
         this.undeployVdbAction.setEnabled(true);
-        
+
         // the shell used for dialogs that the actions display
         Shell shell = this.getSite().getShell();
         // the reconnect action tries to ping a selected server
@@ -621,6 +653,21 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         this.setDefaultServerAction = new SetDefaultServerAction(getServerManager());
         this.viewer.addSelectionChangedListener(this.setDefaultServerAction);
 
+    }
+
+    /**
+     * @see org.eclipse.ui.views.navigator.ResourceNavigator#initDragAndDrop()
+     */
+    private void initDragAndDrop() {
+        // code copied from superclass. only change is to the drag adapter
+        int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] {ResourceTransfer.getInstance()};
+
+        // drop support
+        TeiidViewDropAdapter adapter = new TeiidViewDropAdapter(this.viewer);
+        adapter.setFeedbackEnabled(false);
+
+        viewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, adapter);
     }
 
     private void initKeyListener() {
@@ -646,19 +693,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     }
 
     /**
-     * On certain keys execute certain actions
-     */
-    void handleKeyEvent( KeyEvent event ) {
-        if (event.stateMask != 0) return;
-
-        if (event.character == SWT.DEL) {
-//            if (deleteConnectorBindingAction != null && deleteConnectorBindingAction.isEnabled()) {
-//                deleteConnectorBindingAction.run();
-//            }
-        }
-    }
-
-    /**
      * Passing the focus request to the viewer's control.
      */
     @Override
@@ -666,52 +700,30 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         viewer.getControl().setFocus();
     }
 
-    @Override
-    public void dispose() {
-        DqpPlugin.getInstance().getServerManager().removeListener(this);
-        super.dispose();
-    }
-
-    @Override
-    public Object getAdapter( Class adapter ) {
-        if (adapter.equals(IPropertySheetPage.class)) {
-            propertySourceProvider = new RuntimePropertySourceProvider();
-            ((RuntimePropertySourceProvider)propertySourceProvider).setEditable(true, false);
-            PropertySheetPage page = new PropertySheetPage();
-            page.setPropertySourceProvider(propertySourceProvider);
-            return page;
-        }
-        return super.getAdapter(adapter);
-    }
-
-    /**
-     * @return the server manager being used by this view
-     */
-    private ServerManager getServerManager() {
-        return DqpPlugin.getInstance().getServerManager();
-    }
-
     /**
      * @param selection the current viewer selection (never <code>null</code>)
      */
     private void updateStatusLine( IStructuredSelection selection ) {
-    	// If no selection or mutli-selection 
+        // If no selection or mutli-selection
         String msg = StringUtilities.EMPTY_STRING;
-        
-        if( selection.size() == 1 ) {
-	        Object selectedObject = selection.getFirstElement();
-	
-	        if (selectedObject instanceof Server) {
-	        	msg = getString("statusBar.server.label", ((Server)selectedObject).toString()); //$NON-NLS-1$
-	        } else if (selectedObject instanceof TeiidTranslator) {
-	        	msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
-	        } else if (selectedObject instanceof TeiidVdb) {
-	        	msg = getString("statusBar.vdb.label", ((TeiidVdb)selectedObject).getName()); //$NON-NLS-1$
-	        } else if (selectedObject instanceof TeiidDataSource) {
-	        	msg = getString("statusBar.datasource.label", ((TeiidDataSource)selectedObject).getDisplayName()); //$NON-NLS-1$
-	        }
+
+        if (selection.size() == 1) {
+            Object selectedObject = selection.getFirstElement();
+
+            if (selectedObject instanceof Server) {
+                msg = getString("statusBar.server.label", ((Server)selectedObject).toString()); //$NON-NLS-1$
+            } else if (selectedObject instanceof TeiidTranslator) {
+                msg = getString("statusBar.translator.label", ((TeiidTranslator)selectedObject).getName()); //$NON-NLS-1$
+            } else if (selectedObject instanceof TeiidVdb) {
+                msg = getString("statusBar.vdb.label", ((TeiidVdb)selectedObject).getName()); //$NON-NLS-1$
+            } else if (selectedObject instanceof TeiidDataSource) {
+                msg = getString("statusBar.datasource.label", ((TeiidDataSource)selectedObject).getDisplayName()); //$NON-NLS-1$
+            }
         }
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
+    }
+
+    class NameSorter extends ViewerSorter {
     }
 
 }
