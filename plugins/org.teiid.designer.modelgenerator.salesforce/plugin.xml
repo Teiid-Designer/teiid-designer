@@ -5,7 +5,7 @@
        id="org.teiid.designer.datatools.salesforce.ConnectionInfoProvider"
        name="SalesForceConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
-       <ConnectionInfoHelper
+       <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"
             class="com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider"/>
    </extension>
