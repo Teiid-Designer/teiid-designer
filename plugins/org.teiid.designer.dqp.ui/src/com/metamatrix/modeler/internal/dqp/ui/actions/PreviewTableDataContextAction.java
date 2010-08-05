@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.actions;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -46,6 +44,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
@@ -59,7 +58,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Preferences;
@@ -292,8 +290,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         }
 
         if (sql != null) {
-
-            String driverPath = getClientJarPath();
+            // use the Admin API to get the location of the client jar
+            String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
             try {
 
                 // TODO: All of these values should be taken from the deployed
@@ -450,29 +448,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                                              : e.getMessage());
         }
         return sqlConnection;
-    }
-
-    /**
-     * @return
-     * @throws Error
-     */
-    private String getClientJarPath() throws Error {
-        // We could have a predefined driver created around the jars we
-        // deliver in the dqp plugin, then we could use that driver to
-        // assist in the creation of the Profile. That driver would be
-        // visible to the users though, unlike the transient ConnProfiles.
-
-        IPath jarPath;
-        try {
-            // TODO: has to be a better way to do this, this breaks with
-            // every API change
-            jarPath = DqpPath.getInstallLibPath().addTrailingSeparator().append("teiid-7.1.0-CR1-client.jar");
-        } catch (IOException e) {
-            throw new Error(e);
-        }
-        // String driverPath = jarPath.toOSString();
-        String driverPath = "/home/blafond/TeiidDesigner/Workspaces/7_1_0/tdesigner/plugins/teiid_embedded_query/teiid-7.1.0-CR1-client.jar";
-        return driverPath;
     }
 
     private ParameterInputDialog getInputDialog( List<EObject> params ) {
