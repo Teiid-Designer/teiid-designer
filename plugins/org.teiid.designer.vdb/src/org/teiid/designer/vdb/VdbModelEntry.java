@@ -78,7 +78,9 @@ public final class VdbModelEntry extends VdbEntry {
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
-            visible.set(false);
+            
+            // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
+            //visible.set(false);
             // TODO: re-visit in 7.1
             // For now, we're removing the assumption that the user will want to seed the VDB model entry with the model's
             // Description. From a UI standpoint, if the description contains multiple lines, then the row height
@@ -94,10 +96,10 @@ public final class VdbModelEntry extends VdbEntry {
                 this.translator.set(translator == null ? EMPTY_STR : translator);
                 jndiName.set(defaultName);
             }
-            
-            if( ModelUtil.isVirtual(emfModel) ) {
+            // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
+            //if( ModelUtil.isVirtual(emfModel) ) {
             	visible.set(true);
-            }
+            //}
         } else type = ModelType.TYPE_LITERAL;
         if( this.translator.get() == null ) {
         	this.translator.set(EMPTY_STR);
