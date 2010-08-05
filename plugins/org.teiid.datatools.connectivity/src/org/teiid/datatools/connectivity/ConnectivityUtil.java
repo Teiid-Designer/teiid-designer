@@ -23,7 +23,12 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionCons
  * 
  */
 public class ConnectivityUtil {
-
+	
+	public static final String DRIVER_DEFINITION_ID_KEY = "org.eclipse.datatools.connectivity.driverDefinitionID"; //$NON-NLS-1$
+	public static final String TEIID_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Server JDBC Driver"; //$NON-NLS-1$
+	public static final String TEIID_DRIVER_NAME = "org.teiid.jdbc.TeiidDriver"; //$NON-NLS-1$
+	public static final String TEIID_DATABASE_VENDOR_NAME = "Teiid.org"; //$NON-NLS-1$
+	
 	public static Properties createDriverProps(String jarList,
 			String driverURL,
 			String username, String password, String vdbName) {
@@ -31,8 +36,7 @@ public class ConnectivityUtil {
 		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
 				jarList);
 		baseProperties.setProperty(
-				IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID,
-				"org.teiid.jdbc.TeiidDriver"); //$NON-NLS-1$
+				IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID, TEIID_DRIVER_NAME);
 		baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID,
 				driverURL);
 		baseProperties.setProperty(
@@ -41,10 +45,9 @@ public class ConnectivityUtil {
 				IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, password);
 		baseProperties
 				.setProperty(
-				IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID,
-				"Teiid.org"); //$NON-NLS-1$
+				IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
 		baseProperties.setProperty(
-				IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, "7.0"); //$NON-NLS-1$
+				IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, "7.1"); //$NON-NLS-1$
 		baseProperties.setProperty(
 				IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, vdbName);
 		baseProperties.setProperty(
@@ -52,6 +55,8 @@ public class ConnectivityUtil {
 						.valueOf(true));
 		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
 				jarList);
+		baseProperties.setProperty(DRIVER_DEFINITION_ID_KEY, TEIID_DRIVER_DEFINITION_ID);
+
 		return baseProperties;
 	}
 
@@ -63,12 +68,12 @@ public class ConnectivityUtil {
 
 		try {
 			return pm.createTransientProfile(
-					"org.teiid.datatools.connectivity.connectionProfile",
+					"org.teiid.datatools.connectivity.connectionProfile", //$NON-NLS-1$
 					createDriverProps(
 					driverPath, connectionURL, username, password, vdbName));
 		} catch (ConnectionProfileException e) {
 			Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
-					"error getting profile", e);
+					"error getting profile", e); //$NON-NLS-1$
 			throw new CoreException(status);
 		}
 
