@@ -89,6 +89,10 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
             if (!pvdb.isSynchronized()) {
                 pvdb.synchronize(monitor);
                 pvdb.save(monitor);
+            } else {
+            	if( pvdb.isModified() ) {
+            		pvdb.save(monitor);
+            	}
             }
 
             return new Status(IStatus.OK, PLUGIN_ID, Messages.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,

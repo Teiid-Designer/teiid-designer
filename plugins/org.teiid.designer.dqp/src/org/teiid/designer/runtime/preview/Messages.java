@@ -47,8 +47,13 @@ public final class Messages extends NLS {
     public static String ModelProjectOpenedJob;
     public static String ModelProjectOpenedJobError;
     public static String ModelTranslatorCannotBeSetError;
+    public static String PreviewSetupDeployTask;
     public static String PreviewSetupJob;
     public static String PreviewSetupJobError;
+    public static String PreviewSetupMergeTask;
+    public static String PreviewSetupRefreshWorkspacedTask;
+    public static String PreviewSetupTask;
+    public static String PreviewSetupValidationCheckTask;
     public static String PreviewVdbDeletedPostProcessingError;
     public static String UnexpectedErrorGettingVdbMarkers;
     public static String UnexpectedErrorRunningJob;

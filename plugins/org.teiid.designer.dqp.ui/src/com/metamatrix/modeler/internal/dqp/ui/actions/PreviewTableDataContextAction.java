@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.actions;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -36,23 +36,22 @@ import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfi
 import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
-import org.teiid.designer.runtime.preview.jobs.PreviewSetupJob;
-import org.teiid.designer.runtime.preview.jobs.PreviewVdbJob;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -154,28 +153,46 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @Override
     public void run() {
-        EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
-        PreviewSetupJob job = null;
+        final EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
+        final PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
+        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
 
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            @Override
+            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
+                try {
+                    previewManager.previewSetup(eObj, monitor);
+                } catch (InterruptedException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
+
+        // show dialog
         try {
-            job = DqpPlugin.getInstance().getServerManager().getPreviewManager().previewSetup(eObj, null);
-            IProgressMonitor monitor = Job.getJobManager().createProgressGroup();
-            job.setProgressGroup(monitor, job.getJobs().size());
-            job.schedule();
-            Job.getJobManager().join(PreviewVdbJob.PREVIEW_FAMILY, monitor);
-
-            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            progressService.showInDialog(getShell(), job);
-
-            // setup successful so run preview
-            internalRun();
+            dialog.run(true, true, runnable);
+        } catch (InterruptedException e) {
+            // canceled by user
         } catch (Exception e) {
-            if (job != null) job.cancel();
             DqpUiConstants.UTIL.log(e);
             MessageDialog.openError(getShell(),
                                     null,
                                     DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
+        }
 
+        if (dialog.getReturnCode() == Dialog.OK) {
+            // setup successful so run preview
+            try {
+                internalRun();
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+                MessageDialog.openError(getShell(),
+                                        null,
+                                        DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
+            }
         }
     }
 
@@ -449,12 +466,12 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         try {
             // TODO: has to be a better way to do this, this breaks with
             // every API change
-            jarPath = DqpPath.getInstallLibPath().addTrailingSeparator().append("teiid-7.1.0-SNAPSHOT-client.jar");
+            jarPath = DqpPath.getInstallLibPath().addTrailingSeparator().append("teiid-7.1.0-CR1-client.jar");
         } catch (IOException e) {
             throw new Error(e);
         }
         // String driverPath = jarPath.toOSString();
-        String driverPath = "/Users/dan/Work/Workspaces/teiid-designer/trunk/plugins/teiid_embedded_query/teiid-7.1.0-SNAPSHOT-client.jar";
+        String driverPath = "/home/blafond/TeiidDesigner/Workspaces/7_1_0/tdesigner/plugins/teiid_embedded_query/teiid-7.1.0-CR1-client.jar";
         return driverPath;
     }
 
