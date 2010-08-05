@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
@@ -97,6 +98,23 @@ public final class PreviewManager extends JobChangeAdapter
     public static final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$
     public static final String DEFAULT_PASSWORD = "teiid"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
+
+    public static String getPreviewProjectVdbName( IProject project ) {
+        char delim = '_';
+        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
+
+        name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
+
+        return name.toString();
+    }
+
+    public static int getPreviewVdbVersion( IFile pvdbFile ) {
+        assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
+        assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
+
+        Vdb pvdb = new Vdb(pvdbFile, true, null);
+        return pvdb.getVersion();
+    }
 
     /**
      * @param file the file being checked (may not be <code>null</code>)
@@ -224,8 +242,8 @@ public final class PreviewManager extends JobChangeAdapter
         try {
             for (IMarker marker : pvdb.getProblems()) {
                 if (marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING) == IMarker.SEVERITY_ERROR) {
-                    return new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.ModelErrorMarkerExists,
-                                                                              marker.getAttribute(IMarker.MESSAGE, ""))); //$NON-NLS-1$
+                    return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelErrorMarkerExists,
+                                                                         marker.getAttribute(IMarker.MESSAGE, ""))); //$NON-NLS-1$
                 }
             }
 
@@ -348,9 +366,8 @@ public final class PreviewManager extends JobChangeAdapter
             }
         } else {
             ++errors;
-            connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID,
-                                             Messages.bind(Messages.ModelDoesNotHaveConnectionInfoError, model.getFullPath()),
-                                             null);
+            connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelDoesNotHaveConnectionInfoError,
+                                                                                model.getFullPath()), null);
         }
 
         IStatus translatorError = null;
@@ -362,8 +379,8 @@ public final class PreviewManager extends JobChangeAdapter
             // get translator
             if (connectionProfile == null) {
                 ++errors;
-                translatorError = new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.ModelTranslatorCannotBeSetError,
-                                                                                     model.getFullPath()), null);
+                translatorError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelTranslatorCannotBeSetError,
+                                                                                model.getFullPath()), null);
             } else {
                 modelEntry.setTranslator(JdbcTranslatorHelper.getTranslator(connectionProfile));
             }
@@ -377,8 +394,8 @@ public final class PreviewManager extends JobChangeAdapter
             IStatus[] statuses = new IStatus[2];
             statuses[0] = connectionInfoError;
             statuses[1] = translatorError;
-            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, Messages.bind(Messages.ModelConnectionInfoError,
-                                                                                  model.getFullPath()), null);
+            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.ModelConnectionInfoError,
+                                                                             model.getFullPath()), null);
         }
 
         if (connectionInfoError != null) return connectionInfoError;
@@ -401,7 +418,7 @@ public final class PreviewManager extends JobChangeAdapter
                     job.schedule();
                 }
             } catch (Exception e) {
-                Util.log(IStatus.ERROR, e, Messages.bind(Messages.DeletedModelProcessingError, file.getFullPath()));
+                Util.log(IStatus.ERROR, e, NLS.bind(Messages.DeletedModelProcessingError, file.getFullPath()));
             }
         }
     }
@@ -453,12 +470,12 @@ public final class PreviewManager extends JobChangeAdapter
         }
     }
 
-    private IFile getFile( IPath path ) {
-        return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-    }
-
     private IProject[] getAllProjects() {
         return ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    }
+
+    private IFile getFile( IPath path ) {
+        return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
     }
 
     Server getPreviewServer() {
@@ -515,15 +532,6 @@ public final class PreviewManager extends JobChangeAdapter
         return getPreviewVdbDeployedName(pvdbPath);
     }
 
-    public static String getPreviewProjectVdbName( IProject project ) {
-        char delim = '_';
-        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
-
-        name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
-
-        return name.toString();
-    }
-
     private String getPreviewVdbName( IResource projectOrModel ) {
         char delim = '_';
         StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
@@ -551,14 +559,6 @@ public final class PreviewManager extends JobChangeAdapter
 
         name.append(Vdb.FILE_EXTENSION);
         return name.toString();
-    }
-
-    public static int getPreviewVdbVersion( IFile pvdbFile ) {
-        assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
-        assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
-
-        Vdb pvdb = new Vdb(pvdbFile, true, null);
-        return pvdb.getVersion();
     }
 
     private IPath getProjectPath( IPath pvdbPath ) {
@@ -641,8 +641,8 @@ public final class PreviewManager extends JobChangeAdapter
             findPvdbs(project, pvdbPaths);
 
             if (!pvdbPaths.isEmpty()) {
-                CompositePreviewJob batchJob = new CompositePreviewJob(Messages.bind(Messages.DeleteOrphanedPreviewVdbsJob,
-                                                                                     project.getName()), this.context,
+                CompositePreviewJob batchJob = new CompositePreviewJob(NLS.bind(Messages.DeleteOrphanedPreviewVdbsJob,
+                                                                                project.getName()), this.context,
                                                                        getPreviewServer());
                 Collection<PreviewVdbStatus> statuses = null;
 
@@ -679,7 +679,7 @@ public final class PreviewManager extends JobChangeAdapter
                 }
             }
         } catch (Exception e) {
-            Util.log(IStatus.ERROR, e, Messages.bind(Messages.DeleteOrphanedPreviewVdbsJobError, project.getName()));
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.DeleteOrphanedPreviewVdbsJobError, project.getName()));
         }
     }
 
@@ -749,7 +749,7 @@ public final class PreviewManager extends JobChangeAdapter
             job.addChildJobChangeListener(this);
             job.schedule();
         } catch (Exception e) {
-            Util.log(IStatus.ERROR, e, Messages.bind(Messages.ModelChangedJobError, model.getFullPath()));
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.ModelChangedJobError, model.getFullPath()));
         }
     }
 
@@ -800,7 +800,7 @@ public final class PreviewManager extends JobChangeAdapter
                 previewVdbDeletedPostProcessing(pvdbPath);
             }
         } catch (Exception e) {
-            Util.log(IStatus.ERROR, e, Messages.bind(Messages.PreviewVdbDeletedPostProcessingError, project.getName()));
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.PreviewVdbDeletedPostProcessingError, project.getName()));
         }
     }
 
@@ -816,7 +816,7 @@ public final class PreviewManager extends JobChangeAdapter
             job.addJobChangeListener(this);
             job.schedule();
         } catch (Exception e) {
-            Util.log(IStatus.ERROR, e, Messages.bind(Messages.ModelProjectOpenedJobError, project.getName()));
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.ModelProjectOpenedJobError, project.getName()));
         }
     }
 
@@ -865,6 +865,7 @@ public final class PreviewManager extends JobChangeAdapter
         // name, create new data source on server. The event target eObject should be the ModelAnnotation.
     }
 
+    @SuppressWarnings( "unused" )
     public void previewSetup( final Object objectToPreview,
                               IProgressMonitor monitor ) throws Exception {
         Server previewServer = getPreviewServer();
@@ -880,19 +881,22 @@ public final class PreviewManager extends JobChangeAdapter
             throw new InterruptedException();
         }
 
-        monitor.beginTask(Messages.PreviewSetupTask, 4 + (2 * projectPvdbsToDeploy.size()));
+        monitor.beginTask(Messages.PreviewSetupTask, 3 + (2 * projectPvdbsToDeploy.size()));
 
-        // make sure no errors
-        monitor.subTask(Messages.bind(Messages.PreviewSetupValidationCheckTask, model.getItemName()));
-        IStatus status = checkPreviewVdbForErrors(pvdb);
-        monitor.worked(1);
+        PREVIEW_MODEL_VALIDATION_CHECK_TASK: {
+            // make sure no errors
+            monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, model.getItemName()));
+            IStatus status = checkPreviewVdbForErrors(pvdb);
 
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new CoreException(status);
-        }
+            if (status.getSeverity() == IStatus.ERROR) {
+                throw new CoreException(status);
+            }
 
-        if (monitor.isCanceled()) {
-            throw new InterruptedException();
+            monitor.worked(1);
+
+            if (monitor.isCanceled()) {
+                throw new InterruptedException();
+            }
         }
 
         ExecutionAdmin admin = previewServer.getAdmin();
@@ -900,119 +904,128 @@ public final class PreviewManager extends JobChangeAdapter
         // collect all the Preview VDB parent folders so that we can make sure workspace is in sync with file system
         Set<IContainer> parents = new HashSet<IContainer>();
 
-        ///// SUBTASK /////
-        // make sure all connection information is valid
-        monitor.subTask(Messages.bind(Messages.PreviewSetupConnectionInfoTask, model.getItemName()));
+        PREVIEW_MODEL_CONNECTION_INFO_TASK: {
+            // make sure all connection information is valid
+            if (model.getModelType() == ModelType.PHYSICAL_LITERAL) {
+                monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, model.getItemName()));
+                IStatus status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
 
-        if (model.getModelType() == ModelType.PHYSICAL_LITERAL) {
-            status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new CoreException(status);
+                }
 
-            if (status.getSeverity() == IStatus.ERROR) {
-                throw new CoreException(status);
-            }
-        }
-        
-        monitor.worked(1);
-
-        ///// SUBTASK /////
-        // deploy model's PVDB if necessary
-        monitor.subTask(Messages.bind(Messages.PreviewSetupDeployTask, model.getItemName()));
-
-        if (needsToBeDeployed(pvdbFile)) {
-            // make sure PVDB is in sync with file system
-            IContainer parent = pvdbFile.getParent();
-
-            if (!parents.contains(parent)) {
-                refreshLocal(parent);
-                parents.add(parent);
+                // save if necessary
+                if (pvdb.isModified()) {
+                    pvdb.save(monitor);
+                }
             }
 
-            // deploy and update status map
-            admin.deployVdb(pvdbFile);
-            setNeedsToBeDeployedStatus(pvdbFile, false);
-        }
-
-        monitor.worked(1);
-
-        if (monitor.isCanceled()) {
-            throw new InterruptedException();
-        }
-
-        // deploy any project PVDBs if necessary
-        for (IFile projectPvdbFile : projectPvdbsToDeploy) {
-            ///// SUBTASK /////
-            // deploy PVDB
-            monitor.subTask(Messages.bind(Messages.PreviewSetupDeployTask, projectPvdbFile.getName()));
-
-            if (pvdbFile.equals(projectPvdbFile)) {
-                monitor.worked(1);
-                continue;
-            }
-
-            Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
-
-            // make sure no errors
-            status = checkPreviewVdbForErrors(pvdb);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                throw new CoreException(status);
-            }
-
-            ///// SUBTASK /////
-            monitor.subTask(Messages.bind(Messages.PreviewSetupConnectionInfoTask, projectModelPvdb.getName()));
-            status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
-
-            if (status.getSeverity() == IStatus.ERROR) {
-                throw new CoreException(status);
-            }
-
-            ///// SUBTASK /////
-            IContainer parent = projectPvdbFile.getParent();
-
-            if (!(parent instanceof IWorkspaceRoot) && !parents.contains(parent)) {
-                refreshLocal(parent);
-                parents.add(parent);
-            }
-
-            ///// SUBTASK /////
-            admin.deployVdb(projectPvdbFile);
-            setNeedsToBeDeployedStatus(projectPvdbFile, false);
             monitor.worked(1);
 
             if (monitor.isCanceled()) {
                 throw new InterruptedException();
+            }
+        }
+
+        PREVIEW_MODEL_DEPLOY_TASK: {
+            // deploy model's PVDB if necessary
+            if (needsToBeDeployed(pvdbFile)) {
+                // make sure PVDB is in sync with file system
+                IContainer parent = pvdbFile.getParent();
+                monitor.subTask(NLS.bind(Messages.PreviewSetupRefreshWorkspaceTask, parent.getFullPath()));
+
+                if (!parents.contains(parent)) {
+                    refreshLocal(parent);
+                    parents.add(parent);
+                }
+
+                // deploy and update status map
+                monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, model.getItemName()));
+                admin.deployVdb(pvdbFile);
+                setNeedsToBeDeployedStatus(pvdbFile, false);
+            }
+
+            monitor.worked(1);
+
+            if (monitor.isCanceled()) {
+                throw new InterruptedException();
+            }
+        }
+
+        // deploy any project PVDBs if necessary
+        for (IFile projectPvdbFile : projectPvdbsToDeploy) {
+            PROJECT_MODEL_DEPLOY_TASK: {
+                if (pvdbFile.equals(projectPvdbFile)) {
+                    monitor.worked(1);
+                    continue;
+                }
+
+                Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
+
+                // make sure no errors
+                monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, projectModelPvdb.getName()));
+                IStatus status = checkPreviewVdbForErrors(projectModelPvdb);
+
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new CoreException(status);
+                }
+
+                monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, projectModelPvdb.getName()));
+                status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
+
+                if (status.getSeverity() == IStatus.ERROR) {
+                    throw new CoreException(status);
+                }
+
+                // save if necessary
+                if (projectModelPvdb.isModified()) {
+                    projectModelPvdb.save(monitor);
+                }
+
+                // make sure parent is in sync with file system
+                IContainer parent = projectPvdbFile.getParent();
+                monitor.subTask(NLS.bind(Messages.PreviewSetupRefreshWorkspaceTask, parent.getFullPath()));
+
+                if (!(parent instanceof IWorkspaceRoot) && !parents.contains(parent)) {
+                    refreshLocal(parent);
+                    parents.add(parent);
+                }
+
+                // deploy PVDB
+                monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, projectPvdbFile.getName()));
+                admin.deployVdb(projectPvdbFile);
+                setNeedsToBeDeployedStatus(projectPvdbFile, false);
+
+                monitor.worked(1);
+
+                if (monitor.isCanceled()) {
+                    throw new InterruptedException();
+                }
             }
         }
 
         // merge into project PVDB
         for (IFile pvdbToMerge : projectPvdbsToDeploy) {
-            monitor.subTask(Messages.bind(Messages.PreviewSetupMergeTask, pvdbToMerge.getName()));
+            MERGE_TASK: {
+                monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, pvdbToMerge.getName()));
 
-            // REMOVE the .vdb extension for the source vdb
-            String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
-            String projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
+                // REMOVE the .vdb extension for the source vdb
+                String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
+                String projectPreviewVdbName = getPreviewProjectVdbName(modelToPreview.getProject());
 
-            if (!sourceVdbName.equals(projectPreviewVdbName)) {
-                admin.mergeVdbs(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), projectPreviewVdbName, 1);
-            }
+                if (!sourceVdbName.equals(projectPreviewVdbName)) {
+                    admin.mergeVdbs(sourceVdbName, PreviewManager.getPreviewVdbVersion(pvdbToMerge), projectPreviewVdbName, 1);
+                }
 
-            monitor.worked(1);
+                monitor.worked(1);
 
-            if (monitor.isCanceled()) {
-                throw new InterruptedException();
+                if (monitor.isCanceled()) {
+                    throw new InterruptedException();
+                }
             }
         }
 
         monitor.done();
-    }
-
-    private void refreshLocal( IContainer parent ) throws CoreException {
-        // make sure all workspace PVDBs are in sync with the file system
-        try {
-            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
-            throw e;
-        }
     }
 
     /**
@@ -1029,6 +1042,15 @@ public final class PreviewManager extends JobChangeAdapter
         Job job = new DeleteDeployedPreviewVdbJob(this.context.getPreviewVdbDeployedName(pvdbPath),
                                                   getPreviewVdbVersion(pvdbFile), jndiName, this.context, getPreviewServer());
         job.schedule();
+    }
+
+    private void refreshLocal( IContainer parent ) throws CoreException {
+        // make sure all workspace PVDBs are in sync with the file system
+        try {
+            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            throw e;
+        }
     }
 
     /**
