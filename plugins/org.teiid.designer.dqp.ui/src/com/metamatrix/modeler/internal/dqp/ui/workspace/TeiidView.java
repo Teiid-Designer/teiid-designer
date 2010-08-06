@@ -321,7 +321,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     }
 
     private void fillLocalPullDown( IMenuManager menuMgr ) {
-        IAction action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewVdbsMenuItem", SWT.TOGGLE)) { //$NON-NLS-1$
+        IAction action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
                 TeiidView.this.treeProvider.setShowPreviewVdbs(!TeiidView.this.treeProvider.isShowingPreviewVdbs());
@@ -331,11 +331,32 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         };
 
         menuMgr.add(action);
+        
+        action = new Action(SHOW_TRANSLATORS_LABEL, SWT.TOGGLE) {
+            @Override
+            public void run() {
+                treeProvider.setShowTranslators(!TeiidView.this.treeProvider.isShowingTranslators());
+                viewer.refresh(false);
+                viewer.expandAll();
+            }
+        };
+
+        menuMgr.add(action);        
+        action = new Action(SHOW_ALL_DATA_SOURCES_LABEL, SWT.TOGGLE) {
+            @Override
+            public void run() {
+                treeProvider.setShowAllDataSources(!TeiidView.this.treeProvider.isShowingAllDataSources());
+                viewer.refresh(false);
+                viewer.expandAll();
+            }
+        };
+
+        menuMgr.add(action);
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
-        manager.add(this.showDataSourcesAction);
-        manager.add(this.showTranslatorsToggleAction);
+        manager.add(this.newServerAction);
+        manager.add(this.reconnectAction);
         manager.add(new Separator());
         manager.add(this.collapseAllAction);
     }

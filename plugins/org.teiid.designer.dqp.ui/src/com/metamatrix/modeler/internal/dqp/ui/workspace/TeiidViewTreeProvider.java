@@ -287,6 +287,20 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public boolean isShowingPreviewVdbs() {
         return this.showPreviewVdbs;
     }
+    
+    /**
+     * @return <code>true</code> if Translators are being shown
+     */
+    public boolean isShowingTranslators() {
+        return this.showTranslators;
+    }
+    
+    /**
+     * @return <code>true</code> if Translators are being shown
+     */
+    public boolean isShowingAllDataSources() {
+        return this.showAllDataSources;
+    }
 
     /**
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)

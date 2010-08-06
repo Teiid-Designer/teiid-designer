@@ -13,12 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import org.eclipse.core.resources.IFile;
+
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -46,11 +43,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
-import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
-import org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
+
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -76,8 +71,6 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public class PreviewTableDataContextAction extends SortableSelectionAction {
 
-    private IConnectionInfoHelper connectionHelper;
-
     /**
      * @since 5.0
      */
@@ -86,8 +79,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.PREVIEW_DATA_ICON));
         setWiredForSelection(true);
         setToolTipText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.tooltip")); //$NON-NLS-1$
-
-        this.connectionHelper = new ConnectionInfoHelper();
     }
 
     /**
@@ -114,35 +105,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
         // eObj must be previewable
         return ModelObjectUtilities.isExecutable(eObj);
-    }
-
-    private boolean connectionInfoExists( EObject obj ) {
-        Set<IResource> depModels = new HashSet<IResource>();
-        try {
-            depModels = ModelObjectUtilities.getDependentPhysicalModels(obj);
-        } catch (ModelWorkspaceException e) {
-            String msg = DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.errorGettingDependentPhysicalSources", obj); //$NON-NLS-1$
-            DqpUiConstants.UTIL.log(IStatus.ERROR, e, msg);
-            return false;
-        }
-
-        for (IResource iResource : depModels) {
-            ModelResource mr = ModelUtilities.getModelResourceForIFile((IFile)iResource, true);
-
-            if (!this.connectionHelper.hasConnectionInfo(mr)) {
-                boolean doContinue = false;
-                try {
-                    doContinue = SetConnectionProfileAction.setConnectionProfile((IFile)iResource);
-                } catch (Exception e) {
-                }
-                if (!doContinue) {
-                    // User canceled
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -283,10 +245,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         final int rowLimit = getCurrentRowLimit();
         final Object[] paramValuesAsArray = paramValues.toArray();
 
-        String displaySQL = sql;
         if (sql == null) {
             sql = ModelObjectUtilities.getSQL(selected, paramValuesAsArray, accessPatternsColumns);
-            displaySQL = getDisplaySQL(sql, paramValues);
         }
 
         if (sql != null) {
@@ -328,85 +288,15 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                     iww.getShell().getDisplay().asyncExec(runnable);
 
                 } catch (SQLException e) {
-                    // TODO: Handle this
-                    System.out.print(e);
+                	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
                 } catch (NoSuchProfileException e) {
-                    // TODO: Handle this
-                    System.out.print(e);
+                	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
                 }
             } catch (CoreException e) {
-                // TODO: Handle this
-                System.out.print(e);
+            	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
             } catch (SQLException e) {
-                // TODO: Handle this
-                System.out.print(e);
+            	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
             }
-
-            // TODO: REPLACE DIALOG WITH NEW PREVIEW DATA LOGIC
-            //MessageDialog.openInformation(shell, "Preview Data Action Results Pending",  //$NON-NLS-1$
-            //		"Note that this feature is being re-architected and not yet available. " +  //$NON-NLS-1$
-            //		"\n\nThank you for your patience." + "\n\n Eventually the following query will be executed for you:\n\n" + displaySQL);  //$NON-NLS-1$//$NON-NLS-2$
-
-            // class QueryExecutor implements IRunnableWithProgress {
-            // private final QueryMetadataInterface qmi;
-            // private final String sql;
-            // private final String displaySql;
-            //
-            // public QueryExecutor( EObject previewObject,
-            // String sql,
-            // String displaySql ) {
-            // this.qmi = WorkspaceExecutionUtil.getMetadata(previewObject);
-            // this.sql = sql;
-            // this.displaySql = displaySql;
-            // }
-            //
-            // public void run( IProgressMonitor monitor ) throws InvocationTargetException {
-            // try {
-            // WorkspaceExecutor.getInstance().executeSQL(this.qmi,
-            // this.sql,
-            // paramValuesAsArray,
-            // this.displaySql,
-            // rowLimit,
-            // monitor);
-            // } catch (SQLException e) {
-            // throw new InvocationTargetException(e);
-            // }
-            // }
-            // }
-            //
-            // ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell) {
-            // @Override
-            // protected void cancelPressed() {
-            // super.cancelPressed();
-            //
-            // try {
-            // WorkspaceExecutor.getInstance().cancel();
-            // } catch (SQLException e) {
-            // DqpUiConstants.UTIL.log(e);
-            // }
-            // }
-            // };
-            //
-            // QueryExecutor op = new QueryExecutor(selected, sql, displaySQL);
-            //
-            // try {
-            // dialog.run(true, true, op);
-            //
-            // if (!dialog.getProgressMonitor().isCanceled()) {
-            // showResults(WorkspaceExecutor.getInstance().getResults());
-            // }
-            // } catch (InvocationTargetException e) {
-            // if (!dialog.getProgressMonitor().isCanceled()) {
-            // String msg = e.getTargetException().getMessage();
-            // DqpUiConstants.UTIL.log(new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, IStatus.OK, msg,
-            // e.getTargetException()));
-            //                    MessageDialog.openError(shell, DqpUiConstants.UTIL.getString("PreviewTableDataAction.error_in_execution"), msg); //$NON-NLS-1$
-            // }
-            // } catch (InterruptedException e) {
-            // // dialog was canceled
-            // } finally {
-            // dialog.getProgressMonitor().done();
-            // }
         } else {
             DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
                                                "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
@@ -453,19 +343,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     private ParameterInputDialog getInputDialog( List<EObject> params ) {
         ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
         return dialog;
-    }
-
-    private String getDisplaySQL( String sql,
-                                  List<String> paramValues ) {
-        if (paramValues != null && !paramValues.isEmpty()) {
-            for (String value : paramValues) {
-                // skip over null values as those don't have a ? to replace
-                if (value != null) {
-                    sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                }
-            }
-        }
-        return sql;
     }
 
     private int getCurrentRowLimit() {
