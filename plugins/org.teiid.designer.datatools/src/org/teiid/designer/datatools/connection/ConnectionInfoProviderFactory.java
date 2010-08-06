@@ -35,6 +35,9 @@ public class ConnectionInfoProviderFactory {
                 return getProvider(parent);
             }
         }
+        if (null == result) {
+            result = getProvider(profile.getCategory());
+        }
         return result;
     }
 
@@ -109,16 +112,7 @@ public class ConnectionInfoProviderFactory {
         if (null == profile) {
             throw new Exception("can't resolve profile from model data");
         }
-        result = getProvider(profile);
-
-        if (null == result) {
-            ICategory category = profile.getCategory();
-            if (null == category) {
-                throw new Exception("can't resolve a category from profile");
-            }
-            result = getProvider(category);
-        }
-        return result;
+        return getProvider(profile);
     }
 
     public IConnectionInfoProvider getProvider( Properties props ) {
