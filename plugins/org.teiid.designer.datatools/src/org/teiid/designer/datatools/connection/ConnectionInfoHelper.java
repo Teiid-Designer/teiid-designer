@@ -270,7 +270,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         CoreArgCheck.isNotNull(path, "path"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(uuid, "uuid"); //$NON-NLS-1$
 
-        final StringBuilder builder = new StringBuilder(uuid + "__"); //$NON-NLS-1$
+        final StringBuilder builder = new StringBuilder(uuid + '_');
         for (final String segment : path.removeLastSegments(1).segments())
             builder.append(segment).append('_');
 

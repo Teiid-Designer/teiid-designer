@@ -41,9 +41,6 @@ public class SourceElement implements Serializable {
 
     SourceElement( final VdbModelEntry entry ) {
         name = entry.getSourceName();
-        final StringBuilder builder = new StringBuilder(ModelerCore.workspaceUuid().toString());
-        for (final String segment : entry.getName().removeLastSegments(1).segments())
-            builder.append('.').append(segment);
         jndiName = entry.getJndiName();
         translatorName = entry.getTranslator();
     }

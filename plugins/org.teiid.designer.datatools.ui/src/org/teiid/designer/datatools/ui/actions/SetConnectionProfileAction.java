@@ -165,7 +165,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         IConnectionInfoProvider provider = manager.getProvider(connectionProfile);
 
         if (null == provider) {
-            throw new Exception(DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.no.provider.found"));
+            throw new Exception(DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.no.provider.found")); //$NON-NLS-1$
         }
 
         provider.setConnectionInfo(mr, connectionProfile);

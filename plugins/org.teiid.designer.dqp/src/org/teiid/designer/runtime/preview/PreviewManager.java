@@ -214,7 +214,7 @@ public final class PreviewManager extends JobChangeAdapter
     @Override
     public void aboutToRun( IJobChangeEvent event ) {
         // TODO remove this when done implementing
-        System.out.println("*****Job " + event.getJob().getName() + " is about to run");
+        //System.out.println("*****Job " + event.getJob().getName() + " is about to run");
     }
 
     /**

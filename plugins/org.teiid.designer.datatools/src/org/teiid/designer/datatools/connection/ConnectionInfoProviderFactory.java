@@ -10,9 +10,12 @@ package org.teiid.designer.datatools.connection;
 import java.util.Properties;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.designer.datatools.DatatoolsPlugin;
+
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
@@ -58,7 +61,7 @@ public class ConnectionInfoProviderFactory {
                     helper = (IConnectionInfoProvider)element.createExecutableExtension(CLASS_ATTRIBUTE);
                     break;
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                	DatatoolsPlugin.Util.log(IStatus.ERROR, e.getMessage());
                 }
             }
         }
@@ -89,8 +92,7 @@ public class ConnectionInfoProviderFactory {
                     helper = (IConnectionInfoProvider)element.createExecutableExtension(CLASS_ATTRIBUTE);
                     break;
                 } catch (Exception e) {
-                    // TODO: log an exception
-                    System.out.println(e.getMessage());
+                	DatatoolsPlugin.Util.log(IStatus.ERROR, e.getMessage());
                 }
             }
         }
@@ -105,14 +107,23 @@ public class ConnectionInfoProviderFactory {
     public IConnectionInfoProvider getProvider( ModelResource modelResource ) throws Exception {
         IConnectionInfoProvider result = null;
         if (!helper.hasConnectionInfo(modelResource)) {
-            throw new Exception("no connectionInfo in model");
+            throw new Exception(DatatoolsPlugin.Util.getString("ConnectionInfoProviderFactory.noConnectionInfoInModel", modelResource.getItemName())); //$NON-NLS-1$
         }
 
         IConnectionProfile profile = helper.getConnectionProfile(modelResource);
         if (null == profile) {
-            throw new Exception("can't resolve profile from model data");
+            throw new Exception(DatatoolsPlugin.Util.getString("ConnectionInfoProviderFactory.noConnectionProfileInModel", modelResource.getItemName())); //$NON-NLS-1$
         }
-        return getProvider(profile);
+        result = getProvider(profile);
+
+        if (null == result) {
+            ICategory category = profile.getCategory();
+            if (null == category) {
+                throw new Exception(DatatoolsPlugin.Util.getString("ConnectionInfoProviderFactory.noCategoryForProfile", profile.getName())); //$NON-NLS-1$
+            }
+            result = getProvider(category);
+        }
+        return result;
     }
 
     public IConnectionInfoProvider getProvider( Properties props ) {

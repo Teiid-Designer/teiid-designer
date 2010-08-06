@@ -24,6 +24,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 
 /**
@@ -104,7 +105,9 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             }
 
             if (!enoughProps) {
-                throw new ModelWorkspaceException("not enough props");
+                throw new ModelWorkspaceException(
+                		ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders",  //$NON-NLS-1$
+                				modelResource.getItemName()));
             }
             // Remove old connection properties
             getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
@@ -142,8 +145,9 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
                 }
             }
         } else {
-            // TODO: externalize
-            throw new ModelWorkspaceException("errorFindingModelResourceForModelFile: " + resource.getName());
+            throw new ModelWorkspaceException(
+            		ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.errorFindingModelResourceForModelFile",  //$NON-NLS-1$
+    				resource.getName()));
         }
 
         return null;
@@ -164,7 +168,6 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
 
         if (ModelUtil.isPhysical(modelResource.getEmfResource()) && (modelResource != null)) {
 
-            // TODO: Find Model's JDBC PRoperties here!!!!
             JdbcSource jdbcSource = findJdbcSource(modelResource.getCorrespondingResource());
             if (jdbcSource != null) {
 
