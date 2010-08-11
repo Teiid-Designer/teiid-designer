@@ -78,7 +78,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
             try {
                 server.getAdmin().deployVdb(selectedVDB);
             } catch (Exception e) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpPlugin.Util.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
                                                                                    selectedVDB.getName(),
                                                                                    server.getUrl()));
             }
