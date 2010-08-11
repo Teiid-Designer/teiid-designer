@@ -331,7 +331,7 @@ public class DdlImporter {
         for (final EObject obj : parent == null ? roots : parent.eContents()) {
             if (type.isInstance(obj)) {
                 final T entity = (T)obj;
-                if (entity.getName().equals(name)) return entity;
+                if (entity.getName().equalsIgnoreCase(name)) return entity;
             } else if (parent == null && obj instanceof Schema) try {
                 return find(type, name, node, (Schema)obj, roots);
             } catch (final EntityNotFoundException ignored) {
@@ -587,7 +587,6 @@ public class DdlImporter {
             if (modelFolderPath.segmentCount() == 1) modelFolder = root.getProject(projectName);
             else modelFolder = root.getFolder(modelFolderPath);
         } else modelFolder = (IContainer)resource;
-        setModelName(modelName);
     }
 
     /**
