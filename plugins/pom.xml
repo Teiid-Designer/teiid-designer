@@ -14,8 +14,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<modules>
 		<module>net.jcip.annotations</module>
 		<module>net.sf.saxon</module>
-		<module>org.apache.commons.validator</module>
-		<module>org.apache.oro</module>
 		<module>org.apache.poi</module>
 		<module>org.jaxen</module>
 		<module>org.jdom</module>
