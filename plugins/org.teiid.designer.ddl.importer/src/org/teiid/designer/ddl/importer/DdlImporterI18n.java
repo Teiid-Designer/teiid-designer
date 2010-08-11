@@ -14,7 +14,6 @@ class DdlImporterI18n {
     static final String CREATING_MODEL_MSG = i18n("creatingModelMsg"); //$NON-NLS-1$
     static final String DDL_FILE_NOT_FOUND_MSG = i18n("ddlFileNotFoundMsg"); //$NON-NLS-1$
     static final String ENTITY_NOT_FOUND_MSG = i18n("entityNotFoundMsg"); //$NON-NLS-1$
-    static final String IMPORTING_DDL_MSG = i18n("importingDdlMsg"); //$NON-NLS-1$
     static final String INVALID_MODEL_FOLDER_MSG = i18n("invalidModelFolderMsg"); //$NON-NLS-1$
     static final String INVALID_MODEL_NAME_MSG = i18n("invalidModelNameMsg"); //$NON-NLS-1$
     static final String MODEL = i18n("model"); //$NON-NLS-1$

@@ -26,9 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.modeshape.graph.JcrLexicon;
 import org.modeshape.graph.property.Name;
 import org.modeshape.graph.property.Property;
@@ -45,7 +43,6 @@ import org.teiid.core.exception.EmptyArgumentException;
 import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.OperationUtil;
-import com.metamatrix.core.modeler.util.OperationUtil.ReturningUnreliable;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -67,14 +64,13 @@ import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.UniqueConstraint;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMappingImpl;
 import com.metamatrix.modeler.compare.DifferenceReport;
+import com.metamatrix.modeler.compare.MergeProcessor;
 import com.metamatrix.modeler.compare.ModelerComparePlugin;
 import com.metamatrix.modeler.compare.processor.DifferenceProcessorImpl;
-import com.metamatrix.modeler.compare.selector.EmfResourceSelector;
+import com.metamatrix.modeler.compare.selector.ModelResourceSelector;
 import com.metamatrix.modeler.compare.selector.TransientModelSelector;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
-import com.metamatrix.modeler.internal.core.resource.xmi.MtkXmiResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
@@ -91,6 +87,7 @@ public class DdlImporter {
     private String modelName;
     private IFile modelFile;
     private ModelType modelType;
+    private DifferenceProcessorImpl chgProcessor;
     private ModelResource model;
     private boolean optToCreateModelEntitiesForUnsupportedDdl;
     private boolean optToSetModelEntityDescription;
@@ -104,26 +101,28 @@ public class DdlImporter {
 
     private void create( final AstNode node,
                          Name mixinType,
+                         final List<EObject> roots,
                          final Schema schema,
                          final List<String> messages ) throws CoreException {
         try {
             if (StandardDdlLexicon.TYPE_CREATE_TABLE_STATEMENT.equals(mixinType)) {
-                final BaseTable table = initializeTable(FACTORY.createBaseTable(), node);
+                final BaseTable table = initializeTable(FACTORY.createBaseTable(), node, roots);
                 for (final AstNode node1 : node) {
                     mixinType = mixinType(node1);
                     if (StandardDdlLexicon.TYPE_COLUMN_DEFINITION.equals(mixinType)) createColumn(node1, table);
-                    else if (StandardDdlLexicon.TYPE_TABLE_CONSTRAINT.equals(mixinType)) createKey(node1, table, messages);
+                    else if (StandardDdlLexicon.TYPE_TABLE_CONSTRAINT.equals(mixinType)) createKey(node1, table, roots, messages);
                 }
             } else if (StandardDdlLexicon.TYPE_CREATE_VIEW_STATEMENT.equals(mixinType)) {
                 if (modelType != ModelType.VIRTUAL_LITERAL && optToCreateModelEntitiesForUnsupportedDdl) initializeTable(FACTORY.createView(),
-                                                                                                                         node);
+                                                                                                                         node,
+                                                                                                                         roots);
             } else if (OracleDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
                        || DerbyDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
                        || MySqlDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)
                        || PostgresDdlLexicon.TYPE_CREATE_INDEX_STATEMENT.equals(mixinType)) {
                 final Index index = FACTORY.createIndex();
-                final Info<Index> info = new Info<Index>(index, node);
-                if (info.schema == null) model.getEmfResource().getContents().add(index);
+                final Info<Index> info = new Info<Index>(index, node, roots);
+                if (info.schema == null) roots.add(index);
                 else info.schema.getIndexes().add(index);
                 initialize(index, node, info.name);
                 Property prop = node.getProperty(OracleDdlLexicon.UNIQUE_INDEX);
@@ -133,11 +132,11 @@ public class DdlImporter {
                 if (prop == null) prop = node.getProperty(DerbyDdlLexicon.TABLE_NAME);
                 if (prop != null) {
                     try {
-                        final Table table = find(Table.class, prop.getFirstValue().toString(), node, null);
+                        final Table table = find(Table.class, prop.getFirstValue().toString(), node, null, roots);
                         for (final AstNode node1 : node) {
                             // Probably need to check for a simple column reference for Oracle
                             if (DerbyDdlLexicon.TYPE_INDEX_COLUMN_REFERENCE.equals(mixinType(node1))) try {
-                                index.getColumns().add(find(Column.class, node1, table));
+                                index.getColumns().add(find(Column.class, node1, table, roots));
                             } catch (final EntityNotFoundException error) {
                                 messages.add(error.getMessage());
                             }
@@ -149,7 +148,7 @@ public class DdlImporter {
             } else if (OracleDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)
                        || DerbyDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)
                        || MySqlDdlLexicon.TYPE_CREATE_PROCEDURE_STATEMENT.equals(mixinType)) try {
-                createProcedure(node);
+                createProcedure(node, roots);
             } catch (final EntityNotFoundException error) {
                 messages.add(error.getMessage());
             }
@@ -157,15 +156,18 @@ public class DdlImporter {
                      || DerbyDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)
                      || MySqlDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)
                      || PostgresDdlLexicon.TYPE_CREATE_FUNCTION_STATEMENT.equals(mixinType)) try {
-                createProcedure(node).setFunction(true);
+                createProcedure(node, roots).setFunction(true);
             } catch (final EntityNotFoundException error) {
                 messages.add(error.getMessage());
             }
             else if (StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT.equals(mixinType)) {
-                final BaseTable table = find(BaseTable.class, node, schema);
+                final BaseTable table = find(BaseTable.class, node, schema, roots);
                 for (final AstNode node1 : node) {
                     mixinType = mixinType(node1);
-                    if (StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION.equals(mixinType)) createKey(node1, table, messages);
+                    if (StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION.equals(mixinType)) createKey(node1,
+                                                                                                             table,
+                                                                                                             roots,
+                                                                                                             messages);
                     else if (StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION.equals(mixinType)) createColumn(node1, table);
                 }
             }
@@ -196,6 +198,7 @@ public class DdlImporter {
 
     private void createKey( final AstNode node,
                             final BaseTable table,
+                            final List<EObject> roots,
                             final List<String> messages ) throws CoreException {
         final String type = node.getProperty(StandardDdlLexicon.CONSTRAINT_TYPE).getFirstValue().toString();
         if (DdlConstants.PRIMARY_KEY.equals(type)) {
@@ -204,7 +207,7 @@ public class DdlImporter {
             initialize(key, node);
             for (final AstNode node1 : node) {
                 if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType(node1))) try {
-                    key.getColumns().add(find(Column.class, node1, table));
+                    key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
@@ -218,18 +221,18 @@ public class DdlImporter {
             for (final AstNode node1 : node) {
                 final Name mixinType = mixinType(node1);
                 if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType)) try {
-                    key.getColumns().add(find(Column.class, node1, table));
+                    key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
                 else if (StandardDdlLexicon.TYPE_TABLE_REFERENCE.equals(mixinType)) try {
-                    foreignTable = find(BaseTable.class, node1, null);
+                    foreignTable = find(BaseTable.class, node1, null, roots);
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
                 else if (StandardDdlLexicon.TYPE_FK_COLUMN_REFERENCE.equals(mixinType)) {
                     if (foreignTable != null) try {
-                        foreignColumns.add(find(Column.class, node1, foreignTable));
+                        foreignColumns.add(find(Column.class, node1, foreignTable, roots));
                     } catch (final EntityNotFoundException error) {
                         messages.add(error.getMessage());
                     }
@@ -254,7 +257,7 @@ public class DdlImporter {
             initialize(key, node);
             for (final AstNode node1 : node) {
                 if (StandardDdlLexicon.TYPE_COLUMN_REFERENCE.equals(mixinType(node1))) try {
-                    key.getColumns().add(find(Column.class, node1, table));
+                    key.getColumns().add(find(Column.class, node1, table, roots));
                 } catch (final EntityNotFoundException error) {
                     messages.add(error.getMessage());
                 }
@@ -262,10 +265,11 @@ public class DdlImporter {
         }
     }
 
-    private Procedure createProcedure( final AstNode node ) throws EntityNotFoundException, CoreException {
+    private Procedure createProcedure( final AstNode node,
+                                       final List<EObject> roots ) throws EntityNotFoundException, CoreException {
         final Procedure procedure = FACTORY.createProcedure();
-        final Info<Procedure> info = new Info<Procedure>(procedure, node);
-        if (info.schema == null) model.getEmfResource().getContents().add(procedure);
+        final Info<Procedure> info = new Info<Procedure>(procedure, node, roots);
+        if (info.schema == null) roots.add(procedure);
         else info.schema.getProcedures().add(procedure);
         initialize(procedure, node, info.name);
         if (node.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
@@ -314,20 +318,22 @@ public class DdlImporter {
 
     private <T extends RelationalEntity> T find( final Class<T> type,
                                                  final AstNode node,
-                                                 final RelationalEntity parent ) throws EntityNotFoundException, CoreException {
-        return find(type, node.getName().getLocalName(), node, parent);
+                                                 final RelationalEntity parent,
+                                                 final List<EObject> roots ) throws EntityNotFoundException, CoreException {
+        return find(type, node.getName().getLocalName(), node, parent, roots);
     }
 
     <T extends RelationalEntity> T find( final Class<T> type,
                                          final String name,
                                          AstNode node,
-                                         final RelationalEntity parent ) throws EntityNotFoundException, CoreException {
-        for (final EObject obj : parent == null ? model.getEmfResource().getContents() : parent.eContents()) {
+                                         final RelationalEntity parent,
+                                         final List<EObject> roots ) throws EntityNotFoundException, CoreException {
+        for (final EObject obj : parent == null ? roots : parent.eContents()) {
             if (type.isInstance(obj)) {
                 final T entity = (T)obj;
                 if (entity.getName().equals(name)) return entity;
             } else if (parent == null && obj instanceof Schema) try {
-                return find(type, name, node, (Schema)obj);
+                return find(type, name, node, (Schema)obj, roots);
             } catch (final EntityNotFoundException ignored) {
             }
         }
@@ -349,10 +355,25 @@ public class DdlImporter {
                                                       node.getProperty(StandardDdlLexicon.DDL_START_COLUMN_NUMBER).getFirstValue()));
     }
 
+    /**
+     * @return The difference report for the {@link #importDdl(List, IProgressMonitor, int) imported} model
+     */
+    public DifferenceReport getChangeReport() {
+        return chgProcessor == null ? null : chgProcessor.getDifferenceReport();
+    }
+
+    private void handleStatus( final IStatus status ) {
+        if (!status.isOK()) {
+            if (status.getException() != null) throw CoreModelerPlugin.toRuntimeException(status.getException());
+            throw new RuntimeException(status.getMessage());
+        }
+    }
+
     void importDdl( final FileReader reader,
                     final List<String> messages,
-                    final IProgressMonitor monitor ) throws IOException, CoreException {
-        monitor.beginTask(DdlImporterI18n.IMPORTING_DDL_MSG, 3);
+                    final IProgressMonitor monitor,
+                    final int totalWork ) throws IOException, CoreException {
+        final int workUnit = totalWork / 3;
         monitor.subTask(DdlImporterI18n.PARSING_DDL_MSG);
         final char[] buf = new char[FileUtils.DEFAULT_BUFFER_SIZE];
         final StringBuilder builder = new StringBuilder();
@@ -362,40 +383,43 @@ public class DdlImporter {
         final DdlParsers parsers = new DdlParsers();
         final AstNode rootNode = parsers.parse(builder.toString(), ddlFileName);
         if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(1);
+        monitor.worked(workUnit);
         monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
-        if (model != null) {
-            final Resource resource = model.getEmfResource();
-            ModelerCore.getModelEditor().delete(resource.getContents());
-            resource.delete(null);
-        }
-        model = ModelerCore.create(modelFile());
-        final ModelAnnotation modelAnnotation = model.getModelAnnotation();
-        modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-        modelAnnotation.setModelType(modelType);
+        // TODO: cleanup old model in case import called multiple times
+        model = ModelerCore.create(modelFile);
+        final TransientModelSelector endSelector = new TransientModelSelector(model.getEmfResource().getURI());
+        final DifferenceProcessorImpl processor = new DifferenceProcessorImpl(new ModelResourceSelector(model), endSelector);
+        processor.addEObjectMatcherFactories(ModelerComparePlugin.createEObjectMatcherFactories());
+        final List<EObject> roots = endSelector.getRootObjects();
         for (final AstNode node : rootNode) {
             final Name mixinType = mixinType(node);
             if (StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT.equals(mixinType)) {
                 final Schema schema = FACTORY.createSchema();
-                model.getEmfResource().getContents().add(schema);
+                roots.add(schema);
                 initialize(schema, node);
                 for (final AstNode node1 : node) {
-                    create(node1, mixinType(node1), schema, messages);
+                    create(node1, mixinType(node1), roots, schema, messages);
                 }
-            } else create(node, mixinType, null, messages);
+            } else create(node, mixinType, roots, null, messages);
         }
         if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(1);
-        if (!messages.isEmpty()) return;
-        saveInternal(monitor);
+        monitor.worked(workUnit);
+        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
+        handleStatus(processor.execute(monitor));
+        if (monitor.isCanceled()) throw new OperationCanceledException();
+        monitor.worked(workUnit);
+        chgProcessor = processor;
     }
 
     /**
      * @param messages
      * @param monitor
+     * @param totalWork
      */
     public void importDdl( final List<String> messages,
-                           final IProgressMonitor monitor ) {
+                           final IProgressMonitor monitor,
+                           final int totalWork ) {
+        if (chgProcessor != null) return;
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;
@@ -412,92 +436,7 @@ public class DdlImporter {
             @Override
             public void tryToDo() throws Exception {
                 reader = new FileReader(ddlFileName());
-                importDdl(reader, messages, monitor);
-            }
-        });
-    }
-
-    DifferenceReport importDdl2( final FileReader reader,
-                                 final List<String> messages,
-                                 final IProgressMonitor monitor,
-                                 final int totalWork ) throws IOException, CoreException {
-        final int workUnit = totalWork / 3;
-        monitor.subTask(DdlImporterI18n.PARSING_DDL_MSG);
-        final char[] buf = new char[FileUtils.DEFAULT_BUFFER_SIZE];
-        final StringBuilder builder = new StringBuilder();
-        for (int charTot = reader.read(buf); charTot >= 0; charTot = reader.read(buf))
-            builder.append(buf, 0, charTot);
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        final DdlParsers parsers = new DdlParsers();
-        final AstNode rootNode = parsers.parse(builder.toString(), ddlFileName);
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
-        // if (model != null) {
-        // final Resource resource = model.getEmfResource();
-        // ModelerCore.getModelEditor().delete(resource.getContents());
-        // resource.delete(null);
-        // }
-        final MtkXmiResourceImpl resource = new MtkXmiResourceImpl(URI.createURI(modelFile.getFullPath().toString()));
-        ModelerCore.getModelContainer().getResources().add(resource);
-        final DifferenceProcessorImpl processor = new DifferenceProcessorImpl(new EmfResourceSelector(resource),
-                                                                              new TransientModelSelector(resource.getURI()));
-        processor.addEObjectMatcherFactories(ModelerComparePlugin.createEObjectMatcherFactories());
-        // final ModelAnnotation modelAnnotation = resource.getModelAnnotation();
-        // modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-        // modelAnnotation.setModelType(modelType);
-        // final Resource resource = model.getEmfResource();
-        for (final AstNode node : rootNode) {
-            final Name mixinType = mixinType(node);
-            if (StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT.equals(mixinType)) {
-                final Schema schema = FACTORY.createSchema();
-                model.getEmfResource().getContents().add(schema);
-                initialize(schema, node);
-                for (final AstNode node1 : node) {
-                    create(node1, mixinType(node1), schema, messages);
-                }
-            } else create(node, mixinType, null, messages);
-        }
-        ModelBuildUtil.rebuildImports(resource, false);
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
-        final IStatus status = processor.execute(monitor);
-        if (!status.isOK()) {
-            if (status.getException() != null) throw CoreModelerPlugin.toRuntimeException(status.getException());
-            throw new RuntimeException(status.getMessage());
-        }
-        if (monitor.isCanceled()) throw new OperationCanceledException();
-        monitor.worked(workUnit);
-        return processor.getDifferenceReport();
-    }
-
-    /**
-     * @param messages
-     * @param monitor
-     * @param totalWork
-     * @return the change report for newly imported model
-     */
-    public DifferenceReport importDdl2( final List<String> messages,
-                                        final IProgressMonitor monitor,
-                                        final int totalWork ) {
-        return OperationUtil.perform(new ReturningUnreliable<DifferenceReport>() {
-
-            private FileReader reader = null;
-
-            @Override
-            public void doIfFails() {
-            }
-
-            @Override
-            public void finallyDo() throws Exception {
-                if (reader != null) reader.close();
-            }
-
-            @Override
-            public DifferenceReport tryToDo() throws Exception {
-                reader = new FileReader(ddlFileName());
-                return importDdl2(reader, messages, monitor, totalWork);
+                importDdl(reader, messages, monitor, totalWork);
             }
         });
     }
@@ -519,9 +458,10 @@ public class DdlImporter {
     }
 
     private <T extends Table> T initializeTable( final T table,
-                                                 final AstNode node ) throws EntityNotFoundException, CoreException {
-        final Info<T> info = new Info<T>(table, node);
-        if (info.schema == null) model.getEmfResource().getContents().add(table);
+                                                 final AstNode node,
+                                                 final List<EObject> roots ) throws EntityNotFoundException, CoreException {
+        final Info<T> info = new Info<T>(table, node, roots);
+        if (info.schema == null) roots.add(table);
         else info.schema.getTables().add(table);
         initialize(table, node, info.name);
         return table;
@@ -569,24 +509,26 @@ public class DdlImporter {
 
     /**
      * @param monitor
+     * @param totalWork
      */
-    public void save( final IProgressMonitor monitor ) {
-        monitor.beginTask(DdlImporterI18n.IMPORTING_DDL_MSG, 1);
-        saveInternal(monitor);
-    }
-
-    /**
-     * @param monitor
-     */
-    void saveInternal( final IProgressMonitor monitor ) {
+    public void save( final IProgressMonitor monitor,
+                      final int totalWork ) {
         monitor.subTask(DdlImporterI18n.SAVING_MODEL_MSG);
         try {
+            if (!model.exists()) {
+                final ModelAnnotation modelAnnotation = model.getModelAnnotation();
+                modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+                modelAnnotation.setModelType(modelType);
+            }
+            final MergeProcessor mergeProcessor = ModelerComparePlugin.createMergeProcessor(chgProcessor,
+                                                                                            ModelerCore.getWorkspaceDatatypeManager().getAllDatatypes(),
+                                                                                            true);
+            handleStatus(mergeProcessor.execute(monitor));
             model.save(monitor, false);
-            ModelBuildUtil.rebuildImports(model.getEmfResource(), false);
         } catch (final Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
-        monitor.worked(1);
+        monitor.worked(totalWork);
         monitor.done();
     }
 
@@ -595,6 +537,7 @@ public class DdlImporter {
      */
     public void setDdlFileName( String ddlFileName ) {
         this.ddlFileName = null;
+        chgProcessor = null;
         if (ddlFileName == null) throw new EmptyArgumentException("ddlFileName"); //$NON-NLS-1$
         ddlFileName = ddlFileName.trim();
         if (ddlFileName.isEmpty()) throw new EmptyArgumentException("ddlFileName"); //$NON-NLS-1$
@@ -608,6 +551,7 @@ public class DdlImporter {
      */
     public void setModelFolder( final IContainer modelFolder ) {
         this.modelFolder = modelFolder;
+        chgProcessor = null;
     }
 
     /**
@@ -615,6 +559,7 @@ public class DdlImporter {
      */
     public void setModelFolder( String modelFolderName ) {
         modelFolder = null;
+        chgProcessor = null;
         if (modelFolderName == null) throw new EmptyArgumentException("modelFolderName"); //$NON-NLS-1$
         modelFolderName = modelFolderName.trim();
         final IPath modelFolderPath = Path.fromPortableString(modelFolderName).makeAbsolute();
@@ -649,8 +594,9 @@ public class DdlImporter {
      * @param modelName
      */
     public void setModelName( String modelName ) {
-        modelFile = null;
         this.modelName = null;
+        modelFile = null;
+        chgProcessor = null;
         if (modelName == null) throw new EmptyArgumentException("modelName"); //$NON-NLS-1$
         modelName = modelName.trim();
         if (modelName.isEmpty()) throw new EmptyArgumentException("modelName"); //$NON-NLS-1$
@@ -686,6 +632,7 @@ public class DdlImporter {
      */
     public void setModelType( final ModelType modelType ) {
         this.modelType = modelType;
+        chgProcessor = null;
     }
 
     /**
@@ -693,6 +640,7 @@ public class DdlImporter {
      */
     public void setOptToCreateModelEntitiesForUnsupportedDdl( final boolean optToCreateModelEntitiesForUnsupportedDdl ) {
         this.optToCreateModelEntitiesForUnsupportedDdl = optToCreateModelEntitiesForUnsupportedDdl;
+        chgProcessor = null;
     }
 
     /**
@@ -700,6 +648,14 @@ public class DdlImporter {
      */
     public void setOptToSetModelEntityDescription( final boolean optToSetModelEntityDescription ) {
         this.optToSetModelEntityDescription = optToSetModelEntityDescription;
+        chgProcessor = null;
+    }
+
+    /**
+     * 
+     */
+    public void undoImport() {
+        chgProcessor = null;
     }
 
     private class EntityNotFoundException extends Exception {
@@ -717,14 +673,15 @@ public class DdlImporter {
         final String name;
 
         Info( final T entity,
-              final AstNode node ) throws EntityNotFoundException, CoreException {
+              final AstNode node,
+              final List<EObject> roots ) throws EntityNotFoundException, CoreException {
             final String name = node.getName().getLocalName();
             final int ndx = name.indexOf('.');
             if (ndx < 0) {
                 schema = null;
                 this.name = name;
             } else {
-                schema = find(Schema.class, name.substring(0, ndx), node, null);
+                schema = find(Schema.class, name.substring(0, ndx), node, null, roots);
                 this.name = name.substring(ndx + 1);
             }
         }
