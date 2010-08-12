@@ -8,12 +8,20 @@
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
 import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
-import static org.teiid.designer.vdb.Vdb.Event.*;
+import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
+import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -22,6 +30,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -32,9 +44,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,21 +67,32 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
+import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.roles.ui.NewDataRoleWizard;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
+
+import com.metamatrix.metamodels.core.ModelAnnotation;
+import com.metamatrix.metamodels.relational.RelationalPackage;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.core.ModelEditorImpl;
+import com.metamatrix.modeler.internal.core.container.ContainerImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
+import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -87,9 +113,11 @@ public final class VdbEditor extends EditorPart {
     private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
     private static final String MODELS_GROUP = i18n("modelsGroup"); //$NON-NLS-1$
     private static final String OTHER_FILES_GROUP = i18n("otherFilesGroup"); //$NON-NLS-1$
+    private static final String DATA_POLICY_GROUP = i18n("dataPolicyGroup"); //$NON-NLS-1$
 
     static final String MODEL_COLUMN_NAME = i18n("modelColumnName"); //$NON-NLS-1$
     static final String FILE_COLUMN_NAME = i18n("fileColumnName"); //$NON-NLS-1$
+    static final String DATA_POLICY_COLUMN_NAME = i18n("dataPolicyName"); //$NON-NLS-1$
     static final String PATH_COLUMN_NAME = i18n("pathColumnName"); //$NON-NLS-1$
     static final String SYNCHRONIZED_COLUMN_NAME = i18n("synchronizedColumnName"); //$NON-NLS-1$
     static final String VISIBLE_COLUMN_NAME = i18n("visibleColumnName"); //$NON-NLS-1$;
@@ -115,7 +143,9 @@ public final class VdbEditor extends EditorPart {
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
 
-    private static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
+    static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
+    static final String COPY_SUFFIX = i18n("cloneDataRoleAction.copySuffix"); //$NON-NLS-1$
+    static final String CLONE_DATA_ROLE_LABEL = i18n("cloneDataRoleActionlabel"); //$NON-NLS-1$
 
     private static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
@@ -127,8 +157,13 @@ public final class VdbEditor extends EditorPart {
     TableAndButtonsGroup modelsGroup;
     @SuppressWarnings( "unchecked" )
     TableAndButtonsGroup otherFilesGroup;
+    @SuppressWarnings( "unchecked" )
+    TableAndButtonsGroup dataRolesGroup;
     private Button synchronizeAllButton;
     private PropertyChangeListener vdbListener;
+    
+    Action cloneDataRoleAction;
+    VdbDataRole selectedDataRole;
 
     /**
      * Method which adds models to the VDB.
@@ -168,10 +203,10 @@ public final class VdbEditor extends EditorPart {
         bar = scroller.getVerticalBar();
         if (bar != null) bar.setIncrement(height / 4);
 
-        final Composite pg = WidgetFactory.createPanel(scroller, SWT.NONE, GridData.FILL_BOTH, 1, 1);
+        final Composite pg = WidgetFactory.createPanel(scroller, SWT.NONE, GridData.FILL_BOTH, 1, 2);
         scroller.setContent(pg);
 
-        final Group group = WidgetFactory.createGroup(pg, DESCRIPTION_GROUP, GridData.FILL_HORIZONTAL);
+        final Group group = WidgetFactory.createGroup(pg, DESCRIPTION_GROUP, GridData.FILL_HORIZONTAL, 2);
         this.textEditor = new StyledTextEditor(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.horizontalSpan = 1;
@@ -255,7 +290,7 @@ public final class VdbEditor extends EditorPart {
                 element.setDescription(value);
             }
         };
-        modelsGroup = new TableAndButtonsGroup(pg, MODELS_GROUP, new DefaultTableProvider<VdbModelEntry>() {
+        modelsGroup = new TableAndButtonsGroup(pg, MODELS_GROUP, 2, new DefaultTableProvider<VdbModelEntry>() {
 
             @Override
             public void doubleClicked( final VdbModelEntry element ) {
@@ -479,11 +514,11 @@ public final class VdbEditor extends EditorPart {
                     if (action instanceof IAction) menuManager.add((IAction)action);
                 }
             }
-        });
+        }); 
         modelsGroup.setInput(vdb);
 
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
-        otherFilesGroup = new TableAndButtonsGroup(pg, OTHER_FILES_GROUP, new DefaultTableProvider<VdbEntry>() {
+        otherFilesGroup = new TableAndButtonsGroup(pg, OTHER_FILES_GROUP, 1, new DefaultTableProvider<VdbEntry>() {
 
             @Override
             public VdbEntry[] getElements() {
@@ -538,6 +573,220 @@ public final class VdbEditor extends EditorPart {
         });
         otherFilesGroup.add(removeButtonProvider);
         otherFilesGroup.setInput(vdb);
+        
+        // ======================= DATA POLICIES GROUP START ================================
+        dataRolesGroup = new TableAndButtonsGroup(pg, DATA_POLICY_GROUP, 1, new DefaultTableProvider<VdbDataRole>() {
+
+            @Override
+            public VdbDataRole[] getElements() {
+                final Set<VdbDataRole> entries = vdb.getDataPolicyEntries();
+                return entries.toArray(new VdbDataRole[entries.size()]);
+            }
+        }, new TextColumnProvider<VdbDataRole>() {
+
+            @Override
+            public Image getImage( final VdbDataRole element ) {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return DATA_POLICY_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue( final VdbDataRole element ) {
+                return element.getName();
+            }
+        }, new TextColumnProvider<VdbDataRole>() {
+
+            @Override
+            public String getName() {
+                return DESCRIPTION_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue( final VdbDataRole element ) {
+                return element.getDescription();
+            }
+
+            @Override
+            public boolean isEditable( final VdbDataRole element ) {
+                return true;
+            }
+
+            @Override
+            public void setValue( final VdbDataRole element,
+                                  final String value ) {
+                element.setDescription(value);
+            }
+        });
+        
+        dataRolesGroup.add(dataRolesGroup.new NewButtonProvider() {
+
+            @Override
+            public void selected(IStructuredSelection selection) {
+                Collection<Resource> emfResources = new ArrayList<Resource>();
+                ContainerImpl tempContainer = null;
+                try {
+					Collection<File> modelFiles = vdb.getModelFiles();
+					tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
+					ModelEditorImpl.setContainer(tempContainer);
+					for( File modelFile : modelFiles ) {
+						Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
+						if( ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
+							EObject firstEObj = r.getContents().get(0);
+							ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+							String mmURI = ma.getPrimaryMetamodelUri();
+							if( RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+								emfResources.add(r);
+							} else {
+								tempContainer.getResources().remove(r);
+							}
+						} else {
+							tempContainer.getResources().remove(r);
+						}
+					}
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					ModelEditorImpl.setContainer(null);
+				}
+                
+                
+                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
+                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, emfResources, null);
+                
+                wizard.init(iww.getWorkbench(), new StructuredSelection(vdb.getModelEntries()));
+                final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
+                final int rc = dialog.open();
+                if( rc == Window.OK ) {
+                	// Get the Data Policy
+                	DataRole dp = wizard.getDataRole();
+                	if( dp != null ) {
+                		vdb.addDataPolicy(dp, new NullProgressMonitor());
+                	}
+                	
+                }
+                //MessageDialog.openInformation(pg.getShell(), "New Data Policy launched", "Not yet fully implemented");
+            }
+        });
+        dataRolesGroup.add(dataRolesGroup.new EditButtonProvider() {
+
+            @Override
+            public void selected(IStructuredSelection selection) {
+            	VdbDataRole policy = (VdbDataRole)selection.getFirstElement();
+            	if( policy == null ) {
+            		return;
+            	}
+                Collection<Resource> emfResources = new ArrayList<Resource>();
+                ContainerImpl tempContainer = null;
+                try {
+					Collection<File> modelFiles = vdb.getModelFiles();
+					tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
+					ModelEditorImpl.setContainer(tempContainer);
+					for( File modelFile : modelFiles ) {
+						Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
+						if( ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
+							EObject firstEObj = r.getContents().get(0);
+							ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+							String mmURI = ma.getPrimaryMetamodelUri();
+							if( RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+								emfResources.add(r);
+							} else {
+								tempContainer.getResources().remove(r);
+							}
+						} else {
+							tempContainer.getResources().remove(r);
+						}
+					}
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					ModelEditorImpl.setContainer(null);
+				}
+				
+				
+				DataRole dataPolicy = 
+					new DataRole(policy.getName(), 
+							policy.getDescription(), 
+							policy.getMappedRoleNames(), policy.getPermissions());
+
+				
+                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
+                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, emfResources, dataPolicy);
+                
+                wizard.init(iww.getWorkbench(), new StructuredSelection(vdb.getModelEntries()));
+                final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
+                final int rc = dialog.open();
+                if( rc == Window.OK ) {
+                	// Get the Data Policy
+                	DataRole dp = wizard.getDataRole();
+                	if( dp != null ) {
+                		vdb.removeDataPolicy(policy);
+                		vdb.addDataPolicy(dp, new NullProgressMonitor());
+                	}
+                	
+                }
+            }
+        });
+        dataRolesGroup.add(dataRolesGroup.new RemoveButtonProvider() {
+
+            @Override
+            public void selected(IStructuredSelection selection) {
+                
+                for (final Object element : selection.toList()) {
+                    if( element instanceof VdbDataRole ) {
+                    	vdb.removeDataPolicy((VdbDataRole)element);
+                    }
+
+                }
+            }
+        });
+        dataRolesGroup.setInput(vdb);
+        
+        this.cloneDataRoleAction = new Action(CLONE_DATA_ROLE_LABEL) {
+        	
+            @Override
+            public void run() {
+            	
+            	if( selectedDataRole != null ) {
+            		DataRole newDR = new DataRole(
+            				selectedDataRole.getName() + COPY_SUFFIX, 
+            				selectedDataRole.getDescription(),
+            				selectedDataRole.getMappedRoleNames(),
+            				selectedDataRole.getPermissions());
+            		vdb.addDataPolicy(newDR, new NullProgressMonitor());
+            	}
+
+            }
+        };
+
+        this.cloneDataRoleAction.setEnabled(true);
+        
+        // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
+        // retrieved via the SourceHandler extension point and interface.
+        // This allows changing Translator and JNDI names via existing deployed objects on Teiid Servers that are
+        // connected in the user's workspace.
+        final TableViewer dataRolesViewer = dataRolesGroup.getTable().getViewer();
+        final MenuManager dataRolesMenuManager = new MenuManager();
+        dataRolesViewer.getControl().setMenu(dataRolesMenuManager.createContextMenu(pg));
+        dataRolesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged( final SelectionChangedEvent event ) {
+            	dataRolesMenuManager.removeAll();
+                IStructuredSelection sel = (IStructuredSelection)dataRolesViewer.getSelection();
+                if( sel.size() == 1 ) {
+                	selectedDataRole = (VdbDataRole)sel.getFirstElement();
+                	dataRolesMenuManager.add(cloneDataRoleAction);
+                }
+                
+            }
+        }); 
+        
+        // ======================= DATA POLICIES GROUP END ================================
+        
         synchronizeAllButton = WidgetFactory.createButton(pg, SYNCHRONIZE_ALL_BUTTON, GridData.HORIZONTAL_ALIGN_CENTER);
         synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
 
@@ -680,7 +929,20 @@ public final class VdbEditor extends EditorPart {
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
         }
-        synchronizeAllButton.setEnabled(vdb.isModified());
+        boolean syncChanged = false;
+        for(VdbEntry entry : vdb.getEntries() ) {
+        	if( entry.getSynchronization() == Synchronization.NotSynchronized ) {
+        		syncChanged = true;
+        		break;
+        	}
+        }
+        for(VdbEntry entry : vdb.getModelEntries() ) {
+        	if( entry.getSynchronization() == Synchronization.NotSynchronized ) {
+        		syncChanged = true;
+        		break;
+        	}
+        }
+        synchronizeAllButton.setEnabled(syncChanged);
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 

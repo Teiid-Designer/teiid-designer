@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Designer Roles UI Plug-in
+Bundle-SymbolicName: org.teiid.designer.roles.ui
+Bundle-Version: 7.0.0.qualifier
+Bundle-Activator: org.teiid.designer.roles.ui.RolesUiPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.teiid.designer.ui.common,
+ org.teiid.core.designer,
+ org.teiid.designer.core,
+ teiid_embedded_query,
+ org.teiid.designer.roles,
+ org.teiid.designer.ui,
+ org.eclipse.emf.ecore,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.teiid.designer.metamodels.core,
+ org.eclipse.text,
+ org.eclipse.jface.text,
+ org.teiid.designer.metamodels.relational,
+ org.teiid.designer.transformation
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Red Hat, Inc.
+Export-Package: org.teiid.designer.roles.ui

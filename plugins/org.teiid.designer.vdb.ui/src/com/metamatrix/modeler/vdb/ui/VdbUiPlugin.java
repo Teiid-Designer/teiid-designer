@@ -11,14 +11,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+
+import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
+import com.metamatrix.ui.AbstractUiPlugin;
+import com.metamatrix.ui.actions.ActionService;
 
 /**
  * @since 4.2
  */
-public class VdbUiPlugin extends AbstractUIPlugin implements VdbUiConstants {
+public class VdbUiPlugin extends AbstractUiPlugin implements VdbUiConstants {
 
     /**
      * The singleton instance of this plug-in
@@ -66,4 +70,21 @@ public class VdbUiPlugin extends AbstractUIPlugin implements VdbUiConstants {
         super.stop(context);
         singleton = null;
     }
+
+
+	/**
+	 * @see com.metamatrix.ui.AbstractUiPlugin#createActionService(org.eclipse.ui.IWorkbenchPage)
+	 */
+	@Override
+	protected ActionService createActionService(IWorkbenchPage page) {
+		return null;
+	}
+
+	/**
+	 * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()
+	 */
+	@Override
+	public PluginUtil getPluginUtil() {
+		return Util;
+	}
 }
