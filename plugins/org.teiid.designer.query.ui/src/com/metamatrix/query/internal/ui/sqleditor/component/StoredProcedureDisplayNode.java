@@ -49,7 +49,9 @@ public class StoredProcedureDisplayNode extends DisplayNode {
     private void createDisplayNodeList() {
         displayNodeList = new ArrayList();
         StoredProcedure storedProc = (StoredProcedure)(this.getLanguageObject());
-
+        if (storedProc.getCacheHint() != null) {
+        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,storedProc.getCacheHint().toString()));
+        }
         // position of the child in childNodeList
         // int childIndex = 0;
 

@@ -53,6 +53,7 @@ import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.HasCriteria;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.proc.TranslateCriteria;
 import org.teiid.query.sql.proc.WhileStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
@@ -286,6 +287,9 @@ public class DisplayNodeFactory {
             return node;
         } else if(obj instanceof AssignmentStatement) {
             AssignmentStatementDisplayNode node = new AssignmentStatementDisplayNode( parentNode, (AssignmentStatement)obj );
+            return node;
+        } else if(obj instanceof RaiseErrorStatement) {
+            RaiseErrorDisplayNode node = new RaiseErrorDisplayNode( parentNode, (RaiseErrorStatement)obj );
             return node;
         } else if(obj instanceof Block) {
             BlockDisplayNode node = new BlockDisplayNode( parentNode, (Block)obj );

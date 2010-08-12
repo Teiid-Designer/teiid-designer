@@ -38,7 +38,7 @@ public interface DisplayNodeConstants {
     public static final String SELECT_STR = "SELECT"; //$NON-NLS-1$
     public static final String FROM_STR = "FROM"; //$NON-NLS-1$
     public static final String WHERE_STR = "WHERE"; //$NON-NLS-1$
-    public static final String OPTIONAL_COMMENTS = "/* optional */"; //$NON-NLS-1$
+    public static final String OPTIONAL_COMMENTS = "/*+ optional */"; //$NON-NLS-1$
     public static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
     public static final String EXEC = "EXEC"; //$NON-NLS-1$
     public static final String NAME = "NAME"; //$NON-NLS-1$

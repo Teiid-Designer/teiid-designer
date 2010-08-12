@@ -157,6 +157,9 @@ public class QueryDisplayNode extends DisplayNode {
         //----------------------------------------------------
         // Add clauses to childNodeList
         //----------------------------------------------------
+        if (query.getCacheHint() != null) {
+        	childNodeList.add(DisplayNodeFactory.createDisplayNode(this,query.getCacheHint().toString()));
+        }
         Select select = query.getSelect();
         if(select!=null) {
             childNodeList.add(DisplayNodeFactory.createDisplayNode(this,select));

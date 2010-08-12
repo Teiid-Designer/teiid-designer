@@ -204,7 +204,7 @@ public class WebServiceUtil {
     }
 
     public static Function getXpathFunction(AssignmentStatement statement) {
-        if (statement.hasExpression()) {
+        if (statement.getExpression() != null) {
             Expression expr = statement.getExpression();
             if (expr instanceof Function) {
                 Function function = (Function)expr;

@@ -14,6 +14,7 @@ import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>FunctionDisplayNode</code> class is used to represent a Function.
@@ -67,7 +68,11 @@ public class FunctionDisplayNode extends ExpressionDisplayNode {
 	 	               (name.equalsIgnoreCase(SQLConstants.Reserved.CAST) || name.equalsIgnoreCase(SQLConstants.Reserved.CONVERT))) ||
 	            		(i==0 && 
 	               (name.equalsIgnoreCase(SQLConstants.Reserved.XMLPI) || name.equalsIgnoreCase(SQLConstants.NonReserved.TIMESTAMPADD)||name.equalsIgnoreCase(SQLConstants.NonReserved.TIMESTAMPDIFF))) ) {
-	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,((Constant)args[i]).getValue()));
+	            	String arg = (String)((Constant)args[i]).getValue();
+	            	if (name.equalsIgnoreCase(SQLConstants.Reserved.XMLPI)) {
+	            		arg = SQLStringVisitor.escapeSinglePart(arg);
+	            	}
+	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,arg));
 	            } else {
 	                childNodeList.add(DisplayNodeFactory.createDisplayNode(this,args[i]));
 	            }

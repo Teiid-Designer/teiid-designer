@@ -170,6 +170,11 @@ public class SetQueryDisplayNode extends DisplayNode {
     private void createDisplayNodeList() {
         SetQuery setQuery = (SetQuery)(this.getLanguageObject());
         displayNodeList = new ArrayList();
+        
+        if (setQuery.getCacheHint() != null) {
+        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,setQuery.getCacheHint().toString()));
+        }
+
         //int baseIndent = this.getIndentLevel();
 
         Iterator childIter = this.getChildren().iterator();
