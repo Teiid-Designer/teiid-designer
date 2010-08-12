@@ -35,6 +35,7 @@ public final class TableAndButtonsGroup<T> {
     static final String ADD_BUTTON = UiConstants.Util.getString("addButton"); //$NON-NLS-1$
     static final String EDIT_BUTTON = UiConstants.Util.getString("editButton"); //$NON-NLS-1$
     static final String REMOVE_BUTTON = UiConstants.Util.getString("removeButton"); //$NON-NLS-1$
+    static final String NEW_BUTTON = UiConstants.Util.getString("newButton"); //$NON-NLS-1$
 
     private final Group group;
 
@@ -51,13 +52,14 @@ public final class TableAndButtonsGroup<T> {
      */
     public <V> TableAndButtonsGroup( final Composite parent,
                                      final String title,
+                                     final int span,
                                      final TableProvider<T> tableProvider,
                                      final ColumnProvider<T, V>... columnProviders ) {
         // Create group surrounding table and buttons
         group = new Group(parent, SWT.NONE);
         group.setText(title);
         group.setLayout(new GridLayout(2, false));
-        group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, span, 1));
         // Create table
         table = new Table<T>(group, tableProvider, columnProviders);
         // Create button bar
@@ -225,6 +227,34 @@ public final class TableAndButtonsGroup<T> {
         @Override
         public boolean isEnabled( final IStructuredSelection selection ) {
             return !selection.isEmpty();
+        }
+    }
+    
+    /**
+     * 
+     */
+    public abstract class NewButtonProvider implements ButtonProvider {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @return {@value TableAndButtonsGroup#NEW_BUTTON}
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.ButtonProvider#getText()
+         */
+        @Override
+        public final String getText() {
+            return NEW_BUTTON;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @return <code>true</code> if the supplied selection is not empty
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+         */
+        @Override
+        public boolean isEnabled( final IStructuredSelection selection ) {
+            return true;
         }
     }
 }

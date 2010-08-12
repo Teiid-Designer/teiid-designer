@@ -497,7 +497,9 @@ public class ListPanel extends AbstractVerticalButtonPanel implements CoreString
      */
     void addButtonSelected() {
         final Object[] items = this.ctrlr.addButtonSelected();
-        addItems(items);
+        if( items != null ) {
+        	addItems(items);
+        }
     }
 
     /**
