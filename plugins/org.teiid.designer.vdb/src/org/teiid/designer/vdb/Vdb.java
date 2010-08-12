@@ -12,6 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -24,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -31,19 +33,25 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
@@ -68,6 +76,7 @@ public final class Vdb {
     private final File folder;
     final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
+    final CopyOnWriteArraySet<VdbDataRole> dataPolicyEntries = new CopyOnWriteArraySet<VdbDataRole>();
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
     final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
@@ -136,6 +145,9 @@ public final class Vdb {
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries)
                             entry.initializeImports();
+                        for (final DataRoleElement element : manifest.getDataPolicies()) {
+                        	dataPolicyEntries.add(new VdbDataRole(Vdb.this, element));
+                        }
                     } else FileUtils.copy(entryStream, new File(getFolder(), zipEntry.getName()));
                 }
                 modified.set(false);
@@ -144,7 +156,7 @@ public final class Vdb {
         this.preview = previewable[0];
         this.version = vdbVersion[0];
     }
-
+    
     /**
      * @param file
      * @param monitor
@@ -154,6 +166,22 @@ public final class Vdb {
         this(file, false, monitor);
     }
 
+
+    
+    /**
+     * @param dataPolicy
+     * @param monitor
+     * @return the new data policy
+     */
+    public final VdbDataRole addDataPolicy(
+    										final DataRole dataPolicy, 
+    										final IProgressMonitor monitor ) {
+    	VdbDataRole policy = new VdbDataRole(this, dataPolicy, monitor);
+    	dataPolicyEntries.add(policy);
+    	setModified(this, Event.DATA_POLICY_ADDED, policy, null);
+    	return policy;
+    }
+    
     /**
      * @param listener
      */
@@ -209,6 +237,13 @@ public final class Vdb {
     }
 
     /**
+     * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
+     */
+    public final Set<VdbDataRole> getDataPolicyEntries() {
+        return Collections.unmodifiableSet(dataPolicyEntries);
+    }
+    
+    /**
      * @return description
      */
     public final String getDescription() {
@@ -251,6 +286,24 @@ public final class Vdb {
             if (!entry.isBuiltIn()) entries.add(entry);
         return Collections.unmodifiableSet(entries);
     }
+    
+    /**
+     * Method to return the File objects associated with each model in this VDB.
+     * The intention is to allow the Data Policy wizard to display contents of these models in EMF form so users can 
+     * pick/chose and set-up their data entitlements.
+     * 
+     * @return the immutable list of model files within this VDB
+     */
+    public final Collection<File> getModelFiles() {
+    	final Collection<File> modelFiles = new ArrayList<File>();
+    	
+    	for( VdbModelEntry modelEntry : getModelEntries()) {
+    		IPath modelPath = new Path(folder.getAbsolutePath() + modelEntry.getName());
+    		modelFiles.add(modelPath.toFile());
+    	}
+    	
+    	return Collections.unmodifiableCollection(modelFiles);
+    }
 
     /**
      * @return the name of this VDB
@@ -260,32 +313,32 @@ public final class Vdb {
     }
 
     /**
+     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
+     */
+    public final boolean isModified() {
+        return modified.get();
+    }
+    
+    /**
+     * @return <code>true</code> if this is a Preview VDB
+     */
+    public final boolean isPreview() {
+        return preview;
+    }
+    
+    /**
      * @return the problem markers (never <code>null</code>)
      * @throws Exception if there is a problem obtaining the problem markers
      */
     public IMarker[] getProblems() throws Exception {
         return file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
     }
-
+    
     /**
      * @return the VDB version
      */
     public int getVersion() {
         return version;
-    }
-
-    /**
-     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
-     */
-    public final boolean isModified() {
-        return modified.get();
-    }
-
-    /**
-     * @return <code>true</code> if this is a Preview VDB
-     */
-    public final boolean isPreview() {
-        return preview;
     }
 
     /**
@@ -326,6 +379,14 @@ public final class Vdb {
         if (entry instanceof VdbModelEntry) modelEntries.remove(entry);
         else entries.remove(entry);
         setModified(this, Event.ENTRY_REMOVED, entry, null);
+    }
+    
+    /**
+     * @param policy
+     */
+    public final void removeDataPolicy( final VdbDataRole policy ) {
+        dataPolicyEntries.remove(policy);
+        setModified(this, Event.DATA_POLICY_REMOVED, policy, null);
     }
 
     /**
@@ -374,11 +435,16 @@ public final class Vdb {
                 // Clear all problem markers on VDB file
                 for (final IMarker marker : file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
                     marker.delete();
+                
                 // Save entries
                 for (final VdbEntry entry : entries)
-                    entry.save(out, monitor);
+                	if( entry instanceof VdbEntry ) {
+                		((VdbEntry)entry).save(out, monitor);
+                	}
+                
                 for (final VdbModelEntry entry : modelEntries)
                     entry.save(out, monitor);
+                
                 // Close zip output stream so its fully writen and any locks are removed.
                 out.close();
                 out = null;
@@ -495,6 +561,20 @@ public final class Vdb {
          * physical model entry's {@link VdbModelEntry#getJndiName() JNDI name} changes
          */
         public static final String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
+    
+	    /**
+	     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an data policy is
+	     * added to a VDB
+	     * 
+	     * @see #addDataPolicy(DataRole, IProgressMonitor)
+	     */
+	    public static final String DATA_POLICY_ADDED = "dataPolicyAdded"; //$NON-NLS-1$
+	
+	    /**
+	     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
+	     * {@link #removeDataPolicy(VdbDataRole) entry is removed} from a VDB
+	     */
+	    public static final String DATA_POLICY_REMOVED = "dataPolicyRemoved"; //$NON-NLS-1$
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is

@@ -16,7 +16,8 @@ Require-Bundle: teiid_embedded_query,
  org.eclipse.core.runtime,
  org.eclipse.xsd,
  net.jcip.annotations,
- org.teiid.designer.datatools
+ org.teiid.designer.datatools,
+ org.teiid.designer.roles
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.teiid.designer.vdb,
