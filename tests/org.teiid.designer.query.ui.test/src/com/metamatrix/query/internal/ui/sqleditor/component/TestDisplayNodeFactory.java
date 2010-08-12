@@ -334,7 +334,7 @@ public class TestDisplayNodeFactory extends TestCase {
                                              new UnaryFromClause(new GroupSymbol("m.g3")), //$NON-NLS-1$
                                              JoinType.JOIN_CROSS);
         jp.setOptional(true);
-        helpTest(jp, "/* optional */ (m.g2 CROSS JOIN m.g3)"); //$NON-NLS-1$
+        helpTest(jp, "/*+ optional */ (m.g2 CROSS JOIN m.g3)"); //$NON-NLS-1$
     }
 
     public void testJoinPredicate2() {
@@ -858,7 +858,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
         SubqueryFromClause sfc = new SubqueryFromClause("temp", q1); //$NON-NLS-1$
         sfc.setOptional(true);
-        helpTest(sfc, "/* optional */ (SELECT e1 FROM m.g1) AS temp"); //$NON-NLS-1$
+        helpTest(sfc, "/*+ optional */ (SELECT e1 FROM m.g1) AS temp"); //$NON-NLS-1$
     }
 
     public void testSubquerySetCriteria1() {
@@ -899,7 +899,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testOptionalUnaryFromClause() {
         UnaryFromClause unaryFromClause = new UnaryFromClause(new GroupSymbol("m.g1"));//$NON-NLS-1$
         unaryFromClause.setOptional(true);
-        helpTest(unaryFromClause, "/* optional */ m.g1"); //$NON-NLS-1$ 
+        helpTest(unaryFromClause, "/*+ optional */ m.g1"); //$NON-NLS-1$ 
     }
 
     public void testUpdate1() {
@@ -1061,7 +1061,7 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testElementSymbol5() {
         ElementSymbol es = new ElementSymbol("m.g.select", false); //$NON-NLS-1$
         es.setGroupSymbol(new GroupSymbol("m.g")); //$NON-NLS-1$
-        helpTest(es, "m.g.\"select\""); //$NON-NLS-1$
+        helpTest(es, "\"select\""); //$NON-NLS-1$
     }
 
     public void testExpressionSymbol1() {
@@ -1650,24 +1650,6 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(scc, "e2 <= SOME (SELECT e1 FROM m.g1)"); //$NON-NLS-1$
     }
 
-    public void testSubqueryCompareCriteria3() {
-
-        Select s1 = new Select();
-        s1.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
-        From f1 = new From();
-        f1.addGroup(new GroupSymbol("m.g1")); //$NON-NLS-1$
-        Query q1 = new Query();
-        q1.setSelect(s1);
-        q1.setFrom(f1);
-
-        ElementSymbol expr = new ElementSymbol("e2"); //$NON-NLS-1$
-
-        SubqueryCompareCriteria scc = new SubqueryCompareCriteria(expr, q1, AbstractCompareCriteria.GE,
-                                                                  SubqueryCompareCriteria.NO_QUANTIFIER);
-
-        helpTest(scc, "e2 >= (SELECT e1 FROM m.g1)"); //$NON-NLS-1$
-    }
-
     public void testExistsCriteria1() {
 
         Select s1 = new Select();
@@ -1862,6 +1844,11 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(ex, "xmlpi(NAME foo, 'bar')"); //$NON-NLS-1$
     }
     
+    public void testXMLPi1() throws Exception {
+        Expression ex = QueryParser.getQueryParser().parseExpression("xmlpi(name \"table\", 'bar')"); //$NON-NLS-1$
+        helpTest(ex, "xmlpi(NAME \"table\", 'bar')"); //$NON-NLS-1$
+    }
+    
     public void testTimestampAdd() throws Exception {
         Expression ex = QueryParser.getQueryParser().parseExpression("timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
         helpTest(ex, "timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
@@ -1875,6 +1862,11 @@ public class TestDisplayNodeFactory extends TestCase {
     public void testXMLElement() throws Exception {
         LanguageObject ex = QueryParser.getQueryParser().parseExpression("xmlelement(name y, xmlattributes('x' as foo), q)"); //$NON-NLS-1$
         helpTest(ex, "XMLELEMENT(NAME y, XMLATTRIBUTES('x' AS foo), q)"); //$NON-NLS-1$
+    }
+    
+    public void testCacheHint() throws Exception {
+        LanguageObject ex = QueryParser.getQueryParser().parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
+        helpTest(ex, "/*+ cache(pref_mem) */  \nSELECT \n\t\t* \nFROM \n\t\tdb.g2"); //$NON-NLS-1$
     }
     
     // ################################## TEST SUITE ################################
