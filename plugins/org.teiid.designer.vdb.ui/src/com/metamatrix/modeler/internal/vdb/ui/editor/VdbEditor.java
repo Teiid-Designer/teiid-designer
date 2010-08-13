@@ -145,7 +145,7 @@ public final class VdbEditor extends EditorPart {
 
     static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
     static final String COPY_SUFFIX = i18n("cloneDataRoleAction.copySuffix"); //$NON-NLS-1$
-    static final String CLONE_DATA_ROLE_LABEL = i18n("cloneDataRoleActionlabel"); //$NON-NLS-1$
+    static final String CLONE_DATA_ROLE_LABEL = i18n("cloneDataRoleActionLabel"); //$NON-NLS-1$
 
     private static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
@@ -759,6 +759,7 @@ public final class VdbEditor extends EditorPart {
             				selectedDataRole.getMappedRoleNames(),
             				selectedDataRole.getPermissions());
             		vdb.addDataPolicy(newDR, new NullProgressMonitor());
+            		dataRolesGroup.getTable().getViewer().refresh();
             	}
 
             }

@@ -89,7 +89,9 @@ public class DataRole {
 		
 		if( permissions != null ) {
 			for( Permission next : permissions ) {
-				this.permissionsMap.put(next.getTargetName(), next);
+				// Need to create new instance of this permission
+				Permission perm = new Permission(next);
+				this.permissionsMap.put(perm.getTargetName(), perm);
 			}
 		}
 	}

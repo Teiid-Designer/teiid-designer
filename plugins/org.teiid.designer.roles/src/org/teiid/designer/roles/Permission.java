@@ -28,6 +28,11 @@ public class Permission {
 		this.targetName = targetName;
 	}
 	
+	public Permission(Permission permission) {
+		super();
+		this.targetName = permission.getTargetName();
+		this.crud = permission.getCRUD();
+	}
 	
 	public Permission(String targetName, Boolean createAllowed, Boolean readAllowed, Boolean updateAllowed, Boolean deleteAllowed ) {
 		super();

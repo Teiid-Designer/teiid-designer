@@ -61,6 +61,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(NewDataRoleWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
+    private static final String EDIT_TITLE = getString("editTitle"); //$NON-NLS-1$
 
     private static final ImageDescriptor IMAGE = RolesUiPlugin.getInstance().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
     
@@ -104,6 +105,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     	} else {
     		this.dataRole = existingDataRole;
     		this.isEdit = true;
+    		this.setWindowTitle(EDIT_TITLE);
     	}
         this.mappedRoleNames = new HashSet<String>(dataRole.getRoleNames());
         this.permissionsMap = new HashMap<Object, Permission>();
@@ -125,6 +127,7 @@ public class NewDataRoleWizard extends AbstractWizard {
         this.wizardPage.setPageComplete(false);
         if( isEdit ) {
         	this.wizardPage.setMessage(getString("initialEditMessage")); //$NON-NLS-1$
+        	this.wizardPage.setTitle(EDIT_TITLE);
         } else {
         	this.wizardPage.setMessage(getString("initialCreateMessage")); //$NON-NLS-1$
         }
