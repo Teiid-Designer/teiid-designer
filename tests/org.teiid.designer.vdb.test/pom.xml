@@ -9,7 +9,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.designer.vdb.test</artifactId> 
-	<version>7.0.0-SNAPSHOT</version>
+	<version>7.1.0-SNAPSHOT</version>
 	<!-- switch to plugin instead of test until we have runnable code here <packaging>eclipse-test-plugin</packaging> -->
         <packaging>eclipse-plugin</packaging>
 </project>
