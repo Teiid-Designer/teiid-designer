@@ -32,6 +32,9 @@ public final class Messages extends NLS {
     public static String DeployPreviewVdbJobError;
     public static String DeployPreviewVdbJobSuccessfullyCompleted;
     public static String JobCanceled;
+    public static String JobFinished;
+    public static String JobShouldRun;
+    public static String JobStarted;
     public static String LessThanAMinuteDurationJob;
     public static String LessThanAnHourDurationJob;
     public static String LessThanASecondDurationJob;
@@ -49,8 +52,6 @@ public final class Messages extends NLS {
     public static String ModelTranslatorCannotBeSetError;
     public static String PreviewSetupConnectionInfoTask;
     public static String PreviewSetupDeployTask;
-    public static String PreviewSetupJob;
-    public static String PreviewSetupJobError;
     public static String PreviewSetupMergeTask;
     public static String PreviewSetupRefreshWorkspaceTask;
     public static String PreviewSetupTask;

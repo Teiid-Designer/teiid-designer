@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -45,26 +46,26 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
     private IFile pvdbFile;
 
     /**
-     * @param project the project whose Preview VDB is being created (may not be <code>null</code>)
-     * @throws Exception if unable to construct the Preview VDB
-     */
-    public CreatePreviewVdbJob( IProject project,
-                                PreviewContext context ) throws Exception {
-        super(Messages.bind(Messages.CreatePreviewVdbJob, project.getFullPath()), context);
-        this.project = project;
-        this.model = null;
-    }
-
-    /**
      * @param model the model whose Preview VDB is being created (may not be <code>null</code>)
      * @throws Exception if unable to construct the Preview VDB
      */
     public CreatePreviewVdbJob( IFile model,
                                 PreviewContext context ) throws Exception {
-        super(Messages.bind(Messages.CreatePreviewVdbJob, model.getFullPath()), context);
+        super(NLS.bind(Messages.CreatePreviewVdbJob, model.getFullPath()), context);
         assert PreviewManager.isPreviewable(model) : "model is not previewable" + model.getFullPath(); //$NON-NLS-1$
         this.model = model;
         this.project = null;
+    }
+
+    /**
+     * @param project the project whose Preview VDB is being created (may not be <code>null</code>)
+     * @throws Exception if unable to construct the Preview VDB
+     */
+    public CreatePreviewVdbJob( IProject project,
+                                PreviewContext context ) throws Exception {
+        super(NLS.bind(Messages.CreatePreviewVdbJob, project.getFullPath()), context);
+        this.project = project;
+        this.model = null;
     }
 
     /**
@@ -85,7 +86,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         this.pvdbFile = getContext().getPreviewVdb(resource);
 
         // if the file was deleted from outside Eclipse, Eclipse will think it still exists
-        if (this.pvdbFile.exists() && !this.pvdbFile.getFullPath().toFile().exists()) {
+        if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
             this.pvdbFile.delete(true, monitor);
         }
 
@@ -102,20 +103,24 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
             // don't do if a project PVDB
             if (resource instanceof IFile) {
-                pvdb.addModelEntry(this.model.getFullPath(), monitor);
+                // don't add if already in the PVDB (only one model per PVDB)
+                if (pvdb.getModelEntries().isEmpty()) {
+                    pvdb.addModelEntry(this.model.getFullPath(), monitor);
+                }
             }
 
             // this will trigger an resource change event which will eventually get an update job to run
-            pvdb.save(monitor);
+            if (pvdb.isModified()) {
+                pvdb.save(monitor);
+            }
         } catch (Exception e) {
             IPath path = ((this.project == null) ? this.model.getFullPath() : this.project.getFullPath());
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.CreatePreviewVdbJobError, path),
-                                               e));
+            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.CreatePreviewVdbJobError, path), e));
         }
 
         // all good
-        return new Status(IStatus.OK, PLUGIN_ID, Messages.bind(Messages.CreatePreviewVdbJobSuccessfullyCompleted,
-                                                               this.pvdbFile.getFullPath()));
+        return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.CreatePreviewVdbJobSuccessfullyCompleted,
+                                                          this.pvdbFile.getFullPath()));
     }
 
 }

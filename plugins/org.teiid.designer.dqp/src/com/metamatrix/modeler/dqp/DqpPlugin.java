@@ -8,14 +8,18 @@
 package com.metamatrix.modeler.dqp;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.framework.BundleContext;
+import org.teiid.designer.runtime.DebugConstants;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.ServerManager;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -49,7 +53,7 @@ public class DqpPlugin extends Plugin {
      * @since 4.2.1
      */
     public static PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, I18N_NAME, ResourceBundle.getBundle(I18N_NAME));
-    
+
     /**
      * The shared instance.
      */
@@ -69,12 +73,22 @@ public class DqpPlugin extends Plugin {
     private ServerManager serverMgr;
 
     /**
+     * Obtains the current plubin preferences values. <strong>This method should be used instead of
+     * {@link Plugin#getPluginPreferences()}.</strong>
+     * 
+     * @return the preferences (never <code>null</code>)
+     */
+    public IEclipsePreferences getPreferences() {
+        return new InstanceScope().getNode(PLUGIN_ID);
+    }
+
+    /**
      * @return the server manager
      */
     public ServerManager getServerManager() {
         return this.serverMgr;
     }
-    
+
     /**
      * Cleans up the map of context helpers.
      * 
@@ -90,6 +104,18 @@ public class DqpPlugin extends Plugin {
         // theContext.removeChangeListener(this.changeListener);
         // }
         // }
+    }
+
+    private void initializeDefaultPreferences() {
+        IEclipsePreferences prefs = new DefaultScope().getNode(DqpPlugin.getInstance().getBundle().getSymbolicName());
+
+        // initialize the Teiid cleanup enabled preference
+        prefs.putBoolean(PreferenceConstants.PREVIEW_ENABLED, PreferenceConstants.PREVIEW_ENABLED_DEFAULT);
+
+        // initialize the Teiid cleanup enabled preference
+        prefs.putBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
+                         PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT);
+
     }
 
     private void initializeServerRegistry() throws CoreException {
@@ -108,6 +134,16 @@ public class DqpPlugin extends Plugin {
     }
 
     /**
+     * Option names can be found in the <code>.debug</code> file and in {@link DebugConstants}.
+     * 
+     * @param option the option being checked
+     * @return <code>true</code> if in debugging mode and the debug option is enabled
+     */
+    public boolean isDebugOptionEnabled( String option ) {
+        return (isDebugging() && Boolean.toString(true).equals(Platform.getDebugOption(option)));
+    }
+
+    /**
      * <p>
      * {@inheritDoc}
      * </p>
@@ -121,6 +157,9 @@ public class DqpPlugin extends Plugin {
 
         // initialize logger first so that other methods can use logger
         ((PluginUtilImpl)Util).initializePlatformLogger(this);
+
+        // initialize preferences
+        initializeDefaultPreferences();
 
         try {
             initializeServerRegistry();

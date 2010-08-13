@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -43,7 +44,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     public UpdatePreviewVdbJob( IFile changedModel,
                                 Server previewServer,
                                 PreviewContext context ) throws Exception {
-        super(Messages.bind(Messages.UpdatePreviewVdbJob, changedModel.getFullPath().removeFileExtension()), context);
+        super(NLS.bind(Messages.UpdatePreviewVdbJob, changedModel.getFullPath().removeFileExtension()), context);
         this.model = changedModel;
         this.previewServer = previewServer;
     }
@@ -54,7 +55,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     public IFile getModel() {
         return this.model;
     }
-    
+
     /**
      * @return the preview server used for this job (may be <code>null</code>)
      */
@@ -79,8 +80,8 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
                 // update/create connection info
                 getContext().ensureConnectionInfoIsValid(pvdb, this.previewServer);
             } catch (Exception e) {
-                error = new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.UpdatePreviewVdbJobError,
-                                                                           this.model.getFullPath()), e);
+                error = new Status(IStatus.ERROR, PLUGIN_ID,
+                                   NLS.bind(Messages.UpdatePreviewVdbJobError, this.model.getFullPath()), e);
             }
         }
 
@@ -90,24 +91,24 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
                 pvdb.synchronize(monitor);
                 pvdb.save(monitor);
             } else {
-            	if( pvdb.isModified() ) {
-            		pvdb.save(monitor);
-            	}
+                if (pvdb.isModified()) {
+                    pvdb.save(monitor);
+                }
             }
 
-            return new Status(IStatus.OK, PLUGIN_ID, Messages.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,
-                                                                   pvdbFile.getFullPath()));
+            return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,
+                                                              pvdbFile.getFullPath()));
         } catch (Exception e) {
-            IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.UpdatePreviewVdbJobError,
-                                                                                this.model.getFullPath()), e);
+            IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobError,
+                                                                           this.model.getFullPath()), e);
             if (error == null) {
                 error = status;
             } else {
                 IStatus[] statuses = new IStatus[2];
                 statuses[0] = error;
                 statuses[1] = status;
-                error = new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, Messages.bind(Messages.UpdatePreviewVdbJobError,
-                                                                                       this.model.getFullPath()), null);
+                error = new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.UpdatePreviewVdbJobError,
+                                                                                  this.model.getFullPath()), null);
             }
         }
 

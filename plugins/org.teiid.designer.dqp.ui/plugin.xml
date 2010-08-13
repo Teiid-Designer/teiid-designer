@@ -52,27 +52,24 @@
       </class>
    </extension>
    
-<!-- Initializer for preferences -->
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="com.metamatrix.modeler.internal.dqp.ui.preferences.DqpUiPreferenceInitializer"/>
-   </extension>
+<!-- Preferences -->
   <extension
          point="org.teiid.designer.ui.generalPreferenceContributor">
       <category
             id="dqpUiPreferenceCategory"
             name="%dqpUiPreferenceCategory">
       </category>
-      <!-- Preview Row Count Preference -->
+      <!-- Enable Preview Preference -->
       <preference
-            id="previewRowCountPreferenceContributor"
+            id="enablePreviewPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewRowCountPreferenceContributor">
+            class="com.metamatrix.modeler.internal.dqp.ui.preferences.EnablePreviewPreferenceContributor">
       </preference>
-      <!-- Preview Max Results Preference -->
+      <!-- Enable Teiid Preview Cleanup Preference -->
       <preference
-            id="previewResultsCountPreferenceContributor"
+            id="enableTeiidPreviewCleanupPreferenceContributor"
             categoryId="dqpUiPreferenceCategory"
-            class="com.metamatrix.modeler.internal.dqp.ui.preferences.PreviewResultsCountPreferenceContributor">
+            class="com.metamatrix.modeler.internal.dqp.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
       </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->

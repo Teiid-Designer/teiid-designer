@@ -1,0 +1,19 @@
+# JBoss, Home of Professional Open Source.
+# 
+# See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+# 
+# See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+
+# To get trace logging to work:
+#   1. Run Designer with the -debub /path/to/this/file/.debug program argument
+#   2. Make sure the "org.teiid.designer.dqp/debug" is set to "true"
+#   3. Turn other debug options on/off as needed
+
+# required to indicate plugin has debug enabled/disabled
+org.teiid.designer.dqp/debug = false
+
+# debug job options
+org.teiid.designer.dqp/debug/preview/jobs/jobShouldRun = true
+org.teiid.designer.dqp/debug/preview/jobs/jobStart = true
+org.teiid.designer.dqp/debug/preview/jobs/jobDone = true
+org.teiid.designer.dqp/debug/preview/jobs/jobDuration = true

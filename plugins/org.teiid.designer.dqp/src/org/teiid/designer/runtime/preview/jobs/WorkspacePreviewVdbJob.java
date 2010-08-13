@@ -14,19 +14,17 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.runtime.DebugConstants;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  * The <code>WorkspacePreviewVdbJob</code> are jobs that work with Preview VDBs in the Eclipse workspace.
  */
-public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements PreviewVdbJob {
-
-    /**
-     * Preview is disabled by setting the system property "org.teiid.designer.runtime.preview.disable" to <code>true</code>.
-     * Defaults to <code>false</code>.
-     */
-    public static final boolean DISABLE = Boolean.getBoolean("org.teiid.designer.runtime.preview.disable"); //$NON-NLS-1$
+public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements PreferenceConstants, PreviewVdbJob {
 
     /**
      * The Workspace Preview VDB job family identifier. The value is {@value} .
@@ -99,40 +97,53 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
      */
     @Override
     public final IStatus runInWorkspace( IProgressMonitor monitor ) {
+        // add job start message
+        if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_START)) {
+            Util.log(IStatus.INFO, NLS.bind(Messages.JobStarted, getName()));
+        }
+
+        IStatus results = null;
         long startTime = System.currentTimeMillis();
         monitor.setTaskName(getName());
 
         try {
-            IStatus results = runImpl(monitor);
+            results = runImpl(monitor);
             assert (results != null);
             return results;
         } catch (Exception e) {
             if (e instanceof InterruptedException) {
-                return new Status(IStatus.WARNING, PLUGIN_ID, Messages.bind(Messages.JobCanceled, getName()), e);
+                return new Status(IStatus.WARNING, PLUGIN_ID, NLS.bind(Messages.JobCanceled, getName()), e);
             }
 
-            return new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.UnexpectedErrorRunningJob, getName()), e);
+            return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UnexpectedErrorRunningJob, getName()), e);
         } finally {
+            // add job completion message
+            if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_DONE)) {
+                Util.log(IStatus.INFO, NLS.bind(Messages.JobFinished, getName(), (results.getSeverity() != IStatus.ERROR)));
+            }
+
             monitor.done();
 
-            // add job completed message
-            String msg;
-            long milliseconds = (System.currentTimeMillis() - startTime);
-            long hours = milliseconds / (1000 * 60 * 60);
-            long minutes = (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
-            long seconds = ((milliseconds % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
+            // add job duration message
+            if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_DURATION)) {
+                String msg;
+                long milliseconds = (System.currentTimeMillis() - startTime);
+                long hours = milliseconds / (1000 * 60 * 60);
+                long minutes = (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+                long seconds = ((milliseconds % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
 
-            if (hours > 0) {
-                msg = Messages.bind(Messages.LongDurationJob, new Object[] {getName(), hours, minutes, seconds});
-            } else if (minutes > 0) {
-                msg = Messages.bind(Messages.LessThanAnHourDurationJob, new Object[] {getName(), minutes, seconds});
-            } else if (seconds > 0) {
-                msg = Messages.bind(Messages.LessThanAMinuteDurationJob, getName(), seconds);
-            } else {
-                msg = Messages.bind(Messages.LessThanASecondDurationJob, getName());
+                if (hours > 0) {
+                    msg = NLS.bind(Messages.LongDurationJob, new Object[] {getName(), hours, minutes, seconds});
+                } else if (minutes > 0) {
+                    msg = NLS.bind(Messages.LessThanAnHourDurationJob, new Object[] {getName(), minutes, seconds});
+                } else if (seconds > 0) {
+                    msg = NLS.bind(Messages.LessThanAMinuteDurationJob, getName(), seconds);
+                } else {
+                    msg = NLS.bind(Messages.LessThanASecondDurationJob, getName());
+                }
+
+                Util.log(IStatus.INFO, msg);
             }
-
-            Util.log(IStatus.INFO, msg);
         }
     }
 
@@ -143,7 +154,14 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
      */
     @Override
     public boolean shouldRun() {
-        return !DISABLE;
+        boolean result = DqpPlugin.getInstance().getPreferences().getBoolean(PREVIEW_ENABLED, PREVIEW_ENABLED_DEFAULT);
+
+        // trace message
+        if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_SHOULD_RUN)) {
+            Util.log(IStatus.INFO, NLS.bind(Messages.JobShouldRun, getName(), result));
+        }
+
+        return result;
     }
 
 }

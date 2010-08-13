@@ -47,9 +47,14 @@ public final class ServerManager implements EventManager {
     // ===========================================================================================================================
 
     /**
-     * The tag used to persist a server's login password.
+     * The attribute indicating if the server is currently the preview server.
      */
-    private static final String PASSWORD_TAG = "password"; //$NON-NLS-1$
+    private static final String DEFAULT_ATTR = "default"; //$NON-NLS-1$
+
+    /**
+     * The attribute used to persist a server's login password.
+     */
+    private static final String PASSWORD_ATTR = "password"; //$NON-NLS-1$
 
     /**
      * The file name used when persisting the server registry.
@@ -67,14 +72,14 @@ public final class ServerManager implements EventManager {
     private static final String SERVERS_TAG = "servers"; //$NON-NLS-1$
 
     /**
-     * The tag used to persist a server's URL.
+     * The attribute used to persist a server's URL.
      */
-    private static final String URL_TAG = "url"; //$NON-NLS-1$
+    private static final String URL_ATTR = "url"; //$NON-NLS-1$
 
     /**
-     * The tag used to persist a server's login user.
+     * The attribute used to persist a server's login user.
      */
-    private static final String USER_TAG = "user"; //$NON-NLS-1$
+    private static final String USER_ATTR = "user"; //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Fields
@@ -383,21 +388,32 @@ public final class ServerManager implements EventManager {
                     NodeList servers = root.getChildNodes();
 
                     for (int size = servers.getLength(), i = 0; i < size; ++i) {
-                        Node server = servers.item(i);
+                        Node serverNode = servers.item(i);
 
-                        if (server.getNodeType() != Node.TEXT_NODE) {
-                            NamedNodeMap attributeMap = server.getAttributes();
+                        if (serverNode.getNodeType() != Node.TEXT_NODE) {
+                            NamedNodeMap attributeMap = serverNode.getAttributes();
 
                             if (attributeMap == null) continue;
 
-                            Node urlNode = attributeMap.getNamedItem(URL_TAG);
-                            Node userNode = attributeMap.getNamedItem(USER_TAG);
-                            Node passwordNode = attributeMap.getNamedItem(PASSWORD_TAG);
+                            Node urlNode = attributeMap.getNamedItem(URL_ATTR);
+                            Node userNode = attributeMap.getNamedItem(USER_ATTR);
+                            Node passwordNode = attributeMap.getNamedItem(PASSWORD_ATTR);
                             String pswd = ((passwordNode == null) ? null : new String(Base64.decode(passwordNode.getNodeValue()),
                                                                                       "UTF-8")); //$NON-NLS-1$
 
                             // add server to registry
-                            addServer(new Server(urlNode.getNodeValue(), userNode.getNodeValue(), pswd, (pswd != null), this));
+                            Server server = new Server(urlNode.getNodeValue(), userNode.getNodeValue(), pswd, (pswd != null),
+                                                       this);
+                            addServer(server);
+
+                            // set as default server if necessary
+                            Node previewServerNode = attributeMap.getNamedItem(DEFAULT_ATTR);
+                            boolean previewServer = ((previewServerNode == null) ? false
+                                                                                : Boolean.parseBoolean(previewServerNode.getNodeValue()));
+
+                            if (previewServer) {
+                                setDefaultServer(server);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -409,6 +425,25 @@ public final class ServerManager implements EventManager {
 
         // do nothing of there is no save location or state file does not exist
         return Status.OK_STATUS;
+    }
+
+    /**
+     * @param server Sets defaultServer to the specified value. May be null.
+     */
+    public void setDefaultServer( Server server ) {
+        boolean notify = false;
+        if (server != null) {
+            notify = !server.equals(this.defaultServer);
+        } else {
+            notify = defaultServer != null;
+        }
+
+        Server oldDefaultServer = this.defaultServer;
+        this.defaultServer = server;
+
+        if (notify) {
+            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
+        }
     }
 
     /**
@@ -432,9 +467,13 @@ public final class ServerManager implements EventManager {
                     Element serverElement = doc.createElement(SERVER_TAG);
                     root.appendChild(serverElement);
 
-                    serverElement.setAttribute(URL_TAG, server.getUrl());
-                    serverElement.setAttribute(USER_TAG, server.getUser());
-                    serverElement.setAttribute(PASSWORD_TAG, Base64.encodeBytes(server.getPassword().getBytes()));
+                    serverElement.setAttribute(URL_ATTR, server.getUrl());
+                    serverElement.setAttribute(USER_ATTR, server.getUser());
+                    serverElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(server.getPassword().getBytes()));
+
+                    if ((getDefaultServer() != null) && (getDefaultServer().equals(server))) {
+                        serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                    }
                 }
 
                 DOMSource source = new DOMSource(doc);
@@ -465,25 +504,6 @@ public final class ServerManager implements EventManager {
         }
 
         return Status.OK_STATUS;
-    }
-
-    /**
-     * @param server Sets defaultServer to the specified value. May be null.
-     */
-    public void setDefaultServer( Server server ) {
-        boolean notify = false;
-        if (server != null) {
-            notify = !server.equals(this.defaultServer);
-        } else {
-            notify = defaultServer != null;
-        }
-
-        Server oldDefaultServer = this.defaultServer;
-        this.defaultServer = server;
-
-        if (notify) {
-            notifyListeners(ExecutionConfigurationEvent.createSetDefaultServerEvent(oldDefaultServer, this.defaultServer));
-        }
     }
 
     /**

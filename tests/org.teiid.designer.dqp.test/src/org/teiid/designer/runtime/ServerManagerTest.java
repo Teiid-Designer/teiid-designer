@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsSame.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -16,7 +18,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -180,14 +181,17 @@ public class ServerManagerTest {
         Server server = this.mgr.getServer(RESTORED_SERVER1_URL);
         assertThat(server, notNullValue());
         assertThat(server.getUser(), is(RESTORED_SERVER1_USER));
+        assertThat(server, is(not(this.mgr.getDefaultServer())));
 
         server = this.mgr.getServer(RESTORED_SERVER2_URL);
         assertThat(server, notNullValue());
         assertThat(server.getUser(), is(RESTORED_SERVER2_USER));
+        assertThat(server, is(sameInstance(this.mgr.getDefaultServer()))); // server was persisted as the default preview server
 
         server = this.mgr.getServer(RESTORED_SERVER3_URL);
         assertThat(server, notNullValue());
         assertThat(server.getUser(), is(RESTORED_SERVER3_USER));
+        assertThat(server, is(not(this.mgr.getDefaultServer())));
     }
 
 }

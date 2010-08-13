@@ -8,20 +8,19 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  *
  */
 public abstract class TeiidPreviewVdbCleanupJob extends TeiidPreviewVdbJob {
-
-    /**
-     * Preview is disabled by setting the system property "org.teiid.designer.runtime.preview.teiid.cleanup.disable" to
-     * <code>true</code>. Defaults to <code>false</code>. Disabling will prevent Preview VDBs and data sources from being deleted
-     * off Teiid instances.
-     */
-    public static final boolean DISABLE = Boolean.getBoolean("org.teiid.designer.runtime.preview.teiid.cleanup.disable"); //$NON-NLS-1$
 
     /**
      * The Teiid cleanup job family identifier. The value is {@value} .
@@ -56,7 +55,20 @@ public abstract class TeiidPreviewVdbCleanupJob extends TeiidPreviewVdbJob {
      */
     @Override
     public boolean shouldRun() {
-        return !DISABLE && super.shouldRun();
+        boolean result = super.shouldRun();
+
+        if (result) {
+            // check preference
+            result = DqpPlugin.getInstance().getPreferences().getBoolean(PREVIEW_TEIID_CLEANUP_ENABLED,
+                                                                         PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT);
+
+            // add trace message only if not running since superclass has already logged trace message if enabled
+            if (!result && DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_SHOULD_RUN)) {
+                Util.log(IStatus.INFO, NLS.bind(Messages.JobShouldRun, getName(), result));
+            }
+        }
+
+        return result;
     }
 
 }

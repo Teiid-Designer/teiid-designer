@@ -52,23 +52,28 @@ public interface DqpUiConstants {
      * import types
      */
 
-    /**
-     * Private constants used by other constants within this class.
-     * 
-     * @since 4.3
-     */
-    class PC {
-        public static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
+    interface ExtensionPoints {
 
-        public static final String ICON_PATH = "icons/full/"; //$NON-NLS-1$
+        interface VdbEditorUtil {
+            String ID = "vdbEditorUtil"; //$NON-NLS-1$;
+            String INSTANCE_ELEMENT = "instance"; //$NON-NLS-1$;
+            String CLASSNAME = "classname"; //$NON-NLS-1$;
+        }
 
-        public static final String CVIEW16 = ICON_PATH + "cview16/"; //$NON-NLS-1$
+    }
 
-        public static final String CTOOL16 = ICON_PATH + "ctool16/"; //$NON-NLS-1$
+    interface Extensions {
+        String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"xmlDocumentSqlResultsView"; //$NON-NLS-1$
 
-        public static final String OBJ16 = ICON_PATH + "obj16/"; //$NON-NLS-1$
+        String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"xmlDocumentResultSetProcessor"; //$NON-NLS-1$
 
-        public static final String WIZBAN = ICON_PATH + "wizban/"; //$NON-NLS-1$
+        String SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"sqlResultsView"; //$NON-NLS-1$
+
+        String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"sqlResultSetProcessor"; //$NON-NLS-1$
+
+        String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */"connectorsView"; //$NON-NLS-1$
+
+        String PREVIEW_DATA_VIEW = /*PLUGIN_ID + DOT + */"previewDataView"; //$NON-NLS-1$
     }
 
     interface Images {
@@ -124,48 +129,23 @@ public interface DqpUiConstants {
         public static final String DEPLOY_VDB = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
     }
 
-    interface Extensions {
-        String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"xmlDocumentSqlResultsView"; //$NON-NLS-1$
-
-        String XML_DOC_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"xmlDocumentResultSetProcessor"; //$NON-NLS-1$
-
-        String SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"sqlResultsView"; //$NON-NLS-1$
-
-        String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"sqlResultSetProcessor"; //$NON-NLS-1$
-
-        String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */"connectorsView"; //$NON-NLS-1$
-
-        String PREVIEW_DATA_VIEW = /*PLUGIN_ID + DOT + */"previewDataView"; //$NON-NLS-1$
-    }
-
-    interface ExtensionPoints {
-
-        interface VdbEditorUtil {
-            String ID = "vdbEditorUtil"; //$NON-NLS-1$;
-            String INSTANCE_ELEMENT = "instance"; //$NON-NLS-1$;
-            String CLASSNAME = "classname"; //$NON-NLS-1$;
-        }
-
-    }
-
     /**
-     * Constants used to access plugin preference values.
+     * Private constants used by other constants within this class.
      * 
-     * @since 5.0
+     * @since 4.3
      */
-    interface Preferences {
-        /**
-         * General preference that will limit the number of rows returned on a Preview Query
-         * 
-         * @since 5.0
-         */
-        String ID_PREVIEW_ROW_LIMIT = "generalPreference.previewRowLimit"; //$NON-NLS-1$
+    class PC {
+        public static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
 
-        /**
-         * General preference that will limit the number of preview results shown.
-         * 
-         * @since 5.5.3
-         */
-        String ID_PREVIEW_RESULTS_LIMIT = "generalPreference.previewResultsLimit"; //$NON-NLS-1$
+        public static final String ICON_PATH = "icons/full/"; //$NON-NLS-1$
+
+        public static final String CVIEW16 = ICON_PATH + "cview16/"; //$NON-NLS-1$
+
+        public static final String CTOOL16 = ICON_PATH + "ctool16/"; //$NON-NLS-1$
+
+        public static final String OBJ16 = ICON_PATH + "obj16/"; //$NON-NLS-1$
+
+        public static final String WIZBAN = ICON_PATH + "wizban/"; //$NON-NLS-1$
     }
+
 }

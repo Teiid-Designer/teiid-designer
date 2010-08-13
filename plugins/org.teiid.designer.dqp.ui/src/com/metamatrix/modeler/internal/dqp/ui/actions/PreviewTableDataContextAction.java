@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,11 +30,9 @@ import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfi
 import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -45,7 +42,6 @@ import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
-
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -55,7 +51,6 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants.Preferences;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.AccessPatternColumnsDialog;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDialog;
@@ -82,86 +77,62 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     }
 
     /**
-     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated
-     * with all Tables and Procedures contained within the current selection.
-     * 
+     * @param sql
+     * @param ID
      * @return
-     * @since 4.1
+     * @throws CoreException
      */
-    @Override
-    protected boolean isValidSelection( ISelection selection ) {
-        // An object can be previewed if it is of a certain object type in a Source/Relational model
-        // This is changed from previous releases because the requirement of having a Source binding prior to
-        // enablement has changed. Now the binding check is moved to the run() method which performs the check
-        // and queries the user for any additional info that's needed to execute the preview, including creating
-        // a source binding if necessary.
-
-        // first must have a Teiid to run preview on
-        if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) return false;
-
-        // must have one and only one EObject selected
-        EObject eObj = SelectionUtilities.getSelectedEObject(selection);
-        if (eObj == null) return false;
-
-        // eObj must be previewable
-        return ModelObjectUtilities.isExecutable(eObj);
+    private ILaunchConfigurationWorkingCopy creatLaunchConfig( String sql,
+                                                               DatabaseIdentifier ID ) throws CoreException {
+        ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
+        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
+        // ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
+        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);
+        return config;
     }
 
     /**
-     * @see org.eclipse.jface.action.IAction#run()
+     * This method was created to allow the transformation.ui plugin, and TransformationObjectEditorPage to get it's own instance
+     * of this action so it can allow preview of the specific edited virtual table or procedure. This allows the original action
+     * to remain workspace selection driven. Override abstract method
+     * 
+     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#getClone()
      * @since 5.0
      */
     @Override
-    public void run() {
-        final EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
-        final PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
-        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
+    public SortableSelectionAction getClone() {
+        return new PreviewTableDataContextAction();
+    }
 
-        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            @Override
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
-                try {
-                    previewManager.previewSetup(eObj, monitor);
-                } catch (InterruptedException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
+    private ParameterInputDialog getInputDialog( List<EObject> params ) {
+        ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
+        return dialog;
+    }
 
-        // show dialog
-        try {
-            dialog.run(true, true, runnable);
-        } catch (InterruptedException e) {
-            // canceled by user
-        } catch (Exception e) {
-            DqpUiConstants.UTIL.log(e);
-            MessageDialog.openError(getShell(),
-                                    null,
-                                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
-        }
-
-        if (dialog.getReturnCode() == Dialog.OK) {
-            // setup successful so run preview
-            try {
-                internalRun();
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(e);
-                MessageDialog.openError(getShell(),
-                                        null,
-                                        DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
-            }
-        }
+    private Shell getShell() {
+        return Display.getCurrent().getActiveShell();
     }
 
     /**
-     *
+     * @param profile
+     * @return
+     * @throws SQLException
+     * @throws JdbcException
      */
-    @Override
-    public boolean isApplicable( ISelection selection ) {
-        return isValidSelection(selection);
+    private Connection getSqlConnection( IConnectionProfile profile ) throws SQLException, JdbcException {
+        IConnectionProfileProvider provider = profile.getProvider();
+        IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
+        final String factoryId = factory.getId();
+
+        final IConnection connection = profile.createConnection(factoryId);
+
+        final Connection sqlConnection = (Connection)connection.getRawConnection();
+        if (null == sqlConnection || sqlConnection.isClosed()) {
+            final Throwable e = connection.getConnectException();
+            throw new JdbcException(e == null ? "Unspecified connection error" //$NON-NLS-1$
+                                             : e.getMessage());
+        }
+        return sqlConnection;
     }
 
     /**
@@ -241,8 +212,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
         assert (paramValues != null);
 
-        @SuppressWarnings( "unused" )
-        final int rowLimit = getCurrentRowLimit();
         final Object[] paramValuesAsArray = paramValues.toArray();
 
         if (sql == null) {
@@ -257,8 +226,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                 // TODO: All of these values should be taken from the deployed
                 // pvdb. I have hardcoded them here so that I can test with
                 // a fully depolyed VDB, see the Teiid download for this VDB.
-                String username = PreviewManager.DEFAULT_USERNAME;
-                String password = PreviewManager.DEFAULT_PASSWORD;
+                String username = "admin"; //$NON-NLS-1$
+                String password = "teiid"; //$NON-NLS-1$
                 String vdbName = PreviewManager.getPreviewProjectVdbName(project);
                 if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
                     vdbName = vdbName.substring(0, vdbName.length() - 4);
@@ -288,14 +257,14 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                     iww.getShell().getDisplay().asyncExec(runnable);
 
                 } catch (SQLException e) {
-                	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+                    DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
                 } catch (NoSuchProfileException e) {
-                	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+                    DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
                 }
             } catch (CoreException e) {
-            	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
             } catch (SQLException e) {
-            	DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
             }
         } else {
             DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
@@ -304,58 +273,89 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     }
 
     /**
-     * @param sql
-     * @param ID
-     * @return
-     * @throws CoreException
+     *
      */
-    private ILaunchConfigurationWorkingCopy creatLaunchConfig( String sql,
-                                                               DatabaseIdentifier ID ) throws CoreException {
-        ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
-        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
-        // ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
-        config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);
-        return config;
+    @Override
+    public boolean isApplicable( ISelection selection ) {
+        return isValidSelection(selection);
     }
 
     /**
-     * @param profile
+     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated
+     * with all Tables and Procedures contained within the current selection.
+     * 
      * @return
-     * @throws SQLException
-     * @throws JdbcException
+     * @since 4.1
      */
-    private Connection getSqlConnection( IConnectionProfile profile ) throws SQLException, JdbcException {
-        IConnectionProfileProvider provider = profile.getProvider();
-        IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
-        final String factoryId = factory.getId();
+    @Override
+    protected boolean isValidSelection( ISelection selection ) {
+        // An object can be previewed if it is of a certain object type in a Source/Relational model
+        // This is changed from previous releases because the requirement of having a Source binding prior to
+        // enablement has changed. Now the binding check is moved to the run() method which performs the check
+        // and queries the user for any additional info that's needed to execute the preview, including creating
+        // a source binding if necessary.
 
-        final IConnection connection = profile.createConnection(factoryId);
+        // see if preview enabled
+        if (!DqpPlugin.getInstance().getServerManager().getPreviewManager().isPreviewEnabled()) return false;
 
-        final Connection sqlConnection = (Connection)connection.getRawConnection();
-        if (null == sqlConnection || sqlConnection.isClosed()) {
-            final Throwable e = connection.getConnectException();
-            throw new JdbcException(e == null ? "Unspecified connection error" //$NON-NLS-1$
-                                             : e.getMessage());
-        }
-        return sqlConnection;
+        // first must have a Teiid to run preview on
+        if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) return false;
+
+        // must have one and only one EObject selected
+        EObject eObj = SelectionUtilities.getSelectedEObject(selection);
+        if (eObj == null) return false;
+
+        // eObj must be previewable
+        return ModelObjectUtilities.isExecutable(eObj);
     }
 
-    private ParameterInputDialog getInputDialog( List<EObject> params ) {
-        ParameterInputDialog dialog = new ParameterInputDialog(getShell(), params);
-        return dialog;
-    }
+    /**
+     * @see org.eclipse.jface.action.IAction#run()
+     * @since 5.0
+     */
+    @Override
+    public void run() {
+        final EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
+        final PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
+        assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
 
-    private int getCurrentRowLimit() {
-        IPreferenceStore prefStore = DqpUiPlugin.getDefault().getPreferenceStore();
-        int rowLimit = 10;
-        // initialize
-        rowLimit = prefStore.getInt(Preferences.ID_PREVIEW_ROW_LIMIT);
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            @Override
+            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
+                try {
+                    previewManager.previewSetup(eObj, monitor);
+                } catch (InterruptedException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
 
-        if (rowLimit < 1) {
-            rowLimit = prefStore.getDefaultInt(Preferences.ID_PREVIEW_ROW_LIMIT);
+        // show dialog
+        try {
+            dialog.run(true, true, runnable);
+        } catch (InterruptedException e) {
+            // canceled by user
+        } catch (Exception e) {
+            DqpUiConstants.UTIL.log(e);
+            MessageDialog.openError(getShell(),
+                                    null,
+                                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
         }
 
-        return rowLimit;
+        if (dialog.getReturnCode() == Window.OK) {
+            // setup successful so run preview
+            try {
+                internalRun();
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+                MessageDialog.openError(getShell(),
+                                        null,
+                                        DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
+            }
+        }
     }
 
     /**
@@ -367,22 +367,5 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     @SuppressWarnings( "unused" )
     private void showResults( final IResults theResults ) {
         // REPLACE
-    }
-
-    /**
-     * This method was created to allow the transformation.ui plugin, and TransformationObjectEditorPage to get it's own instance
-     * of this action so it can allow preview of the specific edited virtual table or procedure. This allows the original action
-     * to remain workspace selection driven. Override abstract method
-     * 
-     * @see com.metamatrix.modeler.ui.actions.SortableSelectionAction#getClone()
-     * @since 5.0
-     */
-    @Override
-    public SortableSelectionAction getClone() {
-        return new PreviewTableDataContextAction();
-    }
-
-    private Shell getShell() {
-        return Display.getCurrent().getActiveShell();
     }
 }

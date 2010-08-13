@@ -43,6 +43,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -53,6 +56,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
@@ -77,6 +81,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
@@ -93,13 +98,17 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
  */
 @ThreadSafe
 public final class PreviewManager extends JobChangeAdapter
-    implements IExecutionConfigurationListener, IResourceChangeListener, INotifyChangedListener, PreviewContext {
+    implements IExecutionConfigurationListener, IPreferenceChangeListener, IResourceChangeListener, INotifyChangedListener,
+    PreviewContext {
 
-    public static final String DEFAULT_USERNAME = "admin"; //$NON-NLS-1$
-    public static final String DEFAULT_PASSWORD = "teiid"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
+    /**
+     * @param project the project whose Preview VDB is being requested (may not be <code>null</code>)
+     * @return the name of the project's Preview VDB (never <code>null</code>)
+     */
     public static String getPreviewProjectVdbName( IProject project ) {
+        assert (project != null) : "Project is null"; //$NON-NLS-1$
         char delim = '_';
         StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
 
@@ -108,6 +117,10 @@ public final class PreviewManager extends JobChangeAdapter
         return name.toString();
     }
 
+    /**
+     * @param pvdbFile the Preview VDB (may not be <code>null</code> and must be a VDB)
+     * @return the version of the given Preview VDB
+     */
     public static int getPreviewVdbVersion( IFile pvdbFile ) {
         assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
@@ -172,6 +185,12 @@ public final class PreviewManager extends JobChangeAdapter
     private final PreviewContext context;
 
     /**
+     * A flag indicating if preview is enabled. This will match the value of preferenced
+     * {@link PreferenceConstants#PREVIEW_ENABLED}.
+     */
+    private boolean previewEnabled = true;
+
+    /**
      * The Teiid server being used for preview (may be <code>null</code>).
      */
     private volatile AtomicReference<Server> previewServer = new AtomicReference<Server>();
@@ -204,17 +223,6 @@ public final class PreviewManager extends JobChangeAdapter
     public PreviewManager( PreviewContext context ) throws Exception {
         this.context = (context == null) ? this : context;
         startup();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void aboutToRun( IJobChangeEvent event ) {
-        // TODO remove this when done implementing
-        //System.out.println("*****Job " + event.getJob().getName() + " is about to run");
     }
 
     /**
@@ -440,14 +448,17 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.readLock().unlock();
         }
 
-        for (PreviewVdbStatus status : statuses) {
-            if (!onlyThoseNeedingToBeDeployed) {
-                pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
-            } else {
-                IFile pvdbFile = status.getFile();
+        // statuses could be null at startup when the default server is being set
+        if ((statuses != null) && !statuses.isEmpty()) {
+            for (PreviewVdbStatus status : statuses) {
+                if (!onlyThoseNeedingToBeDeployed) {
+                    pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
+                } else {
+                    IFile pvdbFile = status.getFile();
 
-                if (needsToBeDeployed(pvdbFile)) {
-                    pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+                    if (needsToBeDeployed(pvdbFile)) {
+                        pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+                    }
                 }
             }
         }
@@ -600,9 +611,9 @@ public final class PreviewManager extends JobChangeAdapter
         } else if (ResourceChangeUtilities.isRemoved(fileDelta)) {
             // this occurs when a model is deleted or renamed (old model location)
             fileDeleted(file);
-        } else if (ResourceChangeUtilities.isAdded(fileDelta) && ResourceChangeUtilities.isMovedFrom(fileDelta)
-                   && isPreviewable(file)) {
-            // this occurs on a rename (new model location)
+        } else if (ResourceChangeUtilities.isAdded(fileDelta) && isPreviewable(file)) {
+            // this occurs on a rename (new model location) => ResourceChangeUtilities.isMovedFrom(fileDelta)
+            // this also occurs on a save as
             modelChanged(file);
         }
     }
@@ -736,6 +747,15 @@ public final class PreviewManager extends JobChangeAdapter
     }
 
     /**
+     * Indicates if the preview preference is enabled.
+     * 
+     * @return <code>true</code> if preview is enabled
+     */
+    public boolean isPreviewEnabled() {
+        return this.previewEnabled;
+    }
+
+    /**
      * Handler for a resource change event indicating the specified model has changed.
      * 
      * @param model the model that has changed
@@ -861,13 +881,32 @@ public final class PreviewManager extends JobChangeAdapter
      */
     @Override
     public void notifyChanged( Notification notification ) {
+        if (!isPreviewEnabled()) return;
         // TODO needs to react to changes in a model's connection profile by deleting data source on server, updating translator
         // name, create new data source on server. The event target eObject should be the ModelAnnotation.
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
+     */
+    @Override
+    public void preferenceChange( PreferenceChangeEvent event ) {
+        if (event.getKey().equals(PreferenceConstants.PREVIEW_ENABLED)) {
+            this.previewEnabled = Boolean.parseBoolean(event.getNewValue().toString());
+
+            // clear deploy status map as everything will have to be deployed once preview is enabled again
+            if (!this.previewEnabled) {
+                this.deploymentStatusMap.clear();
+            }
+        }
     }
 
     @SuppressWarnings( "unused" )
     public void previewSetup( final Object objectToPreview,
                               IProgressMonitor monitor ) throws Exception {
+        assert isPreviewEnabled() : "previewSetup should not be called if preview is disabled"; //$NON-NLS-1$
         Server previewServer = getPreviewServer();
         assert (previewServer != null) : "Should not be called when preview server is null"; //$NON-NLS-1$
 
@@ -1078,13 +1117,10 @@ public final class PreviewManager extends JobChangeAdapter
      */
     @Override
     public void resourceChanged( IResourceChangeEvent event ) {
+        if (!isPreviewEnabled()) return;
         // ResourceChangeUtilities.debug(event);
 
-        if (ResourceChangeUtilities.isPostAutoBuild(event)) {
-            ResourceChangeUtilities.debug(event);
-        } else if (ResourceChangeUtilities.isPreAutoBuild(event)) {
-            ResourceChangeUtilities.debug(event);
-        } else if (ResourceChangeUtilities.isPreClose(event)) {
+        if (ResourceChangeUtilities.isPreClose(event)) {
             IProject project = (IProject)event.getResource();
 
             if (ModelerCore.hasModelNature(project)) {
@@ -1155,8 +1191,8 @@ public final class PreviewManager extends JobChangeAdapter
         // mark all PVDBs as needing to be deployed
         resetAllDeployedStatuses();
 
-        // cleanup old server
-        if (oldServer != null) {
+        // cleanup old server if it can be reached
+        if ((oldServer != null) && oldServer.ping().isOK()) {
             PreviewContext oldContext = new PreviewContext() {
 
                 @Override
@@ -1198,9 +1234,12 @@ public final class PreviewManager extends JobChangeAdapter
      * Shutdowns the <code>PreviewManager</code>. This will remove any Preview VDBs from the default Teiid server.
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
+        // remove listeners
         ModelerCore.getModelContainer().getChangeNotifier().removeListener(this);
+        DqpPlugin.getInstance().getPreferences().removePreferenceChangeListener(this);
 
-        if (getPreviewServer() != null) {
+        // cleanup PVDs
+        if ((getPreviewServer() != null) && isPreviewEnabled()) {
             for (IProject project : getAllProjects()) {
                 // Exception thrown if project is already closed.
                 if (project.isOpen()) {
@@ -1214,12 +1253,20 @@ public final class PreviewManager extends JobChangeAdapter
      * Tasks done when first constructed.
      */
     private void startup() throws Exception {
+        // add listeners
         ModelerCore.getModelContainer().getChangeNotifier().addListener(this);
+        DqpPlugin.getInstance().getPreferences().addPreferenceChangeListener(this);
+
+        // get current preference value to see if preview should be enabled
+        IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
+        this.previewEnabled = prefs.getBoolean(PreferenceConstants.PREVIEW_ENABLED, PreferenceConstants.PREVIEW_ENABLED_DEFAULT);
 
         // when Eclipse starts you don't get an open project event so pretend we did get one and call the event handler
-        for (IProject project : getAllProjects()) {
-            if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
-                modelProjectOpened(project);
+        if (this.previewEnabled) {
+            for (IProject project : getAllProjects()) {
+                if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
+                    modelProjectOpened(project);
+                }
             }
         }
     }
