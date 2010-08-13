@@ -10,8 +10,10 @@ package com.metamatrix.modeler.modelgenerator.wsdl.model.internal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Port;

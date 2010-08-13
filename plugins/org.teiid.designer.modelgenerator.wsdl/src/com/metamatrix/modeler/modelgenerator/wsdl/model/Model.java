@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.model;
 
 import java.util.Map;
+
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
 

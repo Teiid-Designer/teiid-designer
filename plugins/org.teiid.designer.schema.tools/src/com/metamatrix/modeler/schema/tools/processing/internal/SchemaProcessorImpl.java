@@ -357,9 +357,7 @@ public class SchemaProcessorImpl implements SchemaProcessor {
 
     public void processAttributes( SchemaObject element,
                                    ElementContentTraversalContext traverseCtx ) throws SchemaProcessingException {
-        Column idcol = new IdColumn(SchemaUtil.getStringType(element.getSchema()));
-        element.addAttribute(idcol);
-
+        
         List attrs = element.getAttributeList();
         for (Iterator iter = attrs.iterator(); iter.hasNext();) {
             Object o = iter.next();

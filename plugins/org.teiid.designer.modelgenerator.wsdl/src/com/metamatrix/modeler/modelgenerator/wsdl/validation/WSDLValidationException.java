@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.validation;
 
 import java.util.ArrayList;
+
 import javax.wsdl.WSDLException;
 
 /**

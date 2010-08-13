@@ -9,7 +9,6 @@ Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.modelgenerator.wsdl,
  com.metamatrix.modeler.modelgenerator.wsdl.model,
  com.metamatrix.modeler.modelgenerator.wsdl.model.internal,
- com.metamatrix.modeler.modelgenerator.wsdl.modelextension,
  com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions,
  com.metamatrix.modeler.modelgenerator.wsdl.util,
  com.metamatrix.modeler.modelgenerator.wsdl.validation
@@ -33,6 +32,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.wsdl4j,
  teiid_embedded_query,
  org.teiid.designer.modelgenerator.xml,
- org.jdom
+ org.jdom,
+ org.teiid.designer.datatools,
+ org.eclipse.datatools.connectivity,
+ org.teiid.designer.transformation,
+ org.teiid.designer.metamodels.transformation,
+ org.eclipse.emf.mapping
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

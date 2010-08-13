@@ -9,6 +9,7 @@ package com.metamatrix.modeler.modelgenerator.wsdl.model.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.SoapBindingInfo;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Binding;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;

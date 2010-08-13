@@ -8,11 +8,13 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions;
 
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.Column;
 import com.metamatrix.modeler.schema.tools.model.schema.QName;
@@ -36,12 +38,7 @@ public class SOAPSchemaProcessor extends SchemaProcessorImpl {
         XSDSimpleTypeDefinition textType = element.getTextType();
         Column col;
 
-        if (element instanceof SOAPArrayDefinition) {
-            if (textType != null) { // scalar array type
-                col = new SoapArrayColumn(false, textType, element);
-                element.addAttribute(col);
-            }
-        } else if (textType != null) {
+        if (textType != null) {
             col = new TextColumn(false, textType);
             element.addAttribute(col);
         }
@@ -54,14 +51,7 @@ public class SOAPSchemaProcessor extends SchemaProcessorImpl {
                              XSDSchema schema ) throws SchemaProcessingException {
         String namespacePrefix = getNameSpacePrefix(type.getTargetNamespace());
 
-        SchemaObject typeDecl;
-        boolean isSOAPArray = SOAPArrayDefinition.isSOAPArray(type);
-        if (isSOAPArray) {
-            XSDTypeDefinition arrayType = SOAPArrayDefinition.getSOAPArrayType(type);
-            typeDecl = new SOAPArrayDefinition(type, arrayType, namespacePrefix, schema);
-        } else {
-            typeDecl = new TypeDefinition(type, namespacePrefix, schema);
-        }
+        SchemaObject typeDecl = new TypeDefinition(type, namespacePrefix, schema);
 
         String fileName = SchemaUtil.shortenFileName(schema.getSchemaLocation());
         typeDecl.setFileName(fileName);
@@ -107,14 +97,7 @@ public class SOAPSchemaProcessor extends SchemaProcessorImpl {
 
         boolean isSoapType = false;
         if (element == null) {
-            XSDTypeDefinition soapType = SOAPArrayDefinition.getSOAPArrayType(type);
-            if (null != soapType) {
-                isSoapType = true;
-                element = new SOAPElement(elem, getNameSpacePrefix(elem.getTargetNamespace()), soapType, schema);
-                type = soapType;
-            } else {
-                element = new ElementImpl(elem, getNameSpacePrefix(elem.getTargetNamespace()), type, schema);
-            }
+            element = new ElementImpl(elem, getNameSpacePrefix(elem.getTargetNamespace()), type, schema);
             element.setFileName(fileName);
             // It's important to put the table in the map before we recurse down
             // the element's contents, to prevent infinite recursion of circular

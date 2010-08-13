@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
 import org.jdom.Namespace;
+
 import com.metamatrix.modeler.schema.tools.model.jdbc.Column;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Table;
 import com.metamatrix.modeler.schema.tools.model.jdbc.internal.TableImpl;

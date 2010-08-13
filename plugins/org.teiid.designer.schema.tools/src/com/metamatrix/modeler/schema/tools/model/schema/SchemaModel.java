@@ -10,6 +10,9 @@ package com.metamatrix.modeler.schema.tools.model.schema;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import com.metamatrix.modeler.schema.tools.model.jdbc.Table;
 import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 
@@ -107,4 +110,6 @@ public interface SchemaModel {
      */
     public abstract void setTypeAsRoot( String typeName,
                                         String namespace ) throws SchemaProcessingException;
+
+	public abstract SchemaObject getElement(QName qName);
 }

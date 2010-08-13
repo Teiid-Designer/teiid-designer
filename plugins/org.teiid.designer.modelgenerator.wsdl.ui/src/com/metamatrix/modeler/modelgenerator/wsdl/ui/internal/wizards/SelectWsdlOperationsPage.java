@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Binding;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Fault;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
@@ -672,7 +672,7 @@ public class SelectWsdlOperationsPage extends AbstractWizardPage
 
         private void updateCheckedOperations( Operation operation,
                                               boolean checked ) {
-            List selectedOperations = importManager.getSelectedOperations();
+            List<Operation> selectedOperations = importManager.getSelectedOperations();
             if (checked && operation.canModel() && !selectedOperations.contains(operation)) {
                 selectedOperations.add(operation);
                 importManager.setSelectedOperations(selectedOperations);

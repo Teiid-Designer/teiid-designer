@@ -8,8 +8,15 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.List;
+
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.State;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,15 +32,20 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.ide.IDE;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.wsdl.RelationalModelBuilder;
-import com.metamatrix.modeler.modelgenerator.wsdl.TableBuilder;
-import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
+import com.metamatrix.modeler.schema.tools.processing.SchemaProcessingException;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 /**
@@ -174,7 +186,7 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         return result;
     }
 
-    public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException {
+    public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException, SchemaProcessingException, ModelGenerationException {
         // Target Model Name
         String modelName = this.importManager.getTargetModelName();
 
@@ -182,14 +194,16 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
         IContainer container = this.importManager.getTargetModelLocation();
 
         // The Selected Operations
-        List selectedOperations = this.importManager.getSelectedOperations();
-        Operation[] opers = new Operation[selectedOperations.size()];
-        for (int i = 0; i < selectedOperations.size(); i++) {
-            opers[i] = (Operation)selectedOperations.get(i);
-        }
-        TableBuilder tableBuilder = new TableBuilder();
-        Collection tables = tableBuilder.createTables(opers);
-        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(tableBuilder.getNamespaces());
-        modelBuilder.createModel(tables, modelName, container);
+        Model model = importManager.getWSDLModel();
+        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(model);
+        try {
+			modelBuilder.modelOperations(this.importManager.getSelectedOperations(), container);
+		} catch (ModelWorkspaceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ModelerCoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
     }
 }

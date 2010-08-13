@@ -14,8 +14,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.xsd.XSDSchema;
 import org.jdom.Namespace;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Message;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;

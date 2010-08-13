@@ -8,14 +8,12 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-     <extension
-         id="modelextension.SOAPExtensionReplaceAction"
-		 name="%extensionReplaceAction.name"
-         point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-            label="%extensionReplaceAction.label"
-            name="com.metamatrix.modeler.modelgenerator.wsdl.modelextension.SOAPExtensionReplaceAction">
-      </resourceAction>
+   <extension
+       id="org.teiid.designer.modelgenerator.wsdl.ConnectionInfoProvider"
+       name="WSDLConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoHelper
+            category="org.eclipse.datatools.enablement.oda.ws"
+            class="com.metamatrix.modeler.modelgenerator.wsdl.SOAPConnectionInfoProvider"/>
    </extension>
-
 </plugin>

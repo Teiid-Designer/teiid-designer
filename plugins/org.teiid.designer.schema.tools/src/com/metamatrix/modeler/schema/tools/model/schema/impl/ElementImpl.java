@@ -23,7 +23,11 @@ public class ElementImpl extends BaseSchemaObject {
 
     protected XSDElementDeclaration elem;
 
-    public ElementImpl( XSDElementDeclaration elem,
+    public XSDElementDeclaration getElem() {
+		return elem;
+	}
+
+	public ElementImpl( XSDElementDeclaration elem,
                         String namespacePrefix,
                         XSDTypeDefinition type,
                         XSDSchema schema ) {

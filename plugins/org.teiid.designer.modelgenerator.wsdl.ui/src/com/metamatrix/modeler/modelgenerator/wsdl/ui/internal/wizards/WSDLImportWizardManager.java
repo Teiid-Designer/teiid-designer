@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
+import com.metamatrix.modeler.modelgenerator.wsdl.model.Operation;
 
 /**
  * WSDL Import Manager - Business Object for interacting with GUI
@@ -125,7 +126,7 @@ public class WSDLImportWizardManager {
      * 
      * @param operations the list of operations
      */
-    public void setSelectedOperations( List operations ) {
+    public void setSelectedOperations( List<Operation> operations ) {
         this.selectedOperations = operations;
     }
 
@@ -134,7 +135,7 @@ public class WSDLImportWizardManager {
      * 
      * @return the list of operations
      */
-    public List getSelectedOperations() {
+    public List<Operation> getSelectedOperations() {
         return this.selectedOperations;
     }
 

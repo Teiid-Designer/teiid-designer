@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.wsdl.BindingFault;
 import javax.wsdl.BindingInput;
 import javax.wsdl.BindingOutput;
@@ -28,7 +29,9 @@ import javax.wsdl.extensions.soap.SOAPBody;
 import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
+
 import org.eclipse.xsd.XSDSchema;
+
 import com.ibm.wsdl.ImportImpl;
 import com.ibm.wsdl.factory.WSDLFactoryImpl;
 import com.metamatrix.modeler.modelgenerator.wsdl.ModelGeneratorWsdlPlugin;

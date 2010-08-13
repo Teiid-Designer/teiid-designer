@@ -14,6 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.jdom.Namespace;
 import com.metamatrix.modeler.schema.tools.ToolsPlugin;
 import com.metamatrix.modeler.schema.tools.model.jdbc.Table;
@@ -38,6 +41,7 @@ public class SchemaModelImpl implements SchemaModel {
     private Set rootElements;
 
     private HashMap tableImplementations = new HashMap();
+    private HashMap<QName, SchemaObject> elementLookup = new HashMap();
 
     private boolean typeAware = false;
 
@@ -47,6 +51,11 @@ public class SchemaModelImpl implements SchemaModel {
                             Map namespaces,
                             String sep ) {
         this.elements = elements;
+        for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
+			SchemaObject object = (SchemaObject) iterator.next();
+			QName qName = new QName(object.getNamespace(), object.getName());
+			elementLookup.put(qName, object);
+		}
         this.namespaces = namespaces;
         if (null == sep) {
             SchemaModelImpl.separator = "_"; //$NON-NLS-1$
@@ -257,4 +266,9 @@ public class SchemaModelImpl implements SchemaModel {
     public static String getSeparator() {
         return separator;
     }
+
+	@Override
+	public SchemaObject getElement(QName qName) {
+		return elementLookup.get(qName);
+	}
 }

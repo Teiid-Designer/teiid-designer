@@ -9,6 +9,9 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -20,11 +23,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -37,14 +40,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -53,10 +58,10 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -104,22 +109,13 @@ public class SelectWsdlPage extends WizardPage
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
     /** Source radio buttons and validate button */
-    private Button radioSelectWorkspace;
-    private Button radioSelectFileSystem;
-    private Button radioSelectURL;
     private Button buttonValidateWSDL;
 
     /** Source and target text fields */
-    Text textFieldWorkspace;
-    Text textFieldFileSystem;
-    Text textFieldURL;
-    Text textFieldTargetModelName;
+    Text wsdlURIText;
     Text textFieldTargetModelLocation;
 
     /** selection buttons */
-    Button buttonSelectFileSystem;
-    Button buttonSelectWorkspace;
-    Button buttonSelectTargetModel;
     Button buttonSelectTargetModelLocation;
 
     /** The import manager. */
@@ -131,6 +127,10 @@ public class SelectWsdlPage extends WizardPage
     private IContainer targetModelLocation;
     private boolean initializing = false;
 
+    private ProfileManager profileManager;
+
+    private Combo profileCombo;
+
     /**
      * Constructs the page with the provided import manager
      * 
@@ -140,6 +140,7 @@ public class SelectWsdlPage extends WizardPage
         super(SelectWsdlPage.class.getSimpleName(), getString("title"), null); //$NON-NLS-1$
         this.importManager = theImportManager;
         setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
+        profileManager = ProfileManager.getInstance();
     }
 
     /**
@@ -151,43 +152,7 @@ public class SelectWsdlPage extends WizardPage
         if (!initializing) {
             boolean validate = false;
 
-            // Select Workspace radio selected
-            if (event.widget == this.radioSelectWorkspace && this.radioSelectWorkspace.getSelection()) {
-                this.importManager.setWSDLFileUri(null);
-                this.textFieldFileSystem.setText(EMPTY_STR);
-                this.textFieldURL.setText(EMPTY_STR);
-                updateWidgetEnablements();
-                validate = true;
-                // Select FileSystem radio selected
-            } else if (event.widget == this.radioSelectFileSystem && this.radioSelectFileSystem.getSelection()) {
-                this.importManager.setWSDLFileUri(null);
-                this.textFieldWorkspace.setText(EMPTY_STR);
-                this.textFieldURL.setText(EMPTY_STR);
-                updateWidgetEnablements();
-                validate = true;
-                // Select URL radio selected
-            } else if (event.widget == this.radioSelectURL && this.radioSelectURL.getSelection()) {
-                this.importManager.setWSDLFileUri(null);
-                this.textFieldFileSystem.setText(EMPTY_STR);
-                this.textFieldWorkspace.setText(EMPTY_STR);
-                String urlText = this.textFieldURL.getText();
-                updateCurrentURL(urlText);
-                updateWidgetEnablements();
-                validate = true;
-                // Handle Workspace Browse Button Selection
-            } else if (event.widget == this.buttonSelectWorkspace) {
-                handleBrowseWorkspaceWsdlFile();
-                validate = true;
-                // Handle FileSystem Browse Button Selection
-            } else if (event.widget == this.buttonSelectFileSystem) {
-                handleBrowseFileSystemWsdlFile();
-                validate = true;
-                // Handle Workspace browse for target model
-            } else if (event.widget == this.buttonSelectTargetModel) {
-                handleBrowseWorkspaceForTargetModel();
-                validate = true;
-                // Handle workspace browse for target model location
-            } else if (event.widget == this.buttonSelectTargetModelLocation) {
+            if (event.widget == this.buttonSelectTargetModelLocation) {
                 handleBrowseWorkspaceForTargetModelLocation();
                 validate = true;
                 // Handle wsdl validate button pressed
@@ -195,6 +160,7 @@ public class SelectWsdlPage extends WizardPage
                 handleValidateWSDLButtonPressed();
                 validate = true;
             }
+
             // Update the page status
             if (validate) {
                 setPageStatus();
@@ -207,27 +173,6 @@ public class SelectWsdlPage extends WizardPage
      */
     private void updateWidgetEnablements() {
         // Workspace control enablement
-        if (this.radioSelectWorkspace.getSelection()) {
-            this.textFieldWorkspace.setEnabled(true);
-            this.buttonSelectWorkspace.setEnabled(true);
-        } else {
-            this.textFieldWorkspace.setEnabled(false);
-            this.buttonSelectWorkspace.setEnabled(false);
-        }
-
-        if (this.radioSelectFileSystem.getSelection()) {
-            this.textFieldFileSystem.setEnabled(true);
-            this.buttonSelectFileSystem.setEnabled(true);
-        } else {
-            this.textFieldFileSystem.setEnabled(false);
-            this.buttonSelectFileSystem.setEnabled(false);
-        }
-
-        if (this.radioSelectURL.getSelection()) {
-            this.textFieldURL.setEnabled(true);
-        } else {
-            this.textFieldURL.setEnabled(false);
-        }
 
         updateValidateWSDLButtonEnablement();
     }
@@ -293,65 +238,41 @@ public class SelectWsdlPage extends WizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // options group
-        Group optionsGroup = new Group(pnl, SWT.NONE);
+        Group optionsGroup = new Group(pnl, SWT.FILL);
         optionsGroup.setText(getString("sourceOptionsGroup.text")); //$NON-NLS-1$
+        optionsGroup.setLayout(new GridLayout(2, false));
+        optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
-        optionsGroup.setLayoutData(gdRadioGroup);
+        GridData gridData;
+        CLabel profileLabel = new CLabel(optionsGroup, SWT.NONE);
+        profileLabel.setText("Connection Profile");//getString("profileLabel.text")); //$NON-NLS-1$
+        gridData = new GridData(SWT.NONE);
+        gridData.horizontalSpan = 1;
+        profileLabel.setLayoutData(gridData);
 
-        optionsGroup.setLayout(new GridLayout(3, false));
+        profileCombo = new Combo(optionsGroup, SWT.READ_ONLY);
+        gridData = new GridData(GridData.FILL_HORIZONTAL);
+        gridData.horizontalSpan = 1;
+        profileCombo.setLayoutData(gridData);
+        profileCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                refreshUiFromManager();
+            }
+        });
 
-        // --------------------------------------------
-        // Composite for Workspace Selection
-        // --------------------------------------------
-        // Workspace Radio
-        radioSelectWorkspace = WidgetFactory.createRadioButton(optionsGroup, getString("workspaceRadio.text")); //$NON-NLS-1$ 
+        CLabel wsldLabel = new CLabel(optionsGroup, SWT.NONE);
+        wsldLabel.setText("WSDL URI");
+        gridData = new GridData(SWT.NONE);
+        gridData.horizontalSpan = 1;
+        wsldLabel.setLayoutData(gridData);
 
         // Workspace textfield
-        textFieldWorkspace = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
+        wsdlURIText = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
         text = getString("workspaceTextField.tooltip"); //$NON-NLS-1$
-        textFieldWorkspace.setToolTipText(text);
-        textFieldWorkspace.setEditable(false);
-
-        // Workspace Browse Button
-        buttonSelectWorkspace = WidgetFactory.createButton(optionsGroup, getString("workspaceBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
-        buttonSelectWorkspace.setToolTipText(getString("workspaceBrowseButton.tooltip")); //$NON-NLS-1$
-        // --------------------------------------------
-        // Composite for FileSystem Selection
-        // --------------------------------------------
-        // File System Radio
-        radioSelectFileSystem = WidgetFactory.createRadioButton(optionsGroup, getString("fileSystemRadio.text")); //$NON-NLS-1$
-
-        // FileSystem textfield
-        textFieldFileSystem = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
-        text = getString("fileSystemTextField.tooltip"); //$NON-NLS-1$
-        textFieldFileSystem.setToolTipText(text);
-        textFieldFileSystem.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
-                handleTextFieldFileSystemChanged();
-            }
-        });
-
-        // File System Browse Button
-        buttonSelectFileSystem = WidgetFactory.createButton(optionsGroup, getString("fileSystemBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
-        buttonSelectFileSystem.setToolTipText(getString("fileSystemBrowseButton.tooltip")); //$NON-NLS-1$
-
-        // --------------------------------------------
-        // Composite for URL Selection
-        // --------------------------------------------
-        // URL Radio
-        radioSelectURL = WidgetFactory.createRadioButton(optionsGroup, getString("urlRadio.text"), true); //$NON-NLS-1$
-
-        // URL textfield
-        textFieldURL = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL, 2);
-        text = getString("urlTextField.tooltip"); //$NON-NLS-1$
-        textFieldURL.setToolTipText(text);
-        textFieldURL.setText(EMPTY_STR);
-        textFieldURL.addModifyListener(new ModifyListener() {
-            public void modifyText( ModifyEvent e ) {
-                handleURLChanged();
-            }
-        });
+        wsdlURIText.setToolTipText(text);
+        wsdlURIText.setEditable(false);
+        wsdlURIText.setEnabled(false);
 
         // --------------------------------------------
         // WSDL Validation Button
@@ -363,11 +284,6 @@ public class SelectWsdlPage extends WizardPage
         // --------------------------------------------
         // Add Listener to handle selection events
         // --------------------------------------------
-        buttonSelectWorkspace.addListener(SWT.Selection, this);
-        radioSelectWorkspace.addListener(SWT.Selection, this);
-        buttonSelectFileSystem.addListener(SWT.Selection, this);
-        radioSelectFileSystem.addListener(SWT.Selection, this);
-        radioSelectURL.addListener(SWT.Selection, this);
         buttonValidateWSDL.addListener(SWT.Selection, this);
 
         updateWidgetEnablements();
@@ -395,32 +311,6 @@ public class SelectWsdlPage extends WizardPage
         optionsGroup.setLayout(new GridLayout(3, false));
 
         // --------------------------------------------
-        // Composite for Model Selection
-        // --------------------------------------------
-        // Select Model Label
-        //WidgetFactory.createLabel( optionsGroup, getString("targetModelLabel.text")); //$NON-NLS-1$ 
-        CLabel theLabel = new CLabel(optionsGroup, SWT.NONE);
-        theLabel.setText(getString("targetModelLabel.text")); //$NON-NLS-1$
-        final GridData gridData = new GridData(SWT.NONE);
-        gridData.horizontalSpan = 1;
-        theLabel.setLayoutData(gridData);
-
-        // target model name textfield
-        textFieldTargetModelName = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
-        String text = getString("targetModelTextField.tooltip"); //$NON-NLS-1$
-        textFieldTargetModelName.setToolTipText(text);
-        this.textFieldTargetModelName.addModifyListener(new ModifyListener() {
-            public void modifyText( final ModifyEvent event ) {
-                setPageStatus();
-            }
-        });
-
-        // target model Browse Button
-        buttonSelectTargetModel = WidgetFactory.createButton(optionsGroup,
-                                                             getString("targetModelBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
-        buttonSelectTargetModel.setToolTipText(getString("targetModelBrowseButton.tooltip")); //$NON-NLS-1$
-
-        // --------------------------------------------
         // Composite for Model Location Selection
         // --------------------------------------------
         // Select Target Location Label
@@ -436,7 +326,7 @@ public class SelectWsdlPage extends WizardPage
 
         // FileSystem textfield
         textFieldTargetModelLocation = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
-        text = getString("targetModelLocationTextField.tooltip"); //$NON-NLS-1$
+        String text = getString("targetModelLocationTextField.tooltip"); //$NON-NLS-1$
         textFieldTargetModelLocation.setToolTipText(text);
 
         if (name != null) {
@@ -453,11 +343,6 @@ public class SelectWsdlPage extends WizardPage
                                                                      getString("targetModelLocationBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
         buttonSelectTargetModelLocation.setToolTipText(getString("targetModelLocationBrowseButton.tooltip")); //$NON-NLS-1$
         buttonSelectTargetModelLocation.addListener(SWT.Selection, this);
-
-        // --------------------------------------------
-        // Add Listener to handle selection events
-        // --------------------------------------------
-        buttonSelectTargetModel.addListener(SWT.Selection, this);
 
     }
 
@@ -512,118 +397,6 @@ public class SelectWsdlPage extends WizardPage
     private static String getString( final String theKey,
                                      final Object parameter ) {
         return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString(), parameter);
-    }
-
-    /**
-     * Handler for workspace WSDL Browse button.
-     */
-    private void handleBrowseWorkspaceWsdlFile() {
-        // Show the Workspace WSDL File Selection dialog
-        Object[] wsdlFiles = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("dialog.browseWorkspaceWsdl.title"), //$NON-NLS-1$
-                                                                           getString("dialog.browseWorkspaceWsdl.msg"), //$NON-NLS-1$
-                                                                           true,
-                                                                           null,
-                                                                           new ModelingResourceFilter(this.wsdlFilter),
-                                                                           this.wsdlValidator);
-        // Update the import manager and controls with the selection
-        if ((wsdlFiles != null) && (wsdlFiles.length > 0)) {
-
-            Object[] aryFiles = new Object[wsdlFiles.length];
-            for (int i = 0; i < wsdlFiles.length; i++) {
-                IFile ifFile = (IFile)wsdlFiles[i];
-
-                // Convert the IFile object to a File object
-                File fNew = ifFile.getLocation().toFile();
-                aryFiles[i] = fNew;
-            }
-
-            String uriStr = null;
-            try {
-                uriStr = ((File)aryFiles[0]).toURI().toURL().toExternalForm();
-            } catch (MalformedURLException err) {
-                // exception will leave uri null
-            }
-            this.importManager.setWSDLFileUri(uriStr);
-            this.textFieldWorkspace.setText(uriStr);
-            this.wsdlStatus = null;
-            updateValidateWSDLButtonEnablement();
-        }
-    }
-
-    /**
-     * Handler for FileSystem WSDL Browse button.
-     */
-    private void handleBrowseFileSystemWsdlFile() {
-        // File System Dialog
-        FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
-        dialog.setText(getString("dialog.browseFileSystemWsdl.title")); //$NON-NLS-1$
-        dialog.setFilterExtensions(ModelGeneratorWsdlUiUtil.FILE_DIALOG_WSDL_EXTENSIONS);
-
-        // Open the dialog
-        if (dialog.open() != null) {
-            boolean validFile = true;
-            String[] filenames = dialog.getFileNames();
-
-            if ((filenames != null) && (filenames.length > 0)) {
-                String directory = dialog.getFilterPath();
-                Object[] wsdlFiles = new Object[filenames.length];
-
-                for (int i = 0; i < filenames.length; i++) {
-                    String path = new StringBuffer().append(directory).append(File.separatorChar).append(filenames[i]).toString();
-                    wsdlFiles[i] = new File(path);
-
-                    // make sure the right type of file was selected. since the user can enter *.* in file name
-                    // field of the dialog they can view all files regardless of the filter extensions. this allows
-                    // them to actually select invalid file types.
-
-                    if (!ModelGeneratorWsdlUiUtil.isWsdlFile((File)wsdlFiles[i])) {
-                        validFile = false;
-                        break;
-                    }
-                }
-
-                // If WSDL file was selected, update the manager and the controls
-                if (validFile) {
-                    String fileStr = ((File) wsdlFiles[0]).getAbsolutePath();
-                    this.textFieldFileSystem.setText(fileStr);
-                    fileStr = URI.createFileURI(fileStr).toString();
-					this.importManager.setWSDLFileUri(fileStr);
-					this.wsdlStatus = null;
-					updateValidateWSDLButtonEnablement();
-                } else {
-                    // open file chooser again based on if user OK'd dialog
-                    if (MessageDialog.openQuestion(getShell(), getString("dialog.browseFileSystemWsdl.wrongFileType.title"), //$NON-NLS-1$
-                                                   getString("dialog.browseFileSystemWsdl.wrongFileType.msg"))) { //$NON-NLS-1$
-                        handleBrowseFileSystemWsdlFile();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Handler for Workspace Target Relational Model Browse button.
-     */
-    void handleBrowseWorkspaceForTargetModel() {
-        // Open the selection dialog for the target relational model
-        MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(RelationalPackage.eNS_URI);
-        Object[] resources = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("dialog.browseTargetModel.title"), //$NON-NLS-1$
-                                                                           getString("dialog.browseTargetModel.msg"), //$NON-NLS-1$
-                                                                           false,
-                                                                           this.importManager.getTargetModelLocation(),
-                                                                           new XMLExtensionsFilter(),
-                                                                           new ModelResourceSelectionValidator(descriptor, false));
-        // Update the manager and the controls with selection
-        if ((resources != null) && (resources.length > 0)) {
-            IFile model = (IFile)resources[0];
-            IContainer location = model.getParent();
-
-            this.textFieldTargetModelName.setText(model.getName());
-            this.textFieldTargetModelLocation.setText((location == null) ? "" //$NON-NLS-1$
-            : location.getFullPath().makeRelative().toString());
-            // this.updateCheckBox.setSelection(true);
-            // updateCheckBoxSelected(); // to get handler activated
-        }
     }
 
     /**
@@ -685,35 +458,11 @@ public class SelectWsdlPage extends WizardPage
         this.wsdlStatus = this.importManager.validateWSDL(monitor);
     }
 
-    /**
-     * Handler for changes to the File System textbox.
-     */
-    void handleTextFieldFileSystemChanged() {
-        if (this.radioSelectFileSystem.getSelection()) {
-            updateCurrentFileSystemSelection(this.textFieldFileSystem.getText());
-            this.wsdlStatus = null;
-            updateValidateWSDLButtonEnablement();
-            setPageStatus();
-        }
-    }
-
     private void updateCurrentFileSystemSelection( String text ) {
         text = text.replace('\\', '/');
         File file = new File(text);
         if (file.exists() && file.isFile() && ModelGeneratorWsdlUiUtil.isWsdlFile(file)) {
             this.importManager.setWSDLFileUri(file.getAbsolutePath());
-        }
-    }
-
-    /**
-     * Handler for changes to the URL textbox.
-     */
-    void handleURLChanged() {
-        if (this.radioSelectURL.getSelection()) {
-            updateCurrentURL(this.textFieldURL.getText());
-            this.wsdlStatus = null;
-            updateValidateWSDLButtonEnablement();
-            setPageStatus();
         }
     }
 
@@ -795,35 +544,58 @@ public class SelectWsdlPage extends WizardPage
      */
     private void refreshUiFromManager() {
         if (this.importManager != null) {
-            String tgtModelName = this.importManager.getTargetModelName();
-            if (this.textFieldTargetModelName != null && tgtModelName != null) {
-                this.textFieldTargetModelName.setText(tgtModelName);
-            }
-            IContainer tgtModelLocation = this.importManager.getTargetModelLocation();
+            
+        	IContainer tgtModelLocation = this.importManager.getTargetModelLocation();
             if (this.textFieldTargetModelLocation != null && tgtModelLocation != null) {
                 this.textFieldTargetModelLocation.setText(tgtModelLocation.getFullPath().makeRelative().toString());
             }
 
-            if (importManager.getUriSource() == WSDLImportWizardManager.WORKSPACE_SOURCE) {
-                this.radioSelectWorkspace.setSelection(true);
-                this.radioSelectFileSystem.setSelection(false);
-                this.radioSelectURL.setSelection(false);
-                updateWidgetEnablements();
+            if (null == profileCombo.getItems() || 0 == profileCombo.getItems().length) {
+                IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.enablement.oda.ws"); //$NON-NLS-1$
+                if (sfProfiles.length == 0) {
+                    setErrorMessage(getString("no.profile")); //$NON-NLS-1$
+                    wsdlURIText.setText(EMPTY_STR);
+                    buttonValidateWSDL.setEnabled(false);
+                    return;
+                } else {
+                    List<String> profileNames = new ArrayList();
+                    for (int i = 0; i < sfProfiles.length; i++) {
+                        IConnectionProfile profile = sfProfiles[i];
+                        profileNames.add(profile.getName());
+                    }
+                    profileCombo.setItems(profileNames.toArray(new String[profileNames.size()]));
+                    setErrorMessage(null);
+                    setMessage(getString("select.profile")); //$NON-NLS-1$
+                    return;
+                }
             }
 
-            if (this.textFieldWorkspace != null && this.radioSelectWorkspace != null && this.radioSelectWorkspace.getSelection()) {
-                String wsdlFileUri = this.importManager.getWSDLFileUri();
-                if (wsdlFileUri != null) {
-                    this.textFieldWorkspace.setText(wsdlFileUri);
-                }
-                if (this.textFieldFileSystem != null) {
-                    this.textFieldFileSystem.setText(EMPTY_STR);
-                }
-                if (this.textFieldURL != null) {
-                    this.textFieldURL.setText(EMPTY_STR);
-                }
+            String profileName = profileCombo.getText();
+            IConnectionProfile profile = findMatchingProfile(profileName);
+            if (null == profile) {
+                // this should really never happen
+                setMessage(null);
+                setErrorMessage(getString("no.profile.match", new Object[] {profileName})); //$NON-NLS-1$
+                buttonValidateWSDL.setEnabled(false);
+                return;
+            }
+            Properties props = profile.getBaseProperties();
+            wsdlURIText.setText(props.getProperty("wsdlURI"));
+            importManager.setWSDLFileUri(props.getProperty("wsdlURI"));
+            updateWidgetEnablements();
+        }
+    }
+
+    private IConnectionProfile findMatchingProfile( String name ) {
+        IConnectionProfile result = null;
+        IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.enablement.oda.ws"); //$NON-NLS-1$
+        for (int i = 0; i < sfProfiles.length; i++) {
+            IConnectionProfile profile = sfProfiles[i];
+            if (profile.getName().equals(name)) {
+                result = profile;
             }
         }
+        return result;
     }
 
     /**
@@ -912,20 +684,6 @@ public class SelectWsdlPage extends WizardPage
             // No WSDL selected message
             msg = getString("noWsdlSelected.msg"); //$NON-NLS-1$
             // If URL radio is selected, check URL validity
-            if (this.radioSelectURL.getSelection()) {
-                String urlText = this.textFieldURL.getText();
-                if (urlText == null || urlText.length() == 0) {
-                    msg = getString("noURLString.msg"); //$NON-NLS-1$
-                } else if (!this.urlValid) {
-                    msg = getString("invalidURLString.msg"); //$NON-NLS-1$
-                } else if (!this.urlReadable) {
-                    msg = getString("urlValidNotReadable.msg"); //$NON-NLS-1$
-                }
-            } else {
-                if (this.radioSelectWorkspace.getSelection()) {
-                    msg = getString("noWsdlSelected.workspace.msg"); //$NON-NLS-1$
-                }
-            }
             WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
             return false;
         }
@@ -955,8 +713,7 @@ public class SelectWsdlPage extends WizardPage
         final boolean updating = false;
         try {
             // Validate the target Model Name and location
-            targetModelLocation = validateFileAndFolder(this.textFieldTargetModelName,
-                                                        this.textFieldTargetModelLocation,
+            targetModelLocation = validateFileAndFolder(this.textFieldTargetModelLocation,
                                                         ModelerCore.MODEL_FILE_EXTENSION);
 
             // If null location was returned, error was found
@@ -969,37 +726,7 @@ public class SelectWsdlPage extends WizardPage
                 targetModelLocation = null;
                 return false;
             }
-
-            // Continue checks on the target model and location
-            String targetModelName = this.textFieldTargetModelName.getText();
-            targetModelName = FileUtils.toFileNameWithExtension(targetModelName, ModelerCore.MODEL_FILE_EXTENSION);
-            final IFile file = targetModelLocation.getFile(new Path(targetModelName));
-            ModelResource model = null;
-            if (file.exists()) {
-                try {
-                    model = ModelerCore.getModelEditor().findModelResource(file);
-                    if (model.isReadOnly()) {
-                        WizardUtil.setPageComplete(this, getString("readOnlyModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                        return false;
-                    }
-                    if (!RelationalPackage.eNS_URI.equals(model.getPrimaryMetamodelDescriptor().getNamespaceURI())) {
-                        WizardUtil.setPageComplete(this, getString("notRelationalModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                        return false;
-                    }
-                    if (model.getModelType().getValue() == ModelType.VIRTUAL) {
-                        WizardUtil.setPageComplete(this, getString("virtualModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                        return false;
-                    }
-                } catch (final ModelWorkspaceException err) {
-                    UTIL.log(err);
-                    WidgetUtil.showError(err.getLocalizedMessage());
-                }
-            } else if (updating) {
-                String msg = getString(getString("noModelToUpdateMessage"), file.getFullPath().makeRelative()); //$NON-NLS-1$
-                WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
-                return false;
-            }
-            this.importManager.setTargetModelName(targetModelName);
+            
             this.importManager.setTargetModelLocation(targetModelLocation);
             // this.importManager.setUpdatedModel(model);
             getContainer().updateButtons();
@@ -1020,53 +747,24 @@ public class SelectWsdlPage extends WizardPage
      * @param locationText the Text entry widget for the model location.
      * @return the location container, null if invalid or not found.
      */
-    private IContainer validateFileAndFolder( final Text fileText,
-                                              final Text folderText,
+    private IContainer validateFileAndFolder( final Text folderText,
                                               final String fileExtension ) throws CoreException {
-        CoreArgCheck.isNotNull(fileText);
         CoreArgCheck.isNotNull(folderText);
         CoreArgCheck.isNotNull(fileExtension);
-        String fileName = fileText.getText();
-        if (CoreStringUtil.isEmpty(fileName)) {
-            WizardUtil.setPageComplete(this, getString("missingFileMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+        final String folderName = folderText.getText();
+        if (CoreStringUtil.isEmpty(folderName)) {
+        	WizardUtil.setPageComplete(this, getString("missingFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
         } else {
-            String problem = ModelUtilities.validateModelName(fileName, ModelerCore.MODEL_FILE_EXTENSION);
-            if (problem != null) {
-                String msg = getString("invalidFileMessage") + '\n' + problem; //$NON-NLS-1$
-                WizardUtil.setPageComplete(this, msg, IMessageProvider.ERROR);
-                targetModelLocation = null;
-            } else {
-                final String folderName = folderText.getText();
-                if (CoreStringUtil.isEmpty(folderName)) {
-                    WizardUtil.setPageComplete(this, getString("missingFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                } else {
-                    final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
-                    if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
-                        WizardUtil.setPageComplete(this, getString("invalidFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                    } else if (!resrc.getProject().isOpen()) {
-                        WizardUtil.setPageComplete(this, getString("closedProjectMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                    } else {
-                        final IContainer folder = (IContainer)resrc;
-                        boolean exists = false;
-                        final IResource[] resrcs;
-                        resrcs = folder.members();
-                        // Append file extension if necessary
-                        fileName = FileUtils.toFileNameWithExtension(fileName, fileExtension);
-                        for (int ndx = resrcs.length; --ndx >= 0;) {
-                            if (resrcs[ndx].getName().equalsIgnoreCase(fileName)) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (exists) {
-                            WizardUtil.setPageComplete(this);
-                        } else {
-                            WizardUtil.setPageComplete(this, getString("invalidFileMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
-                        }
-                        return folder;
-                    }
-                }
-            }
+        	final IResource resrc = ResourcesPlugin.getWorkspace().getRoot().findMember(folderName);
+        	if (resrc == null || !(resrc instanceof IContainer) || resrc.getProject() == null) {
+        		WizardUtil.setPageComplete(this, getString("invalidFolderMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+        	} else if (!resrc.getProject().isOpen()) {
+        		WizardUtil.setPageComplete(this, getString("closedProjectMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+        	} else {
+        		final IContainer folder = (IContainer)resrc;
+        		WizardUtil.setPageComplete(this);
+        		return folder;
+        	}
         }
         return null;
     }

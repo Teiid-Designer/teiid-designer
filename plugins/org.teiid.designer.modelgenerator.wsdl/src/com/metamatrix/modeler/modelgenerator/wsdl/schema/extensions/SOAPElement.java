@@ -10,6 +10,7 @@ package com.metamatrix.modeler.modelgenerator.wsdl.schema.extensions;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
+
 import com.metamatrix.modeler.schema.tools.model.schema.ISchemaModelCopyTraversalContext;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.ElementImpl;
