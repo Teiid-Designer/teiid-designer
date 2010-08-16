@@ -16,8 +16,12 @@ import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.visitor.AbstractSymbolMappingVisitor;
 
@@ -366,4 +370,19 @@ public class SymbolUUIDMappingVisitor extends AbstractSymbolMappingVisitor {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+    /** 
+     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.symbol.AliasSymbol)
+     */
+    public void visit(AliasSymbol obj) {
+        Expression replacement = replaceExpression(obj.getSymbol());
+        
+        if (replacement instanceof SingleElementSymbol) {
+        	// DO NOTHING. Don't need to convert A.ColumnName since it's already aliased.
+        	// Converting would change it to A.ModelName.TableName.ColumnName which defeats the purpose
+        	// of the Alias
+        } else {
+            obj.setSymbol(new ExpressionSymbol(obj.getName(), obj.getSymbol()));
+        }
+    }
 }
