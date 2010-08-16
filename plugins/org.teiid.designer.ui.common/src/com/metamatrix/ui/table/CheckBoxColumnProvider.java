@@ -7,11 +7,12 @@
  */
 package com.metamatrix.ui.table;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+
+import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
 
 /**
@@ -49,8 +50,8 @@ public abstract class CheckBoxColumnProvider<T> extends DefaultColumnProvider<T,
      */
     @Override
     public final Image getImage( final T element ) {
-        if (getValue(element)) return JFaceResources.getImage(UiPlugin.CHECKED_BOX);
-        return JFaceResources.getImage(UiPlugin.UNCHECKED_BOX);
+    	if (getValue(element)) return UiPlugin.getDefault().getImage(UiConstants.Images.CHECKED_CHECKBOX);
+    	return UiPlugin.getDefault().getImage(UiConstants.Images.UNCHECKED_CHECKBOX);
     }
 
     /**

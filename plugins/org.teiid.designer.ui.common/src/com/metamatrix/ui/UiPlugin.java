@@ -9,15 +9,7 @@ package com.metamatrix.ui;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 
@@ -48,29 +40,6 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
 
     // The shared instance.
     private static UiPlugin plugin;
-
-    private static final Image createCheckBoxImage( final boolean checked ) {
-        Display display = Display.getCurrent();
-        if (display == null) display = Display.getDefault();
-        final Shell shell = new Shell(display, SWT.NO_TRIM);
-        final Button checkBox = new Button(shell, SWT.CHECK);
-        checkBox.setSelection(checked);
-        checkBox.pack();
-        final Point size = checkBox.getSize();
-        shell.setSize(size);
-        final Color greenScreen = new Color(display, 255, 255, 254);
-        checkBox.setBackground(greenScreen);
-        shell.setBackground(greenScreen);
-        shell.open();
-        final GC gc = new GC(checkBox);
-        final Image image = new Image(display, size.x, size.y);
-        gc.copyArea(image, 0, 0);
-        gc.dispose();
-        shell.close();
-        final ImageData imageData = image.getImageData();
-        imageData.transparentPixel = imageData.palette.getPixel(greenScreen.getRGB());
-        return new Image(display, imageData);
-    }
 
     /**
      * Returns the shared instance.
@@ -131,8 +100,8 @@ public final class UiPlugin extends AbstractUiPlugin implements InternalUiConsta
                 registerPluginImage(UI, Images.TASK_INFO);
                 // Register commonly-used images. Note that unlike the checkbox images above, these are created using the native UI's
                 // checkbox image
-                JFaceResources.getImageRegistry().put(UNCHECKED_BOX, createCheckBoxImage(false));
-		        JFaceResources.getImageRegistry().put(CHECKED_BOX, createCheckBoxImage(true));
+                registerPluginImage(UiConstants.PLUGIN_ID, UiConstants.Images.CHECKED_CHECKBOX);
+                registerPluginImage(UiConstants.PLUGIN_ID, UiConstants.Images.UNCHECKED_CHECKBOX);
             }
         };
         if (Display.getCurrent() == null) {

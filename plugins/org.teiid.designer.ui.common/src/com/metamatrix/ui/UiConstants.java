@@ -75,8 +75,8 @@ public interface UiConstants {
 		 */
         String REFRESH = ELCL16 + "refresh_nav.gif"; //$NON-NLS-1$
 
-        String CHECKED_CHECKBOX            = OBJ16 + "complete_tsk.gif"; //$NON-NLS-1$
-        String UNCHECKED_CHECKBOX          = OBJ16 + "incomplete_tsk.gif"; //$NON-NLS-1$
+        String CHECKED_CHECKBOX            = CVIEW16 + "checked_box.png"; //$NON-NLS-1$
+        String UNCHECKED_CHECKBOX          = CVIEW16 + "unchecked_box.png"; //$NON-NLS-1$
 
         // images registered from org.eclipse.ui and used in org.eclipse.ui.views.tasklist.
         // images are registered in UiPlugin.startup()
