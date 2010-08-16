@@ -276,6 +276,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 			}
 
 			for( Object child : getChildren(res) ) {
+				if( getTargetName(child).equals(targetName)) {
+					return child;
+				}
 				Object target = getTargetObjectInChildren(child, targetName);
 				if( target != null ) {
 					return target;
