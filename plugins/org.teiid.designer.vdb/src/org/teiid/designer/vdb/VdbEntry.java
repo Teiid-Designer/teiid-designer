@@ -221,7 +221,13 @@ public class VdbEntry {
 
     void save( final ZipOutputStream out,
                final IProgressMonitor monitor ) {
-        final ZipEntry zipEntry = new ZipEntry(name.toString());
+    	String zipName = name.toString();
+    	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
+    	// being located at the file system "root" folder.
+    	if( zipName.startsWith("/") ) { //$NON-NLS-1$
+    		zipName = zipName.substring(1, zipName.length());
+    	}
+        final ZipEntry zipEntry = new ZipEntry(zipName);
         zipEntry.setComment(description.get());
         save(out, zipEntry, new File(vdb.getFolder(), name.toString()), monitor);
     }
