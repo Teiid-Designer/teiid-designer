@@ -10,14 +10,12 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
@@ -36,10 +34,6 @@ public class VdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     */
-    public static final String PREVIEW = "preview"; //$NON-NLS-1$
-
     @XmlAttribute( name = "name", required = true )
     private String name;
 
@@ -57,7 +51,7 @@ public class VdbElement implements Serializable {
 
     @XmlElement( name = "entry", type = EntryElement.class )
     private List<EntryElement> entries;
-    
+
     @XmlElement( name = "data-role", type = DataRoleElement.class )
     private List<DataRoleElement> dataRoles;
 
@@ -78,16 +72,9 @@ public class VdbElement implements Serializable {
             getEntries().add(new EntryElement(entry));
         for (final VdbModelEntry modelEntry : vdb.getModelEntries())
             getModels().add(new ModelElement(modelEntry));
-        for( final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries() )
-        	getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
-        getProperties().add(new PropertyElement(PREVIEW, Boolean.toString(vdb.isPreview())));
-    }
-
-    /**
-     * @return description
-     */
-    public String getDescription() {
-        return description;
+        for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
+            getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
+        getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
     }
 
     /**
@@ -97,7 +84,14 @@ public class VdbElement implements Serializable {
         if (dataRoles == null) dataRoles = new ArrayList<DataRoleElement>();
         return dataRoles;
     }
-    
+
+    /**
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
+
     /**
      * @return entries
      */

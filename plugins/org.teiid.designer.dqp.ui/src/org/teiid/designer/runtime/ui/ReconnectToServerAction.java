@@ -8,34 +8,25 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * The <code>ReconnectToServerAction</code> tries to reconnect to a selected server.
  */
 public final class ReconnectToServerAction extends BaseSelectionListenerAction {
 
-    // ===========================================================================================================================
-    // Fields
-    // ===========================================================================================================================
-
     /**
      * The server view tree viewer.
      */
     private final TreeViewer viewer;
-
-    // ===========================================================================================================================
-    // Constructors
-    // ===========================================================================================================================
 
     /**
      * @param viewer the server view tree viewer
@@ -49,37 +40,11 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
         this.viewer = viewer;
     }
 
-    // ===========================================================================================================================
-    // Methods
-    // ===========================================================================================================================
-
     /**
      * @return the view's tree viewer
      */
     StructuredViewer getViewer() {
         return this.viewer;
-    }
-
-    /**
-     * @param server the server being connected to
-     */
-    void refresh( final Server server ) {
-        final Display display = this.viewer.getControl().getDisplay();
-
-        if (!display.isDisposed()) {
-            // make sure we are in the UI thread
-            display.asyncExec(new Runnable() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see java.lang.Runnable#run()
-                 */
-                @Override
-                public void run() {
-                    getViewer().refresh(server);
-                }
-            });
-        }
     }
 
     /**
@@ -90,27 +55,19 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
     @Override
     public void run() {
         final Server server = (Server)getStructuredSelection().getFirstElement();
-        final ReconnectJob job = new ReconnectJob(server);
+        BusyIndicator.showWhile(getViewer().getControl().getDisplay(), new Runnable() {
 
-        // add listener so we can refresh tree
-        job.addJobChangeListener(new JobChangeAdapter() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-             */
             @Override
-            public void done( IJobChangeEvent event ) {
-                refresh(server);
-                job.removeJobChangeListener(this);
+            public void run() {
+                try {
+                    server.getAdmin().refresh();
+                } catch (Exception e) {
+                    UTIL.log(e);
+                    String msg = UTIL.getString("serverReconnectErrorMsg", server.getUrl()); //$NON-NLS-1$
+                    WidgetUtil.showError(msg);
+                }
             }
         });
-
-        // run job in own thread not in the UI thread
-        Thread t = new Thread();
-        t.run();
-        job.setThread(t);
-        job.schedule();
     }
 
     /**

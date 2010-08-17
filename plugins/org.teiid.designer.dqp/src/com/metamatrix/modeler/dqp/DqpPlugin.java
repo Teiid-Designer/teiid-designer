@@ -174,22 +174,18 @@ public class DqpPlugin extends Plugin {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * It is recommended for the UI to call {@link ServerManager#shutdown(org.eclipse.core.runtime.IProgressMonitor)} as there are
+     * shutdown tasks that the UI should block on before shutting down.
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
     public void stop( final BundleContext context ) throws Exception {
-        super.stop(context);
-
-        // restore registry
-        final IStatus status = this.serverMgr.shutdown();
-
-        if (!status.isOK()) {
-            Util.log(status);
-        }
-
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new CoreException(status);
+        try {
+            this.serverMgr.shutdown(null);
+        } finally {
+            super.stop(context);
         }
     }
 

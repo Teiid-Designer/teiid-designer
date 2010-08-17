@@ -7,21 +7,27 @@
  */
 package com.metamatrix.modeler.dqp.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
+import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
 
@@ -33,16 +39,28 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     private static final String PREFIX = I18nUtil.getPropertyPrefix(DqpUiPlugin.class);
 
     /**
+     * Returns the string from the plugin's resource bundle, or 'key' if not found.
+     */
+    public static String getResourceString( String key ) {
+        ResourceBundle bundle = DqpUiPlugin.getDefault().getResourceBundle();
+        try {
+            return (bundle != null) ? bundle.getString(key) : key;
+        } catch (MissingResourceException e) {
+            return key;
+        }
+    }
+
+    private static String getString( String theKey ) {
+        return UTIL.getStringOrKey(PREFIX + theKey);
+    }
+
+    /**
      * Used in non-Eclipse environments to identify the install location of the <code>modeler.transformation</code> plugin.
      * <strong>To be used for testing purposes only.</strong>
      * 
      * @since 6.0.0
      */
     public String testInstallPath;
-
-    private static String getString( String theKey ) {
-        return UTIL.getStringOrKey(PREFIX + theKey);
-    }
 
     // The shared instance.
     private static DqpUiPlugin plugin;
@@ -72,33 +90,9 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         plugin = this;
     }
 
-    /**
-     * Returns the string from the plugin's resource bundle, or 'key' if not found.
-     */
-    public static String getResourceString( String key ) {
-        ResourceBundle bundle = DqpUiPlugin.getDefault().getResourceBundle();
-        try {
-            return (bundle != null) ? bundle.getString(key) : key;
-        } catch (MissingResourceException e) {
-            return key;
-        }
-    }
-
-    /**
-     * Returns the plugin's resource bundle,
-     */
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
-    }
-
     @Override
     protected ActionService createActionService( IWorkbenchPage workbenchPage ) {
         return null;
-    }
-
-    @Override
-    public PluginUtil getPluginUtil() {
-        return UTIL;
     }
 
     public Image getAnImage( String key ) {
@@ -121,6 +115,18 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         return image;
     }
 
+    @Override
+    public PluginUtil getPluginUtil() {
+        return UTIL;
+    }
+
+    /**
+     * Returns the plugin's resource bundle,
+     */
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
+    }
+
     public IVdbEditorUtil getVdbEditorUtil() {
         if (vdbEditorUtil == null) {
 
@@ -136,10 +142,10 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             if (extensions.length > 0) {
                 IConfigurationElement[] elements = extensions[0].getConfigurationElements();
                 Object extension = null;
-                for (int j = 0; j < elements.length; j++) {
+                for (IConfigurationElement element : elements) {
                     try {
 
-                        extension = elements[j].createExecutableExtension(ExtensionPoints.VdbEditorUtil.CLASSNAME);
+                        extension = element.createExecutableExtension(ExtensionPoints.VdbEditorUtil.CLASSNAME);
 
                         if (extension instanceof IVdbEditorUtil) {
                             this.vdbEditorUtil = (IVdbEditorUtil)extension;
@@ -172,7 +178,32 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     }
 
     @Override
-    public void stop( BundleContext theContext ) throws Exception {
-        super.stop(theContext);
+    public void stop( BundleContext context ) throws Exception {
+        try {
+            // the server manager shutdown can take a bit of time since there are preview jobs that run
+            ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
+            IRunnableWithProgress runnable = new IRunnableWithProgress() {
+                @Override
+                public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
+                    try {
+                        ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
+                        serverMgr.shutdown(monitor);
+                    } catch (InterruptedException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new InvocationTargetException(e);
+                    }
+                }
+            };
+
+            // show dialog
+            try {
+                dialog.run(true, true, runnable);
+            } catch (Exception e) {
+                DqpUiConstants.UTIL.log(e);
+            }
+        } finally {
+            super.stop(context);
+        }
     }
 }

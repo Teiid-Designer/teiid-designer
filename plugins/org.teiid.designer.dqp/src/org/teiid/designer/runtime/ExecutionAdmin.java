@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,7 +16,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -29,7 +27,6 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -75,23 +72,77 @@ public class ExecutionAdmin {
         // refresh();
     }
 
-    private void init() throws Exception {
-        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
-        this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
-        this.workspaceDataSourceByNameMap = new HashMap<String, TeiidDataSource>();
-        this.dataSourceTypeNames = new HashSet<String>();
-        refreshVDBs();
+    /**
+     * @param name
+     * @return true if data source exists with the provided name. else false.
+     * @throws Exception
+     */
+    public boolean dataSourceExists( String name ) throws Exception {
+        // Check if exists, return false
+        if (this.dataSourceNames.contains(name)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void deleteDataSource( String jndiName ) throws Exception {
+        // Check if exists, return false
+        if (this.dataSourceNames.contains(jndiName)) {
+            this.admin.deleteDataSource(jndiName);
+
+            if (!this.admin.getDataSourceNames().contains(jndiName)) {
+                this.dataSourceNames.remove(jndiName);
+                TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
+                if (tds == null) {
+                    tds = this.workspaceDataSourceByNameMap.get(jndiName);
+                }
+                if (tds != null) {
+                    this.dataSourceByNameMap.remove(jndiName);
+                    this.workspaceDataSourceByNameMap.remove(jndiName);
+                    this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(tds));
+
+                }
+            }
+        }
+        //    	
+        // // TODO: I18n
+        // throw new Exception(Util.getString("errorDeletingDataSource", jndiName, getServer().getUrl()));
     }
 
     /**
-     * @throws Exception
+     * @param vdb
+     * @return
      */
-    public void load() throws Exception {
-        if (!this.loaded) {
-            refresh();
-            this.loaded = true;
-        }
+    public VDB deployVdb( IFile vdbFile ) throws Exception {
+        CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
+
+        String vdbName = vdbFile.getFullPath().lastSegment();
+        String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
+
+        admin.deployVDB(vdbName, vdbFile.getContents());
+
+        refreshVDBs();
+
+        // TODO should get version from vdbFile
+        VDB vdb = admin.getVDB(vdbNameNoExt, 1);
+
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
+
+        return vdb;
+    }
+
+    /**
+     * @param vdb
+     * @return
+     */
+    public VDB deployVdb( Vdb vdb ) throws Exception {
+        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+        return deployVdb(vdb.getFile());
+    }
+
+    Admin getAdminApi() {
+        return this.admin;
     }
 
     public Collection<TeiidDataSource> getDataSources() {
@@ -100,6 +151,13 @@ public class ExecutionAdmin {
 
     public Set<String> getDataSourceTypeNames() {
         return this.dataSourceTypeNames;
+    }
+
+    /**
+     * @return the event manager (never <code>null</code>)
+     */
+    EventManager getEventManager() {
+        return this.eventManager;
     }
 
     public TeiidDataSource getOrCreateDataSource( IFile model,
@@ -116,7 +174,7 @@ public class ExecutionAdmin {
 
             if (connectionProfile != null) {
                 connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
-    
+
                 if (connectionProfile != null) {
                     // make sure the password property is there. if not get from connection profile.
                     if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
@@ -184,104 +242,10 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param name
-     * @return true if data source exists with the provided name. else false.
-     * @throws Exception
+     * @return the server who owns this admin object (never <code>null</code>)
      */
-    public boolean dataSourceExists( String name ) throws Exception {
-        // Check if exists, return false
-        if (this.dataSourceNames.contains(name)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public void deleteDataSource( String jndiName ) throws Exception {
-        // Check if exists, return false
-        if (this.dataSourceNames.contains(jndiName)) {
-            this.admin.deleteDataSource(jndiName);
-
-            if (!this.admin.getDataSourceNames().contains(jndiName)) {
-                this.dataSourceNames.remove(jndiName);
-                TeiidDataSource tds = this.dataSourceByNameMap.get(jndiName);
-                if (tds == null) {
-                    tds = this.workspaceDataSourceByNameMap.get(jndiName);
-                }
-                if (tds != null) {
-                    this.dataSourceByNameMap.remove(jndiName);
-                    this.workspaceDataSourceByNameMap.remove(jndiName);
-                    this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(tds));
-
-                }
-            }
-        }
-        //    	
-        // // TODO: I18n
-        // throw new Exception(Util.getString("errorDeletingDataSource", jndiName, getServer().getUrl()));
-    }
-
-    /**
-     * @param vdb
-     * @return
-     */
-    public VDB deployVdb( Vdb vdb ) throws Exception {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-        return deployVdb(vdb.getFile());
-    }
-
-    /**
-     * @param vdb
-     * @return
-     */
-    public VDB deployVdb( IFile vdbFile ) throws Exception {
-        CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
-
-        String vdbName = vdbFile.getFullPath().lastSegment();
-        String vdbNameNoExt = vdbFile.getFullPath().removeFileExtension().lastSegment();
-
-        admin.deployVDB(vdbName, vdbFile.getContents());
-
-        refreshVDBs();
-
-        // TODO should get version from vdbFile
-        VDB vdb = admin.getVDB(vdbNameNoExt, 1);
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb));
-
-        return vdb;
-    }
-
-    public void undeployVdb( String vdbName,
-                             int vdbVersion ) throws Exception {
-        this.admin.deleteVDB(vdbName, vdbVersion);
-        VDB vdb = getVdb(vdbName);
-        
-        refreshVDBs();
-        
-        if (vdb == null) {
-
-        } else {
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
-        }
-    }
-
-    /**
-     * @param vdb
-     * @return
-     */
-    public void undeployVdb( VDB vdb ) throws Exception {
-        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
-
-        admin.deleteVDB(vdb.getName(), vdb.getVersion());
-
-        refreshVDBs();
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
-    }
-
-    Admin getAdminApi() {
-        return this.admin;
+    public Server getServer() {
+        return this.server;
     }
 
     /**
@@ -297,31 +261,6 @@ public class ExecutionAdmin {
 
     public Collection<TeiidTranslator> getTranslators() {
         return this.translatorByNameMap.values();
-    }
-
-    public Collection<TeiidDataSource> getWorkspaceDataSources() {
-        return this.workspaceDataSourceByNameMap.values();
-    }
-
-    /**
-     * @return the event manager (never <code>null</code>)
-     */
-    EventManager getEventManager() {
-        return this.eventManager;
-    }
-
-    /**
-     * @return the server who owns this admin object (never <code>null</code>)
-     */
-    public Server getServer() {
-        return this.server;
-    }
-
-    /**
-     * @return an unmodifiable set of VDBs deployed on the server
-     */
-    public Set<TeiidVdb> getVdbs() {
-        return this.teiidVdbs;
     }
 
     /**
@@ -340,89 +279,23 @@ public class ExecutionAdmin {
     }
 
     /**
-     * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
-     * @param sourceVdbVersion the version of the source VDB
-     * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
-     * @param targetVdbVersion the version of the target VDB
-     * @throws Exception if there is a problem with the merge
+     * @return an unmodifiable set of VDBs deployed on the server
      */
-    public void mergeVdbs( String sourceVdbName,
-                           int sourceVdbVersion,
-                           String targetVdbName,
-                           int targetVdbVersion ) throws Exception {
-        this.admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
+    public Set<TeiidVdb> getVdbs() {
+        return this.teiidVdbs;
     }
 
-    public void refresh() throws Exception {
-        // populate translator map
-        refreshTranslators(this.admin.getTranslators());
+    public Collection<TeiidDataSource> getWorkspaceDataSources() {
+        return this.workspaceDataSourceByNameMap.values();
+    }
 
-        // populate data source type names set
-        this.dataSourceTypeNames = new HashSet(this.admin.getDataSourceTemplateNames());
-
-        // populate data source names list
-        refreshDataSourceNames();
-
-        Collection<TeiidDataSource> tdsList = connectionMatcher.findWorkspaceTeiidDataSources(this);
-        for (TeiidDataSource ds : tdsList) {
-            this.workspaceDataSourceByNameMap.put(ds.getName(), ds);
-        }
-
-        tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames, this);
-        for (TeiidDataSource ds : tdsList) {
-            this.dataSourceByNameMap.put(ds.getName(), ds);
-        }
-
-        // populate VDBs and source bindings
-        // TODO may need to filter out hidden vdb
+    private void init() throws Exception {
+        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.dataSourceNames = new ArrayList<String>();
+        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.workspaceDataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.dataSourceTypeNames = new HashSet<String>();
         refreshVDBs();
-    }
-
-    protected void refreshVDBs() throws Exception {
-        Set<VDB> vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
-        Set<TeiidVdb> tmpVdbs = new HashSet();
-
-        for (VDB vdb : vdbs) {
-            tmpVdbs.add(new TeiidVdb(vdb, this));
-        }
-
-        this.teiidVdbs = Collections.unmodifiableSet(tmpVdbs);
-    }
-
-    protected void refreshDataSourceNames() throws Exception {
-        // populate data source names list
-        this.dataSourceNames = new ArrayList(this.admin.getDataSourceNames());
-    }
-
-    /**
-     * Refreshes the local collection of Translators on the referenced Teiid server.
-     * 
-     * @param translators
-     * @throws Exception
-     */
-    protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
-        for (Translator translator : translators) {
-            if (translator.getName() != null) {
-                Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
-                this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
-            }
-        }
-    }
-
-    /**
-     * @param translator the translator whose property is being changed (never <code>null</code>)
-     * @param propName the name of the property being changed (never <code>null</code> or empty)
-     * @param value the new value
-     * @throws Exception if there is a problem setting the property
-     * @since 7.0
-     */
-    public void setPropertyValue( TeiidTranslator translator,
-                                  String propName,
-                                  String value ) throws Exception {
-        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
-        internalSetPropertyValue(translator, propName, value, true);
     }
 
     private void internalSetPropertyValue( TeiidTranslator translator,
@@ -450,6 +323,90 @@ public class ExecutionAdmin {
     }
 
     /**
+     * @throws Exception
+     */
+    public void load() throws Exception {
+        if (!this.loaded) {
+            refresh();
+            this.loaded = true;
+        }
+    }
+
+    /**
+     * @param sourceVdbName (excluding .vdb extension) the name of the VDB being merged into the target VDB
+     * @param sourceVdbVersion the version of the source VDB
+     * @param targetVdbName (excluding .vdb extension) the name of the VDB being merged into
+     * @param targetVdbVersion the version of the target VDB
+     * @throws Exception if there is a problem with the merge
+     */
+    public void mergeVdbs( String sourceVdbName,
+                           int sourceVdbVersion,
+                           String targetVdbName,
+                           int targetVdbVersion ) throws Exception {
+        this.admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);
+    }
+
+    public void refresh() throws Exception {
+        // populate translator map
+        refreshTranslators(this.admin.getTranslators());
+
+        // populate data source type names set
+        this.dataSourceTypeNames = new HashSet(this.admin.getDataSourceTemplateNames());
+
+        // populate data source names list
+        refreshDataSourceNames();
+
+        this.workspaceDataSourceByNameMap.clear();
+        Collection<TeiidDataSource> tdsList = connectionMatcher.findWorkspaceTeiidDataSources(this);
+        for (TeiidDataSource ds : tdsList) {
+            this.workspaceDataSourceByNameMap.put(ds.getName(), ds);
+        }
+
+        this.dataSourceByNameMap.clear();
+        tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames, this);
+        for (TeiidDataSource ds : tdsList) {
+            this.dataSourceByNameMap.put(ds.getName(), ds);
+        }
+
+        // populate VDBs and source bindings
+        refreshVDBs();
+
+        // notify listeners
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this.server));
+    }
+
+    protected void refreshDataSourceNames() throws Exception {
+        // populate data source names list
+        this.dataSourceNames = new ArrayList(this.admin.getDataSourceNames());
+    }
+
+    /**
+     * Refreshes the local collection of Translators on the referenced Teiid server.
+     * 
+     * @param translators
+     * @throws Exception
+     */
+    protected void refreshTranslators( Collection<Translator> translators ) throws Exception {
+        for (Translator translator : translators) {
+            if (translator.getName() != null) {
+                Collection<PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
+                this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, this));
+            }
+        }
+    }
+
+    protected void refreshVDBs() throws Exception {
+        Set<VDB> vdbs = Collections.unmodifiableSet(this.admin.getVDBs());
+        Set<TeiidVdb> tmpVdbs = new HashSet();
+
+        for (VDB vdb : vdbs) {
+            tmpVdbs.add(new TeiidVdb(vdb, this));
+        }
+
+        this.teiidVdbs = Collections.unmodifiableSet(tmpVdbs);
+    }
+
+    /**
      * @param translator the translator whose properties are being changed (never <code>null</code>)
      * @param changedProperties a collection of properties that have changed (never <code>null</code> or empty)
      * @throws Exception if there is a problem changing the properties
@@ -471,6 +428,50 @@ public class ExecutionAdmin {
             }
             // this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
         }
+    }
+
+    /**
+     * @param translator the translator whose property is being changed (never <code>null</code>)
+     * @param propName the name of the property being changed (never <code>null</code> or empty)
+     * @param value the new value
+     * @throws Exception if there is a problem setting the property
+     * @since 7.0
+     */
+    public void setPropertyValue( TeiidTranslator translator,
+                                  String propName,
+                                  String value ) throws Exception {
+        CoreArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
+        internalSetPropertyValue(translator, propName, value, true);
+    }
+
+    public void undeployVdb( String vdbName,
+                             int vdbVersion ) throws Exception {
+        this.admin.deleteVDB(vdbName, vdbVersion);
+        VDB vdb = getVdb(vdbName);
+
+        refreshVDBs();
+
+        if (vdb == null) {
+
+        } else {
+            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
+        }
+    }
+
+    /**
+     * @param vdb
+     * @return
+     */
+    public void undeployVdb( VDB vdb ) throws Exception {
+        CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
+
+        admin.deleteVDB(vdb.getName(), vdb.getVersion());
+
+        refreshVDBs();
+
+        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb));
     }
 
 }

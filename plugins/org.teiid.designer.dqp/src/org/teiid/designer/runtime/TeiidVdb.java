@@ -1,28 +1,25 @@
 package org.teiid.designer.runtime;
 
-
 import org.teiid.adminapi.VDB;
-
+import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.CoreArgCheck;
 
-public class TeiidVdb  implements Comparable<TeiidVdb> {
-	public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
-	public static final String VDB_DOT_EXTENSION = ".vdb"; //$NON-NLS-1$
+public class TeiidVdb implements Comparable<TeiidVdb> {
+    public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+    public static final String VDB_DOT_EXTENSION = ".vdb"; //$NON-NLS-1$
 
-	private final VDB vdb;
+    private final VDB vdb;
 
     private final ExecutionAdmin admin;
-    
-	public TeiidVdb( VDB vdb, ExecutionAdmin admin) {
+
+    public TeiidVdb( VDB vdb,
+                     ExecutionAdmin admin ) {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
 
         this.vdb = vdb;
         this.admin = admin;
     }
-    public ExecutionAdmin getAdmin() {
-		return admin;
-	}
 
     /**
      * {@inheritDoc}
@@ -50,15 +47,31 @@ public class TeiidVdb  implements Comparable<TeiidVdb> {
 
         return false;
     }
-    
 
-
+    public ExecutionAdmin getAdmin() {
+        return admin;
+    }
 
     public String getName() {
         return this.vdb.getName();
     }
-    
+
     public VDB getVdb() {
-    	return this.vdb;
+        return this.vdb;
+    }
+
+    /**
+     * @return the VDB version
+     */
+    public int getVersion() {
+        return this.vdb.getVersion();
+    }
+
+    /**
+     * @return <code>true</code> if this is a preview VDB
+     */
+    public boolean isPreviewVdb() {
+        String value = this.vdb.getPropertyValue(Vdb.Xml.PREVIEW);
+        return Boolean.parseBoolean(value);
     }
 }

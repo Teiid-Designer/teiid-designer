@@ -111,7 +111,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
 
         // add job start message
         if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_START)) {
-            Util.log(IStatus.INFO, Messages.bind(Messages.JobStarted, getName()));
+            Util.log(IStatus.INFO, NLS.bind(Messages.JobStarted, getName()));
         }
 
         IStatus results = null;
@@ -124,14 +124,14 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
             return results;
         } catch (Exception e) {
             if (e instanceof InterruptedException) {
-                return new Status(IStatus.WARNING, PLUGIN_ID, Messages.bind(Messages.JobCanceled, getName()), e);
+                return new Status(IStatus.WARNING, PLUGIN_ID, NLS.bind(Messages.JobCanceled, getName()), e);
             }
 
-            return new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.UnexpectedErrorRunningJob, getName()), e);
+            return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UnexpectedErrorRunningJob, getName()), e);
         } finally {
             // add job completion message
             if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_DONE)) {
-                Util.log(IStatus.INFO, Messages.bind(Messages.JobFinished, getName(), (results.getSeverity() != IStatus.ERROR)));
+                Util.log(IStatus.INFO, NLS.bind(Messages.JobFinished, getName(), (results.getSeverity() != IStatus.ERROR)));
             }
 
             monitor.done();

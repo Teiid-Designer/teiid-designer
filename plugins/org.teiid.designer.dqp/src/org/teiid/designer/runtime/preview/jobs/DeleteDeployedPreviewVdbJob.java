@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -52,7 +53,7 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
                                         String jndiName,
                                         PreviewContext context,
                                         Server previewServer ) {
-        super(Messages.bind(Messages.DeleteDeployedPreviewVdbJob, pvdbName), context, previewServer);
+        super(NLS.bind(Messages.DeleteDeployedPreviewVdbJob, pvdbName), context, previewServer);
 
         assert !StringUtilities.isEmpty(pvdbName) : "Preview VDB name is null or empty"; //$NON-NLS-1$
         assert !StringUtilities.isEmpty(jndiName) : "JNDI name is null or empty"; //$NON-NLS-1$
@@ -78,8 +79,8 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             server.getAdmin().undeployVdb(this.pvdbName, this.pvdbVersion);
         } catch (Exception e) {
             ++errors;
-            deleteVdbErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID, Messages.bind(Messages.DeleteDeployedPreviewVdbJobError,
-                                                                                      this.pvdbName), e);
+            deleteVdbErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
+                                                                                 this.pvdbName), e);
         }
 
         // delete data source from server
@@ -90,13 +91,13 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
         } catch (Exception e) {
             ++errors;
             deleteDataSourceErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID,
-                                                     Messages.bind(Messages.DeleteDeployedPreviewVdbJobError, this.pvdbName), e);
+                                                     NLS.bind(Messages.DeleteDeployedPreviewVdbJobError, this.pvdbName), e);
         }
 
         // no problems
         if (errors == 0) {
-            return new Status(IStatus.INFO, PLUGIN_ID, Messages.bind(Messages.DeleteDeployedPreviewVdbJobSuccessfullyCompleted,
-                                                                     this.pvdbName));
+            return new Status(IStatus.INFO, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobSuccessfullyCompleted,
+                                                                this.pvdbName));
         }
 
         // couldn't delete PVDB or data source
@@ -104,8 +105,8 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             IStatus[] statuses = new IStatus[2];
             statuses[0] = deleteVdbErrorStatus;
             statuses[1] = deleteDataSourceErrorStatus;
-            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, Messages.bind(Messages.DeleteDeployedPreviewVdbJobError,
-                                                                                  this.pvdbName), null);
+            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
+                                                                             this.pvdbName), null);
         }
 
         // just couldn't delete VDB

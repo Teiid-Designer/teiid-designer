@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.Base64;
@@ -134,10 +135,10 @@ public final class ServerManager implements EventManager {
         if (stateLocationPath != null) {
             try {
                 tempPreviewManager = new PreviewManager();
-                ResourcesPlugin.getWorkspace().addResourceChangeListener(tempPreviewManager); // TODO need to unregister
+                ResourcesPlugin.getWorkspace().addResourceChangeListener(tempPreviewManager);
                 addListener(tempPreviewManager);
             } catch (Exception e) {
-                // TODO preview is not enabled
+                Util.log(IStatus.ERROR, e, Util.getString("serverManagerErrorConstructingPreviewManager")); //$NON-NLS-1$
             }
         }
 
@@ -448,11 +449,14 @@ public final class ServerManager implements EventManager {
 
     /**
      * Saves the {@link Server} registry to the file system, shuts down the {@link PreviewManager}, and performs any other tasks
-     * needed to shutdown.
+     * needed to shutdown. Shutdown may take a bit of time so it is advised to pass in a monitor and, if needed, show the user a
+     * dialog that blocks until the monitor is finished.
      * 
-     * @return a status indicating if shutdown was successful
+     * @param monitor the progress monitor (may be <code>null</code>)
      */
-    public IStatus shutdown() {
+    public void shutdown( IProgressMonitor monitor ) throws Exception {
+        if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
+
         if ((this.stateLocationPath != null) && !getServers().isEmpty()) {
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -484,26 +488,32 @@ public final class ServerManager implements EventManager {
                 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
                 transformer.transform(source, resultXML);
             } catch (Exception e) {
-                return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
+                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                            Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
+                Util.log(status);
             }
         } else if ((this.stateLocationPath != null) && stateFileExists()) {
             // delete current registry file since all servers have been deleted
             try {
                 new File(getStateFileName()).delete();
             } catch (Exception e) {
-                return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                            Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                Util.log(status);
             }
         }
 
-        // shutdown PreviewManager
-        try {
-            // TODO needs a progress monitor to pass in so that user can see shutdown progress
-            this.previewManager.shutdown(null);
-        } catch (Exception e) {
-            return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
-        }
+        // shutdown PreviewManage
+        if (this.previewManager != null) {
+            ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.previewManager);
 
-        return Status.OK_STATUS;
+            try {
+                this.previewManager.shutdown(monitor);
+            } catch (Exception e) {
+                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
+                Util.log(status);
+            }
+        }
     }
 
     /**
@@ -540,8 +550,13 @@ public final class ServerManager implements EventManager {
                     return status;
                 }
 
-                // unexpected problem adding new version of server to registry
-                // TODO add previousServerVerson back into registry???
+                // unexpected problem adding new version of server to registry so add old one back
+                IStatus undoRemoveServerStatus = internalAddServer(replacedServer, false);
+
+                if (undoRemoveServerStatus.getSeverity() == IStatus.ERROR) {
+                    Util.log(undoRemoveServerStatus);
+                }
+
                 return new Status(IStatus.ERROR, PLUGIN_ID,
                                   Util.getString("serverManagerRegistryUpdateAddError", status.getMessage())); //$NON-NLS-1$
             }

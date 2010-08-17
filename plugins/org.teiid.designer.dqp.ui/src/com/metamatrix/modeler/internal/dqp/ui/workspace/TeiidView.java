@@ -52,6 +52,8 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
@@ -150,7 +152,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * @see org.teiid.designer.runtime.IExecutionConfigurationListener#configurationChanged(org.teiid.designer.runtime.ExecutionConfigurationEvent)
      */
     @Override
-    public void configurationChanged( ExecutionConfigurationEvent event ) {
+    public void configurationChanged( final ExecutionConfigurationEvent event ) {
         if (viewer.getTree().isDisposed()) {
             return;
         }
@@ -158,7 +160,12 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         UiUtil.runInSwtThread(new Runnable() {
             public void run() {
                 if (!viewer.getTree().isDisposed()) {
-                    viewer.refresh();
+                    if ((event.getEventType() == EventType.REFRESH) && (event.getTargetType() == TargetType.SERVER)) {
+                        viewer.refresh(event.getServer());
+                    } else {
+                        viewer.refresh();
+                    }
+
                     viewer.expandToLevel(2);
                     // Get Selected Index
                     if (viewer.getTree().getSelectionCount() == 1) {
@@ -331,7 +338,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         };
 
         menuMgr.add(action);
-        
+
         action = new Action(SHOW_TRANSLATORS_LABEL, SWT.TOGGLE) {
             @Override
             public void run() {
@@ -341,7 +348,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         };
 
-        menuMgr.add(action);        
+        menuMgr.add(action);
         action = new Action(SHOW_ALL_DATA_SOURCES_LABEL, SWT.TOGGLE) {
             @Override
             public void run() {

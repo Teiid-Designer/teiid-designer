@@ -56,6 +56,7 @@ public final class Messages extends NLS {
     public static String PreviewSetupRefreshWorkspaceTask;
     public static String PreviewSetupTask;
     public static String PreviewSetupValidationCheckTask;
+    public static String PreviewShutdownTeiidCleanupTask;
     public static String PreviewVdbDeletedPostProcessingError;
     public static String UnexpectedErrorGettingVdbMarkers;
     public static String UnexpectedErrorRunningJob;
