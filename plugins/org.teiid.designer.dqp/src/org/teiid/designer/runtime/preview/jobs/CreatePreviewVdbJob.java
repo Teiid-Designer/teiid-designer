@@ -90,8 +90,10 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             this.pvdbFile.delete(true, monitor);
         }
 
+        boolean isNew = false;
         // create if necessary
         if (!this.pvdbFile.exists()) {
+        	isNew = true;
             this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
         }
 
@@ -110,7 +112,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             }
 
             // this will trigger an resource change event which will eventually get an update job to run
-            if (pvdb.isModified()) {
+            if (isNew || pvdb.isModified()) {
                 pvdb.save(monitor);
             }
         } catch (Exception e) {
