@@ -1,5 +1,7 @@
 package com.metamatrix.modeler.modelgenerator.wsdl.procedures;
 
+import javax.xml.namespace.QName;
+
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.types.DatatypeManager;
@@ -15,18 +17,21 @@ public class BaseTraversalContext {
 	protected  String procedureName;
 	protected  ProcedureBuilder builder;
 	private boolean reachedResultNode = false;
+	protected QName namespace;
 	
-	public BaseTraversalContext(String procedureName,
+	public BaseTraversalContext(String procedureName, QName namespace,
 			TraversalContext ctx, ProcedureBuilder builder) {
 		this.procedureName = procedureName;
+		this.namespace = namespace;
 		this.builder = builder;
 		this.elementPath = new StringBuffer(ctx.getPath());
 
 	}
 
-	public BaseTraversalContext(String procedureName,
+	public BaseTraversalContext(String procedureName, QName namespace,
 			ProcedureBuilder builder) {
 		this.procedureName = procedureName;
+		this.namespace = namespace;
 		this.builder = builder;
 	}
 	
@@ -57,5 +62,13 @@ public class BaseTraversalContext {
 			result = "/";
 		}
 		return result;
+	}
+
+	public QName getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(QName namespace) {
+		this.namespace = namespace;
 	}
 }

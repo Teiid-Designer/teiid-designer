@@ -71,6 +71,8 @@ public class RelationalModelBuilder {
 
 	public static final String XML = "XML";
 
+	private static final String INVOKE = "invoke";
+
 	private List<ModelResource> models;
 	private Map<String, ModelResource> serviceNameToPhysicalMap;
 	private Map<String, ModelResource> serviceNameToVirtualMap;
@@ -178,8 +180,8 @@ public class RelationalModelBuilder {
 
 		Procedure procedure = factory.createProcedure();
 		serviceModel.getEmfResource().getContents().add(procedure);
-		procedure.setName(service.getName());
-		procedure.setNameInSource(service.getName());
+		procedure.setName(INVOKE);
+		procedure.setNameInSource(INVOKE);
 
 		ProcedureParameter param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);

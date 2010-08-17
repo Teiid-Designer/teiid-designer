@@ -3,6 +3,8 @@ package com.metamatrix.modeler.modelgenerator.wsdl.procedures;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDTypeDefinition;
 
@@ -31,14 +33,14 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 	private SqlTransformationMappingRoot transformation;
 	private ProcedureResult procedureResult;
 
-	public RequestBuilderTraversalContext(String procedureName,
+	public RequestBuilderTraversalContext(String procedureName, QName namespace,
 			TraversalContext ctx, ProcedureBuilder builder) {
-		super(procedureName, ctx, builder);
+		super(procedureName, namespace, ctx, builder);
 	}
 
-	public RequestBuilderTraversalContext(String procedureName,
+	public RequestBuilderTraversalContext(String procedureName, QName namespace,
 			ProcedureBuilder builder) {
-		super(procedureName, builder);
+		super(procedureName, namespace, builder);
 	}
 
 	@Override
@@ -100,7 +102,21 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 			sqlString.append(procedureResult.getName());
 			sqlString.append(IBuilderConstants.V_FUNC_COMMA);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-
+			
+			if(null != getNamespace() || !getNamespace().getNamespaceURI().isEmpty()) {
+				sqlString.append(IBuilderConstants.V_FUNC_XMLNAMESPACES);
+				sqlString.append(IBuilderConstants.V_FUNC_OPEN);
+				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
+				sqlString.append(IBuilderConstants.V_FUNC_DEFAULT);
+				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
+				sqlString.append(IBuilderConstants.V_FUNC_QUOTE);
+				sqlString.append(getNamespace().getNamespaceURI());
+				sqlString.append(IBuilderConstants.V_FUNC_QUOTE);
+				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
+				sqlString.append(IBuilderConstants.V_FUNC_CLOSE);
+				sqlString.append(IBuilderConstants.V_FUNC_COMMA);
+			}
+			
 			boolean firstTime = true;
 			for (ProcedureParameter param : cachedParams) {
 				if (!firstTime) {

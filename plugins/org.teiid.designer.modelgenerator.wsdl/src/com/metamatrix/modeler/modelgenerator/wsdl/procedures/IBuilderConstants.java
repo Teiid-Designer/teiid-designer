@@ -18,5 +18,8 @@ public interface IBuilderConstants {
 	static final Object V_FUNC_XML_ELEMENT = "XMLELEMENT";
 	static final Object V_FUNC_NAME = "NAME";
 	static final Object V_FUNC_AS_XML_OUT = "AS xml_out;";
+	static final Object V_FUNC_XMLNAMESPACES = "XMLNAMESPACES";
+	static final Object V_FUNC_AS = "AS";
+	static final Object V_FUNC_DEFAULT = "DEFAULT";
 
 }

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -53,7 +55,7 @@ public class ProcedureBuilder {
 	public void build(SchemaObject sObject, ITraversalCtxFactory traversalCtxFactory)
 			throws ModelerCoreException {
 		this.traversalCtxFactory = traversalCtxFactory;
-		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), this);
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), ""), this);
 		traversalContexts.add(ctx);
 		XSDTypeDefinition type = sObject.getType();
 		String name = getName(type);
@@ -138,7 +140,7 @@ public class ProcedureBuilder {
 				ctx.appendToPath(name);
 				if(particle.getMaxOccurs() > 1 || particle.getMaxOccurs() == -1 || ctx.isReachedResultNode()) {
 					
-					ctx = traversalCtxFactory.getTraversalContext(name, ctx, this);
+					ctx = traversalCtxFactory.getTraversalContext(name, new QName(element.getTargetNamespace(), ""), ctx, this);
 					traversalContexts.add(ctx);
 					if(procedureExists(getName(type))){
 						return;
