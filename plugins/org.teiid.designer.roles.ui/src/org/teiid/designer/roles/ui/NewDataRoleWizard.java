@@ -148,6 +148,8 @@ public class NewDataRoleWizard extends AbstractWizard {
     	
         // ===========>>>> Create page composite
         final Composite pg = new Composite(parent, SWT.NONE);
+        GridData pgGD = new GridData(GridData.FILL_BOTH);
+        pg.setLayoutData(pgGD);
         pg.setLayout(new GridLayout(2, false));
         // Add widgets to page
         WidgetFactory.createLabel(pg, getString("nameLabel")); //$NON-NLS-1$
@@ -168,6 +170,7 @@ public class NewDataRoleWizard extends AbstractWizard {
         descGridData.horizontalSpan = 1;
         descGridData.heightHint = 50;
         descGridData.minimumHeight = 30;
+        descGridData.grabExcessVerticalSpace = true;
         descriptionTextEditor.setLayoutData(descGridData);
         descriptionTextEditor.setText(""); //$NON-NLS-1$
         descriptionTextEditor.getDocument().addDocumentListener(new IDocumentListener() {
@@ -239,8 +242,9 @@ public class NewDataRoleWizard extends AbstractWizard {
 
         final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
         rolesGridData.horizontalSpan = 2;
-        rolesGridData.heightHint = 40;
-        rolesGridData.minimumHeight = 30;
+        rolesGridData.heightHint = 120;
+        rolesGridData.minimumHeight = 120;
+        rolesGridData.grabExcessVerticalSpace = true;
         mappedRolesPanel.setLayoutData(rolesGridData);
         mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(false);
         mappedRolesPanel.getButton(ListPanel.REMOVE_BUTTON).setEnabled(false);
@@ -248,6 +252,13 @@ public class NewDataRoleWizard extends AbstractWizard {
         // ===========>>>> Create Relational Models Tree Viewer/Editor
         Group group = WidgetFactory.createGroup(pg, getString("relationalModelsGroup"),  //$NON-NLS-1$
         		GridData.FILL_BOTH, 2, 2);
+        
+        final GridData modelsGridData = new GridData(GridData.FILL_BOTH);
+        modelsGridData.horizontalSpan = 2;
+        modelsGridData.heightHint = 220;
+        modelsGridData.minimumHeight = 220;
+        modelsGridData.grabExcessVerticalSpace = true;
+        group.setLayoutData(modelsGridData);
         
         treeViewer = new TreeViewer(group,  SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         Tree tree = treeViewer.getTree();
