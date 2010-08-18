@@ -115,6 +115,8 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
         Composite columnComposite = new Composite(parent, SWT.NONE);
         GridLayout columnLayout = new GridLayout();
         columnLayout.numColumns = 3;
+        columnLayout.marginHeight = 8;
+        columnLayout.marginWidth = 8;
 
         columnComposite.setLayout(columnLayout);
 
@@ -433,7 +435,7 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void addValidationListener( IEditorPreferencesValidationListener listener ) {
@@ -442,7 +444,7 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void removeValidationListener( IEditorPreferencesValidationListener listener ) {

@@ -62,8 +62,8 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
         Label label = null;
         Composite comp = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
+        layout.marginHeight = 8;
+        layout.marginWidth = 8;
         layout.numColumns = 1;
         comp.setLayout(layout);
 
@@ -192,7 +192,7 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void addValidationListener( IEditorPreferencesValidationListener listener ) {
@@ -201,7 +201,7 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void removeValidationListener( IEditorPreferencesValidationListener listener ) {

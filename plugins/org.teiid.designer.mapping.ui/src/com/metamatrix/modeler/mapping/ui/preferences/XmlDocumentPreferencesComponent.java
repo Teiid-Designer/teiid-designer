@@ -62,8 +62,8 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
     public Composite createEditorPreferencesComponent( Composite parent ) {
         Composite comp = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
+        layout.marginHeight = 8;
+        layout.marginWidth = 8;
         layout.numColumns = 1;
         comp.setLayout(layout);
 
@@ -248,7 +248,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void addValidationListener( IEditorPreferencesValidationListener listener ) {
@@ -257,7 +257,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
