@@ -40,7 +40,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -370,7 +369,6 @@ public final class PreviewManager extends JobChangeAdapter
             return Status.OK_STATUS;
         }
 
-        int errors = 0;
         IStatus connectionInfoError = null;
 
         // if we have a preview server and connection information on the model then assign a data source
@@ -389,12 +387,9 @@ public final class PreviewManager extends JobChangeAdapter
                 modelEntry.setJndiName(jndiName);
             }
         } else {
-            ++errors;
             connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelDoesNotHaveConnectionInfoError,
                                                                                 model.getFullPath()), null);
         }
-
-        IStatus translatorError = null;
 
         // if no translator name see if we can get one
         if (StringUtilities.isEmpty(modelEntry.getTranslator())) {
@@ -402,28 +397,14 @@ public final class PreviewManager extends JobChangeAdapter
 
             // get translator
             if (connectionProfile == null) {
-                // VDB deployment will throw an error if Translator is NULL/Empty, so setting to LOOPBACK
-                // for lack of a better choice.
+                // Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
                 modelEntry.setTranslator(DataSourceConnectionConstants.Translators.LOOPBACK);
             } else {
                 modelEntry.setTranslator(JdbcTranslatorHelper.getTranslator(connectionProfile));
             }
         }
 
-        if (errors == 0) {
-            return Status.OK_STATUS;
-        }
-
-        if (errors == 2) {
-            IStatus[] statuses = new IStatus[2];
-            statuses[0] = connectionInfoError;
-            statuses[1] = translatorError;
-            return new MultiStatus(PLUGIN_ID, IStatus.OK, statuses, NLS.bind(Messages.ModelConnectionInfoError,
-                                                                             model.getFullPath()), null);
-        }
-
-        if (connectionInfoError != null) return connectionInfoError;
-        return translatorError;
+        return ((connectionInfoError == null) ? Status.OK_STATUS : connectionInfoError);
     }
 
     /**
@@ -1010,10 +991,6 @@ public final class PreviewManager extends JobChangeAdapter
             if (model.getModelType() == ModelType.PHYSICAL_LITERAL) {
                 monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, model.getItemName()));
                 IStatus status = this.context.ensureConnectionInfoIsValid(pvdb, previewServer);
-                //
-                // if (status.getSeverity() == IStatus.ERROR) {
-                // throw new CoreException(status);
-                // }
 
                 // save if necessary
                 if (pvdb.isModified()) {
@@ -1073,10 +1050,6 @@ public final class PreviewManager extends JobChangeAdapter
 
                 monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, projectModelPvdb.getName()));
                 status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
-                //
-                // if (status.getSeverity() == IStatus.ERROR) {
-                // throw new CoreException(status);
-                // }
 
                 // save if necessary
                 boolean wasSaved = false;

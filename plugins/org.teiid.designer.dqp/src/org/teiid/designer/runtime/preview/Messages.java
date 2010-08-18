@@ -44,7 +44,6 @@ public final class Messages extends NLS {
     public static String MergePreviewVdbJobSuccessfullyCompleted;
     public static String ModelChangedJob;
     public static String ModelChangedJobError;
-    public static String ModelConnectionInfoError;
     public static String ModelDoesNotHaveConnectionInfoError;
     public static String ModelErrorMarkerExists;
     public static String ModelProjectOpenedJob;
