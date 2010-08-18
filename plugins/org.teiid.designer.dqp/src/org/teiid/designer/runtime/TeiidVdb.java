@@ -74,4 +74,8 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
         String value = this.vdb.getPropertyValue(Vdb.Xml.PREVIEW);
         return Boolean.parseBoolean(value);
     }
+
+    public boolean isActive() {
+        return vdb.getStatus().equals(VDB.Status.ACTIVE);
+    }
 }

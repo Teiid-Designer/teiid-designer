@@ -56,6 +56,7 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
+import org.teiid.designer.runtime.ui.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
@@ -83,6 +84,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     static final String HIDE_TRANSLATORS_LABEL = getString("hideTranslators.tooltip"); //$NON-NLS-1$
     static final String SHOW_MY_DATA_SOURCES_LABEL = getString("showOnlyMyDataSources.tooltip"); //$NON-NLS-1$
     static final String SHOW_ALL_DATA_SOURCES_LABEL = getString("showAllDataSources.tooltip"); //$NON-NLS-1$
+    static final String ACTIVE_VDB = getString("activeVdb"); //$NON-NLS-1$
+    static final String INACTIVE_VDB = getString("inactiveVdb"); //$NON-NLS-1$
 
     static String getString( final String stringId ) {
         return DqpUiConstants.UTIL.getString(PREFIX + stringId);
@@ -131,6 +134,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     private Action deleteDataSourceAction;
 
     private Action undeployVdbAction;
+
+    private Action executeVdbAction;
 
     /** needed for key listening */
     private KeyAdapter kaKeyAdapter;
@@ -278,7 +283,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
                 } else if (selection instanceof TeiidVdb) {
+                    this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
                     manager.add(this.undeployVdbAction);
+                    manager.add(this.executeVdbAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
                 }
@@ -411,9 +418,19 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
     String getVDBToolTip( TeiidVdb vdb ) {
         StringBuilder builder = new StringBuilder();
-        builder.append(vdb.getName()).append("  contains:"); //$NON-NLS-1$
+        builder.append("VDB:\t\t").append(vdb.getName()).append("\nState:\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (vdb.isActive()) {
+            builder.append(ACTIVE_VDB);
+        } else {
+            builder.append(INACTIVE_VDB);
+            for (String error : vdb.getVdb().getValidityErrors()) {
+                builder.append("\nERROR:\t").append(error); //$NON-NLS-1$
+            }
+        }
+
+        builder.append("\nModels:"); //$NON-NLS-1$
         for (Model model : vdb.getVdb().getModels()) {
-            builder.append("\n   ").append(model.getName()); //$NON-NLS-1$
+            builder.append("\n\t   ").append(model.getName()); //$NON-NLS-1$
         }
         return builder.toString();
     }
@@ -659,6 +676,32 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         this.undeployVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
         this.undeployVdbAction.setEnabled(true);
+
+        this.executeVdbAction = new Action(getString("executeVdbAction")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                List<Object> selectedObjs = getSelectedObjects();
+                for (Object obj : selectedObjs) {
+                    TeiidVdb vdb = (TeiidVdb)obj;
+
+                    ExecutionAdmin admin = vdb.getAdmin();
+                    if (admin != null) {
+                        try {
+                            // admin.undeployVdb(vdb.getVdb());
+                            ExecuteVDBAction.executeVdb(admin.getServer(), vdb.getVdb().getName());
+                        } catch (Exception e) {
+                            DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                                    e,
+                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", vdb.getName())); //$NON-NLS-1$
+                        }
+                    }
+                }
+
+            }
+        };
+
+        this.executeVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
+        this.executeVdbAction.setEnabled(true);
 
         // the shell used for dialogs that the actions display
         Shell shell = this.getSite().getShell();
