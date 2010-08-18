@@ -22,4 +22,5 @@ Require-Bundle: org.teiid.designer.dqp,
  org.teiid.designer.vdb,
  org.teiid.designer.core.test,
  org.eclipse.datatools.connectivity,
- org.teiid.designer.datatools
+ org.teiid.designer.datatools,
+ org.eclipse.emf.edit;bundle-version="2.6.0"
