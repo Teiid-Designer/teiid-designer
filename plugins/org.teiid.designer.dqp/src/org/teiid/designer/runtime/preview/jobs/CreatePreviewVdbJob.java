@@ -93,7 +93,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         boolean isNew = false;
         // create if necessary
         if (!this.pvdbFile.exists()) {
-        	isNew = true;
+            isNew = true;
             this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
         }
 
@@ -102,7 +102,9 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
         try {
             Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
-
+            // if( isNew ) {
+            // if( pvdb.getModelEntries())
+            // }
             // don't do if a project PVDB
             if (resource instanceof IFile) {
                 // don't add if already in the PVDB (only one model per PVDB)

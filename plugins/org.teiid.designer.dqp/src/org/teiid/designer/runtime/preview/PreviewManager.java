@@ -55,6 +55,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
@@ -76,12 +77,15 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.core.Annotation;
+import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
+import com.metamatrix.modeler.core.util.CoreModelObjectNotificationHelper;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -398,9 +402,9 @@ public final class PreviewManager extends JobChangeAdapter
 
             // get translator
             if (connectionProfile == null) {
-                ++errors;
-                translatorError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelTranslatorCannotBeSetError,
-                                                                                model.getFullPath()), null);
+                // VDB deployment will throw an error if Translator is NULL/Empty, so setting to LOOPBACK
+                // for lack of a better choice.
+                modelEntry.setTranslator(DataSourceConnectionConstants.Translators.LOOPBACK);
             } else {
                 modelEntry.setTranslator(JdbcTranslatorHelper.getTranslator(connectionProfile));
             }
@@ -558,7 +562,7 @@ public final class PreviewManager extends JobChangeAdapter
     private String getPreviewVdbJndiName( String pvdbName ) {
         int index = pvdbName.lastIndexOf('.');
 
-        if (index == 0) return pvdbName;
+        if (index == -1) return pvdbName;
         return pvdbName.substring(0, index);
     }
 
@@ -920,6 +924,21 @@ public final class PreviewManager extends JobChangeAdapter
     @Override
     public void notifyChanged( Notification notification ) {
         if (!isPreviewEnabled()) return;
+
+        CoreModelObjectNotificationHelper notificationHelper = new CoreModelObjectNotificationHelper(notification);
+        if (notificationHelper.getModifiedResources().size() == 1) {
+            IFile changedRes = (IFile)notificationHelper.getModifiedResources().get(0);
+            for (Object obj : notificationHelper.getAddOrRemoveTargets()) {
+                if (obj instanceof Annotation) {
+                    if (((Annotation)obj).getAnnotatedObject() instanceof ModelAnnotation) {
+                        Job job = createDeleteDeployedPreviewVdbJob(getPreviewVdb(changedRes).getFullPath());
+                        job.schedule();
+                        // System.out.println(" PreviewManager.notifyChanged() add/remove Target = "
+                        // + ModelerCore.getModelEditor().getName((EObject)obj));
+                    }
+                }
+            }
+        }
         // TODO needs to react to changes in a model's connection profile by deleting data source on server, updating translator
         // name, create new data source on server. The event target eObject should be the ModelAnnotation.
     }
@@ -1060,7 +1079,9 @@ public final class PreviewManager extends JobChangeAdapter
                 // }
 
                 // save if necessary
+                boolean wasSaved = false;
                 if (projectModelPvdb.isModified()) {
+                    wasSaved = true;
                     projectModelPvdb.save(monitor);
                 }
 
@@ -1068,7 +1089,7 @@ public final class PreviewManager extends JobChangeAdapter
                 IContainer parent = projectPvdbFile.getParent();
                 monitor.subTask(NLS.bind(Messages.PreviewSetupRefreshWorkspaceTask, parent.getFullPath()));
 
-                if (!(parent instanceof IWorkspaceRoot) && !parents.contains(parent)) {
+                if (!(parent instanceof IWorkspaceRoot) && (wasSaved || !parents.contains(parent))) {
                     refreshLocal(parent);
                     parents.add(parent);
                 }

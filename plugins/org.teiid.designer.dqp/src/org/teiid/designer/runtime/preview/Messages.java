@@ -49,7 +49,6 @@ public final class Messages extends NLS {
     public static String ModelErrorMarkerExists;
     public static String ModelProjectOpenedJob;
     public static String ModelProjectOpenedJobError;
-    public static String ModelTranslatorCannotBeSetError;
     public static String PreviewSetupConnectionInfoTask;
     public static String PreviewSetupDeployTask;
     public static String PreviewSetupMergeTask;
