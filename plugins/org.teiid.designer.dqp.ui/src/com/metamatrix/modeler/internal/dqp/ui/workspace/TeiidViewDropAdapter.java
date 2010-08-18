@@ -16,7 +16,7 @@ import org.eclipse.ui.part.PluginDropAdapter;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidTranslator;
-
+import org.teiid.designer.runtime.ui.DeployVdbAction;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -33,7 +33,7 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
      * The current transfer data, or <code>null</code> if none.
      */
     private TransferData currentTransfer;
-//    private TeiidTranslator theTargetBinding;/
+    // private TeiidTranslator theTargetBinding;/
     private Server theTargetServer;
 
     /**
@@ -62,7 +62,23 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
                 String extension = theFile.getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
                     try {
-                        theTargetServer.getAdmin().deployVdb(theFile);
+                        DeployVdbAction.deployVdb(theTargetServer, theFile);
+
+                        // VDB deployedVDB = theTargetServer.getAdmin().deployVdb(theFile);
+                        // if (deployedVDB == null) {
+                        // MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                        //                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
+                        //                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", theFile.getName())); //$NON-NLS-1$
+                        // } else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
+                        // StringBuilder message = new StringBuilder(
+                        //                                                                      DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
+                        // for (String error : deployedVDB.getValidityErrors()) {
+                        //                                message.append("\nERROR:\t").append(error); //$NON-NLS-1$
+                        // }
+                        // MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                        //                                                      DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
+                        // message.toString());
+                        // }
                     } catch (Exception e) {
                         DqpUiConstants.UTIL.log(IStatus.ERROR,
                                                 e,
@@ -90,7 +106,7 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
         if (theTarget instanceof TeiidTranslator && currentTransfer != null
             && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
             // plugin cannot be loaded without the plugin data
-//            theTargetBinding = (TeiidTranslator)theTarget;
+            // theTargetBinding = (TeiidTranslator)theTarget;
             return true;
         } else if (theTarget instanceof Server && currentTransfer != null
                    && ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
@@ -98,7 +114,7 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
             theTargetServer = (Server)theTarget;
             return true;
         }
-//        theTargetBinding = null;
+        // theTargetBinding = null;
         theTargetServer = null;
         return false;
     }

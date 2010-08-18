@@ -8,7 +8,6 @@
 
 package org.teiid.designer.runtime.preview.jobs;
 
-import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
 /**
@@ -18,7 +17,7 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 public interface PreviewVdbJob {
 
     /**
-     * The job family. The value is {@value}.
+     * The job family. The value is {@value} .
      */
     Object PREVIEW_FAMILY = "org.teiid.designer.runtime.preview.jobs"; //$NON-NLS-1$
 

@@ -91,6 +91,15 @@
          label="%deployVdbAction.label">
       </resourceAction>
    </extension>
+     <extension
+        id="ExecuteVdbAction"
+        name="%executeVdbAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.ExecuteVDBAction"
+         label="%executeVdbAction.label">
+      </resourceAction>
+   </extension>
    <extension
         id="GenerateWarAction"
         name="%generateWarAction.name"

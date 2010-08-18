@@ -206,7 +206,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         }
 
         if (element instanceof TeiidVdb) {
-            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+            if (((TeiidVdb)element).isActive()) {
+                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+            }
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.INACTIVE_DEPLOYED_VDB);
         }
 
         if (element instanceof SourceConnectionBinding) {
@@ -240,6 +243,9 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         }
 
         if (element instanceof TeiidVdb) {
+            // if( !((TeiidVdb)element).isActive() ) {
+            // return INACTIVE_VDB_PREFIX + ((TeiidVdb)element).getName();
+            // }
             return ((TeiidVdb)element).getName();
         }
 
@@ -287,14 +293,14 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public boolean isShowingPreviewVdbs() {
         return this.showPreviewVdbs;
     }
-    
+
     /**
      * @return <code>true</code> if Translators are being shown
      */
     public boolean isShowingTranslators() {
         return this.showTranslators;
     }
-    
+
     /**
      * @return <code>true</code> if Translators are being shown
      */
