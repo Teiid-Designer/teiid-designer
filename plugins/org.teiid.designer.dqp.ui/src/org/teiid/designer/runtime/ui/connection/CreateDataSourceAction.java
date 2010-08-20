@@ -20,6 +20,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -33,7 +34,17 @@ import com.metamatrix.ui.internal.dialog.AbstractPasswordDialog;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class CreateDataSourceAction extends SortableSelectionAction implements DqpUiConstants {
-    private static final String label = DqpUiConstants.UTIL.getString("CreateDataSourceAction.label"); //$NON-NLS-1$
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(CreateDataSourceAction.class);
+    private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$
+
+    private static String getString( final String id ) {
+        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
+    }
+
+    private static String getString( final String id,
+                                     final Object value ) {
+        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value);
+    }
 
     private String pwd;
     private ConnectionInfoProviderFactory providerFactory;
@@ -69,6 +80,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
      */
     @Override
     public void run() {
+        final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
         // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
 
         // B) Use ConnectionProfileHandler.getConnectionProfile(connectionProfileInfo) to query the user to
@@ -85,10 +97,20 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
 
             ExecutionAdmin executionAdmin = cachedAdmin;
             if (executionAdmin == null) {
-                executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+                if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) {
+                    MessageDialog.openConfirm(iww.getShell(), getString("noServer.title"), //$NON-NLS-1$
+                                              getString("noServer.message")); //$NON-NLS-1$
+                    return;
+                } else if (DqpPlugin.getInstance().getServerManager().getDefaultServer().isConnected()) {
+                    executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+                } else {
+                    MessageDialog.openConfirm(iww.getShell(), getString("noServerConnection.title"), //$NON-NLS-1$
+                                              getString("noServerConnection.message")); //$NON-NLS-1$
+                    return;
+                }
+
             }
 
-            final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
             final CreateDataSourceWizard wizard = new CreateDataSourceWizard(executionAdmin, relationalModels, modelResource);
 
@@ -97,11 +119,6 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
             final int rc = dialog.open();
             if (rc == Window.OK) {
                 // Need to check if the connection needs a password
-                // TODO: Get the connection properties
-
-                // TODO: get the connection provider
-
-                // TODO: if the provider has a password
 
                 TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
                 Properties props = info.getProperties();
@@ -132,16 +149,11 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         } catch (Exception e) {
             if (modelResource != null) {
                 MessageDialog.openError(getShell(),
-                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelResource.getItemName()), e.getMessage()); //$NON-NLS-1$
-                DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                        e,
-                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelResource.getItemName())); //$NON-NLS-1$
+                                        getString("errorCreatingDataSource", modelResource.getItemName()), e.getMessage()); //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("errorCreatingDataSource", modelResource.getItemName())); //$NON-NLS-1$
             } else {
-                MessageDialog.openError(getShell(),
-                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource"), e.getMessage()); //$NON-NLS-1$
-                DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                        e,
-                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource")); //$NON-NLS-1$
+                MessageDialog.openError(getShell(), getString("errorCreatingDataSource"), e.getMessage()); //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("errorCreatingDataSource")); //$NON-NLS-1$
 
             }
         }
@@ -212,7 +224,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         IConnectionInfoProvider provider = null;
         provider = providerFactory.getProvider(modelResource);
         if (null == provider) {
-            throw new Exception(DqpUiConstants.UTIL.getString("CreateDataSourceAction.noConnectionInfoProvider.message")); //$NON-NLS-1$
+            throw new Exception(getString("noConnectionInfoProvider.message")); //$NON-NLS-1$
         }
         return provider;
 

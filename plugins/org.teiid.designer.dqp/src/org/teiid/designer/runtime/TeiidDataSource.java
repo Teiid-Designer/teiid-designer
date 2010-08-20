@@ -139,6 +139,11 @@ public class TeiidDataSource implements Comparable<TeiidDataSource> {
      */
     @Override
     public String toString() {
-        return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName() + "\nType: \t\t\t" + getType(); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        StringBuilder sb = new StringBuilder("Data Source:\t" + getName()); //$NON-NLS-1$
+        if (!getType().equalsIgnoreCase("<unknown>")) { //$NON-NLS-1$
+            sb.append("\nType: \t\t" + getType()); //$NON-NLS-1$
+        }
+
+        return sb.toString();
     }
 }
