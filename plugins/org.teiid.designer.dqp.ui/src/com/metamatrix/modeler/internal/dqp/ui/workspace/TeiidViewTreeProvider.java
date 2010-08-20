@@ -10,11 +10,20 @@ package com.metamatrix.modeler.internal.dqp.ui.workspace;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import net.jcip.annotations.GuardedBy;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISharedImages;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
@@ -32,7 +41,12 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  * 
  * @since 5.0
  */
-public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvider {
+public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILightweightLabelDecorator, ITreeContentProvider {
+
+    /**
+     * If a server connection cannot be established, wait this amount of time before trying again.
+     */
+    private static final long RETRY_DURATION = 2000;
 
     private ServerManager serverMgr;
 
@@ -42,6 +56,18 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     private boolean showDataSources = false;
     private boolean showPreviewDataSources = false;
     private boolean showPreviewVdbs = false;
+
+    /**
+     * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
+     */
+    @GuardedBy( "offlineServersLock" )
+    private final Map<Server, Long> offlineServerMap = new HashMap<Server, Long>();
+
+    /**
+     * Lock used for when accessing the offline server map. The map will be accessed in different threads as the decorator runs in
+     * its own thread (not the UI thread).
+     */
+    private final ReadWriteLock offlineServersLock = new ReentrantReadWriteLock();
 
     /**
      * @since 5.0
@@ -63,10 +89,15 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     * @since 4.2
+     * @param server the server that is offline
      */
-    public void addListener( ILabelProviderListener listener ) {
+    private void addOfflineServer( Server server ) {
+        try {
+            this.offlineServersLock.writeLock().lock();
+            this.offlineServerMap.put(server, System.currentTimeMillis());
+        } finally {
+            this.offlineServersLock.writeLock().unlock();
+        }
     }
 
     /**
@@ -78,7 +109,7 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public boolean containsBindings() {
         boolean result = false;
 
-        if (this.serverMgr != null) {
+        if (getServerManager() != null) {
             Object[] types = getElements(this.serverMgr);
 
             if ((types != null) && (types.length != 0)) {
@@ -95,10 +126,40 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-     * @since 4.2
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang.Object, org.eclipse.jface.viewers.IDecoration)
      */
-    public void dispose() {
+    @Override
+    public void decorate( Object element,
+                          IDecoration decoration ) {
+        final Display display = Display.getDefault();
+
+        if (display.isDisposed()) {
+            return;
+        }
+
+        // the decorator framework actually constructs another instance of this provider and the server manager will not be set by
+        // the getElements method
+        if (getServerManager() != null) {
+            assert (element instanceof Server) : "element is not a server (check plugin.xml enablement)"; //$NON-NLS-1$
+            ImageDescriptor overlay = null;
+            Server server = (Server)element;
+
+            if (isOkToConnect(server)) {
+                // decorate server if can't connect
+                if (!server.isConnected()) {
+                    addOfflineServer(server);
+                    ISharedImages images = DqpUiPlugin.getDefault().getWorkbench().getSharedImages();
+                    overlay = images.getImageDescriptor(ISharedImages.IMG_DEC_FIELD_ERROR);
+                }
+            }
+
+            if (overlay != null) {
+                decoration.addOverlay(overlay);
+            }
+            // }
+        }
     }
 
     /**
@@ -107,7 +168,7 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
      */
     public Object[] getChildren( Object parentElement ) {
 
-        if (parentElement instanceof Server) {
+        if ((parentElement instanceof Server) && ((Server)parentElement).isConnected()) {
             Object[] result = null;
 
             try {
@@ -196,9 +257,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public Image getImage( Object element ) {
         if (element instanceof Server) {
-            if (this.serverMgr != null) {
+            if (getServerManager() != null) {
                 if (this.serverMgr.isDefaultServer((Server)element)) {
                     return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
                 }
@@ -235,9 +297,21 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     }
 
     /**
+     * @return the server manager (never <code>null</code>)
+     */
+    private ServerManager getServerManager() {
+        if (this.serverMgr == null) {
+            this.serverMgr = DqpPlugin.getInstance().getServerManager();
+        }
+
+        return this.serverMgr;
+    }
+
+    /**
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public String getText( Object element ) {
         if (element instanceof Server) {
             return ((Server)element).getUrl();
@@ -287,15 +361,48 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public void inputChanged( Viewer viewer,
                               Object oldInput,
                               Object newInput ) {
+        // nothing to do
     }
 
     /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-     * @since 4.2
+     * Determines if a try to connect to a server should be done based on the last time a try was done and failed.
+     * 
+     * @param server the server being checked
+     * @return <code>true</code> if it is OK to try and connect
      */
-    public boolean isLabelProperty( Object element,
-                                    String property ) {
-        return false;
+    private boolean isOkToConnect( Server server ) {
+        boolean check = false; // check map for time
+
+        try {
+            this.offlineServersLock.readLock().lock();
+            check = this.offlineServerMap.containsKey(server);
+        } finally {
+            this.offlineServersLock.readLock().unlock();
+        }
+
+        if (check) {
+            try {
+                this.offlineServersLock.writeLock().lock();
+
+                if (this.offlineServerMap.containsKey(server)) {
+                    long checkTime = this.offlineServerMap.get(server);
+
+                    // OK to try and connect if last failed attempt was too long ago
+                    if ((System.currentTimeMillis() - checkTime) > RETRY_DURATION) {
+                        this.offlineServerMap.remove(server);
+                        return true;
+                    }
+
+                    // don't try and connect because we just tried and failed
+                    return false;
+                }
+            } finally {
+                this.offlineServersLock.writeLock().unlock();
+            }
+        }
+
+        // OK to try and connect
+        return true;
     }
 
     /**
@@ -317,13 +424,6 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
      */
     public boolean isShowingPreviewDataSources() {
         return this.showPreviewDataSources;
-    }
-
-    /**
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     * @since 4.2
-     */
-    public void removeListener( ILabelProviderListener listener ) {
     }
 
     public void setShowPreviewDataSources( boolean value ) {

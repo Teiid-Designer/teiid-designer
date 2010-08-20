@@ -16,6 +16,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,6 +49,7 @@ import org.teiid.adminapi.Model;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
@@ -54,6 +57,7 @@ import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.ExecuteVDBAction;
@@ -144,7 +148,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
     private IPropertySourceProvider propertySourceProvider;
 
-    private ExecutionAdmin currentSelectedAdmin;
+    ExecutionAdmin currentSelectedAdmin;
 
     /**
      * The constructor.
@@ -230,7 +234,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         treeProvider = new TeiidViewTreeProvider(true, false, true);
         viewer.setContentProvider(treeProvider);
-        viewer.setLabelProvider(treeProvider);
+        ILabelDecorator decorator = DqpUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
+        viewer.setLabelProvider(new DecoratingLabelProvider(treeProvider, decorator));
 
         hookToolTips();
 
@@ -372,6 +377,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         };
 
         menuMgr.add(action);
+
         action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
@@ -382,6 +388,35 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         };
 
         menuMgr.add(action);
+
+        action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "enablePreviewMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#setChecked(boolean)
+             */
+            @Override
+            public void setChecked( boolean checked ) {
+                super.setChecked(checked);
+
+                if (checked != isPreviewEnabled()) {
+                    DqpPlugin.getInstance().getPreferences().putBoolean(PreferenceConstants.PREVIEW_ENABLED, checked);
+                }
+            }
+        };
+
+        menuMgr.add(action);
+
+        // before the menu shows set the state of the enable preview action
+        final IAction enablePreviewAction = action;
+
+        menuMgr.addMenuListener(new IMenuListener() {
+
+            @Override
+            public void menuAboutToShow( IMenuManager manager ) {
+                enablePreviewAction.setChecked(isPreviewEnabled());
+            }
+        });
     }
 
     private void fillLocalToolBar( IToolBarManager manager ) {
@@ -775,6 +810,14 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             viewer.getControl().addKeyListener(kaKeyAdapter);
 
         }
+    }
+
+    /**
+     * @return <code>true</code> if preview is enabled
+     */
+    boolean isPreviewEnabled() {
+        PreviewManager previewManager = getServerManager().getPreviewManager();
+        return ((previewManager != null) && previewManager.isPreviewEnabled());
     }
 
     /**

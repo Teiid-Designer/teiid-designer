@@ -63,6 +63,7 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                     server.getAdmin().refresh();
                 } catch (Exception e) {
                     UTIL.log(e);
+                    getViewer().refresh(server);
                     String msg = UTIL.getString("serverReconnectErrorMsg", server.getUrl()); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
                 }

@@ -35,7 +35,6 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ServerUtils;
-
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -378,7 +377,7 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                success[0] = server.ping().isOK();
+                success[0] = server.isConnected();
             }
         });
 

@@ -12,8 +12,8 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.AdminFactory;
-import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.HashCodeUtil;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  *
@@ -186,6 +186,13 @@ public class Server {
     }
 
     /**
+     * @return <code>true</code> if a connection to this server exists and is working
+     */
+    public boolean isConnected() {
+        return ping().isOK();
+    }
+
+    /**
      * @return persistPassword <code>true</code> if the password is being persisted
      */
     public boolean isPasswordBeingPersisted() {
@@ -195,7 +202,7 @@ public class Server {
     /**
      * Attempts to establish communication with the specified server.
      * 
-     * @return a status if the server connection can be established
+     * @return a status if the server connection can be established (never <code>null</code>)
      */
     public IStatus ping() {
         try {

@@ -125,4 +125,26 @@
             name="org.teiid.designer.runtime.ui.connection.VdbSourceConnectionHandler">
       </class>
    </extension>
+
+<!-- Decorator -->
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="BOTTOM_LEFT"
+            adaptable="true"
+            label="%decorator.label"
+            state="true"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider"
+            id="org.teiid.designer.dqp.ui.decorator">
+         <description>
+            %decorator.description
+         </description>
+         <enablement>
+            <objectClass
+                  name="org.teiid.designer.runtime.Server">
+            </objectClass>
+         </enablement>
+      </decorator>
+   </extension>
 </plugin>

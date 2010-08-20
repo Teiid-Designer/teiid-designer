@@ -181,7 +181,7 @@ public abstract class TeiidPreviewVdbJob extends Job implements PreferenceConsta
 
         // check to see if preview server is available
         if (result) {
-            result = ((getPreviewServer() != null) && getPreviewServer().ping().isOK());
+            result = ((getPreviewServer() != null) && getPreviewServer().isConnected());
         }
 
         // trace message

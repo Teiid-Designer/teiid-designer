@@ -1261,7 +1261,7 @@ public final class PreviewManager extends JobChangeAdapter
         resetAllDeployedStatuses();
 
         // cleanup old server if it can be reached
-        if ((oldServer != null) && oldServer.ping().isOK()) {
+        if ((oldServer != null) && oldServer.isConnected()) {
             PreviewContext oldContext = new PreviewContext() {
 
                 @Override
