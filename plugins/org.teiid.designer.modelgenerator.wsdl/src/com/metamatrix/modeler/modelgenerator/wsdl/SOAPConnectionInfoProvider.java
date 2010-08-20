@@ -8,11 +8,10 @@
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
@@ -21,7 +20,8 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
  */
 public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
-	public static final String ENDPOINT = "Endpoint";
+    public static final String ENDPOINT = "Endpoint";
+
     /**
      * {@inheritDoc}
      * 
@@ -44,6 +44,19 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
         connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, "ws");
         getHelper().setProperties(modelResource, connectionProps);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#getTeiidRelatedProperties(org.eclipse.datatools.connectivity.IConnectionProfile)
+     */
+    @Override
+    public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
+        Properties connectionProps = new Properties();
+        connectionProps.put(IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
+
+        return connectionProps;
     }
 
     /**

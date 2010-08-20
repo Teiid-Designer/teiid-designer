@@ -12,6 +12,8 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
 
     private final ExecutionAdmin admin;
 
+    private final boolean isPreview;
+
     public TeiidVdb( VDB vdb,
                      ExecutionAdmin admin ) {
         CoreArgCheck.isNotNull(vdb, "vdb"); //$NON-NLS-1$
@@ -19,6 +21,7 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
 
         this.vdb = vdb;
         this.admin = admin;
+        isPreview = Boolean.parseBoolean(vdb.getProperties().getProperty(Vdb.Xml.PREVIEW));
     }
 
     /**
@@ -71,8 +74,7 @@ public class TeiidVdb implements Comparable<TeiidVdb> {
      * @return <code>true</code> if this is a preview VDB
      */
     public boolean isPreviewVdb() {
-        String value = this.vdb.getPropertyValue(Vdb.Xml.PREVIEW);
-        return Boolean.parseBoolean(value);
+        return isPreview;
     }
 
     public boolean isActive() {

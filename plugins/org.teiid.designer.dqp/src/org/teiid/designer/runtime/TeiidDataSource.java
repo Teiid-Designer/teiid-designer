@@ -1,27 +1,33 @@
 package org.teiid.designer.runtime;
 
 import java.util.Properties;
-
 import org.teiid.core.util.HashCodeUtil;
-
 import com.metamatrix.core.util.CoreArgCheck;
 
-public class TeiidDataSource  implements Comparable<TeiidDataSource> {
+public class TeiidDataSource implements Comparable<TeiidDataSource> {
 
-	private final String displayName;
+    private final String displayName;
     private final String dataSourceName;
     private final String dataSourceType;
     private String connectionProfileName;
     private final Properties properties;
-    
+
     private final ExecutionAdmin admin;
 
+    private boolean isPreview = false;
 
-	public TeiidDataSource( String displayName, String dataSourceName, String dataSourceType, ExecutionAdmin admin) {
+    public TeiidDataSource( String displayName,
+                            String dataSourceName,
+                            String dataSourceType,
+                            ExecutionAdmin admin ) {
         this(displayName, dataSourceName, dataSourceType, new Properties(), admin);
     }
-    
-    public TeiidDataSource( String displayName,  String dataSourceName, String dataSourceType, Properties properties, ExecutionAdmin admin) {
+
+    public TeiidDataSource( String displayName,
+                            String dataSourceName,
+                            String dataSourceType,
+                            Properties properties,
+                            ExecutionAdmin admin ) {
         CoreArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
@@ -31,11 +37,10 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
         this.properties = properties;
         this.admin = admin;
     }
-    
 
     public ExecutionAdmin getAdmin() {
-		return admin;
-	}
+        return admin;
+    }
 
     /**
      * {@inheritDoc}
@@ -64,20 +69,18 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
 
         return false;
     }
-    
 
     public String getDisplayName() {
-    	if( this.connectionProfileName != null ) {
-    		return this.displayName + ":" + this.connectionProfileName; //$NON-NLS-1$
-    	}
+        if (this.connectionProfileName != null) {
+            return this.displayName + ":" + this.connectionProfileName; //$NON-NLS-1$
+        }
         return this.displayName;
     }
-
 
     public String getName() {
         return this.dataSourceName;
     }
-    
+
     /**
      * Returns the data source type name
      * 
@@ -87,22 +90,34 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
         return this.dataSourceType;
     }
 
-
     public Properties getProperties() {
         return this.properties;
     }
 
-
     public String getPropertyValue( String name ) {
         return this.properties.getProperty(name);
     }
-    
+
     public void setProfileName( String name ) {
-    	this.connectionProfileName = name;
+        this.connectionProfileName = name;
     }
 
     public String getProfileName() {
-    	return this.connectionProfileName;
+        return this.connectionProfileName;
+    }
+
+    /**
+     * @return isPreview
+     */
+    public boolean isPreview() {
+        return isPreview;
+    }
+
+    /**
+     * @param isPreview Sets isPreview to the specified value.
+     */
+    public void setPreview( boolean isPreview ) {
+        this.isPreview = isPreview;
     }
 
     /**
@@ -124,6 +139,6 @@ public class TeiidDataSource  implements Comparable<TeiidDataSource> {
      */
     @Override
     public String toString() {
-    	return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName() + "\nType: \t\t\t" + getType();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        return "Teiid Data Source:\t" + getDisplayName() + "\nJNDI Name: \t\t" + getName() + "\nType: \t\t\t" + getType(); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
 }

@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.datatools.connection;
 
+import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -38,4 +39,12 @@ public interface IConnectionInfoProvider extends IConnectionInfoHelper {
      * @return the Teiid Data Source Type
      */
     String getDataSourceType();
+
+    /**
+     * Extracts the Teiid-related properties required for Data Source creation from Connection Profile
+     * 
+     * @param connectionProfile
+     * @return the list of properties
+     */
+    Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile );
 }

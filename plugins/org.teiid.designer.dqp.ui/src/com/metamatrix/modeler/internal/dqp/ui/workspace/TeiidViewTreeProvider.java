@@ -21,7 +21,6 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
@@ -41,7 +40,7 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     private boolean showTranslators = false;
     private boolean showVDBs = false;
     private boolean showDataSources = false;
-    private boolean showAllDataSources = false;
+    private boolean showPreviewDataSources = false;
     private boolean showPreviewVdbs = false;
 
     /**
@@ -116,11 +115,21 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
                 Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
 
                 if (this.showDataSources) {
-                    if (this.showAllDataSources) {
-                        dataSources = ((Server)parentElement).getAdmin().getDataSources();
-                    } else {
-                        dataSources = ((Server)parentElement).getAdmin().getWorkspaceDataSources();
+                    dataSources = new ArrayList(((Server)parentElement).getAdmin().getDataSources());
+                    Collection<TeiidDataSource> previewDataSources = new ArrayList<TeiidDataSource>();
+
+                    if (!this.showPreviewDataSources) {
+                        for (TeiidDataSource dss : dataSources) {
+
+                            if (dss.isPreview()) {
+                                previewDataSources.add(dss);
+                            }
+                        }
+
+                        dataSources.removeAll(previewDataSources);
                     }
+                } else {
+                    dataSources = Collections.emptyList();
                 }
 
                 Collection<TeiidVdb> vdbs = null;
@@ -131,9 +140,8 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
 
                     if (!this.showPreviewVdbs) {
                         for (TeiidVdb vdb : vdbs) {
-                            boolean isPreviewVdb = Boolean.parseBoolean(vdb.getVdb().getProperties().getProperty(Vdb.Xml.PREVIEW));
 
-                            if (isPreviewVdb) {
+                            if (vdb.isPreviewVdb()) {
                                 previewVdbs.add(vdb);
                             }
                         }
@@ -239,7 +247,10 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
         }
 
         if (element instanceof TeiidDataSource) {
-            return ((TeiidDataSource)element).getDisplayName();
+            if (((TeiidDataSource)element).getDisplayName() != null) {
+                return ((TeiidDataSource)element).getDisplayName();
+            }
+            return ((TeiidDataSource)element).getName();
         }
 
         if (element instanceof TeiidVdb) {
@@ -304,8 +315,8 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     /**
      * @return <code>true</code> if Translators are being shown
      */
-    public boolean isShowingAllDataSources() {
-        return this.showAllDataSources;
+    public boolean isShowingPreviewDataSources() {
+        return this.showPreviewDataSources;
     }
 
     /**
@@ -315,12 +326,12 @@ public class TeiidViewTreeProvider implements ITreeContentProvider, ILabelProvid
     public void removeListener( ILabelProviderListener listener ) {
     }
 
-    public void setShowAllDataSources( boolean value ) {
-        this.showAllDataSources = value;
+    public void setShowPreviewDataSources( boolean value ) {
+        this.showPreviewDataSources = value;
     }
 
     public void setShowDataSources( boolean value ) {
-        this.showDataSources = value;
+        this.showPreviewDataSources = value;
     }
 
     public void setShowPreviewVdbs( boolean value ) {

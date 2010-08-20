@@ -106,8 +106,8 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
 
             if (!enoughProps) {
                 throw new ModelWorkspaceException(
-                		ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders",  //$NON-NLS-1$
-                				modelResource.getItemName()));
+                                                  ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.notEnoughConnectionProviders", //$NON-NLS-1$
+                                                                                     modelResource.getItemName()));
             }
             // Remove old connection properties
             getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
@@ -129,6 +129,35 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#getTeiidRelatedProperties(org.eclipse.datatools.connectivity.IConnectionProfile)
+     */
+    @Override
+    public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
+        Properties connectionProps = new Properties();
+        connectionProps.put(PROFILE_ID_KEY, connectionProfile.getProviderId());
+        Properties baseProps = connectionProfile.getBaseProperties();
+        if (baseProps.get(DRIVER_CLASS_KEY) != null) {
+            connectionProps.put(DRIVER_CLASS, baseProps.get(DRIVER_CLASS_KEY));
+        }
+
+        if (baseProps.get(URL_KEY) != null) {
+            connectionProps.put(URL, baseProps.get(URL_KEY));
+        }
+
+        if (baseProps.get(USERNAME_KEY) != null) {
+            connectionProps.put(USERNAME, baseProps.get(USERNAME_KEY));
+        }
+
+        if (baseProps.get(PASSWORD_KEY) != null) {
+            connectionProps.put(PASSWORD, baseProps.get(PASSWORD_KEY));
+        }
+
+        return connectionProps;
+    }
+
+    /**
      * @param resource
      * @return the JdbcSource object
      * @throws ModelWorkspaceException
@@ -146,8 +175,8 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
             }
         } else {
             throw new ModelWorkspaceException(
-            		ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.errorFindingModelResourceForModelFile",  //$NON-NLS-1$
-    				resource.getName()));
+                                              ModelerJdbcUiPlugin.Util.getString("JDBCConnectionInfoProvider.errorFindingModelResourceForModelFile", //$NON-NLS-1$
+                                                                                 resource.getName()));
         }
 
         return null;
@@ -166,7 +195,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
         Properties result = new Properties();
 
-        if (ModelUtil.isPhysical(modelResource.getEmfResource()) && (modelResource != null)) {
+        if (ModelUtil.isPhysical(modelResource.getEmfResource())) {
 
             JdbcSource jdbcSource = findJdbcSource(modelResource.getCorrespondingResource());
             if (jdbcSource != null) {

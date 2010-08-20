@@ -118,15 +118,6 @@
          label="%createDataSourceAction.label">
       </resourceAction>
    </extension>
-   <extension
-        id="DeleteDataSourceAction"
-        name="%deleteDataSourceAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="org.teiid.designer.runtime.ui.connection.DeleteDataSourceAction"
-         label="%deleteDataSourceAction.label">
-      </resourceAction>
-   </extension>
 
    <extension
          point="org.teiid.designer.vdb.sourceHandler">

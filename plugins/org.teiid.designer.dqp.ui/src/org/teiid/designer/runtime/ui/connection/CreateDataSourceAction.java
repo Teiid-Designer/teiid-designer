@@ -1,30 +1,34 @@
 package org.teiid.designer.runtime.ui.connection;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.TeiidDataSource;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
+import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
 import com.metamatrix.ui.internal.dialog.AbstractPasswordDialog;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
@@ -34,6 +38,8 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
     private String pwd;
     private ConnectionInfoProviderFactory providerFactory;
 
+    private ExecutionAdmin cachedAdmin;
+
     /**
      * @since 5.0
      */
@@ -41,6 +47,10 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
         providerFactory = new ConnectionInfoProviderFactory();
+    }
+
+    public void setAdmin( ExecutionAdmin admin ) {
+        this.cachedAdmin = admin;
     }
 
     /**
@@ -66,66 +76,106 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
 
         // C) Get the resulting ConnectionProfileInfo from the dialog and re-set the model's connection info
         // via the ConnectionProfileInfoHandler
-        IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(getSelection()).get(0);
-
+        ModelResource modelResource = null;
+        if (!getSelection().isEmpty()) {
+            IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(getSelection()).get(0);
+            modelResource = ModelUtilities.getModelResource(modelFile);
+        }
         try {
-            createDataSource(modelFile);
+
+            ExecutionAdmin executionAdmin = cachedAdmin;
+            if (executionAdmin == null) {
+                executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+            }
+
+            final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
+            Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
+            final CreateDataSourceWizard wizard = new CreateDataSourceWizard(executionAdmin, relationalModels, modelResource);
+
+            wizard.init(iww.getWorkbench(), new StructuredSelection());
+            final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
+            final int rc = dialog.open();
+            if (rc == Window.OK) {
+                // Need to check if the connection needs a password
+                // TODO: Get the connection properties
+
+                // TODO: get the connection provider
+
+                // TODO: if the provider has a password
+
+                TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
+                Properties props = info.getProperties();
+                IConnectionInfoProvider provider = info.getConnectionInfoProvider();
+
+                if (null != provider.getPasswordPropertyKey() && props.get(provider.getPasswordPropertyKey()) == null) {
+
+                    int result = new AbstractPasswordDialog(iww.getShell()) {
+                        @SuppressWarnings( "synthetic-access" )
+                        @Override
+                        protected boolean isPasswordValid( final String password ) {
+                            pwd = password;
+                            return true;
+                        }
+                    }.open();
+                    if (result == Window.OK) {
+                        props.put(provider.getPasswordPropertyKey(), this.pwd);
+                    }
+                }
+
+                executionAdmin.getOrCreateDataSource(info.getDisplayName(),
+                                                     info.getJndiName(),
+                                                     provider.getDataSourceType(),
+                                                     props);
+
+            }
+            // createDataSource(modelFile);
         } catch (Exception e) {
-            MessageDialog.openError(getShell(),
-                                    DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelFile.getName()), e.getMessage()); //$NON-NLS-1$
-            DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                    e,
-                                    DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelFile.getName())); //$NON-NLS-1$
+            if (modelResource != null) {
+                MessageDialog.openError(getShell(),
+                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelResource.getItemName()), e.getMessage()); //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR,
+                                        e,
+                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource", modelResource.getItemName())); //$NON-NLS-1$
+            } else {
+                MessageDialog.openError(getShell(),
+                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource"), e.getMessage()); //$NON-NLS-1$
+                DqpUiConstants.UTIL.log(IStatus.ERROR,
+                                        e,
+                                        DqpUiConstants.UTIL.getString("CreateDataSourceAction.errorCreatingDataSource")); //$NON-NLS-1$
+
+            }
         }
     }
 
-    public boolean createDataSource( IFile modelFile ) throws Exception {
+    private Collection<ModelResource> getRelationalModelsWithConnections() {
+        Collection<ModelResource> result = new ArrayList<ModelResource>();
 
-        ModelResource modelResource = null;
+        try {
+            ModelResource[] mrs = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelResources();
+            for (ModelResource mr : mrs) {
+                if (ModelIdentifier.isRelationalSourceModel(mr)) {
+                    IConnectionInfoProvider provider = null;
 
-        modelResource = ModelUtilities.getModelResource(modelFile);
-        IConnectionInfoProvider provider = getProvider(modelResource);
-        Properties properties = provider.getConnectionProperties(modelResource);
-        Shell sh = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-        if (properties != null && !properties.isEmpty()) {
-            ExecutionAdmin executionAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
-            String name = modelFile.getFullPath().removeFileExtension().lastSegment();
-            String jndiName = provider.generateUniqueConnectionJndiName(name,
-                                                                        modelFile.getFullPath(),
-                                                                        ModelerCore.workspaceUuid().toString());
-
-            if (null != provider.getPasswordPropertyKey()) {
-
-                int result = new AbstractPasswordDialog(sh) {
-                    @SuppressWarnings( "synthetic-access" )
-                    @Override
-                    protected boolean isPasswordValid( final String password ) {
-                        pwd = password;
-                        return true;
+                    try {
+                        provider = getProvider(mr);
+                    } catch (Exception e) {
+                        // If provider throws exception its OK because some models may not have connection info.
                     }
-                }.open();
-                if (result == Window.OK) {
-                    properties.put(provider.getPasswordPropertyKey(), this.pwd);
+
+                    if (provider != null) {
+                        Properties properties = provider.getConnectionProperties(mr);
+                        if (properties != null && !properties.isEmpty()) {
+                            result.add(mr);
+                        }
+                    }
                 }
             }
 
-            String dsTypeName = provider.getDataSourceType();
-            TeiidDataSource tds = executionAdmin.getOrCreateDataSource(modelFile.getProjectRelativePath().lastSegment(),
-                                                                       jndiName,
-                                                                       dsTypeName,
-                                                                       properties);
-
-            if (tds != null) {
-                DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
-                return true;
-            }
-
-        } else {
-            MessageDialog.openWarning(sh, DqpUiConstants.UTIL.getString("CreateDataSourceAction.noConnectionProperties.title"), //$NON-NLS-1$
-                                      DqpUiConstants.UTIL.getString("CreateDataSourceAction.noConnectionProperties.message", modelFile.getName())); //$NON-NLS-1$
+        } catch (CoreException e) {
+            DqpUiConstants.UTIL.log(e);
         }
 
-        return false;
+        return result;
     }
 
     /**

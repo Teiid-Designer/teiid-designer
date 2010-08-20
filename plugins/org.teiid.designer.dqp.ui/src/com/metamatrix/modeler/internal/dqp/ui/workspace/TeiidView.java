@@ -60,6 +60,7 @@ import org.teiid.designer.runtime.ui.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
+import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -100,7 +101,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     TeiidViewTreeProvider treeProvider;
 
     Action showTranslatorsToggleAction;
-    Action showDataSourcesAction;
 
     /**
      * Collapses all tree nodes.
@@ -131,6 +131,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      */
     private SetDefaultServerAction setDefaultServerAction;
 
+    private Action createDataSourceAction;
+
     private Action deleteDataSourceAction;
 
     private Action undeployVdbAction;
@@ -141,6 +143,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     private KeyAdapter kaKeyAdapter;
 
     private IPropertySourceProvider propertySourceProvider;
+
+    private ExecutionAdmin currentSelectedAdmin;
 
     /**
      * The constructor.
@@ -276,18 +280,30 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     manager.add(this.reconnectAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
+                    manager.add(this.createDataSourceAction);
+                    try {
+                        currentSelectedAdmin = ((Server)selection).getAdmin();
+                    } catch (Exception e) {
+                        // DO NOTHING
+                    }
                 } else if (selection instanceof TeiidTranslator) {
                     manager.add(this.newServerAction);
+                    manager.add(this.createDataSourceAction);
+                    currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();
                 } else if (selection instanceof TeiidDataSource) {
                     manager.add(this.deleteDataSourceAction);
+                    manager.add(this.createDataSourceAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
+                    currentSelectedAdmin = ((TeiidDataSource)selection).getAdmin();
                 } else if (selection instanceof TeiidVdb) {
                     this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
                     manager.add(this.undeployVdbAction);
                     manager.add(this.executeVdbAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
+                    manager.add(this.createDataSourceAction);
+                    currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
                 }
             } else {
                 boolean allDataSources = true;
@@ -356,10 +372,10 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         };
 
         menuMgr.add(action);
-        action = new Action(SHOW_ALL_DATA_SOURCES_LABEL, SWT.TOGGLE) {
+        action = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
-                treeProvider.setShowAllDataSources(!TeiidView.this.treeProvider.isShowingAllDataSources());
+                treeProvider.setShowPreviewDataSources(!TeiidView.this.treeProvider.isShowingPreviewDataSources());
                 viewer.refresh(false);
                 viewer.expandAll();
             }
@@ -573,28 +589,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      */
     private void initActions() {
 
-        this.showDataSourcesAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
-            @Override
-            public void run() {
-                treeProvider.setShowAllDataSources(showDataSourcesAction.isChecked());
-                // Set Tooltip based on toggle state
-                if (showDataSourcesAction.isChecked()) {
-                    showDataSourcesAction.setToolTipText(SHOW_MY_DATA_SOURCES_LABEL);
-                    viewer.refresh();
-                    viewer.expandAll();
-                } else {
-                    showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
-                    viewer.refresh();
-                    viewer.expandAll();
-                }
-
-            }
-        };
-        this.showDataSourcesAction.setEnabled(true);
-        this.showDataSourcesAction.setChecked(false);
-        this.showDataSourcesAction.setToolTipText(SHOW_ALL_DATA_SOURCES_LABEL);
-        this.showDataSourcesAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CONNECTION_SOURCE_ICON));
-
         this.showTranslatorsToggleAction = new Action(" ", SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
@@ -719,6 +713,26 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         // the new server action is always enabled
         this.newServerAction = new NewServerAction(shell, getServerManager());
+
+        this.createDataSourceAction = new Action() {
+            @Override
+            public void run() {
+                if (currentSelectedAdmin != null) {
+                    CreateDataSourceAction action = new CreateDataSourceAction();
+                    action.setAdmin(currentSelectedAdmin);
+
+                    action.setSelection(new StructuredSelection());
+
+                    action.setEnabled(true);
+                    action.run();
+                }
+            }
+        };
+
+        this.createDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
+        this.createDataSourceAction.setText(getString("createDataSourceAction.text")); //$NON-NLS-1$
+        this.createDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
+        this.createDataSourceAction.setEnabled(true);
 
         // the edit action is only enabled when one server is selected
         this.setDefaultServerAction = new SetDefaultServerAction(getServerManager());

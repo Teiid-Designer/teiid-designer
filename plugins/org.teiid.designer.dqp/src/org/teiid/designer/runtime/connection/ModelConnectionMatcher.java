@@ -37,13 +37,13 @@ public class ModelConnectionMatcher {
                 continue;
             }
 
-            for (TeiidDataSource tds : admin.getWorkspaceDataSources()) {
-                if (tds.getName().equalsIgnoreCase(name)) {
-                    dataSources.add(tds);
-                    create = false;
-                    break;
-                }
-            }
+            // for (TeiidDataSource tds : admin.getWorkspaceDataSources()) {
+            // if (tds.getName().equalsIgnoreCase(name)) {
+            // dataSources.add(tds);
+            // create = false;
+            // break;
+            // }
+            // }
 
             if (create) {
                 dataSources.add(new TeiidDataSource(name, name, "<unknown>", admin)); //$NON-NLS-1$

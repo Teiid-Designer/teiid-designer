@@ -277,7 +277,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         return builder.append(name).toString();
     }
 
-    public String findTranslatorName( ModelResource modelResource ) throws ModelWorkspaceException {
+    public String findTranslatorName( ModelResource modelResource ) {
         String translator = getTranslatorName(modelResource);
         for (String translatorName : DataSourceConnectionConstants.Translators.JDBC_TRANSLATORS) {
             if (translator.toUpperCase().contains(translatorName.toUpperCase())) {
