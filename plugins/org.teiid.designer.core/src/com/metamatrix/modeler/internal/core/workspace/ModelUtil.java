@@ -18,9 +18,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -155,7 +153,7 @@ public class ModelUtil {
         if (modelFile == null) return null;
         return ModelerCore.getModelEditor().findModelResource(modelFile);
     }
-    
+
     private static void getDependentModelResources( ModelResource modelResource,
                                                     Collection<ModelResource> resources,
                                                     Collection<ModelResource> modelsProcessed,
@@ -260,6 +258,18 @@ public class ModelUtil {
         final ModelResource model = getModel(object);
         if (model != null && !model.isReadOnly()) return model;
         return null;
+    }
+
+    public static String getName( final ModelResource modelResource ) {
+        String name = modelResource.getItemName();
+
+        try {
+            name = ((ModelResource)modelResource).getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
+        } catch (ModelWorkspaceException e) {
+            ModelerCore.Util.log(e);
+        }
+
+        return name;
     }
 
     /**
@@ -612,8 +622,8 @@ public class ModelUtil {
      * @return true if model object is in virtual model.
      */
     public static boolean isVirtual( final Object obj ) {
-        if (obj != null ) {
-        	if( obj instanceof EObject) {
+        if (obj != null) {
+            if (obj instanceof EObject) {
                 final EObject eObject = (EObject)obj;
                 final Resource resource = eObject.eResource();
                 if (resource instanceof EmfResource) return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)resource).getModelAnnotation().getModelType());
@@ -625,9 +635,9 @@ public class ModelUtil {
                         if (header != null && ModelType.VIRTUAL_LITERAL.equals(ModelType.get(header.getModelType()))) return true;
                     }
                 }
-        	} else if( obj instanceof EmfResource ) {
-        		return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
-        	}
+            } else if (obj instanceof EmfResource) {
+                return ModelType.VIRTUAL_LITERAL.equals(((EmfResource)obj).getModelAnnotation().getModelType());
+            }
         }
         return false;
     }
