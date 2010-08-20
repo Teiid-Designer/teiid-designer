@@ -85,6 +85,8 @@ public interface DqpUiConstants {
 
         public static final String CONNECTOR_TYPE_ICON = PC.OBJ16 + "connectorType.gif"; //$NON-NLS-1$
 
+        public static final String FOLDER_OBJ = PC.OBJ16 + "fldr_obj.gif"; //$NON-NLS-1$
+
         public static final String IMPORT_ICON = PC.CTOOL16 + "import.gif"; //$NON-NLS-1$
 
         public static final String REFRESH_ICON = PC.CTOOL16 + "refresh.gif"; //$NON-NLS-1$
@@ -128,7 +130,7 @@ public interface DqpUiConstants {
         public static final String CREATE_WAR = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String DEPLOY_VDB = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String INACTIVE_DEPLOYED_VDB = PC.CTOOL16 + "inactiveDeployedVdb.png"; //$NON-NLS-1$
-        
+
     }
 
     /**

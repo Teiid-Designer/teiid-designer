@@ -179,7 +179,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                         viewer.refresh();
                     }
 
-                    viewer.expandToLevel(2);
+                    viewer.expandAll();
                     // Get Selected Index
                     if (viewer.getTree().getSelectionCount() == 1) {
                         ISelection currentSelection = viewer.getSelection();
@@ -241,7 +241,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         viewer.setSorter(new NameSorter());
         viewer.setInput(DqpPlugin.getInstance().getServerManager());
-        viewer.expandToLevel(2);
+        viewer.expandAll();
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged( SelectionChangedEvent event ) {
@@ -584,6 +584,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                     tooltip = getConnectorToolTip((TeiidTranslator)data);
                                 } else if (data instanceof TeiidVdb) {
                                     tooltip = getVDBToolTip((TeiidVdb)data);
+                                } else if (data instanceof TeiidViewTreeProvider.TeiidFolder) {
+                                    tooltip = ((TeiidViewTreeProvider.TeiidFolder)data).getName();
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -829,6 +831,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     }
 
     /**
+     * Updates Eclipse's Status line based on current selection in Teiid View
+     * 
      * @param selection the current viewer selection (never <code>null</code>)
      */
     private void updateStatusLine( IStructuredSelection selection ) {

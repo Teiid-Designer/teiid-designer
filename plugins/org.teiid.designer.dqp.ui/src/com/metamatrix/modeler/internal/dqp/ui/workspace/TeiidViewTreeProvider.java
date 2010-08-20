@@ -47,6 +47,9 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * If a server connection cannot be established, wait this amount of time before trying again.
      */
     private static final long RETRY_DURATION = 2000;
+    private static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("vdbsFolder.label"); //$NON-NLS-1$
+    private static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("dataSourcesFolder.label"); //$NON-NLS-1$
+    private static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("translatorsFolder.label"); //$NON-NLS-1$
 
     private ServerManager serverMgr;
 
@@ -218,9 +221,15 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                 }
 
                 Collection<Object> allObjects = new ArrayList<Object>();
-                allObjects.addAll(translators);
-                allObjects.addAll(dataSources);
-                allObjects.addAll(vdbs);
+                if (!translators.isEmpty()) {
+                    allObjects.add(new TranslatorsFolder(translators.toArray()));
+                }
+                if (!dataSources.isEmpty()) {
+                    allObjects.add(new DataSourcesFolder(dataSources.toArray()));
+                }
+                if (!vdbs.isEmpty()) {
+                    allObjects.add(new VdbsFolder(vdbs.toArray()));
+                }
 
                 result = allObjects.toArray();
 
@@ -233,6 +242,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
             return result;
 
+        } else if (parentElement instanceof TeiidFolder) {
+            return ((TeiidFolder)parentElement).getChildren();
         } else if (parentElement instanceof SourceConnectionBinding) {
             return new Object[0];
         }
@@ -267,6 +278,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
+
+        if (element instanceof TeiidFolder) {
+            return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.FOLDER_OBJ);
+        }
+
         if (element instanceof TeiidTranslator) {
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.CONNECTOR_BINDING_ICON);
         }
@@ -316,6 +332,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         if (element instanceof Server) {
             return ((Server)element).getUrl();
         }
+
+        if (element instanceof TeiidFolder) {
+            return ((TeiidFolder)element).getName();
+        }
+
         if (element instanceof TeiidTranslator) {
             return ((TeiidTranslator)element).getName();
         }
@@ -444,6 +465,55 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
     public void setShowVDBs( boolean value ) {
         this.showVDBs = value;
+    }
+
+    class TeiidFolder {
+        Object[] theValues;
+
+        public TeiidFolder( Object[] values ) {
+            theValues = values;
+        }
+
+        public Object[] getChildren() {
+            return theValues;
+        }
+
+        protected String getName() {
+            return null;
+        }
+    }
+
+    class DataSourcesFolder extends TeiidFolder {
+        public DataSourcesFolder( Object[] values ) {
+            super(values);
+        }
+
+        @Override
+        protected String getName() {
+            return DATA_SOURCES_FOLDER_NAME;
+        }
+    }
+
+    class VdbsFolder extends TeiidFolder {
+        public VdbsFolder( Object[] values ) {
+            super(values);
+        }
+
+        @Override
+        protected String getName() {
+            return VDBS_FOLDER_NAME;
+        }
+    }
+
+    class TranslatorsFolder extends TeiidFolder {
+        public TranslatorsFolder( Object[] values ) {
+            super(values);
+        }
+
+        @Override
+        protected String getName() {
+            return TRANSLATORS_FOLDER_NAME;
+        }
     }
 
 }
