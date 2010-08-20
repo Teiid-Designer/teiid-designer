@@ -43,6 +43,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -68,9 +69,15 @@ public class CreateDataSourceWizard extends AbstractWizard {
     private static final String DEFAULT_NAME = getString("defaultName"); //$NON-NLS-1$
     private static final String PASSWORD = getString("passwordStr"); //$NON-NLS-1$
     private static final String HIDDEN_PASSWORD = "********"; //$NON-NLS-1$
+    private static final String INVALID_CHARS = "; @ # $ % ^ & * ( ) [ ] { } = | ! < > ? \\"; //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
+    }
+
+    private static String getString( final String id,
+                                     final Object value ) {
+        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value);
     }
 
     private ModelResource selectedModelResource;
@@ -92,6 +99,7 @@ public class CreateDataSourceWizard extends AbstractWizard {
     private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
     private IConnectionProfile selectedProfile;
+    private StringNameValidator dataSourceNameValidator;
 
     private boolean hasModelResources = false;
     private boolean hasConnectionProfiles = false;
@@ -408,6 +416,9 @@ public class CreateDataSourceWizard extends AbstractWizard {
         } else if (teiidDataSourceProperties == null || teiidDataSourceProperties.isEmpty()) {
             wizardPage.setErrorMessage(getString("noValidPropertiesError.message")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
+        } else if (!isValidName(this.dataSourceName)) {
+            wizardPage.setErrorMessage(getString("invalidName.message", INVALID_CHARS)); //$NON-NLS-1$
+            wizardPage.setPageComplete(false);
         } else {
             wizardPage.setErrorMessage(null);
             wizardPage.setMessage(getString("finish.message")); //$NON-NLS-1$
@@ -477,6 +488,16 @@ public class CreateDataSourceWizard extends AbstractWizard {
         }
 
         return provider;
+    }
+
+    private boolean isValidName( String name ) {
+        if (dataSourceNameValidator == null) {
+            dataSourceNameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
+                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@',
+                                                                  '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}',
+                                                                  '=', '|', '!', '<', '>', '?', '\''});
+        }
+        return dataSourceNameValidator.isValidName(name);
     }
 
     class StringKeyValuePair {
