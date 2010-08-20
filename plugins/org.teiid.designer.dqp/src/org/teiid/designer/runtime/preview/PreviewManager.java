@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -49,18 +50,22 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
@@ -380,7 +385,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             // create data source on server if we need to
             if (!execAdmin.dataSourceExists(jndiName)) {
-                execAdmin.getOrCreateDataSource(model, jndiName);
+                getOrCreateDataSource(execAdmin, model, jndiName);
             }
 
             if (!jndiName.equals(modelEntry.getJndiName())) {
@@ -484,6 +489,41 @@ public final class PreviewManager extends JobChangeAdapter
 
     private IFile getFile( IPath path ) {
         return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+    }
+
+    public TeiidDataSource getOrCreateDataSource( ExecutionAdmin admin,
+                                                  IFile model,
+                                                  String jndiName ) throws Exception {
+        // String displayName = model.getFullPath().removeFileExtension().lastSegment();
+
+        ModelResource modelResource = ModelUtil.getModelResource(model, true);
+        ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+        IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
+        Properties props = connInfoProvider.getConnectionProperties(modelResource);
+        String dataSourceType = connInfoProvider.getDataSourceType();
+
+        if (!props.isEmpty()) {
+            IConnectionProfile connectionProfile = connInfoProvider.getConnectionProfile(modelResource);
+
+            if (connectionProfile != null) {
+                connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
+
+                if (connectionProfile != null) {
+                    // make sure the password property is there. if not get from connection profile.
+                    if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+                        connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                        props.setProperty(connInfoProvider.getPasswordPropertyKey(),
+                                          connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey()));
+                    }
+
+                    TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+                    tds.setPreview(true);
+                    return tds;
+                }
+            }
+        }
+
+        return null;
     }
 
     Server getPreviewServer() {
