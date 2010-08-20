@@ -47,9 +47,9 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * If a server connection cannot be established, wait this amount of time before trying again.
      */
     private static final long RETRY_DURATION = 2000;
-    private static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("vdbsFolder.label"); //$NON-NLS-1$
-    private static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("dataSourcesFolder.label"); //$NON-NLS-1$
-    private static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("translatorsFolder.label"); //$NON-NLS-1$
+    private static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.vdbsFolder.label"); //$NON-NLS-1$
+    private static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.dataSourcesFolder.label"); //$NON-NLS-1$
+    private static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.translatorsFolder.label"); //$NON-NLS-1$
 
     private ServerManager serverMgr;
 
