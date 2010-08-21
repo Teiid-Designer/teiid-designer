@@ -28,9 +28,6 @@ public final class Messages extends NLS {
     public static String DeletePreviewVdbJobError;
     public static String DeletePreviewVdbJobForModel;
     public static String DeletePreviewVdbJobSuccessfullyCompleted;
-    public static String DeployPreviewVdbJob;
-    public static String DeployPreviewVdbJobError;
-    public static String DeployPreviewVdbJobSuccessfullyCompleted;
     public static String JobCanceled;
     public static String JobFinished;
     public static String JobShouldRun;

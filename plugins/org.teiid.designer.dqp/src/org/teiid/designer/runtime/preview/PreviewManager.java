@@ -73,7 +73,6 @@ import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeletePreviewVdbJob;
-import org.teiid.designer.runtime.preview.jobs.DeployPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.ModelChangedJob;
 import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
@@ -114,17 +113,29 @@ public final class PreviewManager extends JobChangeAdapter
 
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
+    private static String getPreviewVdbPrefix( IResource resource ) {
+        char delim = '_';
+        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
+
+        if (resource instanceof IFile) {
+            IPath path = resource.getParent().getFullPath();
+
+            for (String segment : path.segments()) {
+                name.append(segment).append(delim);
+            }
+        }
+
+        return name.toString();
+    }
+
     /**
      * @param project the project whose Preview VDB is being requested (may not be <code>null</code>)
      * @return the name of the project's Preview VDB (never <code>null</code>)
      */
     public static String getPreviewProjectVdbName( IProject project ) {
         assert (project != null) : "Project is null"; //$NON-NLS-1$
-        char delim = '_';
-        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
-
+        StringBuilder name = new StringBuilder(getPreviewVdbPrefix(project));
         name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
-
         return name.toString();
     }
 
@@ -339,8 +350,6 @@ public final class PreviewManager extends JobChangeAdapter
                 handlePreviewVdbUpdated((UpdatePreviewVdbJob)job);
             } else if (job instanceof ModelProjectOpenedJob) {
                 handleModelProjectOpened((ModelProjectOpenedJob)job);
-            } else if (job instanceof DeployPreviewVdbJob) {
-                handlePreviewVdbDeployed((DeployPreviewVdbJob)job);
             }
 
             if (status.getSeverity() != IStatus.OK) {
@@ -587,29 +596,43 @@ public final class PreviewManager extends JobChangeAdapter
         return pvdbName.substring(0, index);
     }
 
+    private String getResourceNameForPreviewVdb( IFile pvdbFile ) {
+        // see if a project PVDB
+        if (pvdbFile.getFullPath().removeFileExtension().lastSegment().endsWith(PROJECT_VDB_SUFFIX)) {
+            return pvdbFile.getProject().getName();
+        }
+
+        String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();
+        String prefix = getPreviewVdbPrefix(pvdbFile);
+        int index = name.indexOf(prefix);
+
+        if (index == -1) {
+            return name;
+        }
+
+        // model PVDB
+        return name.substring(index + prefix.length());
+    }
+
     private String getPreviewVdbName( IResource projectOrModel ) {
-        char delim = '_';
-        StringBuilder name = new StringBuilder(ModelerCore.workspaceUuid().toString() + delim);
+        StringBuilder name = null;
 
         if (projectOrModel instanceof IProject) {
             name = new StringBuilder(PreviewManager.getPreviewProjectVdbName((IProject)projectOrModel));
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
+            String prefix = PreviewManager.getPreviewVdbPrefix(projectOrModel);
 
             if (projectOrModel.getFileExtension().equalsIgnoreCase(TeiidVdb.VDB_EXTENSION)) {
                 String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
-                if (vdbName.startsWith(ModelerCore.workspaceUuid().toString())) {
+
+                if (vdbName.startsWith(prefix)) {
                     return projectOrModel.getFullPath().lastSegment();
                 }
             }
-            IPath modelPath = projectOrModel.getFullPath().removeFileExtension();
 
-            for (String segment : modelPath.segments()) {
-                name.append(segment).append(delim);
-            }
-
-            // remove last delimiter
-            name.deleteCharAt(name.length() - 1);
+            name = new StringBuilder(prefix);
+            name.append(projectOrModel.getFullPath().removeFileExtension().lastSegment());
         }
 
         name.append(Vdb.FILE_EXTENSION);
@@ -756,16 +779,6 @@ public final class PreviewManager extends JobChangeAdapter
     private void handlePreviewVdbDeleted( DeletePreviewVdbJob job ) {
         assert (job.completedSuccessfully()) : "Delete Preview VDB job did not complete successfully"; //$NON-NLS-1$
         previewVdbDeletedPostProcessing(job.getPvdb().getFullPath());
-    }
-
-    /**
-     * Handler for when a {@link DeployPreviewVdbJob} has finished.
-     * 
-     * @param job the job being processed
-     */
-    private void handlePreviewVdbDeployed( DeployPreviewVdbJob job ) {
-        IFile pvdbFile = job.getPreviewVdb();
-        setNeedsToBeDeployedStatus(pvdbFile, false);
     }
 
     /**
@@ -974,14 +987,9 @@ public final class PreviewManager extends JobChangeAdapter
         if (event.getKey().equals(PreferenceConstants.PREVIEW_ENABLED)) {
             this.previewEnabled = Boolean.parseBoolean(event.getNewValue().toString());
 
-            // clear deploy status map as everything will have to be deployed once preview is enabled again
+            // mark all deploy statuses as needing to be deployed
             if (!this.previewEnabled) {
-                try {
-                    this.statusLock.writeLock().lock();
-                    this.deploymentStatusMap.clear();
-                } finally {
-                    this.statusLock.writeLock().unlock();
-                }
+                resetAllDeployedStatuses();
             }
         }
     }
@@ -1081,14 +1089,15 @@ public final class PreviewManager extends JobChangeAdapter
                 Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
 
                 // make sure no errors
-                monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, projectModelPvdb.getName()));
+                String name = getResourceNameForPreviewVdb(projectPvdbFile);
+                monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, name));
                 IStatus status = checkPreviewVdbForErrors(projectModelPvdb);
 
                 if (status.getSeverity() == IStatus.ERROR) {
                     throw new CoreException(status);
                 }
 
-                monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, projectModelPvdb.getName()));
+                monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, name));
                 status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
 
                 // save if necessary
@@ -1108,7 +1117,7 @@ public final class PreviewManager extends JobChangeAdapter
                 }
 
                 // deploy PVDB
-                monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, projectPvdbFile.getName()));
+                monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
                 admin.deployVdb(projectPvdbFile);
                 setNeedsToBeDeployedStatus(projectPvdbFile, false);
 
@@ -1123,7 +1132,8 @@ public final class PreviewManager extends JobChangeAdapter
         // merge into project PVDB
         for (IFile pvdbToMerge : projectPvdbsToDeploy) {
             MERGE_TASK: {
-                monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, pvdbToMerge.getName()));
+                String name = getResourceNameForPreviewVdb(pvdbToMerge);
+                monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, name));
 
                 // REMOVE the .vdb extension for the source vdb
                 String sourceVdbName = pvdbToMerge.getFullPath().removeFileExtension().lastSegment().toString();
