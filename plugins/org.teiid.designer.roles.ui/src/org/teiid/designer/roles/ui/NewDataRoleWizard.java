@@ -7,13 +7,11 @@
  */
 package org.teiid.designer.roles.ui;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -31,9 +29,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -42,11 +43,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -65,9 +64,10 @@ public class NewDataRoleWizard extends AbstractWizard {
 
     private static final ImageDescriptor IMAGE = RolesUiPlugin.getInstance().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
     
-//    private static final String UNDEFINED = getString("undefinedName"); //$NON-NLS-1$
     private static final String DEFAULT_NAME = "Data Role 1"; //getString("undefinedName"); //$NON-NLS-1$
-    
+    private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
+    private static final String PG_CATALOG_TARGET = "pg_catalog"; //$NON-NLS-1$
+
     private static String getString( final String id ) {
         return RolesUiPlugin.UTIL.getString(I18N_PREFIX + id);
     }
@@ -81,13 +81,15 @@ public class NewDataRoleWizard extends AbstractWizard {
     private StyledTextEditor descriptionTextEditor;
     private TreeViewer treeViewer;
     private ListPanel mappedRolesPanel;
-    
+    private Button allowSystemTablesCheckBox;
+
     private DataRolesModelTreeProvider treeProvider;
     
     private String dataRoleName;
     private String description;
     private Set<String> mappedRoleNames;
-    
+    private boolean allowSystemTables;
+
     String roleNameTextEntry;
     
     private Map<Object, Permission> permissionsMap;
@@ -95,13 +97,14 @@ public class NewDataRoleWizard extends AbstractWizard {
 	/**
      * @since 4.0
      */
-    public NewDataRoleWizard(Container tempContainer, Collection<Resource> relationalModels, DataRole existingDataRole) {
+    public NewDataRoleWizard(Container tempContainer, DataRole existingDataRole) {
     	super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
     	this.tempContainer = tempContainer;
     	if( existingDataRole == null ) {
     		this.dataRole = new DataRole(DEFAULT_NAME);
     		this.dataRoleName = DEFAULT_NAME;
     		this.isEdit = false;
+    		this.allowSystemTables = true;
     	} else {
     		this.dataRole = existingDataRole;
     		this.isEdit = true;
@@ -225,7 +228,8 @@ public class NewDataRoleWizard extends AbstractWizard {
                 return textEntry;
             }
             
-        	public void itemsSelected(final IStructuredSelection selection) {
+        	@Override
+            public void itemsSelected(final IStructuredSelection selection) {
         		Object[] objArray = selection.toArray();
         		boolean enableEdit = true;
         		if( objArray == null ) {
@@ -322,7 +326,20 @@ public class NewDataRoleWizard extends AbstractWizard {
         treeViewer.setLabelProvider(treeProvider);
 
         treeViewer.setInput(tempContainer);
-        
+
+        final Group sysTablesGroup = WidgetFactory.createGroup(pg,
+                                                               getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
+
+        // ===========>>>>
+        allowSystemTablesCheckBox = WidgetFactory.createCheckBox(sysTablesGroup,
+                                                                 getString("systemTablesCheckbox.label"), 0, 2, allowSystemTables); //$NON-NLS-1$
+        allowSystemTablesCheckBox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                allowSystemTables = allowSystemTablesCheckBox.getSelection();
+            }
+        });
+
         // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
         if( isEdit )  {
         	loadExistingPermissions();
@@ -344,7 +361,11 @@ public class NewDataRoleWizard extends AbstractWizard {
     				perm.setPrimary(true);
     			}
     			this.permissionsMap.put(obj, perm);
-    		}
+    		} else if (perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)
+                       || perm.getTargetName().equalsIgnoreCase(PG_CATALOG_TARGET)) {
+                allowSystemTables = true;
+                allowSystemTablesCheckBox.setSelection(allowSystemTables);
+            }
     	}
     	
     	treeViewer.refresh();
@@ -389,6 +410,10 @@ public class NewDataRoleWizard extends AbstractWizard {
 	    	dataRole.setName(this.dataRoleName);
 	    	dataRole.setDescription(this.description);
 	    	dataRole.setPermissions(permissionsMap.values());
+	    	if (allowSystemTables) {
+                dataRole.addPermission(new Permission(SYS_TABLE_TARGET, false, true, false, false));
+                dataRole.addPermission(new Permission(PG_CATALOG_TARGET, false, true, false, false));
+            }
 	    	if( !mappedRoleNames.isEmpty() ) {
 	    		dataRole.setRoleNames(mappedRoleNames);
 	    	}
