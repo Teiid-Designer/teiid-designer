@@ -11,11 +11,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.teiid.client.metadata.ParameterInfo;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.language.SQLConstants;
@@ -164,7 +162,7 @@ public class TestDisplayNodeFactory extends TestCase {
         crits.add(cc);
         CompoundCriteria comp = new CompoundCriteria(CompoundCriteria.AND, crits);
 
-        helpTest(comp, "(m.g.c1 = 'abc')"); //$NON-NLS-1$
+        helpTest(comp, "m.g.c1 = 'abc'"); //$NON-NLS-1$
     }
 
     public void testCompoundCriteria2() {
@@ -242,7 +240,7 @@ public class TestDisplayNodeFactory extends TestCase {
         delete.setCriteria(new CompareCriteria(new ElementSymbol("m.g.c1"), //$NON-NLS-1$
                                                AbstractCompareCriteria.EQ, new Constant("abc"))); //$NON-NLS-1$
 
-        helpTest(delete, "DELETE FROM m.g \n\tWHERE \n\t\tm.g.c1 = 'abc'"); //$NON-NLS-1$
+        helpTest(delete, "DELETE FROM m.g\nWHERE\n\tm.g.c1 = 'abc'"); //$NON-NLS-1$
     }
 
     public void testFrom1() {
@@ -250,7 +248,7 @@ public class TestDisplayNodeFactory extends TestCase {
         from.addGroup(new GroupSymbol("m.g1")); //$NON-NLS-1$
         from.addGroup(new GroupSymbol("m.g2")); //$NON-NLS-1$
 
-        helpTest(from, "FROM \n\tm.g1, m.g2"); //$NON-NLS-1$
+        helpTest(from, "FROM\n\tm.g1, m.g2"); //$NON-NLS-1$
     }
 
     public void testFrom2() {
@@ -260,7 +258,7 @@ public class TestDisplayNodeFactory extends TestCase {
                                          new UnaryFromClause(new GroupSymbol("m.g3")), //$NON-NLS-1$
                                          JoinType.JOIN_CROSS));
 
-        helpTest(from, "FROM \n\tm.g1, m.g2 CROSS JOIN m.g3"); //$NON-NLS-1$
+        helpTest(from, "FROM\n\tm.g1, m.g2 CROSS JOIN m.g3"); //$NON-NLS-1$
     }
 
     public void testGroupBy1() {
@@ -292,7 +290,7 @@ public class TestDisplayNodeFactory extends TestCase {
         values.add(new Constant("abc")); //$NON-NLS-1$
         insert.setValues(values);
 
-        helpTest(insert, "INSERT INTO m.g1 \n\t(e1, e2) \nVALUES \n\t(5, 'abc') "); //$NON-NLS-1$
+        helpTest(insert, "INSERT INTO m.g1\n\t\t(e1, e2)\n\tVALUES\n\t\t(5, 'abc')"); //$NON-NLS-1$
     }
 
     public void testIsNullCriteria1() {
@@ -464,14 +462,14 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testOption1() {
         Option option = new Option();
-        helpTest(option, ""); //$NON-NLS-1$
+        helpTest(option, "OPTION"); //$NON-NLS-1$
     }
 
     public void testOrderBy1() {
         OrderBy ob = new OrderBy();
         ob.addVariable(new ElementSymbol("e1")); //$NON-NLS-1$
 
-        helpTest(ob, "ORDER BY e1 "); //$NON-NLS-1$
+        helpTest(ob, "ORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testOrderBy2() {
@@ -479,7 +477,7 @@ public class TestDisplayNodeFactory extends TestCase {
         ob.addVariable(new ElementSymbol("e1")); //$NON-NLS-1$
         ob.addVariable(new AliasSymbol("x", new ElementSymbol("e2"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-        helpTest(ob, "ORDER BY e1, x "); //$NON-NLS-1$
+        helpTest(ob, "ORDER BY e1, x"); //$NON-NLS-1$
     }
 
     public void testOrderBy3() {
@@ -487,7 +485,7 @@ public class TestDisplayNodeFactory extends TestCase {
         ob.addVariable(new ElementSymbol("e1"), OrderBy.DESC); //$NON-NLS-1$
         ob.addVariable(new ElementSymbol("x"), OrderBy.DESC); //$NON-NLS-1$
 
-        helpTest(ob, "ORDER BY e1 DESC, x DESC "); //$NON-NLS-1$
+        helpTest(ob, "ORDER BY e1 DESC, x DESC"); //$NON-NLS-1$
     }
 
     public void testQuery1() {
@@ -499,7 +497,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setSelect(select);
         query.setFrom(from);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g"); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g"); //$NON-NLS-1$
     }
 
     public void testQuery2() {
@@ -524,7 +522,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tGROUP BY e1\n\tHAVING\n\t\te1 > 0\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testQuery3() {
@@ -546,7 +544,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nGROUP BY e1 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tGROUP BY e1\n\tHAVING\n\t\te1 > 0\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testQuery4() {
@@ -568,7 +566,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tHAVING\n\t\te1 > 0\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testQuery5() {
@@ -590,7 +588,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setGroupBy(groupBy);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nORDER BY e1 "); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tGROUP BY e1\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testQuery6() {
@@ -612,7 +610,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setGroupBy(groupBy);
         query.setHaving(having);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nHAVING e1 > 0"); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tGROUP BY e1\n\tHAVING\n\t\te1 > 0"); //$NON-NLS-1$
     }
 
     public void testQuery7() {
@@ -637,14 +635,14 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setHaving(having);
         query.setOrderBy(orderBy);
 
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\tm.g \nWHERE \n\t\te1 = 5 \nGROUP BY e1 \nHAVING e1 > 0 \nORDER BY e1 "); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\tm.g\n\tWHERE\n\t\te1 = 5\n\tGROUP BY e1\n\tHAVING\n\t\te1 > 0\n\tORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testSelect1() {
         Select select = new Select();
         select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
 
-        helpTest(select, "SELECT \n\te1"); //$NON-NLS-1$
+        helpTest(select, "SELECT\n\t\te1"); //$NON-NLS-1$
     }
 
     public void testSelect2() {
@@ -652,7 +650,7 @@ public class TestDisplayNodeFactory extends TestCase {
         select.setDistinct(true);
         select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
 
-        helpTest(select, "SELECT DISTINCT \n\te1"); //$NON-NLS-1$
+        helpTest(select, "SELECT DISTINCT\n\t\te1"); //$NON-NLS-1$
     }
 
     public void testSelect3() {
@@ -660,7 +658,7 @@ public class TestDisplayNodeFactory extends TestCase {
         select.addSymbol(new ElementSymbol("e1")); //$NON-NLS-1$
         select.addSymbol(new ElementSymbol("e2")); //$NON-NLS-1$
 
-        helpTest(select, "SELECT \n\te1, e2"); //$NON-NLS-1$
+        helpTest(select, "SELECT\n\t\te1, e2"); //$NON-NLS-1$
     }
 
     public void testSetCriteria1() {
@@ -726,7 +724,7 @@ public class TestDisplayNodeFactory extends TestCase {
         sq.setLeftQuery(q1);
         sq.setRightQuery(q2);
 
-        helpTest(sq, "SELECT \n\t\t\te1 \nFROM \n\t\t\tm.g1 \nUNION \nSELECT \n\t\t\te1 \nFROM \n\t\t\tm.g2"); //$NON-NLS-1$
+        helpTest(sq, "SELECT\n\t\te1\n\tFROM\n\t\tm.g1\nUNION\nSELECT\n\t\te1\n\tFROM\n\t\tm.g2"); //$NON-NLS-1$
     }
 
     public void testSetQuery2() {
@@ -750,7 +748,7 @@ public class TestDisplayNodeFactory extends TestCase {
         sq.setLeftQuery(q1);
         sq.setRightQuery(q2);
 
-        helpTest(sq, "SELECT \n\t\t\te1 \nFROM \n\t\t\tm.g1 \nUNION ALL \nSELECT \n\t\t\te1 \nFROM \n\t\t\tm.g2"); //$NON-NLS-1$
+        helpTest(sq, "SELECT\n\t\te1\n\tFROM\n\t\tm.g1\nUNION ALL\nSELECT\n\t\te1\n\tFROM\n\t\tm.g2"); //$NON-NLS-1$
     }
 
     public void testSetQuery3() {
@@ -776,7 +774,7 @@ public class TestDisplayNodeFactory extends TestCase {
         SetQuery sq = new SetQuery(Operation.UNION, false, q1, q2);
         sq.setOrderBy(orderBy);
 
-        helpTest(sq, "SELECT \n\t\t\te1 \nFROM \n\t\t\tm.g1 \nUNION \nSELECT \n\t\t\te1 \nFROM \n\t\t\tm.g2 ORDER BY e1 "); //$NON-NLS-1$
+        helpTest(sq, "SELECT\n\t\te1\n\tFROM\n\t\tm.g1\nUNION\nSELECT\n\t\te1\n\tFROM\n\t\tm.g2\nORDER BY e1"); //$NON-NLS-1$
     }
 
     public void testSetQuery4() {
@@ -798,7 +796,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
         SetQuery sq = new SetQuery(Operation.UNION, false, q1, q2);
 
-        helpTest(sq, "SELECT \n\t\t\te1 \nFROM \n\t\t\tm.g1 \nUNION \nSELECT \n\t\t\te1 \nFROM \n\t\t\tm.g2"); //$NON-NLS-1$
+        helpTest(sq, "SELECT\n\t\te1\n\tFROM\n\t\tm.g1\nUNION\nSELECT\n\t\te1\n\tFROM\n\t\tm.g2"); //$NON-NLS-1$
     }
 
     public void testSetQuery5() {
@@ -831,7 +829,7 @@ public class TestDisplayNodeFactory extends TestCase {
         SetQuery sq2 = new SetQuery(Operation.UNION, true, q3, sq);
 
         helpTest(sq2,
-                 "SELECT \n\t\t\te3 \nFROM \n\t\t\tm.g3 \nUNION ALL \n(SELECT \n\t\t\t\te1 \nFROM \n\t\t\t\tm.g1 \nUNION \nSELECT \n\t\t\t\te1 \nFROM \n\t\t\t\tm.g2)"); //$NON-NLS-1$
+                 "SELECT\n\t\te3\n\tFROM\n\t\tm.g3\nUNION ALL\n(SELECT\n\t\te1\n\tFROM\n\t\tm.g1\nUNION\nSELECT\n\t\te1\n\tFROM\n\t\tm.g2)"); //$NON-NLS-1$
     }
 
     public void testSubqueryFromClause1() {
@@ -907,7 +905,7 @@ public class TestDisplayNodeFactory extends TestCase {
         update.setGroup(new GroupSymbol("m.g1")); //$NON-NLS-1$
         update.addChange(new ElementSymbol("e1"), new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        helpTest(update, "UPDATE \n\t\tm.g1 \nSET \n\t\te1 = 'abc' \n"); //$NON-NLS-1$
+        helpTest(update, "UPDATE m.g1\n\tSET\n\t\te1 = 'abc'"); //$NON-NLS-1$
     }
 
     public void testUpdate2() {
@@ -916,7 +914,7 @@ public class TestDisplayNodeFactory extends TestCase {
         update.addChange(new ElementSymbol("e1"), new Constant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
         update.addChange(new ElementSymbol("e2"), new Constant("xyz")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        helpTest(update, "UPDATE \n\t\tm.g1 \nSET \n\t\te1 = 'abc', \t\te2 = 'xyz' \n"); //$NON-NLS-1$
+        helpTest(update, "UPDATE m.g1\n\tSET\n\t\te1 = 'abc', e2 = 'xyz'"); //$NON-NLS-1$
     }
 
     public void testUpdate3() {
@@ -926,7 +924,7 @@ public class TestDisplayNodeFactory extends TestCase {
         update.setCriteria(new CompareCriteria(new ElementSymbol("e2"), //$NON-NLS-1$
                                                AbstractCompareCriteria.EQ, new Constant("abc"))); //$NON-NLS-1$
 
-        helpTest(update, "UPDATE \n\t\tm.g1 \nSET \n\t\te1 = 'abc' \nWHERE \n\t\te2 = 'abc'"); //$NON-NLS-1$
+        helpTest(update, "UPDATE m.g1\n\tSET\n\t\te1 = 'abc'\n\tWHERE\n\t\te2 = 'abc'"); //$NON-NLS-1$
     }
 
     public void testAggregateSymbol1() {
@@ -1253,7 +1251,7 @@ public class TestDisplayNodeFactory extends TestCase {
         SPParameter param = new SPParameter(1, new Reference(0));
         param.setName("p1");//$NON-NLS-1$
         proc.setParameter(param);
-        helpTest(proc, "EXEC myproc(p1 = ?)"); //$NON-NLS-1$
+        helpTest(proc, "EXEC myproc(p1 => ?)"); //$NON-NLS-1$
     }
 
     public void testExecNamedParams() {
@@ -1266,7 +1264,7 @@ public class TestDisplayNodeFactory extends TestCase {
         SPParameter param2 = new SPParameter(2, new Reference(0));
         param2.setName("p2");//$NON-NLS-1$
         proc.setParameter(param2);
-        helpTest(proc, "EXEC myproc(p1 = ?, p2 = ?)"); //$NON-NLS-1$
+        helpTest(proc, "EXEC myproc(p1 => ?, p2 => ?)"); //$NON-NLS-1$
     }
 
     /**
@@ -1285,29 +1283,29 @@ public class TestDisplayNodeFactory extends TestCase {
         SPParameter param2 = new SPParameter(2, new Reference(0));
         param2.setName("in2");//$NON-NLS-1$
         proc.setParameter(param2);
-        helpTest(proc, "EXEC myproc(\"in\" = ?, in2 = ?)"); //$NON-NLS-1$
+        helpTest(proc, "EXEC myproc(\"in\" => ?, in2 => ?)"); //$NON-NLS-1$
     }
 
     // Test methods for Update Procedure Language Objects
 
     public void testDeclareStatement() {
         DeclareStatement dclStmt = new DeclareStatement(new ElementSymbol("a"), "String"); //$NON-NLS-1$ //$NON-NLS-2$
-        helpTest(dclStmt, "DECLARE String a;\n"); //$NON-NLS-1$
+        helpTest(dclStmt, "DECLARE String a;"); //$NON-NLS-1$
     }
 
     public void testRaiseErrorStatement() {
         RaiseErrorStatement errStmt = new RaiseErrorStatement(new Constant("My Error")); //$NON-NLS-1$
-        helpTest(errStmt, "ERROR 'My Error';\n"); //$NON-NLS-1$
+        helpTest(errStmt, "ERROR 'My Error';"); //$NON-NLS-1$
     }
 
     public void testRaiseErrorStatementWithExpression() {
         RaiseErrorStatement errStmt = new RaiseErrorStatement(new ElementSymbol("a")); //$NON-NLS-1$
-        helpTest(errStmt, "ERROR a;\n"); //$NON-NLS-1$
+        helpTest(errStmt, "ERROR a;"); //$NON-NLS-1$
     }
 
     public void testAssignmentStatement1() {
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), new Constant(new Integer(1))); //$NON-NLS-1$
-        helpTest(assigStmt, "a = 1;\n"); //$NON-NLS-1$
+        helpTest(assigStmt, "a = 1;"); //$NON-NLS-1$
     }
 
     public void testAssignmentStatement2() {
@@ -1320,7 +1318,7 @@ public class TestDisplayNodeFactory extends TestCase {
         q1.setFrom(from);
 
         AssignmentStatement assigStmt = new AssignmentStatement(new ElementSymbol("a"), q1); //$NON-NLS-1$
-        helpTest(assigStmt, "a = SELECT x FROM g;\n"); //$NON-NLS-1$
+        helpTest(assigStmt, "a = SELECT x FROM g;"); //$NON-NLS-1$
     }
 
     public void testCriteriaSelector1() {
@@ -1405,14 +1403,14 @@ public class TestDisplayNodeFactory extends TestCase {
         q1.setFrom(from);
 
         CommandStatement cmdStmt = new CommandStatement(q1);
-        helpTest(cmdStmt, "SELECT x FROM g;\n"); //$NON-NLS-1$
+        helpTest(cmdStmt, "SELECT x FROM g;"); //$NON-NLS-1$
     }
 
     public void testCommandStatement2() {
         Delete d1 = new Delete();
         d1.setGroup(new GroupSymbol("g")); //$NON-NLS-1$
         CommandStatement cmdStmt = new CommandStatement(d1);
-        helpTest(cmdStmt, "DELETE FROM g;\n"); //$NON-NLS-1$
+        helpTest(cmdStmt, "DELETE FROM g;"); //$NON-NLS-1$
     }
 
     public void testBlock1() {
@@ -1425,7 +1423,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
-        helpTest(b, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+        helpTest(b, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testBlock2() {
@@ -1451,7 +1449,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(errStmt);
 
         helpTest(b,
-                 "BEGIN\n\tDELETE FROM g;\n\tIF(HAS LIKE CRITERIA ON (x))\n\tBEGIN\n\t\t\tDELETE FROM g;\n\tEND\n\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+                 "BEGIN\n\tDELETE FROM g;\n\tIF(HAS LIKE CRITERIA ON (x))\n\tBEGIN\n\t\tDELETE FROM g;\n\tEND\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testIfStatement1() {
@@ -1474,7 +1472,7 @@ public class TestDisplayNodeFactory extends TestCase {
         Criteria crit = new HasCriteria(cs);
 
         IfStatement ifStmt = new IfStatement(crit, ifblock);
-        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\t\tDELETE FROM g;\n\t\ta = 1;\n\t\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testIfStatement2() {
@@ -1492,7 +1490,7 @@ public class TestDisplayNodeFactory extends TestCase {
         Criteria crit = new HasCriteria(cs);
 
         IfStatement ifStmt = new IfStatement(crit, ifblock);
-        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\t\tDELETE FROM g;\nEND\n"); //$NON-NLS-1$
+        helpTest(ifStmt, "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\nEND"); //$NON-NLS-1$
     }
 
     public void testIfStatement3() {
@@ -1519,7 +1517,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
         IfStatement ifStmt = new IfStatement(crit, ifblock, elseblock);
         helpTest(ifStmt,
-                 "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\t\tDELETE FROM g;\n\t\ta = 1;\n\t\tERROR 'My Error';\nEND\nELSE\nBEGIN\n\t\tDELETE FROM g;\nEND\n"); //$NON-NLS-1$
+                 "IF(HAS LIKE CRITERIA ON (x))\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND\nELSE\nBEGIN\n\tDELETE FROM g;\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure1() {
@@ -1533,7 +1531,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE \nBEGIN\n\t\tDELETE FROM g;\n\t\ta = 1;\n\t\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure2() {
@@ -1547,7 +1545,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE \nBEGIN\n\t\tDELETE FROM g;\n\t\ta = 1;\n\t\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     public void testCreateUpdateProcedure3() {
@@ -1561,7 +1559,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         b.addStatement(errStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE \nBEGIN\n\t\tDELETE FROM g;\n\t\ta = 1;\n\t\tERROR 'My Error';\nEND\n"); //$NON-NLS-1$
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$
     }
 
     // Test Delete
@@ -1574,7 +1572,7 @@ public class TestDisplayNodeFactory extends TestCase {
         Block b = new Block();
         b.addStatement(assigStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
-        helpTest(cup, "CREATE PROCEDURE \nBEGIN\n\t\tVARIABLES.ROWS_UPDATED = DELETE FROM g WHERE TRANSLATE CRITERIA;\nEND\n"); //$NON-NLS-1$
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = DELETE FROM g WHERE TRANSLATE CRITERIA;\nEND"); //$NON-NLS-1$
     }
 
     // Test Update
@@ -1590,7 +1588,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup,
-                 "CREATE PROCEDURE \nBEGIN\n\t\tVARIABLES.ROWS_UPDATED = UPDATE m.g1 SET e1 = 'abc', e2 = 'def' WHERE TRANSLATE CRITERIA;\nEND\n"); //$NON-NLS-1$
+                 "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = UPDATE m.g1 SET e1 = 'abc', e2 = 'def' WHERE TRANSLATE CRITERIA;\nEND"); //$NON-NLS-1$
     }
 
     // Test Insert
@@ -1611,7 +1609,7 @@ public class TestDisplayNodeFactory extends TestCase {
         b.addStatement(assigStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
         helpTest(cup,
-                 "CREATE PROCEDURE \nBEGIN\n\t\tVARIABLES.ROWS_UPDATED = INSERT INTO m.g1 (e1, e2) VALUES (5, 'abc') ;\nEND\n"); //$NON-NLS-1$
+                 "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = INSERT INTO m.g1 (e1, e2) VALUES (5, 'abc');\nEND"); //$NON-NLS-1$
     }
 
     public void testSubqueryCompareCriteria1() {
@@ -1662,7 +1660,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
         ExistsCriteria ec = new ExistsCriteria(q1);
 
-        helpTest(ec, "EXISTS (SELECT \n\t\t\te1 \nFROM \n\t\t\tm.g1)"); //$NON-NLS-1$
+        helpTest(ec, "EXISTS (SELECT e1 FROM m.g1)"); //$NON-NLS-1$
     }
 
     public void testDynamicCommand() {
@@ -1680,7 +1678,7 @@ public class TestDisplayNodeFactory extends TestCase {
         obj.setAsClauseSet(true);
         obj.setIntoGroup(new GroupSymbol("#g")); //$NON-NLS-1$
 
-        helpTest(obj, "EXECUTE STRING 'SELECT a1 FROM g WHERE a2 = 5' \nAS a1 string \nINTO #g"); //$NON-NLS-1$
+        helpTest(obj, "EXECUTE STRING 'SELECT a1 FROM g WHERE a2 = 5'\n\tAS a1 string\n\tINTO #g"); //$NON-NLS-1$
     }
 
     public void testScalarSubquery() {
@@ -1723,7 +1721,7 @@ public class TestDisplayNodeFactory extends TestCase {
         q2.setCriteria(outer);
 
         helpTest(q2,
-                 "SELECT \n\t\te1, (SELECT e1 FROM m.g1) \nFROM \n\t\tm.g2 \nWHERE \n\t\t(e3 >= ANY (SELECT e1 FROM m.g1)) AND (EXISTS (SELECT \n\t\t\t\t\t\te1 \nFROM \n\t\t\t\t\t\tm.g1))"); //$NON-NLS-1$
+                 "SELECT\n\t\te1, (SELECT e1 FROM m.g1)\n\tFROM\n\t\tm.g2\n\tWHERE\n\t\t(e3 >= ANY (SELECT e1 FROM m.g1)) AND (EXISTS (SELECT e1 FROM m.g1))"); //$NON-NLS-1$
     }
 
     /**
@@ -1731,7 +1729,7 @@ public class TestDisplayNodeFactory extends TestCase {
      */
     public void testSetQueryUnionOfLiteralsCase3102() {
 
-        String expected = "SELECT \n\t\t\t'A' AS FOO \nUNION \nSELECT \n\t\t\t'B' AS FOO"; //$NON-NLS-1$
+        String expected = "SELECT\n\t\t'A' AS FOO\nUNION\nSELECT\n\t\t'B' AS FOO"; //$NON-NLS-1$
 
         Select s1 = new Select();
         s1.addSymbol(new AliasSymbol("FOO", new ExpressionSymbol("xxx", new Constant("A")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1754,7 +1752,7 @@ public class TestDisplayNodeFactory extends TestCase {
      */
     public void testSetQueryUnionOfLiteralsCase3102a() {
 
-        String expected = "SELECT \n\t\t\t'A' AS FOO \nUNION \nSELECT \n\t\t\t'B' AS FOO"; //$NON-NLS-1$
+        String expected = "SELECT\n\t\t'A' AS FOO\nUNION\nSELECT\n\t\t'B' AS FOO"; //$NON-NLS-1$
 
         Select s1 = new Select();
         s1.addSymbol(new AliasSymbol("FOO", new ExpressionSymbol("xxx", new Constant("A")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1773,7 +1771,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testNullExpressionInNamedParameter() {
 
-        String expected = "EXEC sp1(PARAM = \"sp1.PARAM\")"; //$NON-NLS-1$
+        String expected = "EXEC sp1(PARAM => sp1.PARAM)"; //$NON-NLS-1$
 
         StoredProcedure sp = new StoredProcedure();
         sp.setDisplayNamedParameters(true);
@@ -1792,7 +1790,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setSelect(select);
         query.setFrom(from);
         query.setLimit(new Limit(null, new Constant(new Integer(100))));
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\ta \nLIMIT 100"); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta\n\tLIMIT 100"); //$NON-NLS-1$
     }
 
     public void testLimitWithOffset() {
@@ -1802,7 +1800,7 @@ public class TestDisplayNodeFactory extends TestCase {
         query.setSelect(select);
         query.setFrom(from);
         query.setLimit(new Limit(new Constant(new Integer(50)), new Constant(new Integer(100))));
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\ta \nLIMIT 50, 100"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta\n\tLIMIT 50, 100"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithMakeDep() {
@@ -1813,7 +1811,7 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(new Object[] {fromClause}));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\ta MAKEDEP"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKEDEP"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithJoinPredicateMakeDep() {
@@ -1826,12 +1824,12 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(new Object[] {new JoinPredicate(fromClause, fromClause1, JoinType.JOIN_CROSS)}));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT \n\t\t* \nFROM \n\t\ta MAKENOTDEP CROSS JOIN b MAKEDEP"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKENOTDEP CROSS JOIN b MAKEDEP"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithNestedJoinPredicateMakeDep() throws Exception {
         Query query = (Query)QueryParser.getQueryParser().parseCommand("Select a From (db.g1 JOIN db.g2 ON a = b) makedep LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
-        helpTest(query, "SELECT \n\t\ta \nFROM \n\t\t(db.g1 INNER JOIN db.g2 ON a = b) MAKEDEP LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\ta\n\tFROM\n\t\t(db.g1 INNER JOIN db.g2 ON a = b) MAKEDEP LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
     }
     
     public void testCast() throws Exception {
@@ -1856,7 +1854,7 @@ public class TestDisplayNodeFactory extends TestCase {
     
     public void testXMLAgg() throws Exception {
         LanguageObject ex = QueryParser.getQueryParser().parseCommand("select xmlagg(x order by y)"); //$NON-NLS-1$
-        helpTest(ex, "SELECT \n\t\tXMLAGG(x ORDER BY y )"); //$NON-NLS-1$
+        helpTest(ex, "SELECT\n\t\tXMLAGG(x ORDER BY y)"); //$NON-NLS-1$
     }
 
     public void testXMLElement() throws Exception {
@@ -1866,7 +1864,7 @@ public class TestDisplayNodeFactory extends TestCase {
     
     public void testCacheHint() throws Exception {
         LanguageObject ex = QueryParser.getQueryParser().parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
-        helpTest(ex, "/*+ cache(pref_mem) */  \nSELECT \n\t\t* \nFROM \n\t\tdb.g2"); //$NON-NLS-1$
+        helpTest(ex, "/*+ cache(pref_mem) */\nSELECT\n\t\t*\n\tFROM\n\t\tdb.g2"); //$NON-NLS-1$
     }
     
     // ################################## TEST SUITE ################################
