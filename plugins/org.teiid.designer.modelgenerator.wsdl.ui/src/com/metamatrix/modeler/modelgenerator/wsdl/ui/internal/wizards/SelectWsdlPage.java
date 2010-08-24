@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -22,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -59,27 +59,19 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.ModelGeneratorWsdlUiUtil;
-import com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.util.XMLExtensionsFilter;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
@@ -105,6 +97,8 @@ public class SelectWsdlPage extends WizardPage
 
     /** <code>IDialogSetting</code>s key for saved dialog Y position. */
     private static final String DIALOG_Y = "dialogY"; //$NON-NLS-1$
+    
+    private static final String WSDL_URI_PROP_KEY = "wsdlURI"; //$NON-NLS-1$
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
@@ -262,7 +256,7 @@ public class SelectWsdlPage extends WizardPage
         });
 
         CLabel wsldLabel = new CLabel(optionsGroup, SWT.NONE);
-        wsldLabel.setText("WSDL URI");
+        wsldLabel.setText(getString("wsdlLabel.text")); //$NON-NLS-1$
         gridData = new GridData(SWT.NONE);
         gridData.horizontalSpan = 1;
         wsldLabel.setLayoutData(gridData);
@@ -580,8 +574,8 @@ public class SelectWsdlPage extends WizardPage
                 return;
             }
             Properties props = profile.getBaseProperties();
-            wsdlURIText.setText(props.getProperty("wsdlURI"));
-            importManager.setWSDLFileUri(props.getProperty("wsdlURI"));
+            wsdlURIText.setText(props.getProperty(WSDL_URI_PROP_KEY));
+            importManager.setWSDLFileUri(props.getProperty(WSDL_URI_PROP_KEY));
             updateWidgetEnablements();
         }
     }
@@ -801,7 +795,7 @@ public class SelectWsdlPage extends WizardPage
         }
     };
 
-    /** Validator that makes sure the selection containes all WSDL files. */
+    /** Validator that makes sure the selection contains all WSDL files. */
     private ISelectionStatusValidator wsdlValidator = new ISelectionStatusValidator() {
         public IStatus validate( Object[] theSelection ) {
             IStatus result = null;

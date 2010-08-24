@@ -3,7 +3,7 @@
 <plugin>
    <extension
        id="org.teiid.designer.datatools.salesforce.ConnectionInfoProvider"
-       name="SalesForceConnectionInfoProvider"
+       name="%salesForceConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"

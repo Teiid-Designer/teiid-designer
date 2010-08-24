@@ -233,7 +233,7 @@
    <!-- Action contributed to generate materialized views -->
    <extension
 		id="CreateMaterializedViewsAction"
-		name="%c"
+		name="%createMaterializedViewsAction.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
          name="com.metamatrix.modeler.transformation.ui.actions.CreateMaterializedViewsAction"

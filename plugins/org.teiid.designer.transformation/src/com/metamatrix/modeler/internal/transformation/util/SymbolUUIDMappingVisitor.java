@@ -10,8 +10,6 @@ package com.metamatrix.modeler.internal.transformation.util;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
@@ -24,6 +22,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.visitor.AbstractSymbolMappingVisitor;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 
 /**
  * SymbolUUIDMappingVisitor for mapping fullnames to UUIDs and vice-versa.
@@ -374,6 +374,8 @@ public class SymbolUUIDMappingVisitor extends AbstractSymbolMappingVisitor {
     /** 
      * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.symbol.AliasSymbol)
      */
+
+    @Override
     public void visit(AliasSymbol obj) {
         Expression replacement = replaceExpression(obj.getSymbol());
         

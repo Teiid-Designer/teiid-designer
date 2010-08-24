@@ -119,6 +119,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public int getBottomMargin() {
         return this.bottomMargin;
     }
@@ -145,6 +147,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public int getLeftMargin() {
         return this.leftMargin;
     }
@@ -162,6 +166,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public int getRightMargin() {
         return this.rightMargin;
     }
@@ -179,6 +185,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public int getTopMargin() {
         return this.topMargin;
     }
@@ -281,6 +289,7 @@ public class Label extends CLabel {
                             int hgt = (this.gradientPercents[ndx] * bounds.height / 100) - pos;
                             gc.fillGradientRectangle(0, pos, bounds.width, hgt, true);
                             pos += hgt;
+                      
                         } else {
                             int wth = (this.gradientPercents[ndx] * bounds.width / 100) - pos;
                             gc.fillGradientRectangle(pos, 0, wth, bounds.height, false);
@@ -313,6 +322,7 @@ public class Label extends CLabel {
             Rectangle imgBounds = img.getBounds();
             gc.drawImage(img,
                          0,
+                      
                          0,
                          imgBounds.width,
                          imgBounds.height,
@@ -402,7 +412,8 @@ public class Label extends CLabel {
             // Return if gradient unchanged
             if ((this.gradientColors != null) && (colors != null) && (this.gradientColors.length == colors.length)) {
                 boolean same = false;
-                for (int ndx = 0; ndx < this.gradientColors.length; ndx++) {
+                for (int
+                ndx = 0; ndx < this.gradientColors.length; ndx++) {
                     same = (this.gradientColors[ndx] == colors[ndx])
                            || ((this.gradientColors[ndx] == null) && (colors[ndx] == bkgd))
                            || ((this.gradientColors[ndx] == bkgd) && (colors[ndx] == null));
@@ -477,6 +488,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public void setBottomMargin(int margin) {
         this.bottomMargin = Math.max(0, margin);
     }
@@ -522,6 +535,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public void setLeftMargin(int margin) {
         this.leftMargin = Math.max(0, margin);
     }
@@ -540,6 +555,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public void setRightMargin(int margin) {
         this.rightMargin = Math.max(0, margin);
     }
@@ -558,6 +575,8 @@ public class Label extends CLabel {
      * @see #setVerticalMargin(int)
      * @since 5.0
      */
+
+    @Override
     public void setTopMargin(int margin) {
         this.topMargin = Math.max(0, margin);
     }
