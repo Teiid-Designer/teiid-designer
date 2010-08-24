@@ -16,7 +16,6 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -626,109 +625,136 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public void selected(IStructuredSelection selection) {
-                Collection<Resource> emfResources = new ArrayList<Resource>();
                 ContainerImpl tempContainer = null;
                 try {
-					Collection<File> modelFiles = vdb.getModelFiles();
-					tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
-					ModelEditorImpl.setContainer(tempContainer);
-					for( File modelFile : modelFiles ) {
-						Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
-						if( ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
-							EObject firstEObj = r.getContents().get(0);
-							ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
-							String mmURI = ma.getPrimaryMetamodelUri();
-							if( RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
-								emfResources.add(r);
-							} else {
-								tempContainer.getResources().remove(r);
-							}
-						} else {
-							tempContainer.getResources().remove(r);
-						}
-					}
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					ModelEditorImpl.setContainer(null);
-				}
-                
-                
-                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, emfResources, null);
-                
-                wizard.init(iww.getWorkbench(), new StructuredSelection(vdb.getModelEntries()));
-                final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
-                final int rc = dialog.open();
-                if( rc == Window.OK ) {
-                	// Get the Data Policy
-                	DataRole dp = wizard.getDataRole();
-                	if( dp != null ) {
-                		vdb.addDataPolicy(dp, new NullProgressMonitor());
-                	}
-                	
+                    Collection<File> modelFiles = vdb.getModelFiles();
+                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
+
+                    tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
+                    ModelEditorImpl.setContainer(tempContainer);
+                    for (File modelFile : modelFiles) {
+                        boolean isVisible = true;
+//                        for (VdbModelEntry entry : modelEntries) {
+//                            String fileName = entry.getName().removeFileExtension().lastSegment();
+//                            String modelName = modelFile.getName();
+//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
+//                                modelName = modelName.substring(0, modelName.length() - 4);
+//                            }
+//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
+//                                isVisible = false;
+//                                break;
+//                            }
+//                        }
+
+                        Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
+                        if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
+                            EObject firstEObj = r.getContents().get(0);
+                            ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+                            String mmURI = ma.getPrimaryMetamodelUri();
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                                // DO NOTHING. This leaves the resource in the temp container
+                            } else {
+                                tempContainer.getResources().remove(r);
+                            }
+                        } else {
+                            tempContainer.getResources().remove(r);
+                        }
+                    }
+                } catch (CoreException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } finally {
+                    ModelEditorImpl.setContainer(null);
                 }
-                //MessageDialog.openInformation(pg.getShell(), "New Data Policy launched", "Not yet fully implemented");
+
+                final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
+                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, null);
+
+				wizard.init(iww.getWorkbench(), new StructuredSelection(vdb
+						.getModelEntries()));
+				final WizardDialog dialog = new WizardDialog(wizard.getShell(),
+						wizard);
+				final int rc = dialog.open();
+				if( rc == Window.OK ) {
+					// Get the Data Policy
+					DataRole dp = wizard.getDataRole();
+					if( dp != null ) {
+						vdb.addDataPolicy(dp, new NullProgressMonitor());
+					}
+
+				}
+                // MessageDialog.openInformation(pg.getShell(), "New Data Policy launched", "Not yet fully implemented");
             }
         });
         dataRolesGroup.add(dataRolesGroup.new EditButtonProvider() {
 
             @Override
-            public void selected(IStructuredSelection selection) {
-            	VdbDataRole policy = (VdbDataRole)selection.getFirstElement();
-            	if( policy == null ) {
-            		return;
-            	}
-                Collection<Resource> emfResources = new ArrayList<Resource>();
+            public void selected( IStructuredSelection selection ) {
+                VdbDataRole policy = (VdbDataRole)selection.getFirstElement();
+                if (policy == null) {
+                    return;
+                }
                 ContainerImpl tempContainer = null;
                 try {
-					Collection<File> modelFiles = vdb.getModelFiles();
-					tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
-					ModelEditorImpl.setContainer(tempContainer);
-					for( File modelFile : modelFiles ) {
-						Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
-						if( ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
-							EObject firstEObj = r.getContents().get(0);
-							ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
-							String mmURI = ma.getPrimaryMetamodelUri();
-							if( RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
-								emfResources.add(r);
-							} else {
-								tempContainer.getResources().remove(r);
-							}
-						} else {
-							tempContainer.getResources().remove(r);
-						}
-					}
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					ModelEditorImpl.setContainer(null);
-				}
-				
-				
-				DataRole dataPolicy = 
-					new DataRole(policy.getName(), 
-							policy.getDescription(), 
-							policy.getMappedRoleNames(), policy.getPermissions());
+                    Collection<File> modelFiles = vdb.getModelFiles();
+                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
 
-				
+                    tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
+                    ModelEditorImpl.setContainer(tempContainer);
+                    for (File modelFile : modelFiles) {
+                        boolean isVisible = true;
+//                        for (VdbModelEntry entry : modelEntries) {
+//                            String fileName = entry.getName().removeFileExtension().lastSegment();
+//                            String modelName = modelFile.getName();
+//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
+//                                modelName = modelName.substring(0, modelName.length() - 4);
+//                            }
+//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
+//                                isVisible = false;
+//                                break;
+//                            }
+//                        }
+
+                        Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
+                        if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
+                            EObject firstEObj = r.getContents().get(0);
+                            ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+                            String mmURI = ma.getPrimaryMetamodelUri();
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                                // DO NOTHING. This leaves the resource in the temp container
+                            } else {
+                                tempContainer.getResources().remove(r);
+                            }
+                        } else {
+                            tempContainer.getResources().remove(r);
+                        }
+                    }
+                } catch (CoreException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } finally {
+                    ModelEditorImpl.setContainer(null);
+                }
+
+                DataRole dataPolicy = 
+                	new DataRole(policy.getName(), 
+                			policy.getDescription(), 
+                			policy.getMappedRoleNames(), policy.getPermissions());
+
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, emfResources, dataPolicy);
+                final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
                 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdb.getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
                 final int rc = dialog.open();
-                if( rc == Window.OK ) {
-                	// Get the Data Policy
-                	DataRole dp = wizard.getDataRole();
-                	if( dp != null ) {
-                		vdb.removeDataPolicy(policy);
-                		vdb.addDataPolicy(dp, new NullProgressMonitor());
-                	}
-                	
+                if (rc == Window.OK ) {
+                    // Get the Data Policy
+                    DataRole dp = wizard.getDataRole();
+                    if( dp != null ) {
+                        vdb.removeDataPolicy(policy);
+                        vdb.addDataPolicy(dp, new NullProgressMonitor());
+                    }
+
                 }
             }
         });
@@ -752,15 +778,15 @@ public final class VdbEditor extends EditorPart {
             @Override
             public void run() {
             	
-            	if( selectedDataRole != null ) {
-            		DataRole newDR = new DataRole(
-            				selectedDataRole.getName() + COPY_SUFFIX, 
-            				selectedDataRole.getDescription(),
-            				selectedDataRole.getMappedRoleNames(),
-            				selectedDataRole.getPermissions());
-            		vdb.addDataPolicy(newDR, new NullProgressMonitor());
-            		dataRolesGroup.getTable().getViewer().refresh();
-            	}
+                if( selectedDataRole != null ) {
+                    DataRole newDR = new DataRole(
+                    		selectedDataRole.getName() + COPY_SUFFIX, 
+                    		selectedDataRole.getDescription(),
+                            selectedDataRole.getMappedRoleNames(), 
+                            selectedDataRole.getPermissions());
+                    vdb.addDataPolicy(newDR, new NullProgressMonitor());
+                    dataRolesGroup.getTable().getViewer().refresh();
+                }
 
             }
         };
