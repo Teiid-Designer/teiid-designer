@@ -7,13 +7,14 @@ Bundle-Activator: com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.modelgenerator.xml,
+ com.metamatrix.modeler.modelgenerator.xml.action,
  com.metamatrix.modeler.modelgenerator.xml.jdbc.ui.util,
  com.metamatrix.modeler.modelgenerator.xml.model,
  com.metamatrix.modeler.modelgenerator.xml.modelextension,
  com.metamatrix.modeler.modelgenerator.xml.modelextension.impl,
  com.metamatrix.modeler.modelgenerator.xml.wizards,
  com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc,
- com.metamatrix.modeler.modelgenerator.xml.wizards.unzipproject
+ com.metamatrix.modeler.modelgenerator.xsd.procedures
 Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.compare,
  org.teiid.designer.compare.ui,
@@ -34,6 +35,11 @@ Require-Bundle: org.teiid.designer.metamodels.relational,
  org.teiid.designer.schema.tools,
  teiid_embedded_query,
  org.teiid.designer.metamodels.core,
- org.eclipse.emf.edit
+ org.eclipse.emf.edit,
+ org.teiid.designer.transformation,
+ org.teiid.designer.transformation.ui,
+ org.teiid.designer.metamodels.transformation,
+ org.eclipse.emf.mapping,
+ org.eclipse.wst.xsd.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

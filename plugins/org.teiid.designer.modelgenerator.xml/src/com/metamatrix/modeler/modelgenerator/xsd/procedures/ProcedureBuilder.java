@@ -1,4 +1,4 @@
-package com.metamatrix.modeler.modelgenerator.wsdl.procedures;
+package com.metamatrix.modeler.modelgenerator.xsd.procedures;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +19,7 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.Schema;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -52,8 +53,30 @@ public class ProcedureBuilder {
 		return procedures.add(name);
 	}
 
-	public void build(SchemaObject sObject, ITraversalCtxFactory traversalCtxFactory)
+	public void build(List<XSDElementDeclaration> elements, ITraversalCtxFactory traversalCtxFactory)
 			throws ModelerCoreException {
+		CoreArgCheck.isTrue(elements.size() == 1, "wrong number of elements returned from XSD");
+		XSDElementDeclaration element = elements.get(0);
+		this.traversalCtxFactory = traversalCtxFactory;
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(element.getName(), new QName(element.getTargetNamespace(), ""), this);
+		traversalContexts.add(ctx);
+		XSDTypeDefinition type = element.getType();
+		String name = getName(type);
+		if (!procedureExists(name)) {
+			addProcedure(name);
+			if (type instanceof XSDComplexTypeDefinition) {
+				ctx.appendToPath(element.getName());
+				XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) type;
+				addComplexTypeDefToProcedureResult(complexType, ctx);
+			} else if (type instanceof XSDSimpleTypeDefinition) {
+				XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
+				addElementDeclarationToProcedureResult(element, simpleType, ctx);
+			}
+		}
+	}
+	
+	public void build(SchemaObject sObject, ITraversalCtxFactory traversalCtxFactory)
+	throws ModelerCoreException {
 		this.traversalCtxFactory = traversalCtxFactory;
 		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), ""), this);
 		traversalContexts.add(ctx);
@@ -67,15 +90,11 @@ public class ProcedureBuilder {
 				addComplexTypeDefToProcedureResult(complexType, ctx);
 			} else if (type instanceof XSDSimpleTypeDefinition) {
 				XSDElementDeclaration element = ((ElementImpl) sObject)
-						.getElem();
+				.getElem();
 				XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
 				addElementDeclarationToProcedureResult(element, simpleType, ctx);
 			}
 		}
-		//for (TraversalContext context : traversalContexts) {
-		//	context.createTransformation();
-		//}
-
 	}
 	
 	public void createTransformations() {

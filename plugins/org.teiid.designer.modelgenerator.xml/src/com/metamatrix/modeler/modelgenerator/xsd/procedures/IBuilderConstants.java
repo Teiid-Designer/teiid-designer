@@ -1,4 +1,4 @@
-package com.metamatrix.modeler.modelgenerator.wsdl.procedures;
+package com.metamatrix.modeler.modelgenerator.xsd.procedures;
 
 public interface IBuilderConstants {
 	

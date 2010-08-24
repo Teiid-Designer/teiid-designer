@@ -45,23 +45,97 @@
             id="modelgenerator.xml.wizards.PreferencePage">
       </page>
    </extension>
-   <extension
-         id="FileExtensionReplaceAction"
-		 name="%fileExtensionReplaceAction.name"
-         point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-            label="%fileExtensionReplaceAction.label"
-            name="com.metamatrix.modeler.modelgenerator.xml.modelextension.FileExtensionReplaceAction">
-      </resourceAction>
+
+<extension point="org.eclipse.ui.popupMenus">
+      
+	  <viewerContribution 
+	  		id="com.metamatrix.modeler.modelgenerator.xml.action.CreateScalarToXMLTransformationGraph"
+			targetID="org.eclipse.wst.xsd.ui.popup.graph">
+		
+      	  <menu
+         	id="com.metamatrix.modeler.modelgenerator.xml.graph.action"
+         	label="Modeling"
+         	path="additions">
+         	<separator name="group1"/>
+      	</menu>
+      
+         <action
+               class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"
+               enablesFor="1"
+               id="com.metamatrix.modeler.modelgenerator.xml.action.ScalarToXMLGraph"
+               label="Create Scalar To XML Transformation"
+               menubarPath="com.metamatrix.modeler.modelgenerator.xml.graph.action/group1">
+               <enablement>
+               <and>
+            	<objectClass name="org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter"/>
+               </and>
+               </enablement>
+          </action>
+                 <action
+               class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
+               enablesFor="1"
+               id="com.metamatrix.modeler.modelgenerator.xml.action.XMLToScalarGraph"
+               label="Create XML To Scalar Transformation"
+               menubarPath="com.metamatrix.modeler.modelgenerator.xml.graph.action/group1">
+               <enablement>
+               <and>
+            	<objectClass name="org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter"/>
+               </and>
+               </enablement>
+               </action>
+          
+          </viewerContribution>
+        <viewerContribution 
+	  		id="com.metamatrix.modeler.modelgenerator.xml.action.ParseScalarToXMLTransformationOutline"
+			targetID="org.eclipse.wst.xsd.ui.popup.outline">
+						<menu
+         id="com.metamatrix.modeler.modelgenerator.xml.outline.action"
+         label="Modeling"
+         path="additions">
+      <separator name="group1"/>
+      </menu>
+        <action
+               class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"
+               enablesFor="1"
+               id="com.metamatrix.modeler.modelgenerator.xml.action.ScalarToXMLOutline"
+               label="Create Scalar To XML Transformation"
+               menubarPath="com.metamatrix.modeler.modelgenerator.xml.outline.action/group1">
+               <enablement>
+               <and>
+            	<objectClass name="org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter"/>
+               </and>
+               </enablement>
+          </action>
+         <action
+               class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
+               enablesFor="1"
+               id="com.metamatrix.modeler.modelgenerator.xml.action.XMLToScalarOutline"
+               label="Create XML To Scalar Transformation"
+               menubarPath="com.metamatrix.modeler.modelgenerator.xml.outline.action/group1">
+               <enablement>
+               <and>
+            	<objectClass name="org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter"/>
+               </and>
+               </enablement>
+               </action>
+		</viewerContribution>
+	</extension>
+	<extension
+		id="CreateXMLToScalarTransformation"
+		name="Create XML To Scalar Transformation"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
+         label="Create XML To Scalar Transformation">
+      </specialAction>
    </extension>
-   
-      <extension
-         id="HTTPExtensionReplaceAction"
-		 name="%httpExtensionReplaceAction.name"
-         point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-            label="%httpExtensionReplaceAction.label"
-            name="com.metamatrix.modeler.modelgenerator.xml.modelextension.HTTPExtensionReplaceAction">
-      </resourceAction>
+   <extension
+		id="CreateScalarToXMLTransformation"
+		name="Create Scalar To XML Transformation"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"
+         label="Create Scalar To XML Transformation">
+      </specialAction>
    </extension>
 </plugin>
