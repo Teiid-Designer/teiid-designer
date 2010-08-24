@@ -16,7 +16,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>net.sf.saxon</module>
 		<module>org.apache.poi</module>
 		<module>org.jaxen</module>
-		<module>org.jdom</module>
+		<!-- REMOVE to try to make target platform work correctly (avoid confusion between two versions of org.jdom)
+		     <module>org.jdom</module> -->
 		<module>org.mockito</module>
 		<module>org.powermock</module>
 		<module>org.teiid.datatools.connectivity</module>
