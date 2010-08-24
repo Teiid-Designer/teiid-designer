@@ -11,10 +11,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
@@ -114,22 +116,6 @@ public class TableMaterializedRule implements StructuralFeatureValidationRule {
                                 return; // return immediately, since done
                             }
                         }
-                    }
-                    
-                    // Make sure that the materializedTable reference is set correctly
-                    // 1) Table reference is NOT NULL
-                    // 2) Table is Physical and NOT a View
-                    
-                    final Table materializedTable = table.getMaterializedTable();
-                    
-                    if( materializedTable == null ) {
-                    	result = new ValidationResultImpl(eObject);
-                    	
-                    	// create validation problem and add it to the result
-                        final String msg = RelationalPlugin.Util.getString("TableMaterializedRule.MaterializedTableReferenceUndefined"); //$NON-NLS-1$
-                        final ValidationProblem problem = new ValidationProblemImpl(0, IStatus.WARNING, msg);
-                        result.addProblem(problem);
-                        context.addResult(result);
                     }
                 }
             }
