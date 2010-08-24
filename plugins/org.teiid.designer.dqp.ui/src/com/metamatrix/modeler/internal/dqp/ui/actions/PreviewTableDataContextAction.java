@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,6 +43,7 @@ import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
+
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -216,6 +218,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 
         if (sql == null) {
             sql = ModelObjectUtilities.getSQL(selected, paramValuesAsArray, accessPatternsColumns);
+            sql = insertParameterValuesSQL(sql, paramValues);
         }
 
         if (sql != null) {
@@ -271,6 +274,18 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                                                "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
         }
     }
+    
+	private String insertParameterValuesSQL(String sql, List<String> paramValues) {
+		if( paramValues != null && !paramValues.isEmpty() ) {
+			for (String value : paramValues) {
+				// skip over null values as those don't have a ? to replace
+				if( value != null ) {
+					sql = sql.replaceFirst("\\?", "'" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+		}
+		return sql;
+	}
 
     /**
      *
