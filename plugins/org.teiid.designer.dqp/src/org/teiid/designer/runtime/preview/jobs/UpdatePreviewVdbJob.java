@@ -36,6 +36,11 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     private final Server previewServer;
 
     /**
+     * The Preview VDB to be updated (never <code>null</code>).
+     */
+    private final IFile pvdbFile;
+
+    /**
      * @param changedModel the model whose Preview VDB needs to be updated (never <code>null</code>)
      * @param context the preview context (never <code>null</code>)
      * @param previewServer the server where the preview is being performed (may be <code>null</code>)
@@ -47,6 +52,10 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
         super(NLS.bind(Messages.UpdatePreviewVdbJob, changedModel.getFullPath().removeFileExtension()), context);
         this.model = changedModel;
         this.previewServer = previewServer;
+        this.pvdbFile = getContext().getPreviewVdb(this.model);
+
+        // set job scheduling rule on the PVDB resource
+        setRule(getSchedulingRuleFactory().modifyRule(getPreviewVdb()));
     }
 
     /**
@@ -54,6 +63,16 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     public IFile getModel() {
         return this.model;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob#getPreviewVdb()
+     */
+    @Override
+    public IFile getPreviewVdb() {
+        return this.pvdbFile;
     }
 
     /**
@@ -71,8 +90,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
         IStatus error = null;
-        IFile pvdbFile = getContext().getPreviewVdb(this.model);
-        Vdb pvdb = new Vdb(pvdbFile, true, monitor);
+        Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
 
         // run this only if we have a preview server
         if (this.previewServer != null) {
@@ -97,7 +115,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
             }
 
             return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobSuccessfullyCompleted,
-                                                              pvdbFile.getFullPath()));
+                                                              this.pvdbFile.getFullPath()));
         } catch (Exception e) {
             IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.UpdatePreviewVdbJobError,
                                                                            this.model.getFullPath()), e);

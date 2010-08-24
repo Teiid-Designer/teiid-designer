@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -55,6 +57,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         assert PreviewManager.isPreviewable(model) : "model is not previewable" + model.getFullPath(); //$NON-NLS-1$
         this.model = model;
         this.project = null;
+        initialize();
     }
 
     /**
@@ -66,13 +69,39 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
         super(NLS.bind(Messages.CreatePreviewVdbJob, project.getFullPath()), context);
         this.project = project;
         this.model = null;
+        initialize();
     }
 
     /**
-     * @return the Preview VDB associated with a model or project or <code>null</code> if the job did not complete successfully
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob#getPreviewVdb()
      */
-    public IFile getPvdb() {
+    @Override
+    public IFile getPreviewVdb() {
         return this.pvdbFile;
+    }
+
+    /**
+     * <strong>Must be called by constructors.</strong>
+     */
+    private void initialize() {
+        // set the PVDB
+        IResource resource = (project == null) ? this.model : this.project;
+        int size = (project == null) ? 3 : 2;
+        this.pvdbFile = getContext().getPreviewVdb(resource);
+
+        // set job scheduling rule on the PVDB resource
+        ISchedulingRule[] rules = new ISchedulingRule[size];
+        rules[0] = getSchedulingRuleFactory().createRule(this.pvdbFile);
+        rules[1] = getSchedulingRuleFactory().modifyRule(this.pvdbFile);
+
+        // if the model PVDB need to also "lock" on the model resource
+        if (size == 3) {
+            rules[2] = getSchedulingRuleFactory().modifyRule(this.model);
+        }
+
+        setRule(MultiRule.combine(rules));
     }
 
     /**
@@ -83,7 +112,6 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
         IResource resource = ((this.project == null) ? this.model : this.project);
-        this.pvdbFile = getContext().getPreviewVdb(resource);
 
         // if the file was deleted from outside Eclipse, Eclipse will think it still exists
         if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
@@ -102,9 +130,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
         try {
             Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
-            // if( isNew ) {
-            // if( pvdb.getModelEntries())
-            // }
+
             // don't do if a project PVDB
             if (resource instanceof IFile) {
                 // don't add if already in the PVDB (only one model per PVDB)

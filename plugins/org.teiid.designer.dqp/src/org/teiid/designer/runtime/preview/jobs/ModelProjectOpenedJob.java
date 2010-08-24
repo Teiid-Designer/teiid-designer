@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -33,13 +34,13 @@ public final class ModelProjectOpenedJob extends CompositePreviewJob {
      */
     public ModelProjectOpenedJob( IProject project,
                                   PreviewContext context ) throws Exception {
-        super(Messages.bind(Messages.ModelProjectOpenedJob, project), context, null, true);
+        super(NLS.bind(Messages.ModelProjectOpenedJob, project), context, null, true);
 
         assert (project != null);
         assert (ModelerCore.hasModelNature(project));
 
         this.project = project;
-        
+
         // create Preview VDB for project
         CreatePreviewVdbJob job = new CreatePreviewVdbJob(project, context);
         add(job);

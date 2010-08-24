@@ -767,7 +767,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @param job the job being processed
      */
     private void handlePreviewVdbCreated( CreatePreviewVdbJob job ) {
-        IFile pvdb = job.getPvdb();
+        IFile pvdb = job.getPreviewVdb();
         addWorkspacePvdb(pvdb);
     }
 
@@ -778,7 +778,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void handlePreviewVdbDeleted( DeletePreviewVdbJob job ) {
         assert (job.completedSuccessfully()) : "Delete Preview VDB job did not complete successfully"; //$NON-NLS-1$
-        previewVdbDeletedPostProcessing(job.getPvdb().getFullPath());
+        previewVdbDeletedPostProcessing(job.getPreviewVdb().getFullPath());
     }
 
     /**

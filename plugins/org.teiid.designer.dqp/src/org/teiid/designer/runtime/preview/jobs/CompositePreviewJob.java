@@ -12,12 +12,14 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -52,6 +54,11 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
      * A flag indicating if the jobs should be run in sequence instead of asynchronously. Default value is {@value} .
      */
     private final boolean runInSequence;
+
+    /**
+     * Indicates if the this job should wait for all build workspace jobs to finish. Defaults to {@value} .
+     */
+    private boolean waitForBuildToFinish;
 
     /**
      * Runs the jobs asynchronously.
@@ -91,6 +98,12 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     public void add( PreviewVdbJob job ) {
         assert (job != null);
         this.jobs.add(job);
+
+        // wait for build to finish if there is at least one job that changes workspace
+        if (job instanceof WorkspacePreviewVdbJob) {
+            ((WorkspacePreviewVdbJob)job).setStandalone(false);
+            this.waitForBuildToFinish = true;
+        }
     }
 
     /**
@@ -167,10 +180,15 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     @Override
     protected IStatus run( IProgressMonitor monitor ) {
         assert (!this.jobs.isEmpty());
-        
+
         monitor.beginTask(getName(), getJobs().size());
 
         try {
+            // wait for autobuild to run if necessary
+            if (this.waitForBuildToFinish) {
+                Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+            }
+
             for (PreviewVdbJob previewJob : this.jobs) {
                 assert (previewJob instanceof Job);
                 Job job = (Job)previewJob;
@@ -188,7 +206,7 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
             }
         } catch (OperationCanceledException e) {
             // user canceled job
-            Util.log(new Status(IStatus.CANCEL, PLUGIN_ID, Messages.bind(Messages.JobCanceled, getName())));
+            Util.log(new Status(IStatus.CANCEL, PLUGIN_ID, NLS.bind(Messages.JobCanceled, getName())));
         } catch (InterruptedException e) {
             Util.log(e);
         } finally {

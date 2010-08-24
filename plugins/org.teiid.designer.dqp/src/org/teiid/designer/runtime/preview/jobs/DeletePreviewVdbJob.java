@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 
@@ -24,7 +25,7 @@ public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
     /**
      * The Preview VDB to be deleted (never <code>null</code>).
      */
-    private final IFile pvdb;
+    private final IFile pvdbFile;
 
     /**
      * Deletes the specified Preview VDB.
@@ -35,8 +36,10 @@ public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     public DeletePreviewVdbJob( IFile pvdbToDelete,
                                 PreviewContext context ) throws Exception {
-        super(Messages.bind(Messages.DeletePreviewVdbJob, pvdbToDelete.getFullPath()), context);
-        this.pvdb = pvdbToDelete;
+        super(NLS.bind(Messages.DeletePreviewVdbJob, pvdbToDelete.getFullPath()), context);
+        this.pvdbFile = pvdbToDelete;
+        assert (this.pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
+        initialize();
     }
 
     /**
@@ -48,16 +51,29 @@ public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     public DeletePreviewVdbJob( PreviewContext context,
                                 IFile deletedModel ) throws Exception {
-        super(Messages.bind(Messages.DeletePreviewVdbJobForModel, deletedModel.getFullPath()), context);
-        this.pvdb = context.getPreviewVdb(deletedModel);
-        assert (this.pvdb != null);
+        super(NLS.bind(Messages.DeletePreviewVdbJobForModel, deletedModel.getFullPath()), context);
+        this.pvdbFile = context.getPreviewVdb(deletedModel);
+        assert (this.pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
+        initialize();
     }
 
     /**
-     * @return the Preview VDB being deleted (never <code>null</code>)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob#getPreviewVdb()
      */
-    public IFile getPvdb() {
-        return this.pvdb;
+    @Override
+    public IFile getPreviewVdb() {
+        return this.pvdbFile;
+    }
+
+    /**
+     * <strong>Must be called by constructors.</strong>
+     */
+    private void initialize() {
+        assert (this.pvdbFile != null) : "initialize() called before PVDB file is set"; //$NON-NLS-1$
+        // set job scheduling rule on the PVDB resource
+        setRule(getSchedulingRuleFactory().deleteRule(this.pvdbFile));
     }
 
     /**
@@ -68,12 +84,12 @@ public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
         try {
-            this.pvdb.delete(true, monitor);
-            return new Status(IStatus.OK, PLUGIN_ID, Messages.bind(Messages.DeletePreviewVdbJobSuccessfullyCompleted,
-                                                                   this.pvdb.getFullPath()));
+            this.pvdbFile.delete(true, monitor);
+            return new Status(IStatus.OK, PLUGIN_ID, NLS.bind(Messages.DeletePreviewVdbJobSuccessfullyCompleted,
+                                                              this.pvdbFile.getFullPath()));
         } catch (Exception e) {
-            return new Status(IStatus.ERROR, PLUGIN_ID,
-                              Messages.bind(Messages.DeletePreviewVdbJobError, this.pvdb.getFullPath()), e);
+            return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeletePreviewVdbJobError, this.pvdbFile.getFullPath()),
+                              e);
         }
     }
 

@@ -10,10 +10,14 @@ package org.teiid.designer.runtime.preview.jobs;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResourceRuleFactory;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.PreferenceConstants;
@@ -35,6 +39,11 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
      * The preview context (never <code>null</code>)
      */
     private final PreviewContext context;
+
+    /**
+     * Indicates if this job will be run on its own and not part of a composite job. Defaults to {@value} .
+     */
+    private boolean standalone = true;
 
     /**
      * @param name the job name (may not be <code>null</code>)
@@ -84,6 +93,25 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
     }
 
     /**
+     * @return the Preview VDB being created, deleted, or modified in the workspace (never <code>null</code>)
+     */
+    public abstract IFile getPreviewVdb();
+
+    /**
+     * @return the resource job scheduling rule factory
+     */
+    protected IResourceRuleFactory getSchedulingRuleFactory() {
+        return ResourcesPlugin.getWorkspace().getRuleFactory();
+    }
+
+    /**
+     * @return <code>true</code> if this job is not part of a composite job
+     */
+    public boolean isStandaloneJob() {
+        return this.standalone;
+    }
+
+    /**
      * @param monitor the monitor to use for tracking job progress (may be <code>null</code>)
      * @return the results of the job (may not be <code>null</code>)
      * @throws Exception if an unexpected error occurred running the job
@@ -93,7 +121,7 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public final IStatus runInWorkspace( IProgressMonitor monitor ) {
@@ -107,6 +135,11 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
         monitor.setTaskName(getName());
 
         try {
+            // wait for autobuild to run if not part of a composite job
+            if (this.standalone) {
+                Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+            }
+            // run job
             results = runImpl(monitor);
             assert (results != null);
             return results;
@@ -145,6 +178,15 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
                 Util.log(IStatus.INFO, msg);
             }
         }
+    }
+
+    /**
+     * This method is intended only to be called by {@link CompositePreviewJob}.
+     * 
+     * @param standalone <code>true</code> if this job will not be part of a composite job
+     */
+    public void setStandalone( boolean standalone ) {
+        this.standalone = standalone;
     }
 
     /**
