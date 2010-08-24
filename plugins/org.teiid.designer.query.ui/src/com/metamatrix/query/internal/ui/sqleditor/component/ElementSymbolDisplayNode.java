@@ -12,7 +12,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 /**
  * The <code>ElementSymbolDisplayNode</code> class is used to represent an ElemenSymbol.
  */
-public class ElementSymbolDisplayNode extends ExpressionDisplayNode {
+public class ElementSymbolDisplayNode extends DisplayNode {
 
     // ===========================================================================================================================
     // Constructors
@@ -20,13 +20,11 @@ public class ElementSymbolDisplayNode extends ExpressionDisplayNode {
     /**
      * ElementSymbolDisplayNode constructor
      * 
-     * @param parentNode
-     *            the parent DisplayNode of this.
-     * @param eSymbol
-     *            the ElementSymbol language object used to construct this display node.
+     * @param parentNode the parent DisplayNode of this.
+     * @param eSymbol the ElementSymbol language object used to construct this display node.
      */
-    public ElementSymbolDisplayNode(DisplayNode parentNode,
-                                    ElementSymbol eSymbol) {
+    public ElementSymbolDisplayNode( DisplayNode parentNode,
+                                     ElementSymbol eSymbol ) {
         this.parentNode = parentNode;
         this.languageObject = eSymbol;
     }
@@ -38,7 +36,7 @@ public class ElementSymbolDisplayNode extends ExpressionDisplayNode {
      * Method to set the starting index.
      */
     @Override
-    public int setStartIndex(int index) {
+    public int setStartIndex( int index ) {
         startIndex = index;
         endIndex = startIndex + toString().length() - 1;
         return endIndex;

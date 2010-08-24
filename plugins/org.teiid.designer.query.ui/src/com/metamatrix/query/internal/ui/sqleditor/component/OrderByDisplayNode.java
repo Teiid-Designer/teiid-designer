@@ -7,14 +7,7 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>OrderByDisplayNode</code> class is used to represent a Query's ORDERBY clause.
@@ -35,7 +28,6 @@ public class OrderByDisplayNode extends DisplayNode {
                                OrderBy orderBy ) {
         this.parentNode = parentNode;
         this.languageObject = orderBy;
-        createChildNodes();
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -48,70 +40,6 @@ public class OrderByDisplayNode extends DisplayNode {
     @Override
     public boolean supportsElement() {
         return true;
-    }
-
-    // /////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    // /////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Create the child nodes for this type of DisplayNode.
-     */
-    private void createChildNodes() {
-        childNodeList = new ArrayList();
-
-        OrderBy orderBy = (OrderBy)(this.getLanguageObject());
-        int nVariables = orderBy.getVariableCount();
-
-        for (int i = 0; i < nVariables; i++) {
-            SingleElementSymbol symbol = orderBy.getVariable(i);
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this, symbol));
-        }
-
-        // Build the Display Node List
-        createDisplayNodeList();
-    }
-
-    /**
-     * Create the DisplayNode list for this type of DisplayNode. This is a list of all the lowest level nodes for this
-     * DisplayNode.
-     */
-    private void createDisplayNodeList() {
-        displayNodeList = new ArrayList();
-
-        OrderBy orderBy = (OrderBy)(this.getLanguageObject());
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.ORDER));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.BY));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-
-        if (childNodeList.size() > 0) {
-            Iterator iter = childNodeList.iterator();
-            Iterator typeIter = orderBy.getTypes().iterator();
-
-            while (iter.hasNext()) {
-                DisplayNode childNode = (DisplayNode)iter.next();
-                SingleElementSymbol seSymbol = (SingleElementSymbol)childNode.getLanguageObject();
-                if (seSymbol instanceof AliasSymbol) {
-                    AliasSymbol as = (AliasSymbol)seSymbol;
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,
-                                                                             SQLStringVisitor.escapeSinglePart(as.getOutputName())));
-                } else {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, seSymbol.getName()));
-                }
-                Boolean type = (Boolean)typeIter.next();
-                if (type.booleanValue() == OrderBy.DESC) {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SQLConstants.Reserved.DESC));
-                }
-
-                if (iter.hasNext()) {
-                    displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, COMMA + SPACE));
-                }
-            }
-
-            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this, SPACE));
-        }
     }
 
 }

@@ -13,17 +13,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.types.DataTypeManager;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 
 /**
  * Utilities used to get external metadata.
@@ -93,8 +93,18 @@ public class ExternalMetadataUtil {
             ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
             inputElments.add(inputElement);
         }
-
+        
         externalMetadata.put(inputGroup, inputElments);
+        
+        GroupSymbol inputGroup2 = new GroupSymbol(ProcedureReservedWords.INPUTS);
+        List inputElments2 = new ArrayList(elements.size());
+        for (int i = 0; i < elements.size(); i++) {
+            ElementSymbol virtualElmnt = (ElementSymbol)elements.get(i);
+            ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
+            inputElments2.add(inputElement);
+        }
+
+        externalMetadata.put(inputGroup2, inputElments2);
 
         // CHANGING group metadata info
         // Switch type to be boolean for all CHANGING variables

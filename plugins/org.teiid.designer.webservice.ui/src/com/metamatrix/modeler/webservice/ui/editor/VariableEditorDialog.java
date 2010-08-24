@@ -15,11 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.type.Type;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -56,7 +54,6 @@ import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.Statement;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.internal.core.xml.XPathHelper;
@@ -71,9 +68,6 @@ import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.ui.util.WebServiceUiUtil;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.query.internal.ui.sqleditor.component.AssignmentStatementDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.component.BlockDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.component.DeclareStatementDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeFactory;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
@@ -149,7 +143,7 @@ public class VariableEditorDialog extends Dialog
     }
 
     private void addDisplayNode( Statement statement ) {
-        BlockDisplayNode block = this.editor.findBlock();
+        DisplayNode block = this.editor.findBlock();
         DisplayNode newNode = DisplayNodeFactory.createDisplayNode(block, statement);
         if (newNode != null) {
             newNode.setVisible(false, true);
@@ -607,11 +601,12 @@ public class VariableEditorDialog extends Dialog
 
     private void removeVariableStatements( DeclareStatement declaration ) {
         AssignmentStatement assignment = (AssignmentStatement)this.editor.getDeclarationsToAssignments().remove(declaration);
-        BlockDisplayNode block = this.editor.findBlock();
+        DisplayNode block = this.editor.findBlock();
         if (block != null) {
             for (Iterator childIter = block.getChildren().iterator(); childIter.hasNext();) {
                 DisplayNode blockChild = (DisplayNode)childIter.next();
-                if (blockChild instanceof DeclareStatementDisplayNode || blockChild instanceof AssignmentStatementDisplayNode) {
+                if (blockChild.getLanguageObject() instanceof DeclareStatement || 
+                        blockChild.getLanguageObject() instanceof AssignmentStatement) {
                     LanguageObject obj = blockChild.getLanguageObject();
                     if (obj == declaration || obj == assignment) {
                         childIter.remove();

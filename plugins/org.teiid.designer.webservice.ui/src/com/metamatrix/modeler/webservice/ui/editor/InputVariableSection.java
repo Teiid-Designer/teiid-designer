@@ -48,16 +48,15 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.query.internal.ui.sqleditor.component.BlockDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.symbol.ElementSymbol;
 import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -262,7 +261,7 @@ public class InputVariableSection implements IInternalUiConstants {
             DeclareStatement declaration = (DeclareStatement)entry.getKey();
             AssignmentStatement assignment = (AssignmentStatement)entry.getValue();
             this.editor.getDeclarationsToAssignments().remove(declaration);
-            BlockDisplayNode block = this.editor.findBlock();
+            DisplayNode block = this.editor.findBlock();
             if (block != null) {
                 for (Iterator childIter = block.getChildren().iterator(); childIter.hasNext();) {
                     DisplayNode child = (DisplayNode)childIter.next();

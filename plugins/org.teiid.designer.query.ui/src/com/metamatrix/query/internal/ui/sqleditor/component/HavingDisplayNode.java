@@ -7,9 +7,6 @@
  */
 package com.metamatrix.query.internal.ui.sqleditor.component;
 
-import java.util.ArrayList;
-
-import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.lang.Criteria;
 
 /**
@@ -17,24 +14,25 @@ import org.teiid.query.sql.lang.Criteria;
  */
 public class HavingDisplayNode extends DisplayNode {
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
-     *   HavingDisplayNode constructor
-     *  @param parentNode the parent DisplayNode of this.
-     *  @param criteria the query language object used to construct this display node.
+     * HavingDisplayNode constructor
+     * 
+     * @param parentNode the parent DisplayNode of this.
+     * @param criteria the query language object used to construct this display node.
      */
-    public HavingDisplayNode(DisplayNode parentNode, Criteria criteria) {
+    public HavingDisplayNode( DisplayNode parentNode,
+                              Criteria criteria ) {
         this.parentNode = parentNode;
         this.languageObject = criteria;
-        createChildNodes();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     // PUBLIC METHODS
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * Having Clause supports Criteria
@@ -60,57 +58,4 @@ public class HavingDisplayNode extends DisplayNode {
         return true;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     *   Create the child nodes for this type of DisplayNode.
-     */
-    private void createChildNodes() {
-        childNodeList = new ArrayList();
-//        int indent = this.getIndentLevel();
-//        if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
-//        	indent++;
-//        }
-
-        Criteria criteria = (Criteria)this.getLanguageObject();
-        if(criteria!=null) {
-            childNodeList.add(DisplayNodeFactory.createDisplayNode(this,criteria));
-        }
-
-        // Build the Display Node List
-        createDisplayNodeList();
-    }
-
-    /**
-     *   Create the DisplayNode list for this type of DisplayNode.  This is a list of
-     *  all the lowest level nodes for this DisplayNode.
-     */
-    private void createDisplayNodeList() {
-        displayNodeList = new ArrayList();
-//        int indent = this.getIndentLevel();
-
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SQLConstants.Reserved.HAVING));
-        displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-//        if(isClauseIndentOn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
-//        	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-//        }
-
-        if(childNodeList.size()>0) {
-            DisplayNode childNode = childNodeList.get(0);
-            //indent = childNode.getIndentLevel();
-            if(childNode.hasDisplayNodes()) {
-                displayNodeList.addAll(childNode.getDisplayNodeList());
-            } else {
-                displayNodeList.add(childNode);
-            }
-//            displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,SPACE));
-//            if(isClauseCROn() && !DisplayNodeUtils.isWithinNoClauseIndentNode(this)) {
-//            	displayNodeList.add(DisplayNodeFactory.createDisplayNode(this,CR));
-//            }
-        }
-	}
-
 }
-

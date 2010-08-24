@@ -20,7 +20,6 @@ import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -74,7 +73,6 @@ import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.util.ElementSymbolOptimizer;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -96,12 +94,10 @@ import com.metamatrix.query.internal.ui.sqleditor.actions.ToggleOptimizer;
 import com.metamatrix.query.internal.ui.sqleditor.actions.UpFont;
 import com.metamatrix.query.internal.ui.sqleditor.actions.Validate;
 import com.metamatrix.query.internal.ui.sqleditor.component.AliasSymbolDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.component.CriteriaDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DeleteDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeConstants;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeUtils;
-import com.metamatrix.query.internal.ui.sqleditor.component.ExpressionDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.FromDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.GroupSymbolFinder;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
@@ -1412,7 +1408,8 @@ public class SqlEditorPanel extends SashForm
             insertGroups(groupNames, fromEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM) + SQLConstants.Reserved.FROM.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM)
+                              + SQLConstants.Reserved.FROM.length();
             insertGroups(groupNames, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             StringBuffer sb = new StringBuffer("SELECT * FROM"); //$NON-NLS-1$
@@ -1441,7 +1438,8 @@ public class SqlEditorPanel extends SashForm
             insertGroup(groupName, fromEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM) + SQLConstants.Reserved.FROM.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM)
+                              + SQLConstants.Reserved.FROM.length();
             insertGroup(groupName, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             setText("SELECT * FROM " + groupName, source); //$NON-NLS-1$
@@ -1546,7 +1544,8 @@ public class SqlEditorPanel extends SashForm
             insertElements(elementNames, parentNames, selectEndIndex + 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT) + SQLConstants.Reserved.SELECT.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT)
+                              + SQLConstants.Reserved.SELECT.length();
             insertElements(elementNames, parentNames, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
@@ -1595,7 +1594,8 @@ public class SqlEditorPanel extends SashForm
             insertElement(elementName, parentName, selectEndIndex - 1, source);
         } else if (isDefaultQuery()) {
             String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT) + SQLConstants.Reserved.SELECT.length();
+            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT)
+                              + SQLConstants.Reserved.SELECT.length();
             insertElement(elementName, parentName, insertIndex, source);
         } else if (getText().trim().length() == 0) {
             StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
@@ -1619,7 +1619,7 @@ public class SqlEditorPanel extends SashForm
             if (DisplayNodeUtils.isWithinSelect(node) && selectDropsEnabled == false) {
                 return false;
             } else if (node.isInExpression()) {
-                ExpressionDisplayNode expressionNode = DisplayNodeUtils.getExpressionForNode(node);
+                DisplayNode expressionNode = DisplayNodeUtils.getExpressionForNode(node);
                 if (expressionNode != null && !(expressionNode instanceof AliasSymbolDisplayNode)) {
                     // JOptionPane.showMessageDialog(this, propMgr.getText("stp.insertExpressionNotAllowedMsg"),
                     // propMgr.getText("stp.insertNotAllowedTitle"),JOptionPane.INFORMATION_MESSAGE);
@@ -1632,7 +1632,7 @@ public class SqlEditorPanel extends SashForm
             if ((DisplayNodeUtils.isWithinSelect(node1) || DisplayNodeUtils.isWithinSelect(node1)) && selectDropsEnabled == false) {
                 return false;
             } else if (node1.isInExpression() && node2.isInExpression()) {
-                ExpressionDisplayNode expressionNode = DisplayNodeUtils.getExpressionForNode(node1);
+                DisplayNode expressionNode = DisplayNodeUtils.getExpressionForNode(node1);
                 if (expressionNode != null && !(expressionNode instanceof AliasSymbolDisplayNode)) {
                     // JOptionPane.showMessageDialog(this, propMgr.getText("stp.insertExpressionNotAllowedMsg"),
                     // propMgr.getText("stp.insertNotAllowedTitle"),JOptionPane.INFORMATION_MESSAGE);
@@ -1853,17 +1853,17 @@ public class SqlEditorPanel extends SashForm
      * 
      * @return ExpressionDisplayNode at specified index, null if there is none
      */
-    public ExpressionDisplayNode getExpressionAtIndex( int index ) {
-        ExpressionDisplayNode result = null;
+    public DisplayNode getExpressionAtIndex( int index ) {
+        DisplayNode result = null;
         // --------------------------------------------------------------------
         // Get the expression that the index is within, null if there is none.
         // --------------------------------------------------------------------
         if (isParsable()) {
             List displayNodes = queryDisplayComponent.getDisplayNodeList();
-            result = (ExpressionDisplayNode)DisplayNodeUtils.getNodeTypeAtIndex(displayNodes, index, EXPRESSION);
+            result = DisplayNodeUtils.getNodeTypeAtIndex(displayNodes, index, EXPRESSION);
             // If an AliasSymbol is found, get the aliased expression
             if (result instanceof AliasSymbolDisplayNode) {
-                result = (ExpressionDisplayNode)result.getChildren().get(0);
+                result = result.getChildren().get(0);
             }
         }
         return result;
@@ -1877,23 +1877,23 @@ public class SqlEditorPanel extends SashForm
      * @param getOuterMost 'true' to get outerMost criteria, 'false' if not
      * @return CriteriaDisplayNode at current caret, null if there is none
      */
-    public CriteriaDisplayNode getCriteriaAtIndex( int index,
-                                                   boolean getOuterMost ) {
-        CriteriaDisplayNode result = null;
+    public DisplayNode getCriteriaAtIndex( int index,
+                                           boolean getOuterMost ) {
+        DisplayNode result = null;
         if (isParsable()) {
             // ------------------------------------------------------------------
             // If index is within a criteria, get it.
             // ------------------------------------------------------------------
             List displayNodes = queryDisplayComponent.getDisplayNodeList();
-            result = (CriteriaDisplayNode)DisplayNodeUtils.getNodeTypeAtIndex(displayNodes, index, CRITERIA);
+            result = DisplayNodeUtils.getNodeTypeAtIndex(displayNodes, index, CRITERIA);
             // ------------------------------------------------------------------
             // If getOuterMost is desired, walk up through the heirarchy
             // ------------------------------------------------------------------
             if (getOuterMost) {
                 while (result != null) {
                     DisplayNode parent = result.getParent();
-                    if (parent != null && parent instanceof CriteriaDisplayNode) {
-                        result = (CriteriaDisplayNode)parent;
+                    if (parent != null && parent.getLanguageObject() instanceof Criteria) {
+                        result = parent;
                     } else {
                         break;
                     }

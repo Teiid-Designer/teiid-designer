@@ -48,9 +48,12 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.DeclareStatement;
 import com.metamatrix.core.util.ArrayUtil;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.webservice.Interface;
@@ -72,13 +75,8 @@ import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.ui.util.WebServiceUiUtil;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.query.internal.ui.sqleditor.component.AssignmentStatementDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.component.BlockDisplayNode;
-import com.metamatrix.query.internal.ui.sqleditor.component.DeclareStatementDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.DeclareStatement;
 import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -365,14 +363,14 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         root.setVisible(false, false);
         for (Iterator childIter = root.getChildren().iterator(); childIter.hasNext();) {
             DisplayNode node = (DisplayNode)childIter.next();
-            if (node instanceof BlockDisplayNode) {
+            if (node.getLanguageObject() instanceof Block) {
                 // Update declaration-to-assignment mapping using new nodes and set visibility of all nodes as appropriate
                 this.declarationsToAssignments.clear();
                 node.setVisible(false, false);
                 Map declarations = new HashMap();
                 for (Iterator blockIter = node.getChildren().iterator(); blockIter.hasNext();) {
                     node = (DisplayNode)blockIter.next();
-                    if (node instanceof DeclareStatementDisplayNode) {
+                    if (node.getLanguageObject() instanceof DeclareStatement) {
                         DeclareStatement declaration = (DeclareStatement)node.getLanguageObject();
                         if (declaration.getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
                             declarations.put(declaration.getVariable(), declaration);
@@ -380,7 +378,7 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                         }
                     }
 
-                    if (node instanceof AssignmentStatementDisplayNode || node instanceof DeclareStatementDisplayNode) {
+                    if (node.getLanguageObject() instanceof AssignmentStatement || node.getLanguageObject() instanceof DeclareStatement) {
                         AssignmentStatement assignment = (AssignmentStatement)node.getLanguageObject();
                         Object declaration = declarations.get(assignment.getVariable());
                         if (declaration != null) {
@@ -429,18 +427,18 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
      * @return
      * @since 5.0.1
      */
-    public BlockDisplayNode findBlock() {
+    public DisplayNode findBlock() {
         return findBlock(getCurrentSqlEditor().getQueryDisplayComponent().getDisplayNode());
     }
 
-    private BlockDisplayNode findBlock( DisplayNode node ) {
-        if (node instanceof BlockDisplayNode) {
-            return (BlockDisplayNode)node;
+    private DisplayNode findBlock( DisplayNode node ) {
+        if (node.getLanguageObject() instanceof Block) {
+            return node;
         }
         for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
             node = findBlock((DisplayNode)iter.next());
             if (node != null) {
-                return (BlockDisplayNode)node;
+                return node;
             }
         } // for
         return null;

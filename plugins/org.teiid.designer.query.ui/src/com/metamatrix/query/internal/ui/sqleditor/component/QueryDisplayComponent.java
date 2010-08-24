@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -27,12 +26,14 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.UnaryFromClause;
+import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.SelectSymbol;
+import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.util.ElementSymbolOptimizer;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -245,7 +246,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
                         replaced = true;
                     }
                 } else {
-                    if (!replaced && node.getParent() instanceof BlockDisplayNode && SQLConstants.Reserved.END.equals(node.toString())) {
+                    if (!replaced && node.getParent().languageObject instanceof Block && SQLConstants.Reserved.END.equals(node.toString())) {
                         text.append(sqlString);
                     }
                     text.append(node.toString());
@@ -1029,7 +1030,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             Iterator iter = getSelectSymbolDisplayNodes().iterator();
             while(iter.hasNext()) {
                 DisplayNode node = (DisplayNode)iter.next();
-                if(node instanceof SymbolDisplayNode) {
+                if(node.getLanguageObject() instanceof Symbol) {
                     LanguageObject langObj = node.getLanguageObject();
                     if(langObj instanceof MultipleElementSymbol) {
                     	starIndex = node.getStartIndex();
@@ -1294,7 +1295,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // Rebuild the sql string, replacing the Select
             while( iter.hasNext() ) {
                 DisplayNode clauseNode = (DisplayNode)iter.next();
-                if(clauseNode instanceof SelectDisplayNode) {
+                if(clauseNode.getLanguageObject() instanceof Select) {
                     sb.append(selectStr);
                 } else {
                     sb.append(clauseNode.toString());
@@ -1360,7 +1361,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         if(nNodes==2) {
             // If there are two nodes, take the 1st node, or second if a symbol
             displayNode = (DisplayNode)displayNodes.get(0);
-            if( displayNode instanceof SymbolDisplayNode || displayNode instanceof UnaryFromClauseDisplayNode) {
+            if( displayNode.getLanguageObject() instanceof Symbol || displayNode.getLanguageObject() instanceof UnaryFromClause) {
                 displayNode = (DisplayNode)displayNodes.get(1);
             }
         } else if(nNodes==1) {
@@ -1388,7 +1389,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         //------------------------------------------------------------
         // Index is within a Symbol
         //------------------------------------------------------------
-        } else if (displayNode instanceof SymbolDisplayNode || displayNode instanceof UnaryFromClauseDisplayNode) {
+        } else if (displayNode.getLanguageObject() instanceof Symbol || displayNode.getLanguageObject() instanceof UnaryFromClause) {
             int startIndex = displayNode.getStartIndex();
             if(index==startIndex) {
                 insertString(SPACE+symbolName+COMMA,displayNode.getStartIndex());
