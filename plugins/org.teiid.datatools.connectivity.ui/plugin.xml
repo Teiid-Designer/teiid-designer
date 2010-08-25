@@ -44,7 +44,7 @@
    <extension
          point="org.eclipse.datatools.sqltools.plan.planService">
       <planService
-            databaseVendorDefinitionId="Teiid_7.0"
+            databaseVendorDefinitionId="Teiid_7.1"
             serviceClass="org.teiid.datatools.connectivity.ui.plan.TeiidPlanService">
       </planService>
    </extension>
@@ -55,7 +55,7 @@
             configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
             default="false"
             product="Teiid"
-            version="7.0">
+            version="7.1">
       </dbUIConfiguration>
    </extension>
    <extension
@@ -65,14 +65,14 @@
             default="false"
             product="Teiid"
             supportsDebugging="false"
-            version="7.0">
+            version="7.1">
       </dbConfiguration>
    </extension> 
    <extension
          point="org.eclipse.datatools.sqltools.result.ui.resultSetViewer"
          id="org.teiid.datatools.data.extensions.externalResultSetViewer ">
          <externalViewer
-         vendor="Teiid.org"
+         vendor="Teiid"
          id="Teiid Result Set Viewer"
          default_viewer_name="Teiid Result Set Viewer"
          class="org.teiid.datatools.results.view.TeiidResultViewerProvider"/>

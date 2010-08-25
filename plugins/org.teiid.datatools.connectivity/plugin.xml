@@ -23,10 +23,10 @@
 					value="org.teiid.jdbc.TeiidDriver" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.vendor" name="Vendor"
-					value="Teiid.org" required="true" visible="true" />
+					value="Teiid" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.version" name="Version"
-					value="7.0" required="true" visible="true" />
+					value="7.1" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
 					value="jdbc:teiid:vdb-name@mm://localhost:31000" required="true"
@@ -47,10 +47,10 @@
           allowsConnections="true"
           description="Definition of the Teiid Database"
           file="src/org/teiid/datatools/connectivity/database/teiidDB.xmi"
-          product="Teiid.org"
+          product="Teiid"
           productDisplayString="Teiid"
-          version="7.0"
-          versionDisplayString="7.0">
+          version="7.1"
+          versionDisplayString="7.1">
     </definition>
  </extension>
  <extension

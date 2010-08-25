@@ -4,7 +4,7 @@ import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 
 public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 
-    private static final String[] PRODUCTS = {"Teiid Server"}; //$NON-NLS-1$
+    private static final String[] PRODUCTS = {"Teiid Server", "Teiid"}; //$NON-NLS-1$
 
     private String format( String in ) {
         return in.trim().toLowerCase();
@@ -16,12 +16,10 @@ public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
     @Override
     public boolean recognize( String product,
                               String version ) {
-        // TODO extract version from supplied string
-        // example product="teiid" and version="6.3.0)"
         if (product != null) {
             String formattedProduct = format(product);
             for (int i = 0; i < PRODUCTS.length; i++) {
-                if (formattedProduct.indexOf(format(PRODUCTS[i])) > -1) {
+                if (formattedProduct.equals(format(PRODUCTS[i]))) {
                     return true;
                 }
             }
