@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,10 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -81,7 +78,6 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
@@ -115,7 +111,7 @@ public final class PreviewManager extends JobChangeAdapter
     implements IExecutionConfigurationListener, IPreferenceChangeListener, IResourceChangeListener, INotifyChangedListener,
     PreviewContext {
 
-	public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
 
     private static String getPreviewVdbPrefix( IResource resource ) {
@@ -227,7 +223,7 @@ public final class PreviewManager extends JobChangeAdapter
      * deployed.
      */
     @GuardedBy( "statusLock" )
-    private Map<IPath, Collection<PreviewVdbStatus>> deploymentStatusMap = new HashMap<IPath, Collection<PreviewVdbStatus>>();
+    private Map<IPath, Set<PreviewVdbStatus>> deploymentStatusMap = new HashMap<IPath, Set<PreviewVdbStatus>>();
 
     /**
      * Lock used for when accessing PVDB deployment status.
@@ -260,10 +256,10 @@ public final class PreviewManager extends JobChangeAdapter
 
         try {
             this.statusLock.writeLock().lock();
-            Collection<PreviewVdbStatus> statuses = this.deploymentStatusMap.get(projectPath);
+            Set<PreviewVdbStatus> statuses = this.deploymentStatusMap.get(projectPath);
 
             if (statuses == null) {
-                statuses = new ArrayList<PreviewVdbStatus>();
+                statuses = new HashSet<PreviewVdbStatus>();
                 this.deploymentStatusMap.put(projectPath, statuses);
             }
 
@@ -460,21 +456,48 @@ public final class PreviewManager extends JobChangeAdapter
         try {
             this.statusLock.readLock().lock();
             statuses = this.deploymentStatusMap.get(project.getFullPath());
+
+            // make copy in case another thread is updating
+            if ((statuses != null) && !statuses.isEmpty()) {
+                statuses = new ArrayList<PreviewVdbStatus>(statuses);
+            }
         } finally {
             this.statusLock.readLock().unlock();
         }
 
         // statuses could be null at startup when the default server is being set
         if ((statuses != null) && !statuses.isEmpty()) {
-            for (PreviewVdbStatus status : statuses) {
-                if (!onlyThoseNeedingToBeDeployed) {
-                    pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
-                } else {
-                    IFile pvdbFile = status.getFile();
+            Collection<PreviewVdbStatus> missingPvdbs = new ArrayList<PreviewVdbStatus>();
 
-                    if (needsToBeDeployed(pvdbFile)) {
-                        pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+            for (PreviewVdbStatus status : statuses) {
+                IFile pvdbFile = status.getFile();
+
+                // do a check to make sure the PVDB still exists
+                if (pvdbFile.exists()) {
+                    if (!onlyThoseNeedingToBeDeployed) {
+                        pvdbsToDeploy.add(this.context.getPreviewVdb(status.getFile()));
+                    } else {
+                        if (needsToBeDeployed(pvdbFile)) {
+                            pvdbsToDeploy.add(this.context.getPreviewVdb(pvdbFile));
+                        }
                     }
+                } else {
+                    missingPvdbs.add(status);
+                }
+            }
+
+            // if cache is out of sync cleanup (means there is a bug with maintaining the cache)
+            if (!missingPvdbs.isEmpty()) {
+                Util.log(Messages.DeployStatusCacheError);
+
+                try {
+                    this.statusLock.writeLock().lock();
+
+                    for (PreviewVdbStatus status : missingPvdbs) {
+                        statuses.remove(status);
+                    }
+                } finally {
+                    this.statusLock.writeLock().unlock();
                 }
             }
         }
@@ -654,6 +677,11 @@ public final class PreviewManager extends JobChangeAdapter
         try {
             this.statusLock.readLock().lock();
             statuses = this.deploymentStatusMap.get(getProjectPath(pvdbPath));
+
+            // make copy in case another thread is updating
+            if ((statuses != null) && !statuses.isEmpty()) {
+                statuses = new ArrayList<PreviewVdbStatus>(statuses);
+            }
         } finally {
             this.statusLock.readLock().unlock();
         }
@@ -733,6 +761,11 @@ public final class PreviewManager extends JobChangeAdapter
                     this.statusLock.readLock().lock();
                     // these are the PVDBs that have associated models
                     statuses = this.deploymentStatusMap.get(project.getFullPath());
+
+                    // make copy in case another thread is updating
+                    if ((statuses != null) && !statuses.isEmpty()) {
+                        statuses = new ArrayList<PreviewVdbStatus>(statuses);
+                    }
                 } finally {
                     this.statusLock.readLock().unlock();
                 }
@@ -1189,7 +1222,7 @@ public final class PreviewManager extends JobChangeAdapter
             this.statusLock.writeLock().lock();
 
             // set all PVDBs to needing to be deployed
-            for (Map.Entry<IPath, Collection<PreviewVdbStatus>> entry : this.deploymentStatusMap.entrySet()) {
+            for (Map.Entry<IPath, Set<PreviewVdbStatus>> entry : this.deploymentStatusMap.entrySet()) {
                 for (PreviewVdbStatus status : entry.getValue()) {
                     status.setDeploy(true);
                 }
@@ -1414,10 +1447,16 @@ public final class PreviewManager extends JobChangeAdapter
             return false;
         }
 
+        /**
+         * @return the Preview VDB
+         */
         public IFile getFile() {
             return this.pvdb;
         }
 
+        /**
+         * @return the full workspace path of the Preview VDB
+         */
         public IPath getPath() {
             return this.pvdb.getFullPath();
         }
@@ -1431,6 +1470,9 @@ public final class PreviewManager extends JobChangeAdapter
             this.deploy = deploy;
         }
 
+        /**
+         * @return <code>true</code> if the Preview VDB needs to be deployed
+         */
         public boolean shouldDeploy() {
             return this.deploy;
         }

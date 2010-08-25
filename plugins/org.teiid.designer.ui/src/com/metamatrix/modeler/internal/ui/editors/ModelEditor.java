@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -400,42 +401,33 @@ public class ModelEditor extends MultiPageModelEditor
 
         super.preSave(false);
 
-        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-
+        WorkspaceJob job = new WorkspaceJob(UiConstants.Util.getString("ModelEditor.saveModelJob", //$NON-NLS-1$
+                                                                       this.modelResource.getResource().getName())) {
             @Override
-            public void execute( final IProgressMonitor monitor ) throws CoreException {
+            public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException {
                 try {
                     ModelUtilities.saveModelResource(modelResource, monitor, true, this);
                     resourceDirty = false;
-                } catch (Exception e) {
+
+                    // property changes must be handled in UI thread
+                    UiUtil.runInSwtThread(new Runnable() {
+                        @SuppressWarnings( "synthetic-access" )
+                        @Override
+                        public void run() {
+                            ModelEditor.this.firePropertyChange(PROP_DIRTY);
+                        }
+                    }, true);
+
+                    return Status.OK_STATUS;
+                } catch (final Exception e) {
                     throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
                 }
             }
+
         };
 
-        try {
-            operation.run(monitor);
-        } catch (Exception ex) {
-            if (ex instanceof InvocationTargetException) {
-                handleSaveException(((InvocationTargetException)ex).getTargetException(), monitor);
-            } else {
-                handleSaveException(ex, monitor);
-            }
-        }
-
-        firePropertyChange(PROP_DIRTY);
-    }
-
-    private void handleSaveException( Throwable e,
-                                      IProgressMonitor monitor ) {
-        String message = UiConstants.Util.getString("ModelEditor.resourceSaveError", modelResource); //$NON-NLS-1$
-        UiConstants.Util.log(IStatus.ERROR, e, message);
-
-        String title = UiConstants.Util.getString("ModelEditor.resourceSaveErrorTitle"); //$NON-NLS-1$
-        MessageDialog.openError(getSite().getShell(), title, message);
-
-        if (monitor != null) monitor.setCanceled(true);
-
+        job.setRule(this.modelResource.getResource());
+        job.schedule();
     }
 
     /**

@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
@@ -55,7 +57,10 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
         this.pvdbFile = getContext().getPreviewVdb(this.model);
 
         // set job scheduling rule on the PVDB resource
-        setRule(getSchedulingRuleFactory().modifyRule(getPreviewVdb()));
+        ISchedulingRule[] rules = new ISchedulingRule[2];
+        rules[0] = getSchedulingRuleFactory().modifyRule(this.pvdbFile);
+        rules[1] = getSchedulingRuleFactory().buildRule();
+        setRule(MultiRule.combine(rules));
     }
 
     /**

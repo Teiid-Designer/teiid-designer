@@ -12,7 +12,6 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -56,11 +55,6 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     private final boolean runInSequence;
 
     /**
-     * Indicates if the this job should wait for all build workspace jobs to finish. Defaults to {@value} .
-     */
-    private boolean waitForBuildToFinish;
-
-    /**
      * Runs the jobs asynchronously.
      * 
      * @param jobName the name of the job (may not be <code>null</code>)
@@ -98,12 +92,6 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
     public void add( PreviewVdbJob job ) {
         assert (job != null);
         this.jobs.add(job);
-
-        // wait for build to finish if there is at least one job that changes workspace
-        if (job instanceof WorkspacePreviewVdbJob) {
-            ((WorkspacePreviewVdbJob)job).setStandalone(false);
-            this.waitForBuildToFinish = true;
-        }
     }
 
     /**
@@ -184,11 +172,6 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
         monitor.beginTask(getName(), getJobs().size());
 
         try {
-            // wait for autobuild to run if necessary
-            if (this.waitForBuildToFinish) {
-                Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
-            }
-
             for (PreviewVdbJob previewJob : this.jobs) {
                 assert (previewJob instanceof Job);
                 Job job = (Job)previewJob;

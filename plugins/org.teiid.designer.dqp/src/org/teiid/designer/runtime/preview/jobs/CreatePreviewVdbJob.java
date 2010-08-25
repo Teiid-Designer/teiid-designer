@@ -88,17 +88,18 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
     private void initialize() {
         // set the PVDB
         IResource resource = (project == null) ? this.model : this.project;
-        int size = (project == null) ? 3 : 2;
+        int size = (project == null) ? 4 : 3;
         this.pvdbFile = getContext().getPreviewVdb(resource);
 
-        // set job scheduling rule on the PVDB resource
+        // set job scheduling rule on the PVDB resource, the model, and the build
         ISchedulingRule[] rules = new ISchedulingRule[size];
         rules[0] = getSchedulingRuleFactory().createRule(this.pvdbFile);
         rules[1] = getSchedulingRuleFactory().modifyRule(this.pvdbFile);
+        rules[2] = getSchedulingRuleFactory().buildRule();
 
         // if the model PVDB need to also "lock" on the model resource
-        if (size == 3) {
-            rules[2] = getSchedulingRuleFactory().modifyRule(this.model);
+        if (size == 4) {
+            rules[3] = getSchedulingRuleFactory().modifyRule(this.model);
         }
 
         setRule(MultiRule.combine(rules));

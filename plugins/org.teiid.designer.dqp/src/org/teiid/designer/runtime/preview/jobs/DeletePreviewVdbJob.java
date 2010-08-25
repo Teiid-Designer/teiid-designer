@@ -13,6 +13,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -72,8 +74,12 @@ public final class DeletePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     private void initialize() {
         assert (this.pvdbFile != null) : "initialize() called before PVDB file is set"; //$NON-NLS-1$
-        // set job scheduling rule on the PVDB resource
-        setRule(getSchedulingRuleFactory().deleteRule(this.pvdbFile));
+
+        // set job scheduling rule on the PVDB resource and on the build
+        ISchedulingRule[] rules = new ISchedulingRule[2];
+        rules[0] = getSchedulingRuleFactory().deleteRule(this.pvdbFile);
+        rules[1] = getSchedulingRuleFactory().buildRule();
+        setRule(MultiRule.combine(rules));
     }
 
     /**
