@@ -492,6 +492,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                 try {
                     this.statusLock.writeLock().lock();
+                    statuses = this.deploymentStatusMap.get(project.getFullPath());
 
                     for (PreviewVdbStatus status : missingPvdbs) {
                         statuses.remove(status);
@@ -959,33 +960,28 @@ public final class PreviewManager extends JobChangeAdapter
      * @return <code>true</code> if the PVDB needs to be deployed
      */
     boolean needsToBeDeployed( IFile pvdbFile ) {
-        try {
-            this.statusLock.readLock().lock();
-            PreviewVdbStatus status = getStatus(pvdbFile.getFullPath());
-            assert (status != null) : "PVDB status not found in status map:" + pvdbFile.getFullPath(); //$NON-NLS-1$
-            boolean deploy = status.shouldDeploy();
+        PreviewVdbStatus status = getStatus(pvdbFile.getFullPath());
+        assert (status != null) : "PVDB status not found in status map:" + pvdbFile.getFullPath(); //$NON-NLS-1$
+        boolean deploy = status.shouldDeploy();
 
-            if (!deploy) {
-                // make sure server has a copy of the Preview VDB
-                if (getPreviewServer() != null) {
-                    try {
-                        ExecutionAdmin admin = getPreviewServer().getAdmin();
-                        deploy = (admin.getVdb(getPreviewVdbDeployedName(pvdbFile)) == null);
+        if (!deploy) {
+            // make sure server has a copy of the Preview VDB
+            if (getPreviewServer() != null) {
+                try {
+                    ExecutionAdmin admin = getPreviewServer().getAdmin();
+                    deploy = (admin.getVdb(getPreviewVdbDeployedName(pvdbFile)) == null);
 
-                        // server does not have a copy. update status map.
-                        if (deploy) {
-                            setNeedsToBeDeployedStatus(pvdbFile, true);
-                        }
-                    } catch (Exception e) {
-                        Util.log(e);
+                    // server does not have a copy. update status map.
+                    if (deploy) {
+                        setNeedsToBeDeployedStatus(pvdbFile, true);
                     }
+                } catch (Exception e) {
+                    Util.log(e);
                 }
             }
-
-            return deploy;
-        } finally {
-            this.statusLock.readLock().unlock();
         }
+
+        return deploy;
     }
 
     /**
@@ -1219,7 +1215,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void resetAllDeployedStatuses() {
         try {
-            this.statusLock.writeLock().lock();
+            this.statusLock.readLock().lock();
 
             // set all PVDBs to needing to be deployed
             for (Map.Entry<IPath, Set<PreviewVdbStatus>> entry : this.deploymentStatusMap.entrySet()) {
@@ -1228,7 +1224,7 @@ public final class PreviewManager extends JobChangeAdapter
                 }
             }
         } finally {
-            this.statusLock.writeLock().unlock();
+            this.statusLock.readLock().unlock();
         }
     }
 
