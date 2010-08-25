@@ -3,6 +3,7 @@ package org.teiid.designer.runtime.connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -10,6 +11,8 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidDataSource;
+import org.teiid.designer.runtime.preview.PreviewManager;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -32,22 +35,17 @@ public class ModelConnectionMatcher {
         Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
 
         for (String name : names) {
-            boolean create = true;
             if (name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA")) { //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
-
-            // for (TeiidDataSource tds : admin.getWorkspaceDataSources()) {
-            // if (tds.getName().equalsIgnoreCase(name)) {
-            // dataSources.add(tds);
-            // create = false;
-            // break;
-            // }
-            // }
-
-            if (create) {
-                dataSources.add(new TeiidDataSource(name, name, "<unknown>", admin)); //$NON-NLS-1$
+            TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>", admin); //$NON-NLS-1$
+            
+            if( name.startsWith(PreviewManager.PREVIEW_PREFIX) ) {
+            	if( name.length() > ModelerCore.workspaceUuid().toString().length() + 8 ) {
+            	   	tds.setPreview(true);
+            	}
             }
+            dataSources.add(tds);
         }
 
         return dataSources;
