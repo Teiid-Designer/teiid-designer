@@ -12,7 +12,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<packaging>pom</packaging>
 	<modules>
 		<module>../build/parent</module>
-		<module>../build/target-platform</module>
 		<module>plugins</module>
 		<module>features</module>
 		<module>tests</module>
