@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 import org.eclipse.datatools.sqltools.core.SQLToolsFacade;
 import org.eclipse.datatools.sqltools.core.services.ConnectionService;
 import org.eclipse.datatools.sqltools.plan.PlanRequest;
 import org.eclipse.datatools.sqltools.plan.PlanSupportRunnable;
+import org.teiid.datatools.connectivity.ui.Activator;
 import org.teiid.datatools.connectivity.ui.Messages;
 
 public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
@@ -19,19 +23,21 @@ public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
         super(request, profileName, dbName);
     }
 
-    // TODO: SQLDevToolsUIConfiguration dbdefinition is undefined.
     @Override
     protected String explainPlan( Statement stmt ) {
-        // execute the query
-        String result = Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"); //$NON-NLS-1$
+        String result;
         try {
             String sql = this._request.getSql();
-            stmt.execute("set showplan debug");
-            ResultSet resultSet = stmt.executeQuery(sql); //$NON-NLS-1$
-
-            result = resultSet.getString(0);
+            stmt.execute("SET SHOWPLAN DEBUG");
+            stmt.executeQuery(sql);
+            ResultSet planRs = stmt.executeQuery("SHOW PLAN");
+            planRs.next();
+            result = planRs.getString("PLAN_XML"); 
         } catch (SQLException e) {
-            result += e.getMessage();
+            result = "";
+            IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
+            		Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"), e);
+            Activator.getDefault().getLog().log(status);
         }
         return result;
     }
