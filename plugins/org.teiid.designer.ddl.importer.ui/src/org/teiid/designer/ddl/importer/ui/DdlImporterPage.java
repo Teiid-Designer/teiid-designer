@@ -288,10 +288,6 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
         WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_NAME_LABEL);
         modelNameFld = WidgetFactory.createTextField(panel);
-        if (relationalModel(selectedFile)) {
-            modelNameFld.setText(selectedFile.getFullPath().removeFileExtension().lastSegment());
-            generateModelName = false;
-        }
         modelNameFld.addModifyListener(new ModifyListener() {
 
             @Override
@@ -384,7 +380,18 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         ddlFileContentsBox.setEditable(false);
         ddlFileContentsExpander.setExpanded(settings.getBoolean(DDL_FILE_CONTENTS_SHOWN_SETTING));
 
-        validate();
+        if (selectedFile != null) {
+            if (relationalModel(selectedFile)) {
+                modelNameFld.setText(selectedFile.getFullPath().removeFileExtension().lastSegment());
+                generateModelName = false;
+            } else {
+                String ext = selectedFile.getFileExtension();
+                if (ext != null) {
+                    ext = ext.toLowerCase();
+                    if ("ddl".equals(ext) || "sql".equals(ext)) ddlFileCombo.setText(selectedFile.getLocation().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+        } else validate();
     }
 
     void ddlFileModified() {
@@ -511,7 +518,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     }
 
     private IPath showChooseDialog( final ElementTreeSelectionDialog dialog ) {
-        return dialog.open() == Window.OK ? ((IResource)dialog.getFirstResult()).getFullPath() : null;
+        return dialog.open() == Window.OK ? ((IResource)dialog.getFirstResult()).getLocation() : null;
     }
 
     void sizeDdlFileContents() {
