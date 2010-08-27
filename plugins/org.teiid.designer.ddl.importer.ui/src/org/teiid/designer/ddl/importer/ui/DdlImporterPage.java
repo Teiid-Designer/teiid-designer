@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,6 +55,7 @@ import org.modeshape.common.util.IoUtil;
 import org.teiid.core.I18n;
 import org.teiid.core.exception.EmptyArgumentException;
 import org.teiid.designer.ddl.importer.DdlImporter;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
@@ -341,7 +343,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 optToSetModelEntityDescriptionModified();
             }
         });
-
+        optToSetModelEntityDescriptionCheckBox.setSelection(false);
+        optToSetModelEntityDescriptionCheckBox.setVisible(false);
         optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(panel,
                                                                                          DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
                                                                                          0,
