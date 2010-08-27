@@ -430,11 +430,18 @@ public final class PreviewManager extends JobChangeAdapter
     private void fileDeleted( IFile file ) {
         if (ModelUtil.isModelFile(file.getFullPath())) {
             try {
-                IFile pvdb = this.context.getPreviewVdb(file);
+                IFile pvdbFile = this.context.getPreviewVdb(file);
 
-                if ((pvdb != null) && pvdb.exists()) {
+                // if the Preview VDB exists then the associated model was selected and deleted by user
+                if ((pvdbFile != null) && pvdbFile.exists()) {
                     DeletePreviewVdbJob job = new DeletePreviewVdbJob(this.context, file);
                     job.addJobChangeListener(this);
+                    job.schedule();
+                } else {
+                    // Preview VDB doesn't exist so user must've deleted a folder. Just delete the deployed PVDB.
+                    Job job = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
+                                                              getPreviewVdbVersion(pvdbFile), getPreviewVdbJndiName(pvdbFile),
+                                                              this.context, getPreviewServer());
                     job.schedule();
                 }
             } catch (Exception e) {
