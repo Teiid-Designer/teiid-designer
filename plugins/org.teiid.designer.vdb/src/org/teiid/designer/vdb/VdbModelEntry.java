@@ -7,7 +7,11 @@
  */
 package org.teiid.designer.vdb;
 
-import static org.teiid.designer.vdb.Vdb.Event.*;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,7 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -34,6 +40,7 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -129,7 +136,7 @@ public final class VdbModelEntry extends VdbEntry {
         	//this.jndiName.set(EMPTY_STR);
         	//this.source.set(EMPTY_STR);
         }
-        for (final ProblemElement problem : element.getProblems())
+        for (final ProblemElement problem : element.getProblems()) 
             problems.add(new Problem(problem));
         boolean builtIn = false;
         String indexName = null;
@@ -352,8 +359,17 @@ public final class VdbModelEntry extends VdbEntry {
             // Build model if necessary
             ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
             // Synchronize model problems
-            for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
-                problems.add(new Problem(marker));
+            for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
+                Object attr = marker.getAttribute(IMarker.SEVERITY);
+                if( attr == null ) {
+                	continue;
+                }
+                // Asserting attr is an Integer...
+                final int severity = ((Integer)attr).intValue();
+                if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
+                	problems.add(new Problem(marker));
+                }
+            }
             // Also add imported models if not a preview
             if (!getVdb().isPreview()) {
                 final Resource model = findModel();
