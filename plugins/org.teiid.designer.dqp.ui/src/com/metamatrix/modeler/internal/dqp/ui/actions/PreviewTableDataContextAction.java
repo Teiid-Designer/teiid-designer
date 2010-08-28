@@ -26,6 +26,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IConnectionProfileProvider;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
 import org.eclipse.datatools.sqltools.core.profile.NoSuchProfileException;
+import org.eclipse.datatools.sqltools.result.ui.ResultsViewUIPlugin;
 import org.eclipse.datatools.sqltools.routineeditor.launching.LaunchHelper;
 import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfigurationAttribute;
 import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
@@ -34,9 +35,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.adminapi.Admin;
@@ -146,135 +150,160 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         String sql = null;
         List<String> paramValues = null;
         final Shell shell = getShell();
-        final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
+        
+        if(validateResultDisplayProperties()) {
+        	final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
 
-        ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
+        	ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
 
-        IProject project = mr.getCorrespondingResource().getProject();
+        	IProject project = mr.getCorrespondingResource().getProject();
 
-        List accessPatternsColumns = null;
-        if (SqlAspectHelper.isTable(selected)) {
-            SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(selected);
-            Collection accessPatterns = tableAspect.getAccessPatterns(selected);
+        	List accessPatternsColumns = null;
+        	if (SqlAspectHelper.isTable(selected)) {
+        		SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(selected);
+        		Collection accessPatterns = tableAspect.getAccessPatterns(selected);
 
-            if (accessPatterns != null && !accessPatterns.isEmpty()) {
-                // first need to type the collection since dialog requires typed collection
-                List<EObject> patterns = new ArrayList<EObject>(accessPatterns.size());
+        		if (accessPatterns != null && !accessPatterns.isEmpty()) {
+        			// first need to type the collection since dialog requires typed collection
+        			List<EObject> patterns = new ArrayList<EObject>(accessPatterns.size());
 
-                for (Object pattern : accessPatterns) {
-                    patterns.add((EObject)pattern);
-                }
+        			for (Object pattern : accessPatterns) {
+        				patterns.add((EObject)pattern);
+        			}
 
-                AccessPatternColumnsDialog dialog = new AccessPatternColumnsDialog(shell, patterns);
+        			AccessPatternColumnsDialog dialog = new AccessPatternColumnsDialog(shell, patterns);
 
-                if (dialog.open() == Window.OK) {
-                    accessPatternsColumns = dialog.getColumns();
-                    paramValues = dialog.getColumnValues();
-                } else {
-                    return;
-                }
-            } else {
-                paramValues = Collections.emptyList();
-            }
-        }
+        			if (dialog.open() == Window.OK) {
+        				accessPatternsColumns = dialog.getColumns();
+        				paramValues = dialog.getColumnValues();
+        			} else {
+        				return;
+        			}
+        		} else {
+        			paramValues = Collections.emptyList();
+        		}
+        	}
 
-        if (selected instanceof Operation) {
-            List<EObject> inputElements = WebServiceUtil.getInputElements((Operation)selected, false);
+        	if (selected instanceof Operation) {
+        		List<EObject> inputElements = WebServiceUtil.getInputElements((Operation)selected, false);
 
-            if (!inputElements.isEmpty()) {
-                ParameterInputDialog dialog = getInputDialog(inputElements);
-                dialog.open();
+        		if (!inputElements.isEmpty()) {
+        			ParameterInputDialog dialog = getInputDialog(inputElements);
+        			dialog.open();
 
-                if (dialog.getReturnCode() == Window.OK) {
-                    paramValues = dialog.getParameterValues();
-                    sql = WebServiceUtil.getSql((Operation)selected, paramValues);
-                    paramValues = Collections.emptyList(); // no need to pass these to the executor
-                } else {
-                    return;
-                }
-            } else {
-                paramValues = Collections.emptyList();
-                sql = WebServiceUtil.getSql((Operation)selected, paramValues);
-            }
-        } else if (SqlAspectHelper.isProcedure(selected)) {
-            SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(selected);
-            List<EObject> params = procAspect.getParameters(selected);
-            if (params != null && !params.isEmpty()) {
-                ParameterInputDialog dialog = getInputDialog(params);
-                dialog.open();
-                if (dialog.getReturnCode() == Window.OK) {
-                    paramValues = dialog.getParameterValues();
-                } else {
-                    return;
-                }
-            } else {
-                paramValues = Collections.emptyList();
-            }
-        }
+        			if (dialog.getReturnCode() == Window.OK) {
+        				paramValues = dialog.getParameterValues();
+        				sql = WebServiceUtil.getSql((Operation)selected, paramValues);
+        				paramValues = Collections.emptyList(); // no need to pass these to the executor
+        			} else {
+        				return;
+        			}
+        		} else {
+        			paramValues = Collections.emptyList();
+        			sql = WebServiceUtil.getSql((Operation)selected, paramValues);
+        		}
+        	} else if (SqlAspectHelper.isProcedure(selected)) {
+        		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(selected);
+        		List<EObject> params = procAspect.getParameters(selected);
+        		if (params != null && !params.isEmpty()) {
+        			ParameterInputDialog dialog = getInputDialog(params);
+        			dialog.open();
+        			if (dialog.getReturnCode() == Window.OK) {
+        				paramValues = dialog.getParameterValues();
+        			} else {
+        				return;
+        			}
+        		} else {
+        			paramValues = Collections.emptyList();
+        		}
+        	}
 
-        assert (paramValues != null);
+        	assert (paramValues != null);
 
-        final Object[] paramValuesAsArray = paramValues.toArray();
+        	final Object[] paramValuesAsArray = paramValues.toArray();
 
-        if (sql == null) {
-            sql = ModelObjectUtilities.getSQL(selected, paramValuesAsArray, accessPatternsColumns);
-            sql = insertParameterValuesSQL(sql, paramValues);
-        }
+        	if (sql == null) {
+        		sql = ModelObjectUtilities.getSQL(selected, paramValuesAsArray, accessPatternsColumns);
+        		sql = insertParameterValuesSQL(sql, paramValues);
+        	}
 
-        if (sql != null) {
-            // use the Admin API to get the location of the client jar
-            String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-            try {
 
-                // TODO: All of these values should be taken from the deployed
-                // pvdb. I have hardcoded them here so that I can test with
-                // a fully depolyed VDB, see the Teiid download for this VDB.
-                String username = "admin"; //$NON-NLS-1$
-                String password = "teiid"; //$NON-NLS-1$
-                String vdbName = PreviewManager.getPreviewProjectVdbName(project);
-                if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
-                    vdbName = vdbName.substring(0, vdbName.length() - 4);
-                }
-                String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
-                String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
 
-                // Note that this is a Transient profile, it is not visible in
-                // the
-                // UI and goes away when it is garbage collected.
-                IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
-                                                                                          connectionURL,
-                                                                                          username,
-                                                                                          password,
-                                                                                          vdbName);
+        	if (sql != null) {
+        		// use the Admin API to get the location of the client jar
+        		String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        		try {
 
-                final Connection sqlConnection = getSqlConnection(profile);
+        			// TODO: All of these values should be taken from the deployed
+        			// pvdb. I have hardcoded them here so that I can test with
+        			// a fully depolyed VDB, see the Teiid download for this VDB.
+        			String username = "admin"; //$NON-NLS-1$
+        			String password = "teiid"; //$NON-NLS-1$
+        			String vdbName = PreviewManager.getPreviewProjectVdbName(project);
+        			if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
+        				vdbName = vdbName.substring(0, vdbName.length() - 4);
+        			}
+        			String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
+        			String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
 
-                DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
-                ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
+        			// Note that this is a Transient profile, it is not visible in
+        			// the
+        			// UI and goes away when it is garbage collected.
+        			IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
+        					connectionURL,
+        					username,
+        					password,
+        					vdbName);
 
-                try {
-                    // This runnable executes the SQL and displays the results
-                    // in the DTP 'SQL Results' view.
-                    CallableSQLResultRunnable runnable = new CallableSQLResultRunnable(sqlConnection, config, false, null, ID);
-                    final IWorkbenchWindow iww = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow();
-                    iww.getShell().getDisplay().asyncExec(runnable);
+        			final Connection sqlConnection = getSqlConnection(profile);
 
-                } catch (SQLException e) {
-                    DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-                } catch (NoSuchProfileException e) {
-                    DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-                }
-            } catch (CoreException e) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-            } catch (SQLException e) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-            }
-        } else {
-            DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
-                                               "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
+        			DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
+        			ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
+
+        			try {
+        				// This runnable executes the SQL and displays the results
+        				// in the DTP 'SQL Results' view.
+        				CallableSQLResultRunnable runnable = new CallableSQLResultRunnable(sqlConnection, config, false, null, ID);
+        				final IWorkbenchWindow iww = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow();
+        				iww.getShell().getDisplay().asyncExec(runnable);
+
+        			} catch (SQLException e) {
+        				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        			} catch (NoSuchProfileException e) {
+        				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        			}
+        		} catch (CoreException e) {
+        			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        		} catch (SQLException e) {
+        			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
+        		}
+        	} else {
+        		DqpUiConstants.UTIL.log(new Status(IStatus.WARNING, DqpUiConstants.PLUGIN_ID, IStatus.OK,
+        				"failed to produce valid SQL to execute", null)); //$NON-NLS-1$
+        	}
         }
     }
     
+	private boolean validateResultDisplayProperties() {
+		boolean result = true;
+		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
+		if(!store.getBoolean("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile")){
+		
+			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_QUESTION
+	            | SWT.YES | SWT.NO);
+			String message = DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.propertyPrompt"); //$NON-NLS-1$
+			messageBox.setMessage(message);
+	        messageBox.setText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.propertyPromptTitle")); //$NON-NLS-1$);
+	        int response = messageBox.open();
+	        if (response == SWT.YES) {
+	        	store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true");
+	        } else {
+	        	result = false;
+	        }
+		}
+	    return (result);
+	}
+
 	private String insertParameterValuesSQL(String sql, List<String> paramValues) {
 		if( paramValues != null && !paramValues.isEmpty() ) {
 			for (String value : paramValues) {
