@@ -8,43 +8,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-     <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            name="%importXsdAsRelationalWizard.name"
-            icon="icons/full/ctool16/newmodel_wiz.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.modelgenerator.xml.wizards.XsdAsRelationalImportWizard"
-            id="XsdAsRelationalImportWizard">
-         <description>
-            %importXsdAsRelationalWizard.description
-         </description>
-      </wizard>
-   </extension>
    
-<!-- Define the model processor for the xml-as-relational drivers -->
-   <extension
-         id="xmlSchemaAsRelationalModelProcessor"
-         name="XML Schema As Relational Model Processor"
-         point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc.XmlImporterJdbcDriver">
-      </driverClass>
-      <processorClass
-            name="com.metamatrix.modeler.modelgenerator.xml.wizards.jdbc.XmlSchemaAsRelationalModelProcessor">
-      </processorClass>
-   </extension>
-
-<!-- Modeler preferences -->
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            name="%modelerXmlAsRelationalPreferences"
-            category="modelerPreferencePage"
-            class="com.metamatrix.modeler.modelgenerator.xml.wizards.PreferencePage"
-            id="modelgenerator.xml.wizards.PreferencePage">
-      </page>
-   </extension>
 
 <extension point="org.eclipse.ui.popupMenus">
       
