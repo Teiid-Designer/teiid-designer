@@ -29,10 +29,11 @@
             name="com.metamatrix.metamodels.xmlservice.XmlOperation">
       </rootEntityClass>
       <properties
-            createAsPhysical="true"
+            createAsPhysical="false"
+            createAsNewModel="false"
             requiresProxies="false"
             participatoryOnly="false"
-            createAsVirtual="true"
+            createAsVirtual="false"
             supportsDiagrams="true"
             supportsExtension="true">
       </properties>
