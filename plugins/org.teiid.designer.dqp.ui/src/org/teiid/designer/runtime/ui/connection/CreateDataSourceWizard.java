@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -41,6 +42,7 @@ import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -442,7 +444,7 @@ public class CreateDataSourceWizard extends AbstractWizard {
                 } catch (ModelWorkspaceException e) {
                     DqpUiConstants.UTIL.log(e);
                 } catch (Exception e) {
-                    DqpUiConstants.UTIL.log(e);
+                    //DqpUiConstants.UTIL.log(e);
                 }
             }
         } else if (selectedProfile != null) {

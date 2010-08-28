@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +25,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -69,6 +72,7 @@ import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.DeleteDeployedPreviewVdbJob;
@@ -78,6 +82,7 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
@@ -113,6 +118,8 @@ public final class PreviewManager extends JobChangeAdapter
 
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
+    
+    private IPasswordProvider passwordProvider;
 
     private static String getPreviewVdbPrefix( IResource resource ) {
         char delim = '_';
@@ -548,27 +555,39 @@ public final class PreviewManager extends JobChangeAdapter
         String dataSourceType = connInfoProvider.getDataSourceType();
 
         if (!props.isEmpty()) {
-            IConnectionProfile connectionProfile = connInfoProvider.getConnectionProfile(modelResource);
+            IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
 
-            if (connectionProfile != null) {
-                connectionProfile = ProfileManager.getInstance().getProfileByName(connectionProfile.getName());
+            if (modelConnectionProfile != null) {
+            	String pwd = null;
+            	
+                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
 
-                if (connectionProfile != null) {
+                if (existingConnectionProfile != null) {
                     // make sure the password property is there. if not get from connection profile.
                     if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-                        connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-                        props.setProperty(connInfoProvider.getPasswordPropertyKey(),
-                                          connectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey()));
+                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
                     }
-
-                    TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
-                    tds.setPreview(true);
-                    return tds;
                 }
+                
+                if( pwd == null && this.passwordProvider != null) {
+                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+                }
+                
+                if( pwd != null ) {
+                	props.setProperty(connInfoProvider.getPasswordPropertyKey(), pwd);
+                }
+                
+            	TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+                tds.setPreview(true);
+                return tds;
             }
         }
 
         return null;
+    }
+    
+    public void setPasswordProvider(IPasswordProvider provider) {
+    	this.passwordProvider = provider;
     }
 
     Server getPreviewServer() {
