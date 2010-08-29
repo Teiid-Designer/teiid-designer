@@ -62,6 +62,7 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.dqp.ui.jdbc.IResults;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.AccessPatternColumnsDialog;
 import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDialog;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcException;
@@ -389,7 +390,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
         ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObj);
-        if (mr != null && !helper.hasConnectionInfo(mr)) {
+        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) && !helper.hasConnectionInfo(mr)) {
         	MessageDialog.openWarning(getShell(), 
         			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
         			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
