@@ -8,7 +8,6 @@
 <toc label="The Designer" topic="UsersGuide/TheDesigner.htm">
 	<topic label="Perspectives" href="UsersGuide/DesignerPerspectives.htm">
 		<topic label="Designer Perspective" 			href="UsersGuide/DesignerPerspectives.htm#modelingPerspective"/>
-		<topic label="Sql Explorer Perspective" 		href="UsersGuide/DesignerPerspectives.htm#sqlExplorerPerspective"/>
 		<topic label="Changing Perspectives" 			href="UsersGuide/DesignerPerspectives.htm#openNewPerspective"/>
 	</topic>
 	<topic label="Editors">
@@ -30,13 +29,11 @@
 	<topic label="Views" href="UsersGuide/DesignerViews.htm">
 		<topic label="Model Explorer" 			href="UsersGuide/ModelExplorer.htm"/>
 		<topic label="Outline" 					href="UsersGuide/OutlineView.htm"/>
-		<topic label="User Defined Functions" 	href="UsersGuide/UDFView.htm"/>
 		<topic label="Connectors" 			href="UsersGuide/ConnectorsView.htm"/>
 		<topic label="Properties" 			href="UsersGuide/PropertiesView.htm"/>
 		<topic label="Description" 			href="UsersGuide/DescriptionView.htm"/>
 		<topic label="Problems" 			href="UsersGuide/ProblemsView.htm"/>
 		<topic label="Message Log" 			href="UsersGuide/MessageLogView.htm"/>
-		<topic label="Preview Results" 		href="UsersGuide/PreviewDataView.htm"/>
 		<topic label="Search Results" 		href="UsersGuide/SearchingInDesigner.htm#searchResultsView"/>
 		<topic label="Datatypes" 			href="UsersGuide/DatatypesView.htm"/>
 		<topic label="System Catalog" 		href="UsersGuide/SystemCatalogView.htm"/>
@@ -45,11 +42,13 @@
 		<topic label="Import Wizard" href="UsersGuide/ModelingYourData.htm#importWizard">
 			<topic label="Archive File" 									href="UsersGuide/ImportArchiveFile.htm" />
 			<topic label="File System" 										href="UsersGuide/ImportFromFileSystem.htm" />
+			<topic label="DDL as Relational Model"                          href="UsersGuide/ImportFromDDL.htm" />
 			<topic label="Metadata from IBM Rational Rose Model" 			href="UsersGuide/ImportFromRose.htm" />
 			<topic label="Metadata from JDBC Database" 						href="UsersGuide/ImportJdbc.htm" />
 			<topic label="Metadata from Text Files on file system" 			href="UsersGuide/ImportFromTextFiles.htm"/>
-			<topic label="Web Service as Relational Source Model" 			href="UsersGuide/CreateRelationalModelFromWSDL.htm" />
-			<topic label="WSDL File into Web Service Model" 				href="UsersGuide/ImportWsdl.htm" />
+			<topic label="Salesforce as Relational Source Model"/>
+			<topic label="WSDL into Relational Source Model" 			    href="UsersGuide/CreateRelationalModelFromWSDL.htm" />
+			<topic label="WSDL into Web Service Model" 				        href="UsersGuide/ImportWsdl.htm" />
 			<topic label="XML Schema as Relational Source Model" 			href="UsersGuide/CreateRelationalModelFromSchema.htm" />
 			<topic label="XSD Schemas on file system" 						href="UsersGuide/ImportingXsdFiles.htm" />
 		</topic>
@@ -60,11 +59,8 @@
 			<topic label="XML Schema (XSD)" 	href="UsersGuide/ModelingYourData.htm#xmlSchema" />
 			<topic label="Web Service" 		href="UsersGuide/ModelingYourData.htm#webService" />
 			<topic label="Model Extension" 		href="UsersGuide/ModelingYourData.htm#modelExtension" />
-			<topic label="XML Service Source" 	href="UsersGuide/ModelingYourData.htm#xmlServiceSource" />
-			<topic label="XML Service View" 	href="UsersGuide/ModelingYourData.htm#xmlServiceView" />
 			<topic label="Relationship" 		href="UsersGuide/NewModelBuilders.htm" />
 			<topic label="UML 2.0" 			href="UsersGuide/NewModelBuilders.htm" />
-			<topic label="People" 			href="UsersGuide/NewModelBuilders.htm" />
 		</topic>
 	</topic>
 	<topic label="Menus" 			href="UsersGuide/DesignerMainMenus.htm" />

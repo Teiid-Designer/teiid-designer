@@ -7,7 +7,7 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<toc label="Designer User's Guide">
+<toc label="Teiid Designer User's Guide">
 	<topic label="Introduction" href="UsersGuide/DesignerIntro.htm"/>
     <topic label="Getting Started" href="UsersGuide/DesignerGettingStarted.htm">
        <link toc="getting_started.xml"/>

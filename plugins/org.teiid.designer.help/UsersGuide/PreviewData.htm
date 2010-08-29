@@ -5,44 +5,102 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<link rel="stylesheet" href="designer_help.css" type="text/css" /><body>
-<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<body>
+<p><a href="DesignerTOC.htm"><img
+	src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
 <hr>
-<p class="maintitle_b24"> Preview Your Data </p>
+<p class="maintitle_b24">Preview Your Data</p>
 
-<p><span class="subtitle_b16"><a name="previewDataSummary" id="previewDataSummary"></a>Summary</span></p>
-<p>Designing and working with data is often much easier when you can see the information you're working with. &nbsp;The<strong> Designer</strong>'s <strong>Preview Data </strong>feature makes this possible and allows you to instantly preview the information described by any object, whether it's a physical table or a virtual view. &nbsp;In other words, you can test the views with actual data by simply selecting the table, view, procedure or XML document.  Previewing information is a fast and easy way to sample the data. &nbsp;Of course, to run more complicated queries like what your application likely uses, simply <a href="ExecuteVdbHelp.htm">execute the <strong>VDB</strong> Via DTP <strong></strong></a> and type in any query or SQL statement.</p>
-<p>After creating your models, you can test them by   using the <strong>Preview Data </strong>action, <img src="images/icons/previewData.gif" width="16" height="16">. By selecting a desired table object and executing the action, the results of a simple query will be displayed in DTP's SQL Results view. This action is accessible throughout the <strong>Designer</strong> in various view toolbars and context menus.</p>
-<p>There are two requirements for previewing your data: the selected object must be one several previewable model object types and all source models within the model dependency tree must be bound to connectors.</p>
+<p><span class="subtitle_b16"><a name="previewDataSummary"
+	id="previewDataSummary"></a>Summary</span></p>
+<p>Designing and working with data is often much easier when you can
+see the information you're working with. &nbsp;The<strong>
+Designer</strong>'s <strong>Preview Data </strong>feature makes this possible and
+allows you to instantly preview the information described by any object,
+whether it's a physical table or a virtual view. &nbsp;In other words,
+you can test the views with actual data by simply selecting the table,
+view, procedure or XML document. Previewing information is a fast and
+easy way to sample the data. &nbsp;Of course, to run more complicated
+queries like what your application likely uses, simply <a
+	href="ExecuteVdbHelp.htm">execute the <strong>VDB</strong> Via DTP
+<strong></strong></a> and type in any query or SQL statement.</p>
+<p>After creating your models, you can test them by using the <strong>Preview
+Data </strong>action, <img src="images/icons/previewData.gif" width="16"
+	height="16">. By selecting a desired table object and executing
+the action, the results of a simple query will be displayed in DTP's SQL
+Results view. This action is accessible throughout the <strong>Designer</strong>
+in various view toolbars and context menus.</p>
+
+<p>There are two requirements for previewing your data: the selected
+object must be one several previewable model object types and all source
+models within the same project must be associated with a connection
+profile. In order to preview the data, Designer creates a temporary data source, or connection factory
+on your default Teiid server.</p>
+
 <p>Previewable objects include:</p>
 <ul>
-  <li>Relational  table or view, including tables involving<a href="#previewAccessPattern"> access patterns</a>. </li>
-  <li><a href="#previewRelationalProcedure">Relational procedure</a></li>
-  <li><a href="#previewWSOperation">Web Service operation</a></li>
-  <li>XML Document staging table  </li>
+	<li>Relational table or view, including tables involving<a
+		href="#previewAccessPattern"> access patterns</a>.</li>
+	<li><a href="#previewRelationalProcedure">Relational procedure</a></li>
+	<li><a href="#previewWSOperation">Web Service operation</a></li>
+	<li>XML Document staging table</li>
 </ul>
-<p>Note that any virtual table, view or procedure is previewable as long as all &quot;physical&quot; source models are bound via connectors. (See<a href="ConnectorsView.htm"> Connectors View</a> and <a href="ConnectorTypesView.htm">Connector Types View</a>) </p>
 
-<p><span class="subtitle_b16"><a name="previewRelationalProcedure" id="previewRelationalProcedure"></a>Previewing Relational Procedure</span></p>
+<p>Note that any virtual table, view or procedure is previewable as
+long as all &quot;physical&quot; source models are associated with
+connection profiles.</p>
+
+<p>After selecting the Preview Data action, Designer will insure that all source models are associated with connection profiles
+and that all required passwords are set.</p>
+
+<p>If the model selected for preview is a source model and there is insufficient connection info for that model, the following
+dialog will be displayed and the action terminated.</p>
+<p><img src="images/views/PreviewNotAvailableDialog.png"
+    hspace="20"></p>
+    
+<p>If any of the source models in the corresponding project require a password that can't be retrieved from an existing connection
+profile, the user will be queried for each missing password</p>
+<p><img src="images/views/MissingPasswordForPreviewDialog.png"
+    hspace="20"></p>
+
+
+<p><span class="subtitle_b16"><a
+	name="previewRelationalProcedure" id="previewRelationalProcedure"></a>Previewing
+Relational Procedure</span></p>
 <p>Precedure Inputs dialog:</p>
-<p><img src="images/views/ParameterInputDialogProcedure.jpg" hspace="20" ></p>
+<p><img src="images/views/ParameterInputDialogProcedure.jpg"
+	hspace="20"></p>
 
-<p><span class="subtitle_b16"><a name="previewWSOperation" id="previewWSOperation"></a>Previewing Web Service Operation</span></p>
+<p><span class="subtitle_b16"><a name="previewWSOperation"
+	id="previewWSOperation"></a>Previewing Web Service Operation</span></p>
 <p>Precedure Inputs dialog:</p>
-<p><img src="images/views/ParameterInputDialogWSOperation.jpg" hspace="20" ></p>
+<p><img src="images/views/ParameterInputDialogWSOperation.jpg"
+	hspace="20"></p>
 
-<p><span class="subtitle_b16"><a name="previewAccessPattern" id="previewAccessPattern"></a>Previewing Relational Table with Access Pattern</span></p>
+<p><span class="subtitle_b16"><a name="previewAccessPattern"
+	id="previewAccessPattern"></a>Previewing Relational Table with Access
+Pattern</span></p>
 <p>Column Inputs dialog:</p>
-<p><img src="images/views/ParameterInputDialogAccessPattern.jpg" hspace="20" ></p>
-<p>&nbsp;   </p>
+<p><img src="images/views/ParameterInputDialogAccessPattern.jpg"
+	hspace="20"></p>
+<p>&nbsp;</p>
+
+<p><span class="subtitle_b16"><a name="samplePreviewResults"
+    id="samplePreviewResults"></a>Sample SQL Results for Preview Data</span></p>
+<p>SQL Results View</p>
+<p><img src="images/views/SQLResultsViewSample.png"
+    hspace="20"></p>
+<p>&nbsp;</p>
 
 <p class="subtitle_b16">Related Topics</p>
 <ul>
-  <li><a href="DesignerViews.htm">Designer Views</a></li>
-  <li><a href="ConnectorsView.htm">Teiid View</a></li>  
-  <li><a href="UDFView.htm">UDF's View</a></li>
-  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+	<li><a href="DesignerViews.htm">Designer Views</a></li>
+	<li><a href="ConnectorsView.htm">Teiid View</a></li>
+	<li><a href="DesignerGettingStarted.htm" class="medium">Getting
+	Started with Designer</a></li>
 </ul>
 <hr>
-<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+<p class="copyright">See the LEGAL.txt file distributed with this
+work for information regarding copyright ownership and licensing.</p>
 </body>

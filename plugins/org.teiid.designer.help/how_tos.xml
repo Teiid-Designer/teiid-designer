@@ -13,8 +13,9 @@
 				<topic label="Metadata from IBM Rational Rose Model" 			href="UsersGuide/ImportFromRose.htm" />
 				<topic label="Metadata from JDBC Database" 						href="UsersGuide/ImportJdbc.htm" />
 				<topic label="Metadata from Text Files on file system" 			href="UsersGuide/ImportFromTextFiles.htm"/>
-				<topic label="Web Service as Relational Source Model" 			href="UsersGuide/CreateRelationalModelFromWSDL.htm" />
-				<topic label="WSDL File into Web Service Model" 				href="UsersGuide/ImportWsdl.htm" />
+				<topic label="Salesforce as Relational Source Model"/>
+				<topic label="WSDL into Relational Source Model" 			    href="UsersGuide/CreateRelationalModelFromWSDL.htm" />
+				<topic label="WSDL into Web Service Model" 				         href="UsersGuide/ImportWsdl.htm" />
 				<topic label="XML Schema as Relational Source Model" 			href="UsersGuide/CreateRelationalModelFromSchema.htm" />
 				<topic label="XSD Schemas on file system" 						href="UsersGuide/ImportingXsdFiles.htm" />
 			</topic>
@@ -25,8 +26,6 @@
 				<topic label="XML Schema (XSD)" 	href="UsersGuide/ModelingYourData.htm#xmlSchema" />
 				<topic label="Web Service" 			href="UsersGuide/ModelingYourData.htm#webService" />
 				<topic label="Model Extension" 		href="UsersGuide/ModelingYourData.htm#modelExtension" />
-				<topic label="XML Service Source" 	href="UsersGuide/ModelingYourData.htm#xmlServiceSource" />
-				<topic label="XML Service View" 	href="UsersGuide/ModelingYourData.htm#xmlServiceView" />
 				<topic label="Relationship" 		href="UsersGuide/NewModelBuilders.htm">
 					<topic label="Introduction to Relationships" 		href="UsersGuide/Relationships.htm#introToRelationships"/>
 					<topic label="Creating Relationships" 				href="UsersGuide/Relationships.htm#createRelationships"/>
@@ -34,7 +33,6 @@
 					<topic label="Relationship Navigator" 				href="UsersGuide/Relationships.htm#relationshipNavigator"/>
 				</topic>
 				<topic label="UML 2.0" 				href="UsersGuide/NewModelBuilders.htm" />
-				<topic label="People" 				href="UsersGuide/NewModelBuilders.htm" />
 			</topic>
 			<topic label="Other New Model Options" 	href="UsersGuide/ModelingYourData.htm#otherNewModels">
 				<topic label="Create Relational View Model from Schema" href="UsersGuide/ModelingYourData.htm#createRelationalFromSchema"/>
