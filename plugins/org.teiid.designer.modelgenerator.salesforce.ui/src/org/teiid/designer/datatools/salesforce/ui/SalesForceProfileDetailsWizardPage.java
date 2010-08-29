@@ -112,7 +112,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
         gd.verticalAlignment = GridData.BEGINNING;
         descriptionLabel.setLayoutData(gd);
 
-        descriptionText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
+        descriptionText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;
@@ -238,6 +238,9 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
     }
 
     void updateState() {
+        profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
+        descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
+
         Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
         if (null == properties.get(ISalesForceProfileConstants.USERNAME_PROP_ID)
             || properties.get(ISalesForceProfileConstants.USERNAME_PROP_ID).toString().isEmpty()) {
