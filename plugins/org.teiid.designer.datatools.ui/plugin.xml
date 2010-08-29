@@ -10,5 +10,29 @@
          label="%setConnectionProfileAction.label">
       </resourceAction>
    </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.ldap.ConnectionProfileWizard"
+         description="Create an LDAP connection profile."
+         icon="icons/full/obj16/connectionFolder.gif"
+         id="org.teiid.designer.datatools.profiles.ldap.ConnectionProfileWizard"
+         name="LDAP"
+         profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.ldap.PropertyPage"
+            icon="icons/full/obj16/connectionFolder.gif"
+            id="org.teiid.designer.datatools.profiles.ldap.profileProperties"
+            name="Connection Properties">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
+      </page>
+   </extension>
 
 </plugin>

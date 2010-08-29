@@ -3,4 +3,24 @@
 <plugin>
 
 <extension-point id="org.teiid.designer.datatools.ConnectionInfoProvider" name="%connectionInfoProvider" schema="schema/org.teiid.designer.datatools.ConnectionInfoHelper.exsd"/>
+
+   <extension
+       id="org.teiid.designer.datatools.profiles.ldap.ConnectionInfoProvider"
+       name="%salesForceConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
+            class="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionInfoProvider"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
+            name="LDAP"/>
+   </extension>
 </plugin>
