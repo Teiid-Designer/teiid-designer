@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -65,6 +66,7 @@ import org.teiid.designer.runtime.ui.NewServerAction;
 import org.teiid.designer.runtime.ui.ReconnectToServerAction;
 import org.teiid.designer.runtime.ui.SetDefaultServerAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -72,6 +74,7 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidViewTreeProvider.DataSourcesFolder;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelerUiViewUtils;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -207,29 +210,6 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     public void createPartControl( Composite parent ) {
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        // viewer.addFilter(new ViewerFilter() {
-        //
-        // @Override
-        // public boolean select( Viewer viewer,
-        // Object parentElement,
-        // Object element ) {
-        // if (element instanceof SourceConnectionBinding) {
-        // SourceConnectionBinding binding = (SourceConnectionBinding)element;
-        //
-        // // Check to see if model in closed project or not?
-        // String modelName = binding.getModelName();
-        // IResource openModel = ModelUtilities.findModelByName(modelName);
-        // if (openModel != null) {
-        // return true;
-        // }
-        // } else {
-        // return true;
-        // }
-        //
-        // return false;
-        // }
-        // });
-
         initDragAndDrop();
 
         treeProvider = new TeiidViewTreeProvider(true, false, true);
@@ -277,6 +257,11 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             if (selectedObjs.size() == 1) {
                 Object selection = selectedObjs.get(0);
                 if (selection instanceof Server) {
+                    try {
+                        currentSelectedAdmin = ((Server)selection).getAdmin();
+                    } catch (Exception e) {
+                        // DO NOTHING
+                    }
                     manager.add(this.editServerAction);
                     manager.add(this.deleteServerAction);
                     if (this.setDefaultServerAction.isEnabled()) {
@@ -285,16 +270,16 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     manager.add(this.reconnectAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
-                    manager.add(this.createDataSourceAction);
-                    try {
-                        currentSelectedAdmin = ((Server)selection).getAdmin();
-                    } catch (Exception e) {
-                        // DO NOTHING
+                    if( currentSelectedAdmin != null ) {
+                    	manager.add(this.createDataSourceAction);
                     }
+
                 } else if (selection instanceof TeiidTranslator) {
+                	currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();
                     manager.add(this.newServerAction);
-                    manager.add(this.createDataSourceAction);
-                    currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();
+                    if( currentSelectedAdmin != null ) {
+                    	manager.add(this.createDataSourceAction);
+                    }
                 } else if (selection instanceof TeiidDataSource) {
                     manager.add(this.deleteDataSourceAction);
                     manager.add(this.createDataSourceAction);
@@ -302,13 +287,18 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     manager.add(this.newServerAction);
                     currentSelectedAdmin = ((TeiidDataSource)selection).getAdmin();
                 } else if (selection instanceof TeiidVdb) {
+                	currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
                     this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
                     manager.add(this.undeployVdbAction);
                     manager.add(this.executeVdbAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
                     manager.add(this.createDataSourceAction);
-                    currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
+                } else if( selection instanceof DataSourcesFolder ) {
+                	currentSelectedAdmin = ((DataSourcesFolder)selection).getAdmin();
+                    if( currentSelectedAdmin != null ) {
+                    	manager.add(this.createDataSourceAction);
+                    }
                 }
             } else {
                 boolean allDataSources = true;

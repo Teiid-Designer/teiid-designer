@@ -14,7 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
@@ -25,11 +28,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.adminapi.AdminComponentException;
+import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
@@ -222,13 +227,13 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
                 Collection<Object> allObjects = new ArrayList<Object>();
                 if (!translators.isEmpty()) {
-                    allObjects.add(new TranslatorsFolder(translators.toArray()));
+                    allObjects.add(new TranslatorsFolder((Server)parentElement, translators.toArray()));
                 }
                 if (!dataSources.isEmpty()) {
-                    allObjects.add(new DataSourcesFolder(dataSources.toArray()));
+                    allObjects.add(new DataSourcesFolder((Server)parentElement, dataSources.toArray()));
                 }
                 if (!vdbs.isEmpty()) {
-                    allObjects.add(new VdbsFolder(vdbs.toArray()));
+                    allObjects.add(new VdbsFolder((Server)parentElement, vdbs.toArray()));
                 }
 
                 result = allObjects.toArray();
@@ -469,8 +474,10 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
     class TeiidFolder {
         Object[] theValues;
+        Server server;
 
-        public TeiidFolder( Object[] values ) {
+        public TeiidFolder(Server server, Object[] values ) {
+        	this.server = server;
             theValues = values;
         }
 
@@ -481,11 +488,22 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         protected String getName() {
             return null;
         }
+        
+        public ExecutionAdmin getAdmin() {
+        	ExecutionAdmin admin = null;
+        	
+        	try {
+				admin = server.getAdmin();
+			} catch (Exception e) {
+				DqpUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
+			}
+        	return admin;
+        }
     }
 
     class DataSourcesFolder extends TeiidFolder {
-        public DataSourcesFolder( Object[] values ) {
-            super(values);
+        public DataSourcesFolder(Server server, Object[] values ) {
+            super(server, values);
         }
 
         @Override
@@ -495,8 +513,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     }
 
     class VdbsFolder extends TeiidFolder {
-        public VdbsFolder( Object[] values ) {
-            super(values);
+        public VdbsFolder(Server server, Object[] values ) {
+            super(server, values);
         }
 
         @Override
@@ -506,8 +524,8 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     }
 
     class TranslatorsFolder extends TeiidFolder {
-        public TranslatorsFolder( Object[] values ) {
-            super(values);
+        public TranslatorsFolder(Server server, Object[] values ) {
+            super(server, values);
         }
 
         @Override
