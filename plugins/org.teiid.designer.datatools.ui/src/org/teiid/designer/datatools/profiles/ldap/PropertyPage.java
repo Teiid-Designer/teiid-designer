@@ -230,7 +230,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         result.setProperty(ILdapProfileConstants.USERNAME_PROP_ID, usernameText.getText());
         result.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, passwordText.getText());
         result.setProperty(ILdapProfileConstants.URL_PROP_ID, urlText.getText());
-        result.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, urlText.getText());
+        result.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactoryText.getText());
         return result;
     }
 
