@@ -14,9 +14,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.IProfileListener;
-import org.eclipse.datatools.connectivity.ProfileManager;
-import org.eclipse.datatools.connectivity.internal.ui.wizards.NewCPWizard;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -24,21 +21,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -46,7 +41,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
+import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
+import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.ExecutionAdmin;
 
 import com.metamatrix.core.util.I18nUtil;
@@ -65,7 +61,7 @@ import com.metamatrix.ui.internal.wizard.AbstractWizard;
 /**
  * 
  */
-public class CreateDataSourceWizard extends AbstractWizard {
+public class CreateDataSourceWizard extends AbstractWizard implements IProfileChangedListener {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(CreateDataSourceWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
@@ -109,14 +105,15 @@ public class CreateDataSourceWizard extends AbstractWizard {
     private ExecutionAdmin admin;
 //    private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
-    private IConnectionProfile selectedProfile;
+//    private IConnectionProfile selectedProfile;
     private StringNameValidator dataSourceNameValidator;
 
     private boolean hasModelResources = false;
-    private boolean hasConnectionProfiles = false;
 
     private Properties teiidDataSourceProperties;
     private IConnectionInfoProvider currentProvider;
+    
+    private ConnectionProfileWorker profileWorker;
 
     /**
      * @since 4.0
@@ -132,7 +129,6 @@ public class CreateDataSourceWizard extends AbstractWizard {
         this.hasModelResources = !relationalModelsMap.isEmpty();
         this.admin = admin;
         this.selectedModelResource = initialSelection;
-        this.hasConnectionProfiles = ProfileManager.getInstance().getProfiles().length > 0; //!jdbcManager.getJdbcSources().isEmpty();
         this.providerFactory = new ConnectionInfoProviderFactory();
         this.teiidDataSourceProperties = new Properties();
     }
@@ -160,7 +156,8 @@ public class CreateDataSourceWizard extends AbstractWizard {
      * @since 4.0
      */
     Composite createPageControl( final Composite parent ) {
-
+    	profileWorker = new ConnectionProfileWorker(this.getShell(), null, this);
+    	 
         // ===========>>>> Create page composite
         final Composite mainPanel = new Composite(parent, SWT.NONE);
         mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -270,7 +267,9 @@ public class CreateDataSourceWizard extends AbstractWizard {
                 modelsCombo.setEnabled(!useConnectionProfileCheckBox.getSelection());
                 useModelCheckBox.setSelection(!useConnectionProfileCheckBox.getSelection());
 
-                handleConnectionProfileSelected();
+                if( useConnectionProfileCheckBox.getSelection() ) {
+                	handleConnectionProfileSelected();
+                }
 
                 propsViewer.refresh();
 
@@ -279,10 +278,10 @@ public class CreateDataSourceWizard extends AbstractWizard {
         });
 
         WidgetFactory.createLabel(connectionSourceGroup, getString("connectionProfile.label")); //$NON-NLS-1$
-        ArrayList sourceList = new ArrayList(); //this.jdbcManager.getJdbcSources().size());
-        for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
-        	sourceList.add(prof);
-        }
+//        ArrayList profileList = new ArrayList();
+//        for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
+//        	profileList.add(prof);
+//        }
 
         profileLabelProvider = new LabelProvider() {
 
@@ -294,25 +293,39 @@ public class CreateDataSourceWizard extends AbstractWizard {
         this.connectionProfilesCombo = WidgetFactory.createCombo(connectionSourceGroup,
                                                                  SWT.READ_ONLY,
                                                                  GridData.FILL_HORIZONTAL,
-                                                                 sourceList,
+                                                                 profileWorker.getProfiles(),
                                                                  profileLabelProvider,
                                                                  true);
-        this.connectionProfilesCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText( final ModifyEvent event ) {
-                if (useConnectionProfileCheckBox.getSelection()) {
-                    handleConnectionProfileSelected();
-                }
-            }
-        });
+        this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handleConnectionProfileSelected();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+//        .addModifyListener(new ModifyListener() {
+//
+//            public void modifyText( final ModifyEvent event ) {
+//                if (useConnectionProfileCheckBox.getSelection()) {
+//                    handleConnectionProfileSelected();
+//                }
+//            }
+//        });
 
         this.connectionProfilesCombo.setVisibleItemCount(10);
+
         newCPButton = WidgetFactory.createButton(connectionSourceGroup, NEW_BUTTON);
         newCPButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                launchSourceWizard();
+                profileWorker.create();
             }
         });
         
@@ -321,7 +334,7 @@ public class CreateDataSourceWizard extends AbstractWizard {
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                editConnectionProfile();
+                profileWorker.edit();
             }
         });
 
@@ -376,14 +389,15 @@ public class CreateDataSourceWizard extends AbstractWizard {
             modelsCombo.setEnabled(false);
         }
 
-        if (!hasConnectionProfiles) {
+        if (profileWorker.getProfiles().isEmpty()) {
             useConnectionProfileCheckBox.setEnabled(false);
             connectionProfilesCombo.setEnabled(false);
         } else {
             this.connectionProfilesCombo.select(0);
+            handleConnectionProfileSelected();
         }
 
-        if (!hasConnectionProfiles && !hasModelResources) {
+        if (profileWorker.getProfiles().isEmpty() && !hasModelResources) {
             wizardPage.setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
         } else {
             setConnectionProperties();
@@ -407,13 +421,16 @@ public class CreateDataSourceWizard extends AbstractWizard {
     }
 
     private void handleConnectionProfileSelected() {
-        if (connectionProfilesCombo.getSelectionIndex() >= 0) {
-            String selectedItem = connectionProfilesCombo.getItem(connectionProfilesCombo.getSelectionIndex());
-            this.selectedProfile = ProfileManager.getInstance().getProfileByName(selectedItem);
-        } else {
-            this.selectedProfile = null;
-        }
-        setConnectionProperties();
+		int selIndex = connectionProfilesCombo.getSelectionIndex();
+		
+		if( selIndex >= 0 ) {
+			String name = connectionProfilesCombo.getItem(selIndex);
+			if( name != null ) {
+				IConnectionProfile profile = profileWorker.getProfile(name);
+				profileWorker.setSelection(profile);
+				setConnectionProperties();
+			}
+		}
     }
 
     /**
@@ -477,12 +494,12 @@ public class CreateDataSourceWizard extends AbstractWizard {
                     //DqpUiConstants.UTIL.log(e);
                 }
             }
-        } else if (selectedProfile != null) {
+        } else if (profileWorker.getConnectionProfile() != null) {
             try {
-                IConnectionInfoProvider provider = getProvider(selectedProfile);
+                IConnectionInfoProvider provider = getProvider(profileWorker.getConnectionProfile());
                 if (provider != null) {
                     currentProvider = provider;
-                    props = provider.getTeiidRelatedProperties(selectedProfile);
+                    props = provider.getTeiidRelatedProperties(profileWorker.getConnectionProfile());
                 }
             } catch (ModelWorkspaceException e) {
                 DqpUiConstants.UTIL.log(e);
@@ -531,52 +548,21 @@ public class CreateDataSourceWizard extends AbstractWizard {
         }
         return dataSourceNameValidator.isValidName(name);
     }
-
-    /**
-     * @since 7.0
-     */
-    void launchSourceWizard() {
-        NewCPWizard wiz = new NewCPWizard();
-        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
-        wizardDialog.setBlockOnOpen(true);
-
-        CPListener listener = new CPListener();
-        ProfileManager.getInstance().addProfileListener(listener);
-        if (wizardDialog.open() == Window.OK) {
-        	IConnectionProfile newProfile = listener.getLatestProfile();
-        	
-        	ArrayList sourceList = new ArrayList();
-            for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
-            	sourceList.add(prof);
-            }
-            WidgetUtil.setComboItems(this.connectionProfilesCombo, sourceList, this.profileLabelProvider, true);
-
-            selectConnectionProfile(newProfile.getName());
-        }
-        ProfileManager.getInstance().removeProfileListener(listener);
+    
+    public void profileChanged(IConnectionProfile profile) {
+    	resetCPComboItems();
+    	
+    	selectConnectionProfile(profile.getName());
     }
     
-    void editConnectionProfile() {
-    	if( this.selectedProfile != null ) {
-    		IConnectionProfile currentProfile = this.selectedProfile;
-    		EditConnectionProfileAction action = new EditConnectionProfileAction(getShell(), currentProfile);
-    		
-    		CPListener listener = new CPListener();
-            ProfileManager.getInstance().addProfileListener(listener);
-            
-    		action.run();
-    		
-        	ArrayList sourceList = new ArrayList();
-            for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
-            	sourceList.add(prof);
+    void resetCPComboItems() {
+    	if( connectionProfilesCombo != null ) {
+        	ArrayList profileList = new ArrayList();
+            for( IConnectionProfile prof : profileWorker.getProfiles()) {
+            	profileList.add(prof);
             }
             
-            WidgetUtil.setComboItems(connectionProfilesCombo, sourceList, profileLabelProvider, true);
-    		
-    		// Update the Combo Box
-                
-            selectConnectionProfile(currentProfile.getName());
-
+            WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
     	}
     }
     
@@ -691,29 +677,4 @@ public class CreateDataSourceWizard extends AbstractWizard {
         }
 
     }
-    
-    public class CPListener implements IProfileListener {
-
-        IConnectionProfile latestProfile;
-
-        @Override
-        public void profileAdded( IConnectionProfile profile ) {
-            latestProfile = profile;
-        }
-
-        @Override
-        public void profileChanged( IConnectionProfile profile ) {
-        	latestProfile = profile;
-        }
-
-        @Override
-        public void profileDeleted( IConnectionProfile profile ) {
-            // nothing
-        }
-
-        public IConnectionProfile getLatestProfile() {
-            return latestProfile;
-        }
-    }
-
 }

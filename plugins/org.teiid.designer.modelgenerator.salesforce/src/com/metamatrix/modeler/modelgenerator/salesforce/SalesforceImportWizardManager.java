@@ -16,6 +16,7 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.MergeProcessor;
@@ -146,7 +147,13 @@ public class SalesforceImportWizardManager {
             try {
                 IStatus status = connectionProfile.connect();
                 if (!status.isOK()) {
-                    throw status.getException();
+                	connection = null;
+//                	Throwable exception = status.getException();
+//                	if( exception != null ) {
+//                		throw exception;
+//                	}
+//                	
+//                    throw new Exception( status.getMessage());
                 }
                 IConnection conn = connectionProfile.createConnection("org.teiid.designer.datatools.salesforce.ConnectionFactory"); //$NON-NLS-1$
                 connection = (SalesforceConnection)conn.getRawConnection();

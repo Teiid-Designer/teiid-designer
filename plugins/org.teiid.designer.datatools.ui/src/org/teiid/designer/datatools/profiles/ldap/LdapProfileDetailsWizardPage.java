@@ -9,9 +9,11 @@ package org.teiid.designer.datatools.profiles.ldap;
 
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,6 +26,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 
+import com.metamatrix.ui.internal.util.WidgetFactory;
+
 /**
  * 
  */
@@ -32,9 +36,9 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
     private Composite scrolled;
 
     private Label profileLabel;
-    private Text profileText;
+    private CLabel profileText;
     private Label descriptionLabel;
-    private Text descriptionText;
+    private CLabel descriptionText;
     private Label usernameLabel;
     private Text usernameText;
     private Label passwordLabel;
@@ -80,7 +84,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.verticalAlignment = GridData.BEGINNING;
         profileLabel.setLayoutData(gd);
 
-        profileText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        profileText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;
@@ -88,7 +92,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.horizontalSpan = 1;
         profileText.setLayoutData(gd);
         profileText.setText(((ConnectionProfileWizard)getWizard()).getProfileName());
-        profileText.setEnabled(false);
+//        profileText.setEnabled(false);
 
         descriptionLabel = new Label(scrolled, SWT.NONE);
         descriptionLabel.setText(UTIL.getString("Common.Description.Label")); //$NON-NLS-1$
@@ -96,7 +100,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.verticalAlignment = GridData.BEGINNING;
         descriptionLabel.setLayoutData(gd);
 
-        descriptionText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        descriptionText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;
@@ -104,7 +108,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         gd.horizontalSpan = 1;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(((ConnectionProfileWizard)getWizard()).getProfileDescription());
-        descriptionText.setEnabled(false);
+//        descriptionText.setEnabled(false);
 
         usernameLabel = new Label(scrolled, SWT.NONE);
         usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
@@ -222,7 +226,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
         }
         if (event.widget == contextFactoryText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, urlText.getText());
+            properties.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactoryText.getText());
         }
         updateState();
     }
@@ -260,7 +264,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
             return;
         }
         setPageComplete(true);
-        setMessage(UTIL.getString("Click.Next")); //$NON-NLS-1$
+        setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
 
     }
 

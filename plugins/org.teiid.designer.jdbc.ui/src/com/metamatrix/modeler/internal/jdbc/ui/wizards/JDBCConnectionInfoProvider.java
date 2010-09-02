@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.jdbc.ui.wizards;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -20,6 +21,7 @@ import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -136,7 +138,7 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
     @Override
     public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
         Properties connectionProps = new Properties();
-        connectionProps.put(PROFILE_ID_KEY, connectionProfile.getProviderId());
+        
         Properties baseProps = connectionProfile.getBaseProperties();
         if (baseProps.get(DRIVER_CLASS_KEY) != null) {
             connectionProps.put(DRIVER_CLASS, baseProps.get(DRIVER_CLASS_KEY));

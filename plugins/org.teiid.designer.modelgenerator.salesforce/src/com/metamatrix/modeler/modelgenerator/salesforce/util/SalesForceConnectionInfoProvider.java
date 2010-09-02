@@ -8,12 +8,13 @@
 package com.metamatrix.modeler.modelgenerator.salesforce.util;
 
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
-import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
@@ -68,7 +69,6 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
     @Override
     public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
         Properties connectionProps = new Properties();
-        connectionProps.put(IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
 
         Properties props = connectionProfile.getBaseProperties();
 
@@ -78,7 +78,13 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
             connectionProps.setProperty(SALESFORCE_DATASOURCE_URL, url);
         }
         String username = props.getProperty(ISalesForceProfileConstants.USERNAME_PROP_ID);
-        connectionProps.setProperty(SALESFORCE_DATASOURCE_USERNAME, username);
+        if( username != null ) {
+        	connectionProps.setProperty(SALESFORCE_DATASOURCE_USERNAME, username);
+        }
+        String password = props.getProperty(ISalesForceProfileConstants.PASSWORD_PROP_ID);
+        if( password != null ) {
+        	connectionProps.setProperty(SALESFORCE_DATASOURCE_PASSWORD, password);
+        }
         return connectionProps;
     }
 
