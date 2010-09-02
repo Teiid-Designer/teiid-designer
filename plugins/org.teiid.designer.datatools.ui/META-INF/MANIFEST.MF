@@ -23,5 +23,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.help
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.teiid.designer.datatools.ui.actions,
+Export-Package: org.teiid.designer.datatools.ui,
+ org.teiid.designer.datatools.ui.actions,
+ org.teiid.designer.datatools.ui.dialogs,
  org.teiid.designer.datatools.ui.jobs
