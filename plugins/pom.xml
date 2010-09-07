@@ -21,6 +21,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.mockito</module>
 		<module>org.powermock</module>
 		<module>org.teiid.datatools.connectivity</module>
+		<module>org.teiid.datatools.connectivity.model</module>
 		<module>org.teiid.datatools.connectivity.ui</module>
 		<module>org.teiid.core.designer</module>
 		<module>org.teiid.designer</module>
