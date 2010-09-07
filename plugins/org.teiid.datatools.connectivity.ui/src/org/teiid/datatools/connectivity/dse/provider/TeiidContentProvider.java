@@ -26,8 +26,6 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
 
     protected static final ResourceLoader resourceLoader = ResourceLoader.INSTANCE;
 
-    private static final String DEPENDENCY = resourceLoader.queryString("DATATOOLS.SERVER.UI.EXPLORER.DEPENDENCY"); //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * 

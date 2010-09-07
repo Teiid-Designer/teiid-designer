@@ -18,7 +18,6 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelFactory;
 
 public class TeiidDocumentLoader extends JDBCBaseLoader {
 
-	private static final String DOCUMENT_QUERY = null;
 	private static final String DOCUMENT_NAME = "TABLE_NAME";
 
 	public TeiidDocumentLoader(ICatalogObject catalogObject) {

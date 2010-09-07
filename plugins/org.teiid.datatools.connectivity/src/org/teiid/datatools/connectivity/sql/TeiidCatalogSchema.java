@@ -2,10 +2,8 @@ package org.teiid.datatools.connectivity.sql;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.datatools.modelbase.sql.schema.impl.SchemaImpl;
 import org.eclipse.emf.common.util.EList;
 import org.teiid.datatools.models.teiidsqlmodel.impl.TeiidSchemaImpl;
 
