@@ -553,6 +553,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     	resetCPComboItems();
     	
     	selectConnectionProfile(profile.getName());
+    	
+    	setConnectionProperties();
     }
     
     void resetCPComboItems() {

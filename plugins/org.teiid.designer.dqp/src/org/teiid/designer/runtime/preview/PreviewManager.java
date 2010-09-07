@@ -556,26 +556,30 @@ public final class PreviewManager extends JobChangeAdapter
 
         if (!props.isEmpty()) {
             IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
-
+            boolean requiresPassword = connInfoProvider.getPasswordPropertyKey() != null;
+            
             if (modelConnectionProfile != null) {
             	String pwd = null;
-            	
-                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
-
-                if (existingConnectionProfile != null) {
-                    // make sure the password property is there. if not get from connection profile.
-                    if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-                    }
-                }
-                
-                if( pwd == null && this.passwordProvider != null) {
-                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
-                }
-                
-                if( pwd != null ) {
-                	props.setProperty(connInfoProvider.getPasswordPropertyKey(), pwd);
-                }
+    
+            	// Check Password
+            	if( requiresPassword ) {
+	                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
+	
+	                if (existingConnectionProfile != null) {
+	                    // make sure the password property is there. if not get from connection profile.
+	                    if (requiresPassword && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+	                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+	                    }
+	                }
+	                
+	                if( pwd == null && this.passwordProvider != null) {
+	                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+	                }
+	                
+	                if( pwd != null ) {
+	                	props.setProperty(connInfoProvider.getPasswordPropertyKey(), pwd);
+	                }
+            	}
                 
             	TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
                 tds.setPreview(true);
