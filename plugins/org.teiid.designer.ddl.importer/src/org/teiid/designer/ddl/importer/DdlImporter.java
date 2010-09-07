@@ -10,8 +10,10 @@ package org.teiid.designer.ddl.importer;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -91,6 +93,9 @@ public class DdlImporter {
     private ModelResource model;
     private boolean optToCreateModelEntitiesForUnsupportedDdl;
     private boolean optToSetModelEntityDescription;
+    
+    // hold on to DDL so that it can be set in the description
+    private Map<RelationalEntity, String> descriptionMap = new HashMap<RelationalEntity, String>();
 
     /**
      * @param projects
@@ -451,9 +456,13 @@ public class DdlImporter {
                              final String name ) throws CoreException {
         entity.setName(name);
         entity.setNameInSource(name);
+
+        // descriptions must wait to be set until container and model type has been set
         if (optToSetModelEntityDescription) {
             final Property prop = node.getProperty(StandardDdlLexicon.DDL_EXPRESSION);
-            if (prop != null) ModelerCore.getModelEditor().setDescription(entity, prop.getFirstValue().toString());
+            if (prop != null) {
+                this.descriptionMap.put(entity, prop.getFirstValue().toString());
+            }
         }
     }
 
@@ -525,6 +534,16 @@ public class DdlImporter {
                                                                                             true);
             handleStatus(mergeProcessor.execute(monitor));
             model.save(monitor, false);
+
+            // now set descriptions (model type and container *must* be already set)
+            if (optToSetModelEntityDescription) {
+                for (Map.Entry<RelationalEntity, String> entry : this.descriptionMap.entrySet()) {
+                    ModelerCore.getModelEditor().setDescription(entry.getKey(), entry.getValue());
+                }
+
+                // save again
+                model.save(monitor, false);
+            }
         } catch (final Exception error) {
             throw CoreModelerPlugin.toRuntimeException(error);
         }

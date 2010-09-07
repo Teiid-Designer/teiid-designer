@@ -343,8 +343,10 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 optToSetModelEntityDescriptionModified();
             }
         });
-        optToSetModelEntityDescriptionCheckBox.setSelection(false);
-        optToSetModelEntityDescriptionCheckBox.setVisible(false);
+        
+        // make sure importer has restored setting
+        optToSetModelEntityDescriptionModified();
+
         optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(panel,
                                                                                          DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
                                                                                          0,
@@ -357,6 +359,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 optToCreateModelEntitiesForUnsupportedDdlModified();
             }
         });
+        
+        // make sure importer has restored setting
+        optToCreateModelEntitiesForUnsupportedDdlModified();
 
         ddlFileContentsExpanderBar = new ExpandBar(panel, SWT.NONE);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
