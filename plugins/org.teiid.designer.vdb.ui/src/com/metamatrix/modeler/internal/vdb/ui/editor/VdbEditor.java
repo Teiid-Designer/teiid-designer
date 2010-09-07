@@ -628,23 +628,11 @@ public final class VdbEditor extends EditorPart {
                 ContainerImpl tempContainer = null;
                 try {
                     Collection<File> modelFiles = vdb.getModelFiles();
-                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
 
                     tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
                     ModelEditorImpl.setContainer(tempContainer);
                     for (File modelFile : modelFiles) {
                         boolean isVisible = true;
-//                        for (VdbModelEntry entry : modelEntries) {
-//                            String fileName = entry.getName().removeFileExtension().lastSegment();
-//                            String modelName = modelFile.getName();
-//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
-//                                modelName = modelName.substring(0, modelName.length() - 4);
-//                            }
-//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
-//                                isVisible = false;
-//                                break;
-//                            }
-//                        }
 
                         Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
                         if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
@@ -683,7 +671,6 @@ public final class VdbEditor extends EditorPart {
 					}
 
 				}
-                // MessageDialog.openInformation(pg.getShell(), "New Data Policy launched", "Not yet fully implemented");
             }
         });
         dataRolesGroup.add(dataRolesGroup.new EditButtonProvider() {
@@ -697,23 +684,11 @@ public final class VdbEditor extends EditorPart {
                 ContainerImpl tempContainer = null;
                 try {
                     Collection<File> modelFiles = vdb.getModelFiles();
-                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
 
                     tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
                     ModelEditorImpl.setContainer(tempContainer);
                     for (File modelFile : modelFiles) {
                         boolean isVisible = true;
-//                        for (VdbModelEntry entry : modelEntries) {
-//                            String fileName = entry.getName().removeFileExtension().lastSegment();
-//                            String modelName = modelFile.getName();
-//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
-//                                modelName = modelName.substring(0, modelName.length() - 4);
-//                            }
-//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
-//                                isVisible = false;
-//                                break;
-//                            }
-//                        }
 
                         Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
                         if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {

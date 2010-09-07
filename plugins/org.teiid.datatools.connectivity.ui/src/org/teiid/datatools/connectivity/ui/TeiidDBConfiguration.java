@@ -4,7 +4,7 @@ import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
 
 public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 
-    private static final String[] PRODUCTS = {"Teiid Server", "Teiid"}; //$NON-NLS-1$
+    private static final String[] PRODUCTS = {"Teiid Server", "Teiid"}; //$NON-NLS-1$ //$NON-NLS-2$
 
     private String format( String in ) {
         return in.trim().toLowerCase();

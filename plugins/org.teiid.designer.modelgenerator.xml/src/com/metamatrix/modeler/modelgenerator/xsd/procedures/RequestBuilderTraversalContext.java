@@ -25,8 +25,8 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationMapping
 public class RequestBuilderTraversalContext extends BaseTraversalContext
 		implements TraversalContext {
 
-	public static final String CREATE = "create_";
-	public static final String XML_OUT = "xml_out";
+	public static final String CREATE = "create_"; //$NON-NLS-1$
+	public static final String XML_OUT = "xml_out"; //$NON-NLS-1$
 
 	private Procedure procedure;
 	private List<ProcedureParameter> cachedParams = new ArrayList();
