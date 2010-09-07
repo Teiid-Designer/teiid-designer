@@ -49,7 +49,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelProjectInfo;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceItemImpl;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
 /**
  * @since 4.2

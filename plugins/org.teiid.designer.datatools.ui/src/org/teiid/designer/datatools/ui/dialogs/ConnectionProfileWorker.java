@@ -110,7 +110,7 @@ public class ConnectionProfileWorker {
 	}
 
 	public IConnectionProfile getProfile(String name) {
-		return this.profileManager.getProfileByName(name);
+		return ConnectionProfileWorker.profileManager.getProfileByName(name);
 	}
 
 	public List<IConnectionProfile> getProfiles() {
