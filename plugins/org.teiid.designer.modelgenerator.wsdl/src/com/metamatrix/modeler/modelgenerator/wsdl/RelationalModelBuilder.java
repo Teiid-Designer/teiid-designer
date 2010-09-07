@@ -21,8 +21,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.DirectionKind;
@@ -68,10 +70,18 @@ import com.metamatrix.modeler.schema.tools.processing.SchemaProcessor;
  * would limit reuse or require duplication.
  */
 public class RelationalModelBuilder {
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalModelBuilder.class);
+    
+    /**
+     * Get the localized string text for the provided id
+     */
+    private static String getString( final String id ) {
+        return ModelGeneratorWsdlPlugin.Util.getString(I18N_PREFIX + id);
+    }
+	public static final String XML = "XML"; //$NON-NLS-1$
+	public static final String DOT_XMI = ".xmi"; //$NON-NLS-1$
 
-	public static final String XML = "XML";
-
-	private static final String INVOKE = "invoke";
+	private static final String INVOKE = "invoke"; //$NON-NLS-1$
 
 	private List<ModelResource> models;
 	private Map<String, ModelResource> serviceNameToPhysicalMap;
@@ -82,8 +92,10 @@ public class RelationalModelBuilder {
 	private RelationalFactory factory;
 	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
 	private List<ProcedureBuilder> builders= new ArrayList<ProcedureBuilder>();
+	private SOAPConnectionInfoProvider connProvider;
+	private IConnectionProfile connectionProfile;
 	
-	public RelationalModelBuilder(Model model) throws SchemaProcessingException {
+	public RelationalModelBuilder(Model model, IConnectionProfile profile) throws SchemaProcessingException {
 		wsdlModel = model;
 		SchemaProcessor processor = new SOAPSchemaProcessor(null);
 		processor.representTypes(true);
@@ -92,6 +104,8 @@ public class RelationalModelBuilder {
 		schemaModel = processor.getSchemaModel();
 		factory = com.metamatrix.metamodels.relational.RelationalPackage.eINSTANCE
 				.getRelationalFactory();
+		connectionProfile = profile;
+		connProvider = new SOAPConnectionInfoProvider();
 	}
 
 	public void modelOperations(List<Operation> operations, IContainer container)
@@ -108,10 +122,10 @@ public class RelationalModelBuilder {
 			ports.put(port.getName(), port);
 
 			// all ops on a service/port are created in a single physical model
-			ModelResource servicePhysicalModel, serviceVirtualModel;
+			ModelResource serviceVirtualModel;
 			try {
 
-				servicePhysicalModel = getPhysicalModelForService(operation);
+				getPhysicalModelForService(operation);
 				serviceVirtualModel = getVirtualModelForService(operation);
 
 			} catch (CoreException e) {
@@ -138,8 +152,7 @@ public class RelationalModelBuilder {
 		WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
 			@Override
-			public void execute(final IProgressMonitor monitor)
-					throws CoreException {
+			public void execute(final IProgressMonitor monitor) {
 				for (ModelResource resource : models) {
 					try {
 						ModelUtilities.saveModelResource(resource, monitor, false, this);
@@ -186,40 +199,40 @@ public class RelationalModelBuilder {
 		ProcedureParameter param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.IN_LITERAL);
-		param.setName("binding");
-		param.setNameInSource("binding");
+		param.setName(getString("param.binding")); //$NON-NLS-1$
+		param.setNameInSource(getString("param.binding")); //$NON-NLS-1$
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
 
 		param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.IN_LITERAL);
-		param.setName("action");
-		param.setNameInSource("action");
+		param.setName(getString("param.action")); //$NON-NLS-1$
+		param.setNameInSource(getString("param.action")); //$NON-NLS-1$
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
 
 		param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.IN_LITERAL);
-		param.setName("request");
-		param.setNameInSource("request");
+		param.setName(getString("param.request")); //$NON-NLS-1$
+		param.setNameInSource(getString("param.request")); //$NON-NLS-1$
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.XML_LITERAL));
 
 		param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.IN_LITERAL);
-		param.setName("endpoint");
-		param.setNameInSource("endpoint");
+		param.setName(getString("param.endpoint")); //$NON-NLS-1$
+		param.setNameInSource(getString("param.endpoint")); //$NON-NLS-1$
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
 
 		param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.OUT_LITERAL);
-		param.setName("result");
-		param.setNameInSource("result");
+		param.setName(getString("param.result")); //$NON-NLS-1$
+		param.setNameInSource(getString("param.result")); //$NON-NLS-1$
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getBuiltInDatatype(DatatypeConstants.BuiltInNames.XML_LITERAL));
 
@@ -278,7 +291,7 @@ public class RelationalModelBuilder {
 	}
 
 	public ModelResource getPhysicalModelForService(Operation operation)
-			throws CoreException, ModelBuildingException {
+			throws CoreException {
 
 		Port port = operation.getBinding().getPort();
 		ModelResource serviceModel;
@@ -297,12 +310,15 @@ public class RelationalModelBuilder {
 			modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
 			modelAnnotation.setNameInSource(port.getLocationURI());
 			createPhysicalProcedure(port.getService(), serviceModel);
+			
+			// Inject the connection profile properties into the physical model
+			connProvider.setConnectionInfo(serviceModel, connectionProfile);
 		}
 		return serviceModel;
 	}
 
 	public ModelResource getVirtualModelForService(Operation operation)
-			throws CoreException, ModelBuildingException {
+			throws CoreException {
 
 		Port port = operation.getBinding().getPort();
 		ModelResource serviceModel;
@@ -324,7 +340,7 @@ public class RelationalModelBuilder {
 	}
 
 	private IFile createNewFile(String name) {
-		Path modelPath = new Path(name + ".xmi");
+		Path modelPath = new Path(name + DOT_XMI);
 		IFile iFile = folder.getFile(modelPath);
 		return iFile;
 	}

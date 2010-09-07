@@ -46,7 +46,9 @@ public interface DataSourceConnectionConstants {
         String LDAP = "connector-ldap"; //$NON-NLS-1$ 
         String FILE = "connector-file"; //$NON-NLS-1$ 
         String JDBC_XA = "connector-jdbc-xa"; //$NON-NLS-1$
+        String WS = "connector-ws"; //$NON-NLS-1$
         String UNKNOWN = "connector-unknown"; //$NON-NLS-1$
+        
 
         public final static String[] DATA_SOURCES = {JDBC, JDBC_XA, SALESFORCE, LDAP, FILE};
     }

@@ -232,7 +232,7 @@ public class SelectWsdlPage extends WizardPage
      */
     private void createSourceSelectionComposite( Composite theParent ) {
         final int COLUMNS = 1;
-        String text = ""; //$NON-NLS-1$
+
         Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
@@ -259,15 +259,7 @@ public class SelectWsdlPage extends WizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Need to sync the worker with the current profile
-				int selIndex = connectionProfilesCombo.getSelectionIndex();
-				
-				String name = connectionProfilesCombo.getItem(selIndex);
-				if( name != null ) {
-					IConnectionProfile profile = profileWorker.getProfile(name);
-					wsdlStatus = null;
-					profileWorker.setSelection(profile);
-					refreshUiFromManager();
-				}
+				handleConnectionProfileSelected();
 			}
 			
 			@Override
@@ -296,24 +288,13 @@ public class SelectWsdlPage extends WizardPage
         });
         
         // options group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("sourceOptionsGroup.text"), SWT.FILL,  2); //$NON-NLS-1$
-        optionsGroup.setLayout(new GridLayout(3, false));
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("wsdlLabel.text"), SWT.FILL,  2); //$NON-NLS-1$
+        optionsGroup.setLayout(new GridLayout(2, false));
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        GridData gridData;
-        CLabel wsldLabel = new CLabel(optionsGroup, SWT.NONE);
-        wsldLabel.setText(getString("wsdlLabel.text")); //$NON-NLS-1$
-        gridData = new GridData(SWT.NONE);
-        gridData.horizontalSpan = 1;
-        wsldLabel.setLayoutData(gridData);
 
         // Workspace textfield
         wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
-        text = getString("workspaceTextField.tooltip"); //$NON-NLS-1$
-        wsdlURIText.setToolTipText(text);
-//        wsdlURIText.setEditable(false);
-        wsdlURIText.setEnabled(false);
-
+        wsdlURIText.setToolTipText(getString("workspaceTextField.tooltip")); //$NON-NLS-1$
         // --------------------------------------------
         // WSDL Validation Button
         // --------------------------------------------
@@ -325,8 +306,27 @@ public class SelectWsdlPage extends WizardPage
         // Add Listener to handle selection events
         // --------------------------------------------
         buttonValidateWSDL.addListener(SWT.Selection, this);
-
+        
+        if( this.connectionProfilesCombo.getItemCount() > 0 ) {
+        	this.connectionProfilesCombo.select(0);
+        	handleConnectionProfileSelected();
+        }
+        
         updateWidgetEnablements();
+    }
+    
+    private void handleConnectionProfileSelected() {
+		int selIndex = connectionProfilesCombo.getSelectionIndex();
+		
+		if( selIndex >= 0 ) {
+			String name = connectionProfilesCombo.getItem(selIndex);
+			if( name != null ) {
+				IConnectionProfile profile = profileWorker.getProfile(name);
+				profileWorker.setSelection(profile);
+				importManager.setConnectionProfile(profile);
+				refreshUiFromManager();
+			}
+		}
     }
 
     /**
@@ -342,24 +342,17 @@ public class SelectWsdlPage extends WizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // options group
-        Group optionsGroup = new Group(pnl, SWT.NONE);
-        optionsGroup.setText(getString("targetOptionsGroup.text")); //$NON-NLS-1$
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"),SWT.NONE); //$NON-NLS-1$
 
         GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gdRadioGroup);
 
-        optionsGroup.setLayout(new GridLayout(3, false));
+        optionsGroup.setLayout(new GridLayout(2, false));
 
         // --------------------------------------------
         // Composite for Model Location Selection
         // --------------------------------------------
         // Select Target Location Label
-        //WidgetFactory.createLabel( optionsGroup, getString("targetModelLocationLabel.text")); //$NON-NLS-1$
-        CLabel theLabel2 = new CLabel(optionsGroup, SWT.NONE);
-        theLabel2.setText(getString("targetModelLocationLabel.text")); //$NON-NLS-1$
-        final GridData gridData2 = new GridData(SWT.NONE);
-        gridData2.horizontalSpan = 1;
-        theLabel2.setLayoutData(gridData2);
 
         final IContainer location = this.importManager.getTargetModelLocation();
         final String name = (location == null ? null : location.getFullPath().makeRelative().toString());
@@ -604,6 +597,9 @@ public class SelectWsdlPage extends WizardPage
     	resetCPComboItems();
     	
     	selectConnectionProfile(profile.getName());
+    	
+    	importManager.setConnectionProfile(profile);
+    	
     	setPageStatus();
     }
 
@@ -808,6 +804,8 @@ public class SelectWsdlPage extends WizardPage
     	if( cpIndex > -1 ) {
     		connectionProfilesCombo.select(cpIndex);
     	}
+    	
+    	refreshUiFromManager();
     }
     
     /** Filter for selecting target location. */

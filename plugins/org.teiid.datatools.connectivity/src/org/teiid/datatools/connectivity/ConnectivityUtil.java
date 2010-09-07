@@ -8,6 +8,7 @@
 package org.teiid.datatools.connectivity;
 
 import java.util.Properties;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -37,7 +38,7 @@ public class ConnectivityUtil {
     public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Preview Driver"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Preview Driver"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
-	public static final String TEIID_DATABASE_VERSION = "7.1";
+	public static final String TEIID_DATABASE_VERSION = "7.1"; //$NON-NLS-1$
 
     public static Properties createDriverProps( String jarList,
                                                 String driverURL,
@@ -51,7 +52,7 @@ public class ConnectivityUtil {
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, password);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
-        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, TEIID_DATABASE_VERSION); //$NON-NLS-1$
+        baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, TEIID_DATABASE_VERSION);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, vdbName);
         baseProperties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID, String.valueOf(true));
         // baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,

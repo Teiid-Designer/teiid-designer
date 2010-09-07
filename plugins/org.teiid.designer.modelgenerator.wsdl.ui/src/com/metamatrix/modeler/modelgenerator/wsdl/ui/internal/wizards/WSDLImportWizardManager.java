@@ -9,9 +9,12 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+
 import com.metamatrix.modeler.modelgenerator.wsdl.WSDLReader;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
@@ -35,6 +38,7 @@ public class WSDLImportWizardManager {
     private IContainer targetModelLocation;
     private List selectedOperations;
     private int uriSource = URL_SOURCE;
+    private IConnectionProfile connectionProfile;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -156,5 +160,19 @@ public class WSDLImportWizardManager {
     public void setUriSource( int uriSource ) {
         this.uriSource = uriSource;
     }
+
+	/**
+	 * @return connectionProfile
+	 */
+	public IConnectionProfile getConnectionProfile() {
+		return connectionProfile;
+	}
+
+	/**
+	 * @param connectionProfile Sets connectionProfile to the specified value.
+	 */
+	public void setConnectionProfile(IConnectionProfile connectionProfile) {
+		this.connectionProfile = connectionProfile;
+	}
 
 }
