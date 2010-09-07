@@ -16,7 +16,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.sqltools.data.core,
  org.eclipse.datatools.sqltools.sql,
  org.teiid.datatools.connectivity,
- org.eclipse.datatools.sqltools.result.ui
+ org.eclipse.datatools.sqltools.result.ui,
+ org.eclipse.datatools.connectivity.sqm.core,
+ org.eclipse.datatools.connectivity.sqm.core.ui,
+ org.eclipse.datatools.connectivity.sqm.server.ui,
+ org.eclipse.ui.navigator,
+ org.eclipse.emf.ecore,
+ org.eclipse.datatools.modelbase.sql,
+ org.teiid.datatools.connectivity.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.datatools.sqltools.core,

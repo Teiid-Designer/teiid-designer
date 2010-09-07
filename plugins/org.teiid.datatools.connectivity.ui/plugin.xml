@@ -77,4 +77,39 @@
          default_viewer_name="Teiid Result Set Viewer"
          class="org.teiid.datatools.results.view.TeiidResultViewerProvider"/>
    </extension>
+      <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator">
+         <includes>
+            <contentExtension
+                  pattern="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            id="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            labelProvider="org.teiid.datatools.connectivity.dse.provider.TeiidLableProvider"
+            name="Teiid SQL Model Content Extension"
+            priority="highest">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.teiid.datatools.connectivity.sql.TeiidCatalogSchema">
+               </instanceof>
+            </or>
+         </enablement>
+      </navigatorContent>
+      </extension>
+         <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.ui.labelService">
+      <contributor
+            iconLocation="/icons/view.gif"
+            type="org.teiid.datatools.models.teiidsqlmodel.Document">
+      </contributor>
+   </extension>
    </plugin>

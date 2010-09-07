@@ -79,4 +79,28 @@
           providerID="org.teiid.datatools.connectivity.connectionProfile">
        </providerIDtoDriverCategoryID>
     </extension>
+    
+   <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.catalog">
+      <overrideLoader
+            provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
+            eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
+            product="Teiid"
+            version="7.1"/>
+   </extension>
+   
+      <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.logicalContainment">
+      <containment
+            class="TeiidSchema"
+            package="http:///org/teiid/datatools/connectivity/teiidsqlmodel.ecore"
+            provider="org.teiid.datatools.connectivity.sql.TeiidSchemaContainmentProvider">
+      </containment>
+      <containment
+            class="Document"
+            package="http:///org/teiid/datatools/connectivity/teiidsqlmodel.ecore"
+            provider="org.teiid.datatools.connectivity.sql.TeiidDocumentContainmentProvider">
+      </containment>
+   </extension>
+
 </plugin>
