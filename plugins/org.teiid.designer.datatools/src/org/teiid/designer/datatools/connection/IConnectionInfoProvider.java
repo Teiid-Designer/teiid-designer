@@ -32,6 +32,13 @@ public interface IConnectionInfoProvider extends IConnectionInfoHelper {
      * @return
      */
     public abstract String getPasswordPropertyKey();
+    
+    /**
+     * Accessor for the Teiid Data Source password property key. Null is there is no password for this DataSource Type.
+     * 
+     * @return
+     */
+    public abstract String getDataSourcePasswordPropertyKey();
 
     /**
      * Accessor for the Teiid Data Source Type.

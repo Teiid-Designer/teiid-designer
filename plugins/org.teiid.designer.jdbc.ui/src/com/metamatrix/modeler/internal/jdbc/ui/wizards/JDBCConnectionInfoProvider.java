@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
@@ -102,9 +103,9 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
                 enoughProps = false;
             }
 
-            if (baseProps.get(PASSWORD_KEY) != null) {
-                connectionProps.put(CONNECTION_NAMESPACE + PASSWORD, baseProps.get(PASSWORD_KEY));
-            }
+//            if (baseProps.get(PASSWORD_KEY) != null) {
+//                connectionProps.put(CONNECTION_NAMESPACE + PASSWORD, baseProps.get(PASSWORD_KEY));
+//            }
 
             if (!enoughProps) {
                 throw new ModelWorkspaceException(
@@ -232,6 +233,16 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
      */
     @Override
     public String getPasswordPropertyKey() {
+        return IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getDataSourcePasswordPropertyKey()
+     */
+    @Override
+    public String getDataSourcePasswordPropertyKey() {
         return PASSWORD;
     }
 

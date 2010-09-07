@@ -8,8 +8,8 @@
 package org.teiid.designer.runtime.ui.connection;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -78,23 +78,33 @@ public class PreviewMissingPasswordDialog extends Dialog implements InternalUiCo
         WidgetFactory.createLabel(dlgPanel, PASSWORD_LABEL);
         this.pwdFld = WidgetFactory.createPasswordField(dlgPanel);
         
-        this.pwdFld.addKeyListener(new KeyListener() {
+        this.pwdFld.addModifyListener(new ModifyListener() {
 			
 			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
+			public void modifyText(ModifyEvent e) {
 				if( pwdFld.getText() != null && pwdFld.getText().length() > 0 ) {
 					getButton(IDialogConstants.OK_ID).setEnabled(true);
+					pwd = pwdFld.getText();
 				} else {
+					pwd = ""; //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
-				pwd = pwdFld.getText();
+				
 			}
 		});
+
         return dlgPanel;
+    }
+    
+    /**<p>
+     * </p>
+     * @see org.eclipse.jface.window.Window#create()
+     * @since 4.0
+     */
+    @Override
+    public void create() {
+        super.create();
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
     
     /**<p>
@@ -104,6 +114,7 @@ public class PreviewMissingPasswordDialog extends Dialog implements InternalUiCo
      */
     @Override
     protected void okPressed() {
+    	//pwd = pwdFld.getText();
         super.okPressed();
     }
 

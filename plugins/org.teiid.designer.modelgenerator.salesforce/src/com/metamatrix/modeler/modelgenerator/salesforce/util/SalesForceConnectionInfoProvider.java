@@ -97,6 +97,16 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
     public String getPasswordPropertyKey() {
         return SALESFORCE_PASSWORD_KEY;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getDataSourcePasswordPropertyKey()
+     */
+    @Override
+    public String getDataSourcePasswordPropertyKey() {
+        return SALESFORCE_PASSWORD_KEY;
+    }
 
     /**
      * {@inheritDoc}

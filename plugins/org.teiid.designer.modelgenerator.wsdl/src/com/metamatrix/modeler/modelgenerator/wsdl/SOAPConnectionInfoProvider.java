@@ -136,6 +136,16 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     public String getPasswordPropertyKey() {
         return null;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#getDataSourcePasswordPropertyKey()
+     */
+    @Override
+    public String getDataSourcePasswordPropertyKey() {
+        return null;
+    }
 
     /**
      * {@inheritDoc}

@@ -555,29 +555,41 @@ public final class PreviewManager extends JobChangeAdapter
         String dataSourceType = connInfoProvider.getDataSourceType();
 
         if (!props.isEmpty()) {
+        	// 
             IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
-            boolean requiresPassword = connInfoProvider.getPasswordPropertyKey() != null;
+            // The data source property key represents what's needed as a property for the Teiid Data Source
+            // This is provided by the getDataSourcePasswordPropertyKey() method.
+            String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
+            boolean requiresPassword = dsPasswordKey != null;
             
             if (modelConnectionProfile != null) {
             	String pwd = null;
     
             	// Check Password
             	if( requiresPassword ) {
-	                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
-	
-	                if (existingConnectionProfile != null) {
-	                    // make sure the password property is there. if not get from connection profile.
-	                    if (requiresPassword && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-	                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-	                    }
-	                }
-	                
-	                if( pwd == null && this.passwordProvider != null) {
-	                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
-	                }
+            		// Check connection info provider. Property will be coming in with a key = "password
+            		pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+            		
+            		if( pwd == null ) {
+		                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
+		
+		                if (existingConnectionProfile != null) {
+		                    // make sure the password property is there. if not get from connection profile.
+		                	// Use DTP's constant for profile:  IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID = org.eclipse.datatools.connectivity.db.password
+		                	// DTP's connection profile "password" key, if exists for a profile type, is returned via the provider's
+		                	// getPasswordPropertyKey() method. (this can be different than getDataSourcePasswordPropertyKey())
+		                    if (requiresPassword && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+		                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+		                    }
+		                }
+		                
+		                if( pwd == null && this.passwordProvider != null) {
+		                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+		                }
+            		}
 	                
 	                if( pwd != null ) {
-	                	props.setProperty(connInfoProvider.getPasswordPropertyKey(), pwd);
+	                	props.setProperty(dsPasswordKey, pwd);
 	                }
             	}
                 

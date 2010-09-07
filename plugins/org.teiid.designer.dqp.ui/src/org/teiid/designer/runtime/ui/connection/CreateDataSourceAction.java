@@ -124,7 +124,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                 Properties props = info.getProperties();
                 IConnectionInfoProvider provider = info.getConnectionInfoProvider();
 
-                if (null != provider.getPasswordPropertyKey() && props.get(provider.getPasswordPropertyKey()) == null) {
+                if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
 
                     int result = new AbstractPasswordDialog(iww.getShell()) {
                         @SuppressWarnings( "synthetic-access" )
@@ -135,7 +135,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                         }
                     }.open();
                     if (result == Window.OK) {
-                        props.put(provider.getPasswordPropertyKey(), this.pwd);
+                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
                     }
                 }
 
