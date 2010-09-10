@@ -137,4 +137,8 @@ public class ConnectivityUtil {
         }
 
     }
+    
+    public static void deleteTransientTeiidProfile(IConnectionProfile profile) {
+          ProfileManager.getInstance().deleteTransientProfile(profile);
+    }
 }

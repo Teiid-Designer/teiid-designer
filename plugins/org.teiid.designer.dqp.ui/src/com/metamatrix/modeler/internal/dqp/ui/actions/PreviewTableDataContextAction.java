@@ -19,17 +19,17 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IConnectionProfileProvider;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
-import org.eclipse.datatools.sqltools.core.profile.NoSuchProfileException;
 import org.eclipse.datatools.sqltools.result.ui.ResultsViewUIPlugin;
 import org.eclipse.datatools.sqltools.routineeditor.launching.LaunchHelper;
 import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfigurationAttribute;
-import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
+import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,9 +38,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -290,18 +290,11 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
     			ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
 
-    			try {
-    				// This runnable executes the SQL and displays the results
-    				// in the DTP 'SQL Results' view.
-    				CallableSQLResultRunnable runnable = new CallableSQLResultRunnable(sqlConnection, config, false, null, ID);
-    				final IWorkbenchWindow iww = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow();
-    				iww.getShell().getDisplay().asyncExec(runnable);
-
-    			} catch (SQLException e) {
-    				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    			} catch (NoSuchProfileException e) {
-    				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    			}
+    			// This runnable executes the SQL and displays the results
+				// in the DTP 'SQL Results' view.
+				SimpleSQLResultRunnable runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
+				BusyIndicator.showWhile(null, runnable);
+				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
     			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
     		} catch (SQLException e) {
