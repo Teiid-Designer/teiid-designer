@@ -665,8 +665,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             endpointTags.append(startJaxwsEndpoint).append("\"").append(port).append("\"").append(serviceName); //$NON-NLS-1$ //$NON-NLS-2$
             endpointTags.append(contextName).append("\""); //$NON-NLS-1$ 
             endpointTags.append(implementor).append(port).append("\"").append(wsdlLocation).append(wsdlFilename).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
-            endpointTags.append(namespace).append(tns).append("\"").append(address).append("/"); //$NON-NLS-1$ //$NON-NLS-2$
-            endpointTags.append(contextName).append("/").append(port).append("\">\n").append(endJaxwsEndpoint); //$NON-NLS-1$ //$NON-NLS-2$ 
+            endpointTags.append(namespace).append(tns).append("\">\n").append(endJaxwsEndpoint); //$NON-NLS-1$ //$NON-NLS-2$ 
         }
 
         return endpointTags.toString();
