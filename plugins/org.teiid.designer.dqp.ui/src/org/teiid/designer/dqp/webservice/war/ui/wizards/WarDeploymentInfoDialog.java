@@ -253,10 +253,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     private void loadWarFileLocationDefault() {
         try {
             String warDir = WebServicePlugin.getDefaultWarFileSaveLocation();
-            if (warDir != null && warDir.indexOf("/") >= 0) { //$NON-NLS-1$
-                warDir = warDir.replace('/', '\\');
-            }
-
             WarDataserviceModel.getInstance().setWarFilenameDefault(warDir);
         } catch (Throwable theThrowable) {
             DqpUiPlugin.UTIL.log(theThrowable);
