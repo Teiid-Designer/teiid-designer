@@ -117,7 +117,6 @@ public class ExecuteVDBAction extends SortableSelectionAction {
                     deployedVDB = admin.getVdb(selectedVDB.getName());
                     if (deployedVDB == null) {
                         deployedVDB = DeployVdbAction.deployVdb(server, selectedVDB);
-                        // deployedVDB = admin.deployVdb(selectedVDB);
                     }
 
                     if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
@@ -137,7 +136,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
             }
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotDeployedError", //$NON-NLS-1$
-                                                                                    deployedVDB.getName()));
+            		selectedVDB.getName()));
         }
 
     }

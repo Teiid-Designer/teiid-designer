@@ -45,6 +45,7 @@ import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -383,11 +384,34 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
         ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObj);
-        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) && !helper.hasConnectionInfo(mr)) {
-        	MessageDialog.openWarning(getShell(), 
-        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
-        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
-        	return;
+        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
+        	if( !helper.hasConnectionInfo(mr)) {
+	        	MessageDialog.openWarning(getShell(), 
+	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
+	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
+	        	return;
+	        }
+        	
+        	String translatorName = helper.getTranslatorName(mr);
+        	if( translatorName != null ) {
+        		TeiidTranslator tt = null; 
+        		
+        		try {
+					tt = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
+				} catch (Exception e) {
+					DqpUiConstants.UTIL.log(e);
+				}
+        		
+        		if( tt == null ) {
+        			boolean result = MessageDialog.openQuestion(getShell(), 
+    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTranslatorTitle"),  //$NON-NLS-1$
+    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
+        			if( !result ) {
+        				return;
+        			}
+        		}
+        		
+        	}
         }
         
         if(! validateResultDisplayProperties()) {
