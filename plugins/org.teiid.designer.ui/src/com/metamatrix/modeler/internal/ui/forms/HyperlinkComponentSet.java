@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.ui.forms;
 
 import java.io.File;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -19,6 +20,7 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
     private FormTextObjectEditor linker;
     private ComponentSetMonitor mon;
     private boolean modifyResource;
+    private boolean allowReadOnly;
 
     public HyperlinkComponentSet( String id,
                                   String text ) {
@@ -126,7 +128,15 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
     public void setEditible( boolean enabled ) {
         if (linker != null) {
             // always stay enabled:
-            linker.getFormText().setEnabled(true);
+        	if( this.allowReadOnly ) {
+        		linker.getFormText().setEnabled(enabled);
+        	} else {
+        		linker.getFormText().setEnabled(true);
+        	}
         } // endif
+    }
+    
+    public void setAllowReadOnly(boolean allow) {
+    	this.allowReadOnly = allow;
     }
 }

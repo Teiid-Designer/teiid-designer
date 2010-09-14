@@ -140,8 +140,10 @@ public class GUIFacetHelper extends FacetHelper {
                 showObject((EObject)value);
             }
         });
+        HyperlinkComponentSet subTypeSet = new HyperlinkComponentSet(FAKE_FACET_CREATE_SUBTYPE, getString(PREFIX_FACET + FAKE_FACET_CREATE_SUBTYPE), true);
+        subTypeSet.setAllowReadOnly(true);
         MultiComponentSet linkSet = new MultiComponentSet(GROUP_INHERITANCE_LINKS, new LinkedComponentSet[] {
-            new HyperlinkComponentSet(FAKE_FACET_CREATE_SUBTYPE, getString(PREFIX_FACET + FAKE_FACET_CREATE_SUBTYPE), true),
+        		subTypeSet,
             new HyperlinkComponentSet(FAKE_FACET_OPEN_HIERARCHY, getString(PREFIX_FACET + FAKE_FACET_OPEN_HIERARCHY)),},
                                                           SWT.VERTICAL);
 
