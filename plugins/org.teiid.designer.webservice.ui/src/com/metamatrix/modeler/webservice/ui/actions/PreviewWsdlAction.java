@@ -2,17 +2,14 @@ package com.metamatrix.modeler.webservice.ui.actions;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -30,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDParser;
+
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -39,7 +37,6 @@ import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUti
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.webservice.gen.BasicWsdlGenerator;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
-import com.metamatrix.modeler.webservice.ui.IUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.widget.Dialog;
 import com.metamatrix.ui.text.ScaledFontManager;
