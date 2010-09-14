@@ -154,15 +154,19 @@ public abstract class AbstractUiPlugin extends org.eclipse.ui.plugin.AbstractUIP
             // try to recover a valid page so we can continue:
             pg = lastPage;
         } // endif
-        IWorkbenchWindow theWindow = pg.getWorkbenchWindow();
-        ActionService service = windowServiceMap.get(theWindow);
-
-        if (service == null) {
-            service = createActionService(pg);
-            windowServiceMap.put(theWindow, service);
+        
+        if( pg != null ) {
+	        IWorkbenchWindow theWindow = pg.getWorkbenchWindow();
+	        ActionService service = windowServiceMap.get(theWindow);
+	
+	        if (service == null) {
+	            service = createActionService(pg);
+	            windowServiceMap.put(theWindow, service);
+	        }
+	        return service;
         }
 
-        return service;
+        return null;
     }
 
     /**
