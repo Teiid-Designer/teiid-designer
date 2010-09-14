@@ -862,6 +862,14 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
         if (nNodes == 1) {
             DisplayNode node = (DisplayNode)nodes.get(0);
             result = getNodeTypeForNode(node, nodeType);
+            if( result == null ) {
+            	for( DisplayNode child : node.getChildren() ) {
+            		result = getNodeTypeForNode(child, nodeType);
+            		if( result != null && result.isAnywhereWithin(index)) {
+            			return result;
+            		}
+            	}
+            }
             // index is between two Nodes, first check the second node, then the first
         } else if (nNodes == 2) {
             DisplayNode node = (DisplayNode)nodes.get(1);
