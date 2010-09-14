@@ -43,15 +43,17 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
                 String filePath = eObj.eResource().getURI().toFileString();
                 // Defect 24344 - the filePath may be NULL because some base types may be basic XSD schema types that are NOT in
                 // modifyable resources (i.e. in BuildInDatatypes.xsd, etc...)
-                File file = new File(filePath);
-                if (filePath != null && !file.canRead()) {
-                    // Prompt whether to set the resource to writable
-                    // if( MessageDialog.openConfirm(null, UiPlugin.Util.getString("HyperlinkComponentSet.readOnlyTitle"),
-                    // UiPlugin.Util.getString("HyperlinkComponentSet.resourceReadOnlyMessage", filePath))) { //$NON-NLS-1$ //$NON-NLS-2$
-                    // file.setWritable(true);
-                    // }else {
-                    return;
-                    // }
+                
+                if( filePath != null ) {
+                	File file = new File(filePath);
+	                if (!file.canRead()) {
+	                    // Prompt whether to set the resource to writable
+	                    // if( MessageDialog.openConfirm(null, UiPlugin.Util.getString("HyperlinkComponentSet.readOnlyTitle"),
+	                    // UiPlugin.Util.getString("HyperlinkComponentSet.resourceReadOnlyMessage", filePath))) { //$NON-NLS-1$ //$NON-NLS-2$
+	                    // file.setWritable(true);
+	                    // }else {
+	                    return;
+                    }
                 }
             }
 
