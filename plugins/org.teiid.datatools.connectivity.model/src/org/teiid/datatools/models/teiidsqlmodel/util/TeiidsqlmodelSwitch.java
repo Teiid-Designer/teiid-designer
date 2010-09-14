@@ -8,6 +8,9 @@ import java.util.List;
 import org.eclipse.datatools.modelbase.sql.schema.SQLObject;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 
+import org.eclipse.datatools.modelbase.sql.tables.DerivedTable;
+import org.eclipse.datatools.modelbase.sql.tables.Table;
+import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.ENamedElement;
@@ -99,6 +102,9 @@ public class TeiidsqlmodelSwitch {
 			case TeiidsqlmodelPackage.DOCUMENT: {
 				Document document = (Document)theEObject;
 				Object result = caseDocument(document);
+				if (result == null) result = caseViewTable(document);
+				if (result == null) result = caseDerivedTable(document);
+				if (result == null) result = caseTable(document);
 				if (result == null) result = caseSQLObject(document);
 				if (result == null) result = caseENamedElement(document);
 				if (result == null) result = caseEModelElement(document);
@@ -191,6 +197,51 @@ public class TeiidsqlmodelSwitch {
 	 * @generated
 	 */
 	public Object caseSQLObject(SQLObject object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseTable(Table object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Derived Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Derived Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseDerivedTable(DerivedTable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>View Table</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>View Table</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseViewTable(ViewTable object) {
 		return null;
 	}
 

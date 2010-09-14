@@ -3,6 +3,7 @@
  */
 package org.teiid.datatools.models.teiidsqlmodel;
 
+import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
 import org.eclipse.datatools.modelbase.sql.schema.SQLObject;
 
 /**
@@ -21,7 +22,7 @@ import org.eclipse.datatools.modelbase.sql.schema.SQLObject;
  * @model
  * @generated
  */
-public interface Document extends SQLObject {
+public interface Document extends ViewTable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

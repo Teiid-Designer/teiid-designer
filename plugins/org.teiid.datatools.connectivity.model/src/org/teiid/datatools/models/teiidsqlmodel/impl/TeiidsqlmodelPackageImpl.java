@@ -224,10 +224,11 @@ public class TeiidsqlmodelPackageImpl extends EPackageImpl implements Teiidsqlmo
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
+		SQLTablesPackage theSQLTablesPackage = (SQLTablesPackage)EPackage.Registry.INSTANCE.getEPackage(SQLTablesPackage.eNS_URI);
 		SQLSchemaPackage theSQLSchemaPackage = (SQLSchemaPackage)EPackage.Registry.INSTANCE.getEPackage(SQLSchemaPackage.eNS_URI);
 
 		// Add supertypes to classes
-		documentEClass.getESuperTypes().add(theSQLSchemaPackage.getSQLObject());
+		documentEClass.getESuperTypes().add(theSQLTablesPackage.getViewTable());
 		teiidSchemaEClass.getESuperTypes().add(theSQLSchemaPackage.getSchema());
 
 		// Initialize classes and features; add operations and parameters

@@ -3,6 +3,7 @@
  */
 package org.teiid.datatools.models.teiidsqlmodel.impl;
 
+import org.eclipse.datatools.modelbase.sql.tables.impl.ViewTableImpl;
 import org.eclipse.datatools.modelbase.sql.schema.impl.SQLObjectImpl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -28,7 +29,7 @@ import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
  *
  * @generated
  */
-public class DocumentImpl extends SQLObjectImpl implements Document {
+public class DocumentImpl extends ViewTableImpl implements Document {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

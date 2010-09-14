@@ -5,6 +5,7 @@ package org.teiid.datatools.models.teiidsqlmodel;
 
 import org.eclipse.datatools.modelbase.sql.schema.SQLSchemaPackage;
 
+import org.eclipse.datatools.modelbase.sql.tables.SQLTablesPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -91,7 +92,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__EANNOTATIONS = SQLSchemaPackage.SQL_OBJECT__EANNOTATIONS;
+	int DOCUMENT__EANNOTATIONS = SQLTablesPackage.VIEW_TABLE__EANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -100,7 +101,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__NAME = SQLSchemaPackage.SQL_OBJECT__NAME;
+	int DOCUMENT__NAME = SQLTablesPackage.VIEW_TABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference list.
@@ -109,7 +110,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__DEPENDENCIES = SQLSchemaPackage.SQL_OBJECT__DEPENDENCIES;
+	int DOCUMENT__DEPENDENCIES = SQLTablesPackage.VIEW_TABLE__DEPENDENCIES;
 
 	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
@@ -118,7 +119,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__DESCRIPTION = SQLSchemaPackage.SQL_OBJECT__DESCRIPTION;
+	int DOCUMENT__DESCRIPTION = SQLTablesPackage.VIEW_TABLE__DESCRIPTION;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -127,7 +128,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__LABEL = SQLSchemaPackage.SQL_OBJECT__LABEL;
+	int DOCUMENT__LABEL = SQLTablesPackage.VIEW_TABLE__LABEL;
 
 	/**
 	 * The feature id for the '<em><b>Comments</b></em>' reference list.
@@ -136,7 +137,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__COMMENTS = SQLSchemaPackage.SQL_OBJECT__COMMENTS;
+	int DOCUMENT__COMMENTS = SQLTablesPackage.VIEW_TABLE__COMMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Extensions</b></em>' containment reference list.
@@ -145,7 +146,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__EXTENSIONS = SQLSchemaPackage.SQL_OBJECT__EXTENSIONS;
+	int DOCUMENT__EXTENSIONS = SQLTablesPackage.VIEW_TABLE__EXTENSIONS;
 
 	/**
 	 * The feature id for the '<em><b>Privileges</b></em>' reference list.
@@ -154,7 +155,34 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__PRIVILEGES = SQLSchemaPackage.SQL_OBJECT__PRIVILEGES;
+	int DOCUMENT__PRIVILEGES = SQLTablesPackage.VIEW_TABLE__PRIVILEGES;
+
+	/**
+	 * The feature id for the '<em><b>Columns</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__COLUMNS = SQLTablesPackage.VIEW_TABLE__COLUMNS;
+
+	/**
+	 * The feature id for the '<em><b>Supertable</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__SUPERTABLE = SQLTablesPackage.VIEW_TABLE__SUPERTABLE;
+
+	/**
+	 * The feature id for the '<em><b>Subtables</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__SUBTABLES = SQLTablesPackage.VIEW_TABLE__SUBTABLES;
 
 	/**
 	 * The feature id for the '<em><b>Schema</b></em>' reference.
@@ -163,7 +191,79 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT__SCHEMA = SQLSchemaPackage.SQL_OBJECT_FEATURE_COUNT + 0;
+	int DOCUMENT__SCHEMA = SQLTablesPackage.VIEW_TABLE__SCHEMA;
+
+	/**
+	 * The feature id for the '<em><b>Udt</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__UDT = SQLTablesPackage.VIEW_TABLE__UDT;
+
+	/**
+	 * The feature id for the '<em><b>Triggers</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__TRIGGERS = SQLTablesPackage.VIEW_TABLE__TRIGGERS;
+
+	/**
+	 * The feature id for the '<em><b>Index</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__INDEX = SQLTablesPackage.VIEW_TABLE__INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Self Ref Column Generation</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__SELF_REF_COLUMN_GENERATION = SQLTablesPackage.VIEW_TABLE__SELF_REF_COLUMN_GENERATION;
+
+	/**
+	 * The feature id for the '<em><b>Insertable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__INSERTABLE = SQLTablesPackage.VIEW_TABLE__INSERTABLE;
+
+	/**
+	 * The feature id for the '<em><b>Updatable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__UPDATABLE = SQLTablesPackage.VIEW_TABLE__UPDATABLE;
+
+	/**
+	 * The feature id for the '<em><b>Query Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__QUERY_EXPRESSION = SQLTablesPackage.VIEW_TABLE__QUERY_EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Check Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT__CHECK_TYPE = SQLTablesPackage.VIEW_TABLE__CHECK_TYPE;
 
 	/**
 	 * The number of structural features of the '<em>Document</em>' class.
@@ -172,7 +272,7 @@ public interface TeiidsqlmodelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOCUMENT_FEATURE_COUNT = SQLSchemaPackage.SQL_OBJECT_FEATURE_COUNT + 1;
+	int DOCUMENT_FEATURE_COUNT = SQLTablesPackage.VIEW_TABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.

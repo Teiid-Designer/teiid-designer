@@ -6,6 +6,9 @@ package org.teiid.datatools.models.teiidsqlmodel.util;
 import org.eclipse.datatools.modelbase.sql.schema.SQLObject;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 
+import org.eclipse.datatools.modelbase.sql.tables.DerivedTable;
+import org.eclipse.datatools.modelbase.sql.tables.Table;
+import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -93,6 +96,15 @@ public class TeiidsqlmodelAdapterFactory extends AdapterFactoryImpl {
 			}
 			public Object caseSQLObject(SQLObject object) {
 				return createSQLObjectAdapter();
+			}
+			public Object caseTable(Table object) {
+				return createTableAdapter();
+			}
+			public Object caseDerivedTable(DerivedTable object) {
+				return createDerivedTableAdapter();
+			}
+			public Object caseViewTable(ViewTable object) {
+				return createViewTableAdapter();
 			}
 			public Object caseSchema(Schema object) {
 				return createSchemaAdapter();
@@ -182,6 +194,48 @@ public class TeiidsqlmodelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSQLObjectAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.datatools.modelbase.sql.tables.Table <em>Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.datatools.modelbase.sql.tables.Table
+	 * @generated
+	 */
+	public Adapter createTableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.datatools.modelbase.sql.tables.DerivedTable <em>Derived Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.datatools.modelbase.sql.tables.DerivedTable
+	 * @generated
+	 */
+	public Adapter createDerivedTableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.datatools.modelbase.sql.tables.ViewTable <em>View Table</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.datatools.modelbase.sql.tables.ViewTable
+	 * @generated
+	 */
+	public Adapter createViewTableAdapter() {
 		return null;
 	}
 
