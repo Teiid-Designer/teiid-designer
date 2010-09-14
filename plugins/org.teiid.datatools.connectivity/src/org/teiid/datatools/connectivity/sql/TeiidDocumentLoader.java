@@ -12,9 +12,7 @@ import org.eclipse.datatools.connectivity.sqm.loader.IConnectionFilterProvider;
 import org.eclipse.datatools.connectivity.sqm.loader.JDBCBaseLoader;
 import org.eclipse.datatools.connectivity.sqm.loader.Messages;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
-
 import org.teiid.datatools.models.teiidsqlmodel.Document;
-import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelFactory;
 
 public class TeiidDocumentLoader extends JDBCBaseLoader {
 
@@ -29,28 +27,29 @@ public class TeiidDocumentLoader extends JDBCBaseLoader {
 		super(catalogObject, connectionFilterProvider);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void loadDocuments(List container, List existingDocuments) throws SQLException {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		try {
 			rs = createResultSet();
 
-			String dbEventName = null;
+			String docName = null;
 			while (rs.next()) {
-				dbEventName = rs.getString(DOCUMENT_NAME).trim();
+				docName = rs.getString(DOCUMENT_NAME).trim();
 
-				Document dbEvent = (Document) getAndRemoveSQLObject(
-						existingDocuments, dbEventName);
+				Document doc = (Document) getAndRemoveSQLObject(
+						existingDocuments, docName);
 
-				if (dbEvent == null) {
-					dbEvent = processRow(rs);
-					if (dbEvent != null) {
-						container.add(dbEvent);
+				if (doc == null) {
+					doc = processRow(rs);
+					if (doc != null) {
+						container.add(doc);
 					}
 				} else {
-					container.add(dbEvent);
-					if (dbEvent instanceof ICatalogObject) {
-						((ICatalogObject) dbEvent).refresh();
+					container.add(doc);
+					if (doc instanceof ICatalogObject) {
+						((ICatalogObject) doc).refresh();
 					}
 				}
 			}
@@ -59,9 +58,10 @@ public class TeiidDocumentLoader extends JDBCBaseLoader {
 			close(stmt);
 		}
 	}
+	
+	@SuppressWarnings("rawtypes")
 	public void clearDocuments(List documents) {
 		documents.clear();
-
 	}
 
 	protected ResultSet createResultSet()
@@ -91,11 +91,10 @@ public class TeiidDocumentLoader extends JDBCBaseLoader {
 			throws SQLException {
 		String triggerName = rs.getString(DOCUMENT_NAME).trim();
 		document.setName(triggerName);
-		// document.setSchema(((Schema) getCatalogObject()).getSchema());
 	}
 
 	protected Document createDocument() {
-		return TeiidsqlmodelFactory.eINSTANCE.createDocument();
+		return new TeiidDocument();
 	}
 
 	public static void close(Statement stmt) {

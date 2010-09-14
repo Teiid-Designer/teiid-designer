@@ -11,13 +11,15 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 
     private Boolean documentsLoaded = Boolean.FALSE;
     private final Object documents_LOCK = new Object();
+	@SuppressWarnings("rawtypes")
 	private SoftReference documentLoaderRef;
 
     protected TeiidCatalogSchema() {
         super();
     }
 
-    public EList getDocuments() {
+    @SuppressWarnings("rawtypes")
+	public EList getDocuments() {
     	synchronized (documents_LOCK) {
 			if (!documentsLoaded.booleanValue())
 				loadDocuments();
@@ -37,6 +39,7 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 		super.refresh();
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected final TeiidDocumentLoader getDocumentLoader() {
 		if (documentLoaderRef == null || documentLoaderRef.get() == null) {
 			documentLoaderRef = new SoftReference(
@@ -45,6 +48,7 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 		return (TeiidDocumentLoader) documentLoaderRef.get();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void loadDocuments() {
 		synchronized (documents_LOCK) {
 			boolean deliver = eDeliver();

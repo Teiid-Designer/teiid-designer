@@ -30,7 +30,7 @@ public class TeiidLableProvider extends LabelProvider {
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
     public Image getImage( Object element ) {
-    	if(element instanceof TeiidDocumentsFolder) {
+    	if(element instanceof TeiidDocumentsFolder || element instanceof DocumentColumnFolder) {
     		return Activator.getDefault().getImageRegistry().get(Activator.CLOSED_FOLDER_ID);
     	}
         return IDataToolsUIServiceManager.INSTANCE.getLabelService(element).getIcon();

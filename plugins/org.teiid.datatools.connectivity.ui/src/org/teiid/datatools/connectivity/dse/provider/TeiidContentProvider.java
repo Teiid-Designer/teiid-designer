@@ -8,6 +8,7 @@
 package org.teiid.datatools.connectivity.dse.provider;
 
 import org.eclipse.datatools.connectivity.sqm.core.internal.ui.explorer.services.IVirtualNodeServiceFactory;
+import org.eclipse.datatools.connectivity.sqm.core.rte.jdbc.JDBCColumn;
 import org.eclipse.datatools.connectivity.sqm.core.ui.services.IDataToolsUIServiceManager;
 import org.eclipse.datatools.connectivity.sqm.server.internal.ui.explorer.providers.content.impl.ServerExplorerContentProviderNav;
 import org.eclipse.datatools.connectivity.sqm.server.internal.ui.util.resources.ResourceLoader;
@@ -15,7 +16,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonContentProvider;
 import org.teiid.datatools.connectivity.sql.TeiidCatalogSchema;
-import org.teiid.datatools.models.teiidsqlmodel.Document;
+import org.teiid.datatools.connectivity.sql.TeiidDocument;
 
 /**
  * 
@@ -41,8 +42,15 @@ public class TeiidContentProvider extends ServerExplorerContentProviderNav imple
         	TeiidCatalogSchema schema = (TeiidCatalogSchema) docFolder.getParent();
 			docFolder.addChildren(schema.getDocuments());
 			return docFolder.getChildrenArray();
-        } else if (parentElement instanceof Document) {
-        	//System.out.println("found a Document");
+        } else if (parentElement instanceof TeiidDocument) {
+        	   DocumentColumnFolder folder = new DocumentColumnFolder("Columns", "Columns", //$NON-NLS-1$ //$NON-NLS-2$
+                       parentElement);
+        	   return new Object[] {folder};
+        } else if (parentElement instanceof DocumentColumnFolder) {
+        	DocumentColumnFolder folder = (DocumentColumnFolder) parentElement;
+        	TeiidDocument doc = (TeiidDocument) folder.getParent();
+        	return doc.getColumns().toArray();
+        } else if (parentElement instanceof JDBCColumn && ((JDBCColumn)parentElement).eContainer() instanceof TeiidDocument) {
         	return new Object[]{};
         }
         return super.getChildren(parentElement);
