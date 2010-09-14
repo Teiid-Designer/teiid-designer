@@ -21,6 +21,8 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.StringUtil;
+
+import com.metamatrix.core.util.AssertionUtil;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
@@ -981,7 +983,7 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     private MetadataRecord getRecordByName( final String fullname,
                                             final char recordType ) {
-        Assertion.isNotZeroLength(fullname);
+        AssertionUtil.isNotZeroLength(fullname);
 
         // Check the cache for the identifier corresponding to this name ...
         Object id = this.nameToIdCache.get(getLookupKey(fullname, recordType));
@@ -995,7 +997,7 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     private String getFullNameByPartialName( final String partialName,
                                              final char recordType ) {
-        Assertion.isNotZeroLength(partialName);
+        AssertionUtil.isNotZeroLength(partialName);
 
         // Check the cache for the identifier corresponding to this partialname ...
         return this.partialNameToFullNameCache.get(getLookupKey(partialName, recordType));

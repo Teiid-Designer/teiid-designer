@@ -11,11 +11,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.teiid.core.util.Assertion;
-import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.I18nUtil;
+
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.symbol.Expression;
+
+import com.metamatrix.core.util.AssertionUtil;
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.I18nUtil;
 
 /**
  * CriteriaEditorModel
@@ -189,7 +191,7 @@ public class CriteriaEditorModel extends CompositeLanguageObjectEditorModel {
 
     private boolean isValidOperator( String theOperator ) {
         CoreArgCheck.isNotNull(theOperator); // should never fail
-        Assertion.isNotEqual(0, theOperator.length()); // should never fail
+        AssertionUtil.isNotEqual(0, theOperator.length()); // should never fail
 
         boolean result = false;
         Iterator itr = typeOperatorMap.entrySet().iterator();

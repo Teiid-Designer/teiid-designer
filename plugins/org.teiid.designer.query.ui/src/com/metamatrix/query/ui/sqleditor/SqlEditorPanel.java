@@ -1051,7 +1051,10 @@ public class SqlEditorPanel extends SashForm
         // a WHERE clause, or its valid to insert new
         int caretIndex = getCorrectedCaretOffset();
 
-        if (isIndexWithin(caretIndex, EDITABLE_CRITERIA) || commandHasEditableCriteriaClause(caretIndex)
+        List displayNodes = queryDisplayComponent.getDisplayNodeList();
+        DisplayNode criteriaNode = DisplayNodeUtils.getNodeTypeAtIndex(displayNodes, caretIndex, CRITERIA);
+
+        if (criteriaNode != null || commandHasEditableCriteriaClause(caretIndex)
             || isInsertAllowed(caretIndex, CRITERIA)) {
             return true;
         }

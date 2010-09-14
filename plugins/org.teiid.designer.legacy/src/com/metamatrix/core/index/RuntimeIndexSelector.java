@@ -29,6 +29,7 @@ import org.teiid.core.util.FileUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.logging.LogManager;
 
+import com.metamatrix.core.util.AssertionUtil;
 import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.TempDirectory;
 import com.metamatrix.internal.core.index.Index;
@@ -502,7 +503,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
                                        final String[] tokenReplacements ) {
         ArgCheck.isNotNull(tokens);
         ArgCheck.isNotNull(tokenReplacements);
-        Assertion.isEqual(tokens.length, tokenReplacements.length);
+        AssertionUtil.isEqual(tokens.length, tokenReplacements.length);
         String fileContents = getFileContentAsString(path);
         if (fileContents != null) {
             for (int i = 0; i < tokens.length; i++) {
