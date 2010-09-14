@@ -36,6 +36,8 @@ public class VdbDataRole {
 
     private final String name;
     
+    private final boolean anyAuthenticated;
+    
     final AtomicReference<String> description = new AtomicReference<String>();
     private List<Permission> permissions = new ArrayList<Permission>();
     
@@ -49,6 +51,7 @@ public class VdbDataRole {
     	 
     	 this.vdb = vdb;
     	 name = dataRole.getName();
+    	 anyAuthenticated = dataRole.isAnyAuthenticated();
     	 permissions = new ArrayList(dataRole.getPermissions());
     	 mappedRoleNames = new ArrayList(dataRole.getRoleNames());
          this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
@@ -59,6 +62,7 @@ public class VdbDataRole {
     	 super();
     	 this.vdb = vdb;
     	 this.name = element.getName();
+    	 this.anyAuthenticated = element.isAnyAuthenticated();
     	 
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 
@@ -88,6 +92,13 @@ public class VdbDataRole {
      */
     public String getName() {
     	return this.name;
+    }
+    
+    /**
+     * @return the any-authenticated value
+     */
+    public boolean isAnyAuthenticated() {
+    	return this.anyAuthenticated;
     }
     
     /**

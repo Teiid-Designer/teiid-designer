@@ -677,8 +677,8 @@ public final class VdbEditor extends EditorPart {
 
             @Override
             public void selected( IStructuredSelection selection ) {
-                VdbDataRole policy = (VdbDataRole)selection.getFirstElement();
-                if (policy == null) {
+                VdbDataRole vdbDataRole = (VdbDataRole)selection.getFirstElement();
+                if (vdbDataRole == null) {
                     return;
                 }
                 ContainerImpl tempContainer = null;
@@ -712,9 +712,10 @@ public final class VdbEditor extends EditorPart {
                 }
 
                 DataRole dataPolicy = 
-                	new DataRole(policy.getName(), 
-                			policy.getDescription(), 
-                			policy.getMappedRoleNames(), policy.getPermissions());
+                	new DataRole(vdbDataRole.getName(),
+                			vdbDataRole.getDescription(), 
+                			vdbDataRole.isAnyAuthenticated(),
+                			vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
                 final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
@@ -726,7 +727,7 @@ public final class VdbEditor extends EditorPart {
                     // Get the Data Policy
                     DataRole dp = wizard.getDataRole();
                     if( dp != null ) {
-                        vdb.removeDataPolicy(policy);
+                        vdb.removeDataPolicy(vdbDataRole);
                         vdb.addDataPolicy(dp, new NullProgressMonitor());
                     }
 
@@ -757,6 +758,7 @@ public final class VdbEditor extends EditorPart {
                     DataRole newDR = new DataRole(
                     		selectedDataRole.getName() + COPY_SUFFIX, 
                     		selectedDataRole.getDescription(),
+                    		selectedDataRole.isAnyAuthenticated(),
                             selectedDataRole.getMappedRoleNames(), 
                             selectedDataRole.getPermissions());
                     vdb.addDataPolicy(newDR, new NullProgressMonitor());

@@ -82,6 +82,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     private TreeViewer treeViewer;
     private ListPanel mappedRolesPanel;
     private Button allowSystemTablesCheckBox;
+    private Button anyAuthenticatedCheckBox;
 
     private DataRolesModelTreeProvider treeProvider;
     
@@ -89,6 +90,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     private String description;
     private Set<String> mappedRoleNames;
     private boolean allowSystemTables;
+    private boolean anyAuthentication;
 
     String roleNameTextEntry;
     
@@ -105,6 +107,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     		this.dataRoleName = DEFAULT_NAME;
     		this.isEdit = false;
     		this.allowSystemTables = true;
+    		this.anyAuthentication = false;
     	} else {
     		this.dataRole = existingDataRole;
     		this.isEdit = true;
@@ -150,14 +153,14 @@ public class NewDataRoleWizard extends AbstractWizard {
     	
     	
         // ===========>>>> Create page composite
-        final Composite pg = new Composite(parent, SWT.NONE);
+        final Composite mainPanel = new Composite(parent, SWT.NONE);
         GridData pgGD = new GridData(GridData.FILL_BOTH);
-        pg.setLayoutData(pgGD);
-        pg.setLayout(new GridLayout(2, false));
+        mainPanel.setLayoutData(pgGD);
+        mainPanel.setLayout(new GridLayout(2, false));
         // Add widgets to page
-        WidgetFactory.createLabel(pg, getString("nameLabel")); //$NON-NLS-1$
+        WidgetFactory.createLabel(mainPanel, getString("nameLabel")); //$NON-NLS-1$
         
-        this.dataRoleNameText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL, 1, DEFAULT_NAME);
+        this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, DEFAULT_NAME);
         
         this.dataRoleNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -167,7 +170,7 @@ public class NewDataRoleWizard extends AbstractWizard {
 		});
         
         // ===========>>>> Create Description Group 
-        final Group descGroup = WidgetFactory.createGroup(pg, getString("desciptionGroupLabel"), GridData.FILL_HORIZONTAL, 2); //$NON-NLS-1$
+        final Group descGroup = WidgetFactory.createGroup(mainPanel, getString("desciptionGroupLabel"), GridData.FILL_HORIZONTAL, 2); //$NON-NLS-1$
         descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
         final GridData descGridData = new GridData(GridData.FILL_BOTH);
         descGridData.horizontalSpan = 1;
@@ -189,6 +192,18 @@ public class NewDataRoleWizard extends AbstractWizard {
 			}
 		});
 
+        anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(mainPanel,
+		                getString("anyAuthenticatedCheckbox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
+        anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected( final SelectionEvent event ) {
+					anyAuthentication = anyAuthenticatedCheckBox.getSelection();
+					if( mappedRolesPanel != null ) {
+						mappedRolesPanel.setEnabled(!anyAuthentication);
+					}
+				}
+		});
+        
         // ===========>>>> Create Roles List Panel Editor 
         final IListPanelController ctrlr = new ListPanelAdapter() {
             @Override
@@ -242,7 +257,7 @@ public class NewDataRoleWizard extends AbstractWizard {
         		mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(enableEdit);
         	}
         };
-        mappedRolesPanel = new ListPanel(pg, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2);  //$NON-NLS-1$
+        mappedRolesPanel = new ListPanel(mainPanel, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2);  //$NON-NLS-1$
 
         final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
         rolesGridData.horizontalSpan = 2;
@@ -253,8 +268,11 @@ public class NewDataRoleWizard extends AbstractWizard {
         mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(false);
         mappedRolesPanel.getButton(ListPanel.REMOVE_BUTTON).setEnabled(false);
         
+        mappedRolesPanel.setEnabled(!anyAuthentication);
+        
+        
         // ===========>>>> Create Relational Models Tree Viewer/Editor
-        Group group = WidgetFactory.createGroup(pg, getString("relationalModelsGroup"),  //$NON-NLS-1$
+        Group group = WidgetFactory.createGroup(mainPanel, getString("relationalModelsGroup"),  //$NON-NLS-1$
         		GridData.FILL_BOTH, 2, 2);
         
         final GridData modelsGridData = new GridData(GridData.FILL_BOTH);
@@ -327,7 +345,7 @@ public class NewDataRoleWizard extends AbstractWizard {
 
         treeViewer.setInput(tempContainer);
 
-        final Group sysTablesGroup = WidgetFactory.createGroup(pg,
+        final Group sysTablesGroup = WidgetFactory.createGroup(mainPanel,
                                                                getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
 
         // ===========>>>>
@@ -345,11 +363,12 @@ public class NewDataRoleWizard extends AbstractWizard {
         	loadExistingPermissions();
         }
         
-        return pg;
+        return mainPanel;
     }
     
     private void loadExistingPermissions() {
     	this.dataRoleName = this.dataRole.getName();
+    	this.anyAuthentication = this.dataRole.isAnyAuthenticated();
     	this.dataRoleNameText.setText(this.dataRole.getName());
     	this.mappedRolesPanel.addItems(this.dataRole.getRoleNames().toArray());
     	this.descriptionTextEditor.setText(this.dataRole.getDescription());
@@ -367,6 +386,9 @@ public class NewDataRoleWizard extends AbstractWizard {
                 allowSystemTablesCheckBox.setSelection(allowSystemTables);
             }
     	}
+    	
+    	this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
+    	this.mappedRolesPanel.setEnabled(!anyAuthentication);
     	
     	treeViewer.refresh();
     	
@@ -408,14 +430,17 @@ public class NewDataRoleWizard extends AbstractWizard {
     public DataRole getDataRole() {
     	if( dataRole != null ) {
 	    	dataRole.setName(this.dataRoleName);
+	    	dataRole.setAnyAuthenticated(this.anyAuthentication);
 	    	dataRole.setDescription(this.description);
 	    	dataRole.setPermissions(permissionsMap.values());
 	    	if (allowSystemTables) {
                 dataRole.addPermission(new Permission(SYS_TABLE_TARGET, false, true, false, false));
                 dataRole.addPermission(new Permission(PG_CATALOG_TARGET, false, true, false, false));
             }
-	    	if( !mappedRoleNames.isEmpty() ) {
+	    	if( !this.anyAuthentication && !mappedRoleNames.isEmpty() ) {
 	    		dataRole.setRoleNames(mappedRoleNames);
+	    	} else {
+	    		dataRole.getRoleNames().clear();
 	    	}
     	}
 		return dataRole;

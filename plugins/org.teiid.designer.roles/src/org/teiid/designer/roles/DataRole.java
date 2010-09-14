@@ -18,6 +18,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 public class DataRole {
 	
 	private String name;
+	private boolean anyAuthenticated;
 	private String description;
 	private Set<String> roleNames;
 	private Map<String, Permission> permissionsMap;
@@ -25,13 +26,15 @@ public class DataRole {
 	public DataRole(String name) {
 		super();
 		this.name = name;
+		this.anyAuthenticated = false;
 		this.roleNames = new HashSet<String>();
 		this.permissionsMap = new HashMap<String, Permission>();
 	}
 
-	public DataRole(String name, String description, Collection<String> roleNames, Collection<Permission> permissions) {
+	public DataRole(String name, String description, boolean anyAuthenticated, Collection<String> roleNames, Collection<Permission> permissions) {
 		super();
 		this.name = name;
+		this.anyAuthenticated = anyAuthenticated;
 		this.description = description;
 		this.roleNames = new HashSet<String>(roleNames);
 		this.permissionsMap = new HashMap<String, Permission>();
@@ -42,6 +45,7 @@ public class DataRole {
 	public DataRole(DataRole dataRole) {
 		super();
 		this.name = dataRole.getName();
+		this.anyAuthenticated = dataRole.isAnyAuthenticated();
 		this.description = dataRole.getDescription();
 		this.roleNames = new HashSet<String>(dataRole.getRoleNames());
 		this.permissionsMap = new HashMap<String, Permission>();
@@ -99,5 +103,13 @@ public class DataRole {
 	public void addPermission(Permission permission) {
 		CoreArgCheck.isNotNull(permission, "permission"); //$NON-NLS-1$
 		this.permissionsMap.put(permission.getTargetName(), permission);
+	}
+	
+	public boolean isAnyAuthenticated() {
+		return this.anyAuthenticated;
+	}
+	
+	public void setAnyAuthenticated(boolean value) {
+		this.anyAuthenticated = value;
 	}
 }

@@ -25,6 +25,9 @@ public class DataRoleElement implements Serializable {
     @XmlAttribute( name = "name", required = true )
     private String name;
     
+    @XmlAttribute( name = "any-authenticated", required = false )
+    private boolean anyAuthenticated;
+    
     @XmlElement( name = "description" )
     private String description;
 	
@@ -43,6 +46,7 @@ public class DataRoleElement implements Serializable {
     DataRoleElement(VdbDataRole dataRole) {
     	super();
     	name = dataRole.getName();
+    	anyAuthenticated = dataRole.isAnyAuthenticated();
     	description = dataRole.getDescription();
     	for( Permission perm : dataRole.getPermissions() ) {
     		getPermissions().add(new PermissionElement(perm));
@@ -78,6 +82,13 @@ public class DataRoleElement implements Serializable {
     public List<PermissionElement> getPermissions() {
         if (permissions == null) permissions = new ArrayList<PermissionElement>();
         return permissions;
+    }
+    
+    /**
+     * @return anyAuthenticated
+     */
+    public boolean isAnyAuthenticated() {
+        return anyAuthenticated;
     }
 }
 
