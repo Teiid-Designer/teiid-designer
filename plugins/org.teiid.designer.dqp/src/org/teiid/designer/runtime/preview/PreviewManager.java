@@ -566,6 +566,7 @@ public final class PreviewManager extends JobChangeAdapter
             	String pwd = null;
     
             	// Check Password
+            	
             	if( requiresPassword ) {
             		// Check connection info provider. Property will be coming in with a key = "password
             		pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
@@ -593,9 +594,11 @@ public final class PreviewManager extends JobChangeAdapter
 	                }
             	}
                 
-            	TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
-                tds.setPreview(true);
-                return tds;
+            	if( requiresPassword && pwd != null ) {
+	            	TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+	                tds.setPreview(true);
+	                return tds;
+            	}
             }
         }
 
