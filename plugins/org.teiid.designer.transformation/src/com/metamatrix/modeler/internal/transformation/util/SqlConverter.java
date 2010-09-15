@@ -281,7 +281,9 @@ public class SqlConverter {
                     String name = null;
                     if(aspect != null) {
                         // check the character preceeding idToken
-                        if (index > 0 && uuidString.charAt(index - 1) == '.') {
+                    	// UUID's are now sandwiched between double quotes so we need to back up 2 characters
+                    	// T1."mmuuid:13143241-a234a43-q23-32414" for aliased
+                        if (index > 2 && (uuidString.charAt(index - 2) == '.' || uuidString.charAt(index - 2) == '.')) {
                             // if the preceeding character was . then this is an 
                             //   aliased element symbol, so use the short name
                             name = aspect.getName(obj);
