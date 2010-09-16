@@ -106,6 +106,10 @@ public class GenerateWarAction extends Action implements ISelectionListener, Com
                                                   successMessage);
                 }
             });
+        }else{
+        	   MessageDialog.openError(window.getShell(), DqpUiPlugin.UTIL.getString(I18N_PREFIX
+                       + "creationFailedTitle"),//$NON-NLS-1$ 
+                       dialog.getMessage());
         }
         notifyResult(rc == Window.OK);
     }

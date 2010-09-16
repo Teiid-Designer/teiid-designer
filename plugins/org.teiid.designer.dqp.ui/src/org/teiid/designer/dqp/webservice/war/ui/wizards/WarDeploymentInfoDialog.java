@@ -165,6 +165,14 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         }
 
     }
+    
+    @Override
+    public int open() {
+    	// TODO Auto-generated method stub
+    	super.open();
+    	
+    	return deploymentStatus.getCode();
+    }
 
     void execute( IProgressMonitor monitor ) {
         try {
@@ -184,7 +192,8 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
                 DqpUiPlugin.UTIL.log(deploymentStatus.getMessage());
-
+                setMessage(deploymentStatus.getMessage(), InternalModelerWarUiConstants.ERROR); //$NON-NLS-1$
+                
                 super.okPressed();
             }
         } catch (RuntimeException err) {
@@ -203,26 +212,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     @Override
     protected void cancelPressed() {
         super.cancelPressed();
-    }
-
-    /**
-     * set this method for connector binding editor view
-     * 
-     * @param boolean bBool
-     * @since 7.1
-     */
-    protected void setForConnectorBindingEditorViewStatus( IStatus status ) {
-        deploymentStatus = status;
-    }
-
-    /**
-     * calling class will use this method to determine if connector binding editor view will be open
-     * 
-     * @return boolean
-     * @since 7.1
-     */
-    public IStatus getForConnectorBindingEditorViewStatus() {
-        return deploymentStatus;
     }
 
     /**
