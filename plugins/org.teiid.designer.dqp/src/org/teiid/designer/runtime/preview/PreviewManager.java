@@ -88,6 +88,7 @@ import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
@@ -188,7 +189,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             // must be from a relational or web service model
             if (RelationalPackage.eNS_URI.equals(metamodelUri) || WebServicePackage.eNS_URI.equals(metamodelUri)
-                || XmlDocumentPackage.eNS_URI.equals(metamodelUri)) {
+                || XmlDocumentPackage.eNS_URI.equals(metamodelUri) || FunctionPackage.eNS_URI.equals(metamodelUri)) {
                 return true;
             }
         }
