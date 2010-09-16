@@ -1086,11 +1086,7 @@ public class TransformationObjectEditorPage
             // Get valid status for the transformation
             boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
 
-            // Add check to prevent null UUID string when there is a valid string version
-            String uuidString = TransformationHelper.getUUIDSqlString(currentMappingRoot, cmdType);
-            if (uuidString == null && isValid) {
-                showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
-            }
+            showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
 
             // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
             // Go ahead and check the command regardless if it's resolved or not.
@@ -1117,7 +1113,6 @@ public class TransformationObjectEditorPage
             boolean isSelectCached = SqlMappingRootCache.containsStatus(currentMappingRoot, QueryValidator.SELECT_TRNS);
             SqlTransformationResult selectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
                                                                                                   QueryValidator.SELECT_TRNS,
-                                                                                                  SqlMappingRootCache.EITHER_STATUS,
                                                                                                   true,
                                                                                                   null);
             // Create an existing status to pass to the SQL Editor Panel to prevent re-validation of SQL if already validated
@@ -1127,7 +1122,6 @@ public class TransformationObjectEditorPage
             if (cmdType != QueryValidator.SELECT_TRNS) {
                 existingStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
                                                                                 cmdType,
-                                                                                SqlMappingRootCache.EITHER_STATUS,
                                                                                 true,
                                                                                 null);
             }

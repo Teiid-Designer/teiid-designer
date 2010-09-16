@@ -81,7 +81,7 @@ public class QueryReconcilerHelper  {
                 // If command is not resolved, attempt to resolve it.
                 if(!originalCommand.isResolved()) {
                     QueryValidator validator = new TransformationValidator(mappingRoot);
-                    QueryValidationResult result = validator.validateSql(originalCommand.toString(), QueryValidator.SELECT_TRNS, false, false);
+                    QueryValidationResult result = validator.validateSql(originalCommand.toString(), QueryValidator.SELECT_TRNS, false);
                     if(result.isResolvable()) {
                         originalCommand = result.getCommand();
                     }
@@ -269,7 +269,7 @@ public class QueryReconcilerHelper  {
         if(this.reconcilerObject.hasValidSqlModifications()) {
             String newSegmentSql = this.reconcilerObject.getModifiedSql();
             QueryValidator validator = new TransformationValidator(this.transMappingRoot);
-            QueryValidationResult result = validator.validateSql(newSegmentSql, QueryValidator.SELECT_TRNS, false, false);
+            QueryValidationResult result = validator.validateSql(newSegmentSql, QueryValidator.SELECT_TRNS, false);
             QueryCommand newSegmentCommand = null;
             if(result.isParsable()) {
                 newSegmentCommand = (QueryCommand)result.getCommand();

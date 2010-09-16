@@ -359,7 +359,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                             TransformationMappingHelper.reconcileMappingsOnSqlChange(root, this);
                             monitor.subTask(UiConstants.Util.getString(MONITOR_TASK_VALIDATING_SQL_KEY, tableName));
                             monitor.worked(3);
-                            validator.validateSql(nextRow.getSql(), QueryValidator.SELECT_TRNS, false, true);
+                            validator.validateSql(nextRow.getSql(), QueryValidator.SELECT_TRNS, true);
                             monitor.worked(4);
                         }
                             break;
@@ -371,7 +371,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                                                         this);
                             monitor.subTask(UiConstants.Util.getString(MONITOR_TASK_VALIDATING_SQL_KEY, tableName));
                             monitor.worked(5);
-                            validator.validateSql(nextRow.getSql(), QueryValidator.INSERT_TRNS, false, true);
+                            validator.validateSql(nextRow.getSql(), QueryValidator.INSERT_TRNS, true);
                             monitor.worked(5);
                         }
                             break;
@@ -383,7 +383,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                                                         this);
                             monitor.subTask(UiConstants.Util.getString(MONITOR_TASK_VALIDATING_SQL_KEY, tableName));
                             monitor.worked(5);
-                            validator.validateSql(nextRow.getSql(), QueryValidator.UPDATE_TRNS, false, true);
+                            validator.validateSql(nextRow.getSql(), QueryValidator.UPDATE_TRNS, true);
                             monitor.worked(5);
                         }
                             break;
@@ -395,7 +395,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                                                         this);
                             monitor.worked(5);
                             monitor.subTask(UiConstants.Util.getString(MONITOR_TASK_VALIDATING_SQL_KEY, tableName));
-                            validator.validateSql(nextRow.getSql(), QueryValidator.DELETE_TRNS, false, true);
+                            validator.validateSql(nextRow.getSql(), QueryValidator.DELETE_TRNS, true);
                             monitor.worked(5);
                         }
                             break;

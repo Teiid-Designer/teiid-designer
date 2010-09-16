@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -54,14 +55,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryParserException;
 import org.teiid.api.exception.query.QueryResolverException;
-import org.teiid.core.id.UUID;
+import org.teiid.core.TeiidComponentException;
+import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.resolver.util.ResolverVisitor;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
+
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.internal.mapping.factory.TreeMappingAdapter;
-import com.metamatrix.modeler.internal.transformation.util.SymbolUUIDMappingVisitor;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -78,13 +84,6 @@ import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.internal.ui.builder.CriteriaBuilder;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -950,24 +949,14 @@ public class ChoicePanel extends SashForm
             }
         }
         if (mc != null) {
-            final SymbolUUIDMappingVisitor visitor = new SymbolUUIDMappingVisitor();
             for (final Iterator iter = this.icoChoiceObject.getOrderedOptions().iterator(); iter.hasNext();) {
                 final Object option = iter.next();
                 final String criteriaText = this.icoChoiceObject.getCriteria(option);
                 if (criteriaText == null || criteriaText.trim().length() == 0) {
                     continue;
                 }
-                final Criteria criteria = getCriteria(mc, criteriaText);
-                if (criteriaText.indexOf(UUID.PROTOCOL) >= 0) {
-                    visitor.convertToUUID(false);
-                    DeepPreOrderNavigator.doVisit(criteria, visitor);
-                    this.icoChoiceObject.setSqlCriteria(option, criteria.toString());
-                } else {
-                    this.icoChoiceObject.setSqlCriteria(option, criteriaText);
-                    visitor.convertToUUID(true);
-                    DeepPreOrderNavigator.doVisit(criteria, visitor);
-                    this.icoChoiceObject.setCriteria(option, criteria.toString());
-                }
+                this.icoChoiceObject.setCriteria(option, criteriaText);
+                this.icoChoiceObject.setSqlCriteria(option, criteriaText);
             }
             // Refresh the already-displayed table.
             this.tvOptionTableViewer.refresh();
@@ -1053,10 +1042,10 @@ public class ChoicePanel extends SashForm
 
         icoChoiceObject.setSqlCriteria(oOption, sCriteria);
         if (criteria != null) {
-            final SymbolUUIDMappingVisitor visitor = new SymbolUUIDMappingVisitor();
-            visitor.convertToUUID(true);
-            DeepPreOrderNavigator.doVisit(criteria, visitor);
-            icoChoiceObject.setCriteria(oOption, criteria.toString());
+//            final SymbolUUIDMappingVisitor visitor = new SymbolUUIDMappingVisitor();
+//            visitor.convertToUUID(true);
+//            DeepPreOrderNavigator.doVisit(criteria, visitor);
+            icoChoiceObject.setCriteria(oOption,sCriteria);
         }
 
         tvOptionTableViewer.refresh();

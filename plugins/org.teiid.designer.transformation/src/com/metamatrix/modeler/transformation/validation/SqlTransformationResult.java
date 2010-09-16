@@ -31,7 +31,6 @@ public class SqlTransformationResult implements QueryValidationResult {
     private IStatus targetValidStatus = null;
     private String sqlString = null;
     private Command command = null;
-	private boolean isUUIDStatus;
     private Collection sourceGroups = Collections.EMPTY_LIST;
     private Map externalMetadataMap = null;
     private Collection<IStatus> statuses = null;
@@ -242,20 +241,6 @@ public class SqlTransformationResult implements QueryValidationResult {
     public String getSqlString( ) {
         return this.sqlString;
     }
-
-	/**
-	 * @return
-	 */
-	public boolean isUUIDStatus() {
-		return isUUIDStatus;
-	}
-
-	/**
-	 * @param b
-	 */
-	public void setUUIDStatus(boolean b) {
-		isUUIDStatus = b;
-	}
 	
     /** 
      * @see com.metamatrix.query.resolver.util.QueryValidationResult#getStatusList()

@@ -1486,7 +1486,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
                             String dirtysql = transOEP.getCurrentSqlEditor().getText(); // the Teditor page should be loaded in
                             // transOEP already
                             QueryValidator qv = new TransformationValidator((SqlTransformationMappingRoot)mappingRoot, false);
-                            QueryValidationResult qvr = qv.validateSql(dirtysql, QueryValidator.SELECT_TRNS, false, false);
+                            QueryValidationResult qvr = qv.validateSql(dirtysql, QueryValidator.SELECT_TRNS, false);
                             boolean dirtyValid = qvr.isParsable();
                             if (!dirtyValid) {
                                 // add a warning:

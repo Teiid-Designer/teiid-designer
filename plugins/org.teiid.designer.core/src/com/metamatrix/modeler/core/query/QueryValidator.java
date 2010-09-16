@@ -30,11 +30,10 @@ public interface QueryValidator {
      * {@link UNKNOWN_TRNS}, if this is a unknow transfor, the query will only be parsed.
      * @param sqlString The sqlString that needs to be validate
      * @param type The type of sql being passed in
-     * @param isUUIDSql Boolean to determine if this is a UUID sql string
      * @param cacheResult Boolean to determine if the result needs to be cached.
      * @return The ValidationResult.
      */
-    QueryValidationResult validateSql(String sqlString, int type, boolean isUUIDSql, boolean cacheResult);
+    QueryValidationResult validateSql(String sqlString, int type, boolean cacheResult);
     
     /**
      * The QueryMetadataInterface used to validate the sql.

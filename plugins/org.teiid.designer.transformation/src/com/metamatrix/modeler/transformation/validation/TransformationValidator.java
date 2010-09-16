@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,10 +23,7 @@ import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidRuntimeException;
-import org.teiid.designer.udf.UdfManager;
 import org.teiid.query.analysis.AnalysisRecord;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.metadata.BasicQueryMetadataWrapper;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.report.ReportItem;
@@ -35,6 +33,7 @@ import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorReport;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -182,7 +181,6 @@ public class TransformationValidator implements QueryValidator {
         // validate the select sql on the mapping root
         SqlTransformationResult selectStatus = SqlMappingRootCache.getSqlTransformationStatus(this.mappingRoot,
                                                                                               QueryValidator.SELECT_TRNS,
-                                                                                              SqlMappingRootCache.EITHER_STATUS,
                                                                                               restrictSearch,
                                                                                               this.validationContext);
         if (selectStatus != null) {
@@ -232,7 +230,6 @@ public class TransformationValidator implements QueryValidator {
             if (sqlTrans.isInsertAllowed()) {
                 transformResult.setInsertResult(SqlMappingRootCache.getSqlTransformationStatus(mappingRoot,
                                                                                                QueryValidator.INSERT_TRNS,
-                                                                                               SqlMappingRootCache.EITHER_STATUS,
                                                                                                restrictSearch,
                                                                                                this.validationContext));
                 transformResult.setInsertAllowed(true);
@@ -243,7 +240,6 @@ public class TransformationValidator implements QueryValidator {
             if (sqlTrans.isUpdateAllowed()) {
                 transformResult.setUpdateResult(SqlMappingRootCache.getSqlTransformationStatus(mappingRoot,
                                                                                                QueryValidator.UPDATE_TRNS,
-                                                                                               SqlMappingRootCache.EITHER_STATUS,
                                                                                                restrictSearch,
                                                                                                this.validationContext));
                 transformResult.setUpdateAllowed(true);
@@ -254,7 +250,6 @@ public class TransformationValidator implements QueryValidator {
             if (sqlTrans.isDeleteAllowed()) {
                 transformResult.setDeleteResult(SqlMappingRootCache.getSqlTransformationStatus(mappingRoot,
                                                                                                QueryValidator.DELETE_TRNS,
-                                                                                               SqlMappingRootCache.EITHER_STATUS,
                                                                                                restrictSearch,
                                                                                                this.validationContext));
                 transformResult.setDeleteAllowed(true);
@@ -278,7 +273,6 @@ public class TransformationValidator implements QueryValidator {
      */
     public QueryValidationResult validateSql( final String sql,
                                               final int transformType,
-                                              final boolean isUUIDSql,
                                               final boolean cacheResult ) {
         if (!isValidRoot()) {
             return null;
@@ -302,7 +296,6 @@ public class TransformationValidator implements QueryValidator {
         // set other info
         commandValidationResult.setSqlString(sql);
         commandValidationResult.setSourceGroups(this.mappingRoot.getInputs());
-        commandValidationResult.setUUIDStatus(isUUIDSql);
 
         // cache the result if needed
         if (cacheResult) {
@@ -414,12 +407,8 @@ public class TransformationValidator implements QueryValidator {
     }
 
     public QueryMetadataInterface getQueryMetadata() {
-        return new BasicQueryMetadataWrapper(getDirectQueryMetadata()) {
-            @Override
-            public FunctionLibrary getFunctionLibrary() {
-                return UdfManager.INSTANCE.getFunctionLibrary();
-            }
-        };
+        return getDirectQueryMetadata();
+
     }
 
     /**

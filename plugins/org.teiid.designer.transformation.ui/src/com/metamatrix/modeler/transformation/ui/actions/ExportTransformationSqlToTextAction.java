@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.util.SqlUtil;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -33,10 +35,8 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.transformation.util.SqlConstants;
-import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.query.ui.UiPlugin;
@@ -198,14 +198,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                  relativeTablePath = ModelerCore.getModelEditor().getModelRelativePath(table).toString();
                  
                  String userString = TransformationHelper.getSelectSqlString(obj);
-                 if( userString == null ) {
-                     String uuidString = TransformationHelper.getUUIDSqlString(obj, QueryValidator.SELECT_TRNS);
-                     if( uuidString != null ) {
-                         // Let's convert the string
-                         Collection eResources = getImportedResources(modelResource);
-                         userString = SqlConverter.convertUUIDsToFullNames(uuidString, eResources);
-                     }
-                 }
+
                  userString = SqlUtil.normalize(userString);
                  
                  if( userString != null && relativeTablePath != null ) {
@@ -222,14 +215,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                  if( tableSupportsUpdates ) {
                      if( TransformationHelper.supportsInsert((EObject)obj, null) ) {
                          userString = TransformationHelper.getInsertSqlString(obj);
-                         if( userString == null ) {
-                             String uuidString = TransformationHelper.getUUIDSqlString(obj, QueryValidator.INSERT_TRNS);
-                             if( uuidString != null ) {
-                                 // Let's convert the string
-                                 Collection eResources = getImportedResources(modelResource);
-                                 userString = SqlConverter.convertUUIDsToFullNames(uuidString, eResources);
-                             }
-                         }
+
                          userString = SqlUtil.normalize(userString);
                          if( userString != null && relativeTablePath != null ) {
                              rowString = createRowForFile(QueryValidator.INSERT_TRNS, relativeTablePath, userString);
@@ -242,14 +228,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                      }
                      if( TransformationHelper.supportsUpdate((EObject)obj, null) ) {
                          userString = TransformationHelper.getUpdateSqlString(obj);
-                         if( userString == null ) {
-                             String uuidString = TransformationHelper.getUUIDSqlString(obj, QueryValidator.UPDATE_TRNS);
-                             if( uuidString != null ) {
-                                 // Let's convert the string
-                                 Collection eResources = getImportedResources(modelResource);
-                                 userString = SqlConverter.convertUUIDsToFullNames(uuidString, eResources);
-                             }
-                         }
+
                          userString = SqlUtil.normalize(userString);
                          if( userString != null && relativeTablePath != null ) {
                              rowString = createRowForFile(QueryValidator.UPDATE_TRNS, relativeTablePath, userString);
@@ -262,14 +241,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
                      }
                      if( TransformationHelper.supportsDelete((EObject)obj, null) ) {
                          userString = TransformationHelper.getDeleteSqlString(obj);
-                         if( userString == null ) {
-                             String uuidString = TransformationHelper.getUUIDSqlString(obj, QueryValidator.DELETE_TRNS);
-                             if( uuidString != null ) {
-                                 // Let's convert the string
-                                 Collection eResources = getImportedResources(modelResource);
-                                 userString = SqlConverter.convertUUIDsToFullNames(uuidString, eResources);
-                             }
-                         }
+
                          userString = SqlUtil.normalize(userString);
                          if( userString != null && relativeTablePath != null ) {
                              rowString = createRowForFile(QueryValidator.DELETE_TRNS, relativeTablePath, userString);
@@ -291,11 +263,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
          
          return sb.toString();
      }
-     
-     private Collection getImportedResources(ModelResource modelResource) {
-         return ModelUtilities.getResourcesUsedBy(modelResource);
-     }
-     
+
      private String createRowForFile(int sqlType, String relativeTablePath, String theSql) {
          StringBuffer sb = new StringBuffer(relativeTablePath.length() + theSql.length() + 20);
          sb.append(relativeTablePath)
