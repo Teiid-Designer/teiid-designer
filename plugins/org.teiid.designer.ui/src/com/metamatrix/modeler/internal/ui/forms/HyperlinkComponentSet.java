@@ -20,7 +20,6 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
     private FormTextObjectEditor linker;
     private ComponentSetMonitor mon;
     private boolean modifyResource;
-    private boolean allowReadOnly;
 
     public HyperlinkComponentSet( String id,
                                   String text ) {
@@ -127,16 +126,7 @@ public class HyperlinkComponentSet extends SimpleComponentSet {
     @Override
     public void setEditible( boolean enabled ) {
         if (linker != null) {
-            // always stay enabled:
-        	if( this.allowReadOnly ) {
-        		linker.getFormText().setEnabled(enabled);
-        	} else {
-        		linker.getFormText().setEnabled(true);
-        	}
+        	linker.getFormText().setEnabled(true);
         } // endif
-    }
-    
-    public void setAllowReadOnly(boolean allow) {
-    	this.allowReadOnly = allow;
     }
 }

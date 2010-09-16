@@ -50,7 +50,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * The FacetModel is an insulating layer above metadata, and serves as the underlying model for the SDE View.
  */
-public class FacetModel implements ComponentSetMonitor {
+public class FacetModel implements ComponentSetMonitor{
 
     static final String TITLE_BASE_NOT_ALLOWED = GUIFacetHelper.getString("FacetModel.title_BaseNotAllowed"); //$NON-NLS-1$
     static final String DESC_BASE_NOT_ALLOWED_SAME = GUIFacetHelper.getString("FacetModel.desc_BaseNotAllowedSame"); //$NON-NLS-1$
@@ -385,6 +385,11 @@ public class FacetModel implements ComponentSetMonitor {
                             ModelObjectUtilities.setDescription(simpleType, (String)event.value, this);
 
                         } else if (GUIFacetHelper.FAKE_FACET_CREATE_SUBTYPE == id) { // -----------------------------
+                        	if( isReadOnly() ) {
+                        		MessageDialog.openConfirm(null, ModelerXsdUiConstants.Util.getString("FacetModel.read_only.title"),  //$NON-NLS-1$
+                        				ModelerXsdUiConstants.Util.getString("FacetModel.read_only.cannotCreateSubtypeMessage")); //$NON-NLS-1$
+                        		return null;
+                        	}
                             final XSDSimpleTypeDefinition newType = GUIFacetHelper.createType(schema, simpleType);
                             if (newType != null) {
                                 uow.setDescription(ModelerXsdUiConstants.Util.getString("FacetModel.transaction_create", newType.getName())); //$NON-NLS-1$
