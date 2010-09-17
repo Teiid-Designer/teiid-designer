@@ -62,6 +62,7 @@ Require-Bundle: org.eclipse.ui.views,
  org.teiid.designer.datatools,
  org.eclipse.datatools.sqltools.sqleditor,
  net.jcip.annotations,
- org.eclipse.datatools.sqltools.result.ui
+ org.eclipse.datatools.sqltools.result.ui,
+ org.teiid.designer.sdt;bundle-version="7.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
