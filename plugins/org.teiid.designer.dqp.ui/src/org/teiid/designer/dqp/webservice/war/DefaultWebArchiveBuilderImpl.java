@@ -682,11 +682,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 							File xsd = new File(iResource.getLocation()
 									.toOSString());
 							FileUtils.copy(xsd, classesFolder, true);
+							// Get handle to new file in classesFolder
+							File xsdCopy = new File(classesFolder.getPath()+"/"+iResource.getName()); //$NON-NLS-1$
 							// Replace the schemaLocation of the global data
 							// types schema import with the relative path to xsd
 							AntTasks
 									.replace(
-											xsd,
+											xsdCopy,
 											"schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
 											"schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
 						} else {
