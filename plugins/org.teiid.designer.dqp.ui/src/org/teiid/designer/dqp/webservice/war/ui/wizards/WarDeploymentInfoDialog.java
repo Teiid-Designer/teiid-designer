@@ -171,7 +171,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     	// TODO Auto-generated method stub
     	super.open();
     	
-    	return deploymentStatus.getCode();
+    	return deploymentStatus.getSeverity();
     }
 
     void execute( IProgressMonitor monitor ) {
