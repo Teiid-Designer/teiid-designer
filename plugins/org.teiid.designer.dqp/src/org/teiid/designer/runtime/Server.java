@@ -189,6 +189,9 @@ public class Server {
      * @return <code>true</code> if a connection to this server exists and is working
      */
     public boolean isConnected() {
+    	if( this.admin == null ) {
+    		return false;
+    	}
         return ping().isOK();
     }
 

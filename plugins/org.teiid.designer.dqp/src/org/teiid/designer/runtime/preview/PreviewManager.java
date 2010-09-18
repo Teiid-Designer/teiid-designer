@@ -1403,9 +1403,11 @@ public final class PreviewManager extends JobChangeAdapter
 
             // cleanup PVDs if necessary
             if ((getPreviewServer() != null)
-                && isPreviewEnabled()
+                && isPreviewEnabled() 
+                && getPreviewServer().isConnected()
                 && prefs.getBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
                                     PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT)) {
+
                 ExecutionAdmin admin = getPreviewServer().getAdmin();
                 Collection<Job> jobs = new ArrayList<Job>();
 
