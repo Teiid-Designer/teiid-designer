@@ -18,6 +18,7 @@ Require-Bundle: org.teiid.designer.core,
  org.eclipse.core.runtime,
  org.eclipse.emf.mapping,
  org.teiid.designer.metamodels.diagram,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.teiid.designer.metamodels.xml
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

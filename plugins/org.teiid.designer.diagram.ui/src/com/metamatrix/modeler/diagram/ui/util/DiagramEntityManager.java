@@ -168,6 +168,10 @@ public class DiagramEntityManager  {
 
     public static void cleanDiagramEntities(Diagram diagram) {
         String diagramUuid = getDiagramURI(diagram);
+        
+        if( diagramMap == null ) {
+        	return;
+        }
 
         HashMap dMap = (HashMap)diagramMap.get(diagramUuid);
         if( dMap != null ) {
@@ -185,6 +189,17 @@ public class DiagramEntityManager  {
                     EObject realEObject = ModelObjectUtilities.getRealEObject((EObject)someRef);
                     EObject resolvedEObject = getEObject(nextKey);
                     if( realEObject == null || resolvedEObject == null ) {
+                        dMap.remove(nextKey);
+                        if( debugPrint )
+                            System.out.println(" DEM.cleanDiagramEntities()  Removing Stale Entity From Map.  EObject = " + someRef); //$NON-NLS-1$
+                        deleteList.add(de);
+                        continue;
+                    }
+                    
+                    // One more check for FULL UUID's that could have changed via refactor/rename
+                    
+                    String currentUUID = ModelObjectUtilities.getFullUuid(realEObject);
+                    if( ! currentUUID.equals(nextKey) ) {
                         dMap.remove(nextKey);
                         if( debugPrint )
                             System.out.println(" DEM.cleanDiagramEntities()  Removing Stale Entity From Map.  EObject = " + someRef); //$NON-NLS-1$
