@@ -221,10 +221,10 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                 // tell the subclass to modify the resource
                 result = modifyResource(this.getResource(), monitor);
 
-//                if (result == null || result.getSeverity() < IStatus.ERROR) {
-//                	final Map refactoredPaths = getMovedResourcePathMap(false);
-//                	result = refactorModelContents(monitor, refactoredPaths);
-//                }
+                if (result == null || result.getSeverity() < IStatus.ERROR) {
+                	final Map refactoredPaths = getMovedResourcePathMap(false);
+                	result = refactorModelContents(monitor, refactoredPaths);
+                }
                 
                 // if modification succeeded, refactor the dependent files
                 if (result == null || result.getSeverity() < IStatus.ERROR) {
