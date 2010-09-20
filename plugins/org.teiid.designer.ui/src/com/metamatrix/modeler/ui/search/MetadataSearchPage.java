@@ -1243,6 +1243,16 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         }
     }
 
+    @Override
+    public void setVisible( boolean visible ) {
+        // make sure "Search" button is enabled correctly
+        if (visible) {
+            updateSearchState();
+        }
+
+        super.setVisible(visible);
+    }
+    
     private void updatePropertyCriteria() {
         if (this.chkIncludeProperty.getSelection() && this.chkIncludeProperty.getEnabled()) {
             String pattern = this.cbxTextPattern.getText().trim();
