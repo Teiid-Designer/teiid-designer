@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.rules.CoreValidationRulesUtil;
@@ -267,8 +269,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
         return new MultiStatus(PID, REBUILD_IMPORTS_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
     }    
         
-    
-    /**
+	/**
      * Determine the path for the target resource if the name were to change to the proposed name.
      * Takes into account the extension, if a file and the extension exists.
      * @param proposedName
@@ -402,9 +403,6 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
      */
     @Override
     protected Map getMovedResourcePathMap(boolean isUndo) {
-        if ( isUndo ) {
-            return this.undoMap;
-        }
         return this.pathMap;
     }
 

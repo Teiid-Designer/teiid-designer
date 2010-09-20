@@ -24,6 +24,8 @@
    <extension-point id="resourceIndexer" name="%extension-point.name.12"/>
    <extension-point id="invocationFactoryHelper" name="%extension-point.name.13"/>
    <extension-point id="referenceUpdator" name="%extension-point.name.14"/>
+   <extension-point id="refactorModelHandler" name="%modelRefactorHandler" schema="schema/modelRefactorHandler.exsd"/>
+   
 
 <!-- MetamodelAspect extension points -->
    <extension-point id="umlDiagramAspect" name="%extension-point.name.15"/>
