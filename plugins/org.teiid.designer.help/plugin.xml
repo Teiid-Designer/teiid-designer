@@ -27,10 +27,4 @@
       <toc file="QuerySupportRef.xml"/>
    </extension>
 
-    <extension point="org.eclipse.ui.intro.configExtension">
-        <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="$nl$/intro/samplesExtensionContent.xml"/>
-    </extension>
-
 </plugin>
