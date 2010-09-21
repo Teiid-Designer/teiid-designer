@@ -6,19 +6,14 @@ Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.teiid.designer.datatools.ui.DatatoolsUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- teiid_embedded_query,
+Require-Bundle: org.eclipse.core.runtime,
  org.teiid.core.designer,
  org.teiid.designer.datatools,
- org.eclipse.datatools.connectivity,
  org.teiid.designer.core,
  org.teiid.designer.ui,
  org.teiid.designer.ui.common,
  org.eclipse.core.resources,
- org.eclipse.datatools.connectivity.ui,
  org.eclipse.datatools.connectivity.ui.dse,
- org.eclipse.datatools.sqltools.sqleditor,
  org.eclipse.emf.edit.ui,
  org.eclipse.datatools.help
 Bundle-ActivationPolicy: lazy
