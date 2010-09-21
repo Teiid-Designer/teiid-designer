@@ -320,7 +320,7 @@ public class NewDataRoleWizard extends AbstractWizard {
         tree.setLinesVisible(true);
 
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText("columnLabel.model"); //$NON-NLS-1$
+        treeColumn.setText(getString("columnLabel.model")); //$NON-NLS-1$
 
         TreeViewerColumn treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.LEFT | SWT.CHECK);
         treeViewerColumn.getColumn().setText(getString("columnLabel.create")); //$NON-NLS-1$
