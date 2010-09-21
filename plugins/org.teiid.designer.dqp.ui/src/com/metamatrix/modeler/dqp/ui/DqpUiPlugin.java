@@ -196,11 +196,13 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
                 }
             };
 
-            // show dialog
-            try {
-                dialog.run(true, true, runnable);
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(e);
+            // show dialog if DqpPlugin is available to shutdown the server manager
+            if (DqpPlugin.getInstance() != null) {
+                try {
+                    dialog.run(true, true, runnable);
+                } catch (Exception e) {
+                    DqpUiConstants.UTIL.log(e);
+                }
             }
         } finally {
             super.stop(context);

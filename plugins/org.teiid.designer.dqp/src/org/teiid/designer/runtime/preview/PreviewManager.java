@@ -567,7 +567,6 @@ public final class PreviewManager extends JobChangeAdapter
             	String pwd = null;
     
             	// Check Password
-            	
             	if( requiresPassword ) {
             		// Check connection info provider. Property will be coming in with a key = "password
             		pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
@@ -809,8 +808,11 @@ public final class PreviewManager extends JobChangeAdapter
                     // these are the PVDBs that have associated models
                     statuses = this.deploymentStatusMap.get(project.getFullPath());
 
-                    // make copy in case another thread is updating
-                    if ((statuses != null) && !statuses.isEmpty()) {
+                    // make sure collection is not null
+                    if (statuses == null) {
+                        statuses = new ArrayList<PreviewVdbStatus>(0);
+                    } else if (!statuses.isEmpty()) {
+                        // make copy in case another thread is updating
                         statuses = new ArrayList<PreviewVdbStatus>(statuses);
                     }
                 } finally {
