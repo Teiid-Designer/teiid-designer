@@ -28,10 +28,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
+import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.rules.CoreValidationRulesUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 
 /**
@@ -338,6 +340,34 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
             super.addProblem( new Status(IStatus.ERROR, PID, EXCEPTION_DURING_RENAME, msg, e) );
         }
         
+    }
+    
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+        Collection errorList = new ArrayList();
+
+        final ModelEditor editor = ModelerCore.getModelEditor();
+        try {
+            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
+            if (modelResource != null) {
+                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+                    
+                modelResource.save(null, false);
+            }
+
+        } catch (ModelWorkspaceException e) {
+            final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Exception_finding_model_resource", this.getModifiedResource().getName()); //$NON-NLS-1$
+            errorList.add(new Status(IStatus.ERROR, PID, REFACTOR_MODIFIED_RESOURCE_ERROR, msg, e));
+        }
+        
+        // defect 16076 - display the correct text on completion, and display all errors
+        String msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_complete"); //$NON-NLS-1$
+        MultiStatus multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS),
+                                                  msg, null);
+        if (!multiStatus.isOK()) {
+            msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_error"); //$NON-NLS-1$
+            multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_ERROR, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
+        }
+        return multiStatus;
     }
 
     /* (non-Javadoc)

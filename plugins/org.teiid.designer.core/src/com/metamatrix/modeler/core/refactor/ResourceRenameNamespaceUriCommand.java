@@ -238,6 +238,11 @@ public final class ResourceRenameNamespaceUriCommand extends ResourceRefactorCom
     protected int checkDependentResources(boolean theIsUndo) {
         return IStatus.OK;
     }
+    
+    @Override
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    	return null;
+    }
 
     /** 
      * @see com.metamatrix.modeler.core.refactor.ResourceRefactorCommand#redoResourceModification(org.eclipse.core.runtime.IProgressMonitor)

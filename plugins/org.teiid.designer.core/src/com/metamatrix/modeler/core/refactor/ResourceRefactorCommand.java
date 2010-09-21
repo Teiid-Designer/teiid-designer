@@ -457,33 +457,6 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     // return rv;
     // }
     
-    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
-        Collection errorList = new ArrayList();
-
-        final ModelEditor editor = ModelerCore.getModelEditor();
-        try {
-            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
-            if (modelResource != null) {
-                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
-                    
-                modelResource.save(null, false);
-            }
-
-        } catch (ModelWorkspaceException e) {
-            final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Exception_finding_model_resource", this.getModifiedResource().getName()); //$NON-NLS-1$
-            errorList.add(new Status(IStatus.ERROR, PID, REFACTOR_MODIFIED_RESOURCE_ERROR, msg, e));
-        }
-        
-        // defect 16076 - display the correct text on completion, and display all errors
-        String msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_complete"); //$NON-NLS-1$
-        MultiStatus multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS),
-                                                  msg, null);
-        if (!multiStatus.isOK()) {
-            msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_error"); //$NON-NLS-1$
-            multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_ERROR, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
-        }
-        return multiStatus;
-    }
     /**
      * Rebuilds the model import list and fixes broken references for all model files that use this command's resource.
      * 
@@ -512,7 +485,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
                             modelResource.save(null, false);
                             
-//                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
                             
                             modelResource.save(null, false);
                         } // endif -- readonly
@@ -760,6 +733,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @param monitor
      */
     abstract protected IStatus redoResourceModification( IProgressMonitor monitor );
+    
+    abstract protected IStatus refactorModelContents( IProgressMonitor monitor, Map refactoredPaths);
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.refactor.RefactorCommand#undo(org.eclipse.core.runtime.IProgressMonitor)
@@ -882,7 +857,6 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     }
 
     public List getReadOnlyDependentResources() {
-        // TODO: consider caching this value as long as the resource hasn't changed
         IResource res = getModifiedResource();
         if (res == null) {
             res = getResource();
