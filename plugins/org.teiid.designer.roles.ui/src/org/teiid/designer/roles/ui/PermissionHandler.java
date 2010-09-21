@@ -264,7 +264,7 @@ public class PermissionHandler {
 		
 		boolean isVirtualTable = TransformationHelper.isVirtualSqlTable(targetObj);
 
-		if (TransformationHelper.isSqlTable(targetObj)) {
+		if (TransformationHelper.isSqlTable(targetObj) && !TransformationHelper.isXmlDocument(targetObj)) {
             SqlTableAspect tableAspect = (SqlTableAspect)com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect((EObject)targetObj);
             if (tableAspect != null) {
                 if( isVirtualTable ) {

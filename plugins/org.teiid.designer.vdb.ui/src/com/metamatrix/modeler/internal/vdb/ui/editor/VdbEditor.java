@@ -82,6 +82,7 @@ import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
+import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
@@ -145,6 +146,8 @@ public final class VdbEditor extends EditorPart {
     static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
     static final String COPY_SUFFIX = i18n("cloneDataRoleAction.copySuffix"); //$NON-NLS-1$
     static final String CLONE_DATA_ROLE_LABEL = i18n("cloneDataRoleActionLabel"); //$NON-NLS-1$
+    
+    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     private static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
@@ -639,7 +642,9 @@ public final class VdbEditor extends EditorPart {
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                            	XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                            	WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -695,7 +700,9 @@ public final class VdbEditor extends EditorPart {
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                                	XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                                	WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
