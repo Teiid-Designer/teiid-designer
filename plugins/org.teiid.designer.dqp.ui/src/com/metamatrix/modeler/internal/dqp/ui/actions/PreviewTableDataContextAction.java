@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.TeiidTranslator;
@@ -293,7 +294,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
 
     			// This runnable executes the SQL and displays the results
 				// in the DTP 'SQL Results' view.
-				SimpleSQLResultRunnable runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
+				SimpleSQLResultRunnable runnable = new TeiidAdHocScriptRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config, null);
 				BusyIndicator.showWhile(null, runnable);
 				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
