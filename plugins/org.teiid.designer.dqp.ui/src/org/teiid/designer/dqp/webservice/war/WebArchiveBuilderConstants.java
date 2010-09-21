@@ -52,6 +52,21 @@ public class WebArchiveBuilderConstants {
     public static final String PROPERTY_JNDI_NAME = "jndiName"; //$NON-NLS-1$
 
     /**
+     * Property indicating the security type to use for the Teiid web service connection.
+     */
+    public static final String PROPERTY_SECURITY_TYPE = "securityType"; //$NON-NLS-1$
+
+    /**
+     * Property indicating the security realm to use for the Teiid web service connection.
+     */
+    public static final String PROPERTY_SECURITY_REALM = "securityRealm"; //$NON-NLS-1$
+    
+    /**
+     * Property indicating the security role to use for the Teiid web service connection.
+     */
+    public static final String PROPERTY_SECURITY_ROLE = "securityRole"; //$NON-NLS-1$
+    
+    /**
      * Property indicating the VDB file to include in the WAR file.
      */
     public static final String PROPERTY_VDB_FILE_NAME = "VdbFileName"; //$NON-NLS-1$

@@ -48,7 +48,7 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
     protected void validatePage() {
 
         boolean isValid = validateContext() && validatePort() && validateHost() && validateJNDI() && validateTNS()
-                          && validateWARFileFolder();
+                          && validateWARFileFolder() && validateSecurityRole() && validateSecurityRealm();
 
         if (!isValid) {
             setDialogMessage(status);
@@ -177,6 +177,56 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
 
         WarDataserviceModel.getInstance().setTns(text);
         this.settings.put(this.NAMESPACE, text);
+
+        return true;
+    }
+    
+    /**
+     * validate target security realm
+     * 
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRealm() {
+
+        String text = txfSecurityRealm.getText();
+        if (this.basicSecurityButton.getSelection()){
+        
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRealmMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityRealmDefault(text);
+        this.settings.put(this.SECURITY_REALM, text);
+
+        return true;
+    }
+    
+    /**
+     * validate target security role
+     * 
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRole() {
+
+        String text = txfSecurityRole.getText();
+        if (this.basicSecurityButton.getSelection()){
+        
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRoleMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityRoleDefault(text);
+        this.settings.put(this.SECURITY_ROLE, text);
 
         return true;
     }

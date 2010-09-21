@@ -6,6 +6,27 @@
 	<display-name>${warname}</display-name>
 
     ${servlets}
+    
+<!--<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>${warname}</web-resource-name>
+			<description>Protects all resources</description>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>		
+		<auth-constraint>
+			<role-name>${roleName}</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<role-name>${roleName}</role-name>
+	</security-role>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>${realmName}</realm-name>
+	</login-config>-->
+
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

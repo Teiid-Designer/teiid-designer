@@ -43,17 +43,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoPanel;
 
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.TempDirectory;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -266,6 +264,12 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 			monitor.subTask(TASK_COPYING_FILES);
 			// Copy the Web files.
 			getWebFiles(contextDirectory, webInfDirectory);
+			
+			if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)){
+				// Replace the variables in the jboss-web.xml file.
+				replaceJBossWebXmlVariables(webInfDirectoryName);
+			}
+			
 			// Replace the variables in the web.xml file.
 			replaceWebXmlVariables(webInfDirectoryName, properties, contextName);
 			// Replace the variables in the jbossws-cxf.xml file.
@@ -450,10 +454,43 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		File webXmlFile = new File(webInfDirectoryName + File.separator
 				+ "web.xml"); //$NON-NLS-1$
 
+		//Update for Basic Auth if HTTPBasic security is selected
+		if (properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.BASIC)){
+			String realm = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM);
+			String role = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE);
+			
+			AntTasks.replace(webXmlFile, "<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$
+			AntTasks.replace(webXmlFile, "${realmName}", realm); //$NON-NLS-1$
+			AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
+			AntTasks.replace(webXmlFile, "</login-config>-->", "</login-config>"); //$NON-NLS-1$
+		}else{
+			AntTasks.replace(webXmlFile, "<!--${basic_auth}-->", StringUtil.Constants.EMPTY_STRING); //$NON-NLS-1$
+		}
+		
+		
 		AntTasks.replace(webXmlFile, "${warname}", contextName); //$NON-NLS-1$
 		AntTasks.replace(webXmlFile,
 				"${servlets}", createServletTags(getPorts())); //$NON-NLS-1$
+	}
 
+	/**
+	 * Replace the variables in the web.xml file with their appropriate values.
+	 * 
+	 * @param webInfDirectoryName
+	 * @param properties
+	 * @param contextName
+	 * @since 7.1
+	 */
+	protected void replaceJBossWebXmlVariables(String webInfDirectoryName) {
+
+		// Replace variables in the jboss-web.xml file.
+		File jbossWebXmlFile = new File(webInfDirectoryName + File.separator
+				+ "jboss-web.xml"); //$NON-NLS-1$
+
+		AntTasks
+				.replace(
+						jbossWebXmlFile,
+						"<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", "<security-domain>java:/jaas/teiid-security</security-domain>"); //$NON-NLS-1$
 	}
 
 	/**
@@ -683,7 +720,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 									.toOSString());
 							FileUtils.copy(xsd, classesFolder, true);
 							// Get handle to new file in classesFolder
-							File xsdCopy = new File(classesFolder.getPath()+"/"+iResource.getName()); //$NON-NLS-1$
+							File xsdCopy = new File(classesFolder.getPath()
+									+ "/" + iResource.getName()); //$NON-NLS-1$
 							// Replace the schemaLocation of the global data
 							// types schema import with the relative path to xsd
 							AntTasks
@@ -836,7 +874,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		String implementor = "\n\t\timplementor=\"org.teiid.soap.provider."; //$NON-NLS-1$
 		String wsdlLocation = " \n\t\twsdlLocation=\"classpath:"; //$NON-NLS-1$
 		String namespace = " xmlns:s=\""; //$NON-NLS-1$
-		
+
 		for (String port : tags) {
 			endpointTags.append(startJaxwsEndpoint)
 					.append("\"").append(port).append("\"").append(serviceName); //$NON-NLS-1$ //$NON-NLS-2$

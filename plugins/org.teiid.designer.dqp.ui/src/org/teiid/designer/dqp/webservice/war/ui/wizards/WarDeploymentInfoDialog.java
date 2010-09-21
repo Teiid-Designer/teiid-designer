@@ -169,9 +169,13 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     @Override
     public int open() {
     	// TODO Auto-generated method stub
-    	super.open();
+    	int rc = super.open();
     	
-    	return deploymentStatus.getSeverity();
+    	if (rc != CANCEL){
+    		return deploymentStatus.getSeverity();
+    	}
+    	
+    	return rc;
     }
 
     void execute( IProgressMonitor monitor ) {
@@ -226,6 +230,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         loadPortDefault();
         loadTnsDefault();
         loadJndiNameDefault();
+        loadSecurityTypeDefault();
 
         WarDataserviceModel.getInstance().setVdbFile(theVdb);
         WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
@@ -306,6 +311,15 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         WarDataserviceModel.getInstance().setJndiNameDefault("java:teiidvdb");//$NON-NLS-1$
     }
 
+    /**
+     * set default jndiName, by default the jndiName is "java:teiidvdb".
+     * 
+     * @since 7.1.1
+     */
+    private void loadSecurityTypeDefault() {
+        WarDataserviceModel.getInstance().setSecurityTypeDefault("none");//$NON-NLS-1$
+    }
+    
     public void setWarFileName( String name ) {
         warFileName = name;
     }

@@ -106,10 +106,13 @@ public class GenerateWarAction extends Action implements ISelectionListener, Com
                                                   successMessage);
                 }
             });
-        }else{
+        }else { 
+        	if (rc!=Window.CANCEL) {
+        	  
         	   MessageDialog.openError(window.getShell(), DqpUiPlugin.UTIL.getString(I18N_PREFIX
                        + "creationFailedTitle"),//$NON-NLS-1$ 
                        dialog.getMessage());
+        	}
         }
         notifyResult(rc == Window.OK);
     }
@@ -126,6 +129,7 @@ public class GenerateWarAction extends Action implements ISelectionListener, Com
                     this.selectedVDB = (IFile)obj;
                     Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
                     Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
+                    wsModelResources = new ArrayList<ModelResource>();
                     for (VdbModelEntry vdbModelEntry : modelEntrySet) {
                         final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
                         if (ModelIdentifier.isWebServicesViewModel(modelResource)) {
