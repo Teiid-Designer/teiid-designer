@@ -32,3 +32,4 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.datatools.sqltools.core,
  org.eclipse.datatools.sqltools.sql.parser
 Bundle-Localization: plugin
+Export-Package: org.teiid.datatools.connectivity.ui
