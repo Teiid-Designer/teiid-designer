@@ -10,6 +10,7 @@ package com.metamatrix.metamodels.xsd.validator;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -18,7 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.TeiidRuntimeException;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
