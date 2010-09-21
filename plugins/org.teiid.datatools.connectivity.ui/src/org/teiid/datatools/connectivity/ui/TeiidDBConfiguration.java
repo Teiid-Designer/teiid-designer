@@ -1,6 +1,7 @@
 package org.teiid.datatools.connectivity.ui;
 
 import org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration;
+import org.eclipse.datatools.sqltools.core.services.ExecutionService;
 
 public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
 
@@ -34,5 +35,12 @@ public class TeiidDBConfiguration extends SQLDevToolsConfiguration {
     public String[] getAssociatedConnectionProfileType() {
         return new String[] {"org.teiid.datatools.connectivity.connectionProfile"}; //$NON-NLS-1$
     }
+    
+	/* (non-Javadoc)
+	 * @see org.eclipse.datatools.sqltools.core.SQLDevToolsConfiguration#getExecutionService()
+	 */
+	public ExecutionService getExecutionService() {
+		return new TeiidExcecutionService();
+	}
 
 }

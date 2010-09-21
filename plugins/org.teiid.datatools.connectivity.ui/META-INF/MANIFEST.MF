@@ -23,7 +23,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.navigator,
  org.eclipse.emf.ecore,
  org.eclipse.datatools.modelbase.sql,
- org.teiid.datatools.connectivity.model
+ org.teiid.datatools.connectivity.model,
+ org.eclipse.debug.core,
+ org.eclipse.datatools.sqltools.editor.core,
+ org.eclipse.datatools.sqltools.routineeditor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.datatools.sqltools.core,
