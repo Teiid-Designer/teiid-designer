@@ -60,22 +60,26 @@ public class TransformationRefactorModelHandler extends
 		try {
 			switch( type ) {
 				case IRefactorModelHandler.RENAME: {
-                    regenerateUserSql(modelResource, monitor, refactoredPaths);
+                    boolean sqlChanged = regenerateUserSql(modelResource, monitor, refactoredPaths);
                     
-                    // Send notification for transformation roots to invalidate any transformation cache
-                    final Resource resrc = modelResource.getEmfResource();
-                    if (resrc instanceof EmfResource) {
-                        final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
-                        for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
-                            final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
-                            final Notification notification = new ENotificationImpl(
-                                                                                    (InternalEObject)root,
-                                                                                    Notification.SET,
-                                                                                    TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
-                                                                                    refactoredPaths.keySet(),
-                                                                                    refactoredPaths.values());
-                            root.eNotify(notification);
-                        }
+                    if( sqlChanged ) {
+	                    // Send notification for transformation roots to invalidate any transformation cache
+	                    final Resource resrc = modelResource.getEmfResource();
+	                    if (resrc instanceof EmfResource) {
+	                        final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
+	                        for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
+	                            final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
+	                            if( root instanceof SqlTransformationMappingRoot ) {
+		                            final Notification notification = new ENotificationImpl(
+		                                                                                    (InternalEObject)root,
+		                                                                                    Notification.SET,
+		                                                                                    TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
+		                                                                                    refactoredPaths.keySet(),
+		                                                                                    refactoredPaths.values());
+		                            root.eNotify(notification);
+	                            }
+	                        }
+	                    }
                     }
 				}break;
 				case IRefactorModelHandler.DELETE: {
@@ -101,10 +105,13 @@ public class TransformationRefactorModelHandler extends
 		helpUpdateModelContents(type, modelResource, refactoredPaths, monitor);
 	}
 
-	protected void regenerateUserSql(ModelResource modelResource,
+	protected boolean regenerateUserSql(ModelResource modelResource,
 			IProgressMonitor monitor, Map refactoredPaths)
 			throws ModelWorkspaceException {
 		final Resource r = modelResource.getEmfResource();
+		
+		boolean sqlChanged = false;
+		
 		// If the model resource being represents a virtual model with
 		// transformations ...
 		if (r instanceof EmfResource
@@ -119,7 +126,7 @@ public class TransformationRefactorModelHandler extends
 				} catch (IOException e) {
 					TransformationPlugin.Util.log(IStatus.ERROR, e, e
 							.getLocalizedMessage());
-					return;
+					return false;
 				}
 			}
 
@@ -149,7 +156,10 @@ public class TransformationRefactorModelHandler extends
 						if (!CoreStringUtil.isEmpty(userFormSql)) {
 							convertedSql = refactorUserSql(userFormSql,
 									refactoredPaths);
-							nested.setSelectSql(convertedSql);
+							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
+								nested.setSelectSql(convertedSql);
+								sqlChanged = true;
+							}
 						}
 
 						// Convert insert SQL
@@ -157,7 +167,10 @@ public class TransformationRefactorModelHandler extends
 						if (!CoreStringUtil.isEmpty(userFormSql)) {
 							convertedSql = refactorUserSql(userFormSql,
 									refactoredPaths);
-							nested.setInsertSql(convertedSql);
+							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
+								nested.setInsertSql(convertedSql);
+								sqlChanged = true;
+							}
 						}
 
 						// Convert update SQL
@@ -165,7 +178,10 @@ public class TransformationRefactorModelHandler extends
 						if (!CoreStringUtil.isEmpty(userFormSql)) {
 							convertedSql = refactorUserSql(userFormSql,
 									refactoredPaths);
-							nested.setUpdateSql(convertedSql);
+							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
+								nested.setUpdateSql(convertedSql);
+								sqlChanged = true;
+							}
 						}
 
 						// Convert delete SQL
@@ -173,12 +189,17 @@ public class TransformationRefactorModelHandler extends
 						if (!CoreStringUtil.isEmpty(userFormSql)) {
 							convertedSql = refactorUserSql(userFormSql,
 									refactoredPaths);
-							nested.setDeleteSql(convertedSql);
+							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
+								nested.setDeleteSql(convertedSql);
+								sqlChanged = true;
+							}
 						}
 					}
 				}
 			}
 		}
+		
+		return sqlChanged;
 	}
 	
 }
