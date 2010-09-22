@@ -70,8 +70,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         monitor.subTask(Messages.ResultSupportRunnable_task_connection);
         if(_parentOperCommand == null)
         {
-    		//resultsViewAPI.createNewInstance(getOperationCommand(), getTerminateHandler());
-        	createTeiidResultInstance(getOperationCommand(), getTerminateHandler());
+    		resultsViewAPI.createNewInstance(getOperationCommand(), getTerminateHandler());
         }
         else
         {    
@@ -208,39 +207,6 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         return Status.OK_STATUS;
     }
     
-    public boolean createTeiidResultInstance(OperationCommand cmd, Runnable terminateHandler)
-    {
-    	IResultInstance instance = createTeiidResultInstance(cmd, terminateHandler, null);
-    	if(instance == null)
-    	{
-    		return false;
-    	}
-    	else
-    	{
-    		return true;
-    	}
-    }
-    
-    public IResultInstance createTeiidResultInstance(OperationCommand cmd, Runnable terminateHandler, IResultInstance parentInstance)
-    {
-        // check if the OperationCommand instance is valid
-        if (cmd == null || cmd.getDisplayString() == null)
-        {
-            return null;
-        }
-
-        //this instance may exist
-        IResultManager resultManager = ResultsViewAPI.getInstance().getResultManager();
-        IResultInstance instance = ResultsViewAPI.getInstance().getResultInstance(cmd);
-        if (instance == null)
-        {
-        	instance = new TeiidResultInstance(resultManager, cmd, terminateHandler, parentInstance);
-       		resultManager.fireAdded(instance);
-        }
-
-        return instance;
-    }
-
     private class MonitorRunnable implements Runnable
     {
         // Flag expresses whether this thread should be end.
