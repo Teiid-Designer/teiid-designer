@@ -22,8 +22,9 @@ public class ServerUtils {
     /**
      * 
      */
-    public static final String FORMAT_SERVER = "mm://<hostname>:<port1>[,<hostname>:<port1>]"; //$NON-NLS-1$
+    public static final String FORMAT_SERVER = "mm[s]://<hostname>:<port>"; //$NON-NLS-1$
     public static final String DEFAULT_SERVER = "mm://localhost:31443"; //$NON-NLS-1$
+    public static final String DEFAULT_SECURE_SERVER = "mms://localhost:31443"; //$NON-NLS-1$
 
     public static final String MM_PREFIX = "mm://"; //$NON-NLS-1$
     public static final String MMS_PREFIX = "mms://"; //$NON-NLS-1$

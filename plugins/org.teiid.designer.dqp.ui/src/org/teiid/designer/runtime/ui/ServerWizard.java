@@ -8,12 +8,14 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -117,6 +119,16 @@ public final class ServerWizard extends Wizard {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverWizardNewServerErrorMsg")); //$NON-NLS-1$
             }
+        }
+        
+        if( this.page.shouldAutoConnect() ) {
+        	try {
+				server.getAdmin();
+			} catch (Exception e) {
+				status = new Status(IStatus.ERROR, 
+						DqpUiConstants.PLUGIN_ID, 
+						UTIL.getString("serverWizardNewServerAutoConnectError"), e); //$NON-NLS-1$
+			}
         }
 
         // log if necessary

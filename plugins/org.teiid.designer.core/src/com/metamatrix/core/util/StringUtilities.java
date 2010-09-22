@@ -25,6 +25,11 @@ public class StringUtilities {
      * An empty string.
      */
     public static String EMPTY_STRING = ""; //$NON-NLS-1$
+    
+    /**
+     * A space.
+     */
+    public static String SPACE = " "; //$NON-NLS-1$
 
     /**
      * The String "\n"

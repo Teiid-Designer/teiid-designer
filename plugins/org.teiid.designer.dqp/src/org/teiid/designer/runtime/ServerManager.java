@@ -249,13 +249,14 @@ public final class ServerManager implements EventManager {
     private IStatus internalAddServer( Server server,
                                        boolean notifyListeners ) {
         boolean added = false;
+        Server defaultServer = null;
 
         try {
             this.serverLock.writeLock().lock();
 
             if (!isRegistered(server)) {
                 if (servers.isEmpty()) {
-                    setDefaultServer(server);
+                    defaultServer = server;
                 }
                 added = this.servers.add(server);
             }
@@ -267,7 +268,9 @@ public final class ServerManager implements EventManager {
             if (notifyListeners) {
                 notifyListeners(ExecutionConfigurationEvent.createAddServerEvent(server));
             }
-
+            if( defaultServer != null ) {
+            	setDefaultServer(defaultServer);
+            }
             return Status.OK_STATUS;
         }
 

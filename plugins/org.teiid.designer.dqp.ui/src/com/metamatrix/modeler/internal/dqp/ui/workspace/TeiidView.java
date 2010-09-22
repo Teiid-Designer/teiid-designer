@@ -271,11 +271,13 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             if (selectedObjs.size() == 1) {
                 Object selection = selectedObjs.get(0);
                 if (selection instanceof Server) {
-                    try {
-                        currentSelectedAdmin = ((Server)selection).getAdmin();
-                    } catch (Exception e) {
-                        // DO NOTHING
-                    }
+                	if( ((Server)selection).isConnected() ) {
+	                    try {
+	                        currentSelectedAdmin = ((Server)selection).getAdmin();
+	                    } catch (Exception e) {
+	                        // DO NOTHING
+	                    }
+                	}
                     manager.add(this.editServerAction);
                     manager.add(this.deleteServerAction);
                     if (this.setDefaultServerAction.isEnabled()) {
@@ -378,7 +380,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         menuMgr.add(this.showPreviewVdbsAction);
 
         // add the show translators action
-        this.showTranslatorsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showTranslatorsMenuItem"), SWT.TOGGLE) {
+        this.showTranslatorsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
                 treeProvider.setShowTranslators(!TeiidView.this.treeProvider.isShowingTranslators());
