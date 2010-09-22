@@ -534,14 +534,6 @@ public final class ModelerActionService extends AbstractActionService
                 }
             }
 
-            if (isActionSupported(ActionValues.ID_OPEN_ACTION) && (editMenu.find(ModelerGlobalActions.OPEN) == null)) {
-                editMenu.appendToGroup(openId, getAction(ModelerGlobalActions.OPEN));
-            }
-
-            if (isActionSupported(ActionValues.ID_EDIT_ACTION) && (editMenu.find(ModelerGlobalActions.EDIT) == null)) {
-                editMenu.appendToGroup(openId, getAction(ModelerGlobalActions.EDIT));
-            }
-
             if (editMenu.find(ModelerActionBarIdManager.getOpenGroupExtrasMarkerId()) == null) {
                 editMenu.appendToGroup(openId, new Separator(ModelerActionBarIdManager.getOpenGroupExtrasMarkerId()));
             }

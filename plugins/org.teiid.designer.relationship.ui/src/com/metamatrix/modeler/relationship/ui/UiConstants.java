@@ -64,7 +64,7 @@ public interface UiConstants {
         }
 
         interface SearchPage {
-            String ID = PLUGIN_ID + "RelationshipSearchPage"; //$NON-NLS-1$
+            String ID = "relationshipSearchPage"; //$NON-NLS-1$
         }
 
     }
