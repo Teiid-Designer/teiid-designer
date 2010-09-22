@@ -67,6 +67,16 @@ public class WebArchiveBuilderConstants {
     public static final String PROPERTY_SECURITY_ROLE = "securityRole"; //$NON-NLS-1$
     
     /**
+     * Property indicating the test security username to use for the Teiid web service connection when using WS-Security
+     */
+    public static final String PROPERTY_SECURITY_USERNAME = "securityUsername"; //$NON-NLS-1$
+    
+    /**
+     * Property indicating the test security password to use for the Teiid web service connection when using WS-Security
+     */
+    public static final String PROPERTY_SECURITY_PASSWORD = "securityPassword"; //$NON-NLS-1$
+    
+    /**
      * Property indicating the VDB file to include in the WAR file.
      */
     public static final String PROPERTY_VDB_FILE_NAME = "VdbFileName"; //$NON-NLS-1$

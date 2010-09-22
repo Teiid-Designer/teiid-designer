@@ -60,6 +60,8 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 	protected Text txfPort;
 	protected Text txfSecurityRealm;
 	protected Text txfSecurityRole;
+	protected Text txfSecurityUsername;
+	protected Text txfSecurityPassword;
 	public static final String NOSECURITY = getString("noSecurityButton"); //$NON-NLS-1$
 	public static final String BASIC = getString("basicButton"); //$NON-NLS-1$
 	public static final String WSSE = getString("wsSecurityButton"); //$NON-NLS-1$
@@ -79,6 +81,8 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 	protected String SECURITY_TYPE;
 	protected String SECURITY_REALM;
 	protected String SECURITY_ROLE;
+	protected String SECURITY_USERNAME;
+	protected String SECURITY_PASSWORD;
 	
 	/**
 	 * @param parent
@@ -152,6 +156,16 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 			text = (this.settings.get(SECURITY_ROLE) == null ? WarDataserviceModel
 					.getInstance().getSecurityRole() : this.settings.get(SECURITY_ROLE));
 			txfSecurityRole.setText(text);
+			
+			// Security Username
+			text = (this.settings.get(SECURITY_USERNAME) == null ? WarDataserviceModel
+					.getInstance().getSecurityUsername() : this.settings.get(SECURITY_USERNAME));
+			txfSecurityUsername.setText(text);
+			
+			// Security Password
+			text = (this.settings.get(SECURITY_PASSWORD) == null ? WarDataserviceModel
+					.getInstance().getSecurityPassword() : this.settings.get(SECURITY_PASSWORD));
+			txfSecurityPassword.setText(text);
 			
 			// Security type
 			text = (this.settings.get(SECURITY_TYPE) == null ? WarDataserviceModel
@@ -329,59 +343,83 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 					3, 3);
 			
 			// security realm Label
-			SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
+			this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
 			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_REALM);
 			
 			// security realm
-			txfSecurityRealm = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityRealm = WidgetFactory.createTextField(securityFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityRealmTooltip"); //$NON-NLS-1$;
-			txfSecurityRealm.setToolTipText(text);
-			txfSecurityRealm.setEnabled(false);
+			this.txfSecurityRealm.setToolTipText(text);
+			this.txfSecurityRealm.setEnabled(false);
 			
 			// security role Label
-			SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
+			this.SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
 			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_ROLE);
 			
 			// security role
-			txfSecurityRole = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityRole = WidgetFactory.createTextField(securityFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityRoleTooltip"); //$NON-NLS-1$;
-			txfSecurityRole.setToolTipText(text);
-			txfSecurityRole.setEnabled(false);
+			this.txfSecurityRole.setToolTipText(text);
+			this.txfSecurityRole.setEnabled(false);
+			
+			// security username Label
+			this.SECURITY_USERNAME = getString("securityUsernameLabel"); //$NON-NLS-1$       
+			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+					1, SECURITY_USERNAME);
+			
+			// security username
+			this.txfSecurityUsername = WidgetFactory.createTextField(securityFieldsGroup,
+					GridData.FILL_HORIZONTAL, 2);
+			text = getString("securityUsernameTooltip"); //$NON-NLS-1$;
+			this.txfSecurityUsername.setToolTipText(text);
+			this.txfSecurityUsername.setEnabled(false);
+			
+			// security password Label
+			this.SECURITY_PASSWORD = getString("securityPasswordLabel"); //$NON-NLS-1$       
+			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+					1, SECURITY_PASSWORD);
+			
+			// security password
+			this.txfSecurityPassword = WidgetFactory.createTextField(securityFieldsGroup,
+					GridData.FILL_HORIZONTAL, 2);
+			text = getString("securityPasswordTooltip"); //$NON-NLS-1$;
+			this.txfSecurityPassword.setToolTipText(text);
+			this.txfSecurityPassword.setEnabled(false);
 			
 		}
 		
 		// namespace Label
-		NAMESPACE = getString("namespaceLabel"); //$NON-NLS-1$       
+		this.NAMESPACE = getString("namespaceLabel"); //$NON-NLS-1$       
 		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, NAMESPACE);
+				1, this.NAMESPACE);
 
 		// namespace
-		txfNamespace = WidgetFactory.createTextField(pnlContents,
+		this.txfNamespace = WidgetFactory.createTextField(pnlContents,
 				GridData.FILL_HORIZONTAL, 2);
 		text = getString("namespaceTooltip"); //$NON-NLS-1$
-		txfNamespace.setToolTipText(text);
+		this.txfNamespace.setToolTipText(text);
 
 		// WAR file save location Label
-		WARFILELOCATION = getString("warFileSaveLocationLabel"); //$NON-NLS-1$       
+		this.WARFILELOCATION = getString("warFileSaveLocationLabel"); //$NON-NLS-1$       
 		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, WARFILELOCATION);
+				1, this.WARFILELOCATION);
 
 		// WAR file save location textfield
-		txfWarFileDeploymentLocation = WidgetFactory.createTextField(
+		this.txfWarFileDeploymentLocation = WidgetFactory.createTextField(
 				pnlContents, GridData.FILL_HORIZONTAL, 2);
 		text = getString("warFileSaveLocationTooltip"); //$NON-NLS-1$
-		txfWarFileDeploymentLocation.setToolTipText(text);
+		this.txfWarFileDeploymentLocation.setToolTipText(text);
 
 		// WAR folder browse button
-		warBrowseButton = WidgetFactory.createButton(pnlContents,
+		this.warBrowseButton = WidgetFactory.createButton(pnlContents,
 				InternalUiConstants.Widgets.BROWSE_BUTTON);
-		warBrowseButton.setText(getString("changeButtonText")); //$NON-NLS-1$
-		warBrowseButton.setToolTipText(text);
-		warBrowseButton.addSelectionListener(new SelectionAdapter() {
+		this.warBrowseButton.setText(getString("changeButtonText")); //$NON-NLS-1$
+		this.warBrowseButton.setToolTipText(text);
+		this.warBrowseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent theEvent) {
 				handleWarBrowseSourceSelected();
@@ -415,11 +453,11 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 
 		// Restore default button
 		String text = getString("restoreDefaultButtonText"); //$NON-NLS-1$ 
-		restoreDefaultButton = WidgetFactory.createButton(restoreDefault, text,
+		this.restoreDefaultButton = WidgetFactory.createButton(restoreDefault, text,
 				GridData.END);
 		text = getString("restoreDefaultTooltip"); //$NON-NLS-1$
-		restoreDefaultButton.setToolTipText(text);
-		restoreDefaultButton.addSelectionListener(new SelectionAdapter() {
+		this.restoreDefaultButton.setToolTipText(text);
+		this.restoreDefaultButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent event) {
 				restoreDefaultButtonPressed();
 			}
@@ -439,14 +477,16 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 			}
 		};
 
-		txfWarFileDeploymentLocation.addModifyListener(modifyListener);
-		txfContext.addModifyListener(modifyListener);
-		txfHost.addModifyListener(modifyListener);
-		txfPort.addModifyListener(modifyListener);
-		txfJNDIName.addModifyListener(modifyListener);
-		txfNamespace.addModifyListener(modifyListener);
-		txfSecurityRealm.addModifyListener(modifyListener);
-		txfSecurityRole.addModifyListener(modifyListener);
+		this.txfWarFileDeploymentLocation.addModifyListener(modifyListener);
+		this.txfContext.addModifyListener(modifyListener);
+		this.txfHost.addModifyListener(modifyListener);
+		this.txfPort.addModifyListener(modifyListener);
+		this.txfJNDIName.addModifyListener(modifyListener);
+		this.txfNamespace.addModifyListener(modifyListener);
+		this.txfSecurityRealm.addModifyListener(modifyListener);
+		this.txfSecurityRole.addModifyListener(modifyListener);
+		this.txfSecurityUsername.addModifyListener(modifyListener);
+		this.txfSecurityPassword.addModifyListener(modifyListener);
 	}
 
 	protected void setWarFileNameInDialog() {
@@ -459,22 +499,26 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 	 * @since 7.1
 	 */
 	private void restoreDefaultButtonPressed() {
-		txfWarFileDeploymentLocation.setText(WarDataserviceModel.getInstance()
+		this.txfWarFileDeploymentLocation.setText(WarDataserviceModel.getInstance()
 				.getWarFilenameDefault());
-		txfContext.setText(WarDataserviceModel.getInstance()
+		this.txfContext.setText(WarDataserviceModel.getInstance()
 				.getContextNameDefault());
-		txfHost.setText(WarDataserviceModel.getInstance().getHostNameDefault());
-		txfPort.setText(WarDataserviceModel.getInstance().getPortDefault());
-		txfNamespace.setText(WarDataserviceModel.getInstance().getTnsDefault());
-		txfJNDIName.setText(WarDataserviceModel.getInstance()
+		this.txfHost.setText(WarDataserviceModel.getInstance().getHostNameDefault());
+		this.txfPort.setText(WarDataserviceModel.getInstance().getPortDefault());
+		this.txfNamespace.setText(WarDataserviceModel.getInstance().getTnsDefault());
+		this.txfJNDIName.setText(WarDataserviceModel.getInstance()
 				.getJndiNameDefault());
-		noSecurityButton.setSelection(true);
-		basicSecurityButton.setSelection(false);
-		wsSecurityButton.setSelection(false);
-		txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
-		txfSecurityRealm.setEnabled(false);
-		txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
-		txfSecurityRole.setEnabled(false);
+		this.noSecurityButton.setSelection(true);
+		this.basicSecurityButton.setSelection(false);
+		this.wsSecurityButton.setSelection(false);
+		this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+		this.txfSecurityRealm.setEnabled(false);
+		this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+		this.txfSecurityRole.setEnabled(false);
+		this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+    	this.txfSecurityUsername.setEnabled(false);
+    	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+    	this.txfSecurityPassword.setEnabled(false);
 	}
 
 	void handleWarBrowseSourceSelected() {
@@ -500,6 +544,10 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
         	this.txfSecurityRealm.setEnabled(false);
         	this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
         	this.txfSecurityRole.setEnabled(false);
+        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityUsername.setEnabled(false);
+        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityPassword.setEnabled(false);
         }
     }
 	
@@ -515,6 +563,10 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
         	this.txfSecurityRole.setText("MyRole");
         	WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole");
         	this.txfSecurityRole.setEnabled(true);
+        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityUsername.setEnabled(false);
+        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityPassword.setEnabled(false);
         }
     }
 	
@@ -528,6 +580,10 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
         	this.txfSecurityRealm.setEnabled(false);
         	this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
         	this.txfSecurityRole.setEnabled(false);
+        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityUsername.setEnabled(true);
+        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+        	this.txfSecurityPassword.setEnabled(true);
         }
     }
 
