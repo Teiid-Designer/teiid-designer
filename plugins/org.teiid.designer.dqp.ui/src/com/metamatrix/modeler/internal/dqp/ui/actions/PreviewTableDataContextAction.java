@@ -184,6 +184,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         List<String> paramValues = null;
         final Shell shell = getShell();
         
+        boolean isXML = false;
+        
     	final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
 
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
@@ -234,6 +236,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			paramValues = Collections.emptyList();
     			sql = WebServiceUtil.getSql((Operation)selected, paramValues);
     		}
+    		isXML = true;
     	} else if (SqlAspectHelper.isProcedure(selected)) {
     		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(selected);
     		List<EObject> params = procAspect.getParameters(selected);
@@ -294,7 +297,13 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
 
     			// This runnable executes the SQL and displays the results
 				// in the DTP 'SQL Results' view.
-				SimpleSQLResultRunnable runnable = new TeiidAdHocScriptRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config, null);
+				SimpleSQLResultRunnable runnable = null;
+				
+				if( isXML ) {
+					runnable = new TeiidAdHocScriptRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config, null);
+				} else {
+					runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
+				}
 				BusyIndicator.showWhile(null, runnable);
 				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
