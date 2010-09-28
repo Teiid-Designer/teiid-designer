@@ -133,8 +133,12 @@ public final class PreviewManager extends JobChangeAdapter
                 name.append(segment).append(delim);
             }
         }
+        String prefix = name.toString();
+        if( prefix.contains(StringUtilities.SPACE) ) {
+        	prefix = prefix.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
 
-        return name.toString();
+        return prefix;
     }
 
     /**
@@ -144,8 +148,11 @@ public final class PreviewManager extends JobChangeAdapter
     public static String getPreviewProjectVdbName( IProject project ) {
         assert (project != null) : "Project is null"; //$NON-NLS-1$
         StringBuilder name = new StringBuilder(getPreviewVdbPrefix(project));
-        name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
-        return name.toString();
+        String vdbName = name.append(project.getName()).append(PROJECT_VDB_SUFFIX).toString();
+        if( vdbName.contains(StringUtilities.SPACE) ) {
+        	vdbName = vdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
+        return vdbName;
     }
 
     /**
@@ -667,13 +674,22 @@ public final class PreviewManager extends JobChangeAdapter
         int index = pvdbName.lastIndexOf('.');
 
         if (index == -1) return pvdbName;
-        return pvdbName.substring(0, index);
+        String jndiName = pvdbName.substring(0, index);
+        
+        if( jndiName.contains(StringUtilities.SPACE) ) {
+        	jndiName = jndiName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
+        return jndiName;
     }
 
     private String getResourceNameForPreviewVdb( IFile pvdbFile ) {
         // see if a project PVDB
         if (pvdbFile.getFullPath().removeFileExtension().lastSegment().endsWith(PROJECT_VDB_SUFFIX)) {
-            return pvdbFile.getProject().getName();
+        	String projectVdbName = pvdbFile.getProject().getName();
+            if( projectVdbName.contains(StringUtilities.SPACE) ) {
+            	projectVdbName = projectVdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+            }
+            return projectVdbName;
         }
 
         String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();

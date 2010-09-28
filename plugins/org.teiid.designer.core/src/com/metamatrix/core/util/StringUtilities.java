@@ -30,6 +30,11 @@ public class StringUtilities {
      * A space.
      */
     public static String SPACE = " "; //$NON-NLS-1$
+    
+    /**
+     * An underscore.
+     */
+    public static String UNDERSCORE = "_"; //$NON-NLS-1$
 
     /**
      * The String "\n"

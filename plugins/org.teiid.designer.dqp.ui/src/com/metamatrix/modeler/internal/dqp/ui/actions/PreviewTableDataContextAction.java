@@ -305,6 +305,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
 					runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
 				}
 				BusyIndicator.showWhile(null, runnable);
+				sqlConnection.close();
 				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
     			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
