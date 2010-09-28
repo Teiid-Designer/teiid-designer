@@ -1418,21 +1418,21 @@ public class TestRuntimeAdapter extends TestCase {
         try {
             RuntimeAdapter.splitWordEntry(null, new WordEntry("abcd".toCharArray()), 50); //$NON-NLS-1$
             fail("Did not throw expected MyExpectedException"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // do nothing � this is what was expected
         }
         
         try {
             RuntimeAdapter.splitWordEntry("", null, 50); //$NON-NLS-1$
             fail("Did not throw expected MyExpectedException"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // do nothing � this is what was expected
         }
         
         try {
             RuntimeAdapter.splitWordEntry("mmuuid:123", new WordEntry("abcd".toCharArray()), 2); //$NON-NLS-1$ //$NON-NLS-2$
             fail("Did not throw expected MyExpectedException"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // do nothing � this is what was expected
         }
     }

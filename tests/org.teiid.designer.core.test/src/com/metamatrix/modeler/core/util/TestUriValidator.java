@@ -387,7 +387,7 @@ public final class TestUriValidator extends TestCase
         try {
             UriValidator.isValidSegments(null);
             fail("AssertionException was not thrown for null segment array"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // pass
         }
     }
@@ -424,7 +424,7 @@ public final class TestUriValidator extends TestCase
         try {
             UriValidator.validateSegments(null);
             fail("AssertionException was not thrown for null segment array"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // pass
         }
     }

@@ -105,7 +105,7 @@ public class TestResourceDescriptorImpl extends TestCase {
         try {
             new ResourceDescriptorImpl(null);
             fail("Failed to catch null unique identifier"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // expected
         }
     }
@@ -114,7 +114,7 @@ public class TestResourceDescriptorImpl extends TestCase {
         try {
             new ResourceDescriptorImpl(""); //$NON-NLS-1$
             fail("Failed to catch null unique identifier"); //$NON-NLS-1$
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // expected
         }
     }

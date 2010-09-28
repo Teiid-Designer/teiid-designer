@@ -83,7 +83,7 @@ public class TestUnitOfWorkProviderImpl extends TestCase {
         // Verify that SimpleEmfUnitOfWorkProvider can not be created with NULL resource set
         try {
             helpCreateTransactionProvider(null);
-        } catch (AssertionError e) {
+        } catch (IllegalArgumentException e) {
             // This is good. PASS
             return;
         }

@@ -222,14 +222,6 @@ public class TestModelUtil extends TestCase {
         assertTrue(null == ModelFileUtil.getXmiHeader(f));
     }
 
-    public void testGetXmiHeaderWithVdbArchive() {
-        final File f = SmartTestSuite.getTestDataFile("PartSupplierVirtual.vdb"); //$NON-NLS-1$
-        final XMIHeader header = ModelFileUtil.getXmiHeader(f);
-        assertTrue(null != header);
-        assertTrue(header.getXmiVersion().startsWith("2.")); //$NON-NLS-1$
-        assertTrue(null != header.getUUID());
-    }
-
     public void testGetXmiHeaderWithXsdFile() {
         final File f = SmartTestSuite.getTestDataFile("Books.xsd"); //$NON-NLS-1$
         assertTrue(null != ModelFileUtil.getXmiHeader(f));

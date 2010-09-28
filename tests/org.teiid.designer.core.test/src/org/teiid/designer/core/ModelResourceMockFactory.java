@@ -21,6 +21,7 @@ import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.workspace.ModelObjectAnnotations;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
 
 public class ModelResourceMockFactory {
 	public static ModelResource createModelResource(final String name,
@@ -43,6 +44,8 @@ public class ModelResourceMockFactory {
 			throws ModelWorkspaceException {
 		final ModelResource modelResource = createModelResource(name,
 				parentPath);
+		final EmfResource emfResource = mock(EmfResource.class);
+		when(modelResource.getEmfResource()).thenReturn(emfResource);
 		ModelObjectAnnotations annotations = createAnnotations();
 		ModelAnnotation modelAnnotation = createModelAnnotation();
 		when(modelResource.getAnnotations()).thenReturn(annotations);
