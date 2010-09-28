@@ -65,8 +65,8 @@ public class NewDataRoleWizard extends AbstractWizard {
     private static final ImageDescriptor IMAGE = RolesUiPlugin.getInstance().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
     
     private static final String DEFAULT_NAME = "Data Role 1"; //getString("undefinedName"); //$NON-NLS-1$
+    private static final String SYS_ADMIN_TABLE_TARGET = "sysadmin"; //$NON-NLS-1$
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
-    private static final String PG_CATALOG_TARGET = "pg_catalog"; //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return RolesUiPlugin.UTIL.getString(I18N_PREFIX + id);
@@ -380,8 +380,8 @@ public class NewDataRoleWizard extends AbstractWizard {
     				perm.setPrimary(true);
     			}
     			this.permissionsMap.put(obj, perm);
-    		} else if (perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)
-                       || perm.getTargetName().equalsIgnoreCase(PG_CATALOG_TARGET)) {
+    		} else if (perm.getTargetName().equalsIgnoreCase(SYS_ADMIN_TABLE_TARGET) ||
+    				perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)) { // This is for backward compatability
                 allowSystemTables = true;
                 allowSystemTablesCheckBox.setSelection(allowSystemTables);
             }
@@ -434,8 +434,7 @@ public class NewDataRoleWizard extends AbstractWizard {
 	    	dataRole.setDescription(this.description);
 	    	dataRole.setPermissions(permissionsMap.values());
 	    	if (allowSystemTables) {
-                dataRole.addPermission(new Permission(SYS_TABLE_TARGET, false, true, false, false));
-                dataRole.addPermission(new Permission(PG_CATALOG_TARGET, false, true, false, false));
+                dataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET, false, true, false, false));
             }
 	    	if( !this.anyAuthentication && !mappedRoleNames.isEmpty() ) {
 	    		dataRole.setRoleNames(mappedRoleNames);
