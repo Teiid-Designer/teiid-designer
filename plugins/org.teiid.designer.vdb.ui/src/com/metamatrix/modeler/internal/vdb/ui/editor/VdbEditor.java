@@ -36,6 +36,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,6 +61,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
@@ -142,6 +144,8 @@ public final class VdbEditor extends EditorPart {
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
+    static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
+    
 
     static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
     static final String COPY_SUFFIX = i18n("cloneDataRoleAction.copySuffix"); //$NON-NLS-1$
@@ -166,6 +170,7 @@ public final class VdbEditor extends EditorPart {
     
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
+    VdbDataRoleResolver dataRoleResolver;
 
     /**
      * Method which adds models to the VDB.
@@ -266,7 +271,11 @@ public final class VdbEditor extends EditorPart {
             @Override
             public void setValue( final VdbEntry element,
                                   final Boolean value ) {
-                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE)) element.synchronize(new NullProgressMonitor());
+                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE))  {
+                	element.synchronize(new NullProgressMonitor());
+                	
+                	dataRoleResolver.modelSynchronized(element);
+                }
             }
         };
         final TextColumnProvider descriptionColumnProvider = new TextColumnProvider<VdbEntry>() {
@@ -459,6 +468,11 @@ public final class VdbEditor extends EditorPart {
                                                                                       wsFilter,
                                                                                       validator,
                                                                                       modelLabelProvider);
+                if( !vdb.getDataPolicyEntries().isEmpty() ) {
+                	MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+                			VdbEditor.CONFIRM_DIALOG_TITLE, INFORM_DATA_ROLES_ON_ADD_MESSAGE);
+                }
+                
                 for (final Object model : models)
                     vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
             }
@@ -496,6 +510,9 @@ public final class VdbEditor extends EditorPart {
                     })) return;
                     entries.addAll(importedBy);
                 }
+                
+                dataRoleResolver.modelEntriesRemoved(entries);
+                
                 for (final VdbEntry entry : entries)
                     vdb.removeEntry(entry);
             }
@@ -807,6 +824,8 @@ public final class VdbEditor extends EditorPart {
                 vdb.synchronize(new NullProgressMonitor());
                 modelsGroup.getTable().getViewer().refresh();
                 otherFilesGroup.getTable().getViewer().refresh();
+                
+                dataRoleResolver.allSynchronized();
             }
         });
         synchronizeAllButton.setEnabled(!vdb.isSynchronized());
@@ -894,6 +913,8 @@ public final class VdbEditor extends EditorPart {
         setSite(site);
         setInput(input);
         setPartName(file.getName());
+        
+        dataRoleResolver = new VdbDataRoleResolver(vdb);
     }
 
     /**
