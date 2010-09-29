@@ -195,8 +195,8 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 monitor.beginTask(DqpUiPlugin.UTIL.getString(CREATING_WAR_FILE_MESSAGE_ID, warFileName), 100);
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
-                DqpUiPlugin.UTIL.log(deploymentStatus.getMessage());
-                setMessage(deploymentStatus.getMessage(), InternalModelerWarUiConstants.ERROR); //$NON-NLS-1$
+                DqpUiPlugin.UTIL.log(deploymentStatus);
+                setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity()); //$NON-NLS-1$
                 
                 super.okPressed();
             }
