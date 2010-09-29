@@ -48,7 +48,7 @@
       <page
             class="org.teiid.designer.datatools.salesforce.ui.PropertyPage"
             id="org.teiid.designer.datatools.salesforce.ui.profileProperties"
-            name="Connection Properties">
+            name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.salesforce.connectionProfile"/>

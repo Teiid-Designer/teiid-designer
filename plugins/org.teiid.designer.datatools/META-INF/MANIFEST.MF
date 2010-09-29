@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.datatools;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.teiid.designer.datatools.DatatoolsPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.core.designer,
  org.eclipse.core.runtime.compatibility,

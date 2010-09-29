@@ -18,7 +18,7 @@
 		
       	  <menu
          	id="com.metamatrix.modeler.modelgenerator.xml.graph.action"
-         	label="Modeling"
+         	label="%menu.label"
          	path="additions">
          	<separator name="group1"/>
       	</menu>
@@ -27,7 +27,7 @@
                class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"
                enablesFor="1"
                id="com.metamatrix.modeler.modelgenerator.xml.action.ScalarToXMLGraph"
-               label="Create Scalar To XML Transformation"
+               label="%action.label"
                menubarPath="com.metamatrix.modeler.modelgenerator.xml.graph.action/group1">
                <enablement>
                <and>
@@ -39,7 +39,7 @@
                class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
                enablesFor="1"
                id="com.metamatrix.modeler.modelgenerator.xml.action.XMLToScalarGraph"
-               label="Create XML To Scalar Transformation"
+               label="%action.label.0"
                menubarPath="com.metamatrix.modeler.modelgenerator.xml.graph.action/group1">
                <enablement>
                <and>
@@ -54,7 +54,7 @@
 			targetID="org.eclipse.wst.xsd.ui.popup.outline">
 						<menu
          id="com.metamatrix.modeler.modelgenerator.xml.outline.action"
-         label="Modeling"
+         label="%menu.label.0"
          path="additions">
       <separator name="group1"/>
       </menu>
@@ -62,7 +62,7 @@
                class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"
                enablesFor="1"
                id="com.metamatrix.modeler.modelgenerator.xml.action.ScalarToXMLOutline"
-               label="Create Scalar To XML Transformation"
+               label="%action.label.1"
                menubarPath="com.metamatrix.modeler.modelgenerator.xml.outline.action/group1">
                <enablement>
                <and>
@@ -74,7 +74,7 @@
                class="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
                enablesFor="1"
                id="com.metamatrix.modeler.modelgenerator.xml.action.XMLToScalarOutline"
-               label="Create XML To Scalar Transformation"
+               label="%action.label.2"
                menubarPath="com.metamatrix.modeler.modelgenerator.xml.outline.action/group1">
                <enablement>
                <and>
@@ -86,7 +86,7 @@
 	</extension>
 	<extension
 		id="CreateXMLToScalarTransformation"
-		name="Create XML To Scalar Transformation"
+		name="%extension.name"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
          name="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementParseProcedure"
@@ -95,7 +95,7 @@
    </extension>
    <extension
 		id="CreateScalarToXMLTransformation"
-		name="Create Scalar To XML Transformation"
+		name="%extension.name.0"
         point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
          name="com.metamatrix.modeler.modelgenerator.xml.action.CreateXSDElementCreateProcedure"

@@ -28,7 +28,7 @@
             class="org.teiid.designer.datatools.profiles.ldap.PropertyPage"
             icon="icons/full/obj16/connectionFolder.gif"
             id="org.teiid.designer.datatools.profiles.ldap.profileProperties"
-            name="Connection Properties">
+            name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
@@ -52,7 +52,7 @@
             class="org.teiid.designer.datatools.profiles.modeshape.ModeShapePropertyPage"
             icon="icons/modeshape_icon_16px.png"
             id="org.teiid.designer.datatools.profiles.modeshape.profileProperties"
-            name="Connection Properties">
+            name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>

@@ -8,7 +8,7 @@ public class ModeShapeJdbcUrl {
 
     private String protocol = ""; //$NON-NLS-1$
 
-	private String path = "";
+	private String path = ""; //$NON-NLS-1$
 
     /**
      * @param url

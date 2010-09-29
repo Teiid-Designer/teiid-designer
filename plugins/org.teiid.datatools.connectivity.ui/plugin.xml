@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <plugin>
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
@@ -17,7 +24,7 @@
       <page
             class="org.teiid.datatools.connectivity.ui.TeiidPropertyPage"
             id="org.teiid.datatools.connectivity.ui.profileProperties"
-            name="Driver Properties">
+            name="%driverProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.datatools.connectivity.connectionProfile"/>
@@ -94,7 +101,7 @@
             contentProvider="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
             id="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
             labelProvider="org.teiid.datatools.connectivity.dse.provider.TeiidLableProvider"
-            name="Teiid SQL Model Content Extension"
+            name="%teiidModelContent.name"
             priority="highest">
          <enablement>
             <or>

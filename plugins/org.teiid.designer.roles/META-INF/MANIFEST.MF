@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
 Bundle-SymbolicName: org.teiid.designer.roles
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.teiid.designer.roles.RolesPlugin
@@ -10,4 +11,3 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.roles
-Bundle-Vendor: %providerName

@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.teiid.datatools.connectivity.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.teiid.datatools.connectivity.ui.Activator
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: %pluginProvider
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,

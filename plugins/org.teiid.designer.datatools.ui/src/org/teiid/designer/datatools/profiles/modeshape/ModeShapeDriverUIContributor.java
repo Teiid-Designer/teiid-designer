@@ -242,7 +242,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     }
 
     public void updateURL() {
-        String url = "jdbc:jcr:";
+        String url = "jdbc:jcr:"; //$NON-NLS-1$
         if (protocolCheck.getSelection()) {
             url += "https://"; //$NON-NLS-1$
         } else {
@@ -255,7 +255,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             url += ":" + portText.getText().trim(); //$NON-NLS-1$
         }
         if (pathText.getText().trim().length() > 0) {
-            url += pathText.getText().trim(); //$NON-NLS-1$
+            url += pathText.getText().trim();
         }
         urlText.setText(url);
     }
@@ -359,7 +359,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         if (password != null) {
             passwordText.setText(password);
         }
-        if (!(url.getProtocol().equals("https"))) {
+        if (!(url.getProtocol().equals("https"))) { //$NON-NLS-1$
             protocolCheck.setSelection(false);
         } else {
             protocolCheck.setSelection(true);

@@ -13,7 +13,7 @@
    <extension-point id="choiceObjectHandler" name="%choiceObjectHandlerName" schema="schema/choiceObjectHandler.exsd"/>
    <extension
 		id="MappingRefactorModelHandler"
-		name="MappingRefactorModelHandler"
+		name="%mappingRefactorModelExtension.name"
         point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler
          name="com.metamatrix.modeler.internal.mapping.factory.MappingRefactorModelHandler">

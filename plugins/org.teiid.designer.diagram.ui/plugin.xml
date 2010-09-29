@@ -183,7 +183,7 @@
    </extension>
    <extension
 		id="DiagramRefactorModelHandler"
-		name="DiagramRefactorModelHandler"
+		name="%diagramRefactorModelExtension.name"
         point="org.teiid.designer.core.refactorModelHandler">
       <refactorHandler
          name="com.metamatrix.modeler.diagram.ui.util.DiagramRefactorModelHandler">
