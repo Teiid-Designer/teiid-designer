@@ -34,23 +34,6 @@
         name="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidPerspectiveContributor">
       </class>
    </extension>
-
-   <extension
-         id="connectorBindingContentProvider"
-         name="Connector Binding Content Provider"
-         point="org.teiid.designer.ui.extendedModelContentProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelContentProvider">
-      </class>
-   </extension>
-   <extension
-         id="connectorBindingLabelProvider"
-         name="Connector Binding Label Provider"
-         point="org.teiid.designer.ui.extendedModelLabelProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelLabelProvider">
-      </class>
-   </extension>
    
 <!-- Preferences -->
   <extension
