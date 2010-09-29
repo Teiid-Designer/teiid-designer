@@ -473,11 +473,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 					.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE);
 
 			AntTasks.replace(webXmlFile,
-					"<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$
+					"<!--<security-constraint>", "\t<security-constraint>"); //$NON-NLS-1$ //$NON-NLS-2$
 			AntTasks.replace(webXmlFile, "${realmName}", realm); //$NON-NLS-1$
 			AntTasks.replace(webXmlFile, "${roleName}", role); //$NON-NLS-1$
 			AntTasks.replace(webXmlFile,
-					"</login-config>-->", "</login-config>"); //$NON-NLS-1$
+					"</login-config>-->", "</login-config>"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			AntTasks.replace(webXmlFile,
 					"<!--${basic_auth}-->", StringUtil.Constants.EMPTY_STRING); //$NON-NLS-1$
@@ -502,7 +502,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		File jbossWebXmlFile = new File(webInfDirectoryName + File.separator
 				+ "jboss-web.xml"); //$NON-NLS-1$
 		
-		String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>";
+		String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		AntTasks
 				.replace(
@@ -531,8 +531,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 						"${jaxws.endpoint}", createEndpointTags(properties, getPorts())); //$NON-NLS-1$
 
 		if (isWSSecurity(properties)) {
-			AntTasks.replace(jbossWSCxfXMLFile, "<!--<bean ", "<bean "); //$NON-NLS-1$
-			AntTasks.replace(jbossWSCxfXMLFile, "</bean>-->", "</bean>"); //$NON-NLS-1$
+			AntTasks.replace(jbossWSCxfXMLFile, "<!--<bean ", "<bean "); //$NON-NLS-1$ //$NON-NLS-2$
+			AntTasks.replace(jbossWSCxfXMLFile, "</bean>-->", "</bean>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 	}
@@ -932,8 +932,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		String implementor = "\n\t\timplementor=\"org.teiid.soap.provider."; //$NON-NLS-1$
 		String wsdlLocation = " \n\t\twsdlLocation=\"classpath:"; //$NON-NLS-1$
 		String namespace = " xmlns:s=\""; //$NON-NLS-1$
-		String wsseInterceptor1 = "\t\t<jaxws:inInterceptors>\n\t\t\t<ref bean=\"UsernameToken_Request\" />\n\t\t\t<bean ";
-		String wsseInterceptor2 = "class=\"org.apache.cxf.binding.soap.saaj.SAAJInInterceptor\" />\n\t\t</jaxws:inInterceptors>\n";
+		String wsseInterceptor1 = "\t\t<jaxws:inInterceptors>\n\t\t\t<ref bean=\"UsernameToken_Request\" />\n\t\t\t<bean "; //$NON-NLS-1$
+		String wsseInterceptor2 = "class=\"org.apache.cxf.binding.soap.saaj.SAAJInInterceptor\" />\n\t\t</jaxws:inInterceptors>\n"; //$NON-NLS-1$
 
 		for (String port : tags) {
 			endpointTags.append(startJaxwsEndpoint)
@@ -943,11 +943,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 					.append(implementor)
 					.append(port)
 					.append("\"").append(wsdlLocation).append(wsdlFilename).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
-			endpointTags.append(namespace).append(tns).append("\">\n");
+			endpointTags.append(namespace).append(tns).append("\">\n"); //$NON-NLS-1$
 			if (isWSSecurity(properties)) {
 				endpointTags.append(wsseInterceptor1).append(wsseInterceptor2);
 			}
-			endpointTags.append(endJaxwsEndpoint); //$NON-NLS-1$ //$NON-NLS-2$ 
+			endpointTags.append(endJaxwsEndpoint); 
 		}
 
 		return endpointTags.toString();

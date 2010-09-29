@@ -10,13 +10,12 @@ package com.metamatrix.core.util;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.teiid.core.CorePlugin;
 
-import com.metamatrix.core.TestCorePlugin;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**

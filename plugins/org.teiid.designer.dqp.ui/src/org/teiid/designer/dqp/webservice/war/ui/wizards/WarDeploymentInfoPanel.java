@@ -303,7 +303,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 		{
 			CLabel label3 = new CLabel(securityOptionsGroup, SWT.WRAP);
 			label3
-					.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property.");
+					.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property."); //$NON-NLS-1$
 			final GridData gridData3 = new GridData(GridData.FILL_HORIZONTAL);
 			gridData3.horizontalSpan = 1;
 			label3.setLayoutData(gridData3);
@@ -557,11 +557,11 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 	void basicSecurityButtonSelected() {
         if (this.basicSecurityButton.getSelection()) {
         	WarDataserviceModel.getInstance().setSecurityTypeDefault(BASIC);    
-        	this.txfSecurityRealm.setText("teiid-security");
-        	WarDataserviceModel.getInstance().setSecurityRealmDefault("teiid-security");
+        	this.txfSecurityRealm.setText("teiid-security"); //$NON-NLS-1$
+        	WarDataserviceModel.getInstance().setSecurityRealmDefault("teiid-security"); //$NON-NLS-1$
         	this.txfSecurityRealm.setEnabled(true);
-        	this.txfSecurityRole.setText("MyRole");
-        	WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole");
+        	this.txfSecurityRole.setText("MyRole"); //$NON-NLS-1$
+        	WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole"); //$NON-NLS-1$
         	this.txfSecurityRole.setEnabled(true);
         	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
         	this.txfSecurityUsername.setEnabled(false);

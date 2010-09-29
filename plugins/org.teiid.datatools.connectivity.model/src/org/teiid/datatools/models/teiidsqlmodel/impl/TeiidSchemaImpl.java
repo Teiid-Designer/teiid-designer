@@ -1,13 +1,15 @@
-/**
- * Teiid Designer (http://www.jboss.org/projects/teiiddesigner.html) is copyright 2000-2010 MetaMatrix, Inc. and Red Hat, Inc.  This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which is available at http://www.eclipse.org/legal/epl-v10.html.  Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
 package org.teiid.datatools.models.teiidsqlmodel.impl;
 
 import java.util.Collection;
 
 import org.eclipse.datatools.connectivity.sqm.core.rte.jdbc.JDBCSchema;
-import org.eclipse.datatools.modelbase.sql.schema.Dependency;
-import org.eclipse.datatools.modelbase.sql.schema.impl.SchemaImpl;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -15,7 +17,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.teiid.datatools.models.teiidsqlmodel.Document;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.teiid.datatools.models.teiidsqlmodel.TeiidSchema;
 import org.teiid.datatools.models.teiidsqlmodel.TeiidsqlmodelPackage;
 
@@ -38,7 +39,7 @@ public class TeiidSchemaImpl extends JDBCSchema implements TeiidSchema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final String copyright = "Teiid Designer (http://www.jboss.org/projects/teiiddesigner.html) is copyright 2000-2010 MetaMatrix, Inc. and Red Hat, Inc.  This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which is available at http://www.eclipse.org/legal/epl-v10.html.  Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.";
+	public static final String copyright = "Teiid Designer (http://www.jboss.org/projects/teiiddesigner.html) is copyright 2000-2010 MetaMatrix, Inc. and Red Hat, Inc.  This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which is available at http://www.eclipse.org/legal/epl-v10.html.  Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements."; //$NON-NLS-1$
 
 	/**
 	 * The cached value of the '{@link #getDocuments() <em>Documents</em>}' reference list.

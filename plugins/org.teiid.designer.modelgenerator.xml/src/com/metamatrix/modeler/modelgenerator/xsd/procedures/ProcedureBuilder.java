@@ -23,9 +23,7 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.Schema;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
@@ -35,7 +33,7 @@ public class ProcedureBuilder {
 
 	RelationalFactory factory = com.metamatrix.metamodels.relational.RelationalPackage.eINSTANCE
 	.getRelationalFactory();
-	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
+//	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
 	private Set<String> procedures = new HashSet<String>();
 	private Schema operationSchema;
 	private ITraversalCtxFactory traversalCtxFactory;

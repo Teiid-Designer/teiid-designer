@@ -30,7 +30,7 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 
 	private Procedure procedure;
 	private List<ProcedureParameter> cachedParams = new ArrayList();
-	private SqlTransformationMappingRoot transformation;
+	//private SqlTransformationMappingRoot transformation;
 	private ProcedureResult procedureResult;
 
 	public RequestBuilderTraversalContext(String procedureName, QName namespace,

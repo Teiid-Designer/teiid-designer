@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.sql;
 
 import java.lang.ref.SoftReference;
@@ -11,14 +18,14 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 
     private Boolean documentsLoaded = Boolean.FALSE;
     private final Object documents_LOCK = new Object();
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	private SoftReference documentLoaderRef;
 
     protected TeiidCatalogSchema() {
         super();
     }
 
-    @SuppressWarnings("rawtypes")
+    //@SuppressWarnings("rawtypes")
 	public EList getDocuments() {
     	synchronized (documents_LOCK) {
 			if (!documentsLoaded.booleanValue())

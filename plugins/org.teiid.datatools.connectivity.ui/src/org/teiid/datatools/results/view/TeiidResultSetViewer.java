@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.results.view;
 
 import org.eclipse.datatools.sqltools.result.IResultSetObject;
@@ -17,7 +24,7 @@ public class TeiidResultSetViewer extends ExternalResultSetViewer {
 		
 		super(parent, style, instance, result, showRowCount, resultsViewControl);
 		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
-		store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true");
+		store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 	} 
 	
     

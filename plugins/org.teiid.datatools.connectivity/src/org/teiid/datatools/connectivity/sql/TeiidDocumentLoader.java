@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.sql;
 
 import java.sql.PreparedStatement;
@@ -16,7 +23,7 @@ import org.teiid.datatools.models.teiidsqlmodel.Document;
 
 public class TeiidDocumentLoader extends JDBCBaseLoader {
 
-	private static final String DOCUMENT_NAME = "TABLE_NAME";
+	private static final String DOCUMENT_NAME = "TABLE_NAME"; //$NON-NLS-1$
 
 	public TeiidDocumentLoader(ICatalogObject catalogObject) {
 		super(catalogObject, null);

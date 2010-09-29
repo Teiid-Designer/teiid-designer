@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -30,6 +31,7 @@ import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDParser;
+
 import com.metamatrix.modeler.schema.tools.ToolsPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.Column;
 import com.metamatrix.modeler.schema.tools.model.schema.QName;
@@ -37,7 +39,6 @@ import com.metamatrix.modeler.schema.tools.model.schema.SchemaModel;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.AttributeColumn;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.ElementImpl;
-import com.metamatrix.modeler.schema.tools.model.schema.impl.IdColumn;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.SchemaModelImpl;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.TextColumn;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.TypeDefinition;

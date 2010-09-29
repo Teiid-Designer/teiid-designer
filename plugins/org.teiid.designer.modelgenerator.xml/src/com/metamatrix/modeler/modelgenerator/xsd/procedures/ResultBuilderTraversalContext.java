@@ -35,11 +35,11 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 	
 	private ProcedureResult result;
 	private Procedure procedure;
-	private SqlTransformationMappingRoot transformation;
+	//private SqlTransformationMappingRoot transformation;
 	private List<Column> cachedColumns = new ArrayList();
 	
-	public static final String EXTRACT = "extract_";
-	public static final String XML_IN = "xml_in";
+	public static final String EXTRACT = "extract_"; //$NON-NLS-1$
+	public static final String XML_IN = "xml_in"; //$NON-NLS-1$
 	
 	public ResultBuilderTraversalContext(String procedureName, QName namespace, TraversalContext ctx, ProcedureBuilder builder) {
 		super(procedureName, namespace, ctx, builder);

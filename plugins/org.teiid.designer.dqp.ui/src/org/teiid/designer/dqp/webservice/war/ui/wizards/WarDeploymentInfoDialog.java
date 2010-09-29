@@ -196,7 +196,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
                 DqpUiPlugin.UTIL.log(deploymentStatus);
-                setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity()); //$NON-NLS-1$
+                setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity());
                 
                 super.okPressed();
             }

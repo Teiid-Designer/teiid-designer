@@ -447,13 +447,13 @@ public class DdlImporter {
     }
 
     private void initialize( final RelationalEntity entity,
-                             final AstNode node ) throws CoreException {
+                             final AstNode node ) {
         initialize(entity, node, node.getName().getLocalName());
     }
 
     private void initialize( final RelationalEntity entity,
                              final AstNode node,
-                             final String name ) throws CoreException {
+                             final String name ) {
         entity.setName(name);
         entity.setNameInSource(name);
 

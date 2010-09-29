@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.ui;
 
 import java.io.BufferedReader;
@@ -27,9 +34,6 @@ import org.eclipse.datatools.sqltools.core.EditorCorePlugin;
 import org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker;
 import org.eclipse.datatools.sqltools.editor.core.result.Messages;
 import org.eclipse.datatools.sqltools.result.OperationCommand;
-import org.eclipse.datatools.sqltools.result.ResultsViewAPI;
-import org.eclipse.datatools.sqltools.result.internal.core.IResultManager;
-import org.eclipse.datatools.sqltools.result.model.IResultInstance;
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
@@ -301,7 +305,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                         	
                         	Reader reader = xml.getCharacterStream();
                         	BufferedReader bReader = new BufferedReader(reader);
-                        	char[] cbuf = new char[65536];
+//                        	char[] cbuf = new char[65536];
 
                         	StringBuffer stringbuf = new StringBuffer();
                         	char[] ch = new char[1];
