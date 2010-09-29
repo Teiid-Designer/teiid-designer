@@ -73,7 +73,6 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.TransactionRunnable;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
@@ -1335,19 +1334,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // If the type is NUMERIC and precision is non-zero, then look at the length of the column ...
         // (assume zero length means the length isn't known)
         EObject result = null;
-        if (precision != 0 && (jdbcType == Types.NUMERIC || jdbcType == Types.DECIMAL)) {
-            result = findType(precision, scale, problems);
-        }
-        if (result != null) {
-            return result;
-        }
 
         // If the type corresponds to a string ...
         // Defect 15386 - Removed the length > 1 check on the Types.CHAR JDBC type
         // The CHAR runtime type is now deprecated, and thus we import JDBC chars of
         // length 1 as strings
-        if ((jdbcType == Types.CHAR) || jdbcType == Types.VARCHAR || jdbcType == Types.LONGVARCHAR || jdbcType == Types.CLOB
-            || RelationalTypeMapping.SQL_TYPE_NAMES.NCHAR.equals(typeName)) {
+        if (jdbcType == Types.CHAR || jdbcType == Types.VARCHAR || jdbcType == Types.LONGVARCHAR || jdbcType == Types.NCHAR
+            || jdbcType == Types.NVARCHAR || RelationalTypeMapping.SQL_TYPE_NAMES.NCHAR.equals(typeName)
+            || RelationalTypeMapping.SQL_TYPE_NAMES.NVARCHAR.equals(typeName)) {
             result = findType(RelationalTypeMapping.SQL_TYPE_NAMES.VARCHAR, problems);
         }
         if (result != null) {
@@ -1365,53 +1359,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
         // Still have found one, so look it up by name ...
         result = findType(typeName, problems);
-        return result;
-    }
-
-    /**
-     * Find a (numeric) type by precision and scale
-     * 
-     * @param precision the precision of the type
-     * @param scale the scale of the type
-     * @param problems the list if {@link IStatus} into which problems and warnings are to be placed; never null
-     * @return the datatype that is able to represent data with the supplied criteria, or null if no datatype could be found
-     */
-    protected EObject findType( final int precision,
-                                final int scale,
-                                final List problems ) {
-        // If the type is NUMERIC and precision is non-zero, then look at the length of the column ...
-        // (assume zero length means the length isn't known)
-        EObject result = null;
-        if (scale <= 0) {
-            // The scale is 0 or negative (pads zeros at the end of the number).
-            int numDigits = precision - scale;
-
-            // Do this from the least to the greatest, so that we pick the smallest feasible type
-            // But note that because these are by number of digits, the smallest type is always
-            // one digit less than the number of significant digits. For example, the number 65536
-            // is five digits, and short can store that number. But 65537 cannot be stored as a Java
-            // short; therefore, we can only be certain that any 4 digit number can be represented as
-            // a Java short; not all 5 digit numbers can be.
-            if (numDigits <= 4) {
-                // The built-in datatype of xs:short has a runtime type of java.lang.Short
-                // Range of values for java.lang.Short is -32,768 (-2E+15) <= short <= +32,767 (2E+15 - 1)
-                result = findBuiltinType(DatatypeConstants.BuiltInNames.SHORT, problems);
-            } else if (numDigits <= 9) {
-                // The built-in datatype of xs:int has a runtime type of java.lang.Integer
-                // Range of values for java.lang.Integer is -2,147,483,648 (-2E+31) <= int <= +2,147,483,647 (2E+31 - 1)
-                result = findBuiltinType(DatatypeConstants.BuiltInNames.INT, problems);
-            } else if (numDigits <= 18) { // 2^64 = 1.84467E+19
-                // The built-in datatype of xs:long has a runtime type of java.lang.Long
-                // Range of values for java.lang.Long is (-2E+63) <= long <= (2E+63 - 1)
-                result = findBuiltinType(DatatypeConstants.BuiltInNames.LONG, problems);
-            } else {
-                // Range of values for java.lang.BigInteger is limitless
-                // The built-in datatypes of xs:biginteger or xs:integer have a runtime type of java.lang.BigInteger
-                result = findBuiltinType(DatatypeConstants.BuiltInNames.BIG_INTEGER, problems);
-            }
-        } else {
-            result = findBuiltinType(DatatypeConstants.BuiltInNames.BIG_DECIMAL, problems);
-        }
         return result;
     }
 
