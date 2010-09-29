@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,17 +22,20 @@ import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidRuntimeException;
+import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.analysis.AnalysisRecord;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.report.ReportItem;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorReport;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -44,6 +46,13 @@ import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.index.IndexSelector;
+import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlDatatypeAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.validation.ValidationContext;
@@ -464,7 +473,7 @@ public class TransformationValidator implements QueryValidator {
                         if (!(this.metadata instanceof VdbMetadata)
                             && ((this.metadata instanceof TransformationMetadataFacade) && !(((TransformationMetadataFacade)this.metadata).getDelegate() instanceof VdbMetadata))) {
                             throw new TeiidRuntimeException(
-                                                                 TransformationPlugin.Util.getString("TransformationValidator.QMI_of_unexpected_type")); //$NON-NLS-1$
+                                                            TransformationPlugin.Util.getString("TransformationValidator.QMI_of_unexpected_type")); //$NON-NLS-1$
                         }
                     } else {
                         // The TargetLocationIndexSelector will gather all index files under a specified directory location.
@@ -599,7 +608,52 @@ public class TransformationValidator implements QueryValidator {
             resolverResult.setResolvable(true);
         }
 
+        if (command instanceof CreateUpdateProcedureCommand
+            && ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
+            && !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
+            List<EObject> outputColumns = getOutputColumns(this.mappingRoot);
+            List<SingleElementSymbol> projectedSymbols = new ArrayList<SingleElementSymbol>(outputColumns.size());
+            for (EObject outputColumn : outputColumns) {
+                String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
+                SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
+                EObject datatype = columnAspect.getDatatype(outputColumn);
+                SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
+                Class<?> targetType = null;
+                if (typeAspect != null) {
+                    targetType = DataTypeManager.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
+                }
+                ElementSymbol column = new ElementSymbol(outputColumnName);
+                column.setType(targetType);
+                projectedSymbols.add(column);
+            }
+            ((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
+        }
+
         return resolverResult;
+    }
+
+    /**
+     * Get the output columns for the target of the given transformation mapping root.
+     * 
+     * @param transRoot The mappingroot objects wholse targets columns are returned
+     * @return The list of columns on the target.
+     * @since 4.3
+     */
+    public static List getOutputColumns( final SqlTransformationMappingRoot transRoot ) {
+        EObject target = transRoot.getTarget();
+        List outputColumns = null;
+        SqlAspect sqlAspect = AspectManager.getSqlAspect(target);
+        if (sqlAspect instanceof SqlTableAspect) {
+            outputColumns = ((SqlTableAspect)sqlAspect).getColumns(target);
+        } else if (sqlAspect instanceof SqlProcedureAspect) {
+            SqlProcedureAspect procAspect = (SqlProcedureAspect)sqlAspect;
+            EObject resultSet = (EObject)procAspect.getResult(target);
+            if (resultSet != null) {
+                SqlColumnSetAspect resultAspect = (SqlColumnSetAspect)AspectManager.getSqlAspect(resultSet);
+                outputColumns = resultAspect.getColumns(resultSet);
+            }
+        }
+        return outputColumns;
     }
 
     /**
