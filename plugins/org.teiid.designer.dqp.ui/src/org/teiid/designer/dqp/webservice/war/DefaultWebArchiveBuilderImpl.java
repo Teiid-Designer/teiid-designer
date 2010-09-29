@@ -274,7 +274,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 					WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(
 					WarDeploymentInfoPanel.BASIC)) {
 				// Replace the variables in the jboss-web.xml file.
-				replaceJBossWebXmlVariables(webInfDirectoryName);
+				replaceJBossWebXmlVariables(webInfDirectoryName, properties.getProperty(
+						WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
 			}
 
 			// Replace the variables in the web.xml file.
@@ -495,16 +496,18 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	 * @param contextName
 	 * @since 7.1
 	 */
-	protected void replaceJBossWebXmlVariables(String webInfDirectoryName) {
+	protected void replaceJBossWebXmlVariables(String webInfDirectoryName, String securityDomain) {
 
 		// Replace variables in the jboss-web.xml file.
 		File jbossWebXmlFile = new File(webInfDirectoryName + File.separator
 				+ "jboss-web.xml"); //$NON-NLS-1$
-
+		
+		String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>";
+		
 		AntTasks
 				.replace(
 						jbossWebXmlFile,
-						"<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", "<security-domain>java:/jaas/teiid-security</security-domain>"); //$NON-NLS-1$
+						"<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", securityDomainNode); //$NON-NLS-1$
 	}
 
 	/**
@@ -642,13 +645,12 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		StandardJavaFileManager fileManager = compilerTool
 				.getStandardFileManager(null, null, null);
 
-		List<File> sourcePath = Arrays.asList(webInfClassesDirectory);
-		// TODO get callback class to resolve WSPasswordCallback
-		String classpath = webInfLibDirectory.getCanonicalPath()
+		String pathToWSSEJar = webInfLibDirectory.getCanonicalPath()
 				+ File.separator + "wss4j.jar"; //$NON-NLS-1$
-		List<String> compilerOptions = Arrays.asList("-classpath", classpath); //$NON-NLS-1$
-
-		fileManager.setLocation(StandardLocation.SOURCE_PATH, sourcePath);
+	
+		File wsseJar = new File(pathToWSSEJar);
+		List<File> classPaths = Arrays.asList(wsseJar);
+		fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
 
 		// prepare the source files to compile
 		List<File> sourceFileList = new ArrayList<File>();
@@ -664,9 +666,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		Iterable<? extends JavaFileObject> compilationUnits = fileManager
 				.getJavaFileObjectsFromFiles(sourceFileList);
 		CompilationTask task = compilerTool.getTask(null, fileManager, null,
-				compilerOptions, null, compilationUnits);
+				null, null, compilationUnits);
 		task.call();
 		fileManager.close();
+		
+		//Cleanup wsse.jar. Only needed for dynamic compilation.
+		wsseJar.delete();
+		webInfLibDirectory.delete();
 	}
 
 	private boolean isWSSecurity(Properties properties) {
