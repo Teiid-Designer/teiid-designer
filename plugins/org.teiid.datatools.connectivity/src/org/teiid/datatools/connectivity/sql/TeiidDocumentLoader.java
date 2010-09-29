@@ -34,7 +34,7 @@ public class TeiidDocumentLoader extends JDBCBaseLoader {
 		super(catalogObject, connectionFilterProvider);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public void loadDocuments(List container, List existingDocuments) throws SQLException {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
@@ -66,7 +66,6 @@ public class TeiidDocumentLoader extends JDBCBaseLoader {
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public void clearDocuments(List documents) {
 		documents.clear();
 	}

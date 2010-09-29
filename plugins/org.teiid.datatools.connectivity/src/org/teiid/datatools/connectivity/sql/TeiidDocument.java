@@ -18,14 +18,13 @@ public class TeiidDocument extends DocumentImpl {
 
     private Boolean columnsLoaded = Boolean.FALSE;
     private final Object documentColumns_LOCK = new Object();
-	@SuppressWarnings("rawtypes")
+
 	private SoftReference documentColumnLoaderRef;
 
 	public TeiidDocument() {
 		super();
 	}
 	
-    @SuppressWarnings("rawtypes")
 	public EList getColumns() {
     	synchronized (documentColumns_LOCK) {
 			if (!columnsLoaded.booleanValue())
@@ -34,7 +33,6 @@ public class TeiidDocument extends DocumentImpl {
 		return super.getColumns();
     }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private final TeiidDocumentColumnLoader getDocumentColumnLoader() {
 		if (documentColumnLoaderRef == null || documentColumnLoaderRef.get() == null) {
 			documentColumnLoaderRef = new SoftReference(
@@ -43,7 +41,7 @@ public class TeiidDocument extends DocumentImpl {
 		return (TeiidDocumentColumnLoader) documentColumnLoaderRef.get();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private void loadColumns() {
 		synchronized (documentColumns_LOCK) {
 			boolean deliver = eDeliver();

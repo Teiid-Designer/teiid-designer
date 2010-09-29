@@ -9,7 +9,6 @@ import org.eclipse.datatools.connectivity.drivers.jdbc.JDBCConnection;
 
 public class ModeShapeJDBCConnection extends JDBCConnection {
 
-    @SuppressWarnings("rawtypes")
 	public ModeShapeJDBCConnection( IConnectionProfile profile,
                                 Class factoryClass ) {
         super(profile, factoryClass);

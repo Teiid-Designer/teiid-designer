@@ -374,7 +374,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         addListeners();
         setConnectionInformation();
     }
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
     public List getSummaryData() {
         List summaryData = new ArrayList();

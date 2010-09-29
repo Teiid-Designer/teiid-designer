@@ -46,7 +46,6 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 		super.refresh();
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected final TeiidDocumentLoader getDocumentLoader() {
 		if (documentLoaderRef == null || documentLoaderRef.get() == null) {
 			documentLoaderRef = new SoftReference(
@@ -55,7 +54,7 @@ public class TeiidCatalogSchema extends TeiidSchemaImpl {
 		return (TeiidDocumentLoader) documentLoaderRef.get();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private void loadDocuments() {
 		synchronized (documents_LOCK) {
 			boolean deliver = eDeliver();

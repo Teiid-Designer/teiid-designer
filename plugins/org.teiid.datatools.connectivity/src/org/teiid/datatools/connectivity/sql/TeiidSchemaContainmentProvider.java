@@ -26,7 +26,7 @@ public class TeiidSchemaContainmentProvider extends AbstractContainmentProvider 
 	 * AbstractContainmentProvider
 	 * #getContainedElements(org.eclipse.emf.ecore.EObject)
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public Collection getContainedElements(EObject obj) {
 		Collection children = super.getContainedElements(obj);
 		TeiidCatalogSchema schema = (TeiidCatalogSchema) obj;
