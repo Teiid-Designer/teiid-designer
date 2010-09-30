@@ -94,7 +94,7 @@
 			id="org.teiid.designer.ui.propertyTester"
 			type="java.lang.Object"
 			namespace="org.teiid.designer.ui"
-			properties="EDITABLE_OBJECT"
+			properties="CLONE_ALLOWED,EDITABLE_OBJECT,MODEL_PROJECT_OBJECT,PASTE_SPECIAL_ALLOWED,READONLY_MODEL_OBJECT,RENAME_ALLOWED"
 			class="com.metamatrix.modeler.internal.ui.actions.DesignerUiPropertyTester">
 		</propertyTester>
 	</extension>
@@ -108,6 +108,29 @@
 		<handler
 			class="com.metamatrix.modeler.internal.ui.actions.FindModelObjectHandler"
             commandId="com.metamatrix.modeler.ui.actions.findModelObjectCommand">
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.CloneHandler"
+            commandId="com.metamatrix.modeler.ui.actions.cloneCommand">
+			<enabledWhen>
+				<test property="org.teiid.designer.ui.CLONE_ALLOWED" value="true"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.PasteSpecialHandler"
+            commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<or>
+							<instanceof value="org.eclipse.emf.ecore.EObject"/>
+							<instanceof value="org.eclipse.core.resources.IFile"/>
+						</or>
+						<test property="org.teiid.designer.ui.PASTE_SPECIAL_ALLOWED" value="true"/>
+					</iterate>
+				</and>
+			</enabledWhen>
 		</handler>
 		<handler
 			class="com.metamatrix.modeler.internal.ui.actions.OpenHandler"
@@ -139,6 +162,19 @@
 				</and>
 			</enabledWhen>
 		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.RenameHandler"
+            commandId="com.metamatrix.modeler.ui.actions.renameCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+						<test property="org.teiid.designer.ui.RENAME_ALLOWED" value="true"/>
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
    </extension>
 
    <extension
@@ -160,6 +196,16 @@
 	  </command>
 	  <command
 			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.cloneCommand"
+			name="%cloneAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+			name="%pasteSpecialAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
 			id="com.metamatrix.modeler.ui.actions.openCommand"
 			name="%openAction.name">
 	  </command>
@@ -167,6 +213,12 @@
 			categoryId="com.metamatrix.modeler.ui.category.modeler"
 			id="com.metamatrix.modeler.ui.actions.editCommand"
 			name="%editAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.renameCommand"
+			name="%renameCommand.name"
+			description="%renameCommand.description"> 
 	  </command>
    </extension>
 
@@ -200,26 +252,112 @@
         		</command>
 			</menu>
 		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=paste">
+			<command commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+				label="%pasteSpecialAction.name"
+             	tooltip="%pasteSpecialAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+			<command commandId="com.metamatrix.modeler.ui.actions.cloneCommand"
+				label="%cloneAction.name"
+             	tooltip="%cloneAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+		</menuContribution>
 		<menuContribution locationURI="menu:edit?before=find.ext">
 			<command commandId="com.metamatrix.modeler.ui.actions.openCommand"
 				label="%openAction.name"
              	tooltip="%openAction.description">
-             	<visibleWhen
-                    checkEnabled="false">
-					<with variable="activeWorkbenchWindow.activePerspective">
-                 		<equals value="modelerPerspective"/>
-              		</with>
-             	</visibleWhen>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
     		</command>
 			<command commandId="com.metamatrix.modeler.ui.actions.editCommand"
 				label="%editAction.name"
              	tooltip="%editAction.description">
-             	<visibleWhen
-                    checkEnabled="false">
-					<with variable="activeWorkbenchWindow.activePerspective">
-                 		<equals value="modelerPerspective"/>
-              		</with>
-             	</visibleWhen>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?before=editStart">
+			<menu id="org.teiid.designer.ui.newChildMenu"
+                label="%newChildMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewChildMenu"
+                    id="com.metamatrix.modeler.ui.actions.newChildMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.newSiblingMenu"
+                label="%newSiblingMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewSiblingMenu"
+                    id="com.metamatrix.modeler.ui.actions.newSiblingMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.newAssociationMenu"
+                label="%newAssociationMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewAssociationMenu"
+                    id="com.metamatrix.modeler.ui.actions.newAssociationMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.modelingActionsMenu"
+                label="%modelingActionsMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.ModelingActionsMenu"
+                    id="com.metamatrix.modeler.ui.actions.modelingActionsMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+ 		    <separator name="internalDialogGroup" visible="true" />
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=delete">
+			<command commandId="com.metamatrix.modeler.ui.actions.renameCommand"
+				label="%renameCommand.name"
+             	tooltip="%renameCommand.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
     		</command>
 		</menuContribution>
 	</extension>

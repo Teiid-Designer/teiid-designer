@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.internal.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -21,9 +20,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -33,130 +29,151 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
  * The <code>PasteSpecialAction</code> class is the action that handles the global PasteSpecial.
+ * 
  * @since 4.0
  */
-public class PasteSpecialAction
-    extends ModelObjectAction
-    implements UiConstants.ExtensionPoints.MetadataPasteSpecialExtension {
+public class PasteSpecialAction extends ModelObjectAction implements UiConstants.ExtensionPoints.MetadataPasteSpecialExtension {
 
-    //============================================================================================================================
-    // Constants
+    private static List<IPasteSpecialContributor> extensionList;
 
-//    private static final String PROBLEM = "PasteSpecialAction.problem"; //$NON-NLS-1$
-//    private static final String UNDO_TEXT = "PasteSpecialAction.undoText"; //$NON-NLS-1$
-//    private static final String PLURAL_UNDO_TEXT = "PasteSpecialAction.pluralUndoText"; //$NON-NLS-1$
+    public static List<IPasteSpecialContributor> getPasteSpecialContributors() {
+        if (PasteSpecialAction.extensionList == null) {
+            PasteSpecialAction.extensionList = new ArrayList<IPasteSpecialContributor>();
 
-    //============================================================================================================================
-    // Fields
+            // get the ModelEditorPage extension point from the plugin class
+            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(UiConstants.PLUGIN_ID, ID);
 
-    /** The child type descriptor. */
-    private ModelResource modelResource;
-    private boolean editorIsOpening = false;
-    private EObject selectedEObject;
-    private ISelection tempSelection;
-    private List extensionList;
-    private List enabledExtensionList;
+            // get the all extensions to the ModelEditorPage extension point
+            IExtension[] extensions = extensionPoint.getExtensions();
 
-    //============================================================================================================================
-    // Constructors
+            // make executable extensions for every CLASSNAME
+            for (int i = extensions.length - 1; i >= 0; --i) {
+                IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+                Object extension = null;
 
-    public PasteSpecialAction() {
-        super(UiPlugin.getDefault());
-        buildExtensionList();
-    }
-
-    //============================================================================================================================
-    // Methods
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
-     */
-    @Override
-    public void selectionChanged(IWorkbenchPart thePart, ISelection theSelection) {
-        super.selectionChanged(thePart, theSelection);
-        determineEnablement(thePart, theSelection);
-    }
-
-    @Override
-    protected void doRun() {
-        if ( enabledExtensionList.size() == 1 ) {
-            ((IPasteSpecialContributor) enabledExtensionList.get(0)).run(this);
-        }
-        
-        //swjTODO; handle multiple enabled contributors
-    }
-
-    /**
-     * determine if there are any extensions that can handle the selection and, if so, enable. 
-     */
-    private void determineEnablement(IWorkbenchPart thePart, ISelection theSelection) {
-        boolean enable = false;
-        selectedEObject = null;
-        modelResource = null;
-        if ( extensionList != null && !extensionList.isEmpty() ) {
-            enabledExtensionList.clear();
-            if ( !isEmptySelection() && !isMultiSelection() ) {
-                Object o = SelectionUtilities.getSelectedObject(getSelection());
-                if ( o instanceof EObject ) {
-                    if ( isReadOnly() || canLegallyEditResource() ) {
-                        selectedEObject = (EObject) o;
-                    }
-                        
-                } else if ( (o instanceof IFile) && ModelUtilities.isModelFile((IFile) o)) {
+                for (int j = 0; j < elements.length; ++j) {
                     try {
-                        modelResource = ModelUtil.getModelResource((IFile) o, false);
-                    } catch (ModelWorkspaceException e) {
-                        UiConstants.Util.log(e);
-                    }
-                }
-                
-                // see if we have a valid selection before checking the contributors
-                if ( selectedEObject != null || modelResource != null ) {
+                        extension = elements[j].createExecutableExtension(CLASSNAME);
 
-                    // set the selection on the contributors build a list of the ones that can paste
-                    Iterator iter = extensionList.iterator();
-                    while (iter.hasNext()) {
-                        IPasteSpecialContributor action = (IPasteSpecialContributor)iter.next();
-                        action.selectionChanged(thePart, theSelection);
-                        if ( action.canPaste() ) {
-                            enable = true;
-                            enabledExtensionList.add(action);
+                        if (extension instanceof IPasteSpecialContributor) {
+                            IPasteSpecialContributor action = (IPasteSpecialContributor)extension;
+                            String label = elements[j].getAttribute(LABEL);
+                            String description = elements[j].getAttribute(UiConstants.ExtensionPoints.MetadataPasteSpecialExtension.DESCRIPTION);
+                            PasteSpecialAction.extensionList.add(new PasteSpecialDescriptor(action, label, description));
                         }
+                    } catch (Exception e) {
+                        // catch any Exception that occurs initializing the contributions so that
+                        // it can be removed and others function normally
+                        UiConstants.Util.log(IStatus.ERROR, e, e.getClass().getName());
                     }
                 }
             }
         }
-        
-        if (!enable) {
-            modelResource = null;
+
+        return PasteSpecialAction.extensionList;
+    }
+
+    private boolean editorIsOpening = false;
+    private List<IPasteSpecialContributor> enabledExtensionList;
+    private IFile modelFile;
+    private EObject selectedEObject;
+    private ISelection tempSelection;
+
+    public PasteSpecialAction() {
+        super(UiPlugin.getDefault());
+    }
+
+    /**
+     * determine if there are any extensions that can handle the selection and, if so, enable.
+     */
+    private void determineEnablement( IWorkbenchPart thePart,
+                                      ISelection theSelection ) {
+        boolean enable = false;
+        this.selectedEObject = null;
+        this.modelFile = null;
+
+        if (SelectionUtilities.isSingleSelection(theSelection) && !PasteSpecialAction.getPasteSpecialContributors().isEmpty()) {
+            this.enabledExtensionList = new ArrayList<IPasteSpecialContributor>();
+            Object o = SelectionUtilities.getSelectedObject(getSelection());
+
+            if (o instanceof EObject) {
+                this.selectedEObject = (EObject)o;
+            } else if ((o instanceof IFile) && ModelUtilities.isModelFile((IFile)o)) {
+                this.modelFile = (IFile)o;
+            }
+
+            // see if we have a valid selection before checking the contributors
+            if ((this.selectedEObject != null) || (this.modelFile != null)) {
+                // set the selection on the contributors build a list of the ones that can paste
+                for (IPasteSpecialContributor action : PasteSpecialAction.getPasteSpecialContributors()) {
+                    action.selectionChanged(thePart, theSelection);
+
+                    if (action.canPaste()) {
+                        enable = true;
+                        this.enabledExtensionList.add(action);
+                    }
+                }
+
+                if (!enable) {
+                    this.modelFile = null;
+                }
+            }
         }
 
         setEnabled(enable);
     }
 
     /**
-     * This method is called in the run() method of AbstractAction to give the actions a hook into canceling
-     * the run at the last minute.
-     * This overrides the AbstractAction preRun() method.
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.internal.ui.actions.ModelObjectAction#doRun()
+     */
+    @Override
+    protected void doRun() {
+        if (this.enabledExtensionList.size() == 1) {
+            ((IPasteSpecialContributor)this.enabledExtensionList.get(0)).run(this);
+        }
+
+        // swjTODO; handle multiple enabled contributors
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.ui.actions.AbstractAction#getSelection()
+     */
+    @Override
+    public ISelection getSelection() {
+        if (this.editorIsOpening && this.tempSelection != null) return this.tempSelection;
+        return super.getSelection();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.internal.ui.actions.ModelObjectAction#preRun()
      */
     @Override
     protected boolean preRun() {
         if (requiresEditorForRun()) {
-            if (selectedEObject != null) {
-                editorIsOpening = true;
-                tempSelection = getSelection();
-                if (!ModelEditorManager.isOpen(selectedEObject))
-                    ModelEditorManager.open(selectedEObject, true);
-            } else if (modelResource != null) {
-                editorIsOpening = true;
-                tempSelection = getSelection();
-                ModelEditorManager.activate(modelResource, true);
+            this.editorIsOpening = true;
+            this.tempSelection = getSelection(); // cache current selection as opening editor may change selection
+
+            if (this.selectedEObject != null) {
+                if (!ModelEditorManager.isOpen(this.selectedEObject)) {
+                    ModelEditorManager.open(this.selectedEObject, true);
+                }
+            } else if (this.modelFile != null) {
+                ModelEditorManager.activate(this.modelFile, true);
             }
         }
+
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     * 
      * @see com.metamatrix.modeler.internal.ui.actions.ModelObjectAction#requiresEditorForRun()
      */
     @Override
@@ -164,107 +181,97 @@ public class PasteSpecialAction
         return true;
     }
 
-    /**<p>
-     * </p>
-     * @see com.metamatrix.ui.actions.AbstractAction#getSelection()
-     * @since 4.0
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.modeler.internal.ui.actions.ModelObjectAction#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public ISelection getSelection() {
-        if (editorIsOpening && tempSelection != null)
-            return tempSelection;
-        return super.getSelection();
-    }
-
-    /**
-     * Populate this object's list of contributions to the Metadata Paste Special 
-     * extension point.
-     */
-    private void buildExtensionList() {
-        extensionList = new ArrayList();
-        enabledExtensionList = new ArrayList(3);
-        
-        // get the ModelEditorPage extension point from the plugin class
-        IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(UiConstants.PLUGIN_ID, ID);
-        // get the all extensions to the ModelEditorPage extension point
-        IExtension[] extensions = extensionPoint.getExtensions();
-
-        // make executable extensions for every CLASSNAME
-        for (int i = extensions.length - 1; i >= 0; --i) {
-            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-            Object extension = null;
-            for (int j = 0; j < elements.length; ++j) {
-                try {
-                    extension = elements[j].createExecutableExtension(CLASSNAME);
-                    if (extension instanceof IPasteSpecialContributor) {
-                        IPasteSpecialContributor action = (IPasteSpecialContributor) extension;
-                        String label = elements[j].getAttribute(LABEL);
-                        String description = elements[j].getAttribute(UiConstants.ExtensionPoints.MetadataPasteSpecialExtension.DESCRIPTION);
-                        extensionList.add(new PasteSpecialDescriptor(action, label, description));
-                    }
-                } catch (Exception e) {
-                    // catch any Exception that occurs initializing the contributions so that
-                    //    it can be removed and others function normally
-                    UiConstants.Util.log(IStatus.ERROR, e, e.getClass().getName());
-                }
-            }
-        }
+    public void selectionChanged( IWorkbenchPart thePart,
+                                  ISelection theSelection ) {
+        super.selectionChanged(thePart, theSelection);
+        determineEnablement(thePart, theSelection);
     }
 
 }
 
 class PasteSpecialDescriptor implements IPasteSpecialContributor {
-    
+
     public IPasteSpecialContributor delegate;
-    public String label;
     public String description;
-    
-    public PasteSpecialDescriptor(IPasteSpecialContributor contributor, String label, String description) {
+    public String label;
+
+    public PasteSpecialDescriptor( IPasteSpecialContributor contributor,
+                                   String label,
+                                   String description ) {
         this.label = label;
         this.description = description;
         this.delegate = contributor;
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see com.metamatrix.modeler.ui.actions.IPasteSpecialContributor#canPaste()
      */
+    @Override
     public boolean canPaste() {
-        return delegate.canPaste();
+        return this.delegate.canPaste();
     }
 
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
+    @Override
     public void dispose() {
-        delegate.dispose();
+        this.delegate.dispose();
     }
 
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
-    public void init(IWorkbenchWindow window) {
-        delegate.init(window);
+    @Override
+    public void init( IWorkbenchWindow window ) {
+        this.delegate.init(window);
     }
 
-    /* (non-Javadoc)
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
-        delegate.run(action);
+    @Override
+    public void run( IAction action ) {
+        this.delegate.run(action);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+     *      org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IAction action, ISelection selection) {
-        delegate.selectionChanged(action, selection);
+    @Override
+    public void selectionChanged( IAction action,
+                                  ISelection selection ) {
+        this.delegate.selectionChanged(action, selection);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
      */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        delegate.selectionChanged(part, selection);
+    @Override
+    public void selectionChanged( IWorkbenchPart part,
+                                  ISelection selection ) {
+        this.delegate.selectionChanged(part, selection);
     }
 
 }
