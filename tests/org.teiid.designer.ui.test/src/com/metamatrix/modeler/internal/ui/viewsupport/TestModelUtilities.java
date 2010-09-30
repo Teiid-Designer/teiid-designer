@@ -44,7 +44,7 @@ public class TestModelUtilities extends TestCase {
         try {
             ModelUtilities.isModelingRelatedFile(null);
             fail("Null input did not throw exception"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // successfull test
         } catch (Exception theException) {
             fail("Wrong type of exception thrown"); //$NON-NLS-1$

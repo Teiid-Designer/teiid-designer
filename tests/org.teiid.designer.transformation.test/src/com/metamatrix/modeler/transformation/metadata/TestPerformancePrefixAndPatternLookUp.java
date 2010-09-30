@@ -299,6 +299,7 @@ public class TestPerformancePrefixAndPatternLookUp extends TestCase {
         System.out.println("  Number of results = " + results1.length); //$NON-NLS-1$            
     }
 
+     // This danged test might fail when run with all tests, but runs OK by itself.
     public void test1x1x100() throws Exception {
         System.out.println("\nTestPerformancePrefixAndPatternLookUp.test1x1x100()"); //$NON-NLS-1$
         runTest(1, 1, 100, "" + IndexConstants.RECORD_TYPE.COLUMN, "*"); //$NON-NLS-1$  //$NON-NLS-2$
