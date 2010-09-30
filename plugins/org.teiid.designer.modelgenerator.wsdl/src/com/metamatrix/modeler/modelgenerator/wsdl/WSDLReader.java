@@ -96,7 +96,7 @@ public class WSDLReader {
      */
 	public MultiStatus validateWSDL(IProgressMonitor monitor) {
     	
-		monitor.beginTask(ModelGeneratorWsdlPlugin.Util
+		monitor.beginTask(ModelGeneratorWsdlPlugin.getDefault().Util
 				.getString("WSDLReader.validating.wsdl"), //$NON-NLS-1$
 				IProgressMonitor.UNKNOWN);
 		monitor.worked(1);
