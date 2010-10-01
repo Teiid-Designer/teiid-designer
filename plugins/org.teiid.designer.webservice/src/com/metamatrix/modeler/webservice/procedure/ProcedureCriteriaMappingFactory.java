@@ -7,19 +7,17 @@
  */
 package com.metamatrix.modeler.webservice.procedure;
 
-import java.util.Collection;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.query.sql.ProcedureReservedWords;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.webservice.Input;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
-import com.metamatrix.modeler.internal.webservice.procedure.GenerateProcedureCriteriaMappingsVisitor;
 import com.metamatrix.modeler.internal.webservice.procedure.ProcedureCriteriaMappingImpl;
-import org.teiid.query.sql.ProcedureReservedWords;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 
 
 /**
@@ -92,17 +90,5 @@ public class ProcedureCriteriaMappingFactory {
     public String generateVariableName(final IPath xsdElementPath) {
         String xsdElementName = xsdElementPath.lastSegment();
         return ProcedureReservedWords.VARIABLES + CoreStringUtil.Constants.DOT+xsdElementName;
-    }
-
-    /**
-     * Read the given procedure command and generate {com.metamatrix.modeler.webservice.procedure.ProcedureCriteriaMapping}
-     * objects.
-     * @param command The procedure command objects.
-     * @return A collection of mapping objects.
-     * @since 4.3
-     */
-    public Collection createMappings(final CreateUpdateProcedureCommand command) {
-        CoreArgCheck.isNotNull(command);
-        return GenerateProcedureCriteriaMappingsVisitor.getMappins(command);
     }
 }
