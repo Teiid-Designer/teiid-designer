@@ -333,23 +333,24 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     		action.run();
     		
     		// Update the Combo Box
-
-            try {
-            	this.src = listener.getJdbcSource();
-                this.mgr.reload(null);
-                WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
-
-                WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
-                
-                selectConnectionProfile(currentProfile.getName());
-
-            } catch (JdbcException e) {
-                e.printStackTrace();
-            } finally {
-            	ProfileManager.getInstance().removeProfileListener(listener);
-            }
-    		
-    		sourceModified();
+    		if( action.wasFinished() )   {
+	            try {
+	            	this.src = listener.getJdbcSource();
+	                this.mgr.reload(null);
+	                WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
+	
+	                WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
+	                
+	                selectConnectionProfile(currentProfile.getName());
+	
+	            } catch (JdbcException e) {
+	                e.printStackTrace();
+	            } finally {
+	            	ProfileManager.getInstance().removeProfileListener(listener);
+	            }
+	    		
+	    		sourceModified();
+    		}
     	}
     }
 

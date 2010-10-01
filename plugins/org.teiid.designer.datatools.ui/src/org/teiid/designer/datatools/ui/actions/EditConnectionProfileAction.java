@@ -54,6 +54,8 @@ public class EditConnectionProfileAction extends Action {
 	private IConnectionProfile profile;
 	private Shell mShell;
 	
+	private boolean wasFinished = false;
+	
 
 	/**
 	 * Constructor
@@ -171,8 +173,10 @@ public class EditConnectionProfileAction extends Action {
 			}
 		}
 		int rtn_val = propertyDialog.open();
-		if (rtn_val == Dialog.OK)
+		if (rtn_val == Dialog.OK) {
+			wasFinished = true;
 			saveState();
+		}
 	}
 	
 	/*
@@ -325,5 +329,9 @@ public class EditConnectionProfileAction extends Action {
 				dSection.put(MEMENTO_DIALOG_SIZE_WIDTH, mShellWidth);
 			}
 		}
+	}
+
+	public boolean wasFinished() {
+		return wasFinished;
 	}
 }
