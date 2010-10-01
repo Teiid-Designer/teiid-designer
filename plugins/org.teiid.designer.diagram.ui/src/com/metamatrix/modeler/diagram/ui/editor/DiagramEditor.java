@@ -1094,7 +1094,7 @@ public class DiagramEditor extends GraphicalEditor
         // by
         // calling
         // openContext(null)
-    	if( !getCurrentModel().getDiagram().eIsProxy() ) {
+    	if( getCurrentModel() != null && getCurrentModel().getDiagram() !=  null && !getCurrentModel().getDiagram().eIsProxy() ) {
     		openContext(null);
     	}
     }
