@@ -283,17 +283,20 @@ public final class VdbModelEntry extends VdbEntry {
         super.save(out, monitor);
         // Save model index
         save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
-        try {
-            // Convert problems for this model entry to markers on the VDB file
-            final IFile vdbFile = getVdb().getFile();
-            for (final Problem problem : problems) {
-                final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
-                marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
-                marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
-                marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
+        
+        if (!getVdb().isPreview()) {
+            try {
+                // Convert problems for this model entry to markers on the VDB file
+                final IFile vdbFile = getVdb().getFile();
+                for (final Problem problem : problems) {
+                    final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
+                    marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
+                    marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
+                    marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
+                }
+            } catch (final Exception error) {
+                throw CoreModelerPlugin.toRuntimeException(error);
             }
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 
