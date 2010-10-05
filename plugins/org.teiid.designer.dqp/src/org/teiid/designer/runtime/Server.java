@@ -11,6 +11,7 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -217,6 +218,28 @@ public class Server {
 
         return Status.OK_STATUS;
     }
+    
+    /**
+     * Attempts to establish communication with the specified server for testing purposes only.
+     * 
+     * This results in the connection being closed.
+     * 
+     * @return a status if the server connection can be established (never <code>null</code>)
+     */
+    public IStatus testPing() {
+        try {
+        	Admin adminApi = getAdmin().getAdminApi();
+        	adminApi = getAdmin().getAdminApi();
+            adminApi.close();
+            this.admin = null;
+        } catch (Exception e) {
+            String msg = Util.getString("cannotConnectToServer", getUrl()); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
+        }
+
+        return Status.OK_STATUS;
+    }
+    
 
     /**
      * {@inheritDoc}

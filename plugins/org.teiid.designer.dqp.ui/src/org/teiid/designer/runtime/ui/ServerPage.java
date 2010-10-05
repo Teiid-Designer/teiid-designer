@@ -414,7 +414,7 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                success[0] = server.ping().isOK();
+                success[0] = server.testPing().isOK();
             }
         });
 
