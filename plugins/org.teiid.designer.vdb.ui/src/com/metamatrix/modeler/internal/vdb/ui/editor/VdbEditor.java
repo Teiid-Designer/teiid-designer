@@ -24,6 +24,11 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -92,6 +97,8 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
@@ -110,7 +117,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.0
  */
 // TODO: read-only, undo/redo, function model 259
-public final class VdbEditor extends EditorPart {
+public final class VdbEditor extends EditorPart implements IResourceChangeListener {
 
     private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
     private static final String MODELS_GROUP = i18n("modelsGroup"); //$NON-NLS-1$
@@ -834,6 +841,8 @@ public final class VdbEditor extends EditorPart {
 
         // pack and resize:
         pg.pack(true);
+        
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
     /**
@@ -851,6 +860,10 @@ public final class VdbEditor extends EditorPart {
             VdbUiConstants.Util.log(err);
             WidgetUtil.showError(err);
         }
+        
+        // Un-Register this for Resource change events
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        
         super.dispose();
     }
 
@@ -976,6 +989,47 @@ public final class VdbEditor extends EditorPart {
         }
         synchronizeAllButton.setEnabled(syncChanged);
         firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+    
+    /**
+     * @param event 
+     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     */
+    public void resourceChanged( IResourceChangeEvent event ) {
+        int type = event.getType();
+        if (type == IResourceChangeEvent.POST_CHANGE) {
+            try {
+                IResourceDelta delta = event.getDelta();
+                if (delta != null) {
+                    delta.accept(new IResourceDeltaVisitor() {
+
+                        public boolean visit( IResourceDelta delta ) {
+                        	
+                            if (delta.getResource().equals(vdb.getFile()) && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
+                                Display.getDefault().asyncExec(new Runnable() {
+
+                                    public void run() {
+                                        if (Display.getDefault().isDisposed()) {
+                                            return;
+                                        }
+                                        if (UiPlugin.getDefault().getCurrentWorkbenchWindow() != null
+                                            && UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage() != null) {
+                                            UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage().closeEditor(VdbEditor.this,
+                                                                                                                          false);
+                                        }
+                                    }
+                                });
+                                return false;
+                            }
+                            return true;
+                        }
+                    });
+
+                }
+            } catch (CoreException e) {
+                UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+            }
+        }
     }
 
 }
