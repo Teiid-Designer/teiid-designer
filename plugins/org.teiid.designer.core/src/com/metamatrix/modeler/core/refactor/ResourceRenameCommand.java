@@ -345,18 +345,23 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
     protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
         Collection errorList = new ArrayList();
 
-        final ModelEditor editor = ModelerCore.getModelEditor();
-        try {
-            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
-            if (modelResource != null) {
-                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
-                    
-                modelResource.save(null, false);
-            }
-
-        } catch (ModelWorkspaceException e) {
-            final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Exception_finding_model_resource", this.getModifiedResource().getName()); //$NON-NLS-1$
-            errorList.add(new Status(IStatus.ERROR, PID, REFACTOR_MODIFIED_RESOURCE_ERROR, msg, e));
+        IResource modifiedRes = this.getModifiedResource();
+        
+        // Do a check so we don't process folders or projects
+        if( modifiedRes instanceof IFile ) {
+	        final ModelEditor editor = ModelerCore.getModelEditor();
+	        try {
+	            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
+	            if (modelResource != null) {
+	                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+	                    
+	                modelResource.save(null, false);
+	            }
+	
+	        } catch (ModelWorkspaceException e) {
+	            final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Exception_finding_model_resource", this.getModifiedResource().getName()); //$NON-NLS-1$
+	            errorList.add(new Status(IStatus.ERROR, PID, REFACTOR_MODIFIED_RESOURCE_ERROR, msg, e));
+	        }
         }
         
         // defect 16076 - display the correct text on completion, and display all errors
