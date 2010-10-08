@@ -34,6 +34,7 @@ import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.ZipUtil;
 import com.metamatrix.core.util.ChecksumUtil;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 
 /**
  *
@@ -74,6 +75,8 @@ public class VdbEntry {
         // Register to listen for changes to this entries associated workspace file
         fileListener = new IResourceChangeListener() {
             public void resourceChanged( final IResourceChangeEvent event ) {
+            	if( ResourceChangeUtilities.isProjectClosing(event)) return;
+            	
                 final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
                 if (delta == null) return;
                 fileChanged(delta);

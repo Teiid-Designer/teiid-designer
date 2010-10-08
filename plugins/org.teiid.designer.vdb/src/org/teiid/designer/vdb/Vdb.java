@@ -358,9 +358,11 @@ public final class Vdb {
                                 final Object oldValue,
                                 final Object newValue ) {
         PropertyChangeEvent event = null;
-        for (final PropertyChangeListener listener : listeners) {
-            if (event == null) event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-            listener.propertyChange(event);
+        if( !isPreview() ) {
+	        for (final PropertyChangeListener listener : listeners) {
+	            if (event == null) event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+	            listener.propertyChange(event);
+	        }
         }
     }
 
