@@ -32,6 +32,11 @@
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
       </page>
    </extension>
       
@@ -56,6 +61,11 @@
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
       </page>
    </extension>
    
@@ -75,5 +85,40 @@
             id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
       </propertyEditor>
    </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.teiidadmin.ConnectionProfileWizard"
+         description="Create a Teiid Admin connection profile."
+         icon="icons/teiid_lizard_head.png"
+         id="org.teiid.designer.datatools.profiles.teiidadmin.ConnectionProfileWizard"
+         name="Teiid Admin Connection"
+         profile="org.teiid.designer.datatools.profiles.teiidadmin.connectionProfile"/>
+   </extension>
 
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.teiidadmin.TeiidAdminPropertyPage"
+            id="org.teiid.designer.datatools.profiles.teiidadmin.profileProperties"
+            name="Teiid Connection Properties">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.teiidadmin.connectionProfile"/>
+		 <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+
+   <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
+      <driverUIContributor
+            class="org.teiid.designer.datatools.profiles.teiidadmin.TeiidAdminDriverUIContributor"
+            driverTemplateID="org.teiid.designer.datatools.connectivity.driver.teiidAdminDriverTemplate"
+            id="org.teiid.designer.datatools.profiles.teiidadmin.TeiidAdminDriverUIContributor">
+      </driverUIContributor>
+   </extension>
 </plugin>

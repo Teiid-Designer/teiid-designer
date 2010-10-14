@@ -1,11 +1,10 @@
-package org.teiid.designer.datatools.profiles.modeshape;
+package org.teiid.designer.datatools.profiles.teiidadmin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
-import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributor;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
@@ -24,7 +23,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 
-public class ModeShapeDriverUIContributor implements IDriverUIContributor, Listener {
+public class TeiidAdminDriverUIContributor implements IDriverUIContributor, Listener {
 
     private static final String HOST_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.HOST_LBL_UI_"); //$NON-NLS-1$
 
@@ -88,10 +87,6 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 
 	private Text urlText;
 
-	private Label pathLabel;
-
-	private Text pathText;
-	
     private Properties properties;
 
     private DialogPage parentPage;
@@ -154,20 +149,6 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalSpan = 2;
             portText.setLayoutData(gd);
             
-            pathLabel = new Label(baseComposite, SWT.NONE);
-            pathLabel.setText(PATH_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            pathLabel.setLayoutData(gd);
-
-            pathText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            pathText.setLayoutData(gd);
-
             usernameLabel = new Label(baseComposite, SWT.NONE);
             usernameLabel.setText(USERNAME_LBL_UI_);
             gd = new GridData();
@@ -237,16 +218,19 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     }
 
     private void initialize() {
-        updateURL();
+        hostText.setText("localhost");
+        portText.setText("31443");
+        protocolCheck.setSelection(true);
+    	updateURL();
         addListeners();
     }
 
     public void updateURL() {
-        String url = "jdbc:jcr:"; //$NON-NLS-1$
+        String url = new String(); //$NON-NLS-1$
         if (protocolCheck.getSelection()) {
-            url += "https://"; //$NON-NLS-1$
+            url += "mms://"; //$NON-NLS-1$
         } else {
-            url += "http://"; //$NON-NLS-1$
+            url += "mm://"; //$NON-NLS-1$
         }
         if (hostText.getText().trim().length() > 0) {
             url += hostText.getText().trim();
@@ -254,16 +238,12 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         if (portText.getText().trim().length() > 0) {
             url += ":" + portText.getText().trim(); //$NON-NLS-1$
         }
-        if (pathText.getText().trim().length() > 0) {
-            url += pathText.getText().trim();
-        }
         urlText.setText(url);
     }
 
     private void removeListeners() {
         hostText.removeListener(SWT.Modify, this);
         portText.removeListener(SWT.Modify, this);
-        pathText.removeListener(SWT.Modify, this);
         usernameText.removeListener(SWT.Modify, this);
         passwordText.removeListener(SWT.Modify, this);
         protocolCheck.removeListener(SWT.Selection, this);
@@ -273,7 +253,6 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     private void addListeners() {
         hostText.addListener(SWT.Modify, this);
         portText.addListener(SWT.Modify, this);
-        pathText.addListener(SWT.Modify, this);
         usernameText.addListener(SWT.Modify, this);
         passwordText.addListener(SWT.Modify, this);
         protocolCheck.addListener(SWT.Selection, this);
@@ -294,12 +273,10 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     }
 
     public void setConnectionInformation() {
-        // TODO: test to see if this is an issue, might need to stuff something in
-    	//properties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, this.databaseText.getText().trim());
-        properties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, this.passwordText.getText());
+        properties.setProperty(ITeiidAdminProfileConstants.PASSWORD_PROP_ID, this.passwordText.getText());
 
-        properties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, this.usernameText.getText());
-        properties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, this.urlText.getText().trim());
+        properties.setProperty(ITeiidAdminProfileConstants.USERNAME_PROP_ID, this.usernameText.getText());
+        properties.setProperty(ITeiidAdminProfileConstants.URL_PROP_ID, this.urlText.getText().trim());
 
         properties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID,
                                String.valueOf(savePasswordButton.getSelection()));
@@ -310,17 +287,13 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     public boolean determineContributorCompletion() {
         boolean isComplete = true;
         if (hostText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_HOST_REQ_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("TeiidAdmin.VALIDATE_HOST_REQ_UI_")); //$NON-NLS-1$
             isComplete = false;
         } else if (portText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
+            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("TeiidAdmin.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
-        } else if (pathText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PATH_REQ_UI_")); //$NON-NLS-1$
-            isComplete = false;
-        }
-        else if (usernameText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
+        } else if (usernameText.getText().trim().length() < 1) {
+            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("TeiidAdmin.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
         } 
         if (isComplete) {
@@ -344,22 +317,21 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 	@Override
 	public void loadProperties() {
         removeListeners();
-		ModeShapeJdbcUrl url = new ModeShapeJdbcUrl(
+		TeiidAdminUrl url = new TeiidAdminUrl(
 				this.properties
-						.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID));
+						.getProperty(ITeiidAdminProfileConstants.URL_PROP_ID));
         hostText.setText(url.getHost());
         portText.setText(url.getPort());
-        pathText.setText(url.getPath());
 
-        String username = this.properties.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
+        String username = this.properties.getProperty(ITeiidAdminProfileConstants.USERNAME_PROP_ID);
         if (username != null) {
             usernameText.setText(username);
         }
-        String password = this.properties.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+        String password = this.properties.getProperty(ITeiidAdminProfileConstants.PASSWORD_PROP_ID);
         if (password != null) {
             passwordText.setText(password);
         }
-        if (!(url.getProtocol().equals("https"))) { //$NON-NLS-1$
+        if (url.getProtocol().equals("mm")) { //$NON-NLS-1$
             protocolCheck.setSelection(false);
         } else {
             protocolCheck.setSelection(true);
@@ -382,8 +354,6 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         //summaryData.add(new String[] {DATABASE_SUMMARY_DATA_TEXT_, this.databaseText.getText().trim()});
         summaryData.add(new String[] {HOST_SUMMARY_DATA_TEXT_, this.hostText.getText().trim()});
         summaryData.add(new String[] {PORT_SUMMARY_DATA_TEXT_, this.portText.getText().trim()});
-        summaryData.add(new String[] {PATH_SUMMARY_DATA_TEXT_, this.pathText.getText().trim()});
-
         summaryData.add(new String[] {USERNAME_SUMMARY_DATA_TEXT_, this.usernameText.getText().trim()});
         summaryData.add(new String[] {SSL_SUMMARY_DATA_TEXT_,
             protocolCheck.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
