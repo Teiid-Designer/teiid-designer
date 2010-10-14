@@ -96,19 +96,7 @@
         name="com.metamatrix.modeler.transformation.ui.actions.TransformationObjectEditHelper">
       </class>
    </extension>
-<!--
-	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
-	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
--->
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-         targetID="modelerPerspective">
-         <actionSet
-               id="transformationMetadataActionSet">
-         </actionSet>
-      </perspectiveExtension>
-   </extension>
+
 <!-- Action in the Metadata menu to revalidate model transformations -->
 <!-- Property Testers, Handlers, Commands, Menus extensions to add to Teiid Designer submenu in Search Menu -->
 
