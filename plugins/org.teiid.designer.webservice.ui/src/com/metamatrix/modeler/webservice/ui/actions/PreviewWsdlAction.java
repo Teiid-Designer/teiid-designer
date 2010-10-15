@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -75,7 +76,6 @@ public class PreviewWsdlAction extends SortableSelectionAction {
             }
         }
 
-        // TODO: Create wizard to override these default values as part of the soap war generator in 7.1
         webServiceName = webServiceName.substring(0, webServiceName.lastIndexOf(".")); //$NON-NLS-1$
         wsdlGenerator.setName(webServiceName);
         wsdlGenerator.setTargetNamespace("http://teiid.org"); //$NON-NLS-1$
@@ -133,15 +133,11 @@ public class PreviewWsdlAction extends SortableSelectionAction {
             final Iterator selections = objs.iterator();
             while (selections.hasNext() && isValid) {
                 final Object next = selections.next();
-                if (next instanceof Table) {
-                    isValid = true;
-                } else if (next instanceof Procedure) {
-                    isValid = true;
-                } else if (next instanceof IFile) {
-                    final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource((IFile)next);
-                    if (modelResource != null) {
-                        isValid = ModelIdentifier.isWebServicesViewModel(modelResource);
-                        wsResources.add(modelResource);
+                ModelResource modelResource = null;
+                if (next instanceof IFile) {
+                	modelResource = ModelerCore.getModelWorkspace().findModelResource((IFile)next);
+                	if (modelResource != null) {
+                    	isValid = ModelIdentifier.isWebServicesViewModel(modelResource);
                     } else {
                         isValid = false;
                     }
