@@ -1,3 +1,6 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
 <!--
   JBoss, Home of Professional Open Source.
 
@@ -5,91 +8,200 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<link rel="stylesheet" href="designer_help.css" type="text/css" />
+  <link rel="stylesheet" href="designer_help.css" type="text/css">
+</head>
 <body>
-<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png"
+ alt="MMHeader" border="0"></a></p>
 <hr>
-<p class="maintitle_b24">Table Editor  </p>
-
-<p>The <strong>Table Editor </strong> provides a table-based object type structured view of the contents of a model. The figure below shows a relational model viewed in the Table Editor. Common object types are displayed in individual  folders/tables. All Base Tables, for instance, are shown in one table independent of their parentage.</p>
-<p><img src="images/views/TableEditor.jpg"></p>
-<p>You can customize  Table Editor  properties via <a href="DesignerPreferences.htm#tableEditorPrefs">Table Editor Preferences</a>. </p>
-
-<p class="subtitle_b16">Table Editor  Features </p>
+<p class="maintitle_b24">Table Editor </p>
+<p>The <strong>Table Editor </strong> provides a table-based object
+type structured view of the contents of a model. The figure below shows
+a relational model viewed in the Table Editor. Common object types are
+displayed in individual folders/tables. All Base Tables, for instance,
+are shown in one table independent of their parentage.</p>
+<p><img style="width: 843px; height: 314px;" alt="Table Editor"
+ src="images/views/table-editor.png" hspace="20"></p>
+<p>You can customize Table Editor properties via <a
+ href="DesignerPreferences.htm#tableEditorPrefs">Table Editor
+Preferences</a>. </p>
+<p class="subtitle_b16">Table Editor Features </p>
 <p>These are the primary features of the Table Editor:</p>
 <ul>
-  <li><a href="#editingProperties">Edit  existing   properties</a>.</li>
-  <li>Add, remove or edit objects, via the main Edit menu and context menu ( <strong>Cut, Copy, Paste, Clone, Delete, Rename,<a href="#insertRowsTableEditor"> Insert Rows</a> </strong>) </li>
-  <li><a href="#pastingInTableEditor">Paste</a>  information from your clipboard into the table.</li>
-  <li>Print your   tables.</li>
+  <li><a href="#editingProperties">Edit existing properties</a>.</li>
+  <li>Add, remove or edit objects, via the main Edit menu and context
+menu ( <strong>Cut, Copy, Paste, Clone, Delete, Rename,<a
+ href="#insertRowsTableEditor"> Insert Rows</a> </strong>) </li>
+  <li><a href="#pastingInTableEditor">Paste</a> information from your
+clipboard into the table.</li>
+  <li>Print your tables.</li>
 </ul>
-
 <p class="subtitle_b16">Main Toolbar Table Editor actions </p>
-<p>When a <strong>Table Editor</strong> is in focus, the <strong>Insert Table Rows</strong> <img src="images/icons/tb_table_insert.gif" width="20" height="20" hspace="5">action is added to the application's main toolbar.</p>
-
-<p class="subtitle_b16"><a name="contextMenu"></a>Context Menu Table Editor actions </p>
-<p>A few <strong>Table Editor</strong> actions are contributed to the right-click menu for selected table rows. These actions, described and shown below include:</p>
+<p>When a <strong>Table Editor</strong> is in focus, the <strong>Insert
+Table Rows</strong> <img src="images/icons/tb-table-insert.png"
+ height="20" hspace="5" width="20">action is added to the application's
+main toolbar.</p>
+<p class="subtitle_b16"><a name="contextMenu"></a>Context Menu Table
+Editor actions </p>
+<p>A few <strong>Table Editor</strong> actions are contributed to the
+right-click menu for selected table rows. These actions, described and
+shown below include:</p>
 <ul>
-  <li><a href="#pastingInTableEditor"><strong>Table Paste</strong></a> - Paste common spreadsheet data (like Microsoft Excel) to set object properties. </li>
-  <li><strong><a href="DesignerPreferences.htm#tableEditorPrefs">Table Editor Preferences</a></strong> - Change table editor preferences, including customizing visible properties.</li>
-  <li><a href="#insertRowsTableEditor"><strong>Insert Rows</strong></a> - Create multiple new sibling objects.</li>
-  <li><strong>Refresh Table  </strong>- Refreshes the contents of the current Table Editor to insure it is in sync with the model. </li>
+  <li><a href="#pastingInTableEditor"><strong>Table Paste</strong></a>
+- Paste common spreadsheet data (like Microsoft Excel) to set object
+properties. </li>
+  <li><strong><a href="DesignerPreferences.htm#tableEditorPrefs">Table
+Editor Preferences</a></strong> - Change table editor preferences,
+including customizing visible properties.</li>
+  <li><a href="#insertRowsTableEditor"><strong>Insert Rows</strong></a>
+- Create multiple new sibling objects.</li>
+  <li><strong>Refresh Table </strong>- Refreshes the contents of the
+current Table Editor to insure it is in sync with the model. </li>
 </ul>
-<p><img src="images/views/TableEditorContextActions.jpg" border="1" ></p>
-
-<p class="medium"><span class="subtitle_b16"><a name="editingProperties"></a>Editing Properties</span></p>
-<p class="medium">You can edit properties for an object by  double-clicking a table cell. </p>
-<p class="medium">For <strong>String</strong> properties, the table cell will become an in-place text editor field.</p>
-<p class="medium"><img src="images/views/TableEditorStringValuePropertyEdit.jpg" border="1" ></p>
-<p class="medium"> If a property is of a <strong>boolean</strong> (true or false) type or has <strong>multiple, selectable values,</strong> a combo box will be displayed to change the value.</p>
-<p class="medium"><img src="images/views/TableEditorBooleanValuePropertyEdit.jpg" border="1" > <img src="images/views/TableEditorMultiValuePropertyEdit.jpg" hspace="20" border="1" align="top"></p>
-<p class="medium">For <strong>multi-valued</strong> properties where the available values are dynamic (i.e. can change based on available models or data), a picker-button (&quot;....&quot;) will be displayed.</p>
-<p class="medium"><img src="images/views/TableEditorPickerValuePropertyEdit.jpg" border="1" > </p>
-<p>An example of of this type is the relational column datatype property. Editing via the table cell and clicking the &quot;...&quot; button for datatype will display the following dialog.</p>
-<p><img src="images/views/TableEditorDatatypePickerDialog.jpg" > </p>
-
-<p class="subtitle_b16"><a name="insertRowsTableEditor"></a>Inserting Rows in Table Editor </p>
-<p>The Insert Rows action provides an additional way to create objects in a model. Insert Rows action performs the same function as Insert SIbling action, but allows you to create multiple children at the same time. All new rows will correspond to an object of the same type as the selected object and be located under the same parent as the selected object. </p>
+<p><img style="border: 1px solid ; width: 308px; height: 687px;"
+ alt="Table Editor Context Menu"
+ src="images/views/table-editor-context-actions.png" hspace="20"></p>
+<p class="medium"><span class="subtitle_b16"><a name="editingProperties"></a>Editing
+Properties</span></p>
+<p class="medium">You can edit properties for an object by
+double-clicking a table cell. </p>
+<p class="medium">For <strong>String</strong> properties, the table
+cell will become an in-place text editor field.</p>
+<p class="medium"><img
+ style="border: 1px solid ; width: 208px; height: 119px;"
+ alt="Editing String Value"
+ src="images/views/table-editor-string-value-property-edit.png"
+ hspace="20"></p>
+<p class="medium"> If a property is of a <strong>boolean</strong>
+(true or false) type or has <strong>multiple, selectable values,</strong>
+a combo box will be displayed to change the value.</p>
+<p class="medium"><img
+ style="border: 1px solid ; width: 92px; height: 151px;"
+ alt="Boolean Value Edit"
+ src="images/views/table-editor-boolean-value-property-edit.png"
+ hspace="20"> <img
+ style="border: 1px solid ; width: 131px; height: 164px;"
+ alt="Multi-valued Property Edit"
+ src="images/views/table-editor-multi-value-property-edit.png"
+ align="top" hspace="20"></p>
+<p class="medium">For <strong>multi-valued</strong> properties where
+the available values are dynamic (i.e. can change based on available
+models or data), a picker-button ("....") will be displayed.</p>
+<p class="medium"><img
+ style="border: 1px solid ; width: 217px; height: 146px;"
+ alt="Table Editor Picker Button"
+ src="images/views/table-editor-picker-value-property-edit.png"
+ hspace="20"> </p>
+<p>An example of of this type is the relational column datatype
+property. Editing via the table cell and clicking the "..." button for
+datatype will display the following dialog.</p>
+<p><img style="width: 377px; height: 498px;"
+ alt="Select Datatype Dialog"
+ src="images/views/select-datatype-dialog.png" hspace="20"> </p>
+<p class="subtitle_b16"><a name="insertRowsTableEditor"></a>Inserting
+Rows in Table Editor </p>
+<p>The Insert Rows action provides an additional way to create objects
+in a model. Insert Rows action performs the same function as Insert
+SIbling action, but allows you to create multiple children at the same
+time. All new rows will correspond to an object of the same type as the
+selected object and be located under the same parent as the selected
+object. </p>
 <p>To Insert Rows in a table: </p>
 <blockquote>
-  <p><strong>Step 1: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select a table row to insert rows after.</p>
-  <p><strong>Step 2: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Right-click select &quot;Insert Rows&quot; action or select the Insert Rows action on the main toolbar. The following dialog will be displayed.</p>
-  <p><img src="images/views/TableEditorInsertRowsDialog.jpg" > </p>
-  <p><strong>Step 3: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Edit the Number of Rows value in the dialog, or use the up/down buttons to change the value.</p>
-  <p><strong>Step 4: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select OK in dialog.</p>
+  <p><strong>Step 1: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Select a table row to insert rows after.</p>
+  <p><strong>Step 2: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Right-click select "Insert Rows" action or select the Insert Rows
+action on the main toolbar. The following dialog will be displayed.</p>
+  <p><img style="width: 525px; height: 244px;"
+ alt="Insert Table Rows Dialog"
+ src="images/views/table-editor-insert-tables-rows-dialog.png"
+ hspace="20"> </p>
+  <p><strong>Step 3: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Edit the Number of Rows value in the dialog, or use the up/down buttons
+to change the value.</p>
+  <p><strong>Step 4: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Select OK in dialog.</p>
 </blockquote>
-<p>The desired number of rows (new model objects) will be added after the original selected table row. </p>
-
-<p class="subtitle_b16"><a name="pastingInTableEditor"></a>Pasting into the Table Editor </p>
-<p>If you have a Microsoft Excel spreadsheet or other file that contains meta   object property information, you can copy that information onto your operating   system&rsquo;s clipboard and paste the information into the Table Editor.</p>
-<p>The contents of this file must be tab-separated, but not comma-separated. The   Designer will paste this information as metamodel-specific meta objects   of a certain type, determined by the tab onto which you paste this   information.</p>
-<p>This paste function enables you to paste a block of contiguous rows and   columns of property values into the table. This means you can populate many   columns of information, not necessarily all. For example, if you have a   spreadsheet containing meta object Names, Datatypes, and Descriptions, you can   arrange your table and paste only that information into the table and can set   other property values later. You cannot, however, paste namespace or location   information into the table.</p>
+<p>The desired number of rows (new model objects) will be added after
+the original selected table row. </p>
+<p class="subtitle_b16"><a name="pastingInTableEditor"></a>Pasting into
+the Table Editor </p>
+<p>If you have a Microsoft Excel spreadsheet or other file that
+contains meta object property information, you can copy that
+information onto your operating system&#8217;s clipboard and paste the
+information into the Table Editor.</p>
+<p>The contents of this file must be tab-separated, but not
+comma-separated. The Designer will paste this information as
+metamodel-specific meta objects of a certain type, determined by the
+tab onto which you paste this information.</p>
+<p>This paste function enables you to paste a block of contiguous rows
+and columns of property values into the table. This means you can
+populate many columns of information, not necessarily all. For example,
+if you have a spreadsheet containing meta object Names, Datatypes, and
+Descriptions, you can arrange your table and paste only that
+information into the table and can set other property values later. You
+cannot, however, paste namespace or location information into the table.</p>
 <p>To paste items from the clipboard:</p>
 <blockquote>
-  <p><strong>Step 1: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select the  <strong>Table Editor</strong> tab in your <strong>Model Editor</strong>.</p>
-  <p><strong>Step 2: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Copy the information for the meta objects you want to create onto the system   clipboard from <strong>Microsoft Excel</strong>.</p>
-  <p><strong>Step 3:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Click the tab that corresponds to the model object type this information   represents. For example, to paste into table, click the <strong>Base Tables</strong>, <strong>Views</strong>, or <strong>Groups</strong> tab.</p>
-  <p><strong>Step 4:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   From the  <strong>Table Editor</strong>, select <a href="#insertRowsTableEditor"><strong>Insert Rows</strong></a>. Specify number of new rows to correspond to the number of rows copied onto the system clipboard. </p>
-  <p><strong>Step 5:&nbsp;</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   Click the first of the new rows in the left-most column, typically <strong>Name</strong>.</p>
-  <p><strong>Step 6:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   From the <strong>Table Editor</strong>, right-click select <strong>Table Paste </strong>action <img src="images/icons/table_paste.gif" width="16" height="16" hspace="5">.</p>
+  <p><strong>Step 1: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select
+the <strong>Table Editor</strong> tab in your <strong>Model Editor</strong>.</p>
+  <p><strong>Step 2: </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Copy the
+information for the meta objects you want to create onto the system
+clipboard from <strong>Microsoft Excel</strong>.</p>
+  <p><strong>Step 3:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Click
+the tab that corresponds to the model object type this information
+represents. For example, to paste into table, click the <strong>Base
+Tables</strong>, <strong>Views</strong>, or <strong>Groups</strong>
+tab.</p>
+  <p><strong>Step 4:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; From
+the <strong>Table Editor</strong>, select <a
+ href="#insertRowsTableEditor"><strong>Insert Rows</strong></a>.
+Specify number of new rows to correspond to the number of rows copied
+onto the system clipboard. </p>
+  <p><strong>Step 5:&nbsp;</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Click
+the first of the new rows in the left-most column, typically <strong>Name</strong>.</p>
+  <p><strong>Step 6:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; From
+the <strong>Table Editor</strong>, right-click select <strong>Table
+Paste </strong>action <img src="images/icons/table-paste.png"
+ height="16" hspace="5" width="16">.</p>
 </blockquote>
-<p>The rows you selected display in the model. These new objects become a   part of your metadata model. You can create relationships, derive virtual   metadata, and use these meta objects as any others.</p>
-<p>You might encounter difficulties if you try to paste too many rows or if you   try to paste invalid information.</p>
-<H4 class="subtitle_b14">Pasting Too Many Rows</H4>
-<p>Your paste operation might encounter problems if you attempt to paste more   rows than you have created new rows. If you do, the <strong>Reconcile Clipboard   Paste</strong> dialog box displays.</p>
-<p><img src="images/views/TableEditorPasteProblemDialog.jpg">&nbsp;</p>
-<p>You can click <strong>OK</strong> to paste the information anyway; this discards the   information that is highlighted. Or you can click <strong>Cancel</strong> and alter either   your existing table by adding rows for that information, or the dimensions of   the data you are importing.</p>
-<H4 class="subtitle_b14">Other Limitations</H4>
-<p>There is no ability to re-order table columns once they have been imported.&nbsp;   All modifications must be done in Microsoft Excel prior to the   cut-and-paste.</p>
-<p>The <strong>Table Editor</strong> feature is not designed for creating new objects via copy/paste from other selected objects in Designer. This means   that you cannot &ldquo;paste&rdquo; an entirely new object by specifying its parent name.</p>
-<p><strong>Location</strong> is not a valid paste field.&nbsp; You cannot change an object&rsquo;s   parent in the table.</p>
-
+<p>The rows you selected display in the model. These new objects become
+a part of your metadata model. You can create relationships, derive
+virtual metadata, and use these meta objects as any others.</p>
+<p>You might encounter difficulties if you try to paste too many rows
+or if you try to paste invalid information.</p>
+<h4 class="subtitle_b14">Pasting Too Many Rows</h4>
+<p>Your paste operation might encounter problems if you attempt to
+paste more rows than you have created new rows. If you do, the <strong>Reconcile
+Clipboard Paste</strong> dialog box displays.</p>
+<p><img style="width: 543px; height: 458px;" alt="Paste Problem Dialog"
+ src="images/views/table-editor-paste-problem-dialog.png" hspace="20">&nbsp;</p>
+<p>You can click <strong>OK</strong> to paste the information anyway;
+this discards the information that is highlighted. Or you can click <strong>Cancel</strong>
+and alter either your existing table by adding rows for that
+information, or the dimensions of the data you are importing.</p>
+<h4 class="subtitle_b14">Other Limitations</h4>
+<p>There is no ability to re-order table columns once they have been
+imported.&nbsp; All modifications must be done in Microsoft Excel prior
+to the cut-and-paste.</p>
+<p>The <strong>Table Editor</strong> feature is not designed for
+creating new objects via copy/paste from other selected objects in
+Designer. This means that you cannot &#8220;paste&#8221; an entirely new object by
+specifying its parent name.</p>
+<p><strong>Location</strong> is not a valid paste field.&nbsp; You
+cannot change an object&#8217;s parent in the table.</p>
 <p class="subtitle_b16">Related Topics</p>
-<ul><li><a href="DesignerPerspectives.htm">Designer Perspectives </a></li>
+<ul>
+  <li><a href="DesignerPerspectives.htm">Designer Perspectives </a></li>
   <li><a href="ModelEditors.htm">Model Editors </a></li>
-  <li><a href="DesignerPreferences.htm#TablePrefs">Table Editor Preferences </a></li>
-  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+  <li><a href="DesignerPreferences.htm#TablePrefs">Table Editor
+Preferences </a></li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting
+Started with Designer</a> </li>
 </ul>
 <hr>
-<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+<p class="copyright">See the LEGAL.txt file distributed with this work
+for information regarding copyright ownership and licensing.</p>
 </body>
+</html>
