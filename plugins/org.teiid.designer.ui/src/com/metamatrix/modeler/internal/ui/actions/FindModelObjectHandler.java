@@ -16,6 +16,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import com.metamatrix.modeler.internal.ui.search.ModelObjectSelectionDialog;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -38,12 +39,21 @@ public final class FindModelObjectHandler extends AbstractHandler {
 
             if (dialog.getReturnCode() == Window.OK) {
                 EObject eObj = dialog.getSelectedEObject();
-
+                try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 if (eObj != null) {
                     // switch to Teiid Designer perspective
-                    IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-                    IWorkbench workbench = window.getWorkbench();
-
+                	// NOT SURE WHY THE HandlerUtil method below doesn't work for this class. Works for other
+                	// Search action handlers (Transformations, Metadata and Relationships
+                	// TODO: if we ever need to
+                    // IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+                	// IWorkbench workbench =  window.getWorkbench();
+                    IWorkbench workbench =  PlatformUI.getWorkbench();
+                    IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
                     try {
                         workbench.showPerspective(PERSPECTIVE, window);
                     } catch (Exception theException) {
