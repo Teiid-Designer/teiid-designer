@@ -664,8 +664,13 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
      */
     private boolean resourcesRemoved( final List iResources ) {
         if (!iResources.isEmpty()) {
-            final IResource firstResource = (IResource)iResources.iterator().next();
-            if (!firstResource.exists()) return true;
+        	Object nextRes = iResources.iterator().next();
+        	if( nextRes instanceof IResource ) {
+	            final IResource firstResource = (IResource)nextRes;
+	            if (!firstResource.exists()) return true;
+        	} else if( nextRes instanceof ModelResource ) {
+        		if (!((ModelResource)nextRes).exists()) return true;
+        	}
         }
         return false;
     }
