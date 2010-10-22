@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -32,6 +33,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -41,8 +43,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
-import com.metamatrix.core.util.CoreArgCheck;
 import org.teiid.core.util.FileUtils;
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
 
@@ -183,6 +185,26 @@ public final class UiUtil implements UiConstants {
             }
         }
         return result;
+    }
+    
+    /**
+     * Obtains the identifier of the current perspective.
+     * 
+     * @return the ID of the current perspective or <code>null</code> if no perspective open or called outside the UI thread
+     */
+    public static String getPerspectiveId() {
+        IWorkbenchPage page = getWorkbenchPage();
+
+        // could happen if not in UI thread
+        if (page == null) return null;
+
+        IPerspectiveDescriptor descriptor = page.getPerspective();
+
+        // no perspectives open
+        if (descriptor == null) return null;
+
+        // return the perspective ID
+        return descriptor.getId();
     }
 
     /**
@@ -331,6 +353,22 @@ public final class UiUtil implements UiConstants {
      */
     public static IWorkbenchWindow getWorkbenchWindowOnlyIfUiThread() {
         return getWorkbench().getActiveWorkbenchWindow();
+    }
+    
+    /**
+     * Sets focus to the perspective with the specified ID. The perspective will be opened if not already open.
+     * 
+     * @param perspectiveId the ID of the perspective to open
+     */
+    public static void openPerspective( String perspectiveId ) {
+        IWorkbench workbench = getWorkbench();
+        IWorkbenchWindow window = getWorkbenchWindow();
+
+        try {
+            workbench.showPerspective(perspectiveId, window);
+        } catch (Exception theException) {
+            Util.log(theException);
+        }
     }
 
     /**

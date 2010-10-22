@@ -961,6 +961,11 @@
             categoryId="modeler.ui.modelCategory"
             class="com.metamatrix.modeler.internal.ui.preferences.LogicalAsRelationalPreferenceContributor">
       </preference>      
+      <preference
+            id="autoOpenPerspectiveContributor"
+            categoryId="modeler.ui.modelCategory"
+            class="com.metamatrix.modeler.internal.ui.preferences.AutoOpenPerspectivePreferenceContributor">
+      </preference>      
 	</extension>
 
 </plugin>
