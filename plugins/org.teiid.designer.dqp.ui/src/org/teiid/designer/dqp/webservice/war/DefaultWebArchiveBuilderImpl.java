@@ -274,8 +274,10 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 					WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(
 					WarDeploymentInfoPanel.BASIC)) {
 				// Replace the variables in the jboss-web.xml file.
-				replaceJBossWebXmlVariables(webInfDirectoryName, properties.getProperty(
-						WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
+				replaceJBossWebXmlVariables(
+						webInfDirectoryName,
+						properties
+								.getProperty(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM));
 			}
 
 			// Replace the variables in the web.xml file.
@@ -496,14 +498,15 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 	 * @param contextName
 	 * @since 7.1
 	 */
-	protected void replaceJBossWebXmlVariables(String webInfDirectoryName, String securityDomain) {
+	protected void replaceJBossWebXmlVariables(String webInfDirectoryName,
+			String securityDomain) {
 
 		// Replace variables in the jboss-web.xml file.
 		File jbossWebXmlFile = new File(webInfDirectoryName + File.separator
 				+ "jboss-web.xml"); //$NON-NLS-1$
-		
+
 		String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
-		
+
 		AntTasks
 				.replace(
 						jbossWebXmlFile,
@@ -642,37 +645,39 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 		template.delete();
 		// Compile classes
 		JavaCompiler compilerTool = ToolProvider.getSystemJavaCompiler();
-		StandardJavaFileManager fileManager = compilerTool
-				.getStandardFileManager(null, null, null);
+		if (compilerTool != null) {
+			StandardJavaFileManager fileManager = compilerTool
+					.getStandardFileManager(null, null, null);
 
-		String pathToWSSEJar = webInfLibDirectory.getCanonicalPath()
-				+ File.separator + "wss4j.jar"; //$NON-NLS-1$
-	
-		File wsseJar = new File(pathToWSSEJar);
-		List<File> classPaths = Arrays.asList(wsseJar);
-		fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
+			String pathToWSSEJar = webInfLibDirectory.getCanonicalPath()
+					+ File.separator + "wss4j.jar"; //$NON-NLS-1$
 
-		// prepare the source files to compile
-		List<File> sourceFileList = new ArrayList<File>();
-		sourceFileList.add(soapPlugin);
-		sourceFileList.add(teiidProvider);
-		if (isWSSecurity(properties)) {
-			sourceFileList.add(usernameCallback);
+			File wsseJar = new File(pathToWSSEJar);
+			List<File> classPaths = Arrays.asList(wsseJar);
+			fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
+
+			// prepare the source files to compile
+			List<File> sourceFileList = new ArrayList<File>();
+			sourceFileList.add(soapPlugin);
+			sourceFileList.add(teiidProvider);
+			if (isWSSecurity(properties)) {
+				sourceFileList.add(usernameCallback);
+			}
+			for (File providerClass : portProviders) {
+				sourceFileList.add(providerClass);
+			}
+
+			Iterable<? extends JavaFileObject> compilationUnits = fileManager
+					.getJavaFileObjectsFromFiles(sourceFileList);
+			CompilationTask task = compilerTool.getTask(null, fileManager,
+					null, null, null, compilationUnits);
+			task.call();
+			fileManager.close();
+
+			// Cleanup wsse.jar. Only needed for dynamic compilation.
+			wsseJar.delete();
+			webInfLibDirectory.delete();
 		}
-		for (File providerClass : portProviders) {
-			sourceFileList.add(providerClass);
-		}
-
-		Iterable<? extends JavaFileObject> compilationUnits = fileManager
-				.getJavaFileObjectsFromFiles(sourceFileList);
-		CompilationTask task = compilerTool.getTask(null, fileManager, null,
-				null, null, compilationUnits);
-		task.call();
-		fileManager.close();
-		
-		//Cleanup wsse.jar. Only needed for dynamic compilation.
-		wsseJar.delete();
-		webInfLibDirectory.delete();
 	}
 
 	private boolean isWSSecurity(Properties properties) {
@@ -947,7 +952,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 			if (isWSSecurity(properties)) {
 				endpointTags.append(wsseInterceptor1).append(wsseInterceptor2);
 			}
-			endpointTags.append(endJaxwsEndpoint); 
+			endpointTags.append(endJaxwsEndpoint);
 		}
 
 		return endpointTags.toString();
