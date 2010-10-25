@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.mapping.factory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -145,5 +146,14 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     	
     	return nameMap;
     }
+
+    @Override
+	public void helpUpdateModelContentsForDelete(
+			Collection<Object> deletedResourcePaths,
+			Collection<Object> directDependentResources,
+			IProgressMonitor monitor) {
+		// TODO Auto-generated method stub
+	}
     
+
 }

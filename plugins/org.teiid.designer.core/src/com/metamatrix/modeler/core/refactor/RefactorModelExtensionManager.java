@@ -11,15 +11,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * This class manages the loading of Refactor Model Handler extension point contributions.
@@ -118,6 +124,30 @@ public class RefactorModelExtensionManager {
 		
 		for( IRefactorModelHandler handler : handlers) {
 			handler.helpUpdateModelContents(type, refactoredModelResource, refactoredPaths, monitor);
+		}
+	}
+	
+	public static void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor) {
+		if( !handlersLoaded ) {
+			loadExtensions();
+		}
+		
+		for( IRefactorModelHandler handler : handlers) {
+			handler.helpUpdateModelContentsForDelete(deletedResourcePaths, directDependentResources, monitor);
+		}
+		
+		// Need to call update imports for all direct dependent resources
+		
+		for( Object nextObj : directDependentResources ) {
+			IResource iRes = (IResource)nextObj;
+			
+            try {
+            	ModelResource mr = ModelUtil.getModelResource((IFile)iRes, true);
+                ModelBuildUtil.rebuildImports(mr.getEmfResource(), true);
+                mr.save(new NullProgressMonitor(), true);
+            } catch (final ModelWorkspaceException theException) {
+            	ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
+            }
 		}
 	}
 }

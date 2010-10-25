@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.core.refactor;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,5 +44,7 @@ public interface IRefactorModelHandler {
 	 * @param monitor
 	 */
 	void helpUpdateModelContents(int type, ModelResource refactoredModelResource, Map refactoredPaths, IProgressMonitor monitor);
+	
+	void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor);
 	
 }

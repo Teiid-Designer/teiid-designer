@@ -8,14 +8,21 @@
 package com.metamatrix.modeler.internal.transformation.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -28,10 +35,13 @@ import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.refactor.IRefactorModelHandler;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.mapping.factory.MappingRefactorModelHandler;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 
@@ -200,6 +210,102 @@ public class TransformationRefactorModelHandler extends
 		}
 		
 		return sqlChanged;
+	}
+	
+	@Override
+	public void helpUpdateModelContentsForDelete(Collection<Object> deletedResourcePaths, Collection<Object> directDependentResources, IProgressMonitor monitor) {
+		
+		for( Object nextObj : directDependentResources ) {
+			IResource nextRes = (IResource)nextObj;
+			
+			try {
+				cleanUpTransformationReferences(nextRes, deletedResourcePaths, monitor);
+			} catch (ModelWorkspaceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		// 
+	}
+	
+	protected boolean cleanUpTransformationReferences(IResource depResource, Collection deletedPaths, IProgressMonitor monitor)
+			throws ModelWorkspaceException {
+		
+		ModelResource mr = ModelUtil.getModelResource((IFile)depResource, true);
+		final Resource r = mr.getEmfResource();
+		
+		if( mr.getModelType() != ModelType.VIRTUAL_LITERAL) {
+			return false;
+		}
+		
+		
+		
+		// Process all transformations in the TransformationContainer
+		final List transformations = ((EmfResource) r).getModelContents().getTransformations();
+		
+		for (Iterator i = transformations.iterator(); i.hasNext();) {
+			EObject eObj = (EObject) i.next();
+			if (eObj instanceof SqlTransformationMappingRoot) {
+				SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot) eObj;
+				SqlTransformation helper = (SqlTransformation) mappingRoot
+						.getHelper();
+				SqlTransformation nested = null;
+				if (helper != null) {
+					for (Iterator j = helper.getNested().iterator(); j
+							.hasNext();) {
+						eObj = (EObject) j.next();
+						if (eObj instanceof SqlTransformation) {
+							nested = (SqlTransformation) eObj;
+							break;
+						}
+					}
+				}
+				if (nested != null) {
+					// Check inputs
+					List<EObject> delObjList = new ArrayList<EObject>();
+					List inputs = helper.getMapper().getInputs();
+					
+					for (Iterator j = inputs.iterator(); j.hasNext();) {
+						EObject input = (EObject)j.next();
+						if( isDeletedInput(input, deletedPaths)) {
+							delObjList.add(input);
+						}
+
+					}
+					
+					if( !delObjList.isEmpty() ) {
+						try {
+							ModelerCore.getModelEditor().delete(delObjList);
+						} catch (ModelerCoreException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		
+		
+		return true;
+	}
+	
+	private boolean isDeletedInput(EObject input, Collection deletedPaths) {
+		if( input.eIsProxy()) {
+			System.out.println("PROXY INPUT = " + input);
+			
+			return true;
+		} else {
+			for( Object nextPath : deletedPaths ) {
+				IPath delPath = (IPath)nextPath;
+				
+				URI uri = ModelerCore.getModelEditor().getUri(input);
+				if( uri.path().contains(delPath.makeRelative().toString())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 }
