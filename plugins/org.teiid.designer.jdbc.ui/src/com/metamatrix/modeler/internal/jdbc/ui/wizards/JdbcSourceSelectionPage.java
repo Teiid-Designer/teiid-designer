@@ -304,6 +304,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
         CPListener listener = new CPListener();
         ProfileManager.getInstance().addProfileListener(listener);
+        
         if (wizardDialog.open() == Window.OK) {
             try {
                 this.src = listener.getJdbcSource();
@@ -315,11 +316,15 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                 }
 
             } catch (JdbcException e) {
-                ProfileManager.getInstance().removeProfileListener(listener);
                 e.printStackTrace();
+            } finally {
+            	// Remove the listener if there is a problem
+            	ProfileManager.getInstance().removeProfileListener(listener);
             }
+        } else {
+        	// Remove the listener if the dialog is canceled
+        	ProfileManager.getInstance().removeProfileListener(listener);
         }
-        ProfileManager.getInstance().removeProfileListener(listener);
     }
     
     void editConnectionProfile() {
@@ -346,10 +351,14 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 	            } catch (JdbcException e) {
 	                e.printStackTrace();
 	            } finally {
+	            	// Remove the listener if there is a problem
 	            	ProfileManager.getInstance().removeProfileListener(listener);
 	            }
 	    		
 	    		sourceModified();
+    		} else {
+    			// Remove the listener if the dialog is canceled
+    			ProfileManager.getInstance().removeProfileListener(listener);
     		}
     	}
     }
