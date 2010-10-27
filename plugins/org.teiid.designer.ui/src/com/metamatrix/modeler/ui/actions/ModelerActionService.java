@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -42,7 +43,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.ActionFactory;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -109,8 +110,6 @@ public final class ModelerActionService extends AbstractActionService
      * <strong>Must be in the same order as in <code>IModelerActionConstants.EclipseGlobalActions.ALL_ACTIONS</code>.</strong>
      */
     private static final List MAPPED_ACTION_IDS;
-
-    private static final String DELETE_ID = ActionFactory.DELETE.getId();
 
     static {
         ECLIPSE_GLOBAL_ACTION_IDS = Arrays.asList(EclipseGlobalActions.ALL_ACTIONS);

@@ -27,6 +27,7 @@ public interface PluginConstants {
         String LEFT_ARROW_ICON = "icons/full/cview16/left.gif"; //$NON-NLS-1$
         String RIGHT_ARROW_ICON = "icons/full/cview16/right.gif"; //$NON-NLS-1$
         String GENERATE_SQL_REL_ICON = "icons/full/obj16/RelationshipDiagram.gif"; //$NON-NLS-1$
+        String RELATIONSHIP_NAVIGATOR_ICON = "icons/full/cview16/relationshipNavigationView.gif"; //$NON-NLS-1$
 	}
     
 	public interface Prefs {

@@ -72,60 +72,6 @@
             id="relationship.ui.navigation.navigationView">
       </view>
    </extension>
-<!-- Action to open the Navigation View in context menus -->
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            objectClass="org.eclipse.emf.ecore.EObject"
-            id="relationship.ui.navigation.actions.openNavigator">
-         <action
-               label="%openNavigatorAction"
-               icon="icons/full/cview16/navigator_view.gif"
-               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
-               enablesFor="1"
-               id="openNavigatorAction">
-         </action>
-      </objectContribution>
-   </extension>
-<!-- Action to open the Navigation View in the Metadata menu -->
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%navigationActionSet.label"
-            visible="false"
-            id="relationship.ui.actions.navigationActionSet">
-         <menu
-               label="%metadata.menu"
-               path="additions"
-               id="metadataMenu">
-            <separator
-                  name="slot1">
-            </separator>
-            <separator
-                  name="slot2">
-            </separator>
-            <separator
-                  name="slot3">
-            </separator>
-            <separator
-                  name="slot4">
-            </separator>
-            <groupMarker
-                  name="com.metamatrix.modeler.ui.groupMarker1">
-            </groupMarker>
-         </menu>            
-         <action
-               label="%openNavigatorAction"
-               icon="icons/full/cview16/navigator_view.gif"
-               helpContextId="relationship.ui.navigation.actions.helpContext"
-               tooltip="%openNavigatorAction"
-               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
-               menubarPath="metadataMenu/slot2"
-               enablesFor="1"
-               id="relationship.ui.navigation.actions.metadataOpenNavigator">
-         </action>
-      </actionSet>
-   </extension>
 <!-- Adding the Relationship Custom Diagram Type extension-->
    <extension
          id="customRelationshipDiagramType"

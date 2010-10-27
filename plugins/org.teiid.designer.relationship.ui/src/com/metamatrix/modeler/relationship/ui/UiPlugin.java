@@ -10,6 +10,7 @@ package com.metamatrix.modeler.relationship.ui;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import com.metamatrix.core.PluginUtil;
@@ -89,6 +90,26 @@ public class UiPlugin extends AbstractUiPlugin implements UiConstants {
 		// This plugin uses the DiagramActionService
 		return DiagramUiPlugin.getDefault().getActionService(page);
 	}
+	
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void registerActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.addWorkbenchSelectionListener(action);
+    }
+
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void unregisterActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.removeWorkbenchSelectionListener(action);
+    }
     
 	/**
 	 * @see com.metamatrix.ui.AbstractUiPlugin#getPluginUtil()

@@ -831,19 +831,14 @@
                id="organizeImportsAction">
          </action>
       </objectContribution>
-<!-- Action to open add objects to Metadata Favorites View in context menus -->
-      <objectContribution
-            objectClass="org.eclipse.emf.ecore.EObject"
-            id="addToMetadataFavorites">
-         <action
-               label="%addToMetadataFavoritesAction.label"
-               icon="icons/full/cview16/add_to_favorites.gif"
-               class="com.metamatrix.modeler.internal.ui.favorites.actions.AddToMetadataFavoritesAction"
-               enablesFor="1"
-               id="addToMetadataFavoritesAction">
-         </action>
-      </objectContribution>
-
+   </extension>
+   <!-- Action to open add objects to Metadata Favorites View in context menus -->
+   <extension
+         id="designerModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.internal.ui.actions.DesignerPermanentActionContributor">
+      </class>
    </extension>
    <extension
          id="jdbcRefresh"

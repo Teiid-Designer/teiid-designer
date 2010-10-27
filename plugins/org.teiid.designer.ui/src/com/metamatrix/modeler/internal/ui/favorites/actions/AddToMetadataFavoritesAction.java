@@ -9,16 +9,16 @@ package com.metamatrix.modeler.internal.ui.favorites.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import org.eclipse.jface.action.IAction;
+
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionDelegate;
+
+import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.actions.ModelObjectAction;
 import com.metamatrix.modeler.internal.ui.favorites.FavoritesView;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -29,20 +29,32 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 /**
  * @since 4.2
  */
-public class AddToMetadataFavoritesAction extends ActionDelegate implements
-                                                              IWorkbenchWindowActionDelegate,
-                                                              IViewActionDelegate {
+public class AddToMetadataFavoritesAction extends ModelObjectAction {
 
-    private ISelection selection;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+    
+    /**
+     * Construct an instance of NewCustomDiagramAction.
      */
+    public AddToMetadataFavoritesAction() {
+        super(UiPlugin.getDefault());
+        setText(UiConstants.Util.getString("AddToMetadataFavoritesAction.label")); //$NON-NLS-1$
+        setImageDescriptor(
+        		UiPlugin.imageDescriptorFromPlugin(UiConstants.PLUGIN_ID, PluginConstants.Images.METADATA_FAVORITES));
+    }
+
+    /**
+     * Construct an instance of NewCustomDiagramAction.
+     * 
+     * @param theStyle
+     */
+    public AddToMetadataFavoritesAction( int theStyle ) {
+        super(UiPlugin.getDefault(), theStyle);
+    }
+
+
     @Override
-    public void run(IAction action) {
-        Collection objs = new ArrayList(SelectionUtilities.getSelectedEObjects(selection));
+    public void doRun() {
+        Collection objs = new ArrayList(SelectionUtilities.getSelectedEObjects(getSelection()));
         try {
             IViewPart viewPart = UiUtil.getWorkbenchPage().showView(UiConstants.Extensions.FAVORITES_VIEW_ID);
             if (viewPart instanceof FavoritesView) {
@@ -55,21 +67,26 @@ public class AddToMetadataFavoritesAction extends ActionDelegate implements
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-     *      org.eclipse.jface.viewers.ISelection)
+    /**
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
+     * @since 4.0
      */
     @Override
-    public void selectionChanged(IAction action,
-                                 ISelection selection) {
+    public void selectionChanged( final IWorkbenchPart part,
+                                  final ISelection selection ) {
+        super.selectionChanged(part, selection);
+        determineEnablement();
+    }
+    
+    /**
+     * @since 4.0
+     */
+    private void determineEnablement() {
         boolean enable = false;
-        this.selection = selection;
         
         // check to make sure the selection is good (should be, the plugin
         //  settings pretty much mandate it:
-        if (!SelectionUtilities.getSelectedEObjects(selection).isEmpty() ) {
+        if (!SelectionUtilities.getSelectedEObjects(getSelection()).isEmpty() ) {
             // yes, the selection has an EObject.
             // defect 15111 - disable this menu in favorites view
             // check what view we came from:
@@ -80,9 +97,8 @@ public class AddToMetadataFavoritesAction extends ActionDelegate implements
                 enable = true;
             } // endif -- not from FavoritesView
         } // endif -- eobject selected
-        
 
-        action.setEnabled(enable);
+        setEnabled(enable);
     }
 
     /**
@@ -94,21 +110,12 @@ public class AddToMetadataFavoritesAction extends ActionDelegate implements
         IWorkbenchWindow iwbw = iwb.getActiveWorkbenchWindow();
         return iwbw.getActivePage().getActivePart();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+    
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.internal.ui.actions.ModelObjectAction#requiresEditorForRun()
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+    protected boolean requiresEditorForRun() {
+        return false;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-     */
-    public void init(IViewPart view) {
-    }
-
 }

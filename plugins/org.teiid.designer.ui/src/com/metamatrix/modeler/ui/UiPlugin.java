@@ -24,8 +24,9 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.core.PluginUtil;
 import org.teiid.core.CoreConstants.Debug;
+
+import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventBroker;
 import com.metamatrix.core.event.SynchEventBroker;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -172,6 +173,26 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         return warningDecoratorImage;
     }
 
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void registerActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.addWorkbenchSelectionListener(action);
+    }
+
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void unregisterActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.removeWorkbenchSelectionListener(action);
+    }
+    
     private void initializeModelTableColumnUtilsFromPreferenceStore() {
         getEObjectPropertiesOrderPreferences().initializeFromString(getPreferenceStore().getString(UiConstants.TableEditorAttributes.COLUMN_ORDER));
     }
