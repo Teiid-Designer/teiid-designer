@@ -106,13 +106,14 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
 
         // Teiid degenerate/aliased types
         register(Types.CHAR, SQL_TYPE_NAMES.CHAR, internalFindDatatype(DatatypeConstants.BuiltInNames.CHAR));
+        register(Types.NUMERIC, SQL_TYPE_NAMES.NUMERIC, internalFindDatatype(DatatypeConstants.BuiltInNames.INTEGER));
         register(Types.NUMERIC, SQL_TYPE_NAMES.NUMERIC, internalFindDatatype(DatatypeConstants.BuiltInNames.BIG_INTEGER));
-        register(Types.INTEGER, SQL_TYPE_NAMES.INTEGER, internalFindDatatype(DatatypeConstants.BuiltInNames.INT));
 
         // register(Types.ARRAY, SQL_TYPE_NAMES.ARRAY, internalFindDatatype(DatatypeConstants.BuiltInNames.) );
         register(Types.BIGINT, SQL_TYPE_NAMES.BIGINT, internalFindDatatype(DatatypeConstants.BuiltInNames.LONG));
         register(Types.BINARY, SQL_TYPE_NAMES.BINARY, internalFindDatatype(DatatypeConstants.BuiltInNames.OBJECT));
         register(Types.BIT, SQL_TYPE_NAMES.BIT, internalFindDatatype(DatatypeConstants.BuiltInNames.BOOLEAN));
+        register(Types.VARBINARY, SQL_TYPE_NAMES.VARBINARY, internalFindDatatype(DatatypeConstants.BuiltInNames.BLOB));
         register(Types.BLOB, SQL_TYPE_NAMES.BLOB, internalFindDatatype(DatatypeConstants.BuiltInNames.BLOB));
         register(Types.CHAR, SQL_TYPE_NAMES.CHAR, internalFindDatatype(DatatypeConstants.BuiltInNames.STRING));
         register(Types.CLOB, SQL_TYPE_NAMES.CLOB, internalFindDatatype(DatatypeConstants.BuiltInNames.CLOB));
@@ -120,7 +121,7 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
         register(Types.DECIMAL, SQL_TYPE_NAMES.DECIMAL, internalFindDatatype(DatatypeConstants.BuiltInNames.BIG_DECIMAL));
         // register(Types.DISTINCT, SQL_TYPE_NAMES.DISTINCT, internalFindDatatype(DatatypeConstants.BuiltInNames.) );
         register(Types.DOUBLE, SQL_TYPE_NAMES.DOUBLE, internalFindDatatype(DatatypeConstants.BuiltInNames.DOUBLE));
-        register(Types.INTEGER, SQL_TYPE_NAMES.INTEGER, internalFindDatatype(DatatypeConstants.BuiltInNames.INTEGER));
+        register(Types.INTEGER, SQL_TYPE_NAMES.INTEGER, internalFindDatatype(DatatypeConstants.BuiltInNames.INT));
         register(Types.FLOAT, SQL_TYPE_NAMES.FLOAT, internalFindDatatype(DatatypeConstants.BuiltInNames.FLOAT));
         register(Types.LONGVARBINARY, SQL_TYPE_NAMES.LONGVARBINARY, internalFindDatatype(DatatypeConstants.BuiltInNames.OBJECT));
         register(Types.LONGVARCHAR, SQL_TYPE_NAMES.LONGVARCHAR, internalFindDatatype(DatatypeConstants.BuiltInNames.STRING));
@@ -138,7 +139,6 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
         register(Types.TIME, SQL_TYPE_NAMES.TIME, internalFindDatatype(DatatypeConstants.BuiltInNames.TIME));
         register(Types.TIMESTAMP, SQL_TYPE_NAMES.TIMESTAMP, internalFindDatatype(DatatypeConstants.BuiltInNames.TIMESTAMP));
         register(Types.TINYINT, SQL_TYPE_NAMES.TINYINT, internalFindDatatype(DatatypeConstants.BuiltInNames.BYTE));
-        register(Types.VARBINARY, SQL_TYPE_NAMES.VARBINARY, internalFindDatatype(DatatypeConstants.BuiltInNames.OBJECT));
         register(Types.VARCHAR, SQL_TYPE_NAMES.VARCHAR, internalFindDatatype(DatatypeConstants.BuiltInNames.STRING));
     }
 
