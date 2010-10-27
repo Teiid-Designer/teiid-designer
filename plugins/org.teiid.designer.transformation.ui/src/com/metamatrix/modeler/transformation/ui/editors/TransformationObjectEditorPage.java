@@ -2995,12 +2995,12 @@ public class TransformationObjectEditorPage
                     setEditableStatus(currentItem); // defect 13821 - this call respects the state of the checkboxes, unlike the
                     // old call
                 }
-                getCheckBoxContributionForSupportsUpdates().setEnabled(!isReadOnly);
-                // Update check boxes on insert/update/delete tabs
-                updateReadOnlyStateOfCheckBoxes(isReadOnly);
                 // Need to notify actions that need to enable/disable
                 notifyEventListeners(new SqlTransformationStatusChangeEvent(currentMappingRoot, this));
             }
+            getCheckBoxContributionForSupportsUpdates().setEnabled(!isReadOnly);
+            // Update check boxes on insert/update/delete tabs
+            updateReadOnlyStateOfCheckBoxes(isReadOnly);
         }
     }
 
@@ -3177,7 +3177,7 @@ public class TransformationObjectEditorPage
                 }
             });
 
-            chkSupportsUpdates.setEnabled(true);
+            chkSupportsUpdates.setEnabled(!currentReadonlyState);
             chkSupportsUpdates.setSelection(getTargetAllowsUpdates());
 
             return chkSupportsUpdates;
