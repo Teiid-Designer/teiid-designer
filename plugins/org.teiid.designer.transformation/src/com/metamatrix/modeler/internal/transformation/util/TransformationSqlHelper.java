@@ -389,7 +389,7 @@ public class TransformationSqlHelper implements SqlConstants {
                     TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), false, txnSource);
                 }
             } else {
-                SetQuery newQuery = createSetQueryAddUnionSources(new SetQuery(Operation.UNION), sourceGroups, useAll);
+                SetQuery newQuery = createSetQueryAddUnionSources(null, sourceGroups, useAll);
                 // Set the new MetaObject property
                 TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), false, txnSource);
             }
@@ -789,24 +789,52 @@ public class TransformationSqlHelper implements SqlConstants {
                                                            List unionSourceGrps,
                                                            boolean useAll ) {
         SetQuery result = null;
+        result = new SetQuery(Operation.UNION);
+        result.setAll(useAll);
+        Iterator iter = null;
+        
         if (queryCommand != null) {
-            result = new SetQuery(Operation.UNION);
-            result.setAll(useAll);
+        	// Set the left query to the current command
             result.setLeftQuery((QueryCommand)queryCommand.clone());
-            // Add new queries for each of the source groups
-            Iterator iter = unionSourceGrps.iterator();
-            while (iter.hasNext()) {
+
+            iter = unionSourceGrps.iterator();
+        } else {
+        	// Case where there is NO initial query
+            iter = unionSourceGrps.iterator();
+            
+            // Create a default query with the first source groups (left and right)
+            if (iter.hasNext()) {
                 EObject sourceGroup = (EObject)iter.next();
                 Query qry = createDefaultQuery(sourceGroup);
-                result.setRightQuery(qry);
+                result.setLeftQuery(qry);
                 if (iter.hasNext()) {
-                    QueryCommand left = result;
-                    result = new SetQuery(Operation.UNION);
-                    result.setAll(useAll);
-                    result.setLeftQuery(left);
+                    sourceGroup = (EObject)iter.next();
+                    QueryCommand right = createDefaultQuery(sourceGroup);                    
+                    result.setRightQuery(right);
                 }
             }
+
+            // If there are MORE than 2 sources, go ahead and create a New query command and set it as the Left query
+            if (iter.hasNext()) {
+                SetQuery unionResult = new SetQuery(Operation.UNION);
+                unionResult.setAll(useAll);
+                unionResult.setLeftQuery(result);
+                result = unionResult;
+           }
         }
+        
+        // Add new queries for each of the source groups
+        while (iter.hasNext()) {
+            EObject sourceGroup = (EObject)iter.next();
+            Query qry = createDefaultQuery(sourceGroup);
+            result.setRightQuery(qry);
+            if (iter.hasNext()) {
+                QueryCommand left = result;
+                result = new SetQuery(Operation.UNION);
+                result.setAll(useAll);
+                result.setLeftQuery(left);
+            }
+        }        
         return result;
     }
 
