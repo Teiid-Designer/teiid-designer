@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import com.metamatrix.core.event.EventObjectListener;
@@ -42,7 +43,6 @@ import com.metamatrix.modeler.modelgenerator.ui.PluginConstants;
 import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalOptions;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.Dialog;
-import com.metamatrix.ui.internal.widget.EditableIntegerSpinner;
 import com.metamatrix.ui.internal.widget.IListPanelController;
 import com.metamatrix.ui.internal.widget.ListPanel;
 import com.metamatrix.ui.internal.widget.ListPanelAdapter;
@@ -73,7 +73,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
     private DatatypeChooserPanel keysDatatypePanel;
     private Text keyBaseNameField;
     private Combo numberKeysCombo;
-    EditableIntegerSpinner ispinStringLength;
+    Spinner ispinStringLength;
 
     public GeneratedKeyOptionsWizardPanel( Composite parent,
                                            GeneratedKeyOptionsWizardPage page,
@@ -139,13 +139,15 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
             // Default Length for key Column
             title = Util.getString("GeneratedKeyOptionsWizardPanel.keyColLength.title"); //$NON-NLS-1$
             WidgetFactory.createLabel(keysGrp, title);
-            ispinStringLength = new EditableIntegerSpinner(keysGrp, MIN_DEFAULT_KEYCOLUMN_LENGTH, MAX_DEFAULT_KEYCOLUMN_LENGTH);
-            ispinStringLength.setWrap(false);
-
-            ispinStringLength.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    setKeyColumnLength(ispinStringLength.getIntegerValue());
+            ispinStringLength = new Spinner(keysGrp, SWT.NONE);
+            ispinStringLength.setMinimum(MIN_DEFAULT_KEYCOLUMN_LENGTH);
+            ispinStringLength.setMaximum(MAX_DEFAULT_KEYCOLUMN_LENGTH);
+            ispinStringLength.setToolTipText(Util.getString("GeneratedKeyOptionsWizardPanel.keyLengthSpinner.toolTip", //$NON-NLS-1$
+                                                            ispinStringLength.getMinimum(),
+                                                            ispinStringLength.getMaximum()));
+            ispinStringLength.addModifyListener(new ModifyListener() {
+                public void modifyText( ModifyEvent theEvent ) {
+                    setKeyColumnLength();
                 }
             });
 
@@ -305,7 +307,7 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
         options.setKeyColumnLength(defaultLength);
 
         // Set UI component
-        this.ispinStringLength.setValue(defaultLength);
+        this.ispinStringLength.setSelection(defaultLength);
 
         // ---------------------------------------
         // PrimaryKey Stereotypes List
@@ -405,18 +407,24 @@ public class GeneratedKeyOptionsWizardPanel extends Composite
 
     /**
      * Set the Key Column Length for type defaulted columns
-     * 
-     * @param nLength the length of the key Column
      */
-    void setKeyColumnLength( int nLength ) {
+    void setKeyColumnLength() {
+        int nLength = ispinStringLength.getSelection();
+
         // Set the Generator Option
         Uml2RelationalOptions options = this.generatorMgrOptions.getUml2RelationalOptions();
-        options.setKeyColumnLength(nLength);
+        
+        if (nLength != options.getKeyColumnLength()) {
+            options.setKeyColumnLength(nLength);
+        }
 
         // Update the PreferenceStore
         IPreferenceStore prefStore = ModelerModelGeneratorUiPlugin.getDefault().getPreferenceStore();
-        prefStore.setValue(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_LENGTH, nLength);
-        ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
+        
+        if (nLength != prefStore.getInt(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_LENGTH)) {
+            prefStore.setValue(PluginConstants.Prefs.ModelGenerator.KEY_COLUMN_LENGTH, nLength);
+            ModelerModelGeneratorUiPlugin.getDefault().savePreferences();
+        }
 
         // Validate the page
         this.wizardPage.validatePage();

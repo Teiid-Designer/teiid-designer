@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
@@ -88,7 +89,6 @@ import com.metamatrix.ui.internal.eventsupport.SelectionProvider;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.widget.IntegerSpinner;
 import com.metamatrix.ui.table.TableSizeAdapter;
 
 /**
@@ -133,8 +133,8 @@ public class RelationshipTypePanel extends Composite
     private Composite pnlRoleAHeader;
     Text txtRoleAName;
     Button btnBrowsePropertiesForRoleA;
-    IntegerSpinner ispinLowerBoundA;
-    IntegerSpinner ispinUpperBoundA;
+    Spinner ispinLowerBoundA;
+    Spinner ispinUpperBoundA;
     Button cbxOrderedA;
     Button cbxUniqueA;
     Button cbxNavigableA;
@@ -153,8 +153,8 @@ public class RelationshipTypePanel extends Composite
     private Composite pnlRoleBHeader;
     Text txtRoleBName;
     Button btnBrowsePropertiesForRoleB;
-    IntegerSpinner ispinLowerBoundB;
-    IntegerSpinner ispinUpperBoundB;
+    Spinner ispinLowerBoundB;
+    Spinner ispinUpperBoundB;
     Button cbxOrderedB;
     Button cbxUniqueB;
     Button cbxNavigableB;
@@ -369,8 +369,8 @@ public class RelationshipTypePanel extends Composite
             txtRoleAName.setText(EMPTY_STRING);
         }
 
-        ispinLowerBoundA.setValue(getEditor().getLowerBound(rrRoleA));
-        ispinUpperBoundA.setValue(getEditor().getUpperBound(rrRoleA));
+        ispinLowerBoundA.setSelection(getEditor().getLowerBound(rrRoleA));
+        ispinUpperBoundA.setSelection(getEditor().getUpperBound(rrRoleA));
 
         cbxOrderedA.setSelection(getEditor().isOrdered(rrRoleA));
         cbxUniqueA.setSelection(getEditor().isUnique(rrRoleA));
@@ -392,8 +392,8 @@ public class RelationshipTypePanel extends Composite
             txtRoleBName.setText(EMPTY_STRING);
         }
 
-        ispinLowerBoundB.setValue(getEditor().getLowerBound(rrRoleB));
-        ispinUpperBoundB.setValue(getEditor().getUpperBound(rrRoleB));
+        ispinLowerBoundB.setSelection(getEditor().getLowerBound(rrRoleB));
+        ispinUpperBoundB.setSelection(getEditor().getUpperBound(rrRoleB));
         cbxOrderedB.setSelection(getEditor().isOrdered(rrRoleB));
         cbxUniqueB.setSelection(getEditor().isUnique(rrRoleB));
         cbxNavigableB.setSelection(getEditor().isNavigable(rrRoleB));
@@ -830,15 +830,23 @@ public class RelationshipTypePanel extends Composite
         WidgetFactory.createLabel(pnlRoleAHeaderRow1, LOWER_BOUND_TEXT);
 
         // 'lower bound' textfield
-        ispinLowerBoundA = new IntegerSpinner(pnlRoleAHeaderRow1, BOUND_MIN, BOUND_MAX);
-        ispinLowerBoundA.setWrap(false);
+        ispinLowerBoundA = new Spinner(pnlRoleAHeaderRow1, SWT.NONE);
+        ispinLowerBoundA.setMinimum(BOUND_MIN);
+        ispinLowerBoundA.setMaximum(BOUND_MAX);
+        ispinLowerBoundA.setToolTipText(UiConstants.Util.getString("RelationshipTypePanel.spinner.toolTip", //$NON-NLS-1$
+                                                                   ispinLowerBoundA.getMinimum(),
+                                                                   ispinLowerBoundA.getMaximum()));
 
         // 'upper bound' label
         WidgetFactory.createLabel(pnlRoleAHeaderRow1, UPPER_BOUND_TEXT);
 
         // 'upper bound' textfield
-        ispinUpperBoundA = new IntegerSpinner(pnlRoleAHeaderRow1, BOUND_MIN, BOUND_MAX);
-        ispinUpperBoundA.setWrap(false);
+        ispinUpperBoundA = new Spinner(pnlRoleAHeaderRow1, SWT.NONE);
+        ispinUpperBoundA.setMinimum(BOUND_MIN);
+        ispinUpperBoundA.setMaximum(BOUND_MAX);
+        ispinUpperBoundA.setToolTipText(UiConstants.Util.getString("RelationshipTypePanel.spinner.toolTip", //$NON-NLS-1$
+                                                                   ispinUpperBoundA.getMinimum(),
+                                                                   ispinUpperBoundA.getMaximum()));
 
         // 'ordered' checkbox
         cbxOrderedA = WidgetFactory.createCheckBox(pnlRoleAHeaderRow2, ORDERED_TEXT);
@@ -963,15 +971,23 @@ public class RelationshipTypePanel extends Composite
         WidgetFactory.createLabel(pnlRoleBHeaderRow1, LOWER_BOUND_TEXT);
 
         // 'lower bound' textfield
-        ispinLowerBoundB = new IntegerSpinner(pnlRoleBHeaderRow1, -1, 999);
-        ispinLowerBoundB.setWrap(false);
+        ispinLowerBoundB = new Spinner(pnlRoleBHeaderRow1, SWT.NONE);
+        ispinLowerBoundB.setMinimum(BOUND_MIN);
+        ispinLowerBoundB.setMaximum(BOUND_MAX);
+        ispinLowerBoundB.setToolTipText(UiConstants.Util.getString("RelationshipTypePanel.spinner.toolTip", //$NON-NLS-1$
+                                                                   ispinLowerBoundB.getMinimum(),
+                                                                   ispinLowerBoundB.getMaximum()));
 
         // 'upper bound' label
         WidgetFactory.createLabel(pnlRoleBHeaderRow1, UPPER_BOUND_TEXT);
 
         // 'upper bound' textfield
-        ispinUpperBoundB = new IntegerSpinner(pnlRoleBHeaderRow1, -1, 999);
-        ispinUpperBoundB.setWrap(false);
+        ispinUpperBoundB = new Spinner(pnlRoleBHeaderRow1, SWT.NONE);
+        ispinUpperBoundB.setMinimum(BOUND_MIN);
+        ispinUpperBoundB.setMaximum(BOUND_MAX);
+        ispinUpperBoundB.setToolTipText(UiConstants.Util.getString("RelationshipTypePanel.spinner.toolTip", //$NON-NLS-1$
+                                                                   ispinUpperBoundB.getMinimum(),
+                                                                   ispinUpperBoundB.getMaximum()));
 
         // 'ordered' checkbox
         cbxOrderedB = WidgetFactory.createCheckBox(pnlRoleBHeaderRow2, ORDERED_TEXT);
@@ -1248,7 +1264,7 @@ public class RelationshipTypePanel extends Composite
         ispinLowerBoundA.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                getEditor().setLowerBound(getEditor().getSourceRole(), ispinLowerBoundA.getIntegerValue());
+                getEditor().setLowerBound(getEditor().getSourceRole(), ispinLowerBoundA.getSelection());
                 validate();
             }
         });
@@ -1256,7 +1272,7 @@ public class RelationshipTypePanel extends Composite
         ispinUpperBoundA.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                getEditor().setUpperBound(getEditor().getSourceRole(), ispinUpperBoundA.getIntegerValue());
+                getEditor().setUpperBound(getEditor().getSourceRole(), ispinUpperBoundA.getSelection());
                 validate();
             }
         });
@@ -1339,7 +1355,7 @@ public class RelationshipTypePanel extends Composite
         ispinLowerBoundB.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                getEditor().setLowerBound(getEditor().getTargetRole(), ispinLowerBoundB.getIntegerValue());
+                getEditor().setLowerBound(getEditor().getTargetRole(), ispinLowerBoundB.getSelection());
                 validate();
             }
         });
@@ -1347,7 +1363,7 @@ public class RelationshipTypePanel extends Composite
         ispinUpperBoundB.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                getEditor().setUpperBound(getEditor().getTargetRole(), ispinUpperBoundB.getIntegerValue());
+                getEditor().setUpperBound(getEditor().getTargetRole(), ispinUpperBoundB.getSelection());
                 validate();
             }
         });

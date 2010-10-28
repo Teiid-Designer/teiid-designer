@@ -22,6 +22,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -32,6 +34,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -44,7 +47,6 @@ import com.metamatrix.modeler.internal.ui.filter.StructuredViewerTextFilterer;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.EditableIntegerSpinner;
 
 /**
  * DatatypeSelectionDialog
@@ -70,13 +72,14 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
         return UiConstants.Util.getString(PREFIX + key, obj);
     }
 
-    private EditableIntegerSpinner ispin = null;
+    private Spinner ispin = null;
     private int MIN = 0;
     private int MAX = 99999;
     private boolean editLength = false;
     boolean setLengthForAll = false;
     private boolean multipleObjects = false;
     private int initialLength = 0;
+    private int currentLength = initialLength;
     Button setLengthForAllCheckBox;
     CLabel pathLabel;
     private StructuredViewerDatatypeFilterer entFilter;
@@ -370,13 +373,22 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
             WidgetFactory.createLabel(lengthGroup, GridData.FILL, getString("stringLengthLabel")); //$NON-NLS-1$
 
             // int spinner
-            ispin = new EditableIntegerSpinner(lengthGroup, MIN, MAX);
-            ispin.setWrap(false);
+            ispin = new Spinner(lengthGroup, SWT.NONE);
+            ispin.setMinimum(MIN);
+            ispin.setMaximum(MAX);
+            ispin.setToolTipText(UiConstants.Util.getString(PREFIX + "lengthSpinner.toolTip", //$NON-NLS-1$
+                                                            ispin.getMinimum(),
+                                                            ispin.getMaximum()));
+            ispin.addModifyListener(new ModifyListener() {
+                public void modifyText( ModifyEvent theEvent ) {
+                    setLength();
+                }
+            });
 
             GridData gridData2 = new GridData();
             gridData2.horizontalAlignment = GridData.CENTER;
             ispin.setLayoutData(gridData2);
-            ispin.setValue(initialLength);
+            ispin.setSelection(initialLength);
             ispin.setEnabled(true);
             if (multipleObjects) {
                 setLengthForAllCheckBox = WidgetFactory.createCheckBox(lengthGroup, getString("setLengthForAll"), //$NON-NLS-1$
@@ -411,9 +423,13 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
 
         return composite;
     }
+    
+    void setLength() {
+        this.currentLength = this.ispin.getSelection();
+    }
 
     public int getLength() {
-        return ispin.getIntegerValue();
+        return this.currentLength;
     }
 
     public void setInitialLength( int newLength ) {
