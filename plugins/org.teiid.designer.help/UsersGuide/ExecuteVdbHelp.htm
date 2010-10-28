@@ -18,6 +18,26 @@
 <p class="medium">In <strong>Teiid Designer</strong> you can execute a
 <strong>VDB</strong> to test/query actual data.<br>
 </p>
+<p class="medium">The requirements for VDB execution are:<br>
+</p>
+<ol>
+  <li>A deployed VDB backed by valid deployed Data Sources</li>
+  <li>An instance of a Teiid Connection Profile configured for the
+deployed VDB<br>
+  </li>
+</ol>
+<p class="medium">Teiid Designer simplifies this process via <span
+ style="font-weight: bold;">Deploy VDB</span> and <span
+ style="font-weight: bold;">Execute VDB</span> actions.&nbsp; <span
+ style="font-weight: bold;">Deploy VDB</span> does just that, deploy a
+selected VDB to a running Teiid instance. <span
+ style="font-weight: bold;">Execute VDB</span> performs the VDB
+deployment, creates a Teiid Connection Profile, opens the Database
+Development perspective and
+creates a connection to your VDB.</p>
+<p class="subtitle_b16"><a name="executeVDBfromExplorer"></a>Execute
+VDB from Model Explorer<br>
+</p>
 <p class="medium">If you have a Teiid instance defined and connected in
 your Teiid view you can:<br>
 </p>
@@ -60,7 +80,40 @@ your new Teiid
 connection profile and right-click select "<strong>Open SQL Scrapbook</strong>",
 enter your designer SQL (i.e.<strong> SELECT * FROM TableXXXX</strong>),
 select all text and right-click select "<strong>Execute Selected Text</strong>"</p>
+<p class="subtitle_b16"><a name="deployVDBfromExplorer"></a>Deploy VDB
+from Model Explorer<br>
+</p>
+<p class="medium">You can also deploy your VDB first by selecting it in
+the <a href="ModelExplorer.htm"><span style="font-weight: bold;">Model
+Explorer</span></a> and dragging/dropping it onto a connected Teiid
+instance in the <a href="TeiidView.htm"><span
+ style="font-weight: bold;">Teiid view</span></a>, or right-click
+select <span style="font-weight: bold;">Modeling &gt; Deploy</span>
+action.<br>
+</p>
+<p class="medium">Once deployed, you can select the VDB in the <span
+ style="font-weight: bold;">Teiid
+View</span> and right-click select the <span style="font-weight: bold;">Execute
+VDB</span> action there. This will create a Teiid Connection Profile
+specific for that VDB, open the Database Development perspective and
+create a connection to your VDB. Continue with <span
+ style="font-weight: bold;">Step's 2 and 3</span> above.<br>
+</p>
+<p class="medium">Note that if you do not have a Teiid instance defined
+or your default Teiid instance is disconnected, the following dialog
+will be displayed if the <span style="font-weight: bold;">Modeling
+&gt; Deploy</span> action is launched.<br>
+<br>
+</p>
+<p class="medium"><img style="width: 540px; height: 146px;"
+ alt="No Teiid Instance Available"
+ src="images/views/no-teiid-instance-for-deploy-vdb-dialog.png"
+ hspace="20"><br>
+</p>
 <p class="medium"><br>
+</p>
+<p class="subtitle_b16"><a name="executeDeployedVDB"></a>Executing a
+Deployed VDB<br>
 </p>
 <p class="medium">To execute a <strong>VDB</strong>, that's been
 deployed manually, follow the steps
@@ -117,6 +170,7 @@ tab.<br>
 <blockquote>
 </blockquote>
 <p>&nbsp;</p>
+<br>
 <p class="subtitle_b16">Related Topics</p>
 <ul>
   <li><a href="VdbSummary.htm" class="medium">VDB Facts</a></li>

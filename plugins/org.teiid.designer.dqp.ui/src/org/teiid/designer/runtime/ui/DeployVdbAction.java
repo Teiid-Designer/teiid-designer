@@ -80,6 +80,10 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
         if (server != null) {
             deployVdb(server, selectedVDB);
+        } else {
+        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.title"), //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.message")); //$NON-NLS-1$
         }
 
     }
