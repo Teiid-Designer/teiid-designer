@@ -78,14 +78,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     public void run() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
-        if (server != null) {
-            deployVdb(server, selectedVDB);
-        } else {
-        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.title"), //$NON-NLS-1$
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.message")); //$NON-NLS-1$
-        }
-
+        deployVdb(server, selectedVDB);
     }
 
     public void selectionChanged( IWorkbenchPart part,
@@ -107,7 +100,17 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     public static VDB deployVdb( final Server server,
                                  final Object vdbOrVdbFile ) {
 
-
+        if (server == null) {
+        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.title"), //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.message")); //$NON-NLS-1$
+        	return null;
+        } else if( !server.isConnected() ) {
+        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.title"), //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.message", server.getUrl())); //$NON-NLS-1$
+        	return null;
+    	}
 
         BusyIndicator.showWhile(null, new Runnable() {
 			

@@ -120,16 +120,6 @@ public final class ServerWizard extends Wizard {
                                         UTIL.getString("serverWizardNewServerErrorMsg")); //$NON-NLS-1$
             }
         }
-        
-        if( this.page.shouldAutoConnect() ) {
-        	try {
-				server.getAdmin();
-			} catch (Exception e) {
-				status = new Status(IStatus.ERROR, 
-						DqpUiConstants.PLUGIN_ID, 
-						UTIL.getString("serverWizardNewServerAutoConnectError"), e); //$NON-NLS-1$
-			}
-        }
 
         // log if necessary
         if (!status.isOK()) {
@@ -139,4 +129,11 @@ public final class ServerWizard extends Wizard {
         return (status.getSeverity() != IStatus.ERROR);
     }
 
+    public boolean shouldAutoConnect() {
+    	return this.page.shouldAutoConnect();
+    }
+    
+    public Server getServer() {
+    	return this.page.getServer();
+    }
 }

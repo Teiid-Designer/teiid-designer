@@ -229,7 +229,6 @@ public class Server {
     public IStatus testPing() {
         try {
         	Admin adminApi = getAdmin().getAdminApi();
-        	adminApi = getAdmin().getAdminApi();
             adminApi.close();
             this.admin = null;
         } catch (Exception e) {
