@@ -1370,45 +1370,80 @@ public final class PreviewManager extends JobChangeAdapter
         // set new server
         this.previewServer.set(server);
 
+        boolean serverDeleted = (server == null);
+        
         // mark all PVDBs as needing to be deployed
         resetAllDeployedStatuses();
 
         // cleanup old server if it can be reached
-        if ((oldServer != null) && oldServer.isConnected()) {
-            PreviewContext oldContext = new PreviewContext() {
-
-                @Override
-                public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                            Server previewServer ) throws Exception {
-                    return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
-                }
-
-                @Override
-                public IFile getPreviewVdb( IResource projectOrModel ) {
-                    return previewContext.getPreviewVdb(projectOrModel);
-                }
-
-                @Override
-                public String getPreviewVdbDeployedName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbDeployedName(pvdbPath);
-                }
-
-                @Override
-                public String getPreviewVdbJndiName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbJndiName(pvdbPath);
-                }
-            };
-
-            // delete all Preview VDBs on old server
-            for (IProject project : getAllProjects()) {
-                for (IFile pvdbFile : findProjectPvdbs(project, false)) {
-                    Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
-                                                                                getPreviewVdbVersion(pvdbFile),
-                                                                                getPreviewVdbJndiName(pvdbFile), oldContext,
-                                                                                oldServer);
-                    deleteDeployedPvdbJob.schedule();
-                }
-            }
+        if ((oldServer != null)) {
+        	if( oldServer.isConnected() ) {
+	            PreviewContext oldContext = new PreviewContext() {
+	
+	                @Override
+	                public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
+	                                                            Server previewServer ) throws Exception {
+	                    return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
+	                }
+	
+	                @Override
+	                public IFile getPreviewVdb( IResource projectOrModel ) {
+	                    return previewContext.getPreviewVdb(projectOrModel);
+	                }
+	
+	                @Override
+	                public String getPreviewVdbDeployedName( IPath pvdbPath ) {
+	                    return previewContext.getPreviewVdbDeployedName(pvdbPath);
+	                }
+	
+	                @Override
+	                public String getPreviewVdbJndiName( IPath pvdbPath ) {
+	                    return previewContext.getPreviewVdbJndiName(pvdbPath);
+	                }
+	            };
+	
+	            
+	            // If the server is being deleted, then we need to set up a job listener so we can close the server when ALL
+	            // delete jobs are completed. This removes any "sessions" via the adminAPI objects
+	            Collection<Job> jobs = new ArrayList<Job>();
+	
+	            
+	            // delete all Preview VDBs on old server
+	            for (IProject project : getAllProjects()) {
+	                for (IFile pvdbFile : findProjectPvdbs(project, false)) {
+	                    Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
+	                                                                                getPreviewVdbVersion(pvdbFile),
+	                                                                                getPreviewVdbJndiName(pvdbFile), oldContext,
+	                                                                                oldServer);
+	                    jobs.add(deleteDeployedPvdbJob);
+	                }
+	            }
+	            
+	            if( jobs.isEmpty() ) {
+	            	oldServer.close();
+	            } else {
+	                try {
+						CountDownLatch latch = new CountDownLatch(jobs.size());
+						IJobChangeListener shutdownJobListener = new ServerDeleteJobListener(latch,oldServer, serverDeleted);
+						for (Job job : jobs) {
+						    job.addJobChangeListener(shutdownJobListener);
+						    job.schedule();
+						}
+	
+						// wait for at most 10 seconds plus a quarter second per job
+						latch.await(10 + (int)(jobs.size() / 4.0), TimeUnit.SECONDS);
+					} catch (InterruptedException e) {
+						// Make sure we close the old server
+						if( serverDeleted ) {
+							oldServer.close();
+						}
+					}
+	            }
+        	} else {
+        		if( serverDeleted ) {
+        			oldServer.close();
+        		}
+        	}
         }
     }
 
@@ -1573,5 +1608,30 @@ public final class PreviewManager extends JobChangeAdapter
             if (monitor != null) monitor.subTask(NLS.bind(Messages.PreviewShutdownTeiidCleanupTask, latch.getCount()));
         }
     }
-
+    
+    class ServerDeleteJobListener extends JobChangeAdapter {
+        private final CountDownLatch latch;
+        private final Server server;
+        private boolean serverDeleted = false;
+        
+        public ServerDeleteJobListener( CountDownLatch latch, Server server, boolean serverDeleted) {
+            this.latch = latch;
+            this.server = server;
+            this.serverDeleted = serverDeleted;
+        }
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+         */
+        @Override
+        public void done( IJobChangeEvent event ) {
+            this.latch.countDown();
+            if( this.latch.getCount() == 0 ) {
+            	if( serverDeleted ) {
+            		this.server.close();
+            	}
+            }
+        }
+    }
 }
