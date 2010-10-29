@@ -845,19 +845,24 @@ public final class PreviewManager extends JobChangeAdapter
                         }
                     }
 
-                    // delete PVDB if there is no associated model
+                    // remove project part of path because it gets added back in later
+                    IPath path = pvdbPath.removeFirstSegments(1);
+                    IFile modelFile = project.getFile(path);
+
                     if (delete) {
-                        // remove project part of path because it gets added back in
-                        IPath path = pvdbPath.removeFirstSegments(1);
-                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(project.getFile(path), this.context);
+                        // delete PVDB if there is no associated model
+                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(modelFile, this.context);
                         batchJob.add(deletePvdbJob);
+                    } else {
+                        // Make sure PVDB is synchronized. One way a PVDB won't be synchronized is if the model was dirty when
+                        // the project was closed and the user saved the file as part of the project being closed.
+                        UpdatePreviewVdbJob updatePvdbJob = new UpdatePreviewVdbJob(modelFile, getPreviewServer(), this.context);
+                        batchJob.add(updatePvdbJob);
                     }
                 }
 
-                // only schedule if there are jobs to run
-                if (!batchJob.getJobs().isEmpty()) {
-                    batchJob.schedule();
-                }
+                // run job
+                batchJob.schedule();
             }
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.DeleteOrphanedPreviewVdbsJobError, project.getName()));
