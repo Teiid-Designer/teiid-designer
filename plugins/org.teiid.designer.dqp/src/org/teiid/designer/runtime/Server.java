@@ -107,6 +107,20 @@ public class Server {
     // ===========================================================================================================================
 
     /**
+     * Perform cleanup
+     */
+    public void close() {
+    	if( this.admin != null ) {
+        	Admin adminApi = this.admin.getAdminApi();
+        	if( adminApi != null) {
+        		adminApi.close();
+        	}
+        	this.admin = null;
+    	}
+    	//System.out.println(" >>>> Server.close() CLOSED  Server = " + getUrl());
+    }
+    
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)

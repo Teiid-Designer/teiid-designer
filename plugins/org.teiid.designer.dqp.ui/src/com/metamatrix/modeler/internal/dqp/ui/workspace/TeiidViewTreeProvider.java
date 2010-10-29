@@ -26,7 +26,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
@@ -158,15 +157,18 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                 // decorate server if can't connect
                 if (!server.isConnected()) {
                     addOfflineServer(server);
-                    ISharedImages images = DqpUiPlugin.getDefault().getWorkbench().getSharedImages();
-                    overlay = images.getImageDescriptor(ISharedImages.IMG_DEC_FIELD_ERROR);
+                    //ISharedImages images = DqpUiPlugin.getDefault().getWorkbench().getSharedImages();
+                    //overlay = images.getImageDescriptor(ISharedImages.IMG_DEC_FIELD_ERROR);
                 }
+            } else {
+            	if( server.isConnected() ) {
+            		overlay = null;
+            	}
             }
 
             if (overlay != null) {
                 decoration.addOverlay(overlay);
             }
-            // }
         }
     }
 
@@ -176,7 +178,15 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      */
     public Object[] getChildren( Object parentElement ) {
 
-        if ((parentElement instanceof Server) && ((Server)parentElement).isConnected()) {
+        if ((parentElement instanceof Server)) {
+        	Server server = (Server)parentElement;
+        	
+        	//System.out.println(" >>>> TVTP.getChildren() IS CONNECTED = " + server.isConnected() + "  Server = " + server.getUrl());
+        	
+        	if( !server.isConnected() ) {
+        		return new Object[0];
+        	}
+        	
             Object[] result = null;
 
             try {
@@ -184,7 +194,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                 Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
 
                 if (this.showDataSources) {
-                    dataSources = new ArrayList(((Server)parentElement).getAdmin().getDataSources());
+                    dataSources = new ArrayList(server.getAdmin().getDataSources());
                     Collection<TeiidDataSource> previewDataSources = new ArrayList<TeiidDataSource>();
 
                     if (!this.showPreviewDataSources) {
@@ -204,7 +214,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                 Collection<TeiidVdb> vdbs = null;
 
                 if (this.showVDBs) {
-                    vdbs = new ArrayList<TeiidVdb>(((Server)parentElement).getAdmin().getVdbs());
+                    vdbs = new ArrayList<TeiidVdb>(server.getAdmin().getVdbs());
                     Collection<TeiidVdb> previewVdbs = new ArrayList<TeiidVdb>();
 
                     if (!this.showPreviewVdbs) {
@@ -222,18 +232,18 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                 }
 
                 if (showTranslators) {
-                    translators = ((Server)parentElement).getAdmin().getTranslators();
+                    translators = server.getAdmin().getTranslators();
                 }
 
                 Collection<Object> allObjects = new ArrayList<Object>();
                 if (!translators.isEmpty()) {
-                    allObjects.add(new TranslatorsFolder((Server)parentElement, translators.toArray()));
+                    allObjects.add(new TranslatorsFolder(server, translators.toArray()));
                 }
                 if (!dataSources.isEmpty()) {
-                    allObjects.add(new DataSourcesFolder((Server)parentElement, dataSources.toArray()));
+                    allObjects.add(new DataSourcesFolder(server, dataSources.toArray()));
                 }
                 if (!vdbs.isEmpty()) {
-                    allObjects.add(new VdbsFolder((Server)parentElement, vdbs.toArray()));
+                    allObjects.add(new VdbsFolder(server, vdbs.toArray()));
                 }
 
                 result = allObjects.toArray();
@@ -276,10 +286,31 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     @Override
     public Image getImage( Object element ) {
         if (element instanceof Server) {
+        	Server server = (Server)element;
+        	boolean isOKtoConnect = isOkToConnect(server);
+        	//System.out.println(" >>>> TVTP.getImage() IS CONNECTED = " + server.isConnected() + " IS OK TO CONNECT = " + isOKtoConnect + "  Server = " + server.getUrl());
+        	boolean isError = false;
+            if (isOKtoConnect) {
+                // decorate server if can't connect
+                if (!server.isConnected()) {
+                    addOfflineServer(server);
+                    isError = true;
+                }
+            } else {
+            	if( !server.isConnected() ) {
+                	isError = true;
+            	}
+            }
+            //isError = false;
             if (getServerManager() != null) {
                 if (this.serverMgr.isDefaultServer((Server)element)) {
+                	if( isError )
+                		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
                     return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
                 }
+            }
+            if( isError ) {
+            	return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }

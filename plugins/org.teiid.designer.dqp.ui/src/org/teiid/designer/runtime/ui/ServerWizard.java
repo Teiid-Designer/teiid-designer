@@ -42,6 +42,8 @@ public final class ServerWizard extends Wizard {
      * The manager in charge of the server registry.
      */
     private final ServerManager serverManager;
+    
+    private Server resultServer;
 
     // ===========================================================================================================================
     // Constructors
@@ -103,17 +105,17 @@ public final class ServerWizard extends Wizard {
     @Override
     public boolean performFinish() {
         IStatus status = Status.OK_STATUS;
-        Server server = this.page.getServer();
+        resultServer = this.page.getServer();
 
         if (this.existingServer == null) {
-            status = this.serverManager.addServer(server);
+            status = this.serverManager.addServer(resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverWizardEditServerErrorMsg")); //$NON-NLS-1$
             }
-        } else if (!this.existingServer.equals(server)) {
-            status = this.serverManager.updateServer(this.existingServer, server);
+        } else if (!this.existingServer.equals(resultServer)) {
+            status = this.serverManager.updateServer(this.existingServer, resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
@@ -134,6 +136,6 @@ public final class ServerWizard extends Wizard {
     }
     
     public Server getServer() {
-    	return this.page.getServer();
+    	return this.resultServer;
     }
 }

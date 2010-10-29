@@ -430,6 +430,7 @@ public final class ServerManager implements EventManager {
 
                             if (previewServer) {
                                 setDefaultServer(server);
+                                server.ping();
                             }
                         }
                     }
