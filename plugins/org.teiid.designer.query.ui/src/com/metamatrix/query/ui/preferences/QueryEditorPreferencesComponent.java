@@ -177,6 +177,10 @@ public class QueryEditorPreferencesComponent implements IEditorPreferencesCompon
         startClausesOnNewLineButton.setSelection(select);
         select = getPreferenceStore().getDefaultBoolean(UiConstants.Prefs.INDENT_CLAUSE_CONTENT);
         indentClausesButton.setSelection(select);
+        boolean treeLayout = getPreferenceStore().getDefaultBoolean(UiConstants.Prefs.TREE_DIAGRAM_LAYOUT);
+        showViewAndSourcesRadioButton.setSelection(!treeLayout);
+        showTreeLayoutRadioButton.setSelection(treeLayout);
+        defaultStringLength.setText(String.valueOf(ModelerCore.getTransformationPreferences().getDefaultStringLengthDefault()));
         setButtonEnabling();
         validate();
     }

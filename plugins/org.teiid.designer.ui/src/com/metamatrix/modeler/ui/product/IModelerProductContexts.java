@@ -128,21 +128,6 @@ public interface IModelerProductContexts extends IProductContexts {
     }
 
     /**
-     * A collection of {@link IProductContext}s specific to preference pages.
-     * 
-     * @since 5.0
-     */
-    interface PreferencePages {
-        /**
-         * The context used to determine if modeler preference page should include the functionality of importing and exporting
-         * preferences.
-         * 
-         * @since 5.0
-         */
-        IProductContext ID_IMPORT_EXPORT = new ProductContext(Categories.PREFERENCES, "modelProjectFilter"); //$NON-NLS-1$
-    }
-
-    /**
      * Collection of {@link IProductContext}s supporting action-related concepts.
      * 
      * @since 4.4

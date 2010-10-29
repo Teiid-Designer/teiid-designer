@@ -356,6 +356,7 @@ public class DiagramPrintPreferencePage extends PreferencePage
 
         int iPct = store.getDefaultInt(PluginConstants.Prefs.Print.SCALING_PERCENTAGE);
         spinScalingPercentage.setSelection(iPct);
+        spinScalingPercentage.setEnabled(radioAdjustToPercentage.getSelection());
 
         // ================================================
         // 3. Margins
