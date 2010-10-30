@@ -109,9 +109,9 @@ public final class GeneralPreferencePage extends PreferencePage
         createExtensionContents(pnlMain);
 
         // add import/export buttons if supported by the product
-        if (UiPlugin.getDefault().isProductContextSupported(IModelerProductContexts.PreferencePages.ID_IMPORT_EXPORT)) {
-            createImportExportContents(pnlMain);
-        }
+//        if (UiPlugin.getDefault().isProductContextSupported(IModelerProductContexts.PreferencePages.ID_IMPORT_EXPORT)) {
+//            createImportExportContents(pnlMain);
+//        }
 
         return theParent;
     }
