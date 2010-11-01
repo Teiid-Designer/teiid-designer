@@ -209,16 +209,27 @@ implements DiagramUiConstants {
     }
 
     private void cleanUpWindowResources() {
-        DiagramUiConstants.Colors.DEPENDENCY.dispose();
-        DiagramUiConstants.Colors.GROUP_BKGRND.dispose();
-        DiagramUiConstants.Colors.GROUP_HEADER.dispose();
-        DiagramUiConstants.Colors.LOGICAL_GROUP_BKGRND.dispose();
-        DiagramUiConstants.Colors.LOGICAL_GROUP_HEADER.dispose();
-        DiagramUiConstants.Colors.OUTLINE.dispose();
-        DiagramUiConstants.Colors.TEMP_GROUP_BKGRND.dispose();
-        DiagramUiConstants.Colors.TEMP_GROUP_HEADER.dispose();
-        DiagramUiConstants.Colors.VIRTUAL_GROUP_BKGRND.dispose();
-        DiagramUiConstants.Colors.VIRTUAL_GROUP_HEADER.dispose();
-        DiagramUiConstants.Colors.VIRTUAL_RS_GROUP_HEADER.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.DEPENDENCY.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.GROUP_BKGRND.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.GROUP_HEADER.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.LOGICAL_GROUP_BKGRND.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.LOGICAL_GROUP_HEADER.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.OUTLINE.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.TEMP_GROUP_BKGRND.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.TEMP_GROUP_HEADER.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.VIRTUAL_GROUP_BKGRND.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.VIRTUAL_GROUP_HEADER.dispose();
+    	if( !DiagramUiConstants.Colors.DEPENDENCY.isDisposed() )
+    		DiagramUiConstants.Colors.VIRTUAL_RS_GROUP_HEADER.dispose();
     }
 }

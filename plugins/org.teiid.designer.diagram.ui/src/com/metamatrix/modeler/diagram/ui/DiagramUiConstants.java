@@ -8,9 +8,10 @@
 package com.metamatrix.modeler.diagram.ui;
 
 import java.util.ResourceBundle;
-import org.eclipse.draw2d.ColorConstants;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
@@ -154,8 +155,6 @@ public interface DiagramUiConstants {
     interface Colors {
         Color GROUP_HEADER = GlobalUiColorManager.getColor(new RGB(0, 100, 246));
         Color GROUP_BKGRND = GlobalUiColorManager.getColor(new RGB(150, 191, 255));
-        Color HILITE = ColorConstants.lightGreen;
-        Color SELECTION = ColorConstants.lightBlue;
         Color OUTLINE = GROUP_BKGRND;
         Color VIRTUAL_GROUP_HEADER = GlobalUiColorManager.getColor(new RGB(255, 153, 0));
         Color VIRTUAL_RS_GROUP_HEADER = GlobalUiColorManager.getColor(new RGB(0, 100, 225));
