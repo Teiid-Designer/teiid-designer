@@ -49,11 +49,12 @@ public class VdbElement implements Serializable {
     @XmlElement( name = "model", required = true, type = ModelElement.class )
     private List<ModelElement> models;
 
+    @XmlElement( name = "data-role", type = DataRoleElement.class )
+    private List<DataRoleElement> dataRoles;
+    
     @XmlElement( name = "entry", type = EntryElement.class )
     private List<EntryElement> entries;
 
-    @XmlElement( name = "data-role", type = DataRoleElement.class )
-    private List<DataRoleElement> dataRoles;
 
     /**
      * Used by JAXB
