@@ -87,18 +87,21 @@ public class DiagramUiUtilities {
     public static final int TABLE_DIAGRAM = 1;
     public static int iDE = 0;
 
-    private static Font baseFont = GlobalUiFontManager.getFont(new FontData("Verdana", 10, 0)); //$NON-NLS-1$
-    private static Font toolTipFont = GlobalUiFontManager.getFont(new FontData("Veranda", 8, 0)); //$NON-NLS-1$
+    private static Font baseFont;
+    private static Font toolTipFont;
 
     public static Font getFont() {
+    	if( baseFont == null ) {
+    		baseFont = GlobalUiFontManager.getFont(new FontData("Verdana", 10, 0)); //$NON-NLS-1$
+    	}
         return baseFont;
     }
 
     public static Font getToolTipFont() {
+    	if( toolTipFont == null ) {
+    		toolTipFont = GlobalUiFontManager.getFont(new FontData("Veranda", 8, 0)); //$NON-NLS-1$
+    	}
         return toolTipFont;
-    }
-
-    public static void setLoggingLevel( int newLevel ) {
     }
 
     public static String getFontString( Font theFont ) {
