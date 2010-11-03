@@ -51,7 +51,7 @@
 					value="2.2" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
-					value="jdbc:jcr:http://localhost:8080/modeshape-rest/repository/default" required="true"
+					value="jdbc:jcr:http://localhost:8080/modeshape-rest/repository" required="true"
 					visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.username" name="User ID"

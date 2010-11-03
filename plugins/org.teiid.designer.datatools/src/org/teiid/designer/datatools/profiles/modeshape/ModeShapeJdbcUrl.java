@@ -1,5 +1,5 @@
 package org.teiid.designer.datatools.profiles.modeshape;
-// jdbc:jcr:http://localhost:8080/modeshape-rest/repository/default
+// jdbc:jcr:http://localhost:8080/modeshape-rest/repository/
 public class ModeShapeJdbcUrl {
 
     private String host = ""; //$NON-NLS-1$
@@ -8,7 +8,7 @@ public class ModeShapeJdbcUrl {
 
     private String protocol = ""; //$NON-NLS-1$
 
-	private String path = ""; //$NON-NLS-1$
+	private String repos = ""; //$NON-NLS-1$
 
     /**
      * @param url
@@ -36,12 +36,12 @@ public class ModeShapeJdbcUrl {
     /**
      * @return Returns the path.
      */
-    public String getPath() {
-        return path;
+    public String getRepos() {
+        return repos;
     }
 
     private void parseURL( String url ) {
-    	// jdbc:jcr:http://localhost:8080/modeshape-rest/repository/default
+    	// jdbc:jcr:http://localhost:8080/modeshape-rest/repository
         try {
             String remainingURL = url.substring(url.indexOf(':') + 1);
             remainingURL = remainingURL.substring(url.indexOf(':'));
@@ -50,7 +50,11 @@ public class ModeShapeJdbcUrl {
             this.host = remainingURL.substring(0, remainingURL.indexOf(':'));
             remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 1);
             this.port = remainingURL.substring(0, remainingURL.indexOf('/'));
-            this.path = remainingURL.substring(remainingURL.indexOf('/'));
+            //snip off port
+            remainingURL = remainingURL.substring(remainingURL.indexOf('/') + 1);
+            //snip off modeshape-rest
+            this.repos =  remainingURL.substring(remainingURL.indexOf('/') + 1);
+
         } catch (Exception e) {
         }
     }

@@ -1,28 +1,39 @@
 package org.teiid.designer.datatools.profiles.modeshape;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributor;
 import org.eclipse.datatools.connectivity.ui.wizards.IDriverUIContributorInformation;
 import org.eclipse.jface.dialogs.DialogPage;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+
+import com.metamatrix.ui.internal.util.WidgetFactory;
 
 public class ModeShapeDriverUIContributor implements IDriverUIContributor, Listener {
 
@@ -38,9 +49,11 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 
     private static final String SSL_BTN_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.SSL_BTN_UI_"); //$NON-NLS-1$
 
+    private static final String BROWSE_BUTTON_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.BROWSE_BUTTON_LBL_UI_"); //$NON-NLS-1$
+    
     private static final String SAVE_PASSWORD_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.SAVE_PASSWORD_LBL_UI_"); //$NON-NLS-1$
 
-	private static final String PATH_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.PATH_LBL_UI_"); //$NON-NLS-1$
+	private static final String PATH_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.REPOS.TXT"); //$NON-NLS-1$
 
     private static final String HOST_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.host"); //$NON-NLS-1$
 
@@ -88,15 +101,19 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 
 	private Text urlText;
 
-	private Label pathLabel;
+	private Label reposLabel;
 
-	private Text pathText;
+	private Combo reposCombo;
 	
     private Properties properties;
 
     private DialogPage parentPage;
 
 	private IDriverUIContributorInformation contributorInformation;
+
+	private Button reposBrowseButton;
+
+	private LabelProvider reposLabelProvider;
     
 	@Override
 	public Composite getContributedDriverUI(Composite parent, boolean isReadOnly) {
@@ -122,7 +139,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 
             Composite baseComposite = new Composite(tabComposite, SWT.NULL);
             GridLayout layout = new GridLayout();
-            layout.numColumns = 2;
+            layout.numColumns = 3;
             baseComposite.setLayout(layout);
             generalTab.setControl(baseComposite);
 
@@ -136,7 +153,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd = new GridData();
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
-            gd.horizontalSpan = 2;
+            gd.horizontalSpan = 3;
             gd.grabExcessHorizontalSpace = true;
             hostText.setLayoutData(gd);
 
@@ -151,23 +168,9 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
+            gd.horizontalSpan = 3;
             portText.setLayoutData(gd);
             
-            pathLabel = new Label(baseComposite, SWT.NONE);
-            pathLabel.setText(PATH_LBL_UI_);
-            gd = new GridData();
-            gd.verticalAlignment = GridData.BEGINNING;
-            pathLabel.setLayoutData(gd);
-
-            pathText = new Text(baseComposite, SWT.SINGLE | SWT.BORDER | additionalStyles);
-            gd = new GridData();
-            gd.horizontalAlignment = GridData.FILL;
-            gd.verticalAlignment = GridData.BEGINNING;
-            gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
-            pathText.setLayoutData(gd);
-
             usernameLabel = new Label(baseComposite, SWT.NONE);
             usernameLabel.setText(USERNAME_LBL_UI_);
             gd = new GridData();
@@ -179,7 +182,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
+            gd.horizontalSpan = 3;
             usernameText.setLayoutData(gd);
 
             passwordLabel = new Label(baseComposite, SWT.NONE);
@@ -193,8 +196,45 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd.horizontalAlignment = GridData.FILL;
             gd.verticalAlignment = GridData.BEGINNING;
             gd.grabExcessHorizontalSpace = true;
-            gd.horizontalSpan = 2;
+            gd.horizontalSpan = 3;
             passwordText.setLayoutData(gd);
+
+            reposLabel = new Label(baseComposite, SWT.NONE);
+            reposLabel.setText(PATH_LBL_UI_);
+            gd = new GridData();
+            gd.horizontalSpan = 3;
+            gd.verticalAlignment = GridData.BEGINNING;
+            reposLabel.setLayoutData(gd);
+
+            reposLabelProvider = new LabelProvider() {
+
+                @Override
+                public String getText( final Object source ) {
+                    return (String)source;
+                }
+            };
+            reposCombo = WidgetFactory.createCombo(baseComposite,
+                    SWT.SIMPLE,
+                    GridData.FILL_HORIZONTAL,
+                    new ArrayList<String>(),
+                    reposLabelProvider,
+                    true);
+            gd = new GridData();
+            gd.horizontalAlignment = GridData.FILL;
+            gd.verticalAlignment = GridData.BEGINNING;
+            gd.grabExcessHorizontalSpace = true;
+            gd.horizontalSpan = 2;
+            reposCombo.setLayoutData(gd);
+
+            reposBrowseButton = new Button(baseComposite, SWT.BUTTON1);
+            reposBrowseButton.setText(BROWSE_BUTTON_LBL_UI_);
+            gd = new GridData();
+            gd.horizontalAlignment = GridData.CENTER;
+            gd.verticalAlignment = GridData.BEGINNING;
+            gd.horizontalSpan = 1;
+            gd.grabExcessHorizontalSpace = false;
+            reposBrowseButton.setLayoutData(gd);
+            reposBrowseButton.setEnabled(false);
 
             protocolCheck = new Button(baseComposite, SWT.CHECK);
             protocolCheck.setText(SSL_BTN_UI_);
@@ -254,18 +294,41 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         if (portText.getText().trim().length() > 0) {
             url += ":" + portText.getText().trim(); //$NON-NLS-1$
         }
-        if (pathText.getText().trim().length() > 0) {
-            url += pathText.getText().trim();
+        if (reposCombo.getText().trim().length() > 0) {
+            String repos = reposCombo.getText().trim();
+            if(repos.indexOf('/') == 0) {
+            	url += repos;
+            } else {
+            	url += "/" + repos;
+            }
         }
         urlText.setText(url);
+    }
+    
+    private String getRestUrl() {
+    	StringBuffer url = new StringBuffer();
+    	if (protocolCheck.getSelection()) {
+            url.append("https://"); //$NON-NLS-1$
+        } else {
+            url.append("http://"); //$NON-NLS-1$
+        }
+        if (hostText.getText().trim().length() > 0) {
+            url.append(hostText.getText().trim());
+        }
+        if (portText.getText().trim().length() > 0) {
+            url.append(":").append(portText.getText().trim()); //$NON-NLS-1$
+        }
+        url.append("/modeshape-rest/"); //$NON-NLS-1$
+        return url.toString();
     }
 
     private void removeListeners() {
         hostText.removeListener(SWT.Modify, this);
         portText.removeListener(SWT.Modify, this);
-        pathText.removeListener(SWT.Modify, this);
+        reposCombo.removeListener(SWT.Modify, this);
         usernameText.removeListener(SWT.Modify, this);
         passwordText.removeListener(SWT.Modify, this);
+        reposBrowseButton.removeListener(SWT.Selection, this);
         protocolCheck.removeListener(SWT.Selection, this);
         savePasswordButton.removeListener(SWT.Selection, this);
     }
@@ -273,34 +336,42 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     private void addListeners() {
         hostText.addListener(SWT.Modify, this);
         portText.addListener(SWT.Modify, this);
-        pathText.addListener(SWT.Modify, this);
+        reposCombo.addListener(SWT.Modify, this);
         usernameText.addListener(SWT.Modify, this);
         passwordText.addListener(SWT.Modify, this);
+        reposBrowseButton.addListener(SWT.Selection, this);
         protocolCheck.addListener(SWT.Selection, this);
         savePasswordButton.addListener(SWT.Selection, this);
     }
 
     public void handleEvent( Event event ) {
-        if (isReadOnly) {
-            if (event.widget == savePasswordButton) {
-                savePasswordButton.setSelection(!savePasswordButton.getSelection());
-            } else if (event.widget == protocolCheck) {
-                protocolCheck.setSelection(!protocolCheck.getSelection());
-            }
-        } else {
-            updateURL();
-            setConnectionInformation();
-        }
+    	if (event.widget == savePasswordButton) {
+    		savePasswordButton.setSelection(savePasswordButton.getSelection());
+    	} else if (event.widget == protocolCheck) {
+    		protocolCheck.setSelection(protocolCheck.getSelection());
+    	} else if (event.widget == reposBrowseButton) {
+    		browseForRepos();
+    	}
+    	updateURL();
+    	updateBrowseButtonEnablement();
+    	setConnectionInformation();
     }
 
-    public void setConnectionInformation() {
-        // TODO: test to see if this is an issue, might need to stuff something in
-    	//properties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID, this.databaseText.getText().trim());
-        properties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, this.passwordText.getText());
+	private void updateBrowseButtonEnablement() {
+		if(!hostText.getText().trim().isEmpty() &&
+				!portText.getText().trim().isEmpty() &&
+				!usernameText.getText().trim().isEmpty() &&
+				!passwordText.getText().trim().isEmpty()) {
+			reposBrowseButton.setEnabled(true);
+		} else {
+			reposBrowseButton.setEnabled(false);
+		}
+	}
 
+	public void setConnectionInformation() {
+        properties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, this.passwordText.getText());
         properties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, this.usernameText.getText());
         properties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, this.urlText.getText().trim());
-
         properties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID,
                                String.valueOf(savePasswordButton.getSelection()));
         this.contributorInformation.setProperties(properties);
@@ -315,14 +386,16 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         } else if (portText.getText().trim().length() < 1) {
             parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PORT_REQ_MSG_UI_")); //$NON-NLS-1$
             isComplete = false;
-        } else if (pathText.getText().trim().length() < 1) {
+        } else if (usernameText.getText().trim().length() < 1) {
+            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
+            isComplete = false;
+        } else if (passwordText.getText().trim().length() < 1) {
+            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PASSWORD_REQ_MSG_UI_")); //$NON-NLS-1$
+            isComplete = false;
+        } else if (reposCombo.getText().trim().length() < 1) {
             parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_PATH_REQ_UI_")); //$NON-NLS-1$
             isComplete = false;
         }
-        else if (usernameText.getText().trim().length() < 1) {
-            parentPage.setErrorMessage(DatatoolsUiPlugin.UTIL.getString("ModeShapeDriverUIContributor.VALIDATE_USERID_REQ_MSG_UI_")); //$NON-NLS-1$
-            isComplete = false;
-        } 
         if (isComplete) {
             parentPage.setErrorMessage(null);
         }
@@ -349,7 +422,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 						.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID));
         hostText.setText(url.getHost());
         portText.setText(url.getPort());
-        pathText.setText(url.getPath());
+        reposCombo.setText(url.getRepos());
 
         String username = this.properties.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
         if (username != null) {
@@ -382,7 +455,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         //summaryData.add(new String[] {DATABASE_SUMMARY_DATA_TEXT_, this.databaseText.getText().trim()});
         summaryData.add(new String[] {HOST_SUMMARY_DATA_TEXT_, this.hostText.getText().trim()});
         summaryData.add(new String[] {PORT_SUMMARY_DATA_TEXT_, this.portText.getText().trim()});
-        summaryData.add(new String[] {PATH_SUMMARY_DATA_TEXT_, this.pathText.getText().trim()});
+        summaryData.add(new String[] {PATH_SUMMARY_DATA_TEXT_, this.reposCombo.getText().trim()});
 
         summaryData.add(new String[] {USERNAME_SUMMARY_DATA_TEXT_, this.usernameText.getText().trim()});
         summaryData.add(new String[] {SSL_SUMMARY_DATA_TEXT_,
@@ -392,4 +465,25 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         summaryData.add(new String[] {URL_SUMMARY_DATA_TEXT_, this.urlText.getText().trim()});
         return summaryData;
     }
+	
+    private void browseForRepos() {
+    	URL url;
+		try {
+			url = new URL(getRestUrl());
+			RestUtils restUtils = new RestUtils();
+			List<String> repositories = restUtils.getRepositoryList(url, usernameText.getText(), passwordText.getText());
+			reposCombo.setItems(repositories.toArray(new String[0]));
+			if(!repositories.isEmpty()) {
+				reposCombo.setText(repositories.get(0));
+			}
+		} catch (Exception e) {
+			Shell shell = Display.getCurrent().getActiveShell();
+			MessageDialog.openError(shell,
+                    DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.repos.browse.exception"), e.getMessage()); //$NON-NLS-1$
+					IStatus status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
+                        DatatoolsUiConstants.UTIL.getString("ModeShapeDriverUIContributor.repos.browse.exception"), e); //$NON-NLS-1$
+					DatatoolsUiConstants.UTIL.log(status);
+		}
+	}
+
 }
