@@ -12,6 +12,7 @@ public interface IBuilderConstants {
 	static final Object V_FUNC_CLOSE = ")"; //$NON-NLS-1$
 	static final Object V_FUNC_AS_T = "AS t;"; //$NON-NLS-1$
 	static final Object V_FUNC_QUOTE = "'"; //$NON-NLS-1$
+	static final Object V_FUNC_DOUBLE_QUOTE = "\""; //$NON-NLS-1$
 	static final Object V_FUNC_PASSING = "PASSING"; //$NON-NLS-1$
 	static final Object V_FUNC_COLUMNS = "COLUMNS"; //$NON-NLS-1$
 	static final Object V_FUNC_COMMA = ","; //$NON-NLS-1$
@@ -21,5 +22,5 @@ public interface IBuilderConstants {
 	static final Object V_FUNC_XMLNAMESPACES = "XMLNAMESPACES"; //$NON-NLS-1$
 	static final Object V_FUNC_AS = "AS"; //$NON-NLS-1$
 	static final Object V_FUNC_DEFAULT = "DEFAULT"; //$NON-NLS-1$
-
+	static final Object V_FUNC_RESULT = "_RESULT"; //$NON-NLS-1$
 }

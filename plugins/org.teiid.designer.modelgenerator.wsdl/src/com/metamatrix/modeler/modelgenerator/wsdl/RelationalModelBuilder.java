@@ -23,6 +23,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.impl.XSDSchemaImpl;
+import org.eclipse.xsd.util.XSDConstants;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -94,13 +98,15 @@ public class RelationalModelBuilder {
 	private List<ProcedureBuilder> builders= new ArrayList<ProcedureBuilder>();
 	private SOAPConnectionInfoProvider connProvider;
 	private IConnectionProfile connectionProfile;
+	private XSDSchema[] schemas;
 	
 	public RelationalModelBuilder(Model model, IConnectionProfile profile) throws SchemaProcessingException {
 		wsdlModel = model;
 		SchemaProcessor processor = new SOAPSchemaProcessor(null);
 		processor.representTypes(true);
 		processor.setNamespaces(wsdlModel.getNamespaces());
-		processor.processSchemas(wsdlModel.getSchemas());
+		schemas = wsdlModel.getSchemas();
+		processor.processSchemas(schemas);
 		schemaModel = processor.getSchemaModel();
 		factory = com.metamatrix.metamodels.relational.RelationalPackage.eINSTANCE
 				.getRelationalFactory();
@@ -256,10 +262,17 @@ public class RelationalModelBuilder {
 				elementNamespace = part.getTypeNamespace();
 			}
 
+			ITraversalCtxFactory factory = new ResultTraversalContextFactory();
 			QName qName = new QName(elementNamespace, elementName);
 			SchemaObject sObject = schemaModel.getElement(qName);
-			ITraversalCtxFactory factory = new ResultTraversalContextFactory();
-			requestBuilder.build(sObject, factory);
+			
+			if(null != sObject) {
+				requestBuilder.build(sObject, factory);
+			} else {
+				XSDSimpleTypeDefinition simpleType = XSDSchemaImpl.getSchemaForSchema(schemas[0].getSchemaForSchemaNamespace()).
+					resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, elementName);
+				requestBuilder.build(simpleType, part.getName(), factory);
+			}
 		}
 		
 	}
@@ -282,11 +295,18 @@ public class RelationalModelBuilder {
 				elementName = part.getTypeName(); // get the name here also
 				elementNamespace = part.getTypeNamespace();
 			}
-
+			
+			ITraversalCtxFactory factory = new RequestTraversalContextFactory();
 			QName qName = new QName(elementNamespace, elementName);
 			SchemaObject sObject = schemaModel.getElement(qName);
-			ITraversalCtxFactory factory = new RequestTraversalContextFactory();
-			resultBuilder.build(sObject, factory);
+			if(null != sObject) {
+				resultBuilder.build(sObject, factory);
+			} else {
+				XSDSimpleTypeDefinition simpleType = XSDSchemaImpl.getSchemaForSchema(schemas[0].getSchemaForSchemaNamespace()).
+					resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, elementName);
+				resultBuilder.build(simpleType, part.getName(), factory);
+			}
+			
 		}
 	}
 

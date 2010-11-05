@@ -21,6 +21,7 @@ import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
+import com.metamatrix.modeler.schema.tools.NameUtil;
 
 /**
  * 
@@ -65,7 +66,8 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 		// Add a colum to the result for the data.
 		Column resultCol = factory.createColumn();
 		result.getColumns().add(resultCol);
-		resultCol.setName(name);
+		resultCol.setName(NameUtil.normalizeName(name));
+		resultCol.setNameInSource(name);
 		resultCol.setType(datatypeManager.getDatatypeForXsdType(type));
 		cachedColumns .add(resultCol);
 		
@@ -80,8 +82,8 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 			throws ModelWorkspaceException, ModelerCoreException {
 		procedure = factory.createProcedure();
 		builder.getSchema().getProcedures().add(procedure);
-		procedure.setName(EXTRACT + procedureNameBase);
-		procedure.setNameInSource(EXTRACT + procedureNameBase);
+		procedure.setName(EXTRACT + NameUtil.normalizeName(procedureNameBase));
+		procedure.setNameInSource(procedureNameBase);
 
 		ProcedureParameter param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
@@ -94,7 +96,8 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 
 		ProcedureResult result = factory.createProcedureResult();
 		procedure.setResult(result);
-		result.setName(procedureNameBase);
+		result.setName(NameUtil.normalizeName(procedureNameBase) + IBuilderConstants.V_FUNC_RESULT);
+		result.setNameInSource(procedureNameBase);
 		builder.addProcedure(procedureNameBase);
 		
 		//transformation = builder.getModelResource().getModelTransformations().createNewSqlTransformation(procedure);
@@ -144,7 +147,9 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 			}
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-			sqlString.append(column.getName());
+			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
+			sqlString.append(column.getNameInSource());
+			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 			sqlString.append(datatypeManager.getName(column.getType()));
 			// Not sure we need the path

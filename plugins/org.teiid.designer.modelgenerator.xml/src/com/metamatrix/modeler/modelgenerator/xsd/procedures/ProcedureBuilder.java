@@ -28,12 +28,12 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.ElementImpl;
+import com.metamatrix.modeler.schema.tools.model.schema.impl.TypeDefinition;
 
 public class ProcedureBuilder {
 
 	RelationalFactory factory = com.metamatrix.metamodels.relational.RelationalPackage.eINSTANCE
 	.getRelationalFactory();
-//	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
 	private Set<String> procedures = new HashSet<String>();
 	private Schema operationSchema;
 	private ITraversalCtxFactory traversalCtxFactory;
@@ -90,12 +90,25 @@ public class ProcedureBuilder {
 				XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) type;
 				addComplexTypeDefToProcedureResult(complexType, ctx);
 			} else if (type instanceof XSDSimpleTypeDefinition) {
-				XSDElementDeclaration element = ((ElementImpl) sObject)
-				.getElem();
-				XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
-				addElementDeclarationToProcedureResult(element, simpleType, ctx);
+				if(sObject instanceof TypeDefinition) {
+					XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) sObject.getType();
+					addSimpleTypeDefToProcedureResult(simpleType, ctx);
+				} else {
+					XSDElementDeclaration element = ((ElementImpl) sObject)
+					.getElem();
+					XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
+					addElementDeclarationToProcedureResult(element, simpleType, ctx);
+				}
 			}
 		}
+	}
+	
+	public void build(XSDSimpleTypeDefinition simpleType, String name,
+			ITraversalCtxFactory traversalCtxFactory) throws ModelerCoreException {
+		this.traversalCtxFactory = traversalCtxFactory;
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(name, new QName(simpleType.getTargetNamespace(), simpleType.getName()), this);
+		traversalContexts.add(ctx);
+		addSimpleTypeDefToProcedureResult(simpleType, name, ctx);
 	}
 	
 	public void createTransformations() {
@@ -184,6 +197,11 @@ public class ProcedureBuilder {
 		if(null == name) {
 			name = simpleType.getAliasName();
 		}
+		ctx.addColumn(name, simpleType);
+		ctx.setReachedResultNode(true);
+	}
+	
+	private void addSimpleTypeDefToProcedureResult(XSDSimpleTypeDefinition simpleType, String name, TraversalContext ctx) throws ModelerCoreException {
 		ctx.addColumn(name, simpleType);
 		ctx.setReachedResultNode(true);
 	}
