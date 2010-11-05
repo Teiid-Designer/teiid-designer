@@ -143,9 +143,6 @@
          <actionSet
                id="metadataActionSet">
          </actionSet>
-         <actionSet
-               id="relationship.ui.actions.navigationActionSet">
-         </actionSet>
       </perspectiveExtension>
    </extension>
 <!-- New Object Wizard for Relationship -->
