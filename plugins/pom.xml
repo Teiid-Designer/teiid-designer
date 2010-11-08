@@ -74,8 +74,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.relationship.ui</module>
 		<module>org.teiid.designer.roles</module>
 		<module>org.teiid.designer.roles.ui</module>
-		<module>org.teiid.designer.rose</module>
-		<module>org.teiid.designer.rose.ui</module>
 		<module>org.teiid.designer.schema.tools</module>
 		<module>org.teiid.designer.sdt</module>
 		<module>org.teiid.designer.tools.textimport.ui</module>
