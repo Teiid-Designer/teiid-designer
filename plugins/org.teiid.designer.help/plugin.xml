@@ -15,7 +15,6 @@
 <!-- ============================================== -->
    <extension point="org.eclipse.help.toc">
       <toc file="designer_toc.xml" primary="true" /> 
-      <toc file="QuerySupportBook.xml" primary="true" />
    </extension>
 <!-- =============================================== -->
 <!-- Link the sections into the book                 -->
@@ -24,7 +23,6 @@
       <toc file="getting_started.xml"/>
       <toc file="designer_overview.xml"/>
       <toc file="how_tos.xml"/>
-      <toc file="QuerySupportRef.xml"/>
    </extension>
 
 </plugin>
