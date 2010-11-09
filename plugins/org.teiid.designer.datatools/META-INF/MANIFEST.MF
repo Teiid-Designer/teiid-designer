@@ -17,7 +17,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools,
  org.teiid.designer.datatools.connection,
  org.teiid.designer.datatools.profiles.ldap,
- org.teiid.designer.datatools.profiles.modeshape,
- org.teiid.designer.datatools.profiles.teiidadmin
+ org.teiid.designer.datatools.profiles.modeshape
 Bundle-ClassPath: lib/jackson-all-1.6.1.jar,
  .
