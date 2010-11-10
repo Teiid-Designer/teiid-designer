@@ -7,10 +7,12 @@
  */
 package com.metamatrix.modeler.internal.mapping.factory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -124,14 +126,26 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     protected String refactorUserSql(String sqlStr, Map refactoredPaths) {
     	// Only need to fix SQL if Models are renamed, so looking for 
     	Map<String, String> changedModelNames = getChangedNameMap(refactoredPaths);
-    	String newString = sqlStr;
-    	for( String key: changedModelNames.keySet() ) {
-    		String oldName = (String)key;
-    		String newName = (String)changedModelNames.get(key);
-    		newString = newString.replace(oldName, newName);
+    	
+    	// Break the SQL up into managable tokens and look for tokens that start with "ModelName."
+    	// and replace with "NewModelName."
+    	// Reconstruct the SQL as we go.
+    	Collection<String> tokens = tokenize(sqlStr);
+    	StringBuffer sb = new StringBuffer(sqlStr.length());
+    	
+    	for( String token : tokens ) {
+    		String appendStr = token;
+    		for( String key: changedModelNames.keySet() ) {
+	    		String oldName = (String)key + '.';
+	    		String newName = (String)changedModelNames.get(key) + '.';
+	    		if( token.startsWith(oldName) ) {
+	    			appendStr = token.replaceFirst(oldName, newName);
+	    			break;
+	    		}
+    		}
+    		sb.append(appendStr);
     	}
-
-    	return newString;
+    	return sb.toString();
     }
     
     private Map<String, String> getChangedNameMap(Map refactoredPaths) {
@@ -154,6 +168,19 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
 			IProgressMonitor monitor) {
 		// TODO Auto-generated method stub
 	}
+    
+    private Collection<String> tokenize(String sqlStr) {
+    	Collection<String> tokens = new ArrayList<String>();
+    	String token;
+    	StringTokenizer st = new StringTokenizer(sqlStr, " ", true); //$NON-NLS-1$
+		while (st.hasMoreTokens()) {
+			token = st.nextToken();
+			if( token != null && token.length() > 0 ) {
+				tokens.add(token);
+			}
+		}
+		return tokens;
+    }
     
 
 }

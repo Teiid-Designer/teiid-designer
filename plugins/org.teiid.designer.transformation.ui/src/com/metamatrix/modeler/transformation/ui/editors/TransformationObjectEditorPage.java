@@ -1544,9 +1544,9 @@ public class TransformationObjectEditorPage
      * Handler method for transformation status change. Basically, this does a refresh when the status of the current query
      * changes. If the allowsUpdate status of the target changes, this will result in a tab change.
      */
-    void handleTransformationStatusChangeEvent( boolean reconcileTarget,
-                                                Object txnSource,
-                                                boolean overwriteDirty ) {
+    void handleTransformationStatusChangeEvent( final boolean reconcileTarget,
+                                                final Object txnSource,
+                                                final boolean overwriteDirty ) {
 
         if (txnSource != this) {
             if (this.validator != null) {
@@ -1566,7 +1566,12 @@ public class TransformationObjectEditorPage
                         // Call setEditorContent() instead of setText() to force validation.
                         // We want to do this because the txnSource is NOT this T-Editor and we need to assume that the SQL has
                         // changed and we need to re-set the Editor from the SQL T-Root object and it's SQL
-                        setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
+                        UiUtil.runInSwtThread(new Runnable() {
+                            public void run() {
+                            	setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
+                            }
+                        }, true);
+                        
                         didSetText = true;
                     }
                 }
