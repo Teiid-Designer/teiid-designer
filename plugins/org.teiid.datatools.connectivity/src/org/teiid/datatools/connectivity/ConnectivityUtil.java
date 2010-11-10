@@ -73,7 +73,14 @@ public class ConnectivityUtil {
             DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
             if (mDriver == null) {
                 createTeiidPreviewDriverInstance(driverPath, connectionURL, username, password);
+            } else {
+            	// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
+            	String jarList = mDriver.getJarList();
+            	if(jarList != driverPath) {
+            		mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
+            	}
             }
+            
 
             return pm.createTransientProfile(TEIID_PROFILE_PROVIDER_ID, createDriverProps(driverPath,
                                                                                           connectionURL,
@@ -122,6 +129,12 @@ public class ConnectivityUtil {
             DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
             if (mDriver == null) {
                 createTeiidPreviewDriverInstance(driverPath, connectionURL, username, password);
+            } else {
+            	// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
+            	String jarList = mDriver.getJarList();
+            	if(jarList != driverPath) {
+            		mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
+            	}
             }
             IConnectionProfile existingCP = pm.getProfileByName(profileName);
             if (existingCP != null) {
