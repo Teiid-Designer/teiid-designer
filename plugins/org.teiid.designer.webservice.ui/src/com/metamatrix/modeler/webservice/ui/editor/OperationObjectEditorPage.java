@@ -365,7 +365,6 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
             DisplayNode node = (DisplayNode)childIter.next();
             if (node.getLanguageObject() instanceof Block) {
                 // Update declaration-to-assignment mapping using new nodes and set visibility of all nodes as appropriate
-                this.declarationsToAssignments.clear();
                 node.setVisible(true, true);
                 Map declarations = new HashMap();
                 for (Iterator blockIter = node.getChildren().iterator(); blockIter.hasNext();) {
