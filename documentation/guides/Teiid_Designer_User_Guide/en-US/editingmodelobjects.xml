@@ -58,7 +58,7 @@
 									<title>New Child Action In Model Explorer</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/NewChildActionInExplorer.jpg" />
+											<imagedata fileref="images/screencaps/new-child-action-in-explorer.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -70,7 +70,7 @@
 									<title>New Model Object In Explorer</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInExplorer.jpg" />
+											<imagedata fileref="images/screencaps/rename-column-in-explorer.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -98,7 +98,7 @@
 									<title>New Child Action In Diagram</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/AddChildInDiagramEditor.jpg" />
+											<imagedata fileref="images/screencaps/new-child-action-in-diagram.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -110,7 +110,7 @@
 									<title>New Model Object In Diagram</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInDiagramEditor.jpg" />
+											<imagedata fileref="images/screencaps/rename-column-in-diagram.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -140,7 +140,7 @@
 									<title>New Child Action In Table Editor</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/AddChildInTableEditor.jpg" />
+											<imagedata fileref="images/screencaps/new-child-action-in-table-editor.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -149,14 +149,6 @@
 								<para><emphasis role="bold">Step 3 </emphasis> - The selected tab in the <emphasis role="bold">Table Editor</emphasis>
 								changes to the tab for the child object type, the new model object row is displayed and the 
 								row's name table cell is highlighted for renaming.</para>
-								<figure>
-									<title>New Model Object In Table Editor</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInTableEditor.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -184,7 +176,7 @@
 									<title>New Sibling Action In Model Explorer</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/NewSiblingActionInExplorer.jpg" />
+											<imagedata fileref="images/screencaps/new-sibling-action-in-explorer.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -192,14 +184,6 @@
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
 									the <xref linkend="model-explorer-view" /> and is highlighted for renaming.</para>
-								<figure>
-									<title>New Model Sibling In Explorer</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInExplorer.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -224,7 +208,7 @@
 									<title>New Sibling Action In Diagram</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/NewSiblingInDiagramEditor.jpg" />
+											<imagedata fileref="images/screencaps/new-sibling-action-in-diagram.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -232,14 +216,6 @@
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
 									the diagram and is highlighted for renaming.</para>
-								<figure>
-									<title>New Sibling Object In Diagram</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInDiagramEditor.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -265,7 +241,7 @@
 									<title>New Sibling Action In Table Editor</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/AddSiblingInTableEditor.jpg" />
+											<imagedata fileref="images/screencaps/new-sibling-action-in-table-editor.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -274,14 +250,6 @@
 								<para><emphasis role="bold">Step 3 </emphasis> - The selected tab in the <emphasis role="bold">Table Editor</emphasis>
 								changes to the tab for the child object type, the new model object row is displayed and the 
 								row's name table cell is highlighted for renaming.</para>
-								<figure>
-									<title>New Sibling Object In Table Editor</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/RenameInTableEditor.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -308,7 +276,7 @@
 									<title>New Association Action In Model Explorer</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKAssociationInExplorer.jpg" />
+											<imagedata fileref="images/screencaps/new-fk-relationship-in-explorer.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -319,7 +287,7 @@
 									<title>New Association In Diagram</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
+											<imagedata fileref="images/screencaps/new-fk-linked-in-diagram.png" />
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -342,27 +310,11 @@
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Right-click. From the pop-up menu, select 
 								<emphasis role="bold">New Association > Foreign Key Relationship.</emphasis>.</para>
-								<figure>
-									<title>New Association Action In Model Explorer</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKAssociationInDiagram.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new relationship link is displayed in the diagram.
 									The Column, Foreign Key, Primary Key reference properties are properly set 
 									on the selected columns, new primary key and new foreign key.</para>
-								<figure>
-									<title>New Association In Diagram</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 						OR
@@ -373,27 +325,11 @@
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Drag the column to another table and drag 
 									over a column and drop onto this column. The target column should highlight in Yellow.</para>
-								<figure>
-									<title>New Association Via Drag-and-Drop In Diagram</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKAssociationViaDND.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new relationship link is displayed in the diagram.
 									The Column, Foreign Key, Primary Key reference properties are properly set 
 									on the selected columns, new primary key and new foreign key.</para>
-								<figure>
-									<title>New Association In Diagram</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -413,14 +349,6 @@
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Right-click. From the pop-up menu, select 
 								<emphasis role="bold">New Association > Foreign Key Relationship.</emphasis>.</para>
-								<figure>
-									<title>New Association Action In Model Explorer</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/NewFKAssociationInTable.jpg" />
-										</imageobject>
-									</mediaobject>
-								</figure>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - New Foreign Key and Primary Key objects 
@@ -432,7 +360,6 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-				
 			
 		</sect2>
 	</sect1>
@@ -442,25 +369,14 @@
 	
 	<sect1 id="model-object-editors-section">
 		<title>Model Object Editors</title>
-		<para>Teiid Designer provides specialized object editors to handle
-			complex model objects and their unique properties. These objects
-			include:</para>
-		<itemizedlist>
-			<listitem><para><emphasis role="bold"><link linkend="transformation-editor-section">Transformations</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="input-set-editor-section">Mapping Class Input Sets</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="choice-editor-section">XML schema choice elements</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="recursion-editor-section">Recursive Mapping Classes</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="operation-editor-section">Web Service Operations</link></emphasis></para></listitem>
-		</itemizedlist>
-		<para>This section describes these editors in detail.</para>
 		
-		<para> In addition, the primary actions for editing model objects are:
+		<para> The primary actions for editing model objects are:
 			<itemizedlist>
 				<listitem>
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/cut_edit.gif" />
+								<imagedata fileref="images/icons/cut_edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) and copies it to the clipboard.
 					</para>
@@ -469,7 +385,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/copy_edit.gif" />
+								<imagedata fileref="images/icons/copy_edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected object(s) to the clipboard.
 					</para>
@@ -478,7 +394,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/paste_edit.gif" />
+								<imagedata fileref="images/icons/paste_edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the clipboard to the selected context.
 					</para>
@@ -491,7 +407,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/delete_edit.gif" />
+								<imagedata fileref="images/icons/delete_edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
 					</para>
@@ -507,7 +423,44 @@
 			<emphasis role="bold"><link linkend="model-explorer-view">Model Explorer</link></emphasis>, 
 			<emphasis role="bold"><link linkend="diagram-editor-section">Diagram Editor</link></emphasis> and 
 			<emphasis role="bold"><link linkend="table-editor-section">Table Editor</link></emphasis>.</para>
+
+		<!-- ####### MODELING SUB-MENU ######################################### -->
+		<sect2 id="modeling-sub-menu-section">
+			<title>Modeling Sub-Menu</title>
+			<para>In addition to the New Child/Sibling/Association menus available for object creation 
+				Designer provides a <emphasis>Modeling ></emphasis> sub-menu which presents 
+				various object-specific actions which can be performed.</para>
+			<para>If you select a source table, for instance, the modeling menu below would be presented:</para>
+			<figure>
+				<title>Modeling Sub-Menu for Source Table</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/modeling-menu-source-table.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>If a view table is selected, the menu would reflect the actions related to virtual operations:</para>
+			<figure>
+				<title>Modeling Sub-Menu for Source Table</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/modeling-menu-view-table.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</sect2>
 		
+		<para>Teiid Designer also provides specialized object editors to handle
+			complex model objects and their unique properties. These objects
+			include:</para>
+		<itemizedlist>
+			<listitem><para><emphasis role="bold"><link linkend="transformation-editor-section">Transformations</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="input-set-editor-section">Mapping Class Input Sets</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="choice-editor-section">XML schema choice elements</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="recursion-editor-section">Recursive Mapping Classes</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="operation-editor-section">Web Service Operations</link></emphasis></para></listitem>
+		</itemizedlist>
+		<para>This section describes these editors in detail.</para>
 		<!-- ####### TRANSFORMATION EDITOR ######################################### -->
 		
 		<sect2 id="transformation-editor-section">
@@ -548,7 +501,7 @@
 				<title>Editing String Property</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/TransformationEditor.jpg" />
+						<imagedata fileref="images/screencaps/transformation-editor.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -587,8 +540,8 @@
 				</listitem>
 			</itemizedlist>
 			<para> You can also set preferences that impact the display of your
-				<emphasis role="bold">Transformation Editor</emphasis>. For more information, see <property>Transformation
-				Editor Preferences</property>.</para>
+				<emphasis role="bold">Transformation Editor</emphasis>. For more information, 
+					see <link linkend="transformation-editor-prefs-section"> Transformation Editor Preferences.</link></para>
 			<itemizedlist>
 					<listitem>
 					<para>
@@ -598,7 +551,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/previewVirtualData.png"/>
+											<imagedata fileref="images/icons/preview-virtual-data.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Prevew Virtual Data</emphasis> - executes a simple 
 									preview query for the target table or procedure of the transformation being edited.
@@ -608,7 +561,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/search_transformation.gif"/>
+											<imagedata fileref="images/icons/search-transformation.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Search Transformations</emphasis> - provides a simple 
 									way select and edit another transformation based SQL text search criteria.
@@ -618,7 +571,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_edit_transformation.gif"/>
+											<imagedata fileref="images/icons/tb-edit-transformation.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Edit Transformation</emphasis> - provides a simple way
 									 to change which transformation to edit without searching in a diagram or the Model Explorer. 
@@ -630,7 +583,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/CursorAt.gif"/>
+											<imagedata fileref="images/icons/cursor-at.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Cursor Position (line, column)</emphasis> - shows the 
 									current line and column position of the insertion cursor. For example, Cursor Position(1,4) 
@@ -641,7 +594,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/SupportsUpdates.gif"/>
+											<imagedata fileref="images/icons/supports-updates.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Supports Update</emphasis> - checkbox allows you to 
 									enable or disable updates for the current transformation target. If 'Supports Update' is checked, 
@@ -654,7 +607,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_reconcile_sql.gif"/>
+											<imagedata fileref="images/icons/tb-reconcile-sql.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Reconcile</emphasis> - allows you to resolve any 
 									discrepancies between the transformation symbols and the target attributes. Pressing this button 
@@ -666,7 +619,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/validate.gif"/>
+											<imagedata fileref="images/icons/validate.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Save/Validate</emphasis> - saves edits to the current 
 									transformation and validates the transformation SQL. Any Warning or Error messages will be 
@@ -678,7 +631,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/launch_criteria_builder.gif"/>
+											<imagedata fileref="images/icons/launch-criteria-builder.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Criteria Builder</emphasis> - allows you to build a 
 									criteria clause in your transformation. The button will enable if the cursor position is within 
@@ -691,7 +644,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/launch_expression_builder.gif"/>
+											<imagedata fileref="images/icons/launch-expression-builder.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Expression Builder</emphasis> - allows you to build an 
 									expression within your transformation. The button will enable if the cursor position is at a 
@@ -704,7 +657,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/expand.gif"/>
+											<imagedata fileref="images/icons/expand.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Expand Select *</emphasis> - allows you to expand a 
 									"SELECT *" clause into a SELECT clause which contains all of the SELECT symbols. The button will 
@@ -716,7 +669,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/inc_font.gif"/>
+											<imagedata fileref="images/icons/inc-font.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Increase Font Size</emphasis> - increases the font size
 									 of all editor text by 1.
@@ -726,7 +679,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/dec_font.gif"/>
+											<imagedata fileref="images/icons/dec-font.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Decrease Font Size</emphasis> - decreases the font size
 									 of all editor text by 1.
@@ -736,7 +689,12 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/show_message_off.gif"/>
+											<imagedata fileref="images/icons/show-message-off.png"/>
+										</imageobject>
+									</inlinemediaobject>  
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/show-message-on.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Show/Hide Messages</emphasis> - toggles the display of
 									 the message area at the bottom of the transformation editor.
@@ -746,7 +704,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/short_names.gif"/>
+											<imagedata fileref="images/icons/short-names.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Optimize SQL</emphasis> - when toggled 'ON', will use 
 									the short names of all SQL symbols that can be optimized. Some symbol names may remain fully 
@@ -758,7 +716,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/import_from_file.gif"/>
+											<imagedata fileref="images/icons/import-from-file.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Import SQL Text</emphasis> - allows you to import a sql
 									 statement from a text file on your file system. Pressing this button will display an import dialog 
@@ -769,7 +727,7 @@
 								<para>
 									<inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/export_to_file.gif"/>
+											<imagedata fileref="images/icons/export-to-file.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Export SQL Text</emphasis> - allows you to export the 
 									currently displayed sql statement into a text file on your file system. 
@@ -805,7 +763,13 @@
 							<emphasis role="bold">To use the Criteria Builder:</emphasis>
 							<itemizedlist>
 								<listitem>
-									<para><emphasis role="bold">Step 1 </emphasis> - In the Transformation Editor, click the <emphasis role="bold">Launch Criteria Builder</emphasis> button.</para>
+									<para><emphasis role="bold">Step 1 </emphasis> - In the Transformation Editor, 
+										click the <emphasis role="bold">Launch Criteria Builder</emphasis> button.
+										<inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/launch-criteria-builder.png"/>
+											</imageobject>
+										</inlinemediaobject> </para>
 								</listitem>
 								<listitem>
 									<para><emphasis role="bold">Step 2 </emphasis> - The <emphasis role="bold">Criteria Builder</emphasis> displays.</para>
@@ -813,7 +777,7 @@
 										<title>Editing String Property</title>
 										<mediaobject>
 											<imageobject>
-												<imagedata fileref="images/screencaps/CriteriaBuilder.jpg" />
+												<imagedata fileref="images/screencaps/criteria-builder.png" />
 											</imageobject>
 										</mediaobject>
 									</figure>
@@ -844,7 +808,7 @@
 												<title>Attribute Panel</title>
 												<mediaobject>
 													<imageobject>
-														<imagedata fileref="images/screencaps/CriteriaBuilderAttributePanel.jpg" />
+														<imagedata fileref="images/screencaps/criteria-builder-attribute-panel.png" />
 													</imageobject>
 												</mediaobject>
 											</figure>
@@ -862,7 +826,7 @@
 												<title>Constants Panel</title>
 												<mediaobject>
 													<imageobject>
-														<imagedata fileref="images/screencaps/CriteriaBuilderConstantPanel.jpg" />
+														<imagedata fileref="images/screencaps/criteria-builder-constant-panel.png" />
 													</imageobject>
 												</mediaobject>
 											</figure>
@@ -875,7 +839,7 @@
 												<title>Functions</title>
 												<mediaobject>
 													<imageobject>
-														<imagedata fileref="images/screencaps/CriteriaBuilderFunctionPanel.jpg" />
+														<imagedata fileref="images/screencaps/criteria-builder-function-panel.png" />
 													</imageobject>
 												</mediaobject>
 											</figure>
@@ -964,13 +928,16 @@
 										click the location where you want to insert the function.</para>
 								</listitem>
 								<listitem>
-									<para><emphasis role="bold">Step 2 </emphasis> - Click the <emphasis role="bold">Expression Builder</emphasis> button. 
-										The SQL Expression Builder displays.</para>
+									<para><emphasis role="bold">Step 2 </emphasis> - Click the <emphasis role="bold">Expression Builder</emphasis> button.<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/launch-expression-builder.png"/>
+										</imageobject>
+									</inlinemediaobject> The SQL Expression Builder displays.</para>
 									<figure>
 										<title>Expression Builder</title>
 										<mediaobject>
 											<imageobject>
-												<imagedata fileref="images/screencaps/ExpressionBuilder_1.jpg" />
+												<imagedata fileref="images/screencaps/expression-builder.png" />
 											</imageobject>
 										</mediaobject>
 									</figure>
@@ -993,7 +960,7 @@
 										<title>Function Panel Selected</title>
 										<mediaobject>
 											<imageobject>
-												<imagedata fileref="images/screencaps/ExpressionBuilder_2.jpg" />
+												<imagedata fileref="images/screencaps/expression-builder-1.png" />
 											</imageobject>
 										</mediaobject>
 									</figure>
@@ -1035,7 +1002,7 @@
 										<title>New Blank Function Created</title>
 										<mediaobject>
 											<imageobject>
-												<imagedata fileref="images/screencaps/ExpressionBuilder_3.jpg" />
+												<imagedata fileref="images/screencaps/expression-builder-2.png" />
 											</imageobject>
 										</mediaobject>
 									</figure>
@@ -1046,7 +1013,7 @@
 										<title>Nested Function Example</title>
 										<mediaobject>
 											<imageobject>
-												<imagedata fileref="images/screencaps/ExpressionBuilder_4.jpg" />
+												<imagedata fileref="images/screencaps/expression-builder-3.png" />
 											</imageobject>
 										</mediaobject>
 									</figure>
@@ -1064,14 +1031,6 @@
 										If the <emphasis role="bold">OK</emphasis> button does not enable, you have not added a 
 										value to all nodes in the tree.
 									</para>
-									<figure>
-										<title>Completed Expression</title>
-										<mediaobject>
-											<imageobject>
-												<imagedata fileref="images/screencaps/ExpressionBuilder_5.jpg" />
-											</imageobject>
-										</mediaobject>
-									</figure>
 								</listitem>
 							</itemizedlist>
 							You can also nest functions within your expressions by selecting an argument and selecting 
@@ -1124,7 +1083,7 @@
 				<title>Edit Input Set Button</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/InputSetEditButton.jpg" />
+						<imagedata fileref="images/screencaps/input-set-edit-button.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1133,7 +1092,7 @@
 				<title>Input Set Editor Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/InputSetEditor.jpg" />
+						<imagedata fileref="images/screencaps/input-set-editor.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1167,15 +1126,6 @@
 				Set</emphasis> that you need, you can use the <emphasis role="bold">Input Set Parameters</emphasis> within a
 				mapping class transformation to produce mapping attributes you can map
 				to your XML document.</para>
-			
-			<figure>
-				<title>Input Set Editor Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/InputSetEditor.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
 		</sect2>
 		
 		<!-- ####### CHOICE EDITOR ######################################### -->
@@ -1195,7 +1145,7 @@
 					<title>Opening The Choice Editor</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/XmlChoiceElementInTree.jpg" />
+							<imagedata fileref="images/screencaps/xml-choice-element-in-tree.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -1204,7 +1154,7 @@
 				<title>The Choice Editor</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ChoiceEditor.jpg" />
+						<imagedata fileref="images/screencaps/choice-editor.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1215,7 +1165,7 @@
 				<title>Choice Criteria Summary</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ChoiceEditorSummaryTab.jpg" />
+						<imagedata fileref="images/screencaps/choice-editor-summary-tab.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1324,11 +1274,11 @@
 					criteria.</para>
 				<para> To set this order, select an element in the table and use the <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/MoveUp.gif"/>
+							<imagedata fileref="images/icons/move-up.png"/>
 						</imageobject>
 					</inlinemediaobject> or <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/MoveDown.gif"/>
+							<imagedata fileref="images/icons/move-down.png"/>
 						</imageobject>
 					</inlinemediaobject> button to move it into a new position in the table. The new order
 					displays both in the table and in the Choice Criteria box and reorders
@@ -1427,14 +1377,14 @@
 				<para> To open the Recursion Editor, click on the Recursion Editor
 					button <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/recursion.gif"/>
+							<imagedata fileref="images/icons/recursion.png"/>
 						</imageobject>
 					</inlinemediaobject> on the displayed mapping class.</para>
 				<figure>
 					<title>Open Recursion Editor Button</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/RecursiveMappingClass.jpg" />
+							<imagedata fileref="images/screencaps/recursive-mapping-class.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -1442,7 +1392,7 @@
 					<title>Recursion Editor</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/RecursionEditor.jpg" />
+							<imagedata fileref="images/screencaps/recursion-editor.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -1517,7 +1467,7 @@
 				<title>Operation Editor</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/OperationEditor.jpg" />
+						<imagedata fileref="images/screencaps/generate-ws-wizard-results.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1541,7 +1491,7 @@
 				<title>Edit Input Variables Dialog</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/InputVariablesDialog.jpg" />
+						<imagedata fileref="images/screencaps/input-variables-dialog.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1556,7 +1506,7 @@
 				<title>Input Variable Context Menu</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/InputVariablesActionMenu.jpg"/>
+						<imagedata fileref="images/screencaps/input-variables-action-menu.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
