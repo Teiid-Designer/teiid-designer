@@ -139,8 +139,7 @@ public class TransformationDiagramType extends AbstractDiagramType {
             boolean eObjectIsStale = ModelObjectUtilities.isStale(eObj);
 
             if (eObj instanceof Diagram && ((Diagram)eObj).getType() != null
-                && ((Diagram)eObj).getType().equals(PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID)
-                && TransformationDiagramUtil.isStandardVirtualSqlTable(eObj)) {
+                && ((Diagram)eObj).getType().equals(PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID)) {
                 // Need to check if this table has a transformation and if not, then if it's read-only,
                 // present dialog explaining the delema.
                 EObject virtualGroupEObject = ((Diagram)eObj).getTarget();
