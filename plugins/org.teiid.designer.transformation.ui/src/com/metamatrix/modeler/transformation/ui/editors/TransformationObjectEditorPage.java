@@ -2643,8 +2643,8 @@ public class TransformationObjectEditorPage
     private void handleSqlEditorEvent( SqlEditorEvent sqlEvent ) {
         // Only respond if the event was initiated by the SqlEditorPanel
         Object eventSource = sqlEvent.getSource();
+        int eventType = sqlEvent.getType();
         if (eventSource instanceof SqlEditorPanel) {
-            int eventType = sqlEvent.getType();
             // ----------------------------------------------------------------
             // Query Changes Pending Event from EditorPanel
             // ----------------------------------------------------------------
@@ -2667,6 +2667,8 @@ public class TransformationObjectEditorPage
                     handleSqlEditorChanged(sqlEvent.getSQLString(), eventSource);
                 }
             }
+        } else if (eventType == SqlEditorEvent.CHANGES_PENDING) {
+            handleSqlEditorChangesPending();
         }
 
     }
