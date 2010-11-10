@@ -69,8 +69,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
 
     private static final String FALSE_SUMMARY_DATA_TEXT_ = Messages.getString("TeiidDriverUIContributor.summary.false"); //$NON-NLS-1$
 
-    private static final String PROTOCOL_SSL_TRUE_TEXT = "mms://"; //$NON-NLS-1$
-
     private Label databaseLabel;
 
     private Text databaseText;
@@ -373,10 +371,10 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         if (password != null) {
             passwordText.setText(password);
         }
-        if (!(url.getProperties().indexOf(PROTOCOL_SSL_TRUE_TEXT) > -1)) {
-            protocolCheck.setSelection(false);
-        } else {
+        if (url.isSecureProtocol()) {
             protocolCheck.setSelection(true);
+        } else {
+            protocolCheck.setSelection(false);
         }
         String savePassword = this.properties.getProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID);
         if ((savePassword != null) && Boolean.valueOf(savePassword) == Boolean.TRUE) {

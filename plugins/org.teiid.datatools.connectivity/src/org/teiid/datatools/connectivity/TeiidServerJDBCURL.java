@@ -12,13 +12,17 @@ package org.teiid.datatools.connectivity;
  */
 public class TeiidServerJDBCURL {
 
-    private String node = ""; //$NON-NLS-1$
+    private static final String PROTOCOL_SSL_TRUE_TEXT = "mms"; //$NON-NLS-1$
+
+	private String node = ""; //$NON-NLS-1$
 
     private String port = ""; //$NON-NLS-1$
 
     private String vdbName = ""; //$NON-NLS-1$
 
     private String properties = ""; //$NON-NLS-1$
+
+	private boolean isSecureProtocol;
 
     /**
      * @param url
@@ -50,6 +54,8 @@ public class TeiidServerJDBCURL {
             remainingURL = remainingURL.substring(url.indexOf(':') + 2);
             this.vdbName = remainingURL.substring(0, remainingURL.indexOf('@'));
             remainingURL = remainingURL.substring(remainingURL.indexOf('@') + 1);
+            String protocol = remainingURL.substring(0, remainingURL.indexOf(':'));
+            isSecureProtocol = protocol.equalsIgnoreCase(PROTOCOL_SSL_TRUE_TEXT);
             remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 3);
             this.node = remainingURL.substring(0, remainingURL.indexOf(':'));
             remainingURL = remainingURL.substring(remainingURL.indexOf(':') + 1);
@@ -81,4 +87,8 @@ public class TeiidServerJDBCURL {
     public String getProperties() {
         return properties;
     }
+
+	public boolean isSecureProtocol() {
+		return isSecureProtocol;
+	}
 }
