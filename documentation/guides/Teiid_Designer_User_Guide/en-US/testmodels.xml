@@ -62,7 +62,9 @@
 			XML document staging tables.</para>
 		<para> Note that any virtual table, view or procedure is previewable as
 			long as all "physical" source models are bound via connectors.
-			(See <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view )</para>
+			(See <!--<link linkend="connectors-view" >-->
+			   <link linkend="teiid-view"><emphasis role="bold">Connectors</emphasis>
+                           </link> view)</para>
 		
 		<para>After selecting the Preview Data action, Designer will insure that all source models are 
 			associated with connection profiles and that all required passwords are set.</para>

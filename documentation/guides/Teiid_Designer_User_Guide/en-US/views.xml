@@ -26,9 +26,9 @@
 		  <listitem><para><link linkend="system-catalog-view"><emphasis>System Catalog</emphasis></link></para></listitem>
 	</itemizedlist>
 	<itemizedlist>
-		  <listitem><para><link linkend="outline-view"><emphasis>Outline</emphasis></para></listitem>
-		  <listitem><para><link linkend="properties-view"><emphasis>Properties</emphasis></para></listitem>
-		  <listitem><para><link linkend="search-results-view"><emphasis>Search Results</emphasis></para></listitem>
+	   <listitem><para><link linkend="outline-view"><emphasis>Outline</emphasis></link></para></listitem>
+	   <listitem><para><link linkend="properties-view"><emphasis>Properties</emphasis></link></para></listitem>
+		  <listitem><para><link linkend="search-results-view"><emphasis>Search Results</emphasis></link></para></listitem>
 	</itemizedlist>
 	<figure id="show-view-dialog-image">
 		<title>Eclipse Show View Dialog</title>

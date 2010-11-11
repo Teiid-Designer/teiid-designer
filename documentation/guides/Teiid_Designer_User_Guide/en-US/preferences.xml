@@ -196,7 +196,7 @@
 			<title>Validation Preferences</title>
 			<para><emphasis role="bold">Validation Preferences</emphasis> provide a way to customize the severity
 				of some of the rules checked during model validation.</para>
-			<para> Validation preference pages, shown below, include Core, Relational Model, XML-related and XML Schema (XSD) models.</para
+				<para> Validation preference pages, shown below, include Core, Relational Model, XML-related and XML Schema (XSD) models.</para>
 			<figure>
 				<title>Core Model Validation Preferences Panel</title>
 				<mediaobject>

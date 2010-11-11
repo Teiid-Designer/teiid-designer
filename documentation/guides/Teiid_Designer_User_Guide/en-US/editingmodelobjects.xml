@@ -425,11 +425,12 @@
 			<emphasis role="bold"><link linkend="table-editor-section">Table Editor</link></emphasis>.</para>
 
 		<!-- ####### MODELING SUB-MENU ######################################### -->
-		<sect2 id="modeling-sub-menu-section">
+		<formalpara id="modeling-sub-menu-section">
 			<title>Modeling Sub-Menu</title>
 			<para>In addition to the New Child/Sibling/Association menus available for object creation 
 				Designer provides a <emphasis>Modeling ></emphasis> sub-menu which presents 
 				various object-specific actions which can be performed.</para>
+			     </formalpara>
 			<para>If you select a source table, for instance, the modeling menu below would be presented:</para>
 			<figure>
 				<title>Modeling Sub-Menu for Source Table</title>
@@ -448,7 +449,6 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
 		
 		<para>Teiid Designer also provides specialized object editors to handle
 			complex model objects and their unique properties. These objects

@@ -51,12 +51,7 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
-
-	
-	<para>For more details on perspectives, views and other Eclipse workbench details, see formal
-		<ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
-		
+	</sect1>	
 	<sect1 id="opening-perspective-section">
 		<title>Opening a Perspective</title>
 		<para>There are two ways to open a perspective:</para>
@@ -152,5 +147,10 @@
 				</figure>
 			</listitem>
 		</itemizedlist>
+	</sect1>
+	<sect1>
+	   <title>Further information</title>
+	   <para>For more details on perspectives, views and other Eclipse workbench details, see formal
+	      <ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
 	</sect1>
 </chapter>

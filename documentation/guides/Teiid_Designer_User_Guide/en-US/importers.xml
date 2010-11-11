@@ -28,7 +28,7 @@
 		<para>Source relational models can be created by importing DDL.</para>
 		<itemizedlist>
 			<listitem>
-				<para>You can create relational source models from your DDL using the steps below.
+			   <para>You can create relational source models from your DDL using the steps below.</para>
 					
 					<itemizedlist>
 						<listitem>
@@ -81,7 +81,6 @@
 						</listitem>
 					</itemizedlist>
 				</listitem>
-				</para>
 			</itemizedlist>
 	</sect1>
 	
@@ -89,10 +88,9 @@
 	
 	<sect1 id="jdbc-import-section">
 		<title>Import From JDBC</title>
-		<para></para>
 		<itemizedlist>
 			<listitem>
-				<para>You can create relational source models from your JDBC source schema data using the steps below.
+			   <para>You can create relational source models from your JDBC source schema data using the steps below.</para>
 					<note>
 						<para>Depending the detail provided in the database
 							connection url information and schema, Steps 5 thru 7 may not be
@@ -188,7 +186,6 @@
 							</figure>
 						</listitem>
 					</itemizedlist>
-				</para>
 			</listitem>
 		</itemizedlist>
 		<para>During the "<emphasis>Finish</emphasis>" processing, a monitor will be 
