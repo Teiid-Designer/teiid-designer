@@ -157,18 +157,21 @@ public class ProcedureBuilder {
 			}	
 		} else if (content instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) content;
-			
+			if(element.isElementDeclarationReference()) {
+				element = element.getResolvedElementDeclaration();
+			}
 			if(element.getType() instanceof XSDSimpleTypeDefinition) {
 				XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition) element.getType();
 				addElementDeclarationToProcedureResult(element, type, ctx);
 			} else {
 				XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) element.getType();
-				if(procedureExists(getName(type))) {
-					return;
-				}
 				String name = element.getName();
 				if(null == name) {
 					name = element.getAliasName();
+				}
+				
+				if(procedureExists(name)) {
+					return;
 				}
 				ctx.appendToPath(name);
 				if(particle.getMaxOccurs() > 1 || particle.getMaxOccurs() == -1 || ctx.isReachedResultNode()) {
