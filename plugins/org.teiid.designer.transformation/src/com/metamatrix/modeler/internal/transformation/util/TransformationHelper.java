@@ -4322,6 +4322,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean succeeded = false;
                 try {
                     userSqlTrans.setDeleteSql(SqlUtil.normalize(deleteString));
+                    changed = true;
                     succeeded = true;
                 } finally {
                     // if we started the txn, commit it.
