@@ -2117,6 +2117,9 @@ public class TransformationObjectEditorPage
 
         setTargetAllowsUpdates(getCheckBoxContributionForSupportsUpdates().getSelection());
         getCheckBoxContributionForSupportsUpdates().getControl().update();
+        
+        // refresh content as select editor was clearing the first time button was checked
+        refreshEditorContent();
     }
 
     private LabelContribution getLabelContributionForCursorPosition() {
