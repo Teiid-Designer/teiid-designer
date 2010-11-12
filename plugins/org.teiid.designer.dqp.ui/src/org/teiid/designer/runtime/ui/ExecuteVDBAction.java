@@ -7,23 +7,29 @@
  */
 package org.teiid.designer.runtime.ui;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.IProfileListener;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.VDB;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
-import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -31,7 +37,6 @@ import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * 
@@ -49,7 +54,6 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     IFile selectedVDB;
     Vdb vdb;
     boolean contextIsLocal = false;
-    private static String password;
 
     public ExecuteVDBAction() {
         super();
@@ -131,9 +135,11 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 	                                   selectedVDB.getFullPath().removeFileExtension().lastSegment());
 	                    } else {
 	                        StringBuilder message = new StringBuilder(
-	                                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-	                        for (String error : deployedVDB.getValidityErrors()) {
-	                            message.append("\nERROR:\t").append(error); //$NON-NLS-1$
+	                                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", selectedVDB.getName())); //$NON-NLS-1$
+	                        if(null != deployedVDB) {
+	                        	for (String error : deployedVDB.getValidityErrors()) {
+	                        		message.append("\nERROR:\t").append(error); //$NON-NLS-1$
+	                        	}
 	                        }
 	                        MessageDialog.openWarning(getShell(),
 	                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveTitle"), //$NON-NLS-1$
@@ -180,60 +186,40 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     }
 
     private static void processForDTP( Server server,
-                                       String vdbName ) throws CoreException {
-        // I have hard coded them here so that I can test with
-        // a fully deployed VDB, see the Teiid down load for this VDB.
+    		String vdbName ) throws CoreException {
 
-        String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    	String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-        String username = server.getUser();
-        String password = server.getPassword();
-        
-        if( password == null ) {
-        	password = getPassword(username, vdbName);
-        }
-
-        if( password != null ) {
-	        String currentDefaultServerURL = server.getUrl();
-	        String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
-	
-	        IConnectionProfile profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
-	                                                                            connectionURL,
-	                                                                            username,
-	                                                                            password,
-	                                                                            vdbName);
-	
-	        profile.connectWithoutJob();
-	
-	        try {
-	            PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
-	            // jdbcPage.showView(JDBC_CONNECTION_VIEW_ID);
-	        } catch (Throwable e) {
-	            // TODO Auto-generated catch block
-	            DqpUiConstants.UTIL.log(e);
-	        }
-        }
-    }
-
-
-    private static String getPassword(final String username, final String vdbName) {
+    	String currentDefaultServerURL = server.getUrl();
+    	String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
     	
-    	UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
-        		String message = DqpUiConstants.UTIL.getString("ExecuteVDBAction.getMissingPassword", new Object[] {vdbName}); //$NON-NLS-1$
-        		PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(getShell(), message);
-        		
-        		int result = dialog.open();
-        	    
-        	    if (result == Window.OK) {
-        	    	password = dialog.getPassword();
-        	    }
-            }
-        }, false);
-    	String pwd = password;
-    	password = null;
-    	return pwd;
+    	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
+    	
+    	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
+    	if(null != profile) {
+    		profile.connectWithoutJob();
+    		try {
+    			PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    		} catch (Throwable e) {
+    			DqpUiConstants.UTIL.log(e);
+    		}
+    	} else {
+    		// This call has the effect of creating the driver, which provides the values to the Profile UI.
+    		ConnectivityUtil.createVDBTeiidProfileProperties(driverPath,
+    				connectionURL, null, null, vdbName, profileName);
+    		NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
+    		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+    		wizardDialog.setBlockOnOpen(true);
+    		if (wizardDialog.open() == Window.OK) {
+    			try {
+    				PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    			} catch (Throwable e) {
+    				DqpUiConstants.UTIL.log(e);
+    			}
+    		}
+    	}
     }
+
     
     private static Shell getShell() {
     	return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
