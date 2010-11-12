@@ -31,16 +31,19 @@ public class ModelEditorProjectListener implements IResourceChangeListener {
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
     public void resourceChanged(final IResourceChangeEvent event) {
-        int type = event.getType();
-        if ( type == IResourceChangeEvent.PRE_CLOSE || type == IResourceChangeEvent.PRE_DELETE ) {
-        	
-        	UiUtil.runInSwtThread(new Runnable() {
-    			@Override
-    			public void run() {
-    		        handleResourceChanged(event);
-    			}
-    		}, false);
-        }
+    	// It appears that the event is not guarenteed to be NON-NULL, so we need to add the check
+    	if( event != null ) {
+	        int type = event.getType();
+	        if ( type == IResourceChangeEvent.PRE_CLOSE || type == IResourceChangeEvent.PRE_DELETE ) {
+	        	
+	        	UiUtil.runInSwtThread(new Runnable() {
+	    			@Override
+	    			public void run() {
+	    		        handleResourceChanged(event);
+	    			}
+	    		}, false);
+	        }
+    	}
     }
     
     private void handleResourceChanged(IResourceChangeEvent event) {
