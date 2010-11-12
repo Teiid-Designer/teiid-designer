@@ -598,9 +598,7 @@
 				</listitem>
 				<listitem> 
 					<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
-						user-defined functions, including binary source jars, to use in custom transformation SQL statements.
-						Currently only a single UDF model is supported by Teiid Designer. 
-						See <link linkend="udfs-view"><emphasis role="bold">UDFs View</emphasis></link> for details.</para>
+						user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
 				</listitem>
 				<listitem> 
 					<para><emphasis role="bold">Relationship</emphasis> - The relationships metamodel supports 

@@ -51,7 +51,7 @@
 						</imageobject>
 					</inlinemediaobject>. By selecting a desired table object and
 				executing the action, the results of a simple query will be displayed
-				in the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> results view. This 
+				in the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> view. This 
 				action is accessible throughout the
 				Teiid Designer in various view toolbars and context menus.</para>
 		<para> There are two requirements for previewing your data: the
@@ -93,7 +93,7 @@
 		</figure>
 		
 		<bridgehead>Testing Your Transformations</bridgehead>
-		<para>When editing transformation SQL in the Transformation Editor, a special <emphasis role="bold">Preview</emphasis> data action is provided in the
+		<para>When editing transformation SQL in the Transformation Editor, a special <emphasis role="bold">SQL Results</emphasis> data action is provided in the
 			editor tool-bar <inlinemediaobject>
 					<imageobject>
 						<imagedata fileref="images/icons/preview-virtual-data.png"/>
@@ -132,8 +132,8 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
-									results view. The view will automatically open or get focus if not visible
+									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
 						</itemizedlist>
@@ -183,8 +183,8 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
-									results view. The view will automatically open or get focus if not visible
+									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
 						</itemizedlist>
@@ -234,8 +234,8 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
-									results view. The view will automatically open or get focus if not visible
+									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
 						</itemizedlist>
@@ -285,8 +285,8 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> 
-									results view. The view will automatically open or get focus if not visible
+									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
 						</itemizedlist>

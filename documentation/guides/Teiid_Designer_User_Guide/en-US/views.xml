@@ -401,7 +401,7 @@
 			provides a means to display and edit (add, change or remove) a
 			description for any model or model object. To show the Description
 			View click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the
-			<emphasis role="bold"><link linkend="show-view-dialog">Show View</link></emphasis>
+			<emphasis role="bold"><link linkend="show-view-dialog-image">Show View</link></emphasis>
 			dialog. Choose <emphasis role="bold">Teiid Designer > Description</emphasis> view and hit
 			<emphasis role="bold">OK</emphasis>
 			.
