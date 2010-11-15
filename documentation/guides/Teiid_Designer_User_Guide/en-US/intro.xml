@@ -516,7 +516,7 @@
 			<figure>
 				<title>Model Internals</title>
 				<mediaobject><imageobject>
-					<imagedata fileref="images/screencaps/model-internal.png"/>
+					<imagedata fileref="images/screencaps/model-internals.png"/>
 				</imageobject></mediaobject>
 			</figure>
 			<para> In addition to source models, Teiid Designer provides the ability to

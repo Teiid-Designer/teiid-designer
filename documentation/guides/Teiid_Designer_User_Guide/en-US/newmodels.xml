@@ -135,7 +135,7 @@
 		<title>Import Wizard Selection Dialog</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="images/screencaps/new-model-wizard.png"/>
+				<imagedata fileref="images/screencaps/new-model-wizard-page-1.png"/>
 			</imageobject>
 		</mediaobject>
 	</figure>
@@ -266,7 +266,7 @@
 									<title>Select UML Features Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/generate-from-uml.png"/>
+											<imagedata fileref="images/screencaps/generate-rel-from-uml-select-model.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
