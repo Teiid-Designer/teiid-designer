@@ -1481,32 +1481,17 @@
 			<para>When pasting in SQL, do not include the <emphasis role="bold">CREATE VIRTUAL PROCEDURE
 				BEGIN - END</emphasis> keywords. Input variables will be automatically generated
 				when the "Content via Element" property is set on an operation's input
-				parameter. Input variables may be created, edited, or deleted using
+				parameter. Input variables may be edited using
 				the Edit link in the <emphasis role="bold">Input Variables</emphasis> section, and may only represent
 				XPath values to single attributes and elements within the input
 				contents; other variable declarations and assignments must be typed
-				directly into the <emphasis role="bold">Procedure</emphasis> section. Clicking the Edit link will
+				directly into the <emphasis role="bold">Procedure</emphasis> section. Clicking the <emphasis>Edit</emphasis> link will
 				display the following dialog:</para>
 			<figure>
 				<title>Edit Input Variables Dialog</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/input-variables-dialog.png" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-			<para>
-				<emphasis role="bold">Input Variables</emphasis> can be deleted via right-click menu <emphasis role="bold">Delete</emphasis> 
-				action (see figure below) for selected variables or using <emphasis role="bold">Cntl-X, Delete</emphasis> 
-				keys. You can also rename an Input Variable using the right-click menu <emphasis role="bold">Rename</emphasis> 
-				action or the <emphasis role="bold">F2</emphasis> key. ( Note: Input variables names have to be named starting with the "IN_" characters. 
-				Renaming a variable will always insure its name is prepended with "IN_").
-			</para>
-			<figure>
-				<title>Input Variable Context Menu</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/input-variables-action-menu.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
