@@ -553,6 +553,9 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                     // Enable sections
                     setSectionEnabled(varSection, true);
                     setSectionEnabled(sqlPanelSection, true);
+                    
+                    // Selection is either empty or an Interface
+                    this.declarationsToAssignments.clear();
 
                     // Initialize operation's procedure
                     WebServiceUiUtil.initializeProcedure(op, this, false);
