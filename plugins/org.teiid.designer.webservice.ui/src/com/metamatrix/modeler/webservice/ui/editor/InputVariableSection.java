@@ -7,57 +7,38 @@
  */
 package com.metamatrix.modeler.webservice.ui.editor;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
-import org.eclipse.jface.action.Action;
+
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.symbol.ElementSymbol;
+
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -71,21 +52,15 @@ public class InputVariableSection implements IInternalUiConstants {
 
     private static final String I18N_PFX = I18nUtil.getPropertyPrefix(InputVariableSection.class);
 
-    private static final String DELETE = UTIL.getString(I18N_PFX + "delete"); //$NON-NLS-1$
-    private static final String RENAME = UTIL.getString(I18N_PFX + "rename"); //$NON-NLS-1$
     private static final String VARS_TITLE = UTIL.getString(I18N_PFX + "variablesTitle"); //$NON-NLS-1$
-
-    private static final String NAME_EXISTS = UTIL.getString(I18N_PFX + "nameExists"); //$NON-NLS-1$
 
     OperationObjectEditorPage editor;
     private Composite client;
     TableViewer varViewer;
-    private KeyListener deleteListener, renameListener;
     private Section parentSection;
     IAction deleteVariablesAction;
     IAction renameVariableAction;
     Shell renameEditor;
-    private ShellListener renameEditorListener;
 
     public InputVariableSection( Composite parent,
                                  String description,

@@ -7,8 +7,6 @@
  */
 package org.teiid.designer.datatools.ui.dialogs;
 
-import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.internal.ui.wizards.CPWizardSelectionPage;
 import org.eclipse.datatools.connectivity.internal.ui.wizards.NewCPWizardCategoryFilter;
 import org.eclipse.datatools.connectivity.ui.wizards.NewFilteredCPWizard;

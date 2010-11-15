@@ -129,7 +129,7 @@ public class ConnectivityUtil {
 	private static void createTeiidVDBDriverInstance(String jarList,
 			String driverURL, String username, String password, String vdbName,
 			String profileName) {
-		IPropertySet pset = new PropertySetImpl(profileName + " Driver",
+		IPropertySet pset = new PropertySetImpl(profileName + " Driver", //$NON-NLS-1$
 				TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
 		Properties baseProperties = new Properties();
 		baseProperties.setProperty(

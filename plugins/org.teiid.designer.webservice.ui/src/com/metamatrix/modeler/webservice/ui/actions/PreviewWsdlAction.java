@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,8 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDParser;
 
-import com.metamatrix.metamodels.relational.Procedure;
-import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;

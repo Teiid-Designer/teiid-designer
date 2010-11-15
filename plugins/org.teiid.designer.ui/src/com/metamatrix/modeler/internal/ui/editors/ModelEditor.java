@@ -1373,9 +1373,9 @@ public class ModelEditor extends MultiPageModelEditor
                             } else if (!MessageDialogWithToggle.NEVER.equals(openPerspective)) {
                                 // show dialog here and set dialog settings
                                 Shell shell = ModelEditor.this.getSite().getShell();
-                                String title = Util.getString(PREFIX + "OpenPerspectiveDialog.title");
-                                String msg = Util.getString(PREFIX + "OpenPerspectiveDialog.msg");
-                                String toggleMsg = Util.getString(PREFIX + "OpenPerspectiveDialog.toggleMsg");
+                                String title = Util.getString(PREFIX + "OpenPerspectiveDialog.title"); //$NON-NLS-1$
+                                String msg = Util.getString(PREFIX + "OpenPerspectiveDialog.msg"); //$NON-NLS-1$
+                                String toggleMsg = Util.getString(PREFIX + "OpenPerspectiveDialog.toggleMsg"); //$NON-NLS-1$
                                 MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell,
                                                                                                            title,
                                                                                                            msg,

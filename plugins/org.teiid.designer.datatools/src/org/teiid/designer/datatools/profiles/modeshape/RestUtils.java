@@ -14,6 +14,8 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.metamatrix.core.util.StringUtilities;
+
 public class RestUtils {
 
 	public List<String> getRepositoryList(URL url, String user, String pass)
@@ -27,7 +29,7 @@ public class RestUtils {
 	}
 
 	private static String getRepositories(URL url) throws Exception {
-		String result = "";
+		String result = StringUtilities.SPACE;
 		URLConnection conn;
 		conn = url.openConnection();
 
@@ -53,7 +55,7 @@ public class RestUtils {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode rootNode = mapper.readTree(jp);
 			for (JsonNode reposNode : rootNode) {
-				result.add(reposNode.path("repository").path("name")
+				result.add(reposNode.path("repository").path("name") //$NON-NLS-1$ //$NON-NLS-2$
 						.getTextValue());
 			}
 		}

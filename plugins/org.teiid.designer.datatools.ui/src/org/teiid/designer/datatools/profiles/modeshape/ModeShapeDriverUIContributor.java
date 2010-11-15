@@ -299,7 +299,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             if(repos.indexOf('/') == 0) {
             	url += repos;
             } else {
-            	url += "/" + repos;
+            	url += "/" + repos; //$NON-NLS-1$
             }
         }
         urlText.setText(url);

@@ -34,17 +34,17 @@ public class AutoOpenPerspectivePreferenceContributor implements IGeneralPrefere
      */
     public void createPreferenceEditor( Composite parent ) {
         Group pnlButtons = WidgetFactory.createGroup(parent,
-                                                     Util.getStringOrKey(PREFIX + "lbl.text"),
+                                                     Util.getStringOrKey(PREFIX + "lbl.text"), //$NON-NLS-1$
                                                      GridData.FILL_HORIZONTAL,
                                                      1,
                                                      3);
         pnlButtons.setFont(JFaceResources.getDialogFont());
-        this.btnAlways = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnAlways.text"));
-        this.btnAlways.setToolTipText(Util.getStringOrKey(PREFIX + "btnAlways.toolTip"));
-        this.btnNever = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnNever.text"));
-        this.btnNever.setToolTipText(Util.getStringOrKey(PREFIX + "btnNever.toolTip"));
-        this.btnPrompt = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnPrompt.text"));
-        this.btnPrompt.setToolTipText(Util.getStringOrKey(PREFIX + "btnPrompt.toolTip"));
+        this.btnAlways = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnAlways.text")); //$NON-NLS-1$
+        this.btnAlways.setToolTipText(Util.getStringOrKey(PREFIX + "btnAlways.toolTip")); //$NON-NLS-1$
+        this.btnNever = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnNever.text")); //$NON-NLS-1$
+        this.btnNever.setToolTipText(Util.getStringOrKey(PREFIX + "btnNever.toolTip")); //$NON-NLS-1$
+        this.btnPrompt = WidgetFactory.createRadioButton(pnlButtons, Util.getStringOrKey(PREFIX + "btnPrompt.text")); //$NON-NLS-1$
+        this.btnPrompt.setToolTipText(Util.getStringOrKey(PREFIX + "btnPrompt.toolTip")); //$NON-NLS-1$
 
         // initialize state
         refresh();

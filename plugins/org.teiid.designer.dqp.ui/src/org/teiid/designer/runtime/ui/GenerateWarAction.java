@@ -15,7 +15,6 @@ import javax.tools.ToolProvider;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.internal.adaptor.EclipseEnvironmentInfo;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.WarDeploymentInfoDialog;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -103,9 +103,9 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 		boolean cont = true;
 		if (compiler == null) {
 			cont = MessageDialog.openConfirm(window.getShell(),
-					DqpUiPlugin.UTIL.getString(I18N_PREFIX + "javaWarningTitle"),
+					DqpUiPlugin.UTIL.getString(I18N_PREFIX + "javaWarningTitle"), //$NON-NLS-1$
 					DqpUiPlugin.UTIL.getString(I18N_PREFIX
-							+ "invalidJDKMessage"));
+							+ "invalidJDKMessage")); //$NON-NLS-1$
 		}
 
 		if (!cont) {

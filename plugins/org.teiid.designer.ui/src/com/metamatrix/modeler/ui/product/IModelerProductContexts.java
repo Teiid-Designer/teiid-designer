@@ -53,12 +53,6 @@ public interface IModelerProductContexts extends IProductContexts {
          */
         private static final String VIEWS = "views."; //$NON-NLS-1$
 
-        /**
-         * Preferences category.
-         * 
-         * @since 5.0
-         */
-        private static final String PREFERENCES = "preferences."; //$NON-NLS-1$
     }
 
     /**
