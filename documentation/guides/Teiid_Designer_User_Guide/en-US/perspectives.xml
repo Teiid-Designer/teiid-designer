@@ -22,19 +22,19 @@
 			5 main UI components or groups of components as shown below. They include:</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis><link linkend="model-explorer-view">Model Explorer</link></emphasis></para>
+				<para><emphasis><xref linkend="model-explorer-view" /></emphasis></para>
 			</listitem>
 			<listitem>
-				<para><emphasis><link linkend="teiid-view">Teiid View</link></emphasis> - Teiid 
+				<para><emphasis><xref linkend="teiid-view" /></emphasis> - Teiid 
 					instance view. Provides view of contents for connected instances of 
 					installed Teiid runtime.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis><link linkend="model-editors-section">Model Editors</link></emphasis> - Custom 
+				<para><emphasis><xref linkend="model-editors-section" /></emphasis> - Custom 
 					editors targeted for ".xmi" metadata model files.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis><link linkend="properties-view">Properties View</link></emphasis> - Standard 
+				<para><emphasis><xref linkend="properties-view" /></emphasis> - Standard 
 					property values for selected workbench objects.</para>
 			</listitem>
 			<listitem>

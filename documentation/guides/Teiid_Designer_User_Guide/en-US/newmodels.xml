@@ -21,7 +21,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-relational-source-model"><emphasis role="bold">Relational Source</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-relational-source-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -30,7 +30,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/view-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-relational-view-model"><emphasis role="bold">Relational View</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-relational-view-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -39,7 +39,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/xml-view-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-xml-document-view-model"><emphasis role="bold">XML Document View</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-xml-document-view-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -48,7 +48,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/xml-schema-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-xml-schema-model"><emphasis role="bold">XML Schema (.xsd)</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-xml-schema-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -57,7 +57,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/web-service-view-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-web-service-view-model"><emphasis role="bold">Web Service</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-web-service-view-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -66,7 +66,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/extension-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-extension-model"><emphasis role="bold">Model Extension</emphasis></link>
+							     </inlinemediaobject> <link linkend="new-extension-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -75,7 +75,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/relationships.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-relationships-model"><emphasis role="bold">Relationship</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-relationships-model" />
 						</para>
 					</listitem>
 					<listitem>
@@ -84,7 +84,7 @@
 								<imageobject>
 									<imagedata fileref="images/icons/uml-model.png"/>
 								</imageobject>
-							</inlinemediaobject> <link linkend="new-uml-model"><emphasis role="bold">UML 2.0</emphasis></link>
+							     </inlinemediaobject> <xref linkend="new-uml-model" />
 						</para>
 					</listitem>
 				</itemizedlist>
@@ -150,7 +150,7 @@
 				<para>To create a new empty relational source model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -199,7 +199,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another relational source model, 
-						complete <link linkend="create-empty-relational-source-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-relational-source-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -250,7 +250,7 @@
 				<listitem>
 					<para>
 						To create a new relational model generated from an existing UML model, 
-						complete <link linkend="create-empty-relational-source-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-relational-source-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -351,7 +351,7 @@
 				<para>To create a new empty relational view model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -404,7 +404,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another relational view model, 
-						complete <link linkend="create-empty-relational-view-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-relational-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -444,7 +444,7 @@
 			<para>This option is only applicable for creating a relational view model from a relational source model 
 				with the added feature of creating default transformations (SELECT * FROM SourceModel.Table_X) 
 				for each source table. The steps are the same as for the 
-				<link linkend="relational-view-copy-section"> Copy Model From Existing Model </link>described above.</para>
+				<xref linkend="relational-view-copy-section" /> described above.</para>
 			<para>There is an additional option in the second page of the wizard which can automatically set the
 				relational table's supports update property to false. If this is unchecked the default value will be true.</para>
 		</sect2>
@@ -453,7 +453,7 @@
 
 			<para>In the Teiid Designer you can also turn your existing UML models 
 				into relational source or view models. Creating a relational view model utilizes
-				the <link linkend="relational-source-generate-from-uml-section"> same steps as for relational source models </link> with 
+				the <xref linkend="relational-source-generate-from-uml-section" /> with 
 				the one change of setting <emphasis role="bold">Model Type</emphasis> to <emphasis role="bold">View Model</emphasis> instead of 
 				<emphasis role="bold">Source Model</emphasis>.</para>
 		</sect2>
@@ -511,7 +511,7 @@
 				<para>To create a new empty xml document view model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -561,7 +561,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another xml document view model, 
-						complete <link linkend="create-empty-xml-document-view-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -604,7 +604,7 @@
 				<listitem>
 					<para>
 						To create a new xml document view model by from XML schema, 
-						complete <link linkend="create-empty-xml-document-view-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -705,7 +705,7 @@
 				<para>To create a new empty xml schema (.xsd) model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -752,7 +752,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another xml schema model, 
-						complete <link linkend="create-empty-xml-schema-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-xml-schema-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -799,7 +799,7 @@
 				<para>To create a new empty web service view model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -849,7 +849,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another web service view model, 
-						complete <link linkend="create-empty-web-service-view-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-web-service-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -892,7 +892,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another web service view model, 
-						complete <link linkend="create-empty-web-service-view-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-web-service-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -902,8 +902,7 @@
 							</listitem>
 							<listitem>
 								<para>The remaining wizard steps are identical to those found using the 
-								<link linkend="wsdl-to-web-service-import-section"><emphasis role="bold">Import > WSDL 
-									File into Web Service Model</emphasis></link> action option. </para>
+								<xref linkend="wsdl-to-web-service-import-section" /> action option. </para>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -1051,7 +1050,7 @@
 				<para>To create a new empty extensions model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -1098,7 +1097,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another extensions model, 
-						complete <link linkend="create-empty-extensions-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-extensions-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -1145,7 +1144,7 @@
 				<para>To create a new empty relationships model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -1192,7 +1191,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another relationships model, 
-						complete <link linkend="create-empty-relationships-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-relationships-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>
@@ -1244,7 +1243,7 @@
 				<para>To create a new empty UML 2.0 model:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <link linkend="launch-new-model-wizard">Launch the New Model wizard.</link></para>
+							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
@@ -1291,7 +1290,7 @@
 				<listitem>
 					<para>
 						To create a new relational model by copying contents from another UML model, 
-						complete <link linkend="create-empty-uml-model-section">steps 1 through 4</link> above 
+						complete <xref linkend="create-empty-uml-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>

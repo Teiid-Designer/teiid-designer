@@ -33,7 +33,7 @@
 							Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
 							by specifying a relationship type, participant locations, and/or names containing sprcified
 							text.  Search results appear in 
-							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							the <xref linkend="search-results-view" /> view, 
 							and double-clicking a result will open that model in the appropriate editor.
 						</para>
 					</listitem>
@@ -57,7 +57,7 @@
 							Search dialog.  User can search for models in the workspace by 
 							specifying an Object Type, and/or a Data Type, and/or a property value.  
 							Search results appear in 
-							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							the <xref linkend="search-results-view" /> view, 
 							and double-clicking a result will open that model in the appropriate editor.
 						</para>
 					</listitem>
@@ -174,7 +174,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
 								The search will be performed and the results will be displayed in the 
-								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								<xref linkend="search-results-view" />. 
 								If the view is not yet open, it will be opened automatically.</para>
 						</listitem>
 					</itemizedlist>
@@ -276,7 +276,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
 								The search will be performed and the results will be displayed in the 
-								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								<xref linkend="search-results-view" />. 
 								If the view is not yet open, it will be opened automatically.</para>
 						</listitem>
 					</itemizedlist>

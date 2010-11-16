@@ -26,7 +26,7 @@
 			Development perspective will be available to use as your import source. From these import wizards you can also create 
 			new connection profiles or edit existing connection profiles without leaving the wizard. 
 		</para>
-		<para>The <link linkend="teiid-view">Teiid View</link> provides access to running Teiid instances and shows data source
+		<para>The <xref linkend="teiid-view" /> provides access to running Teiid instances and shows data source
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>
@@ -51,7 +51,7 @@
 						</imageobject>
 					</inlinemediaobject>. By selecting a desired table object and
 				executing the action, the results of a simple query will be displayed
-				in the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> view. This 
+				in the <xref linkend="preview-results-section" /> view. This 
 				action is accessible throughout the
 				Teiid Designer in various view toolbars and context menus.</para>
 		<para> There are two requirements for previewing your data: the
@@ -62,9 +62,8 @@
 			XML document staging tables.</para>
 		<para> Note that any virtual table, view or procedure is previewable as
 			long as all "physical" source models are bound via connectors.
-			(See <!--<link linkend="connectors-view" >-->
-			   <link linkend="teiid-view"><emphasis role="bold">Connectors</emphasis>
-                           </link> view)</para>
+			(See <!--<xref linkend="connectors-view" />-->
+			   <xref linkend="teiid-view" /> view)</para>
 		
 		<para>After selecting the Preview Data action, Designer will insure that all source models are 
 			associated with connection profiles and that all required passwords are set.</para>
@@ -132,7 +131,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									the <xref linkend="preview-results-section" />
 									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
@@ -183,7 +182,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									the <xref linkend="preview-results-section" />
 									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
@@ -234,7 +233,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									the <xref linkend="preview-results-section" />
 									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>
@@ -285,7 +284,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
-									the <link linkend="preview-results-section"><emphasis role="bold">SQL Results</emphasis></link> 
+									the <xref linkend="preview-results-section" />
 									view. The view will automatically open or get focus if not visible
 									in your perspective.</para>
 							</listitem>

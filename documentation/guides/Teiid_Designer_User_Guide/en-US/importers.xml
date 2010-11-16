@@ -255,16 +255,16 @@
 				<para>These steps required for each type are defined below:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis><link linkend="relational-tables-text-import-section">Relational Tables</link></emphasis></para>
+							<para><emphasis><xref linkend="relational-tables-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="relational-virtual-tables-text-import-section">Relational Virtual Tables</link></emphasis></para>
+							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="relationships-text-import-section">Relationships</link></emphasis></para>
+							<para><emphasis><xref linkend="relationships-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="datatypes-text-import-section">Datatypes</link></emphasis></para>
+							<para><emphasis><xref linkend="datatypes-text-import-section" /></emphasis></para>
 						</listitem>
 					</itemizedlist>
 				</para>

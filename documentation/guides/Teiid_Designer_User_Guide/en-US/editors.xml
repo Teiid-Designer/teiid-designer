@@ -988,11 +988,11 @@
 					<para>For details, select a specific editor listed below:
 						<itemizedlist>
 							<listitem>
-								<para><link linkend="transformation-editor-section"><emphasis role="bold">Transformation Editor</emphasis></link></para>
-								<para><link linkend="input-set-editor-section"><emphasis role="bold">XML Mapping Input Set Editor</emphasis></link></para>
-								<para><link linkend="choice-editor-section"><emphasis role="bold">XML Choice Editor</emphasis></link></para>
-								<para><link linkend="recursion-editor-section"><emphasis role="bold">XML Recursion Editor</emphasis></link></para>
-								<para><link linkend="operation-editor-section"><emphasis role="bold">Web Service Operation Editor</emphasis></link></para>
+								<para><xref linkend="transformation-editor-section" /></para>
+								<para><xref linkend="input-set-editor-section" /></para>
+								<para><xref linkend="choice-editor-section" /></para>
+								<para><xref linkend="recursion-editor-section" /></para>
+								<para><xref linkend="operation-editor-section" /></para>
 							</listitem>
 						</itemizedlist>
 					</para>

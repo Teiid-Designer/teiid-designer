@@ -21,7 +21,7 @@
 		relationships between metadata entities from different metamodels. For
 		example, it is possible to create a generalized relationship between a
 		<emphasis role="bold">Relational Column</emphasis> and a <emphasis role="bold">UML Package</emphasis>.</para>
-	<para> Users can even define their own <link linkend="create-relationship-type-section"><emphasis role="bold">relationship types</emphasis></link> that
+	<para> Users can even define their own <xref linkend="create-relationship-type-section" /> that
 		constrain the numbers and types (metaclasses) of objects that can be
 		related.</para>
 	<para> Once the existing relationships are defined, the Teiid Designer
@@ -171,7 +171,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing <emphasis role="bold">Relationship</emphasis> model 
 								in the <xref linkend="model-explorer-view" /> or a folder within the model. If a <emphasis role="bold">Relationship</emphasis> model 
 								does not yet exist, create one. 
-								See <link linkend="new-relationships-model"><emphasis role="bold">New Model Wizard</emphasis></link>.</para>
+								See <xref linkend="new-relationships-model" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 

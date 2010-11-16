@@ -115,9 +115,9 @@
 			<para>
 				You can think of this metadata in several contexts:
 				<itemizedlist>
-					<listitem> <para>What information does the metadata contain? (see <link linkend="business-technical-metadata">Business and Technical Metadata</link>)</para> </listitem>
-					<listitem> <para>What data does the metadata represent? (see <link linkend="source-view-metadata">Source and View Metadata</link>)</para> </listitem>
-					<listitem> <para>How will my organization use and manage this metadata? (see <link linkend="design-runtime-metadata">Design-Time and Runtime Metadata</link>)</para> </listitem>
+					<listitem> <para>What information does the metadata contain? (see <xref linkend="business-technical-metadata" />)</para> </listitem>
+					<listitem> <para>What data does the metadata represent? (see <xref linkend="source-view-metadata" />)</para> </listitem>
+					<listitem> <para>How will my organization use and manage this metadata? (see <xref linkend="design-runtime-metadata" />)</para> </listitem>
 				</itemizedlist>
 			</para>
 		</sect2>
@@ -154,7 +154,7 @@
 			</para>
 			<para> 
 				<emphasis role="italic">NOTE: For detailed information about creating models from your
-					metadata, see <link linkend="models-101-section"><emphasis role="bold">Models 101</emphasis></link></emphasis>
+					metadata, see <xref linkend="models-101-section" /></emphasis>
 			</para>
 		</sect2>
 		<sect2 id="business-technical-metadata">
@@ -417,7 +417,7 @@
 				<para> To create this <emphasis role="bold">View Metadata</emphasis>, you create a view and define a
 					<emphasis role="bold">transformation</emphasis> for that view, a special query that enables you to
 					select information from the source (or even other view) metadata
-					models. For more information, see “<link linkend="transformation-editor-section"><emphasis role="bold">Transformation Editor</emphasis></link>.”</para>
+					models. For more information, see “<xref linkend="transformation-editor-section" />.”</para>
 			</sect3>
 			<sect3 id="modeling-transformations">
 				<title>Modeling Metadata Transformations</title>
@@ -538,7 +538,7 @@
 				<listitem> <para>Functions</para> </listitem>
 				<listitem> <para>UML 2.0</para> </listitem>
 			</itemizedlist>
-			<para>For full list of supported model types see <link linkend="newmodels-chapter">New Model Wizard.</link></para>
+			<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
 			<para> A third model type, logical, provides the ability to define
 				models from a logical or structural perspective.</para>
 		</sect2>
@@ -551,14 +551,14 @@
 			<itemizedlist>
 				<listitem> 
 					<para>Created via importing source data characteristics. 
-						(see <link linkend="importers-chapter"><emphasis role="bold">Import Wizard</emphasis></link>)</para> 
+						(see <xref linkend="importers-chapter" />)</para> 
 				</listitem>
 				<listitem> 
-					<para>Manual creation via <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link></para> 
+					<para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
 				</listitem>
 				<listitem> 
 					<para>Transforming or copying from one model into another
-						 (see <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link> options)</para> 
+						 (see <xref linkend="newmodels-chapter" /> options)</para> 
 				</listitem>
 				<listitem> <para>Various custom actions</para></listitem>
 			</itemizedlist>
@@ -603,7 +603,7 @@
 				<listitem> 
 					<para><emphasis role="bold">Relationship</emphasis> - The relationships metamodel supports 
 					creation and management of relationships between any other EMF-based metamodel objects.
-					See <link linkend="relationships-chapter"><emphasis role="bold">Relationships</emphasis></link> section for details.</para>
+					See <xref linkend="relationships-chapter" /> section for details.</para>
 				</listitem>
 				<listitem> 
 					<para><emphasis role="bold">UML 2.0</emphasis> - The UML metamodel supports basic UM2 object management.
@@ -619,7 +619,7 @@
 				models and all resources they depend upon. VDB's are the transport mechanism to expose
 				both the metadata to query against on a server and the corresponding references to the data sources
 				and connections required to perform the actual DB queries. (See the 
-				<link linkend="vdb-editor-section"><emphasis role="bold">VDB Editor</emphasis></link> section)</para>
+				<xref linkend="vdb-editor-section" /> section)</para>
 		</sect2>
 		<sect2 id="intro-models-and-connector-profiles">
 			<title>Models and Connection Profiles</title>

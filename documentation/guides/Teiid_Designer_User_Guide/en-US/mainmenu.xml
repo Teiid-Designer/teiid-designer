@@ -14,28 +14,28 @@
 				These categories include:
 				<itemizedlist>
 					<listitem>
-						<para><link linkend="file-menu-section"><emphasis role="bold">File </emphasis></link> - Resource management actions.</para>
+						<para><xref linkend="file-menu-section" /> - Resource management actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="edit-menu-section"><emphasis role="bold">Edit </emphasis></link> - Standard edit actions including undo/redo.</para>
+						<para><xref linkend="edit-menu-section" /> - Standard edit actions including undo/redo.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="refactor-menu-section"><emphasis role="bold">Refactor </emphasis></link> - Resource actions (i.e. Rename, Move, etc...).</para>
+						<para><xref linkend="refactor-menu-section" /> - Resource actions (i.e. Rename, Move, etc...).</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="search-menu-section"><emphasis role="bold">Search </emphasis></link> - Find data within your workspace.</para>
+						<para><xref linkend="search-menu-section" /> - Find data within your workspace.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="project-menu-section"><emphasis role="bold">Project </emphasis></link> - Model level actions.</para>
+						<para><xref linkend="project-menu-section" /> - Model level actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="metadata-menu-section"><emphasis role="bold">Metadata </emphasis></link> - Custom metadata-related actions.</para>
+						<para><xref linkend="metadata-menu-section" /> - Custom metadata-related actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="window-menu-section"><emphasis role="bold">Window </emphasis></link> - Change perspectives or add/remove views to your perspective.</para>
+						<para><xref linkend="window-menu-section" /> - Change perspectives or add/remove views to your perspective.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="help-menu-section"><emphasis role="bold">Help </emphasis></link> - Access available Teiid Designer help documents, 
+						<para><xref linkend="help-menu-section" /> - Access available Teiid Designer help documents, 
 							Teiid Designer SQL Support Guide and Eclipse Overview information.</para>
 					</listitem>
 				</itemizedlist>
@@ -108,7 +108,7 @@
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Model</emphasis> - Create a new model of
 								a specified model type and class using 
-								the <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link>.
+								the <xref linkend="newmodels-chapter" />.
 							</para>
 						</listitem>
 						<listitem>
@@ -503,7 +503,7 @@
 								Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
 								by specifying a relationship type, participant locations, and/or names containing sprcified
 								text.  Search results appear in 
-								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								the <xref linkend="search-results-view" /> view, 
 								and double-clicking a result will open that model in the appropriate editor.
 							</para>
 						</listitem>
@@ -527,7 +527,7 @@
 								Search dialog.  User can search for models in the workspace by 
 								specifying an Object Type, and/or a Data Type, and/or a property value.  
 								Search results appear in 
-								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								the <xref linkend="search-results-view" /> view, 
 								and double-clicking a result will open that model in the appropriate editor.
 							</para>
 						</listitem>
@@ -675,12 +675,12 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Show System Catalog</emphasis> - Opens the 
-								<link linkend="system-catalog-view"><emphasis role="bold">System Catalog View</emphasis></link>.
+								<xref linkend="system-catalog-view" />.
 							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Show Datatype Hierarchy</emphasis> - Opens the 
-								<link linkend="system-catalog-view"><emphasis role="bold">Datatype Hierarchy View</emphasis></link>.
+								<xref linkend="system-catalog-view" />.
 							</para>
 						</listitem>
 						<listitem>

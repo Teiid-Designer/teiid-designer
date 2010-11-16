@@ -11,7 +11,7 @@
 	
 	<sect1 id="create-model-objects-section">
 		<title>Creating New Model Objects</title>
-		<para>As discussed in the introduction, <link linkend="metadata-models"><emphasis role="bold">Metadata Models</emphasis></link> provide
+		<para>As discussed in the introduction, <xref linkend="metadata-models" /> provide
 			a framework to model various types of metadata.
 			Each metamodel type has a set of parent-child relationships that establish constraints on what can be created and where.
 			You cannot, for example, create a column attribute in a stored procedure, nor can you create a mapping 
@@ -22,8 +22,8 @@
 		<itemizedlist>
 			<listitem>
 				<para>You can create new model objects directly in the <xref linkend="model-explorer-view" /> view, 
-					<link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link> or 
-					<link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link> using the following actions:</para>
+					<xref linkend="diagram-editor-section" /> or 
+					<xref linkend="table-editor-section" /> using the following actions:</para>
 				<itemizedlist>
 					<listitem>
 						<para><emphasis role="bold">New Child Action</emphasis></para>
@@ -84,7 +84,7 @@
 				<listitem>
 					<para>
 						To create new child model objects in 
-						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						the <xref linkend="diagram-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the parent object to which you 
@@ -125,7 +125,7 @@
 				<listitem>
 					<para>
 						To create new child model objects in 
-						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						the <xref linkend="table-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the row for the parent object 
@@ -194,7 +194,7 @@
 				<listitem>
 					<para>
 						To create new sibling model objects in 
-						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						the <xref linkend="diagram-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the object to which you want to 
@@ -227,7 +227,7 @@
 				<listitem>
 					<para>
 						To create new sibling model objects in 
-						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						the <xref linkend="table-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the row for the object to which you 
@@ -301,7 +301,7 @@
 				<listitem>
 					<para>
 						To create new associations between model objects in 
-						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						the <xref linkend="diagram-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
@@ -340,7 +340,7 @@
 				<listitem>
 					<para>
 						To create new associations between model objects in 
-						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						the <xref linkend="table-editor-section" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
@@ -420,9 +420,9 @@
 		</para>		
 		<para> These actions are presented in Teiid Designer's main <emphasis role="bold">Edit</emphasis> menu and also
 			in the right-click context menus for model objects selected in the
-			<emphasis role="bold"><link linkend="model-explorer-view">Model Explorer</link></emphasis>, 
-			<emphasis role="bold"><link linkend="diagram-editor-section">Diagram Editor</link></emphasis> and 
-			<emphasis role="bold"><link linkend="table-editor-section">Table Editor</link></emphasis>.</para>
+			<emphasis role="bold"><xref linkend="model-explorer-view" /></emphasis>, 
+			<emphasis role="bold"><xref linkend="diagram-editor-section" /></emphasis> and 
+			<emphasis role="bold"><xref linkend="table-editor-section" /></emphasis>.</para>
 
 		<!-- ####### MODELING SUB-MENU ######################################### -->
 		<formalpara id="modeling-sub-menu-section">
@@ -454,11 +454,11 @@
 			complex model objects and their unique properties. These objects
 			include:</para>
 		<itemizedlist>
-			<listitem><para><emphasis role="bold"><link linkend="transformation-editor-section">Transformations</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="input-set-editor-section">Mapping Class Input Sets</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="choice-editor-section">XML schema choice elements</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="recursion-editor-section">Recursive Mapping Classes</link></emphasis></para></listitem>
-			<listitem><para><emphasis role="bold"><link linkend="operation-editor-section">Web Service Operations</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><xref linkend="transformation-editor-section" /></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><xref linkend="input-set-editor-section" /></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><xref linkend="choice-editor-section" /></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><xref linkend="recursion-editor-section" /></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><xref linkend="operation-editor-section" /></emphasis></para></listitem>
 		</itemizedlist>
 		<para>This section describes these editors in detail.</para>
 		<!-- ####### TRANSFORMATION EDITOR ######################################### -->
@@ -541,7 +541,7 @@
 			</itemizedlist>
 			<para> You can also set preferences that impact the display of your
 				<emphasis role="bold">Transformation Editor</emphasis>. For more information, 
-					see <link linkend="transformation-editor-prefs-section"> Transformation Editor Preferences.</link></para>
+					see <xref linkend="transformation-editor-prefs-section" /></para>
 			<itemizedlist>
 					<listitem>
 					<para>
@@ -1353,7 +1353,7 @@
 			<para> By default, the Teiid Designer does not mark the recursive fragments
 				in document models to execute recursively in the Teiid Designer Server. To
 				take advantage of this behavior, you must open the <emphasis role="bold">Recursion Editor</emphasis> in
-				the recursive mapping class <link linkend="mapping-transformation-diagram-section">mapping transformation diagram</link>, mark the
+				the recursive mapping class <xref linkend="mapping-transformation-diagram-section" />, mark the
 				transformation query as recursive, and specify the recursion limit
 				properties.</para>
 			<sect3>
@@ -1420,7 +1420,7 @@
 								</listitem>
 								<listitem>
 									<para><emphasis role="bold">Step 4 </emphasis> - Click the <emphasis role="bold">Edit</emphasis> button to launch the 
-									SQL <emphasis role="bold"><link linkend="using-criteria-builder-section">Criteria Builder</link></emphasis> to build a limiting condition for this recursion. </para>
+									SQL <emphasis role="bold"><xref linkend="using-criteria-builder-section" /></emphasis> to build a limiting condition for this recursion. </para>
 								</listitem>
 							</itemizedlist>
 						</para>

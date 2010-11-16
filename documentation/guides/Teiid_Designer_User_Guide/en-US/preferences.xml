@@ -151,8 +151,8 @@
 			<sect3 id="xml-doc-editor-prefs-section">
 				<title>XML Document Preferences</title>
 				<para><emphasis role="bold">XML Document Mapping Preferences</emphasis> provide ways to customize
-					 <link linkend="mapping-diagram-section">XML Mapping Diagram </link>and
-					 <link linkend="recursion-editor-section">Recursion Editor</link> behavior.</para>
+					 <xref linkend="mapping-diagram-section" /> and
+					 <xref linkend="recursion-editor-section" /> behavior.</para>
 				<figure>
 					<title>XML Document Preferences Panel</title>
 					<mediaobject>
@@ -164,7 +164,7 @@
 			</sect3>
 			<sect3 id="table-editor-prefs-section">
 				<title>Table Editor Preferences</title>
-				<para><emphasis role="bold"><link linkend="table-editor-section">Table Editor</link> Preferences</emphasis> provide a way to customize the order and the 
+				<para><emphasis role="bold"><xref linkend="table-editor-section" /> Preferences</emphasis> provide a way to customize the order and the 
 					information content for each model object type.</para>
 				<figure>
 					<title>Table Editor Preferences Panel</title>
@@ -177,7 +177,7 @@
 			</sect3>
 			<sect3 id="transformation-editor-prefs-section">
 				<title>Transformation Editor Preferences</title>
-				<para><emphasis role="bold"><link linkend="transformation-editor-section">Transformation Editor</link> Preferences</emphasis> provide a way to customize SQL formatting, 
+				<para><emphasis role="bold"><xref linkend="transformation-editor-section" /> Preferences</emphasis> provide a way to customize SQL formatting, 
 					diagram layout, and default view entity properties.</para>
 				<figure>
 					<title>Transformation Editor Preferences Panel</title>

@@ -7,7 +7,7 @@
 	
 	<para>Views are dockable windows which present data from your models or your 
 		modeling session in various forms. Some views support particular 
-		<link linkend="editors-chapter"><emphasis role="bold">Editors</emphasis></link> and 
+		<xref linkend="editors-chapter" /> and 
 		their content is dependent on workspace selection. This section summarizes most 
 		of the views used and available in Teiid Designer.
 	</para>
@@ -17,18 +17,18 @@
 	</para>
 	<para>Designer</para>
 	<itemizedlist>
-		  <listitem><para><link linkend="model-explorer-view"><emphasis>Model Explorer</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="datatypes-view"><emphasis>Datatypes</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="description-view"><emphasis>Description</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="message-log-view"><emphasis>Message Log</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="problems-view"><emphasis>Problems</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="teiid-view"><emphasis>Teiid</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="system-catalog-view"><emphasis>System Catalog</emphasis></link></para></listitem>
+		  <listitem><para><xref linkend="model-explorer-view" /></para></listitem>
+		  <listitem><para><xref linkend="datatypes-view" /></para></listitem>
+		  <listitem><para><xref linkend="description-view" /></para></listitem>
+		  <listitem><para><xref linkend="message-log-view" /></para></listitem>
+		  <listitem><para><xref linkend="problems-view" /></para></listitem>
+		  <listitem><para><xref linkend="teiid-view" /></para></listitem>
+		  <listitem><para><xref linkend="system-catalog-view" /></para></listitem>
 	</itemizedlist>
 	<itemizedlist>
-	   <listitem><para><link linkend="outline-view"><emphasis>Outline</emphasis></link></para></listitem>
-	   <listitem><para><link linkend="properties-view"><emphasis>Properties</emphasis></link></para></listitem>
-		  <listitem><para><link linkend="search-results-view"><emphasis>Search Results</emphasis></link></para></listitem>
+	   <listitem><para><xref linkend="outline-view" /></para></listitem>
+	   <listitem><para><xref linkend="properties-view" /></para></listitem>
+		  <listitem><para><xref linkend="search-results-view" /></para></listitem>
 	</itemizedlist>
 	<figure id="show-view-dialog-image">
 		<title>Eclipse Show View Dialog</title>
@@ -401,7 +401,7 @@
 			provides a means to display and edit (add, change or remove) a
 			description for any model or model object. To show the Description
 			View click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the
-			<emphasis role="bold"><link linkend="show-view-dialog-image">Show View</link></emphasis>
+			<emphasis role="bold"><xref linkend="show-view-dialog-image" /></emphasis>
 			dialog. Choose <emphasis role="bold">Teiid Designer > Description</emphasis> view and hit
 			<emphasis role="bold">OK</emphasis>
 			.
