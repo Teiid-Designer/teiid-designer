@@ -3,12 +3,26 @@
 ]>
 <authorgroup>
 	<author>
-		<firstname>Isaac</firstname>
-		<surname>Rooskov</surname>
+		<firstname>Barry</firstname>
+		<surname>LaFond</surname>
+		<!-- 
 		<affiliation>
 			<orgname>Red Hat</orgname>
 			<orgdiv>Engineering Content Services</orgdiv>
 		</affiliation>
-		<email>irooskov@redhat.com</email>
+		 -->
+		<email>blafond@redhat.com</email>
+	</author>
+	<author>
+		<firstname>Dan</firstname>
+		<surname>Florian</surname>
+	</author>
+	<author>
+		<firstname>John</firstname>
+		<surname>Doyle</surname>
+	</author>
+	<author>
+		<firstname>Ted</firstname>
+		<surname>Jones</surname>
 	</author>
 </authorgroup>
