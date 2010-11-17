@@ -220,7 +220,7 @@
 		              <imageResource>
 		                 <directory>${project.basedir}/en-US</directory>
 		                 <includes>
-		                    <include>images/*.png</include>
+				    <include>images/**/*</include>
 		                 </includes>
 		              </imageResource>
 		              <formats>
