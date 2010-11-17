@@ -1,4 +1,14 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <!DOCTYPE Book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 ]>
-<authorgroup><author><firstname>JBoss Tools Team</firstname></author></authorgroup>
+<authorgroup>
+	<author>
+		<firstname>Isaac</firstname>
+		<surname>Rooskov</surname>
+		<affiliation>
+			<orgname>Red Hat</orgname>
+			<orgdiv>Engineering Content Services</orgdiv>
+		</affiliation>
+		<email>irooskov@redhat.com</email>
+	</author>
+</authorgroup>
