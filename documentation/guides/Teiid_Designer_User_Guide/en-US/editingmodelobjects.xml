@@ -2,7 +2,8 @@
 
 <chapter id="editing-model-objects-chapter">
   <title>Creating and Editing Model Objects</title>
-    <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+    <!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   
 	<para>This section summarizes Teiid Designer features for creating and editing
 		existing model objects contained in your models.</para>

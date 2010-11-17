@@ -3,7 +3,7 @@
 <chapter id="preferences-chapter">
 	<title>User Preferences</title>
 	
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<para>The Teiid Designer  provides options or preferences 
 	which enable customization of various modeling and UI behaviors. Preferences can be accessed 

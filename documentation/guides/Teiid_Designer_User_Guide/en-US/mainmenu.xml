@@ -5,7 +5,8 @@
 
 <chapter id="main-menu-chapter">
 	<title>Teiid Designer Main Menu</title>
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 
 	<para>There are 8 categories of actions on Teiid Designer's main menu bar. </para>
 	<itemizedlist>

@@ -2,7 +2,9 @@
 
 <chapter id="perspectives-chapter">
 	<title>Teiid Designer Perspectives</title>
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+	
 	<para>Teiid Designer utilizes <ulink url="http://www.eclipse.org">Eclipse's</ulink> Workbench environment
 		which controls visual layout via perspectives. A perspective defines
 		the initial set and layout of views and editors. Within the

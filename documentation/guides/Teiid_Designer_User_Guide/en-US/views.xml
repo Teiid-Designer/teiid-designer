@@ -3,7 +3,7 @@
 <chapter id="views-chapter">
 	<title>Teiid Designer Views</title>
 	
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<para>Views are dockable windows which present data from your models or your 
 		modeling session in various forms. Some views support particular 
@@ -259,7 +259,7 @@
     <!-- ####### TEIID VIEW ######################################### -->
     
 	<sect1 id="teiid-view">
-		<title>Connectors View</title>
+		<title>Teiid View</title>
 		<para>
 			The Teiid View provides a means to display and manage Teiid server instances 
 			and their contents within Designer.

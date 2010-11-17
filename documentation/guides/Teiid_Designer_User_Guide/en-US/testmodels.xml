@@ -3,7 +3,7 @@
 <chapter id="test-models-chapter">
   <title>Testing Your Models</title>
   
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>As described briefly in Chapter 1, you can test your models in Teiid Designer by using the 
 		Preview Data action <inlinemediaobject>
@@ -56,13 +56,13 @@
 				Teiid Designer in various view toolbars and context menus.</para>
 		<para> There are two requirements for previewing your data: the
 			selected object must be one of several previewable model object types and
-			all source models within the model dependency tree must be bound to
-			connectors. Model objects that can be previewed include:  relational tables and views (including
+			all source models within the model dependency tree must reference a connection profile. 
+			Model objects that can be previewed include:  relational tables and views (including
 			tables involving access patterns), relational procedures, Web service operations and
 			XML document staging tables.</para>
 		<para> Note that any virtual table, view or procedure is previewable as
-			long as all "physical" source models are bound via connectors.
-			(See <!--<xref linkend="connectors-view" />-->
+			long as all "physical" source models reference sufficient connection info.
+			(See <!--<xref linkend="teiid-view" />-->
 			   <xref linkend="teiid-view" /> view)</para>
 		
 		<para>After selecting the Preview Data action, Designer will insure that all source models are 

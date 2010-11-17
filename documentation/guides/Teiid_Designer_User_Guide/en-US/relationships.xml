@@ -6,7 +6,7 @@
 <chapter id="relationships-chapter">
 	<title>Relationships</title>
 
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<bridgehead>Introduction</bridgehead>
 	<para>The Teiid Designer

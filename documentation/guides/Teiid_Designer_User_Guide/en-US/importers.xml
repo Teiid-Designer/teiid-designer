@@ -2,7 +2,8 @@
 
 <chapter id="importers-chapter">
   <title>Importers</title>
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>The <emphasis role="bold">Import Wizard</emphasis> provides a means to create a model based on the 
 		structure of a data source, to convert existing metadata 

@@ -5,7 +5,8 @@
 
 <chapter id="newmodels-chapter">
 	<title>New Model Wizards</title>
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<para>Models are the primary resource used by the Teiid Designer. Creating models can be accomplished by
 		either directly importing existing metadata or by creating them using one of several 

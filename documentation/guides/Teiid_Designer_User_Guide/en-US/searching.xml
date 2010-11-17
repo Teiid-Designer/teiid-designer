@@ -6,7 +6,7 @@
 <chapter id="searching-chapter">
     <title>Searching</title>
   
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>Designer provides multiple search actions located via Teiid Designer sub-menu in Eclipses Search menu.
 		<emphasis role="bold">Search</emphasis> menu. </para>

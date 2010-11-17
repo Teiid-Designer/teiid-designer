@@ -2,7 +2,8 @@
 
 <chapter id="edit-models-and-projects-chapter">
   <title>Editing Models and Projects</title>
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>Teiid Designer offers three basic model edit actions: <emphasis role="bold">Rename</emphasis>, 
 		<emphasis role="bold">Move</emphasis> and 
