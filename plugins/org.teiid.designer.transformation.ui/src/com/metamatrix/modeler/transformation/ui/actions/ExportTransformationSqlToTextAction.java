@@ -54,6 +54,9 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
     private static final String EXPORT_DEFAULT_FILEEXT  = "ExportTransformationSqlToTextAction.exportDefaultExtension.text"; //$NON-NLS-1$
     
     private static final char DELIMETER = '|';
+    private static char COMMA = ',';
+    private static char DQUOTE = '"';
+    private static char ESCAPE = '\\';
 
     /** 
      * 
@@ -264,6 +267,22 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
          return sb.toString();
      }
 
+     private String addEscapeCharsForDoubleQuotesInSQL(String str) {
+     	StringBuffer sb = new StringBuffer(str.length());
+     	int index = 0;
+     	char[] charArray = str.toCharArray();
+     	for( char theChar : charArray ) {
+     		if( index < charArray.length ) {
+     			if( index == charArray.length-1 || (theChar != ESCAPE && charArray[index+1] != DQUOTE) ) {
+     				sb.append(theChar);
+     			}
+     		}
+     		index++;
+     	}
+     	
+     	return sb.toString();
+     }
+     
      private String createRowForFile(int sqlType, String relativeTablePath, String theSql) {
          StringBuffer sb = new StringBuffer(relativeTablePath.length() + theSql.length() + 20);
          sb.append(relativeTablePath)

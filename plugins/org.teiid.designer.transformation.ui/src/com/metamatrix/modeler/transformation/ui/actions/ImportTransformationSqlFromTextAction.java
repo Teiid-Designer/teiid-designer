@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +31,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -44,6 +46,8 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.transformation.ui.textimport.VirtualTableRowObject;
+import com.metamatrix.modeler.transformation.ui.wizards.VirtualRelationalObjectProcessor;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -299,8 +303,9 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
         });
     }
 
-    private void notifyUserOfLeftovers( final List leftOverTables,
-                                        final List leftOverRows ) {
+    private void notifyUserOfLeftovers( final ModelResource modelResource,
+    									final List leftOverTables,
+                                        final List<SqlRow> leftOverRows ) {
         if (!isTestingMode && !leftOverTables.isEmpty()) {
             final Shell shell = getShell();
             shell.getDisplay().syncExec(new Runnable() {
@@ -312,8 +317,31 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                                                     leftOverTables,
                                                                     null);
                     if (result) {
-                        // we need to create virtual tables
-
+                        // TODO: we need to create virtual tables
+							
+	                    VirtualRelationalObjectProcessor virtualRelationalObjectProcessor = new VirtualRelationalObjectProcessor();
+	                    Object location = null;
+	                    
+	                    
+	                    for( SqlRow row : leftOverRows ) {
+	                    	location = modelResource;
+	                    	IPath path = new Path(row.getPath());
+	                    	String tableName = null;
+	                    	if( path.segmentCount() == 2 ) {
+	                    		Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
+	                    		tableName = path.lastSegment();
+	                    		// Need to create a schema here
+	                    		String schemaName = path.segment(0);
+	                    		location = virtualRelationalObjectProcessor.createSchema(modelResource, schemaName);
+	                    		virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
+	                    		virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
+	                    	} else {
+	                    		Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
+	                    		tableName = path.toString();
+	                    		virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
+	                    		virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
+	                    	}
+	                    }
                     }
                 }
             });
@@ -330,7 +358,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                   IProgressMonitor monitor ) throws ModelWorkspaceException {
         boolean sqlChanged = false;
         Collection leftOverTables = new HashSet();
-        Collection leftOverRows = new HashSet();
+        Collection<SqlRow> leftOverRows = new HashSet<SqlRow>();
         int iRow = 0;
         String tableName = null;
         for (Iterator iter = sqlRows.iterator(); iter.hasNext();) {
@@ -418,7 +446,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
             iRow++;
         }
         anyLeftOverRows = leftOverRows;
-        notifyUserOfLeftovers(new ArrayList(leftOverTables), new ArrayList(leftOverRows));
+        notifyUserOfLeftovers(modelResource, new ArrayList(leftOverTables), new ArrayList<SqlRow>(leftOverRows));
 
         return sqlChanged;
     }

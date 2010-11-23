@@ -108,6 +108,14 @@ public class VirtualRelationalObjectProcessor extends AbstractObjectProcessor {
         }
     }
     
+    public EObject createSchema(ModelResource modelResource, String schemaName) {
+    	EObject newSchema = RelationalObjectProcessor.createSchema(schemaName, null);
+    	
+        addValue(modelResource, newSchema, getModelResourceContents(modelResource));
+        
+        return newSchema;
+    }
+    
     private EObject createTable(Object location, VirtualTableRowObject tableRow) {
     	EObject vTarget = null;
     	String selectSql = tableRow.getSelectSql();
