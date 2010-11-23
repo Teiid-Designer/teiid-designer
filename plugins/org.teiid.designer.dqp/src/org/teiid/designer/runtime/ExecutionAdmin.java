@@ -141,6 +141,19 @@ public class ExecutionAdmin {
         return deployVdb(vdb.getFile());
     }
 
+    /**
+     * Closes the admin and re-sets the cached items from the server
+     */
+    public void disconnect() {
+    	// 
+    	this.admin.close();
+        this.translatorByNameMap = new HashMap<String, TeiidTranslator>();
+        this.dataSourceNames = new ArrayList<String>();
+        this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
+        this.dataSourceTypeNames = new HashSet<String>();
+        this.teiidVdbs = Collections.EMPTY_SET;
+    }
+    
     Admin getAdminApi() {
         return this.admin;
     }

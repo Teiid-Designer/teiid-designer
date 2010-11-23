@@ -121,6 +121,19 @@ public class Server {
     }
     
     /**
+     * Basically closes the connection and admin and nulls out the admin reference so next call to connect will
+     * reconstruct the Teiid connection from scratch.
+     */
+    public void disconnect() {
+    	close();
+    	
+    	if( this.admin != null ) {
+    		this.admin.disconnect();
+    		this.admin = null;
+    	}
+    }
+    
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
