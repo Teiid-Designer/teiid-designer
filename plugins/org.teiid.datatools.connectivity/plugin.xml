@@ -65,12 +65,8 @@
          <category
             id="org.eclipse.datatools.connectivity.db.category"
             name="Database Connections"/>
-            <category
-                  id="org.eclipse.datatools.connectivity.db.category.teiid"
-                  name="Teiid Connections"
-                  parentCategory="org.eclipse.datatools.connectivity.db.category"/>
       <connectionProfile
-            category="org.eclipse.datatools.connectivity.db.category.teiid"
+            category="org.eclipse.datatools.connectivity.db.category"
             icon="icons/jdbc_16.gif"
             id="org.teiid.datatools.connectivity.connectionProfile"
             name="Teiid Virtual Database"
