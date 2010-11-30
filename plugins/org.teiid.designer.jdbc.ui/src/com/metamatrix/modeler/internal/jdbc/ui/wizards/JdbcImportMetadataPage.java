@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
@@ -270,6 +272,17 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
                 final String tableType = ttypes[i];
                 tableTypes.add(tableType);
             }
+        } else {
+            this.incls.setApproximateIndexes(false);
+            this.incls.setIncludeForeignKeys(true);
+            this.incls.setIncludeIndexes(false);
+            this.incls.setIncludeProcedures(false);
+            this.incls.setUniqueIndexesOnly(false);
+            this.importSettings.setIncludeApproximateIndexes(true);
+            this.importSettings.setIncludeForeignKeys(true);
+            this.importSettings.setIncludeIndexes(false);
+            this.importSettings.setIncludeProcedures(false);
+            this.importSettings.setIncludeUniqueIndexes(false);
         }
         setSelected(this.approximationsCheckBox, this.incls.getApproximateIndexes());
         setSelected(this.foreignKeysCheckBox, this.incls.includeForeignKeys());
