@@ -16,8 +16,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;
-import com.metamatrix.ui.internal.widget.IntegerSpinner;
 
 /**
  * NumberOfLevelsWizardPage
@@ -47,7 +47,7 @@ public class NumberOfLevelsWizardPage extends WizardPage implements ModelerXmlUi
 }// end NumberOfLevelsWizardPage
 
 class NumberOfLevelsPanel extends Composite implements ModelerXmlUiConstants {
-    private IntegerSpinner spinner;
+    private Spinner spinner;
     private Button allLevelsChk;
 
     public NumberOfLevelsPanel( Composite parent ) {
@@ -71,7 +71,12 @@ class NumberOfLevelsPanel extends Composite implements ModelerXmlUiConstants {
         Label spinnerLabel = new Label(spinnerRow, SWT.NONE);
         String labelText = Util.getString("NumberOfLevelsWizardPage.numberOfLevels"); //$NON-NLS-1$
         spinnerLabel.setText(labelText);
-        spinner = new IntegerSpinner(spinnerRow, NumberOfLevelsWizardPage.MIN_LEVELS, NumberOfLevelsWizardPage.MAX_LEVELS);
+        spinner = new Spinner(spinnerRow, SWT.NONE);
+        spinner.setMinimum(NumberOfLevelsWizardPage.MIN_LEVELS);
+        spinner.setMaximum(NumberOfLevelsWizardPage.MAX_LEVELS);
+        spinner.setToolTipText(Util.getString("NumberOfLevelsWizardPage.spinner.toolTip", //$NON-NLS-1$
+                                              spinner.getMinimum(),
+                                              spinner.getMaximum()));
 
         allLevelsChk = new Button(spinnerRow, SWT.CHECK);
         allLevelsChk.setText(Util.getString("NumberOfLevelsWizardPage.btnTxt")); //$NON-NLS-1$
@@ -92,7 +97,7 @@ class NumberOfLevelsPanel extends Composite implements ModelerXmlUiConstants {
             return -1;
         }
 
-        return spinner.getIntegerValue();
+        return spinner.getSelection();
     }
 
     void allLevelsChkSelected() {

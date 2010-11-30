@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.webservice;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.webservice.WebServicePlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.internal.webservice.gen,

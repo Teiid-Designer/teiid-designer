@@ -157,7 +157,6 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
          */
         public QueryValidationResult validateSql( String sqlString,
                                                   int type,
-                                                  boolean isUUIDSql,
                                                   boolean cacheResult ) {
             Command command = null;
             IStatus status = null;

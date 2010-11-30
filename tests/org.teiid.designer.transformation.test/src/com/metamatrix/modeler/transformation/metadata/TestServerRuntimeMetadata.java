@@ -300,16 +300,16 @@ public class TestServerRuntimeMetadata extends TestCase {
         assertNotNull(node);
     }
 
-    public void testGetXmlSchemas() throws Exception {
-        QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
-        Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument"); //$NON-NLS-1$
-        assertNotNull(groupID);
-        assertTrue(groupID instanceof TableRecord);
-
-        List schemas = metadata.getXMLSchemas(groupID);
-        assertNotNull(schemas);
-        assertEquals(1, schemas.size());
-    }
+//    public void testGetXmlSchemas() throws Exception {
+//        QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);
+//        Object groupID = metadata.getGroupID("BooksDoc.bookSetMixedDocument"); //$NON-NLS-1$
+//        assertNotNull(groupID);
+//        assertTrue(groupID instanceof TableRecord);
+//
+//        List schemas = metadata.getXMLSchemas(groupID);
+//        assertNotNull(schemas);
+//        assertEquals(1, schemas.size());
+//    }
 
     public void testGetMapping() throws Exception {
         QueryMetadataInterface metadata = helpGetMetadata(XML_VDB);

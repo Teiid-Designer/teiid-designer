@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.rose
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.rose.internal.RosePlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.rose,
  com.metamatrix.rose.internal,

@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.diagram.ui.printing;
 
-import java.util.ArrayList;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -24,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -33,7 +33,6 @@ import com.metamatrix.modeler.diagram.ui.preferences.DiagramPrintPreferencePage;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.Dialog;
-import com.metamatrix.ui.internal.widget.Spinner;
 
 public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConstants {
 
@@ -338,13 +337,15 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         radioPagesInRange = WidgetFactory.createRadioButton(grpPageRange, RANGE_FROM);
 
         int iPossiblePageCount = getTotalPossiblePageCount();
-        spinRangeFrom = new Spinner(grpPageRange, getPageSelectPossibleValues(1, iPossiblePageCount));
-        spinRangeFrom.setWrap(false);
+        spinRangeFrom = new Spinner(grpPageRange, SWT.NONE);
+        spinRangeFrom.setMinimum(1);
+        spinRangeFrom.setMaximum(iPossiblePageCount);
 
         WidgetFactory.createLabel(grpPageRange, RANGE_TO);
 
-        spinRangeTo = new Spinner(grpPageRange, getPageSelectPossibleValues(1, iPossiblePageCount));
-        spinRangeTo.setWrap(false);
+        spinRangeTo = new Spinner(grpPageRange, SWT.NONE);
+        spinRangeTo.setMinimum(1);
+        spinRangeTo.setMaximum(iPossiblePageCount);
 
         // ================================================
         // 4. Total Pages
@@ -425,24 +426,25 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
 
                 // capture current 'To'
                 int iCurrentToValue = getToPage();
+                int fromPage = getFromPage();
+                int pageCount = getTotalPossiblePageCount();
 
-                ArrayList arylVals = getPageSelectPossibleValues(getFromPage(), getTotalPossiblePageCount());
-                if (arylVals != null && arylVals.size() > 0) {
-
-                    spinRangeTo.setPossibleValues(arylVals);
+                if ((pageCount - fromPage) >= 0) {
+                    spinRangeTo.setMinimum(fromPage);
+                    spinRangeTo.setMaximum(pageCount);
 
                     // after adjusting 'To' possible values, capture 'To' bounds
-                    int iToLower = ((Integer)spinRangeTo.getLowerBound()).intValue();
-                    int iToUpper = ((Integer)spinRangeTo.getUpperBound()).intValue();
+                    int iToLower = spinRangeTo.getMinimum();
+                    int iToUpper = spinRangeTo.getMaximum();
 
                     // if the former 'To' value no longer fits in the new 'To' range, reset it to
                     // 'lower bound of 'To':
                     if (iCurrentToValue >= iToLower && iCurrentToValue <= iToUpper) {
                         // set it to current, hoping this will make it display
-                        spinRangeTo.setValue(new Integer(iCurrentToValue));
+                        spinRangeTo.setSelection(iCurrentToValue);
                     } else {
                         // set 'To' value to be new lower bound of 'To':
-                        spinRangeTo.setValue(new Integer(iToLower));
+                        spinRangeTo.setSelection(iToLower);
                     }
                 } else {
                     // System.out.println("[DiagramPrintSummaryDialog$SelectionListener] NO POSSIBLE VALUES ARRAY!!! " );
@@ -469,11 +471,11 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         if (radioPagesInRange.getSelection() == true) {
             psSettings.setSetting(PrintSettings.SCOPE, new Integer(PrintSettings.SCOPE_PAGE_RANGE));
 
-            Integer IFrom = (Integer)spinRangeFrom.getValue();
-            psSettings.setSetting(PrintSettings.START_PAGE, IFrom);
+            int iFrom = spinRangeFrom.getSelection();
+            psSettings.setSetting(PrintSettings.START_PAGE, iFrom);
 
-            Integer ITo = (Integer)spinRangeTo.getValue();
-            psSettings.setSetting(PrintSettings.END_PAGE, ITo);
+            int iTo = spinRangeTo.getSelection();
+            psSettings.setSetting(PrintSettings.END_PAGE, iTo);
 
         }
     }
@@ -497,8 +499,8 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
             psSettings.setSetting(PrintSettings.END_PAGE, new Integer(iPossiblePageCount));
 
             updateValuesOnSummaryPanel();
-            spinRangeFrom.setValue(new Integer(1));
-            spinRangeTo.setValue(new Integer(iPossiblePageCount));
+            spinRangeFrom.setSelection(1);
+            spinRangeTo.setSelection(iPossiblePageCount);
 
             // update the settings
             applyModifiableSummaryValuesTo();
@@ -516,18 +518,6 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         return gdTemp;
     }
 
-    ArrayList getPageSelectPossibleValues( int iMin,
-                                           int iMax ) {
-
-        ArrayList arylPctPossibleValues = new ArrayList();
-        for (int i = iMin; i <= iMax; i += 1) {
-
-            arylPctPossibleValues.add(new Integer(i));
-        }
-
-        return arylPctPossibleValues;
-    }
-
     int getTotalActualPageCount() {
         // 
         int iTotalPages = 0;
@@ -535,8 +525,8 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         if (radioAllPages.getSelection() == true) {
             iTotalPages = getTotalPossiblePageCount();
         } else {
-            int iFromPage = ((Integer)spinRangeFrom.getValue()).intValue();
-            int iToPage = ((Integer)spinRangeTo.getValue()).intValue();
+            int iFromPage = spinRangeFrom.getSelection();
+            int iToPage = spinRangeTo.getSelection();
 
             iTotalPages = 1 + iToPage - iFromPage;
         }
@@ -549,15 +539,11 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
     }
 
     int getFromPage() {
-        Integer IValue = (Integer)spinRangeFrom.getValue();
-
-        return IValue.intValue();
+        return spinRangeFrom.getSelection();
     }
 
     int getToPage() {
-        Integer IValue = (Integer)spinRangeTo.getValue();
-
-        return IValue.intValue();
+        return spinRangeTo.getSelection();
     }
 
     private Control createPreferencePage( Composite parent ) {
@@ -727,11 +713,13 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
         if (IScope.intValue() == PrintSettings.SCOPE_ALL_PAGES) {
             radioAllPages.setSelection(true);
             radioPagesInRange.setSelection(false);
-            spinRangeFrom.setPossibleValues(getPageSelectPossibleValues(1, iPossiblePageCount));
-            spinRangeFrom.setValue(new Integer(1));
+            spinRangeFrom.setMinimum(1);
+            spinRangeFrom.setMaximum(iPossiblePageCount);
+            spinRangeFrom.setSelection(1);
 
-            spinRangeTo.setPossibleValues(getPageSelectPossibleValues(getFromPage(), iPossiblePageCount));
-            spinRangeTo.setValue(new Integer(iPossiblePageCount));
+            spinRangeTo.setMinimum(getFromPage());
+            spinRangeTo.setMaximum(iPossiblePageCount);
+            spinRangeTo.setSelection(iPossiblePageCount);
             spinRangeFrom.setEnabled(radioPagesInRange.getSelection());
             spinRangeTo.setEnabled(radioPagesInRange.getSelection());
         }
@@ -741,21 +729,23 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
             radioPagesInRange.setSelection(true);
 
             // From
-            spinRangeFrom.setPossibleValues(getPageSelectPossibleValues(1, iPossiblePageCount));
+            spinRangeFrom.setMinimum(1);
+            spinRangeFrom.setMaximum(iPossiblePageCount);
             if (psSettings.getSetting(PrintSettings.START_PAGE) != null
                 && ((Integer)psSettings.getSetting(PrintSettings.START_PAGE)).intValue() > -1) {
-                spinRangeFrom.setValue(psSettings.getSetting(PrintSettings.START_PAGE));
+                spinRangeFrom.setSelection((Integer)psSettings.getSetting(PrintSettings.START_PAGE));
             } else {
-                spinRangeFrom.setValue(new Integer(1));
+                spinRangeFrom.setSelection(1);
             }
 
             // To
-            spinRangeTo.setPossibleValues(getPageSelectPossibleValues(1, iPossiblePageCount));
+            spinRangeTo.setMinimum(1);
+            spinRangeTo.setMaximum(iPossiblePageCount);
             if (psSettings.getSetting(PrintSettings.END_PAGE) != null
                 && ((Integer)psSettings.getSetting(PrintSettings.END_PAGE)).intValue() > -1) {
-                spinRangeTo.setValue(psSettings.getSetting(PrintSettings.END_PAGE));
+                spinRangeTo.setSelection((Integer)psSettings.getSetting(PrintSettings.END_PAGE));
             } else {
-                spinRangeTo.setValue(new Integer(1));
+                spinRangeTo.setSelection(1);
             }
 
             spinRangeFrom.setEnabled(radioPagesInRange.getSelection());
@@ -794,25 +784,23 @@ public class DiagramPrintSummaryDialog extends Dialog implements DiagramUiConsta
             radioPagesInRange.setSelection(false);
 
             // also set the to and from to min and max
-            spinRangeFrom.setValue(new Integer(1));
-            spinRangeTo.setValue(new Integer(iPossiblePageCount));
+            spinRangeFrom.setSelection(1);
+            spinRangeTo.setSelection(iPossiblePageCount);
 
             // propagate these default values back to Settings
-            Integer IFrom = (Integer)spinRangeFrom.getValue();
-            //            System.out.println("[DiagramPrintSummaryDialog.initModifiableSummaryValuesOnSummaryPanel] about to set store From to: " + IFrom.intValue() ); //$NON-NLS-1$
-            psSettings.setSetting(PrintSettings.START_PAGE, IFrom);
+            int iFrom = spinRangeFrom.getSelection();
+            psSettings.setSetting(PrintSettings.START_PAGE, iFrom);
 
-            Integer ITo = (Integer)spinRangeTo.getValue();
-            //            System.out.println("[DiagramPrintSummaryDialog.initModifiableSummaryValuesOnSummaryPanel] about to set store To to: " + ITo.intValue() ); //$NON-NLS-1$
-            psSettings.setSetting(PrintSettings.END_PAGE, ITo);
+            int iTo = spinRangeTo.getSelection();
+            psSettings.setSetting(PrintSettings.END_PAGE, iTo);
             lblTotalPages.setText(String.valueOf(getTotalActualPageCount()));
         }
 
         if (IScope.intValue() == PrintSettings.SCOPE_PAGE_RANGE) {
             radioAllPages.setSelection(false);
             radioPagesInRange.setSelection(true);
-            spinRangeFrom.setValue(psSettings.getSetting(PrintSettings.START_PAGE));
-            spinRangeTo.setValue(psSettings.getSetting(PrintSettings.END_PAGE));
+            spinRangeFrom.setSelection((Integer)psSettings.getSetting(PrintSettings.START_PAGE));
+            spinRangeTo.setSelection((Integer)psSettings.getSetting(PrintSettings.END_PAGE));
         }
 
     }

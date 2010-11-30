@@ -165,6 +165,18 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         }
 
     }
+    
+    @Override
+    public int open() {
+    	// TODO Auto-generated method stub
+    	int rc = super.open();
+    	
+    	if (rc != CANCEL){
+    		return deploymentStatus.getSeverity();
+    	}
+    	
+    	return rc;
+    }
 
     void execute( IProgressMonitor monitor ) {
         try {
@@ -183,8 +195,9 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 monitor.beginTask(DqpUiPlugin.UTIL.getString(CREATING_WAR_FILE_MESSAGE_ID, warFileName), 100);
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
-                DqpUiPlugin.UTIL.log(deploymentStatus.getMessage());
-
+                DqpUiPlugin.UTIL.log(deploymentStatus);
+                setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity());
+                
                 super.okPressed();
             }
         } catch (RuntimeException err) {
@@ -206,26 +219,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     }
 
     /**
-     * set this method for connector binding editor view
-     * 
-     * @param boolean bBool
-     * @since 7.1
-     */
-    protected void setForConnectorBindingEditorViewStatus( IStatus status ) {
-        deploymentStatus = status;
-    }
-
-    /**
-     * calling class will use this method to determine if connector binding editor view will be open
-     * 
-     * @return boolean
-     * @since 7.1
-     */
-    public IStatus getForConnectorBindingEditorViewStatus() {
-        return deploymentStatus;
-    }
-
-    /**
      * load default setting values for WAR file location, License file location, context name.
      * 
      * @since 7.1
@@ -237,6 +230,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         loadPortDefault();
         loadTnsDefault();
         loadJndiNameDefault();
+        loadSecurityTypeDefault();
 
         WarDataserviceModel.getInstance().setVdbFile(theVdb);
         WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
@@ -253,10 +247,6 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     private void loadWarFileLocationDefault() {
         try {
             String warDir = WebServicePlugin.getDefaultWarFileSaveLocation();
-            if (warDir != null && warDir.indexOf("/") >= 0) { //$NON-NLS-1$
-                warDir = warDir.replace('/', '\\');
-            }
-
             WarDataserviceModel.getInstance().setWarFilenameDefault(warDir);
         } catch (Throwable theThrowable) {
             DqpUiPlugin.UTIL.log(theThrowable);
@@ -321,6 +311,15 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         WarDataserviceModel.getInstance().setJndiNameDefault("java:teiidvdb");//$NON-NLS-1$
     }
 
+    /**
+     * set default jndiName, by default the jndiName is "java:teiidvdb".
+     * 
+     * @since 7.1.1
+     */
+    private void loadSecurityTypeDefault() {
+        WarDataserviceModel.getInstance().setSecurityTypeDefault("none");//$NON-NLS-1$
+    }
+    
     public void setWarFileName( String name ) {
         warFileName = name;
     }

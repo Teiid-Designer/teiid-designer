@@ -96,24 +96,95 @@
         name="com.metamatrix.modeler.transformation.ui.actions.TransformationObjectEditHelper">
       </class>
    </extension>
-<!--
-	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
-	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
--->
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-         targetID="modelerPerspective">
-         <actionSet
-               id="transformationMetadataActionSet">
-         </actionSet>
-         <actionSet
-               id="transformationSearchActionSet">
-         </actionSet>
-      </perspectiveExtension>
-   </extension>
-<!-- Action in the Metadata menu to revalidate model transformations -->
 
+<!-- Action in the Metadata menu to revalidate model transformations -->
+<!-- Property Testers, Handlers, Commands, Menus extensions to add to Teiid Designer submenu in Search Menu -->
+
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="org.teiid.designer.transformation.ui.propertyTester"
+			type="org.eclipse.core.resources.IFile"
+			namespace="org.teiid.designer.transformation.ui"
+			properties="VIRTUAL_MODEL"
+			class="com.metamatrix.modeler.transformation.ui.actions.TransformationUiPropertyTester">
+		</propertyTester>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="com.metamatrix.modeler.transformation.ui.actions.ValidateModelTransformationsHandler"
+            commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.transformation.ui.VIRTUAL_MODEL" value="true" />
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.transformation.ui.search.OpenTransformationSearchPageHandler"
+            commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand">
+		</handler>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.commands">
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+			name="%revalidateModelAction.label">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+			name="%openTransformationSearchAction.label">
+	  </command>
+   </extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:project?after=additions">
+			<command commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+				label="%revalidateModelAction.label"
+             	icon="icons/full/cview16/validate.gif"
+             	tooltip="%revalidateModelAction.tooltip">
+             	<visibleWhen
+                    checkEnabled="false">
+					<with variable="activeWorkbenchWindow.activePerspective">
+                 		<equals value="modelerPerspective"/>
+              		</with>
+             	</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
+			<!-- Note: The Search menu (re-) definition has to be here due to bug: -->
+			<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
+			<menu
+				label="%searchMenu.label"
+				id="org.eclipse.search.menu">
+				<separator name="internalDialogGroup" visible="false" />
+           		<separator name="dialogGroup" visible="false" />
+           		<separator name="fileSearchContextMenuActionsGroup" visible="true" />
+           		<separator name="teiidDesignerSearchMenuActionsGroup" visible="true" />
+           		<separator name="contextMenuActionsGroup" visible="true" />
+           		<separator name="occurencesActionsGroup" visible="true" />
+           		<separator name="extraSearchGroup" visible="true" />
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
+			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
+				<command commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+					label="%openTransformationSearchAction.label"
+                 	icon="icons/full/cview16/search_transformation.gif"
+                 	tooltip="%openTransformationSearchAction.tip">
+        		</command>
+			</menu>
+		</menuContribution>
+	</extension>
+
+<!--
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
@@ -131,6 +202,7 @@
          </action>
       </actionSet>
    </extension>
+-->
  <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
    <extension
          id="transformationUiNewModelObjectHelper"
@@ -194,42 +266,7 @@
          label="%editTransformationAction.label">
       </resourceAction>
    </extension>
-<!-- Action set to get Relationship Search Action in Search Menu -->
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            name="%openTransformationSearchAction.label"
-            description="%openTransformationSearchAction.tip"
-            categoryId="com.metamatrix.modeler.ui.category.modeler"
-            id="OpenTransformationSearchPageAction">
-      </command>
-   </extension> 
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%transformationSearchActionSet.name"
-            visible="true"
-            id="transformationSearchActionSet">
-		 <menu
-			   id="org.eclipse.search.menu"
-			   label="%searchMenu.label"
-			   path="navigate">
-			   <groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
-			   <groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
-			   <groupMarker name="quickPage"/>           <!-- to be used by clients      -->		   
-			   <separator name="contextMenuActionsGroup"/>
-		 </menu>              
-         <action
-               definitionId="OpenTransformationSearchPageAction"
-               label="%openTransformationSearchAction.label"
-               icon="icons/full/cview16/search_transformation.gif"
-               tooltip="%openTransformationSearchAction.tip"
-               class="com.metamatrix.modeler.transformation.ui.search.OpenTransformationSearchPageAction"
-               menubarPath="org.eclipse.search.menu/quickPage"
-               id="OpenTransformationSearchPageAction">
-         </action>
-      </actionSet>
-   </extension>
+
    <!-- Action contributed to generate materialized views -->
    <extension
 		id="CreateMaterializedViewsAction"

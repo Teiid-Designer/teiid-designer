@@ -60,6 +60,8 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
             @Override
             public void run() {
                 try {
+                	// Call disconnect() first to clear out Server & admin caches
+                	server.disconnect();
                     server.getAdmin().refresh();
                 } catch (Exception e) {
                     UTIL.log(e);

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -26,10 +27,13 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+
+import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.ValidationProblem;
 import com.metamatrix.modeler.core.validation.rules.CoreValidationRulesUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 
 /**
@@ -267,8 +271,7 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
         return new MultiStatus(PID, REBUILD_IMPORTS_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
     }    
         
-    
-    /**
+	/**
      * Determine the path for the target resource if the name were to change to the proposed name.
      * Takes into account the extension, if a file and the extension exists.
      * @param proposedName
@@ -338,6 +341,39 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
         }
         
     }
+    
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+        Collection errorList = new ArrayList();
+
+        IResource modifiedRes = this.getModifiedResource();
+        
+        // Do a check so we don't process folders or projects
+        if( modifiedRes instanceof IFile ) {
+	        final ModelEditor editor = ModelerCore.getModelEditor();
+	        try {
+	            ModelResource modelResource = editor.findModelResource((IFile)this.getModifiedResource());
+	            if (modelResource != null) {
+	                RefactorModelExtensionManager.helpUpdateModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+	                    
+	                modelResource.save(null, false);
+	            }
+	
+	        } catch (ModelWorkspaceException e) {
+	            final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Exception_finding_model_resource", this.getModifiedResource().getName()); //$NON-NLS-1$
+	            errorList.add(new Status(IStatus.ERROR, PID, REFACTOR_MODIFIED_RESOURCE_ERROR, msg, e));
+	        }
+        }
+        
+        // defect 16076 - display the correct text on completion, and display all errors
+        String msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_complete"); //$NON-NLS-1$
+        MultiStatus multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS),
+                                                  msg, null);
+        if (!multiStatus.isOK()) {
+            msg = ModelerCore.Util.getString("ResourceRefactorCommand.update_model_contents_error"); //$NON-NLS-1$
+            multiStatus = new MultiStatus(PID, REFACTOR_MODIFIED_RESOURCE_ERROR, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
+        }
+        return multiStatus;
+    }
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.refactor.ModelRefactorCommand#undo()
@@ -402,9 +438,6 @@ public class ResourceRenameCommand extends ResourceRefactorCommand {
      */
     @Override
     protected Map getMovedResourcePathMap(boolean isUndo) {
-        if ( isUndo ) {
-            return this.undoMap;
-        }
         return this.pathMap;
     }
 

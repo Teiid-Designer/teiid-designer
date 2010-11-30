@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.xsd.ui;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.xsd.ui.ModelerXsdUiPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.xsd.ui,
  com.metamatrix.modeler.internal.xsd.ui.actions,

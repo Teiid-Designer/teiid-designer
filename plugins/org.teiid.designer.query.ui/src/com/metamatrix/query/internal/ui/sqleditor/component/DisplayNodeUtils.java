@@ -479,7 +479,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
         if (type == EXPRESSION) {
             // If node is an expression or within an expression, cant insert before it
             // Must use the builder
-            if (!node.isInExpression()) {
+//            if (!node.isInExpression()) {
                 // Get the clause that this node is in
                 DisplayNode clauseNode = getNodeTypeForNode(node, CLAUSE);
                 if (clauseNode != null) {
@@ -487,7 +487,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
                         result = true;
                     }
                 }
-            }
+//            }
         } else if (type == CRITERIA) {
             // If node is a criteria or within a criteria, cant insert before it
             // Must use the builder
@@ -835,9 +835,13 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
             // --------------------------------------------------
         } else if (nodes.size() == 1) {
             // can type be inserted after node
-            if (DisplayNodeUtils.canInsertAfter((DisplayNode)nodes.get(0), nodeType)) {
+        	DisplayNode nodeAtIndex = getNodeAtIndex((DisplayNode)nodes.get(0), index);
+            if (nodeAtIndex != null && DisplayNodeUtils.canInsertAfter(nodeAtIndex, nodeType)) {
                 result = true;
             }
+//            if (DisplayNodeUtils.canInsertAfter((DisplayNode)nodes.get(0), nodeType)) {
+//                result = true;
+//            }
         }
         return result;
     }
@@ -861,7 +865,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
         // index is within a Node, return type for it
         if (nNodes == 1) {
             DisplayNode node = (DisplayNode)nodes.get(0);
-            result = getNodeTypeForNode(node, nodeType);
+            return getNodeTypeAtIndex(node, index, nodeType);
             // index is between two Nodes, first check the second node, then the first
         } else if (nNodes == 2) {
             DisplayNode node = (DisplayNode)nodes.get(1);
@@ -873,6 +877,39 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
             result = getNodeTypeForNode(node, nodeType);
         }
         return result;
+    }
+    
+    public static DisplayNode getNodeTypeAtIndex(DisplayNode parentNode, int index, int nodeType) {
+    	if( parentNode != null && parentNode.isAnywhereWithin(index) ) {
+    		DisplayNode theNode = getNodeTypeForNode(parentNode, nodeType);
+    		if( theNode != null ) {
+    			return theNode;
+    		}
+    	}
+    	
+    	for( DisplayNode node : parentNode.getChildren()) {
+    		DisplayNode theNode = getNodeTypeAtIndex(node, index, nodeType);
+    		if( theNode != null ) {
+    			return theNode;
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    public static DisplayNode getNodeAtIndex(DisplayNode parentNode, int index) {
+    	if( parentNode != null && parentNode.isAnywhereWithin(index) && parentNode.getChildren().isEmpty() ) {
+    		return parentNode;
+    	}
+    	
+    	for( DisplayNode node : parentNode.getChildren()) {
+    		DisplayNode theNode = getNodeAtIndex(node, index);
+    		if( theNode != null ) {
+    			return theNode;
+    		}
+    	}
+    	
+    	return null;
     }
 
     /**

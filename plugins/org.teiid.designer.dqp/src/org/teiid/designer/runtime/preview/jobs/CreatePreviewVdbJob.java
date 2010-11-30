@@ -112,24 +112,24 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
      */
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
-        IResource resource = ((this.project == null) ? this.model : this.project);
-
-        // if the file was deleted from outside Eclipse, Eclipse will think it still exists
-        if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
-            this.pvdbFile.delete(true, monitor);
-        }
-
-        boolean isNew = false;
-        // create if necessary
-        if (!this.pvdbFile.exists()) {
-            isNew = true;
-            this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
-        }
-
-        // make sure the file is hidden
-        this.pvdbFile.setHidden(true);
-
         try {
+            IResource resource = ((this.project == null) ? this.model : this.project);
+
+            // if the file was deleted from outside Eclipse, Eclipse will think it still exists
+            if (this.pvdbFile.exists() && !this.pvdbFile.getLocation().toFile().exists()) {
+                this.pvdbFile.delete(true, monitor);
+            }
+
+            boolean isNew = false;
+            // create if necessary
+            if (!this.pvdbFile.exists()) {
+                isNew = true;
+                this.pvdbFile.create(new ByteArrayInputStream(new byte[0]), false, null);
+            }
+
+            // make sure the file is hidden
+            this.pvdbFile.setHidden(true);
+
             Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
 
             // don't do if a project PVDB
@@ -145,8 +145,15 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
                 pvdb.save(monitor);
             }
         } catch (Exception e) {
-            IPath path = ((this.project == null) ? this.model.getFullPath() : this.project.getFullPath());
-            throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.CreatePreviewVdbJobError, path), e));
+            IProject proj = ((this.project == null) ? this.model.getProject() : this.project);
+            
+            // When a project is closed if an editor is open and dirty a dialog is presented to the user asking them if they
+            // want to save the file. If the user saves the file a resource change event gets fired but when this job gets run
+            // the model's project has been closed. Return a good status in this case. Otherwise return a bad status.
+            if (proj.isOpen()) {
+                IPath path = ((this.project == null) ? this.model.getFullPath() : this.project.getFullPath());
+                throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.CreatePreviewVdbJobError, path), e));
+            }
         }
 
         // all good

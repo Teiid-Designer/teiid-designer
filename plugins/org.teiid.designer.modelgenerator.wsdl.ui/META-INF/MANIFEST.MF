@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.wsdl.ui;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
@@ -22,7 +22,9 @@ Require-Bundle: org.eclipse.ui,
  org.teiid.core.designer,
  org.teiid.designer.metamodels.core,
  org.eclipse.emf.ecore,
- org.eclipse.datatools.connectivity
+ org.eclipse.datatools.connectivity,
+ org.teiid.designer.datatools.ui,
+ org.eclipse.datatools.connectivity.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.wsdl.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

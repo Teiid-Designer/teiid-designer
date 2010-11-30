@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.soap.provider;
 
 import java.io.ByteArrayInputStream;
@@ -183,7 +190,6 @@ public class TeiidWSProvider {
 
 		} catch (SQLException e) {
 			String faultcode = SOAP_11_STANDARD_SERVER_FAULT_CODE;
-			Object[] params = new Object[] { e };
 			String msg = SoapPlugin.Util.getString("TeiidWSProvider.1"); //$NON-NLS-1$
 			logger.logrb(Level.SEVERE,  "TeiidWSProvider", "execute", SoapPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
 			if (e instanceof SQLException) {
@@ -193,10 +199,10 @@ public class TeiidWSProvider {
 				}
 			}
 			createSOAPFaultMessage(e, e.getMessage(), faultcode);
+		
 
 		} catch (Exception e) {
 			String faultcode = SOAP_11_STANDARD_SERVER_FAULT_CODE;
-			Object[] params = new Object[] { e };
 			String msg = SoapPlugin.Util.getString("TeiidWSProvider.1"); //$NON-NLS-1$
 			logger.logrb(Level.SEVERE,  "TeiidWSProvider", "execute", SoapPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
 			if (e instanceof SQLException) {
@@ -257,8 +263,7 @@ public class TeiidWSProvider {
 			String msg = SoapPlugin.Util.getString(
 					"TeiidWSProvider.1"); //$NON-NLS-1$
 			logger.logrb(Level.SEVERE,  "TeiidWSProvider", "loadProperties", SoapPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
-			createSOAPFaultMessage(new Exception(msg), msg,
-					SOAP_11_STANDARD_SERVER_FAULT_CODE);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -276,10 +281,10 @@ public class TeiidWSProvider {
 			loadProperties();
 		} catch (SOAPFaultException e) {
 			logger.log(Level.SEVERE, e.getMessage());
-			response = new StreamSource(e.getMessage());
+			throw new RuntimeException(e);
 		} catch (SOAPException e) {
 			logger.log(Level.SEVERE, e.getMessage());
-			response = new StreamSource(e.getMessage());
+			throw new RuntimeException(e);
 		}
 
 		// Get procedure name from properties object based on operation name
@@ -310,12 +315,12 @@ public class TeiidWSProvider {
 		try {
 			response = execute(procedureName, inputMessage);
 		} catch (SOAPFaultException e) {
-			response = new StreamSource(e.getMessage());
+			throw new RuntimeException(e);
 		} catch (SOAPException e) {
 			logger.log(Level.SEVERE, SoapPlugin.Util
 					.getString("TeiidWSProvider.9") //$NON-NLS-1$
 					+ procedureName);
-			response = new StreamSource(e.getMessage());
+			throw new RuntimeException(e);
 		}
 
 		return response;

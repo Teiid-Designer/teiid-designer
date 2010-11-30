@@ -28,11 +28,61 @@
             class="org.teiid.designer.datatools.profiles.ldap.PropertyPage"
             icon="icons/full/obj16/connectionFolder.gif"
             id="org.teiid.designer.datatools.profiles.ldap.profileProperties"
-            name="Connection Properties">
+            name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
       </page>
    </extension>
+      
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.modeshape.ConnectionProfileWizard"
+         description="Create a ModeShape connection profile."
+         icon="icons/modeshape_icon_16px.png"
+         id="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfileWizard"
+         name="ModeShape"
+         profile="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
+   </extension>
 
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.modeshape.ModeShapePropertyPage"
+            icon="icons/modeshape_icon_16px.png"
+            id="org.teiid.designer.datatools.profiles.modeshape.profileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+   
+   <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
+      <driverUIContributor
+            class="org.teiid.designer.datatools.profiles.modeshape.ModeShapeDriverUIContributor"
+            driverTemplateID="org.teiid.designer.datatools.connectivity.driver.modeShapeDriverTemplate"
+            id="org.teiid.designer.datatools.profiles.modeshape.ModeShapeDriverUIContributor">
+      </driverUIContributor>
+   </extension>
+   
+   <extension point="org.eclipse.datatools.connectivity.ui.driverPropertyEditor">
+      <propertyEditor
+            customPropertyDescriptor="org.eclipse.datatools.connectivity.ui.PasswordTextPropertyDescriptor"
+            driverPropertyID="org.eclipse.datatools.connectivity.db.password"
+            driverTemplateID="org.teiid.datatools.connectivity.driver.serverDriverTemplate"
+            id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
+      </propertyEditor>
+   </extension>
 </plugin>

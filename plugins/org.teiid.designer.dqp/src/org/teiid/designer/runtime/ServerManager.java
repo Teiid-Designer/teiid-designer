@@ -43,6 +43,13 @@ import com.metamatrix.core.util.CoreArgCheck;
  */
 public final class ServerManager implements EventManager {
 
+    private enum RuntimeState {
+        INVALID,
+        STARTED,
+        SHUTTING_DOWN,
+        SHUTDOWN
+    }
+
     // ===========================================================================================================================
     // Constants
     // ===========================================================================================================================
@@ -116,6 +123,11 @@ public final class ServerManager implements EventManager {
      */
     private final ReadWriteLock serverLock = new ReentrantReadWriteLock();
 
+    /**
+     * The status of this manager.
+     */
+    private RuntimeState state = RuntimeState.INVALID;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -143,6 +155,7 @@ public final class ServerManager implements EventManager {
         }
 
         this.previewManager = tempPreviewManager;
+        this.state = RuntimeState.STARTED;
     }
 
     // ===========================================================================================================================
@@ -236,13 +249,14 @@ public final class ServerManager implements EventManager {
     private IStatus internalAddServer( Server server,
                                        boolean notifyListeners ) {
         boolean added = false;
+        Server defaultServer = null;
 
         try {
             this.serverLock.writeLock().lock();
 
             if (!isRegistered(server)) {
                 if (servers.isEmpty()) {
-                    setDefaultServer(server);
+                    defaultServer = server;
                 }
                 added = this.servers.add(server);
             }
@@ -254,7 +268,9 @@ public final class ServerManager implements EventManager {
             if (notifyListeners) {
                 notifyListeners(ExecutionConfigurationEvent.createAddServerEvent(server));
             }
-
+            if( defaultServer != null ) {
+            	setDefaultServer(defaultServer);
+            }
             return Status.OK_STATUS;
         }
 
@@ -414,6 +430,7 @@ public final class ServerManager implements EventManager {
 
                             if (previewServer) {
                                 setDefaultServer(server);
+                                server.ping();
                             }
                         }
                     }
@@ -455,64 +472,73 @@ public final class ServerManager implements EventManager {
      * @param monitor the progress monitor (may be <code>null</code>)
      */
     public void shutdown( IProgressMonitor monitor ) throws Exception {
-        if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
+        // return if already being shutdown
+        if ((this.state == RuntimeState.SHUTTING_DOWN) || (this.state == RuntimeState.SHUTDOWN)) return;
 
-        if ((this.stateLocationPath != null) && !getServers().isEmpty()) {
-            try {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = factory.newDocumentBuilder();
-                Document doc = docBuilder.newDocument();
+        try {
+            this.state = RuntimeState.SHUTTING_DOWN;
 
-                // create root element
-                Element root = doc.createElement(SERVERS_TAG);
-                doc.appendChild(root);
+            if (monitor != null) monitor.subTask(Util.getString("serverManagerSavingServerRegistryTask")); //$NON-NLS-1$
 
-                for (Server server : getServers()) {
-                    Element serverElement = doc.createElement(SERVER_TAG);
-                    root.appendChild(serverElement);
+            if ((this.stateLocationPath != null) && !getServers().isEmpty()) {
+                try {
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder docBuilder = factory.newDocumentBuilder();
+                    Document doc = docBuilder.newDocument();
 
-                    serverElement.setAttribute(URL_ATTR, server.getUrl());
-                    serverElement.setAttribute(USER_ATTR, server.getUser());
-                    serverElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(server.getPassword().getBytes()));
+                    // create root element
+                    Element root = doc.createElement(SERVERS_TAG);
+                    doc.appendChild(root);
 
-                    if ((getDefaultServer() != null) && (getDefaultServer().equals(server))) {
-                        serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                    for (Server server : getServers()) {
+                        Element serverElement = doc.createElement(SERVER_TAG);
+                        root.appendChild(serverElement);
+
+                        serverElement.setAttribute(URL_ATTR, server.getUrl());
+                        serverElement.setAttribute(USER_ATTR, server.getUser());
+                        serverElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(server.getPassword().getBytes()));
+
+                        if ((getDefaultServer() != null) && (getDefaultServer().equals(server))) {
+                            serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
+                        }
                     }
+
+                    DOMSource source = new DOMSource(doc);
+                    StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
+                    TransformerFactory transFactory = TransformerFactory.newInstance();
+                    Transformer transformer = transFactory.newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    transformer.transform(source, resultXML);
+                } catch (Exception e) {
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                                Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
+                    Util.log(status);
                 }
-
-                DOMSource source = new DOMSource(doc);
-                StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
-                TransformerFactory transFactory = TransformerFactory.newInstance();
-                Transformer transformer = transFactory.newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
-                transformer.transform(source, resultXML);
-            } catch (Exception e) {
-                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                            Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
-                Util.log(status);
+            } else if ((this.stateLocationPath != null) && stateFileExists()) {
+                // delete current registry file since all servers have been deleted
+                try {
+                    new File(getStateFileName()).delete();
+                } catch (Exception e) {
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                                Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                    Util.log(status);
+                }
             }
-        } else if ((this.stateLocationPath != null) && stateFileExists()) {
-            // delete current registry file since all servers have been deleted
-            try {
-                new File(getStateFileName()).delete();
-            } catch (Exception e) {
-                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                            Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
-                Util.log(status);
-            }
-        }
 
-        // shutdown PreviewManage
-        if (this.previewManager != null) {
-            ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.previewManager);
+            // shutdown PreviewManage
+            if (this.previewManager != null) {
+                ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.previewManager);
 
-            try {
-                this.previewManager.shutdown(monitor);
-            } catch (Exception e) {
-                IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
-                Util.log(status);
+                try {
+                    this.previewManager.shutdown(monitor);
+                } catch (Exception e) {
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("errorOnPreviewManagerShutdown"), e); //$NON-NLS-1$
+                    Util.log(status);
+                }
             }
+        } finally {
+            this.state = RuntimeState.SHUTDOWN;
         }
     }
 

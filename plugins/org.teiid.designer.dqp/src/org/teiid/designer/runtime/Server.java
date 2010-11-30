@@ -11,6 +11,7 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -106,6 +107,33 @@ public class Server {
     // ===========================================================================================================================
 
     /**
+     * Perform cleanup
+     */
+    public void close() {
+    	if( this.admin != null ) {
+        	Admin adminApi = this.admin.getAdminApi();
+        	if( adminApi != null) {
+        		adminApi.close();
+        	}
+        	this.admin = null;
+    	}
+    	//System.out.println(" >>>> Server.close() CLOSED  Server = " + getUrl());
+    }
+    
+    /**
+     * Basically closes the connection and admin and nulls out the admin reference so next call to connect will
+     * reconstruct the Teiid connection from scratch.
+     */
+    public void disconnect() {
+    	close();
+    	
+    	if( this.admin != null ) {
+    		this.admin.disconnect();
+    		this.admin = null;
+    	}
+    }
+    
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -189,6 +217,9 @@ public class Server {
      * @return <code>true</code> if a connection to this server exists and is working
      */
     public boolean isConnected() {
+    	if( this.admin == null ) {
+    		return false;
+    	}
         return ping().isOK();
     }
 
@@ -214,6 +245,27 @@ public class Server {
 
         return Status.OK_STATUS;
     }
+    
+    /**
+     * Attempts to establish communication with the specified server for testing purposes only.
+     * 
+     * This results in the connection being closed.
+     * 
+     * @return a status if the server connection can be established (never <code>null</code>)
+     */
+    public IStatus testPing() {
+        try {
+        	Admin adminApi = getAdmin().getAdminApi();
+            adminApi.close();
+            this.admin = null;
+        } catch (Exception e) {
+            String msg = Util.getString("cannotConnectToServer", getUrl()); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
+        }
+
+        return Status.OK_STATUS;
+    }
+    
 
     /**
      * {@inheritDoc}

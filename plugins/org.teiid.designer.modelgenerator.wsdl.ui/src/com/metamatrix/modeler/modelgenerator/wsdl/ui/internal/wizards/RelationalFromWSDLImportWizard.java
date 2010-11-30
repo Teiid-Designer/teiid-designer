@@ -10,13 +10,6 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.State;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,9 +25,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.ide.IDE;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -188,14 +180,14 @@ public class RelationalFromWSDLImportWizard extends AbstractWizard implements II
 
     public void runFinish( IProgressMonitor theMonitor ) throws ModelBuildingException, SchemaProcessingException, ModelGenerationException {
         // Target Model Name
-        String modelName = this.importManager.getTargetModelName();
+//        String modelName = this.importManager.getTargetModelName();
 
         // Target location for the new model
         IContainer container = this.importManager.getTargetModelLocation();
 
         // The Selected Operations
         Model model = importManager.getWSDLModel();
-        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(model);
+        RelationalModelBuilder modelBuilder = new RelationalModelBuilder(model, this.importManager.getConnectionProfile());
         try {
 			modelBuilder.modelOperations(this.importManager.getSelectedOperations(), container);
 		} catch (ModelWorkspaceException e) {

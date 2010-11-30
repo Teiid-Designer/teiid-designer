@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.PresentationEntity;
+import com.metamatrix.metamodels.relational.aspects.uml.IndexAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlClassifier;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlPackage;
@@ -91,7 +92,7 @@ final public class TransformationDiagramContentProvider implements ITreeContentP
             
             if( aspect instanceof UmlPackage ) {
                 return children;
-            } else if ( aspect instanceof UmlClassifier ) {
+            } else if ( aspect instanceof UmlClassifier && !(aspect instanceof IndexAspect) ) {
                 // We should only find/make t-diagrams for classifiers that arent nested. So we check parent.
                 Object parentParentObject = ((EObject)parentElement).eContainer();
                 if( parentParentObject instanceof EObject ) {

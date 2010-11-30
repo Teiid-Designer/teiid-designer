@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <plugin>
  
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
@@ -29,7 +36,7 @@
 					value="7.1" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
-					value="jdbc:teiid:vdb-name@mm://localhost:31000" required="true"
+					value="jdbc:teiid:vdb-name@mms://localhost:31000" required="true"
 					visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.username" name="User ID"
@@ -79,4 +86,28 @@
           providerID="org.teiid.datatools.connectivity.connectionProfile">
        </providerIDtoDriverCategoryID>
     </extension>
+    
+   <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.catalog">
+      <overrideLoader
+            provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
+            eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
+            product="Teiid"
+            version="7.1"/>
+   </extension>
+   
+      <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.logicalContainment">
+      <containment
+            class="TeiidSchema"
+            package="http:///org/teiid/datatools/connectivity/teiidsqlmodel.ecore"
+            provider="org.teiid.datatools.connectivity.sql.TeiidSchemaContainmentProvider">
+      </containment>
+      <containment
+            class="Document"
+            package="http:///org/teiid/datatools/connectivity/teiidsqlmodel.ecore"
+            provider="org.teiid.datatools.connectivity.sql.TeiidDocumentContainmentProvider">
+      </containment>
+   </extension>
+
 </plugin>

@@ -20,20 +20,20 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.Schema;
-import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
 import com.metamatrix.modeler.schema.tools.model.schema.SchemaObject;
 import com.metamatrix.modeler.schema.tools.model.schema.impl.ElementImpl;
+import com.metamatrix.modeler.schema.tools.model.schema.impl.TypeDefinition;
 
 public class ProcedureBuilder {
 
 	RelationalFactory factory = com.metamatrix.metamodels.relational.RelationalPackage.eINSTANCE
 	.getRelationalFactory();
-	private DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
 	private Set<String> procedures = new HashSet<String>();
 	private Schema operationSchema;
 	private ITraversalCtxFactory traversalCtxFactory;
@@ -55,10 +55,11 @@ public class ProcedureBuilder {
 
 	public void build(List<XSDElementDeclaration> elements, ITraversalCtxFactory traversalCtxFactory)
 			throws ModelerCoreException {
-		CoreArgCheck.isTrue(elements.size() == 1, "wrong number of elements returned from XSD");
+		CoreArgCheck.isTrue(elements.size() == 1, 
+				XmlImporterUiPlugin.getDefault().getPluginUtil().getString("ProcedureBuilder.wrongNumberElementsReturnedFromXsd")); //$NON-NLS-1$
 		XSDElementDeclaration element = elements.get(0);
 		this.traversalCtxFactory = traversalCtxFactory;
-		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(element.getName(), new QName(element.getTargetNamespace(), ""), this);
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(element.getName(), new QName(element.getTargetNamespace(), StringUtilities.EMPTY_STRING), this);
 		traversalContexts.add(ctx);
 		XSDTypeDefinition type = element.getType();
 		String name = getName(type);
@@ -78,7 +79,7 @@ public class ProcedureBuilder {
 	public void build(SchemaObject sObject, ITraversalCtxFactory traversalCtxFactory)
 	throws ModelerCoreException {
 		this.traversalCtxFactory = traversalCtxFactory;
-		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), ""), this);
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), StringUtilities.EMPTY_STRING), this);
 		traversalContexts.add(ctx);
 		XSDTypeDefinition type = sObject.getType();
 		String name = getName(type);
@@ -89,12 +90,25 @@ public class ProcedureBuilder {
 				XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) type;
 				addComplexTypeDefToProcedureResult(complexType, ctx);
 			} else if (type instanceof XSDSimpleTypeDefinition) {
-				XSDElementDeclaration element = ((ElementImpl) sObject)
-				.getElem();
-				XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
-				addElementDeclarationToProcedureResult(element, simpleType, ctx);
+				if(sObject instanceof TypeDefinition) {
+					XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) sObject.getType();
+					addSimpleTypeDefToProcedureResult(simpleType, ctx);
+				} else {
+					XSDElementDeclaration element = ((ElementImpl) sObject)
+					.getElem();
+					XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) element.getType();
+					addElementDeclarationToProcedureResult(element, simpleType, ctx);
+				}
 			}
 		}
+	}
+	
+	public void build(XSDSimpleTypeDefinition simpleType, String name,
+			ITraversalCtxFactory traversalCtxFactory) throws ModelerCoreException {
+		this.traversalCtxFactory = traversalCtxFactory;
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(name, new QName(simpleType.getTargetNamespace(), simpleType.getName()), this);
+		traversalContexts.add(ctx);
+		addSimpleTypeDefToProcedureResult(simpleType, name, ctx);
 	}
 	
 	public void createTransformations() {
@@ -143,23 +157,26 @@ public class ProcedureBuilder {
 			}	
 		} else if (content instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) content;
-			
+			if(element.isElementDeclarationReference()) {
+				element = element.getResolvedElementDeclaration();
+			}
 			if(element.getType() instanceof XSDSimpleTypeDefinition) {
 				XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition) element.getType();
 				addElementDeclarationToProcedureResult(element, type, ctx);
 			} else {
 				XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) element.getType();
-				if(procedureExists(getName(type))) {
-					return;
-				}
 				String name = element.getName();
 				if(null == name) {
 					name = element.getAliasName();
 				}
+				
+				if(procedureExists(name)) {
+					return;
+				}
 				ctx.appendToPath(name);
 				if(particle.getMaxOccurs() > 1 || particle.getMaxOccurs() == -1 || ctx.isReachedResultNode()) {
 					
-					ctx = traversalCtxFactory.getTraversalContext(name, new QName(element.getTargetNamespace(), ""), ctx, this);
+					ctx = traversalCtxFactory.getTraversalContext(name, new QName(element.getTargetNamespace(), StringUtilities.EMPTY_STRING), ctx, this);
 					traversalContexts.add(ctx);
 					if(procedureExists(getName(type))){
 						return;
@@ -183,6 +200,11 @@ public class ProcedureBuilder {
 		if(null == name) {
 			name = simpleType.getAliasName();
 		}
+		ctx.addColumn(name, simpleType);
+		ctx.setReachedResultNode(true);
+	}
+	
+	private void addSimpleTypeDefToProcedureResult(XSDSimpleTypeDefinition simpleType, String name, TraversalContext ctx) throws ModelerCoreException {
 		ctx.addColumn(name, simpleType);
 		ctx.setReachedResultNode(true);
 	}

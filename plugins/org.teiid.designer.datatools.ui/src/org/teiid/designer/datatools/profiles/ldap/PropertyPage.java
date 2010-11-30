@@ -1,6 +1,7 @@
 package org.teiid.designer.datatools.profiles.ldap;
 
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -13,6 +14,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -52,7 +54,16 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
         return contextProviderDelegate.getSearchExpression(target);
     }
 
+    
     @Override
+	protected Control createContents(Composite parent) {
+		Control result = super.createContents(parent);
+        this.setPingButtonEnabled(false);
+        this.setPingButtonVisible(false);
+        return result;
+	}
+
+	@Override
     protected void createCustomContents( Composite parent ) {
         GridData gd;
 

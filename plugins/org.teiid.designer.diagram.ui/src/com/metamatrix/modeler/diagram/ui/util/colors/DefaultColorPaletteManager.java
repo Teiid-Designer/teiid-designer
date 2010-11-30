@@ -34,8 +34,8 @@ public class DefaultColorPaletteManager implements ColorPaletteManager {
                  DiagramUiConstants.Colors.VIRTUAL_GROUP_HEADER,
                  DiagramUiConstants.Colors.VIRTUAL_GROUP_BKGRND,
                  ColorConstants.black,
-                 DiagramUiConstants.Colors.SELECTION,
-                 DiagramUiConstants.Colors.HILITE,
+                 ColorConstants.lightBlue,
+                 ColorConstants.lightGreen,
                  DiagramUiConstants.Colors.OUTLINE
                 );
         } else if( ModelObjectUtilities.isLogical(eObject) || 
@@ -46,8 +46,8 @@ public class DefaultColorPaletteManager implements ColorPaletteManager {
                 DiagramUiConstants.Colors.LOGICAL_GROUP_HEADER,
                 DiagramUiConstants.Colors.LOGICAL_GROUP_BKGRND,
                 ColorConstants.black,
-                DiagramUiConstants.Colors.SELECTION,
-                DiagramUiConstants.Colors.HILITE,
+                ColorConstants.lightBlue,
+                ColorConstants.lightGreen,
                 DiagramUiConstants.Colors.OUTLINE
                 );
         } else {
@@ -57,8 +57,8 @@ public class DefaultColorPaletteManager implements ColorPaletteManager {
                 DiagramUiConstants.Colors.GROUP_HEADER,
                 DiagramUiConstants.Colors.GROUP_BKGRND,
                 ColorConstants.black,
-                DiagramUiConstants.Colors.SELECTION,
-                DiagramUiConstants.Colors.HILITE,
+                ColorConstants.lightBlue,
+                ColorConstants.lightGreen,
                 DiagramUiConstants.Colors.OUTLINE
                 );
         }

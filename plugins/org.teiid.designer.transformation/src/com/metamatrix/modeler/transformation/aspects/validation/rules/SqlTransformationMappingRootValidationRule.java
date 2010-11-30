@@ -21,6 +21,26 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.AbstractCompareCriteria;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.HasCriteria;
+import org.teiid.query.sql.proc.TranslateCriteria;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupCollectorVisitor;
+import org.teiid.query.sql.visitor.PredicateCollectorVisitor;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -49,7 +69,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
-import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.util.ModelContents;
@@ -61,33 +80,12 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 import com.metamatrix.modeler.internal.transformation.util.AttributeMappingHelper;
-import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadata;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.AbstractCompareCriteria;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.lang.Option;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.proc.HasCriteria;
-import org.teiid.query.sql.proc.TranslateCriteria;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
-import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.CommandCollectorVisitor;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
-import org.teiid.query.sql.visitor.GroupCollectorVisitor;
-import org.teiid.query.sql.visitor.PredicateCollectorVisitor;
 
 /**
  * SqlTransformationMappingRootValidationRule
@@ -670,7 +668,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             boolean updatable = false;
             for (final Iterator inIter = inputs.iterator(); inIter.hasNext();) {
                 EObject sourceObj = (EObject)inIter.next();
-                if (com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isUpdatableGroup(sourceObj)) {
+                if (com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isUpdatableGroup(sourceObj)
+                    || com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isProcedure(sourceObj)) {
                     updatable = true;
                     break;
                 }
@@ -679,7 +678,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             if (!updatable) {
                 ValidationProblem problem = new ValidationProblemImpl(
                                                                       0,
-                                                                      IStatus.ERROR,
+                                                                      IStatus.WARNING,
                                                                       TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_transformation_defining_an_updatable_virtual_group_should_be_include_atleast_one_updatable_source_group._1", TransformationHelper.getSqlEObjectName(targetObj))); //$NON-NLS-1$
                 validationResult.addProblem(problem);
             }
@@ -910,11 +909,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                             Class leftDataType = ((Expression)leftExpression).getType();
                             Class rightDataType = ((Expression)rightExpression).getType();
                             if (!leftDataType.equals(rightDataType)) {
-                                String critStr = SqlConverter.convertToString(compare.toString(),
-                                                                              transRoot,
-                                                                              QueryValidator.SELECT_TRNS,
-                                                                              true);
-                                Object[] params = new Object[] {critStr, DataTypeManager.getDataTypeName(leftDataType),
+                                Object[] params = new Object[] {compare, DataTypeManager.getDataTypeName(leftDataType),
                                     DataTypeManager.getDataTypeName(rightDataType)};
 
                                 ValidationProblem warningProblem = new ValidationProblemImpl(

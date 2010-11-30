@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.dqp;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.dqp.DqpPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.config,
@@ -34,7 +34,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.datatools,
  org.teiid.designer.metamodels.relational,
  org.teiid.designer.metamodels.webservice,
- org.teiid.designer.metamodels.xml
+ org.teiid.designer.metamodels.xml,
+ org.teiid.designer.metamodels.function
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.adminapi

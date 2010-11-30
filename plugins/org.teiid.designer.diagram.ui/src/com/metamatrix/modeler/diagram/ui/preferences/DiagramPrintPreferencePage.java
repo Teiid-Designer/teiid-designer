@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.diagram.ui.preferences;
 
-import java.util.ArrayList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -19,13 +18,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.PluginConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.Spinner;
 
 /**
  * This class is the preference page for setting the Modeler Diagram Printing Preferences.
@@ -57,9 +56,8 @@ public class DiagramPrintPreferencePage extends PreferencePage
     private Button radioAdjustToPercentage;
     private Spinner spinScalingPercentage;
 
-    private ArrayList arylPctPossibleValues;
     private int SCALING_PERCENTAGE_MIN = 50;
-    private int SCALING_PERCENTAGE_MAX = 150;
+    private int SCALING_PERCENTAGE_MAX = 300;
     private int SCALING_PERCENTAGE_INCREMENT = 5;
 
     private static final String MARGINS_TITLE = Util.getString("DiagramPrintPreferencePage.margins.title"); //$NON-NLS-1$
@@ -73,7 +71,6 @@ public class DiagramPrintPreferencePage extends PreferencePage
     private Spinner spinBottomMargin;
     private Spinner spinLeftMargin;
 
-    private ArrayList arylMarginPossibleValues;
     private int MARGIN_MIN = 0;
     private int MARGIN_MAX = 30;
     private int MARGIN_INCREMENT = 1;
@@ -135,8 +132,13 @@ public class DiagramPrintPreferencePage extends PreferencePage
 
         createSpacer(pnlPercentSpinner);
 
-        spinScalingPercentage = new Spinner(pnlPercentSpinner, getScalingPercentagePossibleValues());
-        spinScalingPercentage.setWrap(false);
+        spinScalingPercentage = new Spinner(pnlPercentSpinner, SWT.READ_ONLY);
+        spinScalingPercentage.setMinimum(SCALING_PERCENTAGE_MIN);
+        spinScalingPercentage.setMaximum(SCALING_PERCENTAGE_MAX);
+        spinScalingPercentage.setIncrement(SCALING_PERCENTAGE_INCREMENT);
+        spinScalingPercentage.setToolTipText(Util.getString("DiagramPrintPreferencePage.spinner.toolTip", //$NON-NLS-1$
+                                                            spinScalingPercentage.getMinimum(),
+                                                            spinScalingPercentage.getMaximum()));
 
         WidgetFactory.createLabel(pnlPercentSpinner, PERCENT_NORMAL_SIZE);
 
@@ -153,15 +155,15 @@ public class DiagramPrintPreferencePage extends PreferencePage
         Group grpMargins = WidgetFactory.createGroup(comp, MARGINS_TITLE, GridData.FILL_HORIZONTAL, 1, 3);
 
         createSpacer(grpMargins);
-        spinTopMargin = createMarginPanel(grpMargins, getMarginPossibleValues(), TOP);
+        spinTopMargin = createMarginPanel(grpMargins, TOP);
         createSpacer(grpMargins);
 
-        spinLeftMargin = createMarginPanel(grpMargins, getMarginPossibleValues(), LEFT);
+        spinLeftMargin = createMarginPanel(grpMargins, LEFT);
         createSpacer(grpMargins);
-        spinRightMargin = createMarginPanel(grpMargins, getMarginPossibleValues(), RIGHT);
+        spinRightMargin = createMarginPanel(grpMargins, RIGHT);
 
         createSpacer(grpMargins);
-        spinBottomMargin = createMarginPanel(grpMargins, getMarginPossibleValues(), BOTTOM);
+        spinBottomMargin = createMarginPanel(grpMargins, BOTTOM);
         createSpacer(grpMargins);
 
         // ================================================
@@ -185,40 +187,7 @@ public class DiagramPrintPreferencePage extends PreferencePage
         spinScalingPercentage.setEnabled(radioAdjustToPercentage.getSelection());
     }
 
-    private ArrayList getScalingPercentagePossibleValues() {
-
-        if (arylPctPossibleValues == null) {
-            arylPctPossibleValues = new ArrayList();
-            for (int i = SCALING_PERCENTAGE_MIN; i < SCALING_PERCENTAGE_MAX; i += SCALING_PERCENTAGE_INCREMENT) {
-
-                arylPctPossibleValues.add(new Integer(i));
-            }
-        }
-
-        // add additional values
-        arylPctPossibleValues.add(new Integer(150));
-        arylPctPossibleValues.add(new Integer(200));
-        arylPctPossibleValues.add(new Integer(250));
-        arylPctPossibleValues.add(new Integer(300));
-
-        return arylPctPossibleValues;
-    }
-
-    private ArrayList getMarginPossibleValues() {
-        if (arylMarginPossibleValues == null) {
-            arylMarginPossibleValues = new ArrayList();
-            for (int i = MARGIN_MIN; i <= MARGIN_MAX; i += MARGIN_INCREMENT) {
-                double dCurrent = i;
-                double dShifted = (dCurrent / MARGIN_DIVISOR);
-                Double DVal = new Double(dShifted);
-                arylMarginPossibleValues.add(DVal);
-            }
-        }
-        return arylMarginPossibleValues;
-    }
-
     private Spinner createMarginPanel( Composite parent,
-                                       ArrayList arylValues,
                                        String sLabel ) {
         /*
          * Goal:    Top: [ 1.0 ]#
@@ -237,16 +206,20 @@ public class DiagramPrintPreferencePage extends PreferencePage
 
         WidgetFactory.createLabel(pnlOuter, sLabel);
 
-        Spinner spinMargin = new Spinner(pnlOuter, arylValues);
-        spinMargin.setWrap(false);
+        Spinner spinMargin = new Spinner(pnlOuter, SWT.READ_ONLY);
+        spinMargin.setMinimum(MARGIN_MIN);
+        spinMargin.setMaximum(MARGIN_MAX);
+        spinMargin.setIncrement(MARGIN_INCREMENT);
+        spinMargin.setDigits(1);
+        spinMargin.setToolTipText(Util.getString("DiagramPrintPreferencePage.spinner.toolTip", //$NON-NLS-1$
+                                                 Double.toString(spinMargin.getMinimum() / MARGIN_DIVISOR),
+                                                 Double.toString(spinMargin.getMaximum() / MARGIN_DIVISOR)));
 
         return spinMargin;
     }
 
     private void createSpacer( Composite parent ) {
-        ArrayList aryl = new ArrayList(1);
-        aryl.add("100"); //$NON-NLS-1$
-        Spinner spinTemp = new Spinner(parent, aryl);
+        Spinner spinTemp = new Spinner(parent, SWT.NONE);
         spinTemp.setVisible(false);
     }
 
@@ -268,24 +241,24 @@ public class DiagramPrintPreferencePage extends PreferencePage
         store.setValue(PluginConstants.Prefs.Print.FIT_TO_ONE_PAGE_HIGH, radioFitToOnePageHigh.getSelection());
         store.setValue(PluginConstants.Prefs.Print.ADJUST_TO_PERCENT, radioAdjustToPercentage.getSelection());
 
-        Integer IPct = (Integer)spinScalingPercentage.getValue();
-        store.setValue(PluginConstants.Prefs.Print.SCALING_PERCENTAGE, IPct.intValue());
+        int iPct = spinScalingPercentage.getSelection();
+        store.setValue(PluginConstants.Prefs.Print.SCALING_PERCENTAGE, iPct);
 
         // ================================================
         // 3. Margins
         // ================================================
 
-        Double DMargin = (Double)spinTopMargin.getValue();
-        store.setValue(PluginConstants.Prefs.Print.TOP_MARGIN, DMargin.doubleValue());
+        int value = spinTopMargin.getSelection();
+        store.setValue(PluginConstants.Prefs.Print.TOP_MARGIN, (value / MARGIN_DIVISOR));
 
-        DMargin = (Double)spinRightMargin.getValue();
-        store.setValue(PluginConstants.Prefs.Print.RIGHT_MARGIN, DMargin.doubleValue());
+        value = spinRightMargin.getSelection();
+        store.setValue(PluginConstants.Prefs.Print.RIGHT_MARGIN, (value / MARGIN_DIVISOR));
 
-        DMargin = (Double)spinBottomMargin.getValue();
-        store.setValue(PluginConstants.Prefs.Print.BOTTOM_MARGIN, DMargin.doubleValue());
+        value = spinBottomMargin.getSelection();
+        store.setValue(PluginConstants.Prefs.Print.BOTTOM_MARGIN, (value / MARGIN_DIVISOR));
 
-        DMargin = (Double)spinLeftMargin.getValue();
-        store.setValue(PluginConstants.Prefs.Print.LEFT_MARGIN, DMargin.doubleValue());
+        value = spinLeftMargin.getSelection();
+        store.setValue(PluginConstants.Prefs.Print.LEFT_MARGIN, (value / MARGIN_DIVISOR));
 
         // ================================================
         // 4. Page Order
@@ -325,22 +298,22 @@ public class DiagramPrintPreferencePage extends PreferencePage
         radioAdjustToPercentage.setSelection(bool);
 
         int iPct = store.getInt(PluginConstants.Prefs.Print.SCALING_PERCENTAGE);
-        spinScalingPercentage.setValue(new Integer(iPct));
+        spinScalingPercentage.setSelection(iPct);
 
         // ================================================
         // 3. Margins
         // ================================================
         double dMargin = store.getDouble(PluginConstants.Prefs.Print.TOP_MARGIN);
-        spinTopMargin.setValue(new Double(dMargin));
+        spinTopMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDouble(PluginConstants.Prefs.Print.RIGHT_MARGIN);
-        spinRightMargin.setValue(new Double(dMargin));
+        spinRightMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDouble(PluginConstants.Prefs.Print.BOTTOM_MARGIN);
-        spinBottomMargin.setValue(new Double(dMargin));
+        spinBottomMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDouble(PluginConstants.Prefs.Print.LEFT_MARGIN);
-        spinLeftMargin.setValue(new Double(dMargin));
+        spinLeftMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         // ================================================
         // 4. Page Order
@@ -382,22 +355,23 @@ public class DiagramPrintPreferencePage extends PreferencePage
         radioAdjustToPercentage.setSelection(bool);
 
         int iPct = store.getDefaultInt(PluginConstants.Prefs.Print.SCALING_PERCENTAGE);
-        spinScalingPercentage.setValue(new Integer(iPct));
+        spinScalingPercentage.setSelection(iPct);
+        spinScalingPercentage.setEnabled(radioAdjustToPercentage.getSelection());
 
         // ================================================
         // 3. Margins
         // ================================================
         double dMargin = store.getDefaultDouble(PluginConstants.Prefs.Print.TOP_MARGIN);
-        spinTopMargin.setValue(new Double(dMargin));
+        spinTopMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDefaultDouble(PluginConstants.Prefs.Print.RIGHT_MARGIN);
-        spinRightMargin.setValue(new Double(dMargin));
+        spinRightMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDefaultDouble(PluginConstants.Prefs.Print.BOTTOM_MARGIN);
-        spinBottomMargin.setValue(new Double(dMargin));
+        spinBottomMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         dMargin = store.getDefaultDouble(PluginConstants.Prefs.Print.LEFT_MARGIN);
-        spinLeftMargin.setValue(new Double(dMargin));
+        spinLeftMargin.setSelection((int)(dMargin * MARGIN_DIVISOR));
 
         // ================================================
         // 4. Page Order

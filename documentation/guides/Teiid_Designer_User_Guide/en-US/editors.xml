@@ -3,87 +3,82 @@
 <chapter id="editors-chapter">
   	<title>Editors</title>
 
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<!--
 		####### MODEL EDITORS #########################################
 	-->
-	<para>
-		<emphasis role="bold">Editors</emphasis>
-		are the UI components designed to assist editing your models and to
-		maintain the state for a given model or resource in your workspace.
-		When editing a model, the model will be opened in a <emphasis role="bold">Model Editor</emphasis>. Editing 
-		a property value, for instance, will require an open editor
-		prior to actually changing the property.
-	</para>
-	<para>
-		Any number of editors can be open at once, but only one can be active
-		at a time. The main menu bar and toolbar for Teiid Designer
-		may contain operations that are applicable to the active editor (and
-		removed when editor becomes inactive).
-	</para>
-	<para> Tabs in the editor area indicate the names of models that are
-		currently open for editing. An asterisk (*) indicates that an editor
-		has unsaved changes.</para>
-	<figure id="model-editor-tabs-image_copy">
-		<title>Editor Tabs</title>
-		<mediaobject>
-			<imageobject>
-				<imagedata fileref="images/screencaps/ModelEditorTabs.jpg" />
-			</imageobject>
-		</mediaobject>
-	</figure>
-	<para>By default, editors are stacked in the editors area, but you
-		can choose to tile them vertically, and or horizontally in order to
-		view multiple models simultaneously.</para>
-	<figure id="multiple-model-editors-image_copy">
-		<title>Viewing Multiple Editors</title>
-		<mediaobject>
-			<imageobject>
-				<imagedata fileref="images/screencaps/MultipleModelEditors.jpg" />
-			</imageobject>
-		</mediaobject>
-	</figure>
-	<para>Editors also contain sub-editors which provide
-		different views of the data or parts of data within a model. These
-		sub-editors, specific to model types are listed below.</para>
-	<itemizedlist>
-		<listitem>
-			<para><link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link> - All models except XML Schema models.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link> - All models.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="datatypes-editor-section"><emphasis role="bold">Simple Datatypes Editor</emphasis></link> - XML Schema models only.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="semantic-editor-section"><emphasis role="bold">Semantic Editor</emphasis></link> - XML Schema models only.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="source-editor-section"><emphasis role="bold">Source Editor</emphasis></link> - XML Schema models only.</para>
-		</listitem>
-	</itemizedlist>
-	<para> In addition to general Editors for models, there are detailed
-		editors designed for editing specific model object types. These
-		"object" editors include:</para>
-	<itemizedlist>
-		<listitem>
-			<para><link linkend="transformation-editor-section"><emphasis role="bold">Transformation Editor</emphasis></link> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="choice-editor-section"><emphasis role="bold">Choice Editor</emphasis></link> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="input-set-editor-section"><emphasis role="bold">Input Editor</emphasis></link> - Manages Input Set parameters used between Mapping Classes in XML Document View models.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="recursion-editor-section"><emphasis role="bold">Recursion Editor</emphasis></link> - Manages recursion properties for recursive XML Elements in XML Document View models.</para>
-		</listitem>
-		<listitem>
-			<para><link linkend="operation-editor-section"><emphasis role="bold">Operation Editor</emphasis></link> - Manages SQL and Input Variables for Web Service Operations.</para>
-		</listitem>
-	</itemizedlist>
+		<para><emphasis role="bold">Editors</emphasis> are the UI components designed to assist
+			editing your models and to maintain the state for a given model or
+			resource in your workspace. When editing a model, the model will be
+			opened in a <emphasis role="bold">Model Editor</emphasis>. Editing a property value, for instance,
+			will require an open editor prior to actually changing the property.
+		</para>
+		<para> Any number of editors can be open at once, but only one can be
+			active at a time. The main menu bar and toolbar for Teiid Designer may
+			contain operations that are applicable to the active editor (and
+			removed when editor becomes inactive).</para>
+		<para> Tabs in the editor area indicate the names of models that are
+			currently open for editing. An asterisk (*) indicates that an editor
+			has unsaved changes.</para>
+		<figure id="model-editor-tabs-image-copy">
+			<title>Editor Tabs</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/model-editor-tabs.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>By default, editors are stacked in the editors area, but you can choose to tile them vertically, and or horizontally in order to view multiple models simultaneously.</para>
+		<figure id="multiple-model-editors-image-copy">
+			<title>Viewing Multiple Editors</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/multiple-model-editors.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>The Teiid Designer provides main editor views for XMI models and VDBs.</para>
+		<para>The Model Editor contains sub-editors which provide different views of the data or parts of data 
+			within an XMI model. These sub-editors, specific to model types are listed below.</para>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">Diagram Editor</emphasis> - All models except XML Schema models.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Table Editor</emphasis> - All models.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Simple Datatypes Editor</emphasis> - XML Schema models only.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Semantics Editor</emphasis> - XML Schema models only.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Source Editor</emphasis> - XML Schema models only.</para>
+			</listitem>
+		</itemizedlist>
+		<para>The <emphasis>VDB Editor</emphasis> is a single page editor containing panels for editing description, 
+			model contents and data roles.</para>
+		<para> In addition to general Editors for models, there are detailed editors designed 
+			for editing specific model object types. These "object" editors include:</para>
+		<itemizedlist>
+			<listitem>
+				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Input Editor</emphasis> - Manages Input Set parameters used between Mapping Classes in XML Document View models.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Recursion Editor</emphasis> - Manages recursion properties for recursive XML Elements in XML Document View models.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis role="bold">Operation Editor</emphasis> - Manages SQL and Input Variables for Web Service Operations.</para>
+			</listitem>
+		</itemizedlist>
 	<!--
 		####### MODEL SUB_EDITORS #########################################
 	-->
@@ -102,7 +97,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/Diagram.gif"/>
+								<imagedata fileref="images/icons/diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Package Diagram</emphasis>
 					</para>
@@ -110,7 +105,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/custom_diagram.gif"/>
+								<imagedata fileref="images/icons/custom-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Custom Diagram</emphasis>
 					</para>
@@ -118,7 +113,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/TransformationDiagram.gif"/>
+								<imagedata fileref="images/icons/transformation-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Transformation Diagram</emphasis>
 					</para>
@@ -126,7 +121,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/MappingDiagram.gif"/>
+								<imagedata fileref="images/icons/mapping-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Mapping Diagram</emphasis>
 					</para>
@@ -134,7 +129,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/TransformationDiagram.gif"/>
+								<imagedata fileref="images/icons/transformation-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Mapping Transformation Diagram</emphasis>
 					</para>
@@ -142,7 +137,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/RelationshipDiagram.gif"/>
+								<imagedata fileref="images/icons/relationship-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Relationship Diagram</emphasis>
 					</para>
@@ -164,7 +159,7 @@
 					<title>Main Toolbar Diagram Actions</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/MainToolbarDiagramActions.jpg" />
+							<imagedata fileref="images/screencaps/main-toolbar-diagram-actions.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -177,7 +172,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_zoom_in.gif"/>
+											<imagedata fileref="images/icons/tb-zoom-in.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Zoom In</emphasis>
 								</para>
@@ -185,7 +180,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/zoom_level.gif"/>
+											<imagedata fileref="images/icons/zoom-level.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Zoom to Level</emphasis>
 								</para>
@@ -193,7 +188,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_zoom_out.gif"/>
+											<imagedata fileref="images/icons/tb-zoom-out.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Zoom Out</emphasis>
 								</para>
@@ -201,7 +196,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_inc_font.gif"/>
+											<imagedata fileref="images/icons/tb-inc-font.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Increase Font Size</emphasis>
 								</para>
@@ -209,7 +204,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_dec_font.gif"/>
+											<imagedata fileref="images/icons/tb-dec-font.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Decrease Font Size</emphasis>
 								</para>
@@ -217,7 +212,7 @@
 							<listitem>
 								<para><inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/tb_diagram_layout.gif"/>
+											<imagedata fileref="images/icons/tb-diagram-layout.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Perform Diagram Layout</emphasis>
 								</para>
@@ -233,7 +228,7 @@
 					<title>Package Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/PackageDiagram.jpg" />
+							<imagedata fileref="images/screencaps/package-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -245,7 +240,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -253,7 +248,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -261,7 +256,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/previewData.gif"/>
+												<imagedata fileref="images/icons/preview-data.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 									</para>
@@ -269,7 +264,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_save_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-save-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
 									</para>
@@ -277,7 +272,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_page_setup.gif"/>
+												<imagedata fileref="images/icons/tb-page-setup.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 									</para>
@@ -285,11 +280,11 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_on.gif"/>
+												<imagedata fileref="images/icons/tb-grid-on.png"/>
 											</imageobject>
 										</inlinemediaobject> <inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_off.gif"/>
+												<imagedata fileref="images/icons/tb-grid-off.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
 									</para>
@@ -310,7 +305,7 @@
 					<title>Package Diagram Contenxt Menu</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/DiagramContextMenu_BaseTable.jpg" />
+							<imagedata fileref="images/screencaps/diagram-context-menu-base-table.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -324,7 +319,7 @@
 					<title>Package Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/CustomDiagram.jpg" />
+							<imagedata fileref="images/screencaps/custom-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -336,7 +331,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -344,7 +339,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -352,7 +347,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/previewData.gif"/>
+												<imagedata fileref="images/icons/preview-data.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 									</para>
@@ -360,7 +355,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_add_to_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Add To Diagram</emphasis> - Add objects selected in Model Explorer to diagram.
 									</para>
@@ -368,7 +363,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_remove_from_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Remove From Diagram</emphasis> - Removed objects selected in diagram from diagram.
 									</para>
@@ -376,7 +371,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_clear_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-clear-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Clear Diagram</emphasis> - Remove all objects from diagram.
 									</para>
@@ -384,7 +379,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_save_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-save-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
 									</para>
@@ -392,7 +387,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_page_setup.gif"/>
+												<imagedata fileref="images/icons/tb-page-setup.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 									</para>
@@ -400,11 +395,11 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_on.gif"/>
+												<imagedata fileref="images/icons/tb-grid-on.png"/>
 											</imageobject>
 										</inlinemediaobject> <inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_off.gif"/>
+												<imagedata fileref="images/icons/tb-grid-off.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
 									</para>
@@ -426,7 +421,7 @@
 					<title>Transformation Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TransformationDiagram.jpg" />
+							<imagedata fileref="images/screencaps/transformation-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -438,7 +433,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -446,7 +441,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -454,7 +449,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/previewData.gif"/>
+												<imagedata fileref="images/icons/preview-data.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 									</para>
@@ -462,7 +457,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_add_to_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Add Transformation Sources</emphasis> - Add selected sources to transformation.
 									</para>
@@ -470,7 +465,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_add_union_to_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-add-union-to-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Add Union Transformation Sources</emphasis> - Add selected sources as union sources.
 									</para>
@@ -478,7 +473,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_remove_from_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Remove Transformation Sources</emphasis> - Removed sources selected in diagram from transformation.
 									</para>
@@ -486,7 +481,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_clear_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-clear-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Clear Transformation</emphasis> - Remove all sources from transformation.
 									</para>
@@ -494,7 +489,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_reconcile_sql.gif"/>
+												<imagedata fileref="images/icons/tb-reconcile-sql.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Open Transformation Reconciler dialog</emphasis>
 									</para>
@@ -502,7 +497,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_save_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-save-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
 									</para>
@@ -510,7 +505,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_page_setup.gif"/>
+												<imagedata fileref="images/icons/tb-page-setup.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 									</para>
@@ -518,11 +513,11 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_on.gif"/>
+												<imagedata fileref="images/icons/tb-grid-on.png"/>
 											</imageobject>
 										</inlinemediaobject> <inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_grid_off.gif"/>
+												<imagedata fileref="images/icons/tb-grid-off.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
 									</para>
@@ -542,7 +537,7 @@
 					<title>Mapping Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/MappingDiagram.jpg" />
+							<imagedata fileref="images/screencaps/mapping-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -554,7 +549,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -562,7 +557,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -570,7 +565,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_detailed_mapping.gif"/>
+												<imagedata fileref="images/icons/tb-show-detailed-mapping.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Mapping Transformation Diagram</emphasis> - Show detailed mapping transformation diagram for selected mapping class.
 									</para>
@@ -578,7 +573,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/previewData.gif"/>
+												<imagedata fileref="images/icons/preview-data.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 									</para>
@@ -586,7 +581,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_gen_mapping_classes.gif"/>
+												<imagedata fileref="images/icons/tb-gen-mapping-classes.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Generate Mapping Classes</emphasis> - Generate mapping classes for the selected XML document root element.
 									</para>
@@ -594,7 +589,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_new_mapping_class.gif"/>
+												<imagedata fileref="images/icons/tb-new-mapping-class.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">New Mapping Class</emphasis> - Insert new mapping class referenced to the selected XML document element or attribute..
 									</para>
@@ -602,7 +597,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_new_temp_table.gif"/>
+												<imagedata fileref="images/icons/tb_new_temp_table.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">New Staging Table</emphasis> - Insert new staging table referenced to the selected XML document element or attribute.
 									</para>
@@ -610,7 +605,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_merge_mapping_classes.gif"/>
+												<imagedata fileref="images/icons/tb-merge-mapping-classes.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Merge Mapping Classe</emphasis> - Merge selected mapping classes.
 									</para>
@@ -618,7 +613,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_split_mapping_classes.gif"/>
+												<imagedata fileref="images/icons/tb-split-mapping-classes.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Split Mapping Class</emphasis> - Split selected mapping class.
 									</para>
@@ -626,7 +621,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/show_exposed_mapping_classes.gif"/>
+												<imagedata fileref="images/icons/show-exposed-mapping-classes.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Display All Mapping Classes</emphasis>
 									</para>
@@ -634,7 +629,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/expand_mapping_classes.gif"/>
+												<imagedata fileref="images/icons/expand-mapping-classes.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Mapping Class Columns</emphasis>
 									</para>
@@ -642,7 +637,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/filter_change.gif"/>
+												<imagedata fileref="images/icons/filter-change.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Filter Displayed Mapping Classes with Selection</emphasis>
 									</para>
@@ -663,7 +658,7 @@
 					<title>Mapping Transformation Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/MappingTransformationDiagram.jpg" />
+							<imagedata fileref="images/screencaps/mapping-transformation-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -675,7 +670,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -683,7 +678,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -691,7 +686,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/previewData.gif"/>
+												<imagedata fileref="images/icons/preview-data.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 									</para>
@@ -699,7 +694,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_new_mapping_link.gif"/>
+												<imagedata fileref="images/icons/tb-new-mapping-link.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">New Mapping Link</emphasis> - Create a mapping link between selected mapping extent (i.e. XML element or attribute) and mapping class column.
 									</para>
@@ -707,7 +702,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_delete_mapping_link.gif"/>
+												<imagedata fileref="images/icons/tb-delete-mapping-link.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Remove Mapping Link</emphasis> - Delete mapping link between selected mapping extent (i.e. XML element or attribute) and mapping class column.
 									</para>
@@ -715,7 +710,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_add_to_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Add Transformation Sources</emphasis> - Add selected sources to transformation.
 									</para>
@@ -723,7 +718,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_add_union_to_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-add-union-to-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Add Union Transformation Sources</emphasis> - Add selected sources as union sources.
 									</para>
@@ -731,7 +726,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_remove_from_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Remove Transformation Sources</emphasis> - Removed sources selected in diagram from transformation.
 									</para>
@@ -739,7 +734,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_clear_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-clear-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Clear Transformation</emphasis> - Remove all sources from transformation.
 									</para>
@@ -747,7 +742,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_reconcile_sql.gif"/>
+												<imagedata fileref="images/icons/tb-reconcile-sql.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Open Transformation Reconciler dialog</emphasis>
 									</para>
@@ -755,7 +750,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_save_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-save-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
 									</para>
@@ -763,7 +758,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_page_setup.gif"/>
+												<imagedata fileref="images/icons/tb-page-setup.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 									</para>
@@ -783,7 +778,7 @@
 					<title>Relationship Diagram Example</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/RelationshipDiagram.jpg" />
+							<imagedata fileref="images/screencaps/relationship-diagram.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -795,7 +790,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_refresh_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
 									</para>
@@ -803,7 +798,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_show_parent_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
 									</para>
@@ -811,7 +806,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_remove_from_relationship.gif"/>
+												<imagedata fileref="images/icons/tb-remove-from-relationship.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Remove From Relationship</emphasis> - Removes the selected source or targets from a relationship.
 									</para>
@@ -819,7 +814,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_save_diagram.gif"/>
+												<imagedata fileref="images/icons/tb-save-diagram.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
 									</para>
@@ -841,7 +836,7 @@
 				<title>Table Editor Example</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/TableEditor.jpg" />
+						<imagedata fileref="images/screencaps/table-editor.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -868,7 +863,7 @@
 				is in focus, the
 				<emphasis role="bold">Insert Table Rows</emphasis> action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/tb_table_insert.gif"/>
+							<imagedata fileref="images/icons/tb-table-insert.png"/>
 						</imageobject>
 					</inlinemediaobject> is added to the application's main toolbar.
 			</para>
@@ -893,7 +888,7 @@
 				<title>Table Editor Example</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/TableEditorContextActions.jpg" />
+						<imagedata fileref="images/screencaps/table-editor-context-actions.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -905,7 +900,7 @@
 					<title>Editing String Property</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorStringValuePropertyEdit.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-string-value-property-edit.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -914,7 +909,7 @@
 					<title>Editing Boolean Value</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorBooleanValuePropertyEdit.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-boolean-value-property-edit.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -922,7 +917,7 @@
 					<title>Editing Multi-Value Property</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorMultiValuePropertyEdit.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-multi-value-property-edit.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -931,7 +926,7 @@
 					<title>Editing Multi-Value With Picker</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorPickerValuePropertyEdit.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-picker-value-property-edit.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -940,7 +935,7 @@
 					<title>Editing Datatype Values</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorDatatypePickerDialog.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-picker-value-property-edit.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -955,7 +950,7 @@
 					<title>Editing String Property</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/TableEditorInsertRowsDialog.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-insert-tables-rows-dialog.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -971,7 +966,7 @@
 				<title>Editing String Property</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/SimpleDatatypesEditor.jpg" />
+						<imagedata fileref="images/screencaps/simple-datatypes-editor.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -993,11 +988,11 @@
 					<para>For details, select a specific editor listed below:
 						<itemizedlist>
 							<listitem>
-								<para><link linkend="transformation-editor-section"><emphasis role="bold">Transformation Editor</emphasis></link></para>
-								<para><link linkend="input-set-editor-section"><emphasis role="bold">XML Mapping Input Set Editor</emphasis></link></para>
-								<para><link linkend="choice-editor-section"><emphasis role="bold">XML Choice Editor</emphasis></link></para>
-								<para><link linkend="recursion-editor-section"><emphasis role="bold">XML Recursion Editor</emphasis></link></para>
-								<para><link linkend="operation-editor-section"><emphasis role="bold">Web Service Operation Editor</emphasis></link></para>
+								<para><xref linkend="transformation-editor-section" /></para>
+								<para><xref linkend="input-set-editor-section" /></para>
+								<para><xref linkend="choice-editor-section" /></para>
+								<para><xref linkend="recursion-editor-section" /></para>
+								<para><xref linkend="operation-editor-section" /></para>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -1008,156 +1003,70 @@
 	</sect1>
 	<sect1 id="vdb-editor-section">
 		<title>VDB Editor</title>
-		<para>A <emphasis role="bold">VDB</emphasis>, or  <emphasis role="bold">virtual database</emphasis> is a container for components used to integrate 
-			data from multiple data sources, so that they can be accessed in a federated manner 
+		<para>A <emphasis role="bold">VDB</emphasis>, or  <emphasis role="bold">virtual database</emphasis> is a container 
+			for components used to integrate data from multiple data sources, so that they can be accessed in a federated manner 
 			through a single, uniform API. A <emphasis role="bold">VDB</emphasis> contains models, which define the structural 
 			characteristics of data sources, views, and Web services. The <emphasis role="bold">VDB Editor</emphasis>, provides 
 			the means to manage the contents of the <emphasis role="bold">VDB</emphasis> as well as its deployable (validation) state.</para>
-			
-		<itemizedlist>
-			<listitem>
-				<para> 
-					The VDB Editor, shown below, contains six editor tabs, namely:
-					<itemizedlist>
-						<listitem>
-							<para><link linkend="vdb-editor-overview-section"><emphasis role="bold">Overview</emphasis></link> - Manage/edit contents, 
-								description and indicates current deployable state.
-							</para>
-						</listitem>
-						<listitem>
-							<para><link linkend="vdb-editor-problems-section"><emphasis role="bold">Problems</emphasis></link> - Table view of any validation 
-								problems your VDB may have (i.e. Warnings and/or Errors).
-							</para>
-						</listitem>
-						<listitem>
-							<para><link linkend="vdb-editor-indexes-section"><emphasis role="bold">Indexes</emphasis></link> - Provides viewable summary of 
-								various Index files utilized at run-time.
-							</para>
-						</listitem>
-						<listitem>
-							<para><link linkend="vdb-editor-user-files-section"><emphasis role="bold">User Files</emphasis></link> - Provides importing or 
-								attaching additional user files to the VDB archive.
-							</para>
-						</listitem>
-						<listitem>
-							<para><link linkend="vdb-editor-web-services-section"><emphasis role="bold">Web Services</emphasis></link> -  When VDB contains Web Services 
-								models, this tab provides access edit and view WSDL specific information.
-							</para>
-						</listitem>
-						<listitem>
-							<para><link linkend="vdb-editor-execute-section"><emphasis role="bold">Execute</emphasis></link> - Manage source model connector 
-								bindings and actually test your data.
-							</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
+		<para>The VDB Editor, shown below, contains a Description area, a Models area, an Other Files panel and a  VDB Data Roles panel.</para>
 		<figure>
 			<title>VDB Editor</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/VDBEditor.jpg" />
+					<imagedata fileref="images/screencaps/vdb-editor.png" />
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<sect2 id="vdb-editor-overview-section">
-			<title>Overview</title>
-			<para>The <emphasis role="bold">Overview</emphasis> tab allows you to Manage and edit the contents, description and indicates current 
-				deployable state of your VDB.</para>
-			<para>Manage content of the VDB by using the <emphasis role="bold">Add...</emphasis> and 
-				<emphasis role="bold">Remove...</emphasis> buttons.</para>
-			<para><emphasis role="bold">Synchronize</emphasis> and <emphasis role="bold">Synchronize All</emphasis> button provide a easy way to update the contents of your VDB if changes 
-				have occurred to one or more models in your local workspace.  Remember, when a model is added to a VDB, an exact
-				copy of that model is added the the VDB archive. If a model has changed since it was added to a VDB, 
-				a <emphasis role="bold">Not Synchronized</emphasis> message will be visible in the Workspace Status column.</para>
-			<para>An example VDB containing multiple models is shown below (including models that have been 
-				modified in the workspace after they were added to the VDB).</para>
+		<para>You can manage your VDB contents by using the <emphasis>Add</emphasis> or <emphasis>Remove</emphasis> models 
+			via the buttons at the right.</para>
+		<para>Set individual model visibility via the <emphasis>Visibility</emphasis> checkbox for each model. 
+			This provides low level data access security by removing specific models and their metadata contents from schema exposed
+			in GUI tools.</para>
+		<para>In order for a VDB to be fully queryable the "Source Name", "Translator" and "JNDI Names" must 
+			have valid values and represent deployed artifacts on your Teiid server.</para>
+		<para>If you have Designer runtime plugins installed, and have a Teiid server running, you can 
+			select a source model in the VDB Editor and right-click select "Change Translator" or 
+			"Change JNDI Data Source" which will allow you to select any applicable artifacts on your server.</para>
+		<figure>
+			<title>Change Translator or Data Source Actions</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/vdb-editor-context-menu.png" />
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<sect2 id="editing-data-roles-section">
+			<title>Editing Data Roles</title>
+			<para>Teiid Designer provides a means to create, edit and manage data roles specific 
+				to a VDB. Once deployed within a Teiid server with the security option turned on 
+				(by default) any query run against this VDB via a Teiid JDBC connection will adhere 
+				to the data access permissions defined by the VDB's data roles.</para>
+			<para>The <emphasis>VDB Editor</emphasis> contains a <emphasis>VDB Data Roles</emphasis> section 
+				consisting of a List of current data roles and <emphasis>New...</emphasis> , 
+				<emphasis>Edit...</emphasis> and <emphasis>Remove</emphasis> action buttons.</para>
 			<figure>
-				<title>VDB Editor Overview Panel</title>
+				<title>VDB Data Roles Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_Example.jpg" />
+						<imagedata fileref="images/screencaps/vdb-data-roles-panel.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Clicking <emphasis>New...</emphasis> or <emphasis>Edit...</emphasis> will launch 
+				the <emphasis>New VDB Data Role</emphasis> editor dialog. Speicify a unique data role name, 
+				add a optional description and modify the individual model element 
+				CRUD values by check or unchecking entries in the models section.</para>
+			<figure>
+				<title>VDB Data Roles Panel</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/vdb-data-roles-dialog.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
 		</sect2>
-		<sect2 id="vdb-editor-problems-section">
-			<title>Problems</title>
-			<para>The <emphasis role="bold">Problems</emphasis> tab displays all errors and warnings for your VDB and its contained models.</para>
-			<figure>
-				<title>VDB Editor Problems Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_Problems.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
-		<sect2 id="vdb-editor-indexes-section">
-			<title>Indexes</title>
-			<para>The <emphasis role="bold">Indexes</emphasis> tab provides visual access to the underlying metadata that 
-				will be deployed to the server and accessed at runtime.</para>
-			<figure>
-				<title>VDB Editor Indexes Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_Indexes.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
-		<sect2 id="vdb-editor-user-files-section">
-			<title>User Files</title>
-			<para>You can add additional artifacts or files to your VDB via the User Files 
-				tab in the <emphasis role="bold">VDB Editor</emphasis>. Select the <emphasis role="bold">Add...</emphasis> button 
-				and locate/select files from your local file system. </para>
-			<figure>
-				<title>VDB Editor User Files Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_UserFiles.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
-		<sect2 id="vdb-editor-web-services-section">
-			<title>Web Services</title>
-			<para>The <emphasis role="bold">Web Services</emphasis> tab provides a means to specify the target namespace URL 
-				for your <emphasis role="bold">WSDL</emphasis> and to display a preview 
-				of that <emphasis role="bold">WSDL</emphasis>.</para>
-			<figure>
-				<title>VDB Editor Web Services Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_WebServices.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-			<figure>
-				<title>WSDL Preview Dialog</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/PreviewWsdlDialog.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
-		<sect2 id="vdb-editor-execute-section">
-			<title>Execute</title>
-			<para>The Execute tab provides the capability to create and edit connectors for each source model in your
-				VDB and to launch the SQL Explorer to query your data.
-				</para>
-			<para>For more information on Connectors, see <link linkend="manage-bindings-section"><emphasis role="bold">Manage Connectors</emphasis></link>.</para>
-			<figure>
-				<title>VDB Editor Execute Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/VDBEditor_Execute.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
+
 	</sect1>
     
 </chapter>

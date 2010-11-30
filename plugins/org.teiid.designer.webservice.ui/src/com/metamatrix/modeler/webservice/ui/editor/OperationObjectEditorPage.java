@@ -360,13 +360,12 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
 
     void displayNodeUpdated( DisplayNode root ) {
         // System.out.println("OperationObjectEditorPage.makeInputVariableStatementsInvisible()");
-        root.setVisible(false, false);
+        root.setVisible(true, true);
         for (Iterator childIter = root.getChildren().iterator(); childIter.hasNext();) {
             DisplayNode node = (DisplayNode)childIter.next();
             if (node.getLanguageObject() instanceof Block) {
                 // Update declaration-to-assignment mapping using new nodes and set visibility of all nodes as appropriate
-                this.declarationsToAssignments.clear();
-                node.setVisible(false, false);
+                node.setVisible(true, true);
                 Map declarations = new HashMap();
                 for (Iterator blockIter = node.getChildren().iterator(); blockIter.hasNext();) {
                     node = (DisplayNode)blockIter.next();
@@ -374,7 +373,7 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                         DeclareStatement declaration = (DeclareStatement)node.getLanguageObject();
                         if (declaration.getVariable().getName().startsWith(WebServiceUtil.INPUT_VARIABLE_PREFIX)) {
                             declarations.put(declaration.getVariable(), declaration);
-                            node.setVisible(false, true);
+                            node.setVisible(true, true);
                         }
                     }
 
@@ -383,7 +382,7 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                         Object declaration = declarations.get(assignment.getVariable());
                         if (declaration != null) {
                             this.declarationsToAssignments.put(declaration, assignment);
-                            node.setVisible(false, true);
+                            node.setVisible(true, true);
                         }
                     }
                 } // for
@@ -554,6 +553,9 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                     // Enable sections
                     setSectionEnabled(varSection, true);
                     setSectionEnabled(sqlPanelSection, true);
+                    
+                    // Selection is either empty or an Interface
+                    this.declarationsToAssignments.clear();
 
                     // Initialize operation's procedure
                     WebServiceUiUtil.initializeProcedure(op, this, false);

@@ -8,15 +8,20 @@
 package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,16 +34,20 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
+import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.datatools.ui.jobs.PingJobWithoutPopup;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceImportWizardManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
 public class CredentialsPage extends AbstractWizardPage
-    implements Listener, ModelGeneratorSalesforceUiConstants, ModelGeneratorSalesforceUiConstants.Images,
+    implements Listener, IProfileChangedListener, ModelGeneratorSalesforceUiConstants, ModelGeneratorSalesforceUiConstants.Images,
     ModelGeneratorSalesforceUiConstants.HelpContexts {
 
     /** Used as a prefix to properties file keys. */
@@ -48,26 +57,32 @@ public class CredentialsPage extends AbstractWizardPage
 
     SalesforceImportWizardManager importManager;
 
-    private Combo profileCombo;
+    private Combo connectionProfilesCombo;
+    private ILabelProvider profileLabelProvider;
+    private IConnectionProfile[] sfProfiles;
+    private IConnectionProfile selectedConnectionProfile;
 
-    private Text textFieldUsername;
+    private CLabel textFieldUsername;
 
     private Text textFieldPassword;
 
     private Button validateButton;
+    private Button newCPButton;
+    private Button editCPButton;
 
-    private Text textFieldURL;
+    private CLabel textFieldURL;
 
-    private ProfileManager profileManager;
+    private ConnectionProfileWorker profileWorker;
 
     public CredentialsPage( SalesforceImportWizardManager importManager ) {
         super(CredentialsPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
         this.importManager = importManager;
-        profileManager = ProfileManager.getInstance();
     }
 
     @Override
     public void createControl( Composite theParent ) {
+    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_TEIID_IMPORT, this);
+    	
         GridData gridData;
         final int COLUMNS = 1;
         Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
@@ -76,78 +91,117 @@ public class CredentialsPage extends AbstractWizardPage
         IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
         helpSystem.setHelp(pnl, CREDENTIAL_SELECTION_PAGE);
         setControl(pnl);
+        
+        // ================================================================================
+        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2); //$NON-NLS-1$
+        profileGroup.setLayout(new GridLayout(3, false));
+        profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        // credentials group
-        Group credentialsGroup = new Group(pnl, SWT.NONE);
-        credentialsGroup.setText(getString("credentialsOptionsGroup.text")); //$NON-NLS-1$
+        profileLabelProvider = new LabelProvider() {
 
-        GridData gdCredentialsGroup = new GridData(GridData.FILL_HORIZONTAL);
-        credentialsGroup.setLayoutData(gdCredentialsGroup);
-
-        credentialsGroup.setLayout(new GridLayout(2, false));
-
-        CLabel profileLabel = new CLabel(credentialsGroup, SWT.NONE);
-        profileLabel.setText(getString("profileLabel.text")); //$NON-NLS-1$
-        gridData = new GridData(SWT.NONE);
-        gridData.horizontalSpan = 1;
-        profileLabel.setLayoutData(gridData);
-
-        profileCombo = new Combo(credentialsGroup, SWT.READ_ONLY);
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalSpan = 1;
-        profileCombo.setLayoutData(gridData);
-        profileCombo.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected( SelectionEvent e ) {
-                setValues();
+            public String getText( final Object source ) {
+                return ((IConnectionProfile)source).getName();
+            }
+        };
+        this.connectionProfilesCombo = WidgetFactory.createCombo(profileGroup,
+                                                                 SWT.READ_ONLY,
+                                                                 GridData.FILL_HORIZONTAL,
+                                                                 profileWorker.getProfiles(),
+                                                                 profileLabelProvider,
+                                                                 true);
+        this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				int selIndex = connectionProfilesCombo.getSelectionIndex();
+				
+				String name = connectionProfilesCombo.getItem(selIndex);
+				if( name != null ) {
+					IConnectionProfile profile = profileWorker.getProfile(name);
+					profileWorker.setSelection(profile);
+					handleProfileSelection();
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        connectionProfilesCombo.setVisibleItemCount(10);
+        
+        newCPButton = WidgetFactory.createButton(profileGroup, getString("new.label")); //$NON-NLS-1$
+        newCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+            	profileWorker.create();
             }
         });
+        
+        editCPButton = WidgetFactory.createButton(profileGroup, getString("edit.label")); //$NON-NLS-1$
+        editCPButton.addSelectionListener(new SelectionAdapter() {
 
-        // --------------------------------------------
-        // Composite for Username
-        // --------------------------------------------
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+            	profileWorker.edit();
+            }
+        });
+        
+        // ================================================================================
+        // properties group
+        Group propertiesGroup = WidgetFactory.createGroup(pnl, getString("properties.label"), SWT.NONE, 2); //$NON-NLS-1$
 
-        CLabel userLabel = new CLabel(credentialsGroup, SWT.NONE);
+        GridData gdCredentialsGroup = new GridData(GridData.FILL_HORIZONTAL);
+        propertiesGroup.setLayoutData(gdCredentialsGroup);
+
+        propertiesGroup.setLayout(new GridLayout(2, false));
+        
+        // URL
+        CLabel urlLabel = new CLabel(propertiesGroup, SWT.NONE);
+        urlLabel.setText(getString("overrideURLCheckbox.text")); //$NON-NLS-1$
+        urlLabel.setToolTipText(getString("overrideURLCheckbox.tipText")); //$NON-NLS-1$
+
+        textFieldURL = WidgetFactory.createLabel(propertiesGroup, GridData.FILL_HORIZONTAL);
+        String urlText = getString("URLTextField.tooltip"); //$NON-NLS-1$
+        textFieldURL.setToolTipText(urlText);
+        textFieldURL.addListener(SWT.Selection, this);
+        textFieldURL.setEnabled(false);
+        
+        // username
+        CLabel userLabel = new CLabel(propertiesGroup, SWT.NONE);
         userLabel.setText(getString("usernameLabel.text")); //$NON-NLS-1$
         gridData = new GridData(SWT.NONE);
         gridData.horizontalSpan = 1;
         userLabel.setLayoutData(gridData);
 
-        // URL textfield
-
-        textFieldUsername = WidgetFactory.createTextField(credentialsGroup, GridData.FILL_HORIZONTAL);
+        textFieldUsername = WidgetFactory.createLabel(propertiesGroup, GridData.FILL_HORIZONTAL);
         String text = getString("usernameTextField.tooltip"); //$NON-NLS-1$
         textFieldUsername.setToolTipText(text);
         textFieldUsername.setText(EMPTY_STR);
         textFieldUsername.setEnabled(false);
 
-        // --------------------------------------------
-        // Composite for Username
-        // --------------------------------------------
-
-        CLabel passwordLabel = new CLabel(credentialsGroup, SWT.NONE);
+        // Password
+        CLabel passwordLabel = new CLabel(propertiesGroup, SWT.NONE);
         passwordLabel.setText(getString("passwordLabel.text")); //$NON-NLS-1$
         final GridData gridData2 = new GridData(SWT.NONE);
         gridData2.horizontalSpan = 1;
         passwordLabel.setLayoutData(gridData2);
-
-        // URL textfield
-        textFieldPassword = WidgetFactory.createTextField(credentialsGroup, GridData.FILL_HORIZONTAL);
+        
+        textFieldPassword = WidgetFactory.createTextField(propertiesGroup, GridData.FILL_HORIZONTAL);
         text = getString("usernameTextField.tooltip"); //$NON-NLS-1$
         textFieldPassword.setToolTipText(text);
         textFieldPassword.setText(EMPTY_STR);
-        textFieldPassword.setEchoChar('*');
-        textFieldPassword.setEnabled(false);
+        this.textFieldPassword.setEchoChar('*');
+        this.textFieldPassword.addModifyListener(new ModifyListener() {
 
-        CLabel urlLabel = new CLabel(credentialsGroup, SWT.NONE);
-        urlLabel.setText(getString("overrideURLCheckbox.text")); //$NON-NLS-1$
-        urlLabel.setToolTipText(getString("overrideURLCheckbox.tipText")); //$NON-NLS-1$
+            public void modifyText( final ModifyEvent event ) {
+                //passwordModified();
+            }
+        });
 
-        textFieldURL = WidgetFactory.createTextField(credentialsGroup, GridData.FILL_HORIZONTAL);
-        String urlText = getString("URLTextField.tooltip"); //$NON-NLS-1$
-        textFieldURL.setToolTipText(urlText);
-        textFieldURL.addListener(SWT.Selection, this);
-        textFieldURL.setEnabled(false);
 
         Composite buttonComposite = WidgetFactory.createPanel(pnl, SWT.NONE, GridData.FILL_VERTICAL);
         GridLayout layout = new GridLayout(1, false);
@@ -157,67 +211,48 @@ public class CredentialsPage extends AbstractWizardPage
         validateButton.setToolTipText(getString("validateCredentialsButton.tipText")); //$NON-NLS-1$
         validateButton.addListener(SWT.Selection, this);
         validateButton.setEnabled(false);
-        setValues();
+        handleProfileSelection();
     }
 
     /**
      * 
      */
-    protected void setValues() {
-        if (null == profileCombo.getItems() || 0 == profileCombo.getItems().length) {
-            IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.teiid.designer.import.category"); //$NON-NLS-1$
-            if (sfProfiles.length == 0) {
+    protected void handleProfileSelection() {
+        if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
+            
+            if (this.sfProfiles.length == 0) {
                 setErrorMessage(getString("no.profile")); //$NON-NLS-1$
                 textFieldUsername.setText(EMPTY_STR);
                 textFieldPassword.setText(EMPTY_STR);
                 textFieldURL.setText(EMPTY_STR);
                 validateButton.setEnabled(false);
                 return;
-            } else {
-                List<String> profileNames = new ArrayList();
-                for (int i = 0; i < sfProfiles.length; i++) {
-                    IConnectionProfile profile = sfProfiles[i];
-                    profileNames.add(profile.getName());
-                }
-                profileCombo.setItems(profileNames.toArray(new String[profileNames.size()]));
-                setErrorMessage(null);
-                setMessage(getString("select.profile")); //$NON-NLS-1$
-                return;
             }
-        }
-
-        String profileName = profileCombo.getText();
-        IConnectionProfile profile = findMatchingProfile(profileName);
-        if (null == profile) {
-            // this should really never happen
-            setMessage(null);
-            setErrorMessage(getString("no.profile.match", new Object[] {profileName})); //$NON-NLS-1$
-            validateButton.setEnabled(false);
+            setErrorMessage(null);
+            setMessage(getString("select.profile")); //$NON-NLS-1$
             return;
         }
-        Properties props = profile.getBaseProperties();
+        
+        if( connectionProfilesCombo.getSelectionIndex() < 0 ) {
+        	return;
+        }
+        
+        String selectedItem = connectionProfilesCombo.getItem(connectionProfilesCombo.getSelectionIndex());
+        this.selectedConnectionProfile = ProfileManager.getInstance().getProfileByName(selectedItem);
+        
+        Properties props = selectedConnectionProfile.getBaseProperties();
         textFieldUsername.setText(props.getProperty(ISalesForceProfileConstants.USERNAME_PROP_ID));
         textFieldPassword.setText(props.getProperty(ISalesForceProfileConstants.PASSWORD_PROP_ID));
         if (null == props.getProperty(ISalesForceProfileConstants.URL_PROP_ID)) {
-            textFieldURL.setText(EMPTY_STR);
+            textFieldURL.setText(UTIL.getString("Common.URL.Default.Label")); //$NON-NLS-1$
         } else {
             textFieldURL.setText(props.getProperty(ISalesForceProfileConstants.URL_PROP_ID));
         }
         setErrorMessage(null);
         setMessage(getString("validate.profile")); //$NON-NLS-1$
         validateButton.setEnabled(true);
-    }
-
-    private IConnectionProfile findMatchingProfile( String name ) {
-        IConnectionProfile result = null;
-        IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.teiid.designer.import.category"); //$NON-NLS-1$
-        for (int i = 0; i < sfProfiles.length; i++) {
-            IConnectionProfile profile = sfProfiles[i];
-            if (profile.getName().equals(name)) {
-                result = profile;
-            }
-        }
-        return result;
+        setPageComplete(true);
+        importManager.setConnectionProfile(selectedConnectionProfile);
     }
 
     /**
@@ -230,32 +265,13 @@ public class CredentialsPage extends AbstractWizardPage
         return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString());
     }
 
-    /**
-     * Utility to get localized text from properties file.
-     * 
-     * @param theKey the key whose localized value is being requested
-     * @param parameters parameters for the message format
-     * @return the localized text
-     */
-    private static String getString( String theKey,
-                                     Object[] parameters ) {
-        return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString(), parameters);
-    }
-
     @Override
     public void handleEvent( Event event ) {
         if (event.widget == this.validateButton) {
-            String profileName = profileCombo.getText();
-            IConnectionProfile profile = findMatchingProfile(profileName);
-            if (null == profile) {
-                // this should really never happen
-                setMessage(null);
-                setErrorMessage(getString("no.profile.match", new Object[] {profileName})); //$NON-NLS-1$
-                validateButton.setEnabled(false);
-                return;
-            }
+            String selectedItem = connectionProfilesCombo.getItem(connectionProfilesCombo.getSelectionIndex());
+            this.selectedConnectionProfile = ProfileManager.getInstance().getProfileByName(selectedItem);
 
-            final PingJobWithoutPopup pingJob = new PingJobWithoutPopup(Display.getCurrent().getActiveShell(), profile);
+            final PingJobWithoutPopup pingJob = new PingJobWithoutPopup(Display.getCurrent().getActiveShell(), selectedConnectionProfile);
             pingJob.schedule();
 
             Runnable op = new Runnable() {
@@ -271,7 +287,7 @@ public class CredentialsPage extends AbstractWizardPage
             BusyIndicator.showWhile(getShell().getDisplay(), op);
 
             if (pingJob.getResult().isOK()) {
-                importManager.setConnectionProfile(profile);
+                importManager.setConnectionProfile(selectedConnectionProfile);
                 setErrorMessage(null);
                 setMessage(getString("Click.Next")); //$NON-NLS-1$
                 setPageComplete(true);
@@ -290,5 +306,43 @@ public class CredentialsPage extends AbstractWizardPage
             super.setVisible(visible);
         }
     }
-
+    
+    public void profileChanged(IConnectionProfile profile) {
+    	resetCPComboItems();
+    	
+    	selectConnectionProfile(profile.getName());
+    }
+    
+    void resetCPComboItems() {
+    	if( connectionProfilesCombo != null ) {
+        	ArrayList profileList = new ArrayList();
+            for( IConnectionProfile prof : profileWorker.getProfiles()) {
+            	profileList.add(prof);
+            }
+            
+            WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
+    	}
+    }
+    
+    void selectConnectionProfile(String name) {
+    	if( name == null ) {
+    		return;
+    	}
+    	
+    	int cpIndex = -1;
+    	int i = 0;
+    	for( String item : connectionProfilesCombo.getItems()) {
+    		if( item != null && item.length() > 0 ) {
+    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+    				cpIndex = i;
+    				break;
+    			}
+    		}
+    		i++;
+    	}
+    	if( cpIndex > -1 ) {
+    		connectionProfilesCombo.select(cpIndex);
+    	}
+    	handleProfileSelection();
+    }
 }

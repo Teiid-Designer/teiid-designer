@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -21,6 +23,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -35,10 +42,12 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
 import com.metamatrix.modeler.core.refactor.ModelResourceCollectorVisitor;
+import com.metamatrix.modeler.core.refactor.RefactorModelExtensionManager;
 import com.metamatrix.modeler.core.refactor.RefactorResourceEvent;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -65,6 +74,11 @@ import com.metamatrix.ui.internal.widget.ListMessageDialog;
  * {@link com.metamatrix.modeler.internal.ui.actions.DeleteAction}.
  */
 public class DeleteResourceAction extends AbstractAction implements UiConstants {
+	
+	// The actual IDEWorkbenchMessages.DeleteResourceAction_jobName is an internal class, so we are borrowing the 
+	// constant here.
+	private static final String DeleteResourceAction_jobName = "Deleting resources"; //$NON-NLS-1$
+
 
     /** Delegate action to delete resources. */
     private SelectionListenerAction deleteResourceAction;
@@ -151,8 +165,11 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
 
         while (iter.hasNext()) {
             mr = (IResource)iter.next();
-            if (!targetedResources.contains(mr) && !allAffectedResources.contains(mr)
-                && !isUnderSelectedObjects(mr, selectedObjects)) allAffectedResources.add(mr);
+            if (!targetedResources.contains(mr) && 
+            	!allAffectedResources.contains(mr) && 
+            	!isUnderSelectedObjects(mr, selectedObjects)) {
+            	allAffectedResources.add(mr);
+            }
         }
     }
 
@@ -343,81 +360,100 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
      */
     @Override
     protected void doRun() {
-        final List<IPath> deletedModelPaths = new ArrayList<IPath>();
-        try {
-            if (this.delegateAction == this.deleteResourceAction) {
-                // this should never be called when there is one or more selected objects that are NOT an IResource.
-                // the delegate action enablement should assure this.
-                final List resources = getSelectedObjects();
+        final Collection deletedModelPaths = new ArrayList();
+        boolean deleteApproved = false;
 
-                /* Temp dependant model list */
-                Collection depModelFiles = Collections.EMPTY_LIST;
-                /*Cached list of all dependent models for all contained resources */
-                final Collection allDependantModelFiles = new ArrayList();
-                /* All models contained in select and under objects selected (i.e. projects and folders */
-                final List allSelectedAndContainedModelFiles = allSelectedAndContainedModelFiles(resources);
+        if (this.delegateAction == this.deleteResourceAction) {
+            // this should never be called when there is one or more selected objects that are NOT an IResource.
+            // the delegate action enablement should assure this.
+            final List resources = getSelectedObjects();
 
-                for (final Iterator iter2 = allSelectedAndContainedModelFiles.iterator(); iter2.hasNext();)
-                    deletedModelPaths.add(((IResource)iter2.next()).getFullPath());
+            /* Temp dependant model list */
+            Collection depModelFiles = Collections.EMPTY_LIST;
+            /*Cached list of all dependent models for all contained resources */
+            final Collection allDependantModelFiles = new ArrayList();
+            /* All models contained in select and under objects selected (i.e. projects and folders */
+            final List allSelectedAndContainedModelFiles = allSelectedAndContainedModelFiles(resources);
 
-                final Iterator iter = allSelectedAndContainedModelFiles.iterator();
-                // Loop through all contained/objects targeted for deletion
-                while (iter.hasNext()) {
-                    // Obtain all model file IResources for each model targeted for deletion
-                    depModelFiles = WorkspaceResourceFinderUtil.getResourcesThatUse((IResource)iter.next());
-                    // Append these to the big list using the private appendXXXX method below
-                    if (!depModelFiles.isEmpty()) appendDependentModelFiles(depModelFiles,
-                                                                            allDependantModelFiles,
-                                                                            allSelectedAndContainedModelFiles,
-                                                                            resources);
-                }
+            for (final Iterator iter2 = allSelectedAndContainedModelFiles.iterator(); iter2.hasNext();)
+                deletedModelPaths.add(((IResource)iter2.next()).getFullPath());
 
-                if (isOkToCloseResources(resources)) {
-                    boolean okToDelete = true;
-                    // If we find dependent models, we need to warn the user
-                    if (!allDependantModelFiles.isEmpty()) okToDelete = warnUserAboutDependants(allDependantModelFiles);
+            final Iterator iter = allSelectedAndContainedModelFiles.iterator();
+            // Loop through all contained/objects targeted for deletion
+            while (iter.hasNext()) {
+                // Obtain all model file IResources for each model targeted for deletion
+                depModelFiles = WorkspaceResourceFinderUtil.getResourcesThatUse((IResource)iter.next());
+                // Append these to the big list using the private appendXXXX method below
+                if (!depModelFiles.isEmpty()) appendDependentModelFiles(depModelFiles,
+                                                                        allDependantModelFiles,
+                                                                        allSelectedAndContainedModelFiles,
+                                                                        resources);
+            }
 
-                    if (okToDelete) {
-                        closeResources(resources);
+            if (isOkToCloseResources(resources)) {
+                boolean okToDelete = true;
+                // If we find dependent models, we need to warn the user
+                if (!allDependantModelFiles.isEmpty()) okToDelete = warnUserAboutDependants(allDependantModelFiles);
 
-                        // get the appropriate action based on the selected objects
-                        final SelectionListenerAction action = getDelegateDeleteResourceAction(resources);
-                        // If we make this call we can keep additional confirm dialogs from popping up
-                        action.run();
+                if (okToDelete) {
+                    closeResources(resources);
 
-                        // We need to check whether or not the resources were deleted. Only way to do that
-                        // is to see if they "exist()". User may have said "No" to the "Do you wish to Delete xxxxx" dialog.
-                        if (resourcesRemoved(resources)) {
+                    // get the appropriate action based on the selected objects
+                    final SelectionListenerAction action = getDelegateDeleteResourceAction(resources);
+                    // If we make this call we can keep additional confirm dialogs from popping up
+                    action.run();
+                    
+                    // Find all Deleting resources jobs and add listeners to count down the delete jobs, so this class
+                    // can perform both Undo manager cleanup and notifyDeleted() to listeners.
+                    Job[] jobs = Job.getJobManager().find(DeleteResourceAction_jobName);
+                    
+                    CountDownLatch latch = new CountDownLatch(jobs.length);
+                    IJobChangeListener deleteFinishedJobListener = new DeleteFinishedJobListener(latch, deletedModelPaths);
+                    
+                    if( jobs != null && jobs.length > 0 ) {
+                    	deleteApproved = true;
+                    	
+                    	for( Job job : jobs ) {
+                    		job.addJobChangeListener(deleteFinishedJobListener);
+                    	}
+                    }
+                    
+                    
+                    // if there are any dependent models AND the delete was approved (i.e. Delete jobs were started)
+                    // We assume we need to clean-up and revalidate dependent models.
+                    if (! allDependantModelFiles.isEmpty() && deleteApproved ) {
 
-                            // make a call to validate the dependent models so the appropriate problem markers are generated and
-                            // displayed to user.
+                    	// Call the refactor model extension manager to update for Delete resource operations.
+                    	// This is to clean up both SQL transformation inputs as well as Custom Diagram components that
+                    	// may be been made "stale".
+                    	// NOTE: This isn't a problem with delete "EObject" because of the inherent EMF framework.
+                    	RefactorModelExtensionManager.helpUpdateModelContentsForDelete(
+                    			(Collection<Object>)deletedModelPaths, 
+                    			(Collection<Object>)allDependantModelFiles, 
+                    			new NullProgressMonitor());
+                    	
+                        // make a call to validate the dependent models so the appropriate problem markers are generated and
+                        // displayed to user.
 
-                            final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-                                @Override
-                                public void execute( final IProgressMonitor theMonitor ) {
-                                    validateDependentResources(allDependantModelFiles, theMonitor);
-                                    theMonitor.done();
-                                }
-                            };
-                            try {
-                                new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
-                            } catch (final InterruptedException e) {
-                            } catch (final InvocationTargetException e) {
-                                UiConstants.Util.log(e.getTargetException());
+                        final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+                            @Override
+                            public void execute( final IProgressMonitor theMonitor ) {
+                                validateDependentResources(allDependantModelFiles, theMonitor);
+                                theMonitor.done();
                             }
+                        };
+                        
+                        try {
+                            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
+                        } catch (final InterruptedException e) {
+                        } catch (final InvocationTargetException e) {
+                            UiConstants.Util.log(e.getTargetException());
                         }
                     }
                 }
+            }
 
-            } else if (this.delegateAction == this.deleteEObjectAction) this.delegateAction.run();
-        } finally {
-            ModelerUndoManager.getInstance().clearAllEdits();
-            RefactorUndoManager.getInstance().clear();
-
-            for (final IPath path : deletedModelPaths)
-                notifyDeleted(path);
-        }
-
+        } else if (this.delegateAction == this.deleteEObjectAction) this.delegateAction.run();
     }
 
     /*
@@ -658,18 +694,6 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
                                                                                           this, deletedResourcePath));
     }
 
-    /*
-     * Private method used to assess whether or not the user actually deleted the resources or said "NO". This action 
-     * doesn't know about the "Do you want to delete" dialog, so we needed an alternate way to check.
-     */
-    private boolean resourcesRemoved( final List iResources ) {
-        if (!iResources.isEmpty()) {
-            final IResource firstResource = (IResource)iResources.iterator().next();
-            if (!firstResource.exists()) return true;
-        }
-        return false;
-    }
-
     /* (non-Javadoc)
      * @see com.metamatrix.ui.actions.AbstractAction#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
@@ -778,5 +802,36 @@ public class DeleteResourceAction extends AbstractAction implements UiConstants 
             resourceList.add(shortPath);
         }
         return ListMessageDialog.openWarningQuestion(getShell(), title, null, msg, resourceList, null);
+    }
+
+    // Inner class designed to count down each Deleting resources
+    class DeleteFinishedJobListener extends JobChangeAdapter {
+    	private final CountDownLatch latch;
+    	
+    	Collection deletedModelPaths;
+
+        public DeleteFinishedJobListener( CountDownLatch latch, Collection deletedModelPaths) {
+        	this.latch = latch;
+        	this.deletedModelPaths = new ArrayList(deletedModelPaths);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+         */
+        @Override
+        public void done( IJobChangeEvent event ) {
+        	this.latch.countDown();
+            
+        	
+            if( latch.getCount() == 0 ) {
+            	ModelerUndoManager.getInstance().clearAllEdits();
+	            RefactorUndoManager.getInstance().clear();
+	
+	            for (final Object path : deletedModelPaths)
+	                notifyDeleted((IPath)path);
+            }
+        }
     }
 }

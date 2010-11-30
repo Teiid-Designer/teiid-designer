@@ -172,6 +172,12 @@ public class ObjectDeleteCommand extends ResourceRefactorCommand {
 
         return result;
     }
+    
+    @Override
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    	return null;
+    }
+    
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.refactor.ModelRefactorCommand#undo()

@@ -6,7 +6,7 @@
 <chapter id="relationships-chapter">
 	<title>Relationships</title>
 
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<bridgehead>Introduction</bridgehead>
 	<para>The Teiid Designer
@@ -21,7 +21,7 @@
 		relationships between metadata entities from different metamodels. For
 		example, it is possible to create a generalized relationship between a
 		<emphasis role="bold">Relational Column</emphasis> and a <emphasis role="bold">UML Package</emphasis>.</para>
-	<para> Users can even define their own <link linkend="create-relationship-type-section"><emphasis role="bold">relationship types</emphasis></link> that
+	<para> Users can even define their own <xref linkend="create-relationship-type-section" /> that
 		constrain the numbers and types (metaclasses) of objects that can be
 		related.</para>
 	<para> Once the existing relationships are defined, the Teiid Designer
@@ -48,7 +48,7 @@
 								<title>Create New Relationship Action in Diagram</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationshipInDiagramSelection.jpg"/>
+										<imagedata fileref="images/screencaps/create-relationship-in-diagram-selection.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -61,7 +61,7 @@
 								<title>New Relationships Wizard</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationshipDialog.jpg"/>
+										<imagedata fileref="images/screencaps/create-relationship-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -74,7 +74,7 @@
 								<title>Select Relationship Type Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SelectRelationshipTypeDialog.jpg"/>
+										<imagedata fileref="images/screencaps/select-relationship-type-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -89,7 +89,7 @@
 								<title>Select Relationship Model Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipModelSelectorDialog.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-model-selector-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -105,7 +105,7 @@
 								<title>Model Object Finder Dialog - Workspace Tab</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Workspace.jpg"/>
+										<imagedata fileref="images/screencaps/model-object-finder-dialog-workspace.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -113,7 +113,7 @@
 								<title>Model Object Finder Dialog - Finder Tab</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Finder.jpg"/>
+										<imagedata fileref="images/screencaps/model-object-finder-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -125,7 +125,7 @@
 								<title>Create Relationship Dialog - Properties Tab</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ModelObjectFinderDialog_Finder.jpg"/>
+										<imagedata fileref="images/screencaps/create-relationship-dialog-properties.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -137,7 +137,7 @@
 								<title>New Relationship In Diagram</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/NewRelationshipInDiagram.png"/>
+										<imagedata fileref="images/screencaps/new-relationship-in-diagram.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -153,7 +153,7 @@
 			<title>New Relationship Action in Model Explorer</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/CreateRelationshipInExplorerSelection.jpg"/>
+					<imagedata fileref="images/screencaps/create-relationship-in-explorer-selection.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -171,7 +171,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing <emphasis role="bold">Relationship</emphasis> model 
 								in the <xref linkend="model-explorer-view" /> or a folder within the model. If a <emphasis role="bold">Relationship</emphasis> model 
 								does not yet exist, create one. 
-								See <link linkend="new-relationships-model"><emphasis role="bold">New Model Wizard</emphasis></link>.</para>
+								See <xref linkend="new-relationships-model" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
@@ -180,7 +180,7 @@
 								<title>New Relationship Type Action in Model Explorer</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/NewRelationshipTypeActionInExplorer.jpg"/>
+										<imagedata fileref="images/screencaps/new-relationship-type-in-explorer.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -193,7 +193,7 @@
 								<title>Create Relationship Type Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipTypeDialog.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-type-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -207,7 +207,7 @@
 								<title>Role A Panel</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipTypeDialog_RoleATab.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-type-dialog-role-a-tab.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -215,7 +215,7 @@
 								<title>Role B Panel</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipTypeDialog_RoleBTab.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-type-dialog-role-b-tab.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -225,7 +225,7 @@
 								<title>Role Properties Panel</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipTypeModelObjectPropertiesDialog.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-type-modle-object-properties-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -236,7 +236,7 @@
 								<title>Inheritance Panel</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RelationshipTypeDialog_InheritanceTab.jpg"/>
+										<imagedata fileref="images/screencaps/relationship-type-dialog-inheritance-tab.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -250,7 +250,7 @@
 								<title>Relationship Type Selection Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SelectRelationshipTypeDialog.jpg"/>
+										<imagedata fileref="images/screencaps/select-relationship-type-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -297,24 +297,16 @@
 			or a 
 			<emphasis role="bold">Model Editor</emphasis>
 			and right-click select the
-			<emphasis role="bold">Open in Relationship Navigator</emphasis>
+			<emphasis role="bold">Modeling > Open in Relationship Navigator</emphasis>
 			action.
 		</para>
-		<figure>
-			<title>Open In Relationship Navigator Action</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/OpenInRelationshipNavigatorAction.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
 		<para> In the example presented here, the diagram below illustrates the
 			standard role-based relationships defined for a family.</para>
 		<figure>
 			<title>Sample Relationships Diagram</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/RelationshipDiagramExample.png"/>
+					<imagedata fileref="images/screencaps/relationship-diagram-example.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -331,7 +323,7 @@
 			<title>Relationship Navigator View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/RelationshipNavigatorExample.jpg"/>
+					<imagedata fileref="images/screencaps/relationship-navigator-example.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -343,7 +335,7 @@
 			<title>Tool-tip Info in Navigator</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/RelationshipNavigatorTooltip.jpg"/>
+					<imagedata fileref="images/screencaps/relationship-navigator-tooltip.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -361,7 +353,7 @@
 			<title>Navigating Relationships</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/RelationshipDiagramExample_2.jpg"/>
+					<imagedata fileref="images/screencaps/relationship-diagram-example-2.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>

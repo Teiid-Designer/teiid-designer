@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.ui;
 
 import java.util.ArrayList;
@@ -61,8 +68,6 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
     private static final String TRUE_SUMMARY_DATA_TEXT_ = Messages.getString("TeiidDriverUIContributor.summary.true"); //$NON-NLS-1$
 
     private static final String FALSE_SUMMARY_DATA_TEXT_ = Messages.getString("TeiidDriverUIContributor.summary.false"); //$NON-NLS-1$
-
-    private static final String PROTOCOL_SSL_TRUE_TEXT = "mms://"; //$NON-NLS-1$
 
     private Label databaseLabel;
 
@@ -366,10 +371,10 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         if (password != null) {
             passwordText.setText(password);
         }
-        if (!(url.getProperties().indexOf(PROTOCOL_SSL_TRUE_TEXT) > -1)) {
-            protocolCheck.setSelection(false);
-        } else {
+        if (url.isSecureProtocol()) {
             protocolCheck.setSelection(true);
+        } else {
+            protocolCheck.setSelection(false);
         }
         String savePassword = this.properties.getProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID);
         if ((savePassword != null) && Boolean.valueOf(savePassword) == Boolean.TRUE) {

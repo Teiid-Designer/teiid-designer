@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.ui.plan;
 
 import java.sql.Connection;
@@ -28,15 +35,15 @@ public class TeiidPlanSupportRunnable extends PlanSupportRunnable {
         String result;
         try {
             String sql = this._request.getSql();
-            stmt.execute("SET SHOWPLAN DEBUG");
+            stmt.execute("SET SHOWPLAN DEBUG"); //$NON-NLS-1$
             stmt.executeQuery(sql);
-            ResultSet planRs = stmt.executeQuery("SHOW PLAN");
+            ResultSet planRs = stmt.executeQuery("SHOW PLAN"); //$NON-NLS-1$
             planRs.next();
-            result = planRs.getString("PLAN_XML"); 
+            result = planRs.getString("PLAN_XML");  //$NON-NLS-1$
         } catch (SQLException e) {
-            result = "";
+            result = ""; //$NON-NLS-1$
             IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-            		Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"), e);
+            		Messages.getString("TeiidPlanSupportRunnable.planDidNotWork"), e); //$NON-NLS-1$
             Activator.getDefault().getLog().log(status);
         }
         return result;

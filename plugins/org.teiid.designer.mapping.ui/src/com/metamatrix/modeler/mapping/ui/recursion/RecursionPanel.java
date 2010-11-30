@@ -33,7 +33,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
@@ -46,11 +50,7 @@ import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.query.internal.ui.builder.CriteriaBuilder;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.ui.internal.util.WidgetFactory;
-import com.metamatrix.ui.internal.widget.EditableIntegerSpinner;
 
 /**
  * RecursionPanel
@@ -63,7 +63,7 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
     private Composite pnlOuter;
     CheckBoxContribution recurseContribution;
     private Composite pnlCountControls;
-    private EditableIntegerSpinner spinCountLimit;
+    private Spinner spinCountLimit;
     private int upperRecursionLimit = 10;
     private CLabel lblErrorIfLimitExceeded;
     private Combo cbxErrorIfLimitExceeded;
@@ -169,7 +169,7 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
 
         // set the value of the spinner
         restoreRecursionLimit();
-        spinCountLimit.setValue(new Integer(getRecursionObject().getRecursionLimit()));
+        spinCountLimit.setSelection(getRecursionObject().getRecursionLimit());
 
         // set the value of the checkbox
         getCheckBoxContributionForRecurseQuery().setSelection(getRecursionObject().isRecursive());
@@ -183,7 +183,11 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         // set the value of the spinner
         upperRecursionLimit = ModelerCore.getTransformationPreferences().getUpperRecursionLimit();
         upperRecursionLimit = Math.max(upperRecursionLimit, getRecursionObject().getRecursionLimit());
-        spinCountLimit.resetLimits(1, upperRecursionLimit);
+        spinCountLimit.setMinimum(1);
+        spinCountLimit.setMaximum(upperRecursionLimit);
+        spinCountLimit.setToolTipText(UiConstants.Util.getString("RecursionPanel.limitSpinner.toolTip", //$NON-NLS-1$
+                                                                 spinCountLimit.getMinimum(),
+                                                                 spinCountLimit.getMaximum()));
     }
 
     /**
@@ -226,19 +230,11 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
         WidgetFactory.createLabel(pnlCountControls, LABEL_GRID_STYLE, COUNT_LIMIT_TEXT);
 
         // 'count limit' spinner
-        spinCountLimit = new EditableIntegerSpinner(pnlCountControls, 1, 10);
+        spinCountLimit = new Spinner(pnlCountControls, SWT.NONE);
+
         // Reset from preferences
         restoreRecursionLimit();
 
-        spinCountLimit.setWrap(false);
-        spinCountLimit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                listenToTextChange = false;
-                handleSpinnerChanged();
-                listenToTextChange = true;
-            }
-        });
         spinCountLimit.addModifyListener(new ModifyListener() {
             public void modifyText( ModifyEvent theEvent ) {
                 if (listenToTextChange) handleSpinnerChanged();
@@ -301,7 +297,11 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
     }
 
     void handleSpinnerChanged() {
-        getRecursionObject().setRecursionLimit(spinCountLimit.getIntegerValue());
+        int newValue = spinCountLimit.getSelection();
+        
+        if (newValue != this.roRecursionObject.getRecursionLimit()) {
+            getRecursionObject().setRecursionLimit(newValue);
+        }
     }
 
     private void createConditionControlsPanel( Composite parent ) {
@@ -485,7 +485,7 @@ public class RecursionPanel extends SashForm implements SelectionListener, UiCon
 
         ElementViewerFactory.setCriteriaStrategy(new RecursionCriteriaStrategy());
 
-        List lstMappingClassWrapper = new ArrayList(1);
+        List<MappingClass> lstMappingClassWrapper = new ArrayList<MappingClass>(1);
         lstMappingClassWrapper.add(mc);
 
         ElementViewerFactory.setViewerInput(lstMappingClassWrapper);

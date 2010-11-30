@@ -167,7 +167,6 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                                                                                        (SqlTransformationMappingRoot)transMappingRoot);
                                 QueryValidationResult result = validator.validateSql(command.toString(),
                                                                                      QueryValidator.SELECT_TRNS,
-                                                                                     false,
                                                                                      false);
                                 if (!result.isResolvable()) {
                                     shouldEnable = false;

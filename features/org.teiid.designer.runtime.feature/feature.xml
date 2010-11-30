@@ -47,7 +47,6 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
       <import feature="org.eclipse.datatools.enablement.oracle.feature" version="1.7.0.v200908280400-548aAkF77g7XAO9aBB"/>
       <import feature="org.eclipse.datatools.enablement.postgresql.feature" version="1.7.0.v200908280400-542AkF77g7V9N9e77"/>
       <import feature="org.eclipse.datatools.enablement.sap.feature" version="1.7.0.v200908280400-540AkF77g7V9N9e77"/>
-      <import feature="org.eclipse.datatools.enablement.sdk.feature" version="1.7.0.v200908280400-7I8r1FE9JfFmk-yuqu6UI6nZ93ao"/>
       <import feature="org.eclipse.datatools.enablement.sqlite.feature" version="1.7.0.v200908280400-541AkF77g7V9N9e77"/>
       <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.7.0.v200908280400-7E45F9NiNWvOOXxPdVT"/>
       <import feature="org.eclipse.datatools.intro" version="1.7.0.v200908280400-26-7w311A17142212"/>

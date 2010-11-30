@@ -668,10 +668,14 @@ public class JdbcManagerImpl implements JdbcManager {
      * This method is not synchronized and is not thread safe.
      */
     public void start() {
-        profileManager = ProfileManager.getInstance();
+        setProfileManager(ProfileManager.getInstance());
         profileListener = new ProfileListener();
         profileManager.addProfileListener(profileListener);
         driverManager = DriverManager.getInstance();
+    }
+    
+    protected void setProfileManager(ProfileManager profManager) {
+    	profileManager = profManager;
     }
 
     public class ProfileListener implements IProfileListener {

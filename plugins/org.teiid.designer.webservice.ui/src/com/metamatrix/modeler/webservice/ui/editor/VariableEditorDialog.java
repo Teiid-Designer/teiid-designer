@@ -70,6 +70,7 @@ import com.metamatrix.modeler.webservice.ui.util.WebServiceUiUtil;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeFactory;
+import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.graphics.GlobalUiColorManager;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -146,8 +147,7 @@ public class VariableEditorDialog extends Dialog
         DisplayNode block = this.editor.findBlock();
         DisplayNode newNode = DisplayNodeFactory.createDisplayNode(block, statement);
         if (newNode != null) {
-            newNode.setVisible(false, true);
-            block.getChildren().add(0, newNode);
+            newNode.setVisible(true, true);
             // Add new statement's display nodes to block and its ancestors
             List newNodes = newNode.getDisplayNodeList();
             for (DisplayNode ancestor = block; ancestor != null; ancestor = ancestor.getParent()) {
@@ -161,6 +161,9 @@ public class VariableEditorDialog extends Dialog
                 } // for
             } // for
         }
+        SqlEditorPanel editorPanel = this.editor.getCurrentSqlEditor();
+        editorPanel.setText(editorPanel.getQueryDisplayComponent().getDisplayNode().toDisplayString());
+        editorPanel.setHasPendingChanges();        
     }
 
     /**
@@ -289,18 +292,7 @@ public class VariableEditorDialog extends Dialog
                 return getNodeName(element);
             }
         });
-        this.varSection = new InputVariableSection(hSplitter, VARS_DESC, editor) {
-
-            @Override
-            protected void variablesDeleted( List entries ) {
-                updateDeletedNodes(entries);
-            }
-
-            @Override
-            protected void variableRenamed( Entry entry ) {
-                updateNodesToDeclarations();
-            }
-        };
+        this.varSection = new InputVariableSection(hSplitter, VARS_DESC, editor) {        };
         this.varSection.create();
         this.varSection.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -512,10 +504,11 @@ public class VariableEditorDialog extends Dialog
 
     private boolean isDescendentOf( DisplayNode node,
                                     DisplayNode ancestor ) {
-        DisplayNode parent = node.getParent();
-        if (parent == ancestor) {
+        if (node == ancestor) {
             return true;
         }
+        
+        DisplayNode parent = node.getParent();
         if (parent == null) {
             return false;
         }
@@ -624,6 +617,9 @@ public class VariableEditorDialog extends Dialog
                 }
             } // for
         }
+        SqlEditorPanel editorPanel = this.editor.getCurrentSqlEditor();
+        editorPanel.setText(editorPanel.getQueryDisplayComponent().getDisplayNode().toDisplayString());
+        editorPanel.setHasPendingChanges();      
     }
 
     private void updateCheckBoxes( TreeItem[] items ) {

@@ -9,6 +9,7 @@ package org.teiid.designer.datatools.salesforce.ui;
 
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,6 +23,7 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,21 +38,26 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.salesforce.ISalesForceProfileConstants;
+
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
  * 
  */
 public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetailsPage
     implements Listener, ModelGeneratorSalesforceUiConstants {
+	
+	private final static String DEFAULT_URL = UTIL.getString("Common.URL.Default.Label"); //$NON-NLS-1$
 
     private Composite scrolled;
 
     private Label profileLabel;
-    private Text profileText;
+    private CLabel profileText;
     private Label descriptionLabel;
-    private Text descriptionText;
+    private CLabel descriptionText;
     private Label usernameLabel;
     private Text usernameText;
     private Label passwordLabel;
@@ -65,7 +72,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
      */
     public SalesForceProfileDetailsWizardPage( String pageName ) {
         super(pageName, UTIL.getString("SalesForceProfileDetailsWizardPage.Name"), //$NON-NLS-1$
-              AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/salesforce_wiz.gif"));
+              AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/salesforce_wiz.gif")); //$NON-NLS-1$
         // TODO: image
         /*)
         */
@@ -96,7 +103,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
         gd.verticalAlignment = GridData.BEGINNING;
         profileLabel.setLayoutData(gd);
 
-        profileText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        profileText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;
@@ -112,7 +119,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
         gd.verticalAlignment = GridData.BEGINNING;
         descriptionLabel.setLayoutData(gd);
 
-        descriptionText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
+        descriptionText = WidgetFactory.createLabel(scrolled, SWT.SINGLE | SWT.BORDER);
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;
@@ -163,7 +170,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
         urlCheckBox.setLayoutData(gd);
 
         urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        urlText.setText("https://test.salesforce.com/services/Soap/u/19.0"); //$NON-NLS-1$
+        urlText.setText(DEFAULT_URL);
         urlText.setToolTipText(UTIL.getString("Common.URL.ToolTip")); //$NON-NLS-1$
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
@@ -212,12 +219,14 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
             boolean enable = urlCheckBox.getSelection();
             urlText.setEnabled(enable);
             urlText.setEditable(enable);
+            urlText.setText(StringUtilities.EMPTY_STRING);
             setValidatedConnection(false);
             if (!enable) {
+            	urlText.setText(DEFAULT_URL);
                 Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
                 properties.remove(ISalesForceProfileConstants.URL_PROP_ID);
             }
-        }
+        } 
 
         if (event.widget == usernameText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
@@ -273,6 +282,9 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
             setPageComplete(true);
             setMessage(UTIL.getString("Click.Next")); //$NON-NLS-1$
         }
+//        setPingButtonEnabled(true);
+//        setPageComplete(true);
+//        setMessage(UTIL.getString("Click.Next")); //$NON-NLS-1$
 
     }
 
@@ -306,6 +318,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
             complete = false;
         }
         if (complete && btnPing.isEnabled() && isValidatedConnection()) {
+//        if (complete && btnPing.isEnabled() ) {
             complete = true;
         }
         return complete;

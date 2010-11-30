@@ -38,9 +38,16 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.teiid.datatools.connectivity.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.datatools.connectivity.model"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -11,7 +11,7 @@ public class ResultTraversalContextFactory implements ITraversalCtxFactory {
 	 */
 	@Override
 	public TraversalContext getTraversalContext(String procedureName, QName namespace, TraversalContext ctx, ProcedureBuilder builder) {
-		CoreArgCheck.isNotNull(procedureName, "procedure name is null");
+		CoreArgCheck.isNotNull(procedureName, "procedure name is null"); //$NON-NLS-1$
 		return new ResultBuilderTraversalContext(procedureName, namespace, ctx, builder);
 	}
 
@@ -20,7 +20,7 @@ public class ResultTraversalContextFactory implements ITraversalCtxFactory {
 	 */
 	@Override
 	public TraversalContext getTraversalContext(String procedureName, QName namespace, ProcedureBuilder builder) {
-		CoreArgCheck.isNotNull(procedureName, "procedure name is null");
+		CoreArgCheck.isNotNull(procedureName, "procedure name is null"); //$NON-NLS-1$
 		return new ResultBuilderTraversalContext(procedureName, namespace, builder);
 	}
 }

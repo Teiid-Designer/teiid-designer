@@ -9,7 +9,6 @@
 package com.metamatrix.modeler.transformation.metadata;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,19 +19,29 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import org.teiid.core.TeiidComponentException;
+
 import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidException;
 import org.teiid.core.id.UUID;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.Assertion;
+import org.teiid.core.util.StringUtil;
+import org.teiid.query.mapping.relational.QueryNode;
+import org.teiid.query.mapping.xml.MappingDocument;
+import org.teiid.query.mapping.xml.MappingLoader;
+import org.teiid.query.mapping.xml.MappingNode;
+import org.teiid.query.metadata.BasicQueryMetadata;
+import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.metadata.SupportConstants;
+import org.teiid.query.sql.lang.SPParameter;
+
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.RuntimeIndexSelector;
 import com.metamatrix.core.index.SimpleIndexUtil;
-import org.teiid.core.util.ArgCheck;
-import org.teiid.core.util.Assertion;
 import com.metamatrix.core.util.ModelType;
-import org.teiid.core.util.StringUtil;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.metadata.runtime.impl.RecordFactory;
@@ -53,14 +62,6 @@ import com.metamatrix.modeler.core.metadata.runtime.TransformationRecord;
 import com.metamatrix.modeler.core.metadata.runtime.VdbRecord;
 import com.metamatrix.modeler.core.util.ColumnRecordComparator;
 import com.metamatrix.modeler.internal.transformation.util.UuidUtil;
-import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.mapping.xml.MappingDocument;
-import org.teiid.query.mapping.xml.MappingLoader;
-import org.teiid.query.mapping.xml.MappingNode;
-import org.teiid.query.metadata.BasicQueryMetadata;
-import org.teiid.query.metadata.StoredProcedureInfo;
-import org.teiid.query.metadata.SupportConstants;
-import org.teiid.query.sql.lang.SPParameter;
 
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, models etc. index files for various metadata
@@ -1171,11 +1172,8 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         List<String> fullPaths = new LinkedList<String>();
 
-        File f = new File(transformRecord.getResourcePath());
-        String path = f.getParent();
-
         for (String string : schemaPaths) {
-            fullPaths.add(path + File.separator + string);
+            fullPaths.add(string);
         }
 
         // get schema contents

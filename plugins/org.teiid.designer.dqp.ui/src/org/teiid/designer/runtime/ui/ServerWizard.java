@@ -8,12 +8,14 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -40,6 +42,8 @@ public final class ServerWizard extends Wizard {
      * The manager in charge of the server registry.
      */
     private final ServerManager serverManager;
+    
+    private Server resultServer;
 
     // ===========================================================================================================================
     // Constructors
@@ -101,17 +105,17 @@ public final class ServerWizard extends Wizard {
     @Override
     public boolean performFinish() {
         IStatus status = Status.OK_STATUS;
-        Server server = this.page.getServer();
+        resultServer = this.page.getServer();
 
         if (this.existingServer == null) {
-            status = this.serverManager.addServer(server);
+            status = this.serverManager.addServer(resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverWizardEditServerErrorMsg")); //$NON-NLS-1$
             }
-        } else if (!this.existingServer.equals(server)) {
-            status = this.serverManager.updateServer(this.existingServer, server);
+        } else if (!this.existingServer.equals(resultServer)) {
+            status = this.serverManager.updateServer(this.existingServer, resultServer);
 
             if (status.getSeverity() == IStatus.ERROR) {
                 MessageDialog.openError(getShell(), UTIL.getString("errorDialogTitle"), //$NON-NLS-1$
@@ -127,4 +131,11 @@ public final class ServerWizard extends Wizard {
         return (status.getSeverity() != IStatus.ERROR);
     }
 
+    public boolean shouldAutoConnect() {
+    	return this.page.shouldAutoConnect();
+    }
+    
+    public Server getServer() {
+    	return this.resultServer;
+    }
 }

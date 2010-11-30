@@ -34,23 +34,6 @@
         name="com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidPerspectiveContributor">
       </class>
    </extension>
-
-   <extension
-         id="connectorBindingContentProvider"
-         name="Connector Binding Content Provider"
-         point="org.teiid.designer.ui.extendedModelContentProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelContentProvider">
-      </class>
-   </extension>
-   <extension
-         id="connectorBindingLabelProvider"
-         name="Connector Binding Label Provider"
-         point="org.teiid.designer.ui.extendedModelLabelProvider">
-      <class
-            name="com.metamatrix.modeler.internal.dqp.ui.workspace.ConnectionBindingModelLabelProvider">
-      </class>
-   </extension>
    
 <!-- Preferences -->
   <extension
@@ -116,6 +99,15 @@
       <resourceAction
          name="org.teiid.designer.runtime.ui.connection.CreateDataSourceAction"
          label="%createDataSourceAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="SetTranslatorNameAction"
+        name="%setTranslatorNameAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.SetTranslatorNameAction"
+         label="%setTranslatorNameAction.label">
       </resourceAction>
    </extension>
 

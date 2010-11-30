@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: teiid_embedded_query;singleton:=true
 Bundle-Version: 7.1.0.qualifier
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
  System.vdb,
  jta-1.1.jar,
- teiid-7.1.0.Final-client.jar,
- teiid-api-7.1.0.Final.jar,
- teiid-engine-7.1.0.Final.jar
+ teiid-7.1.1-client.jar,
+ teiid-api-7.1.1.jar,
+ teiid-engine-7.1.1.jar
 Export-Package: javax.transaction,
  javax.transaction.xa,
  org.teiid,
@@ -33,7 +33,6 @@ Export-Package: javax.transaction,
  org.teiid.core.types,
  org.teiid.core.types.basic,
  org.teiid.core.util,
- org.teiid.dqp,
  org.teiid.dqp.internal.datamgr,
  org.teiid.dqp.internal.process,
  org.teiid.dqp.internal.process.multisource,
@@ -50,7 +49,6 @@ Export-Package: javax.transaction,
  org.teiid.query,
  org.teiid.query.analysis,
  org.teiid.query.eval,
- org.teiid.query.execution,
  org.teiid.query.function,
  org.teiid.query.function.aggregate,
  org.teiid.query.function.metadata,

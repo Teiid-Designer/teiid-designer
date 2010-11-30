@@ -45,6 +45,7 @@ public interface RelationalTypeMapping {
         public static final String REAL = "REAL"; //$NON-NLS-1$
         public static final String REF = "REF"; //$NON-NLS-1$
         public static final String SMALLINT = "SMALLINT"; //$NON-NLS-1$
+        public static final String SQLXML = "SQLXML"; //$NON-NLS-1$
         public static final String STRUCT = "STRUCT"; //$NON-NLS-1$
         public static final String TIME = "TIME"; //$NON-NLS-1$
         public static final String TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$

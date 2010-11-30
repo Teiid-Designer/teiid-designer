@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.GlobalBuildAction;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationDescriptor;
@@ -254,14 +255,13 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
             int res = dialog.open();
             if (res == 0) {
                 try {
+                    final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
                     IRunnableWithProgress op = new IRunnableWithProgress() {
                         public void run( IProgressMonitor monitor ) {
                             try {
                                 // defect 19634 - code below copied from CleanDialog:
                                 ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
-                                GlobalBuildAction build = new GlobalBuildAction(
-                                                                                UiPlugin.getDefault().getCurrentWorkbenchWindow(),
-                                        IncrementalProjectBuilder.FULL_BUILD);
+                                GlobalBuildAction build = new GlobalBuildAction(window, IncrementalProjectBuilder.FULL_BUILD);
                                 build.doBuild();
                             } catch (CoreException ex) {
                                 Util.log(ex);

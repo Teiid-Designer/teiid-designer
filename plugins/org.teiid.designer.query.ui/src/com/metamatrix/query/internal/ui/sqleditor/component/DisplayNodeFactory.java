@@ -37,6 +37,7 @@ import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  * The <code>DisplayNodeFactory</code> class is the Factory used to create all different types of DisplayNodes.

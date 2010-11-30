@@ -476,7 +476,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
                 } // for
             }
         }
-        if (initVar) {
+        if (initVar && replace) {
             Input input = operation.getInput();
             if (input != null) {
                 XSDElementDeclaration elem = input.getContentElement();

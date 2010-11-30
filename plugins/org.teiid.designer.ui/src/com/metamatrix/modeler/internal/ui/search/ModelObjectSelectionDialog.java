@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,7 +30,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
+import org.eclipse.ui.dialogs.SelectionStatusDialog;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.search.runtime.ResourceObjectRecord;
 import com.metamatrix.modeler.internal.core.search.ModelWorkspaceSearch;
@@ -89,14 +91,14 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         setUpperListLabel(UPPER_TABLE_LABEL_TEXT);
         setLowerListLabel(LOWER_TABLE_LABEL_TEXT);
 
-        doLoadObjects();
+        doLoadObjects(parent);
 
     }
 
     /**
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    private void doLoadObjects() {
+    private void doLoadObjects(Shell shell ) {
 
         final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
             @Override
@@ -109,7 +111,7 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         ProgressMonitorDialog dlg = null;
         try {
 
-            dlg = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
+            dlg = new ProgressMonitorDialog(shell); //Display.getCurrent().getActiveShell());
             dlg.run(true, true, op);
 
             if (dlg.getProgressMonitor().isCanceled()) {

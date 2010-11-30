@@ -8,9 +8,10 @@
 package com.metamatrix.modeler.relationship.ui;
 
 import java.util.ResourceBundle;
-import org.eclipse.draw2d.ColorConstants;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -64,7 +65,7 @@ public interface UiConstants {
         }
 
         interface SearchPage {
-            String ID = PLUGIN_ID + "RelationshipSearchPage"; //$NON-NLS-1$
+            String ID = "relationshipSearchPage"; //$NON-NLS-1$
         }
 
     }
@@ -77,15 +78,10 @@ public interface UiConstants {
     interface Colors {
         Color FOCUS_NODE_BKGD = GlobalUiColorManager.getColor(new RGB(225, 220, 210));
         Color NON_FOCUS_NODE_BKGD = GlobalUiColorManager.getColor(new RGB(200, 230, 255));
-        Color HILITE = ColorConstants.lightGreen;
-        Color SELECTION = ColorConstants.lightBlue;
-        Color OUTLINE = ColorConstants.black;
         Color RELATIONSHIP_BKGD = DiagramUiConstants.Colors.LOGICAL_GROUP_BKGRND;
         Color RELATIONSHIP_HEADER_BKGD = DiagramUiConstants.Colors.LOGICAL_GROUP_HEADER;
         Color RELATIONISHIP_TYPE_BKGD = DiagramUiConstants.Colors.LOGICAL_GROUP_BKGRND;
         // Color RELATIONISHIP_TYPE_BKGD = new Color(null, 92, 160, 192);
-        Color LAST_FOCUS_NODE_BKGD = ColorConstants.orange;
-        Color NEXT_FOCUS_NODE_BKGD = ColorConstants.yellow;
 
     }
 

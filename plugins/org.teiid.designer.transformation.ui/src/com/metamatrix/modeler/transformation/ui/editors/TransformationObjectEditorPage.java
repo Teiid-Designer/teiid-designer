@@ -1086,11 +1086,7 @@ public class TransformationObjectEditorPage
             // Get valid status for the transformation
             boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
 
-            // Add check to prevent null UUID string when there is a valid string version
-            String uuidString = TransformationHelper.getUUIDSqlString(currentMappingRoot, cmdType);
-            if (uuidString == null && isValid) {
-                showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
-            }
+            showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
 
             // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
             // Go ahead and check the command regardless if it's resolved or not.
@@ -1117,7 +1113,6 @@ public class TransformationObjectEditorPage
             boolean isSelectCached = SqlMappingRootCache.containsStatus(currentMappingRoot, QueryValidator.SELECT_TRNS);
             SqlTransformationResult selectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
                                                                                                   QueryValidator.SELECT_TRNS,
-                                                                                                  SqlMappingRootCache.EITHER_STATUS,
                                                                                                   true,
                                                                                                   null);
             // Create an existing status to pass to the SQL Editor Panel to prevent re-validation of SQL if already validated
@@ -1127,7 +1122,6 @@ public class TransformationObjectEditorPage
             if (cmdType != QueryValidator.SELECT_TRNS) {
                 existingStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
                                                                                 cmdType,
-                                                                                SqlMappingRootCache.EITHER_STATUS,
                                                                                 true,
                                                                                 null);
             }
@@ -1550,9 +1544,9 @@ public class TransformationObjectEditorPage
      * Handler method for transformation status change. Basically, this does a refresh when the status of the current query
      * changes. If the allowsUpdate status of the target changes, this will result in a tab change.
      */
-    void handleTransformationStatusChangeEvent( boolean reconcileTarget,
-                                                Object txnSource,
-                                                boolean overwriteDirty ) {
+    void handleTransformationStatusChangeEvent( final boolean reconcileTarget,
+                                                final Object txnSource,
+                                                final boolean overwriteDirty ) {
 
         if (txnSource != this) {
             if (this.validator != null) {
@@ -1572,7 +1566,12 @@ public class TransformationObjectEditorPage
                         // Call setEditorContent() instead of setText() to force validation.
                         // We want to do this because the txnSource is NOT this T-Editor and we need to assume that the SQL has
                         // changed and we need to re-set the Editor from the SQL T-Root object and it's SQL
-                        setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
+                        UiUtil.runInSwtThread(new Runnable() {
+                            public void run() {
+                            	setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
+                            }
+                        }, true);
+                        
                         didSetText = true;
                     }
                 }
@@ -2118,6 +2117,9 @@ public class TransformationObjectEditorPage
 
         setTargetAllowsUpdates(getCheckBoxContributionForSupportsUpdates().getSelection());
         getCheckBoxContributionForSupportsUpdates().getControl().update();
+        
+        // refresh content as select editor was clearing the first time button was checked
+        refreshEditorContent();
     }
 
     private LabelContribution getLabelContributionForCursorPosition() {
@@ -2649,8 +2651,8 @@ public class TransformationObjectEditorPage
     private void handleSqlEditorEvent( SqlEditorEvent sqlEvent ) {
         // Only respond if the event was initiated by the SqlEditorPanel
         Object eventSource = sqlEvent.getSource();
+        int eventType = sqlEvent.getType();
         if (eventSource instanceof SqlEditorPanel) {
-            int eventType = sqlEvent.getType();
             // ----------------------------------------------------------------
             // Query Changes Pending Event from EditorPanel
             // ----------------------------------------------------------------
@@ -2673,6 +2675,8 @@ public class TransformationObjectEditorPage
                     handleSqlEditorChanged(sqlEvent.getSQLString(), eventSource);
                 }
             }
+        } else if (eventType == SqlEditorEvent.CHANGES_PENDING) {
+            handleSqlEditorChangesPending();
         }
 
     }
@@ -3001,12 +3005,12 @@ public class TransformationObjectEditorPage
                     setEditableStatus(currentItem); // defect 13821 - this call respects the state of the checkboxes, unlike the
                     // old call
                 }
-                getCheckBoxContributionForSupportsUpdates().setEnabled(!isReadOnly);
-                // Update check boxes on insert/update/delete tabs
-                updateReadOnlyStateOfCheckBoxes(isReadOnly);
                 // Need to notify actions that need to enable/disable
                 notifyEventListeners(new SqlTransformationStatusChangeEvent(currentMappingRoot, this));
             }
+            getCheckBoxContributionForSupportsUpdates().setEnabled(!isReadOnly);
+            // Update check boxes on insert/update/delete tabs
+            updateReadOnlyStateOfCheckBoxes(isReadOnly);
         }
     }
 
@@ -3183,7 +3187,7 @@ public class TransformationObjectEditorPage
                 }
             });
 
-            chkSupportsUpdates.setEnabled(true);
+            chkSupportsUpdates.setEnabled(!currentReadonlyState);
             chkSupportsUpdates.setSelection(getTargetAllowsUpdates());
 
             return chkSupportsUpdates;

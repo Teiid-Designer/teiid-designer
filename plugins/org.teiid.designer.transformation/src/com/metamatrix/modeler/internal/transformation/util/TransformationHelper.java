@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -46,6 +47,7 @@ import org.teiid.query.sql.util.UpdateProcedureGenerator;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.validator.UpdateValidationVisitor;
 import org.teiid.query.validator.ValidatorReport;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -104,13 +106,6 @@ public class TransformationHelper implements SqlConstants {
     private static final boolean IS_UNDOABLE = true;
     private static final boolean IS_SIGNIFICANT = true;
     private static final boolean NOT_SIGNIFICANT = false;
-    private static final boolean IS_UUID = true;
-    private static final boolean IS_NOT_UUID = false;
-
-    //    private static final String SELECT_TRNS_STRING = "SELECT"; //$NON-NLS-1$
-    //    private static final String INSERT_TRNS_STRING = "INSERT"; //$NON-NLS-1$
-    //    private static final String UPDATE_TRNS_STRING = "UPDATE"; //$NON-NLS-1$
-    //    private static final String DELETE_TRNS_STRING = "DELETE"; //$NON-NLS-1$
 
     //public static final String DEFAULT_SELECT = "SELECT * FROM"; //$NON-NLS-1$
 
@@ -250,26 +245,26 @@ public class TransformationHelper implements SqlConstants {
             Container container = ModelerCore.getContainer(sqlTransformation);
             if (container != null) {
                 if (selectSql != null) {
-                    final String userSql = SqlConverter.convertUUIDsToFullNames(selectSql, container);
-                    userSqlTrans.setSelectSql(userSql);
+//                    final String userSql = SqlConverter.convertUUIDsToFullNames(selectSql, container);
+                    userSqlTrans.setSelectSql(selectSql);
                 }
 
                 final String insertSql = sqlTran.getInsertSql();
                 if (insertSql != null) {
-                    final String userSql = SqlConverter.convertUUIDsToFullNames(insertSql, container);
-                    userSqlTrans.setInsertSql(userSql);
+//                    final String userSql = SqlConverter.convertUUIDsToFullNames(insertSql, container);
+                    userSqlTrans.setInsertSql(insertSql);
                 }
 
                 final String updateSql = sqlTran.getUpdateSql();
                 if (updateSql != null) {
-                    final String userSql = SqlConverter.convertUUIDsToFullNames(updateSql, container);
-                    userSqlTrans.setUpdateSql(userSql);
+//                    final String userSql = SqlConverter.convertUUIDsToFullNames(updateSql, container);
+                    userSqlTrans.setUpdateSql(updateSql);
                 }
 
                 final String deleteSql = sqlTran.getDeleteSql();
                 if (deleteSql != null) {
-                    final String userSql = SqlConverter.convertUUIDsToFullNames(deleteSql, container);
-                    userSqlTrans.setDeleteSql(userSql);
+//                    final String userSql = SqlConverter.convertUUIDsToFullNames(deleteSql, container);
+                    userSqlTrans.setDeleteSql(deleteSql);
                 }
             }
 
@@ -521,7 +516,6 @@ public class TransformationHelper implements SqlConstants {
             boolean succeeded = false;
             try {
                 // Convert Symbols to UUIDs First
-                String newUUIDSQL = SqlConverter.convertToUID(sqlString, (EObject)transMappingRoot, cmdType);
                 boolean hasCachedStatus = SqlMappingRootCache.containsStatus((EObject)transMappingRoot, cmdType);
 
                 // Switch based on type (SELECT, INSERT, UPDATE, DELETE)
@@ -529,11 +523,10 @@ public class TransformationHelper implements SqlConstants {
                     case QueryValidator.SELECT_TRNS:
                         // Set the mapping root sql strings
                         changed = setSelectSqlUserString(transMappingRoot, sqlString, isSignificant, txnSource);
-                        boolean uuidSelectChanged = setSelectSqlUUIDString(transMappingRoot, newUUIDSQL, isSignificant, txnSource);
-                        changed = changed || uuidSelectChanged;
+                        
                         // Invalid cache if the sql has changed
                         if (hasCachedStatus) {
-                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString, newUUIDSQL)) {
+                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString)) {
                                 // invalidate cached status
                                 SqlMappingRootCache.invalidateSelectStatus(transMappingRoot, true, txnSource);
                                 // refresh Update, Insert, Delete if necessary
@@ -545,11 +538,10 @@ public class TransformationHelper implements SqlConstants {
                     case QueryValidator.INSERT_TRNS:
                         // Set the mapping root sql strings
                         changed = setInsertSqlUserString(transMappingRoot, sqlString, isSignificant, txnSource);
-                        boolean uuidInsertChanged = setInsertSqlUUIDString(transMappingRoot, newUUIDSQL, isSignificant, txnSource);
-                        changed = changed || uuidInsertChanged;
+
                         // Invalid cache if the user string changed, or current status is uuid status
                         if (changed || hasCachedStatus) {
-                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString, newUUIDSQL)) {
+                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString)) {
                                 // invalidate cached status
                                 SqlMappingRootCache.invalidateInsertStatus(transMappingRoot, true, txnSource);
                                 changed = true;
@@ -559,11 +551,10 @@ public class TransformationHelper implements SqlConstants {
                     case QueryValidator.UPDATE_TRNS:
                         // Set the mapping root sql strings
                         changed = setUpdateSqlUserString(transMappingRoot, sqlString, isSignificant, txnSource);
-                        boolean uuidUpdateChanged = setUpdateSqlUUIDString(transMappingRoot, newUUIDSQL, isSignificant, txnSource);
-                        changed = changed || uuidUpdateChanged;
+
                         // Invalid cache if the user string changed, or current status is uuid status
                         if (changed || hasCachedStatus) {
-                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString, newUUIDSQL)) {
+                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString)) {
                                 // invalidate cached status
                                 SqlMappingRootCache.invalidateUpdateStatus(transMappingRoot, true, txnSource);
                                 changed = true;
@@ -573,11 +564,10 @@ public class TransformationHelper implements SqlConstants {
                     case QueryValidator.DELETE_TRNS:
                         // Set the mapping root sql strings
                         changed = setDeleteSqlUserString(transMappingRoot, sqlString, isSignificant, txnSource);
-                        boolean uuidDeleteChanged = setDeleteSqlUUIDString(transMappingRoot, newUUIDSQL, isSignificant, txnSource);
-                        changed = changed || uuidDeleteChanged;
+
                         // Invalid cache if the user string changed, or current status is uuid status
                         if (changed || hasCachedStatus) {
-                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString, newUUIDSQL)) {
+                            if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString)) {
                                 // invalidate cached status
                                 SqlMappingRootCache.invalidateDeleteStatus(transMappingRoot, true, txnSource);
                                 changed = true;
@@ -617,52 +607,34 @@ public class TransformationHelper implements SqlConstants {
         // If this mappingRoot allows insert, and default is being used, reset it
         if (isInsertAllowed(transMappingRoot) && isInsertSqlDefault((EObject)transMappingRoot)) {
             String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.INSERT_TRNS);
-            String generatedProcUID = SqlConverter.convertToUID(generatedProc,
-                                                                (EObject)transMappingRoot,
-                                                                QueryValidator.INSERT_TRNS);
+
             String currentInsertUserStr = getInsertSqlUserString(transMappingRoot);
-            String currentInsertUUIDStr = getInsertSqlUUIDString(transMappingRoot);
+
             if ((generatedProc == null && currentInsertUserStr != null)
                 || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentInsertUserStr))) {
                 setInsertSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-            if ((generatedProcUID == null && currentInsertUUIDStr != null)
-                || (generatedProcUID != null && !generatedProcUID.equalsIgnoreCase(currentInsertUUIDStr))) {
-                setInsertSqlUUIDString(transMappingRoot, generatedProcUID, isSignificant, txnSource);
             }
         }
         // If this mappingRoot allows update, and default is being used, reset it
         if (isUpdateAllowed(transMappingRoot) && isUpdateSqlDefault((EObject)transMappingRoot)) {
             String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.UPDATE_TRNS);
-            String generatedProcUID = SqlConverter.convertToUID(generatedProc,
-                                                                (EObject)transMappingRoot,
-                                                                QueryValidator.UPDATE_TRNS);
+
             String currentUpdateUserStr = getUpdateSqlUserString(transMappingRoot);
-            String currentUpdateUUIDStr = getUpdateSqlUUIDString(transMappingRoot);
+
             if ((generatedProc == null && currentUpdateUserStr != null)
                 || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentUpdateUserStr))) {
                 setUpdateSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-            if ((generatedProcUID == null && currentUpdateUUIDStr != null)
-                || (generatedProcUID != null && !generatedProcUID.equalsIgnoreCase(currentUpdateUUIDStr))) {
-                setUpdateSqlUUIDString(transMappingRoot, generatedProcUID, isSignificant, txnSource);
             }
         }
         // If this mappingRoot allows delete, and default is being used, reset it
         if (isDeleteAllowed(transMappingRoot) && isDeleteSqlDefault((EObject)transMappingRoot)) {
             String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.DELETE_TRNS);
-            String generatedProcUID = SqlConverter.convertToUID(generatedProc,
-                                                                (EObject)transMappingRoot,
-                                                                QueryValidator.DELETE_TRNS);
+
             String currentDeleteUserStr = getDeleteSqlUserString(transMappingRoot);
-            String currentDeleteUUIDStr = getDeleteSqlUUIDString(transMappingRoot);
+
             if ((generatedProc == null && currentDeleteUserStr != null)
                 || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentDeleteUserStr))) {
                 setDeleteSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-            if ((generatedProcUID == null && currentDeleteUUIDStr != null)
-                || (generatedProcUID != null && !generatedProcUID.equalsIgnoreCase(currentDeleteUUIDStr))) {
-                setDeleteSqlUUIDString(transMappingRoot, generatedProcUID, isSignificant, txnSource);
             }
         }
     }
@@ -4128,171 +4100,6 @@ public class TransformationHelper implements SqlConstants {
      * @param transMappingRoot the transformation mapping root
      * @param selectString the SQL Select String
      */
-    private static boolean setSelectSqlUUIDString( Object transMappingRoot,
-                                                   String selectString,
-                                                   boolean isSignificant,
-                                                   Object txnSource ) {
-        boolean changed = false;
-
-        if (isSqlDifferent(transMappingRoot, QueryValidator.SELECT_TRNS, selectString, IS_UUID)) {
-            MappingHelper helper = getMappingHelper(transMappingRoot);
-
-            if (helper != null && helper instanceof SqlTransformation) {
-                // start txn if not already in txn
-                boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_SELECT_TXN_DESCRIPTION, txnSource);
-                boolean succeeded = false;
-                try {
-                    ((SqlTransformation)helper).setSelectSql(selectString);
-                    changed = true;
-                    succeeded = true;
-                } finally {
-                    // if we started the txn, commit it.
-                    if (requiredStart) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            changed = false;
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
-                }
-            }
-        }
-        // if( !changed )
-        // System.out.println("  >> T-Helper tried to set UUID SQL with SAME SQL.  Command type = " + SELECT_TRNS_STRING);
-        return changed;
-    }
-
-    /**
-     * Set the SQL Insert String on a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param insertString the SQL Insert String
-     */
-    private static boolean setInsertSqlUUIDString( Object transMappingRoot,
-                                                   String insertString,
-                                                   boolean isSignificant,
-                                                   Object txnSource ) {
-        boolean changed = false;
-
-        if (isSqlDifferent(transMappingRoot, QueryValidator.INSERT_TRNS, insertString, IS_UUID)) {
-            MappingHelper helper = getMappingHelper(transMappingRoot);
-
-            if (helper != null && helper instanceof SqlTransformation) {
-                // start txn if not already in txn
-                boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_INSERT_TXN_DESCRIPTION, txnSource);
-                boolean succeeded = false;
-                try {
-                    ((SqlTransformation)helper).setInsertSql(insertString);
-                    changed = true;
-                    succeeded = true;
-                } finally {
-                    // if we started the txn, commit it.
-                    if (requiredStart) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            changed = false;
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
-                }
-            }
-        }
-        // if( !changed )
-        // System.out.println("  >> T-Helper tried to set UUID SQL with SAME SQL.  Command type = " + INSERT_TRNS_STRING);
-        return changed;
-    }
-
-    /**
-     * Set the SQL Update String on a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param updateString the SQL Update String
-     */
-    private static boolean setUpdateSqlUUIDString( Object transMappingRoot,
-                                                   String updateString,
-                                                   boolean isSignificant,
-                                                   Object txnSource ) {
-        boolean changed = false;
-
-        if (isSqlDifferent(transMappingRoot, QueryValidator.UPDATE_TRNS, updateString, IS_UUID)) {
-            MappingHelper helper = getMappingHelper(transMappingRoot);
-
-            if (helper != null && helper instanceof SqlTransformation) {
-                // start txn if not already in txn
-                boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_UPDATE_TXN_DESCRIPTION, txnSource);
-                boolean succeeded = false;
-                try {
-                    ((SqlTransformation)helper).setUpdateSql(updateString);
-                    changed = true;
-                    succeeded = true;
-                } finally {
-                    // if we started the txn, commit it.
-                    if (requiredStart) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            changed = false;
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
-                }
-            }
-        }
-        // if( !changed )
-        // System.out.println("  >> T-Helper tried to set UUID SQL with SAME SQL.  Command type = " + UPDATE_TRNS_STRING);
-        return changed;
-    }
-
-    /**
-     * Set the SQL Delete String on a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param deleteString the SQL Delete String
-     */
-    private static boolean setDeleteSqlUUIDString( Object transMappingRoot,
-                                                   String deleteString,
-                                                   boolean isSignificant,
-                                                   Object txnSource ) {
-        boolean changed = false;
-
-        if (isSqlDifferent(transMappingRoot, QueryValidator.DELETE_TRNS, deleteString, IS_UUID)) {
-            MappingHelper helper = getMappingHelper(transMappingRoot);
-
-            if (helper != null && helper instanceof SqlTransformation) {
-                // start txn if not already in txn
-                boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_DELETE_TXN_DESCRIPTION, txnSource);
-                boolean succeeded = false;
-                try {
-                    if (((SqlTransformation)helper).getDeleteSql() == null) changed = true;
-
-                    ((SqlTransformation)helper).setDeleteSql(deleteString);
-                    succeeded = true;
-                } finally {
-                    // if we started the txn, commit it.
-                    if (requiredStart) {
-                        if (succeeded) {
-                            ModelerCore.commitTxn();
-                        } else {
-                            changed = false;
-                            ModelerCore.rollbackTxn();
-                        }
-                    }
-                }
-            }
-        }
-        // if( !changed )
-        // System.out.println("  >> T-Helper tried to set UUID SQL with SAME SQL.  Command type = " + DELETE_TRNS_STRING);
-        return changed;
-    }
-
-    /**
-     * Set the SQL Select String on a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param selectString the SQL Select String
-     */
     public static boolean setSelectSqlUserString( Object transMappingRoot,
                                                   String selectString,
                                                   boolean isSignificant,
@@ -4315,7 +4122,7 @@ public class TransformationHelper implements SqlConstants {
 
         boolean setString = false;
         if (checkIfDifferent) {
-            setString = isSqlDifferent(transMappingRoot, QueryValidator.SELECT_TRNS, selectString, IS_NOT_UUID);
+            setString = isSqlDifferent(transMappingRoot, QueryValidator.SELECT_TRNS, selectString);
         } else {
             setString = true;
         }
@@ -4345,8 +4152,7 @@ public class TransformationHelper implements SqlConstants {
                 }
             }
         }
-        // if( !changed )
-        // System.out.println("  >> T-Helper tried to set Stnd SQL with SAME SQL.  Command type = " + SELECT_TRNS_STRING);
+
         return changed;
     }
 
@@ -4378,7 +4184,7 @@ public class TransformationHelper implements SqlConstants {
 
         boolean setString = false;
         if (checkIfDifferent) {
-            setString = isSqlDifferent(transMappingRoot, QueryValidator.INSERT_TRNS, insertString, IS_NOT_UUID);
+            setString = isSqlDifferent(transMappingRoot, QueryValidator.INSERT_TRNS, insertString);
         } else {
             setString = true;
         }
@@ -4440,7 +4246,7 @@ public class TransformationHelper implements SqlConstants {
 
         boolean setString = false;
         if (checkIfDifferent) {
-            setString = isSqlDifferent(transMappingRoot, QueryValidator.UPDATE_TRNS, updateString, IS_NOT_UUID);
+            setString = isSqlDifferent(transMappingRoot, QueryValidator.UPDATE_TRNS, updateString);
         } else {
             setString = true;
         }
@@ -4502,7 +4308,7 @@ public class TransformationHelper implements SqlConstants {
 
         boolean setString = false;
         if (checkIfDifferent) {
-            setString = isSqlDifferent(transMappingRoot, QueryValidator.DELETE_TRNS, deleteString, IS_NOT_UUID);
+            setString = isSqlDifferent(transMappingRoot, QueryValidator.DELETE_TRNS, deleteString);
         } else {
             setString = true;
         }
@@ -4516,6 +4322,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean succeeded = false;
                 try {
                     userSqlTrans.setDeleteSql(SqlUtil.normalize(deleteString));
+                    changed = true;
                     succeeded = true;
                 } finally {
                     // if we started the txn, commit it.
@@ -4545,17 +4352,11 @@ public class TransformationHelper implements SqlConstants {
      */
     public static boolean isSqlDifferent( final Object transMappingRoot,
                                           final int cmdType,
-                                          final String sqlString,
-                                          boolean isUUID ) {
+                                          final String sqlString) {
         boolean isDifferent = true;
         if (transMappingRoot != null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
-            if (isUUID) {
-                String currentUUIDSql = getUUIDSqlString(transMappingRoot, cmdType);
-                isDifferent = stringsDifferent(SqlUtil.normalize(currentUUIDSql), SqlUtil.normalize(sqlString));
-            } else {
-                String currentSql = getSqlString(transMappingRoot, cmdType);
-                isDifferent = stringsDifferent(SqlUtil.normalize(currentSql), SqlUtil.normalize(sqlString));
-            }
+            String currentSql = getSqlString(transMappingRoot, cmdType);
+            isDifferent = stringsDifferent(SqlUtil.normalize(currentSql), SqlUtil.normalize(sqlString));
         }
         return isDifferent;
     }

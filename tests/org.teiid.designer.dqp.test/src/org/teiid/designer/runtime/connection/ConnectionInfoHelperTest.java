@@ -50,8 +50,8 @@ public class ConnectionInfoHelperTest {
     private static String CP_PROVIDER_ID_VALUE = "connectionProfileProviderId"; //$NON-NLS-1$  
     private static String CP_PROVIDER_ID_KEY = ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE
                                                + ConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY;
-    private static final String VALUE_1 = "partssupplier"; //$NON-NLS-1$
-    private static final String VALUE_2 = "org.bogus.company.mydb.MyDbDriver"; //$NON-NLS-1$
+    //private static final String VALUE_1 = "partssupplier"; //$NON-NLS-1$
+    //private static final String VALUE_2 = "org.bogus.company.mydb.MyDbDriver"; //$NON-NLS-1$
 
     private static final String EMPTY_STRING = StringUtilities.EMPTY_STRING;
 

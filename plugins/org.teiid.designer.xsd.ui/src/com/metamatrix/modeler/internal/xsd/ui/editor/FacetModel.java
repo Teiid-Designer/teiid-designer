@@ -50,7 +50,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * The FacetModel is an insulating layer above metadata, and serves as the underlying model for the SDE View.
  */
-public class FacetModel implements ComponentSetMonitor {
+public class FacetModel implements ComponentSetMonitor{
 
     static final String TITLE_BASE_NOT_ALLOWED = GUIFacetHelper.getString("FacetModel.title_BaseNotAllowed"); //$NON-NLS-1$
     static final String DESC_BASE_NOT_ALLOWED_SAME = GUIFacetHelper.getString("FacetModel.desc_BaseNotAllowedSame"); //$NON-NLS-1$
@@ -59,6 +59,7 @@ public class FacetModel implements ComponentSetMonitor {
     private ComponentCategory[] ccats = GUIFacetHelper.getCategories(this);
     XSDSimpleTypeDefinition simpleType;
     boolean isReadOnly;
+    boolean editorIsReadOnly;
     boolean ignoreEvents;
     private Map idToFacet = new HashMap();
     private Map idToCategory = new HashMap();
@@ -161,6 +162,11 @@ public class FacetModel implements ComponentSetMonitor {
         } else {
             isReadOnly = true;
         } // endif
+        
+        ModelResource schemaModelResource = ModelUtilities.getModelResourceForModelObject(this.schema);
+        if( schemaModelResource != null ) {
+        	setEditorReadOnly(schemaModelResource.isReadOnly());
+        }
     }
 
     public boolean isReadOnly() {
@@ -179,6 +185,14 @@ public class FacetModel implements ComponentSetMonitor {
                 cat.setEnabled(!ro);
             } // endfor
         } // endif
+    }
+    
+    void setEditorReadOnly(boolean editorIsReadOnly) {
+    	this.editorIsReadOnly = editorIsReadOnly;
+    }
+    
+    boolean isEditorReadOnly() {
+    	return this.editorIsReadOnly;
     }
 
     void setFields( XSDSimpleTypeDefinition simpleType ) {
@@ -385,6 +399,13 @@ public class FacetModel implements ComponentSetMonitor {
                             ModelObjectUtilities.setDescription(simpleType, (String)event.value, this);
 
                         } else if (GUIFacetHelper.FAKE_FACET_CREATE_SUBTYPE == id) { // -----------------------------
+                        	// We need to check the read-only state of the datatypes editor, rather than the "selected datatype"
+                        	// This will allow creating a sub-type of a built-in datatype that IS read-only
+                        	if( isEditorReadOnly() ) {
+                        		MessageDialog.openConfirm(null, ModelerXsdUiConstants.Util.getString("FacetModel.read_only.title"),  //$NON-NLS-1$
+                        				ModelerXsdUiConstants.Util.getString("FacetModel.read_only.cannotCreateSubtypeMessage")); //$NON-NLS-1$
+                        		return null;
+                        	}
                             final XSDSimpleTypeDefinition newType = GUIFacetHelper.createType(schema, simpleType);
                             if (newType != null) {
                                 uow.setDescription(ModelerXsdUiConstants.Util.getString("FacetModel.transaction_create", newType.getName())); //$NON-NLS-1$

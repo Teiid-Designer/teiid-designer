@@ -10,7 +10,6 @@ package com.metamatrix.modeler.modelgenerator.wsdl.ui.internal.wizards;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
@@ -24,14 +23,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -42,6 +42,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,11 +55,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
+import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
+import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -72,15 +74,15 @@ import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.dialog.FolderSelectionDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
-import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
  * Source WSDL and Target Relational Model Selection page. This page of the WSDL to Relational Importer is used to select the
  * source wsdl file for processing and the target relational model in which the generated entities will be placed.
  */
 public class SelectWsdlPage extends WizardPage
-    implements Listener, FileUtils.Constants, ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images,
+    implements Listener, IProfileChangedListener, FileUtils.Constants, ModelGeneratorWsdlUiConstants, ModelGeneratorWsdlUiConstants.Images,
     ModelGeneratorWsdlUiConstants.HelpContexts {
 
     /** Used as a prefix to properties file keys. */
@@ -106,24 +108,26 @@ public class SelectWsdlPage extends WizardPage
     private Button buttonValidateWSDL;
 
     /** Source and target text fields */
-    Text wsdlURIText;
+    CLabel wsdlURIText;
     Text textFieldTargetModelLocation;
 
     /** selection buttons */
     Button buttonSelectTargetModelLocation;
+    
+    private Button newCPButton;
+    private Button editCPButton;
 
     /** The import manager. */
     private WSDLImportWizardManager importManager;
 
-    private boolean urlValid = false;
-    private boolean urlReadable = false;
     private MultiStatus wsdlStatus;
     private IContainer targetModelLocation;
     private boolean initializing = false;
 
-    private ProfileManager profileManager;
-
-    private Combo profileCombo;
+    private Combo connectionProfilesCombo;
+    private ILabelProvider profileLabelProvider;
+    
+    private ConnectionProfileWorker profileWorker;
 
     /**
      * Constructs the page with the provided import manager
@@ -134,7 +138,6 @@ public class SelectWsdlPage extends WizardPage
         super(SelectWsdlPage.class.getSimpleName(), getString("title"), null); //$NON-NLS-1$
         this.importManager = theImportManager;
         setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(NEW_MODEL_BANNER));
-        profileManager = ProfileManager.getInstance();
     }
 
     /**
@@ -196,6 +199,8 @@ public class SelectWsdlPage extends WizardPage
         // create main container
         //
 
+    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_WS, this);
+    	
         final int COLUMNS = 1;
         Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
         GridLayout layout = new GridLayout(COLUMNS, false);
@@ -227,60 +232,101 @@ public class SelectWsdlPage extends WizardPage
      */
     private void createSourceSelectionComposite( Composite theParent ) {
         final int COLUMNS = 1;
-        String text = ""; //$NON-NLS-1$
+
         Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
+        // ================================================================================
+        Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel.text"), SWT.NONE, 2); //$NON-NLS-1$
+        profileGroup.setLayout(new GridLayout(3, false));
+        profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        profileLabelProvider = new LabelProvider() {
+
+            @Override
+            public String getText( final Object source ) {
+                return ((IConnectionProfile)source).getName();
+            }
+        };
+        this.connectionProfilesCombo = WidgetFactory.createCombo(profileGroup,
+                                                                 SWT.READ_ONLY,
+                                                                 GridData.FILL_HORIZONTAL,
+                                                                 profileWorker.getProfiles(),
+                                                                 profileLabelProvider,
+                                                                 true);
+        this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handleConnectionProfileSelected();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        connectionProfilesCombo.setVisibleItemCount(10);
+        
+        newCPButton = WidgetFactory.createButton(profileGroup, getString("new.label")); //$NON-NLS-1$
+        newCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                profileWorker.create();
+            }
+        });
+        
+        editCPButton = WidgetFactory.createButton(profileGroup, getString("edit.label")); //$NON-NLS-1$
+        editCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                profileWorker.edit();
+            }
+        });
+        
         // options group
-        Group optionsGroup = new Group(pnl, SWT.FILL);
-        optionsGroup.setText(getString("sourceOptionsGroup.text")); //$NON-NLS-1$
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("wsdlLabel.text"), SWT.FILL,  2); //$NON-NLS-1$
         optionsGroup.setLayout(new GridLayout(2, false));
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        GridData gridData;
-        CLabel profileLabel = new CLabel(optionsGroup, SWT.NONE);
-        profileLabel.setText("Connection Profile");//getString("profileLabel.text")); //$NON-NLS-1$
-        gridData = new GridData(SWT.NONE);
-        gridData.horizontalSpan = 1;
-        profileLabel.setLayoutData(gridData);
-
-        profileCombo = new Combo(optionsGroup, SWT.READ_ONLY);
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalSpan = 1;
-        profileCombo.setLayoutData(gridData);
-        profileCombo.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                refreshUiFromManager();
-            }
-        });
-
-        CLabel wsldLabel = new CLabel(optionsGroup, SWT.NONE);
-        wsldLabel.setText(getString("wsdlLabel.text")); //$NON-NLS-1$
-        gridData = new GridData(SWT.NONE);
-        gridData.horizontalSpan = 1;
-        wsldLabel.setLayoutData(gridData);
-
         // Workspace textfield
-        wsdlURIText = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
-        text = getString("workspaceTextField.tooltip"); //$NON-NLS-1$
-        wsdlURIText.setToolTipText(text);
-        wsdlURIText.setEditable(false);
-        wsdlURIText.setEnabled(false);
-
+        wsdlURIText = WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL);
+        wsdlURIText.setToolTipText(getString("workspaceTextField.tooltip")); //$NON-NLS-1$
         // --------------------------------------------
         // WSDL Validation Button
         // --------------------------------------------
         buttonValidateWSDL = WidgetFactory.createButton(optionsGroup,
-                                                        getString("validateWsdlButton.text"), GridData.HORIZONTAL_ALIGN_END, 3); //$NON-NLS-1$
+                                                        getString("validateWsdlButton.text"), GridData.HORIZONTAL_ALIGN_END, 1); //$NON-NLS-1$
         buttonValidateWSDL.setToolTipText(getString("validateWsdlButton.tooltip")); //$NON-NLS-1$
 
         // --------------------------------------------
         // Add Listener to handle selection events
         // --------------------------------------------
         buttonValidateWSDL.addListener(SWT.Selection, this);
-
+        
+        if( this.connectionProfilesCombo.getItemCount() > 0 ) {
+        	this.connectionProfilesCombo.select(0);
+        	handleConnectionProfileSelected();
+        }
+        
         updateWidgetEnablements();
+    }
+    
+    private void handleConnectionProfileSelected() {
+		int selIndex = connectionProfilesCombo.getSelectionIndex();
+		
+		if( selIndex >= 0 ) {
+			String name = connectionProfilesCombo.getItem(selIndex);
+			if( name != null ) {
+				IConnectionProfile profile = profileWorker.getProfile(name);
+				profileWorker.setSelection(profile);
+				importManager.setConnectionProfile(profile);
+				refreshUiFromManager();
+			}
+		}
     }
 
     /**
@@ -296,24 +342,17 @@ public class SelectWsdlPage extends WizardPage
         pnl.setLayout(new GridLayout(COLUMNS, false));
 
         // options group
-        Group optionsGroup = new Group(pnl, SWT.NONE);
-        optionsGroup.setText(getString("targetOptionsGroup.text")); //$NON-NLS-1$
+        Group optionsGroup = WidgetFactory.createGroup(pnl, getString("targetLocationGroup.text"),SWT.NONE); //$NON-NLS-1$
 
         GridData gdRadioGroup = new GridData(GridData.FILL_HORIZONTAL);
         optionsGroup.setLayoutData(gdRadioGroup);
 
-        optionsGroup.setLayout(new GridLayout(3, false));
+        optionsGroup.setLayout(new GridLayout(2, false));
 
         // --------------------------------------------
         // Composite for Model Location Selection
         // --------------------------------------------
         // Select Target Location Label
-        //WidgetFactory.createLabel( optionsGroup, getString("targetModelLocationLabel.text")); //$NON-NLS-1$
-        CLabel theLabel2 = new CLabel(optionsGroup, SWT.NONE);
-        theLabel2.setText(getString("targetModelLocationLabel.text")); //$NON-NLS-1$
-        final GridData gridData2 = new GridData(SWT.NONE);
-        gridData2.horizontalSpan = 1;
-        theLabel2.setLayoutData(gridData2);
 
         final IContainer location = this.importManager.getTargetModelLocation();
         final String name = (location == null ? null : location.getFullPath().makeRelative().toString());
@@ -452,29 +491,6 @@ public class SelectWsdlPage extends WizardPage
         this.wsdlStatus = this.importManager.validateWSDL(monitor);
     }
 
-    private void updateCurrentFileSystemSelection( String text ) {
-        text = text.replace('\\', '/');
-        File file = new File(text);
-        if (file.exists() && file.isFile() && ModelGeneratorWsdlUiUtil.isWsdlFile(file)) {
-            this.importManager.setWSDLFileUri(file.getAbsolutePath());
-        }
-    }
-
-    /**
-     * Takes a url string and tries to read it, saving state info
-     * 
-     * @param urlText the supplied url text
-     */
-    private void updateCurrentURL( String urlText ) {
-        this.importManager.setWSDLFileUri(null);
-        if (urlText != null && urlText.length() > 0) {
-            this.urlValid = isValidUri(urlText);
-            if (this.urlValid) {
-                this.importManager.setWSDLFileUri(urlText.replaceAll("\\\\", "/")); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-    }
-
     /**
      * Determines if the supplied string is a valid formatted URI
      * 
@@ -544,28 +560,25 @@ public class SelectWsdlPage extends WizardPage
                 this.textFieldTargetModelLocation.setText(tgtModelLocation.getFullPath().makeRelative().toString());
             }
 
-            if (null == profileCombo.getItems() || 0 == profileCombo.getItems().length) {
-                IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.enablement.oda.ws"); //$NON-NLS-1$
-                if (sfProfiles.length == 0) {
+            if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
+                if (profileWorker.getProfiles().isEmpty()) {
                     setErrorMessage(getString("no.profile")); //$NON-NLS-1$
                     wsdlURIText.setText(EMPTY_STR);
                     buttonValidateWSDL.setEnabled(false);
                     return;
-                } else {
-                    List<String> profileNames = new ArrayList();
-                    for (int i = 0; i < sfProfiles.length; i++) {
-                        IConnectionProfile profile = sfProfiles[i];
-                        profileNames.add(profile.getName());
-                    }
-                    profileCombo.setItems(profileNames.toArray(new String[profileNames.size()]));
-                    setErrorMessage(null);
-                    setMessage(getString("select.profile")); //$NON-NLS-1$
-                    return;
                 }
+                
+                setErrorMessage(null);
+                setMessage(getString("select.profile")); //$NON-NLS-1$
+                return;
             }
 
-            String profileName = profileCombo.getText();
-            IConnectionProfile profile = findMatchingProfile(profileName);
+            if( connectionProfilesCombo.getSelectionIndex() < 0 ) {
+            	return;
+            }
+            
+            String profileName = connectionProfilesCombo.getText();
+            IConnectionProfile profile = profileWorker.getConnectionProfile(); //findMatchingProfile(profileName);
             if (null == profile) {
                 // this should really never happen
                 setMessage(null);
@@ -579,17 +592,15 @@ public class SelectWsdlPage extends WizardPage
             updateWidgetEnablements();
         }
     }
-
-    private IConnectionProfile findMatchingProfile( String name ) {
-        IConnectionProfile result = null;
-        IConnectionProfile[] sfProfiles = profileManager.getProfilesByCategory("org.eclipse.datatools.enablement.oda.ws"); //$NON-NLS-1$
-        for (int i = 0; i < sfProfiles.length; i++) {
-            IConnectionProfile profile = sfProfiles[i];
-            if (profile.getName().equals(name)) {
-                result = profile;
-            }
-        }
-        return result;
+    
+    public void profileChanged(IConnectionProfile profile) {
+    	resetCPComboItems();
+    	
+    	selectConnectionProfile(profile.getName());
+    	
+    	importManager.setConnectionProfile(profile);
+    	
+    	setPageStatus();
     }
 
     /**
@@ -704,7 +715,7 @@ public class SelectWsdlPage extends WizardPage
         // Hardcode the updating flag to false for now.
         // Plan to implement in the future.
         // final boolean updating = this.updateCheckBox.getSelection();
-        final boolean updating = false;
+
         try {
             // Validate the target Model Name and location
             targetModelLocation = validateFileAndFolder(this.textFieldTargetModelLocation,
@@ -742,7 +753,7 @@ public class SelectWsdlPage extends WizardPage
      * @return the location container, null if invalid or not found.
      */
     private IContainer validateFileAndFolder( final Text folderText,
-                                              final String fileExtension ) throws CoreException {
+                                              final String fileExtension ) {
         CoreArgCheck.isNotNull(folderText);
         CoreArgCheck.isNotNull(fileExtension);
         final String folderName = folderText.getText();
@@ -762,66 +773,41 @@ public class SelectWsdlPage extends WizardPage
         }
         return null;
     }
-
-    /** Filter for selecting WSDL files and their parent containers. */
-    private ViewerFilter wsdlFilter = new ViewerFilter() {
-
-        @Override
-        public boolean select( Viewer theViewer,
-                               Object theParentElement,
-                               Object theElement ) {
-            boolean result = false;
-
-            if (theElement instanceof IContainer) {
-                IProject project = ((IContainer)theElement).getProject();
-
-                // check for closed project
-                if (project.isOpen()) {
-                    try {
-                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
-                            result = true;
-                        }
-                    } catch (CoreException theException) {
-                        UTIL.log(theException);
-                    }
-                }
-            } else if (theElement instanceof IFile) {
-                result = ModelGeneratorWsdlUiUtil.isWsdlFile((IFile)theElement);
-            } else if (theElement instanceof File) {
-                return (((File)theElement).isDirectory() || ModelGeneratorWsdlUiUtil.isWsdlFile(((File)theElement)));
+    
+    void resetCPComboItems() {
+    	if( connectionProfilesCombo != null ) {
+        	ArrayList profileList = new ArrayList();
+            for( IConnectionProfile prof : profileWorker.getProfiles()) {
+            	profileList.add(prof);
             }
-
-            return result;
-        }
-    };
-
-    /** Validator that makes sure the selection contains all WSDL files. */
-    private ISelectionStatusValidator wsdlValidator = new ISelectionStatusValidator() {
-        public IStatus validate( Object[] theSelection ) {
-            IStatus result = null;
-            boolean valid = true;
-
-            if ((theSelection != null) && (theSelection.length > 0)) {
-                for (int i = 0; i < theSelection.length; i++) {
-                    if ((!(theSelection[i] instanceof IFile)) || !ModelGeneratorWsdlUiUtil.isWsdlFile((IFile)theSelection[i])) {
-                        valid = false;
-                        break;
-                    }
-                }
-            } else {
-                valid = false;
-            }
-
-            if (valid) {
-                result = new StatusInfo(PLUGIN_ID);
-            } else {
-                result = new StatusInfo(PLUGIN_ID, IStatus.ERROR, getString("selectionNotWsdl.msg")); //$NON-NLS-1$
-            }
-
-            return result;
-        }
-    };
-
+            
+            WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
+    	}
+    }
+    
+    void selectConnectionProfile(String name) {
+    	if( name == null ) {
+    		return;
+    	}
+    	
+    	int cpIndex = -1;
+    	int i = 0;
+    	for( String item : connectionProfilesCombo.getItems()) {
+    		if( item != null && item.length() > 0 ) {
+    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+    				cpIndex = i;
+    				break;
+    			}
+    		}
+    		i++;
+    	}
+    	if( cpIndex > -1 ) {
+    		connectionProfilesCombo.select(cpIndex);
+    	}
+    	
+    	refreshUiFromManager();
+    }
+    
     /** Filter for selecting target location. */
     private ViewerFilter targetLocationFilter = new ViewerFilter() {
         @Override

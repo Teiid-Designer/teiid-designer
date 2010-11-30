@@ -63,6 +63,15 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
 
         return getPreferences().getInt(DEFAULT_STRING_LENGTH_KEY, DEFAULT_LENGTH);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.TransformationPreferences#getDefaultStringLengthDefault()
+     */
+    public int getDefaultStringLengthDefault() {
+        return DEFAULT_LENGTH;
+    }
     
     /**
      * {@inheritDoc}
@@ -102,6 +111,15 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
         return getPreferences().getInt(UPPER_RECURSION_LIMIT_KEY, UPPER_RECURSION_LIMIT);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.TransformationPreferences#getUpperRecursionLimitDefault()
+     */
+    public int getUpperRecursionLimitDefault() {
+        return UPPER_RECURSION_LIMIT;
+    }
+
     public boolean getRemoveDuplicateAttibutes() {
         if (HEADLESS) return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
 
@@ -111,6 +129,15 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
         }
 
         return getPreferences().getBoolean(REMOVE_DUPLICATE_ATTRIBUTES_KEY, DEFAULT_REMOVE_ATTRIBUTES_VALUE);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.core.TransformationPreferences#getRemoveDuplicateAttibutesDefault()
+     */
+    public boolean getRemoveDuplicateAttibutesDefault() {
+        return DEFAULT_REMOVE_ATTRIBUTES_VALUE;
     }
     
     public void setRemoveDuplicateAttibutes( boolean val ) {

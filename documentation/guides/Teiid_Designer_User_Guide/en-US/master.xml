@@ -20,9 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-    <releaseinfo>6.0.0
+    <releaseinfo>7.1.0
     </releaseinfo>
-    <productnumber>6.0.0
+    <productnumber>7.1.0
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -39,7 +39,7 @@
       <holder>Red Hat, Inc.
       </holder>
     </copyright>
-    <xi:include href="legal_notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="legal_notice_org.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   </bookinfo>
   
 

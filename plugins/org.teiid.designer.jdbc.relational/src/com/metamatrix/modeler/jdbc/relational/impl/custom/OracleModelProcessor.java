@@ -31,7 +31,6 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
     private static final String VARCHAR2_TYPE_NAME = "VARCHAR2"; //$NON-NLS-1$
     private static final String NVARCHAR2_TYPE_NAME = "NVARCHAR2"; //$NON-NLS-1$
     private static final String TIMESTAMP_TYPE_NAME = "TIMESTAMP("; //$NON-NLS-1$
-    private static final String NUMBER_TYPE_NAME = "NUMBER"; //$NON-NLS-1$
     private static final String REF_CURSOR = "REF CURSOR"; //$NON-NLS-1$
 
     /**
@@ -137,16 +136,6 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
                                 final List problems ) {
 
         EObject result = null;
-        // If the type is NUMERIC and precision is non-zero, then look at the length of the column ...
-        // (assume zero length means the length isn't known)
-        if (precision != 0) {
-            if (NUMBER_TYPE_NAME.equalsIgnoreCase(typeName) || REF_CURSOR.equalsIgnoreCase(typeName)) {
-                result = findType(precision, scale, problems);
-            }
-        }
-        if (result != null) {
-            return result;
-        }
 
         // Oracle 9i introduced the "timestamp" type name (with type=1111, or OTHER)
         if (typeName.startsWith(TIMESTAMP_TYPE_NAME)) {
@@ -271,8 +260,8 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
                                           final boolean forced ) {
 
         String nis = super.computeNameInSource(object, name, node, context, forced);
-        if( nis != null ) {
-        	nis = nis.replace('@', '.');
+        if (nis != null) {
+            nis = nis.replace('@', '.');
         }
         return nis;
     }

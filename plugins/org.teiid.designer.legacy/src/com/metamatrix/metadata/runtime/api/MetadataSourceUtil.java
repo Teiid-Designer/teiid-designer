@@ -4,11 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.teiid.core.TeiidException;
 import org.teiid.core.util.ArgCheck;
-import org.teiid.core.util.Assertion;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
+
+import com.metamatrix.core.util.AssertionUtil;
 
 public class MetadataSourceUtil {
 
@@ -37,7 +39,7 @@ public class MetadataSourceUtil {
                                               final String[] tokenReplacements ) throws TeiidException {
         ArgCheck.isNotNull(tokens);
         ArgCheck.isNotNull(tokenReplacements);
-        Assertion.isEqual(tokens.length, tokenReplacements.length);
+        AssertionUtil.isEqual(tokens.length, tokenReplacements.length);
         String fileContents = getFileContentAsString(path, iss);
         if (fileContents != null) {
             for (int i = 0; i < tokens.length; i++) {

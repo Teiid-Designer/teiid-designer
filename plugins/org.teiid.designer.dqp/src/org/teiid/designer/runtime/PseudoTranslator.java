@@ -106,4 +106,10 @@ public class PseudoTranslator implements Translator {
     public void setType( String type ) {
         this.type = type;
     }
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

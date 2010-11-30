@@ -42,7 +42,7 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
     private String removeDuplicateAttributesMessage = UiPlugin.getDefault().getPluginUtil().getString("XmlDocumentPreferencesComponent.removeDuplicateAttributes"); //$NON-NLS-1$
     String sNumericErrorMsg = Util.getString("XmlDocumentPreferencesComponent.numericErrorMsg"); //$NON-NLS-1$
 
-    private List validationListeners = new ArrayList();
+    private List<IEditorPreferencesValidationListener> validationListeners = new ArrayList<IEditorPreferencesValidationListener>();
 
     private Text txfAutoExpandMappingClassMax;
     private Text txfAutoExpandTreeTargetLevel;
@@ -237,6 +237,9 @@ public class XmlDocumentPreferencesComponent implements IEditorPreferencesCompon
 
         boolean bool = getPreferenceStore().getDefaultBoolean(PluginConstants.Prefs.FOLD_MAPPING_CLASSES_BY_DEFAULT);
         btnDisplayMappingClassesFolded.setSelection(bool);
+
+        upperRecursionLimit.setText(String.valueOf(ModelerCore.getTransformationPreferences().getUpperRecursionLimitDefault()));
+        removeDuplicateAttributesButton.setSelection(ModelerCore.getTransformationPreferences().getRemoveDuplicateAttibutesDefault());
     }
 
     void setButtonEnabling() {

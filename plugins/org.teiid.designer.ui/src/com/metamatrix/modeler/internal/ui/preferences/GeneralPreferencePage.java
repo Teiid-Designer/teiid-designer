@@ -7,7 +7,6 @@
  */
 package com.metamatrix.modeler.internal.ui.preferences;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,18 +16,12 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -36,9 +29,6 @@ import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.ui.UiConstants;
-import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.product.IModelerProductContexts;
-import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
@@ -66,22 +56,22 @@ public final class GeneralPreferencePage extends PreferencePage
      * 
      * @since 5.0
      */
-    private Map categoryMap;
+    private Map<String, PreferenceCategory> categoryMap;
 
     /**
      * key=preference id, value=GeneralPreference
      * 
      * @since 5.0
      */
-    private Map preferenceMap;
+    private Map<String, GeneralPreference> preferenceMap;
 
     public GeneralPreferencePage() {
         super();
         setDescription(Util.getStringOrKey(PREFIX + "description")); //$NON-NLS-1$
 
         // initialized fields
-        this.categoryMap = new HashMap();
-        this.preferenceMap = new TreeMap();
+        this.categoryMap = new HashMap<String, PreferenceCategory>();
+        this.preferenceMap = new TreeMap<String, GeneralPreference>();
 
         processExtensions();
     }
@@ -108,46 +98,7 @@ public final class GeneralPreferencePage extends PreferencePage
 
         createExtensionContents(pnlMain);
 
-        // add import/export buttons if supported by the product
-        if (UiPlugin.getDefault().isProductContextSupported(IModelerProductContexts.PreferencePages.ID_IMPORT_EXPORT)) {
-            createImportExportContents(pnlMain);
-        }
-
         return theParent;
-    }
-
-    /**
-     * Constructs UI components for importing and exporting preferences.
-     * 
-     * @param theParent the UI parent container
-     * @since 5.0
-     */
-    private void createImportExportContents( Composite theParent ) {
-        Composite pnlImportExport = new Composite(theParent, SWT.NONE);
-        pnlImportExport.setLayout(new GridLayout(2, false));
-        pnlImportExport.setLayoutData(new GridData());
-
-        Button btn = new Button(pnlImportExport, SWT.PUSH);
-        btn.setText(Util.getStringOrKey(PREFIX + "btnImport.text") + InternalUiConstants.Widgets.BROWSE_BUTTON); //$NON-NLS-1$
-        btn.setToolTipText(Util.getStringOrKey(PREFIX + "btnImport.toolTip")); //$NON-NLS-1$
-        btn.setLayoutData(new GridData());
-        btn.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleImportSelected();
-            }
-        });
-
-        btn = new Button(pnlImportExport, SWT.PUSH);
-        btn.setText(Util.getStringOrKey(PREFIX + "btnExport.text") + InternalUiConstants.Widgets.BROWSE_BUTTON); //$NON-NLS-1$
-        btn.setToolTipText(Util.getStringOrKey(PREFIX + "btnExport.toolTip")); //$NON-NLS-1$
-        btn.setLayoutData(new GridData());
-        btn.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent theEvent ) {
-                handleExportSelected();
-            }
-        });
     }
 
     /**
@@ -157,24 +108,24 @@ public final class GeneralPreferencePage extends PreferencePage
      * @since 5.0
      */
     private void createExtensionContents( Composite theParent ) {
-        Map groupMap = new TreeMap();
+        Map<String, Group> groupMap = new TreeMap<String, Group>();
 
         // add prefs to categories
-        Iterator itr = this.preferenceMap.values().iterator();
+        Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
-            Group group = (Group)groupMap.get(pref.categoryId);
+            GeneralPreference pref = itr.next();
+            Group group = groupMap.get(pref.categoryId);
 
             // if group hasn't been constructed yet, then construct it
             if (group == null) {
-                PreferenceCategory category = (PreferenceCategory)this.categoryMap.get(pref.categoryId);
+                PreferenceCategory category = this.categoryMap.get(pref.categoryId);
 
                 // make sure a category for that id exists
                 if (category == null) {
                     // put it in the default group
                     category = DEFAULT_CATEGORY;
-                    group = (Group)groupMap.get(category.id);
+                    group = groupMap.get(category.id);
 
                     // log that category not found
                     Object[] params = new Object[] {pref.categoryId, pref.id};
@@ -199,81 +150,15 @@ public final class GeneralPreferencePage extends PreferencePage
     }
 
     /**
-     * Handles the exporting of all preferences.
-     * 
-     * @since 5.0
-     */
-    void handleExportSelected() {
-        // display chooser
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-        dialog.setText(Util.getStringOrKey(PREFIX + "exportPrefsChooser.title")); //$NON-NLS-1$
-        dialog.setFilterExtensions(PreferencesUtils.PREFERENCE_DIALOG_FILTER_EXTENSIONS);
-
-        // display dialog and process results
-        if (dialog.open() != null) {
-            String name = dialog.getFileName();
-            String directory = dialog.getFilterPath();
-            String path = new StringBuffer().append(directory).append(File.separatorChar).append(name).toString();
-            path = PreferencesUtils.ensurePathExtension(path);
-            boolean overwrite = true;
-
-            // if file already exists ask user if they want to overwrite
-            if (new File(path).exists()) {
-                overwrite = MessageDialog.openConfirm(getShell(), Util.getStringOrKey(PREFIX
-                                                                                      + "exportPrefsConfirmOverwrite.title"), //$NON-NLS-1$
-                                                      Util.getStringOrKey(PREFIX + "exportPrefsConfirmOverwrite.msg")); //$NON-NLS-1$
-            }
-
-            if (overwrite) {
-                try {
-                    PreferencesUtils.exportAll(path, overwrite);
-                } catch (Exception theException) {
-                    Util.log(IStatus.ERROR, theException, theException.getMessage());
-                    MessageDialog.openError(getControl().getShell(), Util.getStringOrKey(PREFIX + "exportPrefsProblem.title"), //$NON-NLS-1$
-                                            theException.getLocalizedMessage());
-                }
-            }
-        }
-    }
-
-    /**
-     * Handles the importing of preferences from a file on the file system.
-     * 
-     * @since 5.0
-     */
-    void handleImportSelected() {
-        // display chooser
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-        dialog.setText(Util.getStringOrKey(PREFIX + "importPrefsChooser.title")); //$NON-NLS-1$
-        dialog.setFilterExtensions(PreferencesUtils.PREFERENCE_DIALOG_FILTER_EXTENSIONS);
-
-        // display dialog and process results
-        if (dialog.open() != null) {
-            String name = dialog.getFileName();
-            String directory = dialog.getFilterPath();
-            String path = new StringBuffer().append(directory).append(File.separatorChar).append(name).toString();
-
-            try {
-                PreferencesUtils.importAll(path);
-                refresh();
-            } catch (Exception theException) {
-                Util.log(IStatus.ERROR, theException, theException.getMessage());
-                MessageDialog.openError(getControl().getShell(), Util.getStringOrKey(PREFIX + "importPrefsProblem.title"), //$NON-NLS-1$
-                                        theException.getLocalizedMessage());
-            }
-        }
-    }
-
-    /**
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      * @since 5.0
      */
     public void init( IWorkbench theWorkbench ) {
         // pass the workbench to the contributors
-        Iterator itr = this.preferenceMap.values().iterator();
+        Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
+            GeneralPreference pref = itr.next();
 
             try {
                 pref.contributor.setWorkbench(theWorkbench);
@@ -290,10 +175,10 @@ public final class GeneralPreferencePage extends PreferencePage
     @Override
     public boolean performCancel() {
         boolean result = true;
-        Iterator itr = this.preferenceMap.values().iterator();
+        Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
+            GeneralPreference pref = itr.next();
 
             try {
                 boolean successful = pref.contributor.performCancel();
@@ -316,7 +201,7 @@ public final class GeneralPreferencePage extends PreferencePage
      */
     @Override
     protected void performDefaults() {
-        Iterator itr = this.preferenceMap.values().iterator();
+        Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
             GeneralPreference pref = (GeneralPreference)itr.next();
@@ -339,10 +224,10 @@ public final class GeneralPreferencePage extends PreferencePage
     @Override
     public boolean performOk() {
         boolean result = true;
-        Iterator itr = this.preferenceMap.values().iterator();
+        Iterator<GeneralPreference> itr = this.preferenceMap.values().iterator();
 
         while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
+            GeneralPreference pref = itr.next();
 
             try {
                 boolean successful = pref.contributor.performOk();
@@ -523,20 +408,6 @@ public final class GeneralPreferencePage extends PreferencePage
         }
 
         return result;
-    }
-
-    /**
-     * Refresh editor values from their appropriate preference stores.
-     * 
-     * @since 5.0
-     */
-    private void refresh() {
-        Iterator itr = this.preferenceMap.values().iterator();
-
-        while (itr.hasNext()) {
-            GeneralPreference pref = (GeneralPreference)itr.next();
-            pref.contributor.refresh();
-        }
     }
 
     /**

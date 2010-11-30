@@ -371,7 +371,7 @@ public class TransformationMappingHelper implements SqlConstants {
         // If command is not resolved, attempt to resolve it.
         if (!command.isResolved()) {
             QueryValidator validator = new TransformationValidator((SqlTransformationMappingRoot)transMappingRoot);
-            QueryValidationResult result = validator.validateSql(command.toString(), QueryValidator.SELECT_TRNS, false, false);
+            QueryValidationResult result = validator.validateSql(command.toString(), QueryValidator.SELECT_TRNS, false);
             if (result.isValidatable()) {
                 isCommandValid = true;
             }

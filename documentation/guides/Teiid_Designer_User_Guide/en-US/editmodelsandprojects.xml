@@ -2,7 +2,8 @@
 
 <chapter id="edit-models-and-projects-chapter">
   <title>Editing Models and Projects</title>
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>Teiid Designer offers three basic model edit actions: <emphasis role="bold">Rename</emphasis>, 
 		<emphasis role="bold">Move</emphasis> and 
@@ -27,7 +28,7 @@
 								<title>Refactor Rename Action In Model Explorer</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RenameActionInExplorer.jpg" />
+										<imagedata fileref="images/screencaps/rename-model-action-in-explorer.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -39,7 +40,7 @@
 								<title>Rename Model File Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/RenameModelFileDialog.jpg" />
+										<imagedata fileref="images/screencaps/rename-model-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -75,7 +76,7 @@
 								<title>Refactor Move Action In Model Explorer</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/MoveActionInExplorer.jpg" />
+										<imagedata fileref="images/screencaps/move-model-action-in-explorer.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -87,7 +88,7 @@
 								<title>Move Model Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/MoveToFolderSelectionDialog.jpg" />
+										<imagedata fileref="images/screencaps/move-model-select-location-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -101,7 +102,7 @@
 	<sect1 id="save-as-modelsection">
 		<title>Save Copy of Model</title>
 		<para>The <emphasis role="bold">Save As...</emphasis> action performs a similar function as the 
-			<emphasis role="bold">Refactor Rename</emphasis> action except the renamed model a structural copy of the original model.</para>
+			<emphasis role="bold">Refactor > Rename</emphasis> action except the renamed model is a structural copy of the original model.</para>
 		<note>
 			<para>Each model object maintains it's own unique ID, so copying a model will result in a exact structural copy
 			of your original model but with re-generated unique object IDs. Be aware that locating and copying your models via 
@@ -125,7 +126,7 @@
 								<title>Select Editor Tab</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ModelEditorTabSelected.jpg" />
+										<imagedata fileref="images/screencaps/model-editor-tab-selected.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -137,7 +138,7 @@
 								<title>Save Model As Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SaveModelAsDialog.jpg" />
+										<imagedata fileref="images/screencaps/save-model-as-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -155,7 +156,7 @@
 								<title>Save Model As Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SaveModelAsImportRefsDialog.jpg" />
+										<imagedata fileref="images/screencaps/save-model-as-import-refs-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -211,7 +212,8 @@
 					To clone a model project::
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing model project in the <xref linkend="model-explorer-view" />.</para>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing model 
+								project in the <xref linkend="model-explorer-view" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
@@ -221,7 +223,7 @@
 								<title>Clone Project In Context Menu</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CloneModelProjectOnMenu.jpg" />
+										<imagedata fileref="images/screencaps/clone-project-action.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -229,7 +231,7 @@
 								<title>Clone Project In Project Menu</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ED_MainMenus_Project.jpg" />
+										<imagedata fileref="images/screencaps/clone-project-action-main-menu.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -241,7 +243,7 @@
 								<title>Clone Project In Project Menu</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CloneModelProjectDialog.jpg" />
+										<imagedata fileref="images/screencaps/clone-project-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -249,7 +251,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - (Optional) If you wish to create your 
 								cloned project in a location other than your default
-								workspace location, uncheck the <emphasis role="bold">Use default</emphasis> check-box 
+								workspace location, uncheck the <emphasis role="bold">Use default location</emphasis> check-box 
 								and specify (type in or browse to) a new directory 
 								location on your local file system.</para>
 						</listitem>

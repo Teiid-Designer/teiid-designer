@@ -72,60 +72,6 @@
             id="relationship.ui.navigation.navigationView">
       </view>
    </extension>
-<!-- Action to open the Navigation View in context menus -->
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            objectClass="org.eclipse.emf.ecore.EObject"
-            id="relationship.ui.navigation.actions.openNavigator">
-         <action
-               label="%openNavigatorAction"
-               icon="icons/full/cview16/navigator_view.gif"
-               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
-               enablesFor="1"
-               id="openNavigatorAction">
-         </action>
-      </objectContribution>
-   </extension>
-<!-- Action to open the Navigation View in the Metadata menu -->
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%navigationActionSet.label"
-            visible="false"
-            id="relationship.ui.actions.navigationActionSet">
-         <menu
-               label="%metadata.menu"
-               path="additions"
-               id="metadataMenu">
-            <separator
-                  name="slot1">
-            </separator>
-            <separator
-                  name="slot2">
-            </separator>
-            <separator
-                  name="slot3">
-            </separator>
-            <separator
-                  name="slot4">
-            </separator>
-            <groupMarker
-                  name="com.metamatrix.modeler.ui.groupMarker1">
-            </groupMarker>
-         </menu>            
-         <action
-               label="%openNavigatorAction"
-               icon="icons/full/cview16/navigator_view.gif"
-               helpContextId="relationship.ui.navigation.actions.helpContext"
-               tooltip="%openNavigatorAction"
-               class="com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction"
-               menubarPath="metadataMenu/slot2"
-               enablesFor="1"
-               id="relationship.ui.navigation.actions.metadataOpenNavigator">
-         </action>
-      </actionSet>
-   </extension>
 <!-- Adding the Relationship Custom Diagram Type extension-->
    <extension
          id="customRelationshipDiagramType"
@@ -197,12 +143,6 @@
          <actionSet
                id="metadataActionSet">
          </actionSet>
-         <actionSet
-               id="navigationActionSet">
-         </actionSet>
-         <actionSet
-               id="relationshipSearchActionSet">
-         </actionSet>
       </perspectiveExtension>
    </extension>
 <!-- New Object Wizard for Relationship -->
@@ -251,45 +191,56 @@
             icon="icons/full/obj16/relationshipSearchPage.gif"
             extensions="xmi:1"
             class="com.metamatrix.modeler.internal.relationship.ui.search.RelationshipSearchPage"
-            id="RelationshipSearchPage">
+            id="relationshipSearchPage">
       </page>
    </extension>
-<!-- Action set to get Relationship Search Action in Search Menu -->
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%relationshipSearchActionSet.name"
-            visible="false"
-            id="relationshipSearchActionSet">
-		 <menu
-			   id="org.eclipse.search.menu"
-			   label="%searchMenu.label"
-			   path="navigate">
-			   <groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
-			   <groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
-			   <groupMarker name="quickPage"/>           <!-- to be used by clients      -->		   
-			   <separator name="contextMenuActionsGroup"/>
-		 </menu>              
-         <action
-               definitionId="OpenRelationshipSearchPageAction"
-               label="%openRelationshipSearchAction.label"
-               icon="icons/full/obj16/relationshipSearchPage.gif"
-               tooltip="%openRelationshipSearchAction.tip"
-               class="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageAction"
-               menubarPath="org.eclipse.search.menu/quickPage"
-               id="OpenRelationshipSearchPageAction">
-         </action>
-      </actionSet>
+
+<!-- Handlers, Commands, Menus extensions to add to Teiid Designer submenu in Search Menu -->
+
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="com.metamatrix.modeler.internal.relationship.ui.search.OpenRelationshipSearchPageHandler"
+            commandId="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand">
+		</handler>
    </extension>
+
    <extension
          point="org.eclipse.ui.commands">
-      <command
-            name="%openRelationshipSearchAction.label"
-            description="%openRelationshipSearchAction.tip"
-            categoryId="com.metamatrix.modeler.ui.category.modeler"
-            id="OpenRelationshipSearchPageAction">
-      </command>
-   </extension>      
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand"
+			name="%openRelationshipSearchAction.label">
+	  </command>
+   </extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
+			<!-- Note: The Search menu (re-) definition has to be here due to bug: -->
+			<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
+			<menu
+				label="%searchMenu.label"
+				id="org.eclipse.search.menu">
+				<separator name="internalDialogGroup" visible="false" />
+           		<separator name="dialogGroup" visible="false" />
+           		<separator name="fileSearchContextMenuActionsGroup" visible="true" />
+           		<separator name="teiidDesignerSearchMenuActionsGroup" visible="true" />
+           		<separator name="contextMenuActionsGroup" visible="true" />
+           		<separator name="occurencesActionsGroup" visible="true" />
+           		<separator name="extraSearchGroup" visible="true" />
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
+			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
+				<command commandId="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand"
+					label="%openRelationshipSearchAction.label"
+                 	icon="icons/full/obj16/relationshipSearchPage.gif"
+                 	tooltip="%openRelationshipSearchAction.tip">
+        		</command>
+			</menu>
+		</menuContribution>
+	</extension>
+
    <extension
          id="RelationshipPropertyEditorFactory"
          name="%relationshipPropertyEditorFactory"

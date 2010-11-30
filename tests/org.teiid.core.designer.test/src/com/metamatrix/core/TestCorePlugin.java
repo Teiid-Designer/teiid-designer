@@ -25,11 +25,11 @@ import com.metamatrix.core.util.PluginUtilImpl;
  */
 public class TestCorePlugin extends TestCase {
 
-    public final static String[] REAL_KEYS = new String[] {"RunnableState.Unknown_state_value___7", //$NON-NLS-1$
-        "StreamPipe.The_output_stream_has_been_closed._1" //$NON-NLS-1$
+    public final static String[] REAL_KEYS = new String[] {"stream_closed", //$NON-NLS-1$
+        "invalid_string" //$NON-NLS-1$
     };
-    public final static String[] REAL_VALUES = new String[] {"Unknown state value: ", //$NON-NLS-1$
-        "The output stream has been closed." //$NON-NLS-1$
+    public final static String[] REAL_VALUES = new String[] {"The stream already closed", //$NON-NLS-1$
+        "Value is not valid XML" //$NON-NLS-1$
     };
 
     /**

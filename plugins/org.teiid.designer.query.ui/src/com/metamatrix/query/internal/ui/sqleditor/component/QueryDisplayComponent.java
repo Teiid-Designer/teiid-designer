@@ -263,7 +263,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             this.validationResult = theResult;
         } else {
         	try {
-        		this.validationResult = queryValidator.validateSql(sqlString, this.queryType , false, false);
+        		this.validationResult = queryValidator.validateSql(sqlString, this.queryType , false);
         	} catch (Exception ex) {
                 sqlDisplayNode = DisplayNodeFactory.createUnknownQueryDisplayNode(null,sqlString);
                 

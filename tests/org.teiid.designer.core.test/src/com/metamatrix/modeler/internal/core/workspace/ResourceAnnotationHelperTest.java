@@ -59,7 +59,7 @@ public class ResourceAnnotationHelperTest {
 		mockStatic(ModelResourceContainerFactory.class);
 		Annotation annotation = ModelResourceMockFactory.createAnnotation(true, "Sample Description", //$NON-NLS-1$
 				true, props, false, null);
-		when(ModelResourceContainerFactory.createNewAnnotation(mr.getModelAnnotation())).thenReturn(annotation);
+		when(ModelResourceContainerFactory.createNewAnnotation(mr.getModelAnnotation(), mr.getEmfResource())).thenReturn(annotation);
 		
 		mockStatic(ModelerCore.class);
 		final ModelEditor me = ModelResourceMockFactory.getModelerEditor();

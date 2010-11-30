@@ -53,12 +53,6 @@ public interface IModelerProductContexts extends IProductContexts {
          */
         private static final String VIEWS = "views."; //$NON-NLS-1$
 
-        /**
-         * Preferences category.
-         * 
-         * @since 5.0
-         */
-        private static final String PREFERENCES = "preferences."; //$NON-NLS-1$
     }
 
     /**
@@ -125,21 +119,6 @@ public interface IModelerProductContexts extends IProductContexts {
          * @since 4.4
          */
         IProductContext ID_MODEL_PROJECT_FILTER = new ProductContext(Categories.VIEWS, "modelProjectFilter"); //$NON-NLS-1$
-    }
-
-    /**
-     * A collection of {@link IProductContext}s specific to preference pages.
-     * 
-     * @since 5.0
-     */
-    interface PreferencePages {
-        /**
-         * The context used to determine if modeler preference page should include the functionality of importing and exporting
-         * preferences.
-         * 
-         * @since 5.0
-         */
-        IProductContext ID_IMPORT_EXPORT = new ProductContext(Categories.PREFERENCES, "modelProjectFilter"); //$NON-NLS-1$
     }
 
     /**

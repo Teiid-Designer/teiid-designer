@@ -59,7 +59,7 @@ public class BaseTraversalContext {
 	public String getPath() {
 		String result = elementPath.toString();
 		if(null == result || result.isEmpty()) {
-			result = "/";
+			result = "/"; //$NON-NLS-1$
 		}
 		return result;
 	}

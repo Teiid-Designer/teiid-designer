@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.xml;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.xml.ModelerXmlPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.internal.xml.aspects.sql,
  com.metamatrix.modeler.internal.xml.choice,

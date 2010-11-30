@@ -10,19 +10,21 @@ package com.metamatrix.core.util;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.teiid.core.CorePlugin;
+
+import com.metamatrix.core.modeler.CoreModelerPlugin;
 
 /**
  * TestPluginUtilImpl
  */
 public class TestPluginUtilImpl extends TestCase {
 
-    public static final String PLUGIN_ID = CorePlugin.PLUGIN_ID;
-    public static final String I18N_NAME = PLUGIN_ID + ".util.testResourceBundleUtil"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = CoreModelerPlugin.PLUGIN_ID;
+    public static final String I18N_NAME = "com.metamatrix.core.util.testResourceBundleUtil"; //$NON-NLS-1$
 
     public static String KEY1 = "key1"; //$NON-NLS-1$
     public static String KEY2 = "key2"; //$NON-NLS-1$

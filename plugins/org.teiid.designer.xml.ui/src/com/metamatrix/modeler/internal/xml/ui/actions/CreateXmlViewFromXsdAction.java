@@ -40,7 +40,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelSelectorDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelSelectorInfo;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceViewerFilter;
 import com.metamatrix.modeler.internal.xml.ui.wizards.XmlViewModelSelectionValidator;
 import com.metamatrix.modeler.ui.UiConstants;

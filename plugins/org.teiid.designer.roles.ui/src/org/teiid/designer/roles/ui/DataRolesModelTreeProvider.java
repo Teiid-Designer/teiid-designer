@@ -36,6 +36,9 @@ import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.Schema;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.View;
+import com.metamatrix.metamodels.webservice.Interface;
+import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.metamodels.xml.XmlDocument;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
@@ -180,7 +183,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||
-				eObj instanceof ProcedureParameter ) {
+				eObj instanceof ProcedureParameter ||
+				eObj instanceof Interface ||
+				eObj instanceof Operation ||
+				eObj instanceof XmlDocument) {
 				relObjects.add(eObj);
 			}
 		}
@@ -200,7 +206,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||
-				eObj instanceof ProcedureParameter ) {
+				eObj instanceof ProcedureParameter ||
+				eObj instanceof Interface ||
+				eObj instanceof Operation ||
+				eObj instanceof XmlDocument) {
 				relObjects.add((EObject)eObj);
 			}
 		}

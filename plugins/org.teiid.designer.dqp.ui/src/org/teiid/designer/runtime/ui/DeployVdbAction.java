@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.adminapi.VDB;
@@ -29,7 +30,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     protected static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
 
     protected boolean successfulRefresh = false;
-
+    private static VDB deployedVDB = null;
+    private static String vdbName = null;
+    
     IFile selectedVDB;
     Vdb vdb;
     boolean contextIsLocal = false;
@@ -75,35 +78,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     public void run() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
-        if (server != null) {
-            try {
-                // VDB deployedVDB =
-                deployVdb(server, selectedVDB);
-                // server.getAdmin().deployVdb(selectedVDB);
-                //
-                // if (deployedVDB == null) {
-                // MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                //                                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
-                //                                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", selectedVDB.getName())); //$NON-NLS-1$
-                // } else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
-                // StringBuilder message = new StringBuilder(
-                //                                                              DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-                // for (String error : deployedVDB.getValidityErrors()) {
-                //                        message.append("\nERROR:\t").append(error); //$NON-NLS-1$
-                // }
-                // MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                //                                              DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
-                // message.toString());
-                // }
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                        e,
-                                        DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
-                                                                      selectedVDB.getName(),
-                                                                      server.getUrl()));
-            }
-        }
-
+        deployVdb(server, selectedVDB);
     }
 
     public void selectionChanged( IWorkbenchPart part,
@@ -122,34 +97,59 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         setEnabled(enable);
     }
 
-    public static VDB deployVdb( Server server,
-                                 Object vdbOrVdbFile ) throws Exception {
+    public static VDB deployVdb( final Server server,
+                                 final Object vdbOrVdbFile ) {
 
-        VDB deployedVDB = null;
-        String vdbName = null;
+        if (server == null) {
+        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.title"), //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.message")); //$NON-NLS-1$
+        	return null;
+        } else if( !server.isConnected() ) {
+        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.title"), //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.message", server.getUrl())); //$NON-NLS-1$
+        	return null;
+    	}
 
-        if (vdbOrVdbFile instanceof IFile) {
-            deployedVDB = server.getAdmin().deployVdb((IFile)vdbOrVdbFile);
-            vdbName = ((IFile)vdbOrVdbFile).getName();
-        } else {
-            deployedVDB = server.getAdmin().deployVdb((Vdb)vdbOrVdbFile);
-            vdbName = ((Vdb)vdbOrVdbFile).getName().toString();
-        }
+        BusyIndicator.showWhile(null, new Runnable() {
+			
+			@Override
+			public void run() {
+				
+		        try {
+					if (vdbOrVdbFile instanceof IFile) {
+					    deployedVDB = server.getAdmin().deployVdb((IFile)vdbOrVdbFile);
+					    vdbName = ((IFile)vdbOrVdbFile).getName();
+					} else {
+					    deployedVDB = server.getAdmin().deployVdb((Vdb)vdbOrVdbFile);
+					    vdbName = ((Vdb)vdbOrVdbFile).getName().toString();
+					}
 
-        if (deployedVDB == null) {
-            MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
-                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", vdbName)); //$NON-NLS-1$
-        } else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
-            StringBuilder message = new StringBuilder(
-                                                      DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-            for (String error : deployedVDB.getValidityErrors()) {
-                message.append("\n\nERROR:\t").append(error); //$NON-NLS-1$
-            }
-            MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                                      DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
-                                      message.toString());
-        }
+					if (deployedVDB == null) {
+					    MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+					                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
+					                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", vdbName)); //$NON-NLS-1$
+					} else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
+					    StringBuilder message = new StringBuilder(
+					                                              DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
+					    for (String error : deployedVDB.getValidityErrors()) {
+					        message.append("\n\nERROR:\t").append(error); //$NON-NLS-1$
+					    }
+					    MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+					                              DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
+					                              message.toString());
+					}
+				} catch (Exception e) {
+					DqpUiConstants.UTIL.log(IStatus.ERROR,
+                            e,
+                            DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
+                            							  vdbName,
+                                                          server.getUrl()));
+				}
+			}
+		});
+
 
         return deployedVDB;
     }

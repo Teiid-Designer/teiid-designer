@@ -6,7 +6,7 @@
 
    <extension
        id="org.teiid.designer.datatools.profiles.ldap.ConnectionInfoProvider"
-       name="%salesForceConnectionInfoProvider"
+       name="%ldapConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
@@ -22,5 +22,75 @@
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile"
             name="LDAP"/>
+   </extension>
+   
+	<extension point="org.eclipse.datatools.connectivity.driverExtension">
+		<category parentCategory="org.eclipse.datatools.connectivity.db.driverCategory"
+			id="org.teiid.designer.datatools.connectivity.driver.modeShapeCategory"
+			name="ModeShape"
+			description="Driver for ModeShape Federating JCR" />
+		
+		<driverTemplate
+        createDefault="false"
+        defaultDefinitionName="ModeShape Driver"
+        description="Driver for ModeShape Federating JCR"
+        emptyJarListIsOK="false"
+        id="org.teiid.designer.datatools.connectivity.driver.modeShapeDriverTemplate"
+        jarList="modeshape-client.jar"
+        name="ModeShape JDBC Driver"
+        parentCategory="org.teiid.designer.datatools.connectivity.driver.modeShapeCategory">
+			<properties>
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.driverClass" name="Driver Class"
+					value="org.modeshape.jdbc.JcrDriver" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.vendor" name="Vendor"
+					value="ModeShape" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.version" name="Version"
+					value="2.2" required="true" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
+					value="jdbc:jcr:http://localhost:8080/modeshape-rest/repository" required="true"
+					visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.username" name="User ID"
+					value="" required="false" visible="true" />
+				<property generated="false"
+					id="org.eclipse.datatools.connectivity.db.password" name="Password"
+					required="false" visible="true" />
+			</properties>
+		</driverTemplate>
+
+	</extension>
+ <extension
+       point="org.eclipse.datatools.connectivity.sqm.core.databaseDefinition">
+    <definition
+          allowsConnections="true"
+          description="Definition of the ModeShape Database"
+          file="src/org/teiid/designer/datatools/profiles/modeshape/database/modeshapeDB.xmi"
+          product="Mo0deShape"
+          productDisplayString="ModeShape"
+          version="2.2"
+          versionDisplayString="2.2">
+    </definition>
+ </extension>
+ <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+         <category
+            id="org.eclipse.datatools.connectivity.db.category"
+            name="Database Connections"/>
+      <connectionProfile
+            category="org.eclipse.datatools.connectivity.db.category"
+            icon="icons/modeshape_icon_16px.png"
+            id="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"
+            name="ModeShape Federating JCR"
+            pingFactory="org.teiid.designer.datatools.profiles.modeshape.ModeShapeJDBCConnectionFactory"
+            propertiesPersistenceHook="org.teiid.designer.datatools.profiles.modeshape.ModeShapePersistanceHook"/>
+      <connectionFactory
+            class="org.teiid.designer.datatools.profiles.modeshape.ModeShapeJDBCConnectionFactory"
+            id="java.sql.Connection"
+            name="JDBC Connection"
+            profile="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
    </extension>
 </plugin>

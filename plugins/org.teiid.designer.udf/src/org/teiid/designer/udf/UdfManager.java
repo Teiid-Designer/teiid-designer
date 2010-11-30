@@ -59,6 +59,8 @@ import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUti
 public final class UdfManager implements IResourceChangeListener {
 
     public static final UdfManager INSTANCE = new UdfManager();
+    
+    public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
 
     private FunctionLibrary functionLibrary;
 
@@ -370,7 +372,7 @@ public final class UdfManager implements IResourceChangeListener {
 					}
                 }
             }
-            functionLibrary = new FunctionLibrary(SystemFunctionManager.getSystemFunctions(),
+            functionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(),
                                                   new FunctionTree(new UDFSource(methods)));
         }
         return functionLibrary;

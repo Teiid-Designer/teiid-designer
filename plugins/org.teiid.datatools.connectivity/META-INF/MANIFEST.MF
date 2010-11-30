@@ -4,12 +4,14 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.teiid.datatools.connectivity;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.teiid.datatools.connectivity.Activator
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: %pluginProvider
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity,
  org.eclipse.datatools.connectivity.sqm.core,
- org.eclipse.datatools.sqltools.parsers.sql
+ org.eclipse.datatools.sqltools.parsers.sql,
+ org.eclipse.datatools.connectivity.sqm.server.ui,
+ org.teiid.datatools.connectivity.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.datatools.modelbase.dbdefinition,
@@ -19,4 +21,5 @@ Import-Package: org.eclipse.datatools.modelbase.dbdefinition,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.ecore.xmi.impl
 Bundle-Localization: plugin
-Export-Package: org.teiid.datatools.connectivity
+Export-Package: org.teiid.datatools.connectivity,
+ org.teiid.datatools.connectivity.sql

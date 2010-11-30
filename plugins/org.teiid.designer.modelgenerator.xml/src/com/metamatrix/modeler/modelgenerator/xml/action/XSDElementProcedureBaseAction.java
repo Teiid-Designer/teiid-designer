@@ -7,7 +7,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -111,10 +110,10 @@ public abstract class XSDElementProcedureBaseAction extends
 			try {
 				modelResource.getEmfResource().getContents().add(schema);
 			} catch (ModelWorkspaceException e) {
-				String message = util.getString("XSDElementProcedureBaseAction.error.creating.schema.in.resource", new Object[] {modelResource.getResource().getName()});
-				MessageDialog.openError(getShell(), message, e.getMessage()); //$NON-NLS-1$
+				String message = util.getString("XSDElementProcedureBaseAction.error.creating.schema.in.resource", new Object[] {modelResource.getResource().getName()}); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), message, e.getMessage());
 				util.log(IStatus.ERROR, e, 
-						message); //$NON-NLS-1$
+						message);
 			}
 			schema.setName(element.getName());
 			schema.setNameInSource(element.getName());
@@ -125,26 +124,25 @@ public abstract class XSDElementProcedureBaseAction extends
 			try {
 				builder.build(elements, getTraversalCtxFactory());
 			} catch (ModelerCoreException e) {
-				String message = util.getString("XSDElementProcedureBaseAction.error.creating.procedure");
-				MessageDialog.openError(getShell(), message, e.getMessage()); //$NON-NLS-1$
+				String message = util.getString("XSDElementProcedureBaseAction.error.creating.procedure"); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), message, e.getMessage());
 				util.log(IStatus.ERROR, e, 
-						message); //$NON-NLS-1$
+						message);
 
 			}
 
 			WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
 				@Override
-				public void execute(final IProgressMonitor monitor)
-						throws CoreException {
+				public void execute(final IProgressMonitor monitor) {
 					try {
 						ModelUtilities.saveModelResource(modelResource,
 								monitor, false, this);
 					} catch (Exception e) {
-						String message = util.getString("XSDElementProcedureBaseAction.error.saving.resource", new Object[] {modelResource.getResource().getName()});
-						MessageDialog.openError(getShell(), message, e.getMessage()); //$NON-NLS-1$
+						String message = util.getString("XSDElementProcedureBaseAction.error.saving.resource", new Object[] {modelResource.getResource().getName()}); //$NON-NLS-1$
+						MessageDialog.openError(getShell(), message, e.getMessage());
 						util.log(IStatus.ERROR, e, 
-								message); //$NON-NLS-1$
+								message);
 					}
 
 					builder.createTransformations();
@@ -153,10 +151,10 @@ public abstract class XSDElementProcedureBaseAction extends
 						ModelUtilities.saveModelResource(modelResource,
 								monitor, false, this);
 					} catch (Exception e) {
-						String message = util.getString("XSDElementProcedureBaseAction.error.saving.resource", new Object[] {modelResource.getResource().getName()});
-						MessageDialog.openError(getShell(), message, e.getMessage()); //$NON-NLS-1$
+						String message = util.getString("XSDElementProcedureBaseAction.error.saving.resource", new Object[] {modelResource.getResource().getName()}); //$NON-NLS-1$
+						MessageDialog.openError(getShell(), message, e.getMessage());
 						util.log(IStatus.ERROR, e, 
-								message); //$NON-NLS-1$
+								message);
 					}
 
 				}
@@ -168,10 +166,10 @@ public abstract class XSDElementProcedureBaseAction extends
 			} catch (Exception ex) {
 				if (ex instanceof InvocationTargetException) {
 					Throwable e = ((InvocationTargetException) ex).getTargetException();
-					String message = util.getString("XSDElementProcedureBaseAction.error.creating.procedure");
-					MessageDialog.openError(getShell(), message, e.getMessage()); //$NON-NLS-1$
+					String message = util.getString("XSDElementProcedureBaseAction.error.creating.procedure"); //$NON-NLS-1$
+					MessageDialog.openError(getShell(), message, e.getMessage());
 					util.log(IStatus.ERROR, e, 
-							message); //$NON-NLS-1$
+							message);
 				}
 				ex.printStackTrace();
 			}

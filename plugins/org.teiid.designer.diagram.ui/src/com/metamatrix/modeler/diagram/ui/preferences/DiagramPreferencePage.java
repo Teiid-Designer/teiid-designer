@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.diagram.ui.preferences;
 
 import java.util.Iterator;
+import java.util.List;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -168,11 +169,11 @@ public class DiagramPreferencePage extends PreferencePage
 
     private NotationIDAndName[] getNotations() {
         DiagramNotationManager mgr = DiagramUiPlugin.getDiagramNotationManager();
-        java.util.List /*<NotationIDAndName>*/notationList = mgr.getDiagramNotationInfo();
+        List<NotationIDAndName> notationList = mgr.getDiagramNotationInfo();
         NotationIDAndName[] notationArray = new NotationIDAndName[notationList.size()];
-        Iterator it = notationList.iterator();
+        Iterator<NotationIDAndName> it = notationList.iterator();
         for (int i = 0; it.hasNext(); i++) {
-            notationArray[i] = (NotationIDAndName)it.next();
+            notationArray[i] = it.next();
         }
         return notationArray;
     }
@@ -212,7 +213,7 @@ public class DiagramPreferencePage extends PreferencePage
     private void selectDefaultRouter() {
         String prefName = PluginConstants.Prefs.DIAGRAM_ROUTER_STYLE;
         String router = getPreferenceStore().getDefaultString(prefName);
-        selectNotation(router);
+        selectRouter(router);
     }
 
     private void selectRouter( String router ) {
@@ -298,7 +299,7 @@ public class DiagramPreferencePage extends PreferencePage
         selectDefaultNotation();
         selectDefaultRouter();
         appearanceProcessor.performDefaults();
-        modelSizeTextField.setText(String.valueOf(getPreferenceStore().getInt(PluginConstants.Prefs.LARGE_MODEL_SIZE)));
+        modelSizeTextField.setText(String.valueOf(getPreferenceStore().getDefaultInt(PluginConstants.Prefs.LARGE_MODEL_SIZE)));
         selectDefaultShowFKValues();
     }
 

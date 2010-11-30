@@ -7,7 +7,6 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.internal.webservice.gen,
- com.metamatrix.modeler.internal.webservice.procedure,
  com.metamatrix.modeler.webservice,
  com.metamatrix.modeler.webservice.procedure
 Bundle-Localization: plugin

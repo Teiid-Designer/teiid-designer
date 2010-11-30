@@ -216,11 +216,23 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         //
 
         //
-        // ROW 1 - object type group
+        // ROW 1 - properties group
+        //
+
+        final int PROPERTIES_COLS = 4;
+        Group pnl = WidgetFactory.createGroup(pnlMain, Util.getString(PREFIX + "group.criteria"), //$NON-NLS-1$
+                                        GridData.FILL_BOTH,
+                                        MAIN_COLS,
+                                        PROPERTIES_COLS);
+        pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
+        createPropertiesPanelContents(pnl, PROPERTIES_COLS);
+        
+        //
+        // ROW 2 - object type group
         //
 
         final int OBJ_TYPE_COLS = 3;
-        Group pnl = WidgetFactory.createGroup(pnlMain, Util.getString(PREFIX + "group.objectType"), //$NON-NLS-1$
+        pnl = WidgetFactory.createGroup(pnlMain, Util.getString(PREFIX + "group.objectType"), //$NON-NLS-1$
                                               GridData.FILL_BOTH,
                                               MAIN_COLS,
                                               OBJ_TYPE_COLS);
@@ -228,7 +240,7 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         createObjectTypePanelContents(pnl, OBJ_TYPE_COLS);
 
         //
-        // ROW 2 - data type group
+        // ROW 3 - data type group
         //
 
         final int DATA_TYPE_COLS = 3;
@@ -238,18 +250,6 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
                                         DATA_TYPE_COLS);
         pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
         createDataTypePanelContents(pnl, DATA_TYPE_COLS);
-
-        //
-        // ROW 3 - properties group
-        //
-
-        final int PROPERTIES_COLS = 4;
-        pnl = WidgetFactory.createGroup(pnlMain, Util.getString(PREFIX + "group.properties"), //$NON-NLS-1$
-                                        GridData.FILL_BOTH,
-                                        MAIN_COLS,
-                                        PROPERTIES_COLS);
-        pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
-        createPropertiesPanelContents(pnl, PROPERTIES_COLS);
 
         //
         // ROW 4 Scope is added by SearchPage framework
@@ -1243,6 +1243,16 @@ public final class MetadataSearchPage extends DialogPage implements ISearchPage,
         }
     }
 
+    @Override
+    public void setVisible( boolean visible ) {
+        // make sure "Search" button is enabled correctly
+        if (visible) {
+            updateSearchState();
+        }
+
+        super.setVisible(visible);
+    }
+    
     private void updatePropertyCriteria() {
         if (this.chkIncludeProperty.getSelection() && this.chkIncludeProperty.getEnabled()) {
             String pattern = this.cbxTextPattern.getText().trim();

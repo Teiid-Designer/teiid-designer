@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jboss.project</groupId>
+	<groupId>org.jboss.tools</groupId>
 	<artifactId>${docname}-${translation}</artifactId>
 	<version>1.0</version>
 	<packaging>jdocbook</packaging>
@@ -220,7 +220,7 @@
 		              <imageResource>
 		                 <directory>${project.basedir}/en-US</directory>
 		                 <includes>
-		                    <include>images/*.png</include>
+				    <include>images/**/*</include>
 		                 </includes>
 		              </imageResource>
 		              <formats>

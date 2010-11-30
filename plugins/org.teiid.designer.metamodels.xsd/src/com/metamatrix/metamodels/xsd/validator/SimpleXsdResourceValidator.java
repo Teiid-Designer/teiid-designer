@@ -10,6 +10,7 @@ package com.metamatrix.metamodels.xsd.validator;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.util.XSDResourceImpl;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.xsd.XsdPlugin;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -83,8 +85,14 @@ public class SimpleXsdResourceValidator implements ResourceValidator {
             final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
             final ModelResource mResource = workspace.findModelResource(iResource);
 
-            final Resource eResource = mResource.getEmfResource();
-            validate(monitor, eResource, iResource, context);
+            if( mResource != null ) {
+                final Resource eResource = mResource.getEmfResource();
+                validate(monitor, eResource, iResource, context);
+            } else {
+            	final String msg = XsdPlugin.Util.getString("SimpleXsdResourceValidator.Could_not_find_model_resource", iResource.getName()); //$NON-NLS-1$
+            	XsdPlugin.Util.log(IStatus.WARNING, msg);
+            }
+
 
         } else if (obj instanceof XSDResourceImpl) {
             final XSDResourceImpl eResource = (XSDResourceImpl)obj;

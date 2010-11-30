@@ -5,7 +5,8 @@
 
 <chapter id="main-menu-chapter">
 	<title>Teiid Designer Main Menu</title>
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 
 	<para>There are 8 categories of actions on Teiid Designer's main menu bar. </para>
 	<itemizedlist>
@@ -14,28 +15,28 @@
 				These categories include:
 				<itemizedlist>
 					<listitem>
-						<para><link linkend="file-menu-section"><emphasis role="bold">File </emphasis></link> - Resource management actions.</para>
+						<para><xref linkend="file-menu-section" /> - Resource management actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="edit-menu-section"><emphasis role="bold">Edit </emphasis></link> - Standard edit actions including undo/redo.</para>
+						<para><xref linkend="edit-menu-section" /> - Standard edit actions including undo/redo.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="refactor-menu-section"><emphasis role="bold">Refactor </emphasis></link> - Resource actions (i.e. Rename, Move, etc...).</para>
+						<para><xref linkend="refactor-menu-section" /> - Resource actions (i.e. Rename, Move, etc...).</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="search-menu-section"><emphasis role="bold">Search </emphasis></link> - Find data within your workspace.</para>
+						<para><xref linkend="search-menu-section" /> - Find data within your workspace.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="project-menu-section"><emphasis role="bold">Project </emphasis></link> - Model level actions.</para>
+						<para><xref linkend="project-menu-section" /> - Model level actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="metadata-menu-section"><emphasis role="bold">Metadata </emphasis></link> - Custom metadata-related actions.</para>
+						<para><xref linkend="metadata-menu-section" /> - Custom metadata-related actions.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="window-menu-section"><emphasis role="bold">Window </emphasis></link> - Change perspectives or add/remove views to your perspective.</para>
+						<para><xref linkend="window-menu-section" /> - Change perspectives or add/remove views to your perspective.</para>
 					</listitem>
 					<listitem>
-						<para><link linkend="help-menu-section"><emphasis role="bold">Help </emphasis></link> - Access available Teiid Designer help documents, 
+						<para><xref linkend="help-menu-section" /> - Access available Teiid Designer help documents, 
 							Teiid Designer SQL Support Guide and Eclipse Overview information.</para>
 					</listitem>
 				</itemizedlist>
@@ -46,7 +47,7 @@
 		<title>Application Main Menu</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="images/screencaps/DesignerMainMenuBar.jpg"/>
+				<imagedata fileref="images/screencaps/designer-main-menu-bar.png"/>
 			</imageobject>
 		</mediaobject>
 	</figure>
@@ -60,7 +61,7 @@
 			<title>File Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_File.jpg"/>
+					<imagedata fileref="images/screencaps/main-menus-file.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -71,7 +72,7 @@
 			<title>File Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_File_New.jpg"/>
+					<imagedata fileref="images/screencaps/main-menus-file-new.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -84,7 +85,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/newproject_wiz.gif"/>
+										<imagedata fileref="images/icons/new-project-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Model Project</emphasis> - Create user a new 
 								model project.
@@ -94,7 +95,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/newfolder.gif"/>
+										<imagedata fileref="images/icons/new-folder.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Folder</emphasis> - Create new folder 
 								within an existing project or folder.
@@ -104,43 +105,21 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/newmodel_wiz.gif"/>
+										<imagedata fileref="images/icons/new-model-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Model</emphasis> - Create a new model of
 								a specified model type and class using 
-								the <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link>.
+								the <xref linkend="newmodels-chapter" />.
 							</para>
 						</listitem>
 						<listitem>
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/newvdb_wiz.gif"/>
+										<imagedata fileref="images/icons/ne-vdb-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Virtual Database Definition</emphasis> - Create a new VDB, or
 								Virtual Database Definition.
-							</para>
-						</listitem>
-						<listitem>
-							<para>
-								<inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/addprj_wiz.gif"/>
-									</imageobject>
-								</inlinemediaobject> <emphasis role="bold">Add Existing Project... </emphasis> - Add an existing 
-								Teiid Designer project into your workspace.
-							</para>
-						</listitem>
-						<listitem>
-							<para>
-								<inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/addprj_wiz.gif"/>
-									</imageobject>
-								</inlinemediaobject> <emphasis role="bold">Add Existing Model Project Set...</emphasis> - Import
-								an existing <emphasis role="bold">Model Project Set</emphasis> from your file system. A 
-								<emphasis role="bold">Model Project Set</emphasis>an be exported via the
-								<emphasis role="bold">Export</emphasis> action.
 							</para>
 						</listitem>
 						<listitem>
@@ -162,7 +141,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/save_edit.gif"/>
+										<imagedata fileref="images/icons/save-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Save (Ctrl+S)</emphasis> - Saves the contents of 
 									the active editor.
@@ -172,7 +151,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/saveas_edit.gif"/>
+										<imagedata fileref="images/icons/save-as-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Save As</emphasis> - Enables you to save the 
 									contents of the active editor under another file name or location. 
@@ -182,16 +161,10 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/saveall_edit.gif"/>
+										<imagedata fileref="images/icons/save-all-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Save All (Shift+Ctrl+S)</emphasis> - Saves the 
 									contents of all open editors.
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Revert</emphasis> - Replaces the contents of the 
-									active editor with the previously saved contents. Currently not implemented for Teiid Designer models
-									or VDBs.
 							</para>
 						</listitem>
 						<listitem>
@@ -218,7 +191,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/print_edit.gif"/>
+										<imagedata fileref="images/icons/print-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Print (Ctrl+P)</emphasis> - Prints the contents 
 									of the active editor. In the Teiid Designer, this action prints the diagram in the selected editor. 
@@ -241,7 +214,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import.gif"/>
+										<imagedata fileref="images/icons/import.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Import</emphasis> - Launches the 
 									<emphasis role="bold">Import Wizard</emphasis> which provides several ways to 
@@ -252,7 +225,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/export.gif"/>
+										<imagedata fileref="images/icons/export.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Export</emphasis> - Launches the 
 									<emphasis role="bold">Export Wizard</emphasis> which provides options for exporting model data.
@@ -293,7 +266,7 @@
 			<title>Edit Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Edit.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-edit.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -329,7 +302,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/undo_edit.gif"/>
+										<imagedata fileref="images/icons/undo-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Undo</emphasis> - Reverses the effect of the 
 								most recent command.
@@ -339,7 +312,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/redo_edit.gif"/>
+										<imagedata fileref="images/icons/redo-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Redo</emphasis> - Reapplies the most recently
 								 undone command.
@@ -349,7 +322,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/cut_edit.gif"/>
+										<imagedata fileref="images/icons/cut-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) 
 								and copies it to the clipboard.
@@ -359,7 +332,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/copy_edit.gif"/>
+										<imagedata fileref="images/icons/copy-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected 
 								object(s) to the clipboard.
@@ -369,7 +342,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/paste_edit.gif"/>
+										<imagedata fileref="images/icons/paste-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the 
 								clipboard to the selected context.
@@ -389,9 +362,13 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/delete_edit.gif"/>
+										<imagedata fileref="images/icons/delete-edit.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Select All</emphasis> - Select All objects in current view. 
 							</para>
 						</listitem>
 						<listitem>
@@ -440,7 +417,7 @@
 			<title>Refactor Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Refactor.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-refactor.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -473,6 +450,21 @@
 		</itemizedlist>
 		
 	</sect1>
+	<!-- ####### NAVIGATE MENU ######################################## -->
+
+	<sect1 id="navigate-menu-section">
+		<title>Navigate Menu</title>
+		<para>Teiid Designer currently does not contribute actions to the Navigate menu. See Eclipse documention for details.</para>
+		
+		<figure>
+			<title>Navigate Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/main-menu-navigate.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
 	
 	<!-- ####### SEARCH MENU ######################################## -->
 
@@ -484,7 +476,16 @@
 			<title>Search Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Search.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-search.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>Teiid Designer contributes a sub-menu (i.e.  Teiid Designer > ) to the main search menu, as shown above.</para>
+		<figure>
+			<title>Search Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/teiid-designer-search-menu.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -492,58 +493,25 @@
 		<itemizedlist>
 			<listitem>
 				<para>
-					The <emphasis role="bold">Search</emphasis> menu contains the following actions: 
+					The individual actions in the Teiid Designer sub-menu are described below:
 					<itemizedlist>
 						<listitem>
 							<para><inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/metadata_search.gif"/>
-									</imageobject>
-								</inlinemediaobject> <emphasis role="bold">Search...</emphasis> - Launches the 
-								standard Search dialog, which can be used to find resource containing specific
-								text or expressions and filter based on file name patterns. For standard Eclipse 
-								installations, the default search tile will be File Search.
-							</para>
-						</listitem>
-						<listitem>
-							<para><inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/metadata_search.gif"/>
-									</imageobject>
-								</inlinemediaobject> <emphasis role="bold">File...</emphasis> - Launches the 
-								standard Search dialog, which can be used to find resource containing specific
-								text or expressions and filter based on file name patterns. The File Search 
-								tab will be selected in the dialog.
-							</para>
-						</listitem>
-						<listitem>
-							<para><inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/opentype.gif"/>
-									</imageobject>
-								</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
-								Find Model Object dialog, which can be used to find an object in the 
-								workspace by specifying all or part of its name.  Selecting the object 
-								will open it in the appropriate editor.
-							</para>
-						</listitem>
-						<listitem>
-							<para><inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+										<imagedata fileref="images/icons/relationship-search-page.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
 								Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
 								by specifying a relationship type, participant locations, and/or names containing sprcified
 								text.  Search results appear in 
-								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								the <xref linkend="search-results-view" /> view, 
 								and double-clicking a result will open that model in the appropriate editor.
 							</para>
 						</listitem>
 						<listitem>
 							<para><inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/search_transformation.gif"/>
+										<imagedata fileref="images/icons/search-transformation.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
 								Transformation Search dialog.  User can search models in 
@@ -554,14 +522,25 @@
 						<listitem>
 							<para><inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/metadata_search.gif"/>
+										<imagedata fileref="images/icons/metadata-search.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Metadata...</emphasis> - Launches the 
 								Search dialog.  User can search for models in the workspace by 
 								specifying an Object Type, and/or a Data Type, and/or a property value.  
 								Search results appear in 
-								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								the <xref linkend="search-results-view" /> view, 
 								and double-clicking a result will open that model in the appropriate editor.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/open-type.png"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
+								Find Model Object dialog, which can be used to find an object in the 
+								workspace by specifying all or part of its name.  Selecting the object 
+								will open it in the appropriate editor.
 							</para>
 						</listitem>
 					</itemizedlist>
@@ -574,13 +553,11 @@
 
 	<sect1 id="project-menu-section">
 		<title>Project Menu</title>
-		<para>The <emphasis role="bold">Project Menu</emphasis> menu ...</para>
-		
 		<figure>
 			<title>Project Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Project.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-project.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -588,7 +565,7 @@
 		<itemizedlist>
 			<listitem>
 				<para>
-					The <emphasis role="bold">Project</emphasis> menu contains the following actions:
+					The individual actions in the Project menu are described below:
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Open Project</emphasis> - Launches the <emphasis role="bold">Open Project</emphasis> dialog.
@@ -601,7 +578,7 @@
 						<listitem>
 							<para><inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/build_exec.gif"/>
+										<imagedata fileref="images/icons/build-exec.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Build All</emphasis> - Validates the contents of the entire workspace. 
 								Any errors or warnings will appear in the <emphasis role="bold">Problems View</emphasis>.
@@ -629,11 +606,7 @@
 								turned on, validation of changes is done automatically each time a <emphasis role="bold">Save</emphasis> is done.
 							</para>
 						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Validate Model Transformations</emphasis> - Revalidates all 
-								transformations for the selected view model.
-							</para>
-						</listitem>
+
 						<listitem>
 							<para><emphasis role="bold">Clone Project</emphasis> - Launches the 
 								<emphasis role="bold">Clone Project</emphasis> dialog.
@@ -647,6 +620,15 @@
 						<listitem>
 							<para><emphasis role="bold">Build All Imports</emphasis> - Reconciles all model import 
 								dependencies for models contained within the workspace.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Packages</emphasis> - TBD
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Validate Model Transformations</emphasis> - Revalidates all 
+								transformations for the selected view model.
 							</para>
 						</listitem>
 						<listitem>
@@ -670,7 +652,7 @@
 			<title>Metadata Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Metadata.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-metadata.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -681,22 +663,9 @@
 					The <emphasis role="bold">Metadata</emphasis> menu contains the following actions:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Rebuild VDB</emphasis> - Performs a complete re-validation of the 
-								contents of the selected VDB.
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Import...</emphasis> - Launches <emphasis role="bold">Import Wizard</emphasis>.
-							</para>
-						</listitem>
-						<listitem>
 							<para><emphasis role="bold">Update Model from Source</emphasis> - If the selected model is a 
 								relational source model that was originally created via JDBC Import, then the model will be
 								updated based on changes in the database schema.
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Export...</emphasis> - Launches <emphasis role="bold">Export Wizard</emphasis>.
 							</para>
 						</listitem>
 						<listitem>
@@ -707,12 +676,12 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Show System Catalog</emphasis> - Opens the 
-								<link linkend="system-catalog-view"><emphasis role="bold">System Catalog View</emphasis></link>.
+								<xref linkend="system-catalog-view" />.
 							</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Show Datatype Hierarchy</emphasis> - Opens the 
-								<link linkend="system-catalog-view"><emphasis role="bold">Datatype Hierarchy View</emphasis></link>.
+								<xref linkend="system-catalog-view" />.
 							</para>
 						</listitem>
 						<listitem>
@@ -741,6 +710,22 @@
 			</listitem>
 		</itemizedlist>
 	</sect1>
+
+	<!-- ####### RUN MENU ######################################## -->
+
+	<sect1 id="run-menu-section">
+		<title>Run Menu</title>
+		<para>Teiid Designer currently does not contribute actions to the Run menu. See Eclipse documention for details.</para>
+		
+		<figure>
+			<title>Window Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/main-menu-run.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>	
 	
 	<!-- ####### WINDOW MENU ######################################## -->
 
@@ -753,7 +738,24 @@
 			<title>Window Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Window.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-windows.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>The Preferences...  action launches the Preferences dialog, which can be used 
+			to set preferences and default values for many features of Teiid Designer.</para>
+
+		<para>Note that these menu items may vary depending on your set of installed Eclipse features and plugins.</para>
+
+		<para>If you wish to customize a perspective to include one or more Teiid Designer views, 
+			select the Show View > Other...  action and expand the Teiid Designer category 
+			to show the available views.</para>
+		<figure>
+			<title>Show View Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/show-view-dialog.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -770,10 +772,74 @@
 			<title>Help Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ED_MainMenus_Help.jpg"/>
+					<imagedata fileref="images/screencaps/main-menu-help.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<itemizedlist>
+			<listitem>
+				<para>The individual actions are described below:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis>Welcome</emphasis> - Shifts to the Welcome perspective, which contains links to documentation, examples and ‘how-to’ starting points.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Help Contents</emphasis><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/help-contents.png"/>
+									</imageobject>
+								</inlinemediaobject> - Launches the Help Window.  All of Designer’s online documentation is accessible from there as well.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Search</emphasis><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/help-search.png"/>
+									</imageobject>
+								</inlinemediaobject>  - Launches the Help Search view, which can be used to search for phrases in the documentation.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Dynamic Help</emphasis> - Opens the  docked  dynamic help  view.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Key Assist</emphasis> (Cntl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Tips and Tricks...</emphasis> - Launches a dialog to select one of any contributed "Tips and Tricks" help pages.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Cheat Sheets...</emphasis> - Launches a dialog to select one of any contributed Eclipse cheat sheets.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Project Examples..</emphasis>. - A JBoss contributed action which provides quick access to import various project examples into your workspace.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Report Problem</emphasis> - A JBoss contributed action which provides simple problem reporting.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Check for Updates...</emphasis> - provides access to retrieve updates to installed Eclipse software.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>Install New Software...</emphasis> - provides access to install new software into your workbench.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis>About XXXXX</emphasis> - Launches the About dialog.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
 	</sect1>
 
 </chapter>

@@ -225,6 +225,20 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
 
         return props.getProperty(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, StringUtil.Constants.EMPTY_STRING);
     }
+    
+    public void setTranslatorName( ModelResource modelResource, String translatorName ) {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(translatorName, "translatorName"); //$NON-NLS-1$
+        
+        try {
+            getHelper().setProperty(modelResource, TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, translatorName);
+        } catch (Exception e) {
+            DatatoolsPlugin.Util.log(IStatus.ERROR,
+                                     e,
+                                     DatatoolsPlugin.Util.getString("errorFindingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
+                                                                    modelResource.getItemName()));
+        }
+    }
 
     /**
      * @param model the model whose JNDI data source name is being requested

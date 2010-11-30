@@ -221,7 +221,12 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
 
             // if the actions map indicates that a default action should be used, the map will not contain that
             // action. need to get it from the service
-            IAction action = (globalActions.isDefaultAction(actionId)) ? actionService.getDefaultAction(actionId) : (IAction)entry.getValue();
+            IAction action = null;
+            if( globalActions.isDefaultAction(actionId) && actionService != null ) {
+            	action = actionService.getDefaultAction(actionId);
+            } else {
+            	action = (IAction)entry.getValue();
+            }
 
             if (action == null) {
                 action = GlobalActionsMap.UNSUPPORTED_ACTION;

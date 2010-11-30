@@ -176,8 +176,6 @@ public class DiagramEditor extends GraphicalEditor
     private final Map adapterMap = new HashMap();
 
     public DiagramEditor() {
-        DiagramUiUtilities.setLoggingLevel(DiagramUiUtilities.LOG_NONE);
-
         setEditDomain(new DefaultEditDomain(this));
         sNotationId = DiagramUiPlugin.getDiagramNotationManager().getCurrentExtensionId();
         viewer = new DiagramViewer(this);
@@ -1094,7 +1092,9 @@ public class DiagramEditor extends GraphicalEditor
         // by
         // calling
         // openContext(null)
-        openContext(null);
+    	if( getCurrentModel() != null && getCurrentModel().getDiagram() !=  null && !getCurrentModel().getDiagram().eIsProxy() ) {
+    		openContext(null);
+    	}
     }
 
     /**

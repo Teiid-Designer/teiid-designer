@@ -257,13 +257,24 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
         //
         // pnlMain contents
         //
+        
+        //
+        // ROW 3 - name group
+        //
 
+        final int NAME_COLS = 2;
+        Group pnl = WidgetFactory.createGroup(pnlMain, UTIL.getString(PREFIX + "group.name"), //$NON-NLS-1$
+                                        GridData.FILL_BOTH,
+                                        MAIN_COLS,
+                                        NAME_COLS);
+        pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
+        createNamePanelContents(pnl, NAME_COLS);
         //
         // ROW 1 - type group
         //
 
         final int TYPE_COLS = 3;
-        Group pnl = WidgetFactory.createGroup(pnlMain, UTIL.getString(PREFIX + "group.type"), //$NON-NLS-1$
+        pnl = WidgetFactory.createGroup(pnlMain, UTIL.getString(PREFIX + "group.type"), //$NON-NLS-1$
                                               GridData.FILL_BOTH,
                                               MAIN_COLS,
                                               TYPE_COLS);
@@ -281,18 +292,6 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
                                         PARTICIPANT_COLS);
         pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
         createParticipantPanelContents(pnl, PARTICIPANT_COLS);
-
-        //
-        // ROW 3 - name group
-        //
-
-        final int NAME_COLS = 2;
-        pnl = WidgetFactory.createGroup(pnlMain, UTIL.getString(PREFIX + "group.name"), //$NON-NLS-1$
-                                        GridData.FILL_BOTH,
-                                        MAIN_COLS,
-                                        NAME_COLS);
-        pnl.setFont(JFaceResources.getDefaultFont()); // undo bold font WidgetFactory assigned
-        createNamePanelContents(pnl, NAME_COLS);
 
         //
         // ROW 4 Scope is added by SearchPage framework

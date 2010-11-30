@@ -24,7 +24,7 @@ public interface ITransformationDiagramActionConstants {
         boolean UNDO_ADD_TRANSFORMATION_SOURCE = false;
         boolean UNDO_ADD_UNION_SOURCE = true; // NO_UCD
         boolean UNDO_REMOVE_TRANSFORMATION_SOURCE = true;
-        boolean UNDO_CLEAR_TRANSFORMATION = true;
+        boolean UNDO_CLEAR_TRANSFORMATION = false;
         boolean UNDO_RECONCILE_TRANSFORMATION = false; // NO_UCD
         boolean UNDO_ADD_TO_SQL_FROM = false; // NO_UCD
         boolean UNDO_ADD_TO_SQL_SELECT = false; // NO_UCD

@@ -44,9 +44,9 @@ public class RelationshipColorPaletteManager extends DefaultColorPaletteManager 
 			UiConstants.Colors.FOCUS_NODE_BKGD,
 			UiConstants.Colors.FOCUS_NODE_BKGD,
 			ColorConstants.black,
-			UiConstants.Colors.SELECTION,
-			UiConstants.Colors.HILITE,
-			UiConstants.Colors.OUTLINE
+			ColorConstants.lightBlue,
+			ColorConstants.lightGreen,
+			ColorConstants.black
 			);
 			
 		nonFocusNodePalette = new FigureColorPalette();
@@ -54,9 +54,9 @@ public class RelationshipColorPaletteManager extends DefaultColorPaletteManager 
 			UiConstants.Colors.NON_FOCUS_NODE_BKGD,
 			UiConstants.Colors.NON_FOCUS_NODE_BKGD,
 			ColorConstants.black,
-			UiConstants.Colors.SELECTION,
-			UiConstants.Colors.HILITE,
-			UiConstants.Colors.OUTLINE
+			ColorConstants.lightBlue,
+			ColorConstants.lightGreen,
+			ColorConstants.black
 			);
 			
 		relationshipPalette = new FigureColorPalette();
@@ -64,9 +64,9 @@ public class RelationshipColorPaletteManager extends DefaultColorPaletteManager 
 			UiConstants.Colors.RELATIONSHIP_BKGD,
 			UiConstants.Colors.RELATIONSHIP_HEADER_BKGD,
 			ColorConstants.black,
-			UiConstants.Colors.SELECTION,
-			UiConstants.Colors.HILITE,
-			UiConstants.Colors.OUTLINE
+			ColorConstants.lightBlue,
+			ColorConstants.lightGreen,
+			ColorConstants.black
 			);
 			
 		relationshipTypePalette = new FigureColorPalette();
@@ -74,9 +74,9 @@ public class RelationshipColorPaletteManager extends DefaultColorPaletteManager 
 			UiConstants.Colors.RELATIONISHIP_TYPE_BKGD,
 			UiConstants.Colors.RELATIONISHIP_TYPE_BKGD,
 			ColorConstants.black,
-			UiConstants.Colors.SELECTION,
-			UiConstants.Colors.HILITE,
-			UiConstants.Colors.OUTLINE
+			ColorConstants.lightBlue,
+			ColorConstants.lightGreen,
+			ColorConstants.black
 			);
 			
 		unknownPalette = relationshipPalette;

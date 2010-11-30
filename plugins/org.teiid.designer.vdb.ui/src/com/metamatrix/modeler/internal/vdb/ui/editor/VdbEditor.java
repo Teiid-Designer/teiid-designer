@@ -24,6 +24,11 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,6 +41,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,6 +66,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.IEditorInput;
@@ -82,6 +89,7 @@ import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
+import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.ModelEditorImpl;
 import com.metamatrix.modeler.internal.core.container.ContainerImpl;
@@ -89,6 +97,8 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
@@ -107,7 +117,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * @since 4.0
  */
 // TODO: read-only, undo/redo, function model 259
-public final class VdbEditor extends EditorPart {
+public final class VdbEditor extends EditorPart implements IResourceChangeListener {
 
     private static final String DESCRIPTION_GROUP = i18n("descriptionGroup"); //$NON-NLS-1$
     private static final String MODELS_GROUP = i18n("modelsGroup"); //$NON-NLS-1$
@@ -141,10 +151,14 @@ public final class VdbEditor extends EditorPart {
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
+    static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
+    
 
     static final String SYNCHRONIZE_ALL_BUTTON = i18n("synchronizeAllButton"); //$NON-NLS-1$
     static final String COPY_SUFFIX = i18n("cloneDataRoleAction.copySuffix"); //$NON-NLS-1$
     static final String CLONE_DATA_ROLE_LABEL = i18n("cloneDataRoleActionLabel"); //$NON-NLS-1$
+    
+    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     private static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
@@ -163,6 +177,7 @@ public final class VdbEditor extends EditorPart {
     
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
+    VdbDataRoleResolver dataRoleResolver;
 
     /**
      * Method which adds models to the VDB.
@@ -263,7 +278,11 @@ public final class VdbEditor extends EditorPart {
             @Override
             public void setValue( final VdbEntry element,
                                   final Boolean value ) {
-                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE)) element.synchronize(new NullProgressMonitor());
+                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE))  {
+                	element.synchronize(new NullProgressMonitor());
+                	
+                	dataRoleResolver.modelSynchronized(element);
+                }
             }
         };
         final TextColumnProvider descriptionColumnProvider = new TextColumnProvider<VdbEntry>() {
@@ -456,6 +475,11 @@ public final class VdbEditor extends EditorPart {
                                                                                       wsFilter,
                                                                                       validator,
                                                                                       modelLabelProvider);
+                if( !vdb.getDataPolicyEntries().isEmpty() ) {
+                	MessageDialog.openInformation(Display.getCurrent().getActiveShell(), 
+                			VdbEditor.CONFIRM_DIALOG_TITLE, INFORM_DATA_ROLES_ON_ADD_MESSAGE);
+                }
+                
                 for (final Object model : models)
                     vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
             }
@@ -493,6 +517,9 @@ public final class VdbEditor extends EditorPart {
                     })) return;
                     entries.addAll(importedBy);
                 }
+                
+                dataRoleResolver.modelEntriesRemoved(entries);
+                
                 for (final VdbEntry entry : entries)
                     vdb.removeEntry(entry);
             }
@@ -628,30 +655,20 @@ public final class VdbEditor extends EditorPart {
                 ContainerImpl tempContainer = null;
                 try {
                     Collection<File> modelFiles = vdb.getModelFiles();
-                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
 
                     tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
                     ModelEditorImpl.setContainer(tempContainer);
                     for (File modelFile : modelFiles) {
                         boolean isVisible = true;
-//                        for (VdbModelEntry entry : modelEntries) {
-//                            String fileName = entry.getName().removeFileExtension().lastSegment();
-//                            String modelName = modelFile.getName();
-//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
-//                                modelName = modelName.substring(0, modelName.length() - 4);
-//                            }
-//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
-//                                isVisible = false;
-//                                break;
-//                            }
-//                        }
 
                         Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
                         if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                            	XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                            	WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -683,44 +700,33 @@ public final class VdbEditor extends EditorPart {
 					}
 
 				}
-                // MessageDialog.openInformation(pg.getShell(), "New Data Policy launched", "Not yet fully implemented");
             }
         });
         dataRolesGroup.add(dataRolesGroup.new EditButtonProvider() {
 
             @Override
             public void selected( IStructuredSelection selection ) {
-                VdbDataRole policy = (VdbDataRole)selection.getFirstElement();
-                if (policy == null) {
+                VdbDataRole vdbDataRole = (VdbDataRole)selection.getFirstElement();
+                if (vdbDataRole == null) {
                     return;
                 }
                 ContainerImpl tempContainer = null;
                 try {
                     Collection<File> modelFiles = vdb.getModelFiles();
-                    Set<VdbModelEntry> modelEntries = vdb.getModelEntries();
 
                     tempContainer = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
                     ModelEditorImpl.setContainer(tempContainer);
                     for (File modelFile : modelFiles) {
                         boolean isVisible = true;
-//                        for (VdbModelEntry entry : modelEntries) {
-//                            String fileName = entry.getName().removeFileExtension().lastSegment();
-//                            String modelName = modelFile.getName();
-//                            if (modelName.endsWith(".xmi")) { //$NON-NLS-1$
-//                                modelName = modelName.substring(0, modelName.length() - 4);
-//                            }
-//                            if (!entry.isVisible() && fileName.equalsIgnoreCase(modelName)) {
-//                                isVisible = false;
-//                                break;
-//                            }
-//                        }
 
                         Resource r = tempContainer.getResource(URI.createFileURI(modelFile.getPath()), true);
                         if (isVisible && ModelUtil.isModelFile(r) && !ModelUtil.isXsdFile(r)) {
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                                	XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI) ||
+                                	WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -737,9 +743,10 @@ public final class VdbEditor extends EditorPart {
                 }
 
                 DataRole dataPolicy = 
-                	new DataRole(policy.getName(), 
-                			policy.getDescription(), 
-                			policy.getMappedRoleNames(), policy.getPermissions());
+                	new DataRole(vdbDataRole.getName(),
+                			vdbDataRole.getDescription(), 
+                			vdbDataRole.isAnyAuthenticated(),
+                			vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
                 final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
@@ -751,7 +758,7 @@ public final class VdbEditor extends EditorPart {
                     // Get the Data Policy
                     DataRole dp = wizard.getDataRole();
                     if( dp != null ) {
-                        vdb.removeDataPolicy(policy);
+                        vdb.removeDataPolicy(vdbDataRole);
                         vdb.addDataPolicy(dp, new NullProgressMonitor());
                     }
 
@@ -782,6 +789,7 @@ public final class VdbEditor extends EditorPart {
                     DataRole newDR = new DataRole(
                     		selectedDataRole.getName() + COPY_SUFFIX, 
                     		selectedDataRole.getDescription(),
+                    		selectedDataRole.isAnyAuthenticated(),
                             selectedDataRole.getMappedRoleNames(), 
                             selectedDataRole.getPermissions());
                     vdb.addDataPolicy(newDR, new NullProgressMonitor());
@@ -823,6 +831,8 @@ public final class VdbEditor extends EditorPart {
                 vdb.synchronize(new NullProgressMonitor());
                 modelsGroup.getTable().getViewer().refresh();
                 otherFilesGroup.getTable().getViewer().refresh();
+                
+                dataRoleResolver.allSynchronized();
             }
         });
         synchronizeAllButton.setEnabled(!vdb.isSynchronized());
@@ -831,6 +841,8 @@ public final class VdbEditor extends EditorPart {
 
         // pack and resize:
         pg.pack(true);
+        
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
     /**
@@ -848,6 +860,10 @@ public final class VdbEditor extends EditorPart {
             VdbUiConstants.Util.log(err);
             WidgetUtil.showError(err);
         }
+        
+        // Un-Register this for Resource change events
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        
         super.dispose();
     }
 
@@ -910,6 +926,8 @@ public final class VdbEditor extends EditorPart {
         setSite(site);
         setInput(input);
         setPartName(file.getName());
+        
+        dataRoleResolver = new VdbDataRoleResolver(vdb);
     }
 
     /**
@@ -971,6 +989,47 @@ public final class VdbEditor extends EditorPart {
         }
         synchronizeAllButton.setEnabled(syncChanged);
         firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+    
+    /**
+     * @param event 
+     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     */
+    public void resourceChanged( IResourceChangeEvent event ) {
+        int type = event.getType();
+        if (type == IResourceChangeEvent.POST_CHANGE) {
+            try {
+                IResourceDelta delta = event.getDelta();
+                if (delta != null) {
+                    delta.accept(new IResourceDeltaVisitor() {
+
+                        public boolean visit( IResourceDelta delta ) {
+                        	
+                            if (delta.getResource().equals(vdb.getFile()) && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
+                                Display.getDefault().asyncExec(new Runnable() {
+
+                                    public void run() {
+                                        if (Display.getDefault().isDisposed()) {
+                                            return;
+                                        }
+                                        if (UiPlugin.getDefault().getCurrentWorkbenchWindow() != null
+                                            && UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage() != null) {
+                                            UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage().closeEditor(VdbEditor.this,
+                                                                                                                          false);
+                                        }
+                                    }
+                                });
+                                return false;
+                            }
+                            return true;
+                        }
+                    });
+
+                }
+            } catch (CoreException e) {
+                UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+            }
+        }
     }
 
 }

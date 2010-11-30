@@ -19,17 +19,17 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IConnectionProfileProvider;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
-import org.eclipse.datatools.sqltools.core.profile.NoSuchProfileException;
 import org.eclipse.datatools.sqltools.result.ui.ResultsViewUIPlugin;
 import org.eclipse.datatools.sqltools.routineeditor.launching.LaunchHelper;
 import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfigurationAttribute;
-import org.eclipse.datatools.sqltools.routineeditor.result.CallableSQLResultRunnable;
+import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,13 +38,15 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
@@ -182,6 +184,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         List<String> paramValues = null;
         final Shell shell = getShell();
         
+        boolean isXML = false;
+        
     	final EObject selected = SelectionUtilities.getSelectedEObject(getSelection());
 
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(selected);
@@ -232,6 +236,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			paramValues = Collections.emptyList();
     			sql = WebServiceUtil.getSql((Operation)selected, paramValues);
     		}
+    		isXML = true;
     	} else if (SqlAspectHelper.isProcedure(selected)) {
     		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(selected);
     		List<EObject> params = procAspect.getParameters(selected);
@@ -290,18 +295,18 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
     			ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
 
-    			try {
-    				// This runnable executes the SQL and displays the results
-    				// in the DTP 'SQL Results' view.
-    				CallableSQLResultRunnable runnable = new CallableSQLResultRunnable(sqlConnection, config, false, null, ID);
-    				final IWorkbenchWindow iww = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow();
-    				iww.getShell().getDisplay().asyncExec(runnable);
-
-    			} catch (SQLException e) {
-    				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    			} catch (NoSuchProfileException e) {
-    				DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
-    			}
+    			// This runnable executes the SQL and displays the results
+				// in the DTP 'SQL Results' view.
+				SimpleSQLResultRunnable runnable = null;
+				
+				if( isXML ) {
+					runnable = new TeiidAdHocScriptRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config, null);
+				} else {
+					runnable = new SimpleSQLResultRunnable(sqlConnection, sql, true, null, new NullProgressMonitor(), ID, config);
+				}
+				BusyIndicator.showWhile(null, runnable);
+				sqlConnection.close();
+				ConnectivityUtil.deleteTransientTeiidProfile(profile);
     		} catch (CoreException e) {
     			DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
     		} catch (SQLException e) {
@@ -390,11 +395,34 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
         ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObj);
-        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) && !helper.hasConnectionInfo(mr)) {
-        	MessageDialog.openWarning(getShell(), 
-        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
-        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
-        	return;
+        if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
+        	if( !helper.hasConnectionInfo(mr)) {
+	        	MessageDialog.openWarning(getShell(), 
+	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
+	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
+	        	return;
+	        }
+        	
+        	String translatorName = helper.getTranslatorName(mr);
+        	if( translatorName != null ) {
+        		TeiidTranslator tt = null; 
+        		
+        		try {
+					tt = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
+				} catch (Exception e) {
+					DqpUiConstants.UTIL.log(e);
+				}
+        		
+        		if( tt == null ) {
+        			boolean result = MessageDialog.openQuestion(getShell(), 
+    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTranslatorTitle"),  //$NON-NLS-1$
+    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
+        			if( !result ) {
+        				return;
+        			}
+        		}
+        		
+        	}
         }
         
         if(! validateResultDisplayProperties()) {

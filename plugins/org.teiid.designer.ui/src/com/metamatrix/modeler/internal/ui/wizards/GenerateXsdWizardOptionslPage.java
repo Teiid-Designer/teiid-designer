@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -19,11 +20,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,8 +38,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.BaseTable;
@@ -61,8 +64,8 @@ import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
-import com.metamatrix.ui.internal.widget.StatusLabel;
 
 /**
  * This page is used to capture the user preferences for Generation of XSD from Relational objects.
@@ -73,23 +76,19 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
 
     private static final String XSD_EXT = ".xsd"; //$NON-NLS-1$
     private static final String XMI_EXT = ".xmi"; //$NON-NLS-1$
-    private static final int DEFAULT_LBL_ROWS = 5;
 
     private final Collection unsavedResources = new HashSet();
     private final Collection invalidResources = new HashSet();
     private final Collection unvalidatedResources = new HashSet();
 
     private boolean validResources;
-    private Button genOutputButton;
-    private Button genXmlButton;
     private Button genSqlButton;
-    private Button genInputButton;
-    private Button genWsButton;
-    private Button doFlatButton;
+    private Button genInputButton;;
+    private Button doFlatOutputButton;
+    private Button doFlatInputButton;
     Text outputNameText;
     Text inputNameText;
     Text wsNameText;
-    private StatusLabel statusLbl;
     private LinkedHashSet roots;
     String rootName;
     private String parentPath;
@@ -135,146 +134,84 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         container.setLayout(layout);
 
         // add a Location field and BROWSE button to select target project or folder
-        // Make sure this isn't displayed in DIMENSIONI by checking for hiddenProjectCentric
-        if (!ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            Composite locationComposite = new Composite(container, SWT.NULL);
-            GridData locationCompositeGridData = new GridData(GridData.FILL_BOTH);
-            locationComposite.setLayoutData(locationCompositeGridData);
-            GridLayout locationLayout = new GridLayout();
-            locationLayout.numColumns = 3;
-            locationComposite.setLayout(locationLayout);
 
-            // Instruction label.
-            Label locationMsg = new Label(locationComposite, SWT.NULL);
-            GridData locationMsgGridData = new GridData();
-            locationMsgGridData.horizontalSpan = 3;
-            locationMsg.setLayoutData(locationMsgGridData);
-            locationMsg.setText(Util.getString("GenerateXsdWizard.locationMessage")); //$NON-NLS-1$
-            containerText = new Text(locationComposite, SWT.BORDER | SWT.SINGLE);
-            GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-            containerText.setLayoutData(gd);
-            containerText.addModifyListener(new ModifyListener() {
-                public void modifyText( ModifyEvent e ) {
-                    checkStatus();
-                }
-            });
-            containerText.setEditable(false);
-
-            Button browseButton = new Button(locationComposite, SWT.PUSH);
-            GridData buttonGridData = new GridData();
-            // buttonGridData.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
-            browseButton.setLayoutData(buttonGridData);
-            browseButton.setText(Util.getString("GenerateXsdWizard.browse")); //$NON-NLS-1$
-            browseButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleBrowse();
-                }
-            });
-        }
-
-        Composite topComposite = new Composite(container, SWT.NULL);
-        GridData topCompositeGridData = new GridData(GridData.FILL_BOTH);
-        topComposite.setLayoutData(topCompositeGridData);
-        GridLayout topLayout = new GridLayout();
-        topLayout.numColumns = 2;
-        topComposite.setLayout(topLayout);
+        Group locationGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.locationGroup.label"), GridData.FILL_BOTH, 1, 3); //$NON-NLS-1$
 
         // Instruction label.
-        Label prompt = new Label(topComposite, SWT.NULL);
-        GridData promptGridData = new GridData();
-        promptGridData.horizontalSpan = 2;
-        prompt.setLayoutData(promptGridData);
-        prompt.setText(Util.getString("GenerateXsdWizard.prompt")); //$NON-NLS-1$
-
-        Label spacer = new Label(topComposite, SWT.NULL);
-        GridData spGridData = new GridData();
-        spGridData.horizontalSpan = 2;
-        spacer.setLayoutData(spGridData);
-
-        Label opLabel = new Label(topComposite, SWT.NULL);
-        GridData opGridData = new GridData();
-        opGridData.horizontalSpan = 2;
-        opLabel.setLayoutData(opGridData);
-        opLabel.setText(Util.getString("GenerateXsdWizard.outOptions")); //$NON-NLS-1$
-
-        // Control to prompt for bulding of output XSD
-        genOutputButton = new Button(topComposite, SWT.CHECK);
-        GridData buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        genOutputButton.setLayoutData(buttonGridData);
-        genOutputButton.setText(Util.getString("GenerateXsdWizard.outModel")); //$NON-NLS-1$
-        genOutputButton.setSelection(true);
-        genOutputButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleGenOutputButton();
+        Label locationMsg = new Label(locationGroup, SWT.NULL);
+        GridData locationMsgGridData = new GridData();
+        locationMsgGridData.horizontalSpan = 3;
+        locationMsg.setLayoutData(locationMsgGridData);
+        locationMsg.setText(Util.getString("GenerateXsdWizard.locationMessage")); //$NON-NLS-1$
+        containerText = new Text(locationGroup, SWT.BORDER | SWT.SINGLE);
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        containerText.setLayoutData(gd);
+        containerText.addModifyListener(new ModifyListener() {
+            public void modifyText( ModifyEvent e ) {
+                checkStatus();
             }
         });
+        containerText.setEditable(false);
 
-        // Control to capture flat or nested XSD preference
-        doFlatButton = new Button(topComposite, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        doFlatButton.setLayoutData(buttonGridData);
-        doFlatButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
-        doFlatButton.setSelection(true);
+        Button browseButton = new Button(locationGroup, SWT.PUSH);
+        GridData buttonGridData = new GridData();
+        browseButton.setLayoutData(buttonGridData);
+        browseButton.setText(Util.getString("GenerateXsdWizard.browse")); //$NON-NLS-1$
+        browseButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleBrowse();
+            }
+        });
+        
+        Group outputGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.outputGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
 
+
+        Label spacer = null;
+        GridData spGridData = null;
+        
         // Control to capture the Model name to use
-        Label modelNameLabel = new Label(topComposite, SWT.NULL);
-        modelNameLabel.setText(Util.getString("GenerateXsdWizard.modelName")); //$NON-NLS-1$
+        Label modelNameLabel = new Label(outputGroup, SWT.NULL);
+        modelNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
 
-        outputNameText = new Text(topComposite, SWT.BORDER | SWT.SINGLE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        outputNameText.setLayoutData(gd);
+        outputNameText = new Text(outputGroup, SWT.BORDER | SWT.SINGLE);
+        GridData outputGridData = new GridData(GridData.FILL_HORIZONTAL);
+        outputNameText.setLayoutData(outputGridData);
         outputNameText.addModifyListener(new ModifyListener() {
 
             public void modifyText( ModifyEvent e ) {
                 checkStatus();
             }
         });
+        
+        spacer = new Label(outputGroup, SWT.NULL);
+        spGridData = new GridData();
+        spGridData.horizontalSpan = 1;
+        spacer.setLayoutData(spGridData);
 
-        // Control to prompt for generation of XML Documents
-        genXmlButton = new Button(topComposite, SWT.CHECK);
+        // Control to capture flat or nested XSD preference
+        doFlatOutputButton = new Button(outputGroup, SWT.CHECK);
         buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        genXmlButton.setLayoutData(buttonGridData);
-        genXmlButton.setText(Util.getString("GenerateXsdWizard.genXml")); //$NON-NLS-1$
-        genXmlButton.setSelection(true);
-        genXmlButton.addSelectionListener(new SelectionAdapter() {
+        buttonGridData.horizontalSpan = 1;
+        doFlatOutputButton.setLayoutData(buttonGridData);
+        doFlatOutputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
+        doFlatOutputButton.setSelection(true);
+        doFlatOutputButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                handleGenXmlButton();
+                doFlatInputButton.setSelection(doFlatOutputButton.getSelection());
             }
         });
 
-        // Control to prompt for generation of default Mapping class SQL
-        genSqlButton = new Button(topComposite, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        genSqlButton.setLayoutData(buttonGridData);
-        genSqlButton.setText(Util.getString("GenerateXsdWizard.genSql")); //$NON-NLS-1$
-        genSqlButton.setSelection(true);
-
-        spacer = new Label(topComposite, SWT.NULL);
-        spGridData = new GridData();
-        spGridData.horizontalSpan = 2;
-        spacer.setLayoutData(spGridData);
-
-        Label inLabel = new Label(topComposite, SWT.NULL);
-        GridData inGridData = new GridData();
-        inGridData.horizontalSpan = 2;
-        inLabel.setLayoutData(inGridData);
-        inLabel.setText(Util.getString("GenerateXsdWizard.inOptions")); //$NON-NLS-1$
+        Group inputGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.inputGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
 
         // Control to prompt for creation of input docs for Procedures
-        genInputButton = new Button(topComposite, SWT.CHECK);
+        genInputButton = new Button(inputGroup, SWT.CHECK);
         buttonGridData = new GridData();
         buttonGridData.horizontalSpan = 2;
         genInputButton.setLayoutData(buttonGridData);
-        genInputButton.setText(Util.getString("GenerateXsdWizard.genInputForProcs")); //$NON-NLS-1$
+        genInputButton.setText("Generate"); //Util.getString("GenerateXsdWizard.genInputForProcs")); //$NON-NLS-1$
         genInputButton.setSelection(true);
         genInputButton.addSelectionListener(new SelectionAdapter() {
 
@@ -285,12 +222,11 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         });
 
         // Control to capture the name of the Input Doc model name.
-        Label inputNameLabel = new Label(topComposite, SWT.NULL);
-        inputNameLabel.setText(Util.getString("GenerateXsdWizard.inputName")); //$NON-NLS-1$
+        Label inputNameLabel = new Label(inputGroup, SWT.NULL);
+        inputNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
 
-        inputNameText = new Text(topComposite, SWT.BORDER | SWT.SINGLE);
+        inputNameText = new Text(inputGroup, SWT.BORDER | SWT.SINGLE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.verticalSpan = 2;
         inputNameText.setLayoutData(gd);
         inputNameText.addModifyListener(new ModifyListener() {
 
@@ -298,38 +234,33 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
                 checkStatus();
             }
         });
-
-        spacer = new Label(topComposite, SWT.NULL);
+        
+        spacer = new Label(inputGroup, SWT.NULL);
         spGridData = new GridData();
-        spGridData.horizontalSpan = 2;
+        spGridData.horizontalSpan = 1;
         spacer.setLayoutData(spGridData);
-
-        Label wsLabel = new Label(topComposite, SWT.NULL);
-        GridData wsGridData = new GridData();
-        wsGridData.horizontalSpan = 2;
-        wsLabel.setLayoutData(wsGridData);
-        wsLabel.setText(Util.getString("GenerateXsdWizard.wsOptions")); //$NON-NLS-1$
-
-        // Control to prompt for creation of Web Service Model
-        genWsButton = new Button(topComposite, SWT.CHECK);
+        
+        // Control to capture flat or nested XSD preference
+        doFlatInputButton = new Button(inputGroup, SWT.CHECK);
         buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        genWsButton.setLayoutData(buttonGridData);
-        genWsButton.setText(Util.getString("GenerateXsdWizard.genWs")); //$NON-NLS-1$
-        genWsButton.setSelection(true);
-        genWsButton.addSelectionListener(new SelectionAdapter() {
+        buttonGridData.horizontalSpan = 1;
+        doFlatInputButton.setLayoutData(buttonGridData);
+        doFlatInputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
+        doFlatInputButton.setSelection(true);
+        doFlatInputButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                handleGenWsButton();
+                doFlatOutputButton.setSelection(doFlatInputButton.getSelection());
             }
         });
 
+        Group wsGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.wsGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
         // Control to capture the WebService Model name
-        Label wsNameLabel = new Label(topComposite, SWT.NULL);
-        wsNameLabel.setText(Util.getString("GenerateXsdWizard.wsName")); //$NON-NLS-1$
+        Label wsNameLabel = new Label(wsGroup, SWT.NULL);
+        wsNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
 
-        wsNameText = new Text(topComposite, SWT.BORDER | SWT.SINGLE);
+        wsNameText = new Text(wsGroup, SWT.BORDER | SWT.SINGLE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         wsNameText.setLayoutData(gd);
         wsNameText.addModifyListener(new ModifyListener() {
@@ -338,17 +269,19 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
                 checkStatus();
             }
         });
-
-        spacer = new Label(topComposite, SWT.NULL);
+        
+        spacer = new Label(wsGroup, SWT.NULL);
         spGridData = new GridData();
-        spGridData.horizontalSpan = 2;
+        spGridData.horizontalSpan = 1;
         spacer.setLayoutData(spGridData);
-
-        statusLbl = new StatusLabel(topComposite);
-        statusLbl.setRows(DEFAULT_LBL_ROWS);
-        GridData statusGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-        statusGridData.horizontalSpan = 2;
-        statusLbl.setLayoutData(statusGridData);
+        
+        // Control to prompt for generation of default Mapping class SQL
+        genSqlButton = new Button(wsGroup, SWT.CHECK);
+        buttonGridData = new GridData();
+        buttonGridData.horizontalSpan = 1;
+        genSqlButton.setLayoutData(buttonGridData);
+        genSqlButton.setText(Util.getString("GenerateXsdWizard.genSql")); //$NON-NLS-1$
+        genSqlButton.setSelection(true);
 
         setControl(container);
         checkStatus();
@@ -377,47 +310,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
     void handleGenInputButton() {
         // If genInput, enable input model name field, else disable.
         inputNameText.setEnabled(genInputButton.getSelection());
-
-        // You must gen Inputs and Outputs to gen WS
-        if (!genInputButton.getSelection()) {
-            genWsButton.setSelection(false);
-        }
-
-        genWsButton.setEnabled(genInputButton.getSelection() && genOutputButton.getSelection());
-        wsNameText.setEnabled(genInputButton.getSelection() && genOutputButton.getSelection());
-
-        checkStatus();
-    }
-
-    void handleGenWsButton() {
-        // If genWs, enable WS model name field, else disable.
-        wsNameText.setEnabled(genWsButton.getSelection());
-        checkStatus();
-    }
-
-    void handleGenXmlButton() {
-        // If genXml, enable genSql, else disable.
-        if (!genXmlButton.getSelection()) {
-            genWsButton.setSelection(false);
-        }
-
-        genSqlButton.setEnabled(genXmlButton.getSelection());
-        checkStatus();
-    }
-
-    void handleGenOutputButton() {
-        // If single model, enable the model name field, else disable.
-        outputNameText.setEnabled(genOutputButton.getSelection());
-        genSqlButton.setEnabled(genOutputButton.getSelection());
-        genXmlButton.setEnabled(genOutputButton.getSelection());
-
-        // You must gen Inputs and Outputs to gen WS
-        if (!genOutputButton.getSelection()) {
-            genWsButton.setSelection(false);
-        }
-
-        genWsButton.setEnabled(genInputButton.getSelection() && genOutputButton.getSelection());
-        wsNameText.setEnabled(genInputButton.getSelection() && genOutputButton.getSelection());
+        doFlatInputButton.setEnabled(genInputButton.getSelection());
 
         checkStatus();
     }
@@ -670,161 +563,125 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
     void checkStatus() {
         boolean hasWarnings = false;
         if (!unsavedResources.isEmpty()) {
-            setMessageLabelText(Util.getString("GenerateXsdWizard.unsavedModels"), IStatus.ERROR); //$NON-NLS-1$
-            setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+        	setErrorMessage(Util.getString("GenerateXsdWizard.unsavedModels")); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
 
         if (!invalidResources.isEmpty()) {
-            setMessageLabelText(Util.getString("GenerateXsdWizard.invalidModels"), IStatus.ERROR); //$NON-NLS-1$
-            setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+            setErrorMessage(Util.getString("GenerateXsdWizard.invalidModels")); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
 
         if (!unvalidatedResources.isEmpty()) {
-            setMessageLabelText(Util.getString("GenerateXsdWizard.unvalidatedModels"), IStatus.ERROR); //$NON-NLS-1$
-            setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+        	setErrorMessage(Util.getString("GenerateXsdWizard.unvalidatedModels")); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
 
         // This needs to be after the 3 checks to unsavedResources, unvalidatedResources and invalideResources
         if (!validResources) {
-            setMessageLabelText(Util.getString("GenerateXsdWizard.errValidatingModels"), IStatus.ERROR); //$NON-NLS-1$
-            setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+            setErrorMessage(Util.getString("GenerateXsdWizard.errValidatingModels")); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
 
-        if (!genOutputButton.getSelection() && !genInputButton.getSelection()) {
-            setMessageLabelText(Util.getString("GenerateXsdWizard.noBuilds"), IStatus.ERROR); //$NON-NLS-1$
-            setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+        String modelName = outputNameText.getText();
+        if (modelName.trim().length() == 0) {
+            setErrorMessage(Util.getString("GenerateXsdWizard.enterModelFileName")); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
 
-        if (genOutputButton.getSelection()) {
-            String modelName = outputNameText.getText();
-            if (modelName.trim().length() == 0) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.enterModelFileName"), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        String msg = ModelUtilities.validateModelName(modelName, XSD_EXT);
+        if (msg != null) {
+            setErrorMessage(Util.getString("GenerateXsdWizard.invalidModelFileName", msg)); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
+        }
 
-            final String msg = ModelUtilities.validateModelName(modelName, XSD_EXT);
-            if (msg != null) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.invalidModelFileName", msg), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
-
-            final String fullPath = parentPath + File.separator + modelName + XSD_EXT;
-            File file = new File(fullPath);
-            if (file.exists()) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", modelName + XSD_EXT), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        String fullPath = parentPath + File.separator + modelName + XSD_EXT;
+        File file = new File(fullPath);
+        if (file.exists()) {
+            setErrorMessage(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", modelName + XSD_EXT)); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
         }
 
         if (genInputButton.getSelection()) {
             String inputName = inputNameText.getText();
             if (inputName.trim().length() == 0) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.enterInputFileName"), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+                setErrorMessage(Util.getString("GenerateXsdWizard.enterInputFileName")); //$NON-NLS-1$
                 setPageComplete(false);
                 return;
             }
 
-            final String msg = ModelUtilities.validateModelName(inputName, XSD_EXT);
+            msg = ModelUtilities.validateModelName(inputName, XSD_EXT);
             if (msg != null) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.invalidInputFileName", msg), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+                setErrorMessage(Util.getString("GenerateXsdWizard.invalidInputFileName", msg)); //$NON-NLS-1$
                 setPageComplete(false);
                 return;
             }
 
-            final String fullPath = parentPath + File.separator + inputName + XSD_EXT;
-            File file = new File(fullPath);
+            fullPath = parentPath + File.separator + inputName + XSD_EXT;
+            file = new File(fullPath);
             if (file.exists()) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", inputName + XSD_EXT), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
+            	setErrorMessage(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", inputName + XSD_EXT)); //$NON-NLS-1$
                 setPageComplete(false);
                 return;
             }
         }
 
-        if (genWsButton.getSelection()) {
-            String wsName = wsNameText.getText();
-            if (wsName.trim().length() == 0) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.enterWsFileName"), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        String wsName = wsNameText.getText();
+        if (wsName.trim().length() == 0) {
+        	setErrorMessage(Util.getString("GenerateXsdWizard.enterWsFileName")); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
+        }
 
-            if (wsName.indexOf(XMI_EXT) > 0) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.noExtWsFileName"), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        if (wsName.indexOf(XMI_EXT) > 0) {
+        	setErrorMessage(Util.getString("GenerateXsdWizard.noExtWsFileName")); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
+        }
 
-            final String msg = ModelUtilities.validateModelName(wsName, XMI_EXT);
-            if (msg != null) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.invalidWsFileName", msg), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        msg = ModelUtilities.validateModelName(wsName, XMI_EXT);
+        if (msg != null) {
+        	setErrorMessage(Util.getString("GenerateXsdWizard.invalidWsFileName", msg)); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
+        }
 
-            final String fullPath = parentPath + File.separator + wsName + XMI_EXT;
-            File file = new File(fullPath);
-            if (file.exists()) {
-                setMessageLabelText(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", wsName + XMI_EXT), IStatus.ERROR); //$NON-NLS-1$
-                setMessage(Util.getString("GenerateXsdWizard.errs"), IMessageProvider.ERROR); //$NON-NLS-1$
-                setPageComplete(false);
-                return;
-            }
+        fullPath = parentPath + File.separator + wsName + XMI_EXT;
+        file = new File(fullPath);
+        if (file.exists()) {
+            setErrorMessage(Util.getString("GenerateXsdWizard.fileAlreadyExistsMessage", wsName + XMI_EXT)); //$NON-NLS-1$
+            setPageComplete(false);
+            return;
         }
 
         if (!hasWarnings) {
             setMessage(Util.getString("GenerateXsdWizard.done"), IMessageProvider.NONE); //$NON-NLS-1$
-            setMessageLabelText(null, IStatus.OK);
+            setErrorMessage(null);
         }
 
         setPageComplete(true);
-    }
-
-    private void setMessageLabelText( final String text,
-                                      final int severity ) {
-        if (text == null) {
-            statusLbl.setVisible(false);
-        } else {
-            statusLbl.setText(text, severity);
-            statusLbl.update();
-            statusLbl.setVisible(true);
-        }
     }
 
     /**
      * Construct and return an options object based on the user selections.
      */
     public XsdBuilderOptions getOptions() {
-        final boolean genOutput = genOutputButton.getSelection();
-        final boolean genXml = genXmlButton.getSelection() && genOutput;
-        final String xsdName = genOutput ? outputNameText.getText() : new String();
-        final boolean genSQL = genXmlButton.getSelection() && genOutput && genXml;
+        final boolean genOutput = true;
+        final boolean genXml = true;
+        final String xsdName = outputNameText.getText();
+        final boolean genSQL = genSqlButton.getSelection();
         final boolean genInput = genInputButton.getSelection();
         final String inputName = genInput ? inputNameText.getText() : new String();
-        final boolean genWs = genWsButton.getSelection() && genOutput && genInput && genXml;
-        final String wsName = genWs ? wsNameText.getText() : new String();
-        final boolean doFlat = doFlatButton.getSelection();
+        final boolean genWs = true;
+        final String wsName = wsNameText.getText();
+        final boolean doFlat = doFlatOutputButton.getSelection() || doFlatInputButton.getSelection();
 
         final XsdBuilderOptions ops = new XsdBuilderOptions(genOutput, genXml, doFlat, roots, xsdName, genSQL, genInput,
                                                             inputName, genWs, wsName, rootName);

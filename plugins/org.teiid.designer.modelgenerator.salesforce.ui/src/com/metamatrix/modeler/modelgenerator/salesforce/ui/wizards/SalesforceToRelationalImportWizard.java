@@ -9,6 +9,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,6 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceImportWizardManager;
@@ -51,7 +54,7 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
     private ShowDifferencesPage differencesPage;
 
     public SalesforceToRelationalImportWizard() {
-        super(Activator.getDefault(), TITLE, null);
+        super(Activator.getDefault(), TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/salesforce_wiz.gif")); //$NON-NLS-1$);
     }
 
     /**

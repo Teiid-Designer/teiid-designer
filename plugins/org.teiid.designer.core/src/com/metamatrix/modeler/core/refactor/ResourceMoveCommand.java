@@ -7,11 +7,14 @@
  */
 package com.metamatrix.modeler.core.refactor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,8 +26,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+
+import com.metamatrix.metamodels.core.ModelImport;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
@@ -252,7 +258,6 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
                 }
                 if ( mResource != null ) {
                     mResource.save(null, false);
-                    super.buildIndexes(monitor, iFile);
                 } else {
                     if ( severity < IStatus.WARNING ) {
                         severity = IStatus.WARNING;
@@ -264,13 +269,49 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
             
             // Rebuild the import lists on the refactored resources ...
             for ( Iterator iter = visitor.getResources().iterator() ; iter.hasNext() ; ) {
-                IFile iFile = (IFile) iter.next();
-                ModelResource mResource = ModelerCore.getModelEditor().findModelResource(iFile);
+                IFile nextResourceIFile = (IFile) iter.next();
+                ModelResource mResource = ModelerCore.getModelEditor().findModelResource(nextResourceIFile);
                 if ( mResource != null ) {
+                	
+                	// Cache a map of import locations to model UUIDs prior to rebuilding imports.
+                	Map<String, String> preImportsUuidMap = new HashMap<String, String>();
+                	List<ModelImport> preImports = mResource.getModelImports();
+                	for( ModelImport modelImport : preImports ) {
+                		preImportsUuidMap.put(modelImport.getUuid(), modelImport.getModelLocation());
+                	}
+                	
                     super.rebuildImports(mResource, monitor, refactoredPaths);
+                    
+                    // Cache a map of import locations to model UUIDs after rebuilding imports
+                	Map<String, String> postImportsUuidMap = new HashMap<String, String>();
+                	List<ModelImport> postImports = mResource.getModelImports();
+                	for( ModelImport modelImport : postImports ) {
+                		postImportsUuidMap.put(modelImport.getUuid(), modelImport.getModelLocation());
+                	}
+                	
+                	// Build a map of refactored "locations" so the refactor helper can fix HREFs
+                	Map<String, String> importLocationChangeMap = new HashMap<String, String>();
+                	for( Object nextKey : preImportsUuidMap.keySet()) {
+                		String preLoc = preImportsUuidMap.get(nextKey);
+                		String postLoc = postImportsUuidMap.get(nextKey);
+                		if( ! postLoc.equalsIgnoreCase(preLoc) ) {
+                			importLocationChangeMap.put(preLoc, postLoc);
+                		}
+                	}
+                	
                     mResource.save(null, false);
                     // Close the resource so that when it is opened any new hrefs will be resolved.
                     mResource.close();
+                    
+                    mResource.unload();
+                    
+                    File file = new File(nextResourceIFile.getLocation().toOSString());
+                    
+                    ResourceRefactorFileHelper.updateHrefsForFile(file, importLocationChangeMap);
+                    
+                    mResource.open(new NullProgressMonitor());
+                    super.buildIndexes(monitor, nextResourceIFile);
+                    
                 } else {
                     if ( severity < IStatus.WARNING ) {
                         severity = IStatus.WARNING;
@@ -288,6 +329,10 @@ public class ResourceMoveCommand extends ResourceRefactorCommand {
         // defect 16076 - display the correct text on completion, and display all errors
         final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.Execution_complete"); //$NON-NLS-1$
         return new MultiStatus(PID, REBUILD_IMPORTS_COMPLETE, (IStatus[])errorList.toArray(EMPTY_ISTATUS), msg, null);
+    }
+    
+    protected IStatus refactorModelContents(IProgressMonitor monitor, final Map refactoredPaths ) {
+    	return null;
     }
 
     /* (non-Javadoc)

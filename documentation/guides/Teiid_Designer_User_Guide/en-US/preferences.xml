@@ -3,7 +3,7 @@
 <chapter id="preferences-chapter">
 	<title>User Preferences</title>
 	
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
 	<para>The Teiid Designer  provides options or preferences 
 	which enable customization of various modeling and UI behaviors. Preferences can be accessed 
@@ -12,7 +12,7 @@
 		<title>Preferences Dialog</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="images/screencaps/DesignerPreferencesTree.jpg" />
+				<imagedata fileref="images/screencaps/designer-preferences-tree.png" />
 			</imageobject>
 		</mediaobject>
 	</figure>
@@ -30,6 +30,14 @@
 				editor will be opened before the operation is completed.</para>
 			</listitem>
 			<listitem>
+				<para><emphasis>Open Designer perspective when model is opened</emphasis> - If a model is opened via importing projects, 
+					the New > Teiid Metadata Model menu and the Teiid Designer perspective is not open, you may want
+					to automatically open the perspective and beging working on your model.  This preference has 3 settings.
+					Always open, which means always open the perspective without prompting; never open, which means
+					do not open the Teiid Designer perspective, or prompt, which will always ask you if you wish to
+					open the Teiid Designer perspective.</para>
+			</listitem>
+			<listitem>
 				<para><emphasis role="bold">Check and update imports during save</emphasis> occasionally editing 
 				a model may add or remove objects in one model that reference objects in another model. 
 				Model Imports keep track of these dependencies within each model. A validation error or 
@@ -38,12 +46,30 @@
 				from the model or any required imports added to the model. If unchecked, no updating of 
 				imports will be performed.</para>
 			</listitem>
+			<listitem>
+				<para><emphasis><emphasis>Import Logical ER Models as View Relational Models</emphasis></emphasis> - When importing 
+					ER models, the default relational model created during the import process is a 
+					Source model. This preferences, forces the importer to create a View relational model instead.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis>Enable Preview</emphasis> - If the Designer Runtime feature is installed and a Teiid 
+					Instance is defined, Teiid Designer will automatically keep the preview artifacts 
+					(VDBs) in sync with the workspace models. Unchecking this preference will disable 
+					preview feature and not create preview artifacts.</para>
+			</listitem>
+			<listitem>
+				<para><emphasis>Enable Preview Teiid Cleanup</emphasis> - If operating Designer with Enable 
+					Preview = TRUE, then this preference will result in automatic 
+					clean-up of your preview artifacts from your Teiid servers. Any preview 
+					VDBs or preview data sources will be undeployed from your servers as part of 
+					Eclipse's shut-down process.</para>
+			</listitem>
 		</itemizedlist>
 		<figure>
 			<title>General Teiid Designer Preferences Panel</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/DesignerPreferences.jpg" />
+					<imagedata fileref="images/screencaps/designer-preferences.png" />
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -86,7 +112,7 @@
 				<title>Diagram Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/DiagramPreferences.jpg" />
+						<imagedata fileref="images/screencaps/diagram-preferences.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -99,19 +125,19 @@
 			<para>Diagram print options are stored as preferences. These can be accessed through 
 			this preference page, by right-click on diagram <emphasis role="bold">Page Setup action</emphasis> <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/tb_page_setup.gif" />
+							<imagedata fileref="images/icons/tb_page_setup.png" />
 						</imageobject>
 					</inlinemediaobject>, 
 			or via the <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/tb_page_setup.gif" />
+							<imagedata fileref="images/icons/tb_page_setup.png" />
 						</imageobject>
 					</inlinemediaobject> located on the vertical diagram toolbar .</para>
 			<figure>
 				<title>Diagram Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/DiagramPrintingPreferences.jpg" />
+						<imagedata fileref="images/screencaps/diagram-printing-preferences.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -125,39 +151,39 @@
 			<sect3 id="xml-doc-editor-prefs-section">
 				<title>XML Document Preferences</title>
 				<para><emphasis role="bold">XML Document Mapping Preferences</emphasis> provide ways to customize
-					 <link linkend="mapping-diagram-section">XML Mapping Diagram </link>and
-					 <link linkend="recursion-editor-section">Recursion Editor</link> behavior.</para>
+					 <xref linkend="mapping-diagram-section" /> and
+					 <xref linkend="recursion-editor-section" /> behavior.</para>
 				<figure>
 					<title>XML Document Preferences Panel</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/EditorXMLDocPreferences.jpg" />
+							<imagedata fileref="images/screencaps/xml-document-editor-preferences.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
 			</sect3>
 			<sect3 id="table-editor-prefs-section">
 				<title>Table Editor Preferences</title>
-				<para><emphasis role="bold"><link linkend="table-editor-section">Table Editor</link> Preferences</emphasis> provide a way to customize the order and the 
+				<para><emphasis role="bold"><xref linkend="table-editor-section" /> Preferences</emphasis> provide a way to customize the order and the 
 					information content for each model object type.</para>
 				<figure>
 					<title>Table Editor Preferences Panel</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/EditorTablePreferences.jpg" />
+							<imagedata fileref="images/screencaps/table-editor-preferences.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
 			</sect3>
 			<sect3 id="transformation-editor-prefs-section">
 				<title>Transformation Editor Preferences</title>
-				<para><emphasis role="bold"><link linkend="transformation-editor-section">Transformation Editor</link> Preferences</emphasis> provide a way to customize SQL formatting, 
+				<para><emphasis role="bold"><xref linkend="transformation-editor-section" /> Preferences</emphasis> provide a way to customize SQL formatting, 
 					diagram layout, and default view entity properties.</para>
 				<figure>
 					<title>Transformation Editor Preferences Panel</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/EditorTransformationPreferences.jpg" />
+							<imagedata fileref="images/screencaps/transformation-editor-preferences.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -170,21 +196,20 @@
 			<title>Validation Preferences</title>
 			<para><emphasis role="bold">Validation Preferences</emphasis> provide a way to customize the severity
 				of some of the rules checked during model validation.</para>
-			<para> Validation preference pages, shown below, include Core, Data
-				Access, Relational Model, XML-related and XML Schema (XSD) models.</para>
+				<para> Validation preference pages, shown below, include Core, Relational Model, XML-related and XML Schema (XSD) models.</para>
 			<figure>
-				<title>Data Access Model Validation Preferences Panel</title>
+				<title>Core Model Validation Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ValidationDataAccessPreferences.jpg" />
+						<imagedata fileref="images/screencaps/validation-preferences-core.png" />
 					</imageobject>
 				</mediaobject>
-			</figure>
+			</figure>			
 			<figure>
 				<title>Relational Model Validation Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ValidationRelationalPreferences.jpg" />
+						<imagedata fileref="images/screencaps/validation-preferences-relational.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -192,7 +217,7 @@
 				<title>XML Document Model Validation Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ValidationXMLPreferences.jpg" />
+						<imagedata fileref="images/screencaps/validation-preferences-xml.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -200,72 +225,14 @@
 				<title>XSD Schema Model Validation Preferences Panel</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ValidationXSDPreferences.jpg" />
+						<imagedata fileref="images/screencaps/validation-preferences-xsd.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<figure>
-				<title>Core Model Validation Preferences Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/ValidationCorePreferences.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
+
 			<note><para>Increasing the severity level to error will prevent you from testing your VDB or
 				deploying a web service if violations of that preference are found
 				during validation.</para></note>
 		</sect2>
-		
-		<!-- ####### XML SCHEMA AS RELATIONAL SOURCE MODEL PREFERENCES #3######## -->
-		
-		<sect2 id="xml-schema-source-prefs">
-			<title>XML Schema Source Preferences</title>
-			<para>XML Schema as Relational Source Model Preferences provide a way to 
-				customize how the relational source model is generated from the schema.</para>
-			<figure>
-				<title>XML Schema Source Preferences Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/XMLSchemaAsRelationalPreferences.jpg" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</sect2>
 	</sect1>
-	
-	<!-- ####### SQL EXPLORER PREFERENCES ################################### -->
-	
-	<sect1 id="sql-explorer-prefs">
-		<title>SQL Explorer Preferences</title>
-		<para><emphasis role="bold"><link linkend="sql-explorer-perspective">SQL Explorer</link> Preferences</emphasis> provide a way to customize the result preview
-		row count and the actual result row count. If a query plan should be
-		generated each time a query is executed, keep the Generate query plans
-		preference checked. Note: Changes to this preference do not affect
-		existing connections.</para>
-		<figure>
-			<title>SQL Explorer Preferences Panel</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/SQLExplorerPreferences.jpg" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		
-	<!-- ####### SQL EDITOR PREFERENCES ################################### -->
-		<sect2 id="sql-editor-prefs">
-			<title>SQL Editor Preferences</title>
-			<para><emphasis role="bold"><link linkend="sql-editor-view">SQL Editor</link> Preferences</emphasis> provide a way to customize the font properties of the 
-				editor and the separator character used when exporting results to the clipboard.</para>
-			<figure>
-			<title>SQL Editor Preferences Panel</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/SQLEditorPreferences.jpg" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		</sect2>
-	</sect1>
-	
 </chapter>

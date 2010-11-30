@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.relationship.ui.navigation.figure;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -103,9 +104,9 @@ public class NavigationDiagramFigureFactory  extends AbstractDiagramFigureFactor
 				if( node.getModelObject() != null ) {
 					NavigationNode navNode = (NavigationNode)node.getModelObject();
 					if( currentBackFocusNode != null && navNode.getModelObjectUri().equals(currentBackFocusNode.getModelObjectUri())) {
-						newFigure.setBackgroundColor(UiConstants.Colors.LAST_FOCUS_NODE_BKGD);
+						newFigure.setBackgroundColor(ColorConstants.orange);
 					} else if(currentNextFocusNode != null && navNode.getModelObjectUri().equals(currentNextFocusNode.getModelObjectUri())) {
-						newFigure.setBackgroundColor(UiConstants.Colors.NEXT_FOCUS_NODE_BKGD);
+						newFigure.setBackgroundColor(ColorConstants.yellow);
 					}
 				}
 //				System.out.println(" FIGURE FACTORY >>> Created NON_FOCUS_NODE");

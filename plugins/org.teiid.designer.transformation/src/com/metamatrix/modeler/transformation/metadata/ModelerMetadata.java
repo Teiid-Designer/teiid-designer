@@ -25,6 +25,9 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
+import org.teiid.designer.udf.UdfManager;
+import org.teiid.query.function.FunctionLibrary;
+
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -875,5 +878,10 @@ public class ModelerMetadata extends TransformationMetadata {
         }
 
         return transforms;
+    }
+    
+    @Override
+    public FunctionLibrary getFunctionLibrary() {
+        return UdfManager.INSTANCE.getFunctionLibrary();
     }
 }

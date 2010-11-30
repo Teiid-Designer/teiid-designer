@@ -184,9 +184,14 @@ public class WebServiceUtil {
         String fullName = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(operation).toString();
         fullName = fullName.replace('/', '.');
         sql.append(fullName);
-        sql.append("('"); //$NON-NLS-1$
-        sql.append(generateRequestDocument(operation, paramValues));
-        sql.append("\n')"); //$NON-NLS-1$
+        if (!paramValues.isEmpty()) {
+        	sql.append("('"); //$NON-NLS-1$
+        	sql.append(generateRequestDocument(operation, paramValues));
+        	sql.append("\n')"); //$NON-NLS-1$
+        }else{
+        	//No parms
+        	sql.append("()"); //$NON-NLS-1$
+        }
         
         return sql.toString();
     }

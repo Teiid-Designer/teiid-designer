@@ -29,19 +29,19 @@ public class NameUtilTest extends TestCase {
      * Test method for 'com.metamatrix.modeler.schema.tools.NameUtil.normalizeNameForRelationalTable(String)'
      */
     public void testDots() {
-        assertEquals("foo_bar", NameUtil.normalizeNameForRelationalTable(dots)); //$NON-NLS-1$
+        assertEquals("foo_bar", NameUtil.normalizeName(dots)); //$NON-NLS-1$
     }
 
     public void testParens() {
-        assertEquals("foo_bar", NameUtil.normalizeNameForRelationalTable(parens)); //$NON-NLS-1$
+        assertEquals("foo_bar", NameUtil.normalizeName(parens)); //$NON-NLS-1$
     }
 
     public void testUnderscore() {
-        assertEquals("foo_bar", NameUtil.normalizeNameForRelationalTable(trailingUnderscore)); //$NON-NLS-1$
+        assertEquals("foo_bar", NameUtil.normalizeName(trailingUnderscore)); //$NON-NLS-1$
     }
 
     public void testDuplicate() {
-        assertEquals("foo_bar", NameUtil.normalizeNameForRelationalTable(duplicate)); //$NON-NLS-1$
+        assertEquals("foo_bar", NameUtil.normalizeName(duplicate)); //$NON-NLS-1$
     }
 
 }

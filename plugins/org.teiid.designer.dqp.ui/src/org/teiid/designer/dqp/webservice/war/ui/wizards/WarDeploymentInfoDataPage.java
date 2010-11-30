@@ -48,7 +48,8 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
     protected void validatePage() {
 
         boolean isValid = validateContext() && validatePort() && validateHost() && validateJNDI() && validateTNS()
-                          && validateWARFileFolder();
+                          && validateWARFileFolder() && validateSecurityRole() && validateSecurityRealm() 
+                          && validateSecurityUsername() && validateSecurityPassword();
 
         if (!isValid) {
             setDialogMessage(status);
@@ -177,6 +178,106 @@ public class WarDeploymentInfoDataPage extends WarDeploymentInfoPanel {
 
         WarDataserviceModel.getInstance().setTns(text);
         this.settings.put(this.NAMESPACE, text);
+
+        return true;
+    }
+    
+    /**
+     * validate target security realm
+     * 
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRealm() {
+
+        String text = txfSecurityRealm.getText();
+        if (this.basicSecurityButton.getSelection()){
+        
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRealmMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityRealmDefault(text);
+        this.settings.put(this.SECURITY_REALM, text);
+
+        return true;
+    }
+    
+    /**
+     * validate security username
+     * 
+     * @return boolean
+     * @since 7.1.1
+     */
+    private boolean validateSecurityUsername() {
+
+        String text = txfSecurityUsername.getText();
+        if (this.wsSecurityButton.getSelection()){
+        
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityUsernameMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEUSERNAME);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityUsernameDefault(text);
+        this.settings.put(this.SECURITY_USERNAME, text);
+
+        return true;
+    }
+    
+    /**
+     * validate security password
+     * 
+     * @return boolean
+     * @since 7.1.1
+     */
+    private boolean validateSecurityPassword() {
+
+    	 String text = txfSecurityPassword.getText();
+         if (this.wsSecurityButton.getSelection()){
+         
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityPasswordMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEPASSWORD);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityPasswordDefault(text);
+        this.settings.put(this.SECURITY_PASSWORD, text);
+
+        return true;
+    }
+    
+    /**
+     * validate target security role
+     * 
+     * @return boolean
+     * @since 7.1
+     */
+    private boolean validateSecurityRole() {
+
+        String text = txfSecurityRole.getText();
+        if (this.basicSecurityButton.getSelection()){
+        
+        	if (text == null || text.length() == 0) {
+                ERROR_MESSAGE = getString("securityRoleMessage");//$NON-NLS-1$
+                createStatus(IStatus.ERROR, ERROR_MESSAGE, InternalModelerWarUiConstants.VALIDATEREALM);
+                return false;
+            }
+
+        }
+        
+        WarDataserviceModel.getInstance().setSecurityRoleDefault(text);
+        this.settings.put(this.SECURITY_ROLE, text);
 
         return true;
     }

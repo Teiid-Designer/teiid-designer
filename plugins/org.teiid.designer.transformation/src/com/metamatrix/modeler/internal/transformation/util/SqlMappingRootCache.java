@@ -15,15 +15,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.mapping.MappingHelper;
+import org.teiid.query.sql.lang.Command;
+
 import com.metamatrix.core.event.EventObjectListener;
-import org.teiid.core.id.ObjectID;
-import org.teiid.core.id.UUID;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -36,16 +36,11 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
 
 /**
  * SqlMappingRootCache
  */
 public class SqlMappingRootCache implements SqlConstants {
-
-    // Type definition for status type
-    public static int EITHER_STATUS = 0;
-    public static int USER_STATUS = 1;
 
     // Caches for each command type
     private static HashMap selectSqlCache = new HashMap();
@@ -136,27 +131,27 @@ public class SqlMappingRootCache implements SqlConstants {
                     sourceGroup = TransformationHelper.getSqlProcedureForResultSet(sourceGroup);
                 }
                 if(containsStatus(selectRoot,QueryValidator.SELECT_TRNS)) {
-                    SqlTransformationResult selectStatus = getStatus(selectRoot,QueryValidator.SELECT_TRNS,EITHER_STATUS,false);
+                    SqlTransformationResult selectStatus = getStatus(selectRoot,QueryValidator.SELECT_TRNS,false);
                     if(selectStatus != null && selectStatus.hasSourceGroup(sourceGroup)) {
                         invalidateRoot = true;
                         break;
                     }
                     if(containsStatus(selectRoot,QueryValidator.INSERT_TRNS)) {
-                        SqlTransformationResult insertStatus = getStatus(selectRoot,QueryValidator.INSERT_TRNS,EITHER_STATUS,false);
+                        SqlTransformationResult insertStatus = getStatus(selectRoot,QueryValidator.INSERT_TRNS,false);
                             if(insertStatus != null && insertStatus.hasSourceGroup(sourceGroup)) {
                                 invalidateRoot = true;
                                 break;
                             }
                         }
                     if(containsStatus(selectRoot,QueryValidator.UPDATE_TRNS)) {
-                        SqlTransformationResult updateStatus = getStatus(selectRoot,QueryValidator.UPDATE_TRNS,EITHER_STATUS,false);
+                        SqlTransformationResult updateStatus = getStatus(selectRoot,QueryValidator.UPDATE_TRNS,false);
                             if(updateStatus != null && updateStatus.hasSourceGroup(sourceGroup)) {
                                 invalidateRoot = true;
                                 break;
                             }
                         }
                     if(containsStatus(selectRoot,QueryValidator.DELETE_TRNS)) {
-                        SqlTransformationResult deleteStatus = getStatus(selectRoot,QueryValidator.DELETE_TRNS,EITHER_STATUS,false);
+                        SqlTransformationResult deleteStatus = getStatus(selectRoot,QueryValidator.DELETE_TRNS,false);
                             if(deleteStatus != null && deleteStatus.hasSourceGroup(sourceGroup)) {
                                 invalidateRoot = true;
                                 break;
@@ -263,7 +258,7 @@ public class SqlMappingRootCache implements SqlConstants {
                     invalidateRoot = true;
 
                 } else if (containsStatus(selectRoot, QueryValidator.SELECT_TRNS)) {
-                    SqlTransformationResult selectStatus = getStatus(selectRoot, QueryValidator.SELECT_TRNS, EITHER_STATUS, false);
+                    SqlTransformationResult selectStatus = getStatus(selectRoot, QueryValidator.SELECT_TRNS, false);
 
                     if (selectStatus != null 
                      && (areAnySourceGroupsProxies(selectStatus) // this check looks for proxies without resolving them
@@ -271,19 +266,19 @@ public class SqlMappingRootCache implements SqlConstants {
                         invalidateRoot = true;
                     } else {
                         if (containsStatus(selectRoot, QueryValidator.INSERT_TRNS)) {
-                            SqlTransformationResult insertStatus = getStatus(selectRoot, QueryValidator.INSERT_TRNS, EITHER_STATUS, false);
+                            SqlTransformationResult insertStatus = getStatus(selectRoot, QueryValidator.INSERT_TRNS, false);
                             if (insertStatus != null && !insertStatus.areSrcGroupMdlResourcesValid()) {
                                 invalidateRoot = true;
                             }
                         }
                         if (!invalidateRoot && containsStatus(selectRoot, QueryValidator.UPDATE_TRNS)) {
-                            SqlTransformationResult updateStatus = getStatus(selectRoot, QueryValidator.UPDATE_TRNS, EITHER_STATUS, false);
+                            SqlTransformationResult updateStatus = getStatus(selectRoot, QueryValidator.UPDATE_TRNS, false);
                             if (updateStatus != null && !updateStatus.areSrcGroupMdlResourcesValid()) {
                                 invalidateRoot = true;
                             }
                         }
                         if (!invalidateRoot && containsStatus(selectRoot, QueryValidator.DELETE_TRNS)) {
-                            SqlTransformationResult deleteStatus = getStatus(selectRoot, QueryValidator.DELETE_TRNS, EITHER_STATUS, false);
+                            SqlTransformationResult deleteStatus = getStatus(selectRoot, QueryValidator.DELETE_TRNS, false);
                             if (deleteStatus != null && !deleteStatus.areSrcGroupMdlResourcesValid()) {
                                 invalidateRoot = true;
                             }
@@ -443,7 +438,7 @@ public class SqlMappingRootCache implements SqlConstants {
      * @return 'true' if the strings are different or cached is uuid, 'false' otherwise.
      */
     public static boolean isSqlDifferent(final Object transMappingRoot,final int cmdType,
-                                            final String userSql,final String uuidSql) {
+                                            final String userSql) {
         boolean isDifferent = true;
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             if(containsStatus((EObject)transMappingRoot,cmdType)) {
@@ -454,11 +449,7 @@ public class SqlMappingRootCache implements SqlConstants {
                 // check whether the status is a uuid status or user status when doing comparison
                 String cachedSql = status.getSqlString();
                 // If uuid status, use uuidSql for the comparison
-                if(status.isUUIDStatus()) {
-                    isDifferent = stringsDifferent(uuidSql,cachedSql);
-                } else {
-                    isDifferent = stringsDifferent(userSql,cachedSql);
-                }
+                isDifferent = stringsDifferent(userSql,cachedSql);
             }
         }
         return isDifferent;
@@ -532,7 +523,7 @@ public class SqlMappingRootCache implements SqlConstants {
         
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 isParsable = status.isParsable();
@@ -551,7 +542,7 @@ public class SqlMappingRootCache implements SqlConstants {
         
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 isResolvable = status.isResolvable();
@@ -570,7 +561,7 @@ public class SqlMappingRootCache implements SqlConstants {
         
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 isValid = status.isValidatable();
@@ -593,7 +584,7 @@ public class SqlMappingRootCache implements SqlConstants {
            TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot) &&
            TransformationHelper.isSqlTable(sourceGroup) ) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 Collection sourceGroups = status.getSourceGroups();
@@ -615,7 +606,7 @@ public class SqlMappingRootCache implements SqlConstants {
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 isTargetValid = status.isTargetValid();
@@ -634,7 +625,7 @@ public class SqlMappingRootCache implements SqlConstants {
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
 
             if(status!=null) {
                 targetValidStatus = status.getTargetValidStatus();
@@ -657,10 +648,10 @@ public class SqlMappingRootCache implements SqlConstants {
      * @param context the ValidationContext to use; may be null
      */
     public static SqlTransformationResult getSqlTransformationStatus(final SqlTransformationMappingRoot transMappingRoot, 
-                                                                     final int cmdType, final int statusType, 
+                                                                     final int cmdType,
                                                                      final boolean restrictSearch, final ValidationContext context) {
         CoreArgCheck.isNotNull(transMappingRoot);
-        return getStatus(transMappingRoot, cmdType, statusType, restrictSearch, context);
+        return getStatus(transMappingRoot, cmdType, restrictSearch, context);
     }
 
     /**
@@ -673,7 +664,7 @@ public class SqlMappingRootCache implements SqlConstants {
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 command = status.getCommand();
@@ -692,7 +683,7 @@ public class SqlMappingRootCache implements SqlConstants {
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 map = status.getExternalMetadataMap();
@@ -711,7 +702,7 @@ public class SqlMappingRootCache implements SqlConstants {
 
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
             	Command command = status.getCommand();
@@ -727,7 +718,7 @@ public class SqlMappingRootCache implements SqlConstants {
         String sqlString = null;
         if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,USER_STATUS,false);
+            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
             
             if(status!=null) {
                 sqlString = status.getSqlString();
@@ -768,14 +759,12 @@ public class SqlMappingRootCache implements SqlConstants {
      * @param context the ValidationContext to use; may be null
      */
     private static SqlTransformationResult createStatus(final EObject transMappingRoot,final int cmdType, 
-                                                          final int statusType, final boolean restrictSearch,
+                                                          final boolean restrictSearch,
                                                           final ValidationContext context) {
         SqlTransformationResult status = null;        
 
         // Parse/Resolve/Validate the SQL
         if(transMappingRoot !=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
-            // get the UUID sql and validate it
-            String uuidSql = getSqlUUIDString(transMappingRoot,cmdType);
             // user sql string
             String userSql = null;
             // create a validator
@@ -785,33 +774,12 @@ public class SqlMappingRootCache implements SqlConstants {
             //if this is workspace validation, validate the UUID sql if that does not validate validate the userSql
             // Any unexpected exception here creates invalid status and logs error
             try {
-	            if(statusType==EITHER_STATUS ) {
-	                if(uuidSql != null) {
-	                    status = (SqlTransformationResult) validator.validateSql(uuidSql, cmdType, true, false);
-	                    //if it is not valid, convert the UUID sql to user sql and validate
-	                    if(status != null && !status.isValidatable()) {
-	                        // get user Sql coverting the uuid sql
-	                        userSql = getConvertedSqlString(transMappingRoot, cmdType, statusType, restrictSearch, context);
-	                        // can return null, if complete conversion of uuids to names is not sucessful
-	                        if(userSql != null) {
-	                            status = (SqlTransformationResult) validator.validateSql(userSql, cmdType, false, false);
-	                        }
-	                    }
-	                } else {
-	                    // if no uuid sql available just validate the user form
-	                    userSql = getSqlUserString(transMappingRoot,cmdType);
-	                    if(userSql != null) {
-	                        status = (SqlTransformationResult) validator.validateSql(userSql, cmdType, false, false);
-	                    }
-	                }
-	            } else if(statusType==USER_STATUS) {
 	                // this is non-worspace validation just validate the user sql
 	                // get user Sql
-	                userSql = getConvertedSqlString(transMappingRoot, cmdType, statusType, restrictSearch, context);
-	                if(userSql != null) {
-	                    status = (SqlTransformationResult) validator.validateSql(userSql, cmdType, false, false);
-	                }
-	            }
+	                userSql = getSqlUserString(transMappingRoot, cmdType); //getConvertedSqlString(transMappingRoot, cmdType,  restrictSearch, context);
+                if(userSql != null) {
+                    status = (SqlTransformationResult) validator.validateSql(userSql, cmdType, false);
+                }
             } catch (Exception e) {
                 String message = TransformationPlugin.Util.getString("SqlMappingRootCache.validationError"); //$NON-NLS-1$
                 TransformationPlugin.Util.log(IStatus.ERROR, e, message); 
@@ -821,7 +789,6 @@ public class SqlMappingRootCache implements SqlConstants {
             	status.setParsable(false);
             	status.setResolvable(false);
             	status.setValidatable(false);
-            	status.setUUIDStatus(false);
             	status.setSqlString(getSqlUserString(transMappingRoot,cmdType));
             }
         }
@@ -846,8 +813,8 @@ public class SqlMappingRootCache implements SqlConstants {
      * Get the SELECT status object (new status is created if not contained in cache)
      */
     private static synchronized SqlTransformationResult getStatus(final EObject transMappingRoot, final int cmdType, 
-                                                                     final int statusType, final boolean restrictSearch) {
-        return getStatus(transMappingRoot, cmdType, statusType, restrictSearch, null);
+                                                                     final boolean restrictSearch) {
+        return getStatus(transMappingRoot, cmdType, restrictSearch, null);
     }
     
     /**
@@ -861,7 +828,7 @@ public class SqlMappingRootCache implements SqlConstants {
      * @param context the ValidationContext to use; may be null
      */
     private static synchronized SqlTransformationResult getStatus(final EObject transMappingRoot, final int cmdType, 
-                                                                  final int statusType, final boolean restrictSearch,
+                                                                  final boolean restrictSearch,
                                                                   final ValidationContext context) {
         SqlTransformationResult statusResult = null;
 
@@ -875,10 +842,10 @@ public class SqlMappingRootCache implements SqlConstants {
             // If statusType is EITHER, use the cached status
             // If statusType is USER, check that the cached status is not a UUID Status
             if(status != null) {
-                if(statusType==EITHER_STATUS || 
-                   statusType==USER_STATUS && !status.isUUIDStatus()) {
+//                if(statusType==EITHER_STATUS || 
+//                   statusType==USER_STATUS && !status.isUUIDStatus()) {
                     statusResult = status;
-                }
+//                }
             }
         }
         
@@ -886,7 +853,7 @@ public class SqlMappingRootCache implements SqlConstants {
         if(statusResult==null) {
             // Cache doesnt contain status or the status is a UUID status 
             // This does a parse/resolve/validate on the SQL
-            statusResult = createStatus(transMappingRoot, cmdType, statusType, restrictSearch, context);
+            statusResult = createStatus(transMappingRoot, cmdType, restrictSearch, context);
             // when validating in editor etc context is null, cach in that case
             if(context == null || context.cacheMappingRootResults()) {
 	            // Add status to the cache
@@ -913,127 +880,6 @@ public class SqlMappingRootCache implements SqlConstants {
             default:
                 return null;
         }
-    }
-
-    /**
-     * Get the SQL for the specified type from a QueryOperationDefinition MetaObject
-     * This method will attempt to use the uuid (statement) property first, converting it
-     * to displayable form.  If it is fully convertable, it is returned.  If it still contains
-     * uuids, the SQL (string) property is used.  If the string property is null, the
-     * partially converted string (containing uuids) will be used.
-     * @param transMappingRoot the transformation mapping root
-     * @param cmdType The type of sql being converted
-     * @param statusType The type type of sttus that is being created when the conversion is requested
-     * @param restrictSearch A boolean indicating if the search needs to be restricted to model imports
-     * @param context the ValidationContext to use; may be null
-     * or if the whole workspace needs to be searched 
-     * @return the SQL Select String
-     */
-    private static String getConvertedSqlString(final Object transMappingRoot, final int cmdType, final int statusType,
-                                                final boolean restrictSearch, final ValidationContext context) {
-        String result = null;
-        String sqlUUIDString = getSqlUUIDString(transMappingRoot, cmdType);
-
-        //-----------------------------------------------------------------
-        // If the statement (UUID version) exists, try to convert it first
-        //-----------------------------------------------------------------
-        if(!CoreStringUtil.isEmpty(sqlUUIDString)) {
-            // Get the mmuid version first.  It is unaffected by any name changes which may have
-            // occurred.
-            String sqlStatementConverted = SqlConverter.convertToString(sqlUUIDString, (EObject)transMappingRoot, cmdType, restrictSearch, context);
-
-            // Determine if the statement was fully converted (no mmuuid found)
-            boolean fullyConverted = sqlStatementConverted.indexOf(UUID.PROTOCOL+ ObjectID.DELIMITER) == -1;
-
-            // If it couldnt be fully converted, try to use the String version of the property instead
-            if(fullyConverted) {
-                result = sqlStatementConverted;
-            }
-        }
-        
-        // we need the user form of sql, if we cannot convert it from uuid form
-        // get it directly from the mapping root 
-        if(result == null && statusType == USER_STATUS) {
-            result = getSqlUserString(transMappingRoot, cmdType);
-        }
-        return result;
-    }
-
-	/**
-	 * Get the SQL string, given a SqlTransformationMappingRoot and a command type
-	 * @param transMappingRoot the transformation mapping root
-	 * @param cmdType The command type whose UUID sql is to be returned.
-	 * @return the SQL UUID String
-	 */
-	private static String getSqlUUIDString(final Object transMappingRoot, final int cmdType) {
-		switch (cmdType) {
-			case QueryValidator.SELECT_TRNS:
-				return getSelectSqlUUIDString(transMappingRoot);
-			case QueryValidator.INSERT_TRNS:
-				return getInsertSqlUUIDString(transMappingRoot);
-			case QueryValidator.UPDATE_TRNS:
-				return getUpdateSqlUUIDString(transMappingRoot);
-			case QueryValidator.DELETE_TRNS:
-				return getDeleteSqlUUIDString(transMappingRoot);
-			default:
-				return getSelectSqlUUIDString(transMappingRoot);
-		}
-	}
-
-    /**
-     * Get the SQL Select String, given a SqlTransformationMappingRoot
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Select String
-     */
-    private static String getSelectSqlUUIDString(final Object transMappingRoot) {
-        MappingHelper helper = TransformationHelper.getMappingHelper(transMappingRoot);
-        String result = null;
-        if(helper!=null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getSelectSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Insert String, given a SqlTransformationMappingRoot
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Insert String
-     */
-    private static String getInsertSqlUUIDString(final Object transMappingRoot) {
-        MappingHelper helper = TransformationHelper.getMappingHelper(transMappingRoot);
-        String result = null;
-        if(helper!=null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getInsertSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Update String, given a SqlTransformationMappingRoot
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Update String
-     */
-    private static String getUpdateSqlUUIDString(final Object transMappingRoot) {
-        MappingHelper helper = TransformationHelper.getMappingHelper(transMappingRoot);
-        String result = null;
-        if(helper!=null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getUpdateSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Delete String, given a SqlTransformationMappingRoot
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Delete String
-     */
-    private static String getDeleteSqlUUIDString(final Object transMappingRoot) {
-        MappingHelper helper = TransformationHelper.getMappingHelper(transMappingRoot);
-        String result = null;
-        if(helper!=null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getDeleteSql();
-        }
-        return result;
     }
 
 	/**

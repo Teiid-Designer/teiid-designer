@@ -7,23 +7,26 @@
  */
 package com.metamatrix.modeler.relationship.ui.custom.actions;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
+
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.relationship.RelationshipFolder;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.relationship.ui.UiPlugin;
 import com.metamatrix.modeler.relationship.ui.actions.RelationshipAction;
 import com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramUtil;
+import com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -39,6 +42,8 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     
     private RelationshipAction createDiagramAction;
     private RelationshipAction createDiagramSiblingAction;
+    
+    private OpenInNavigatorAction openInNavigatorAction;
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -97,7 +102,17 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
      * @since 5.0
      */
     public List<IAction> getAdditionalModelingActions(ISelection theSelection) {
-        return Collections.EMPTY_LIST;
+        List addedActions = new ArrayList();
+        
+        // Need to check the selection first.
+        if( openInNavigatorAction.isEnabled() ) {
+            if( SelectionUtilities.isSingleSelection(theSelection) &&
+            	SelectionUtilities.isAllEObjects(theSelection)  ) {
+                addedActions.add(openInNavigatorAction);
+            }
+        }
+        
+        return addedActions;
     }
     
     /**
@@ -105,9 +120,11 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
      */
     private void initActions() {
         createDiagramAction = new NewCustomDiagramAction();
-        DiagramUiPlugin.registerDiagramActionForSelection(createDiagramAction);
+        UiPlugin.registerActionForSelection(createDiagramAction);
         createDiagramSiblingAction = new NewCustomDiagramSiblingAction();
-        DiagramUiPlugin.registerDiagramActionForSelection(createDiagramSiblingAction);
+        UiPlugin.registerActionForSelection(createDiagramSiblingAction);
+        openInNavigatorAction = new OpenInNavigatorAction();
+        UiPlugin.registerActionForSelection(openInNavigatorAction);
     }
     
     private void addToChildMenu(IMenuManager theMenuMgr) {

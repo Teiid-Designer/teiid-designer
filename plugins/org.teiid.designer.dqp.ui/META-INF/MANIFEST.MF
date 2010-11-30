@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.dqp.ui;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.dqp.ui.DqpUiPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.dqp.ui,
  com.metamatrix.modeler.dqp.ui.connection,
@@ -62,6 +62,8 @@ Require-Bundle: org.eclipse.ui.views,
  org.teiid.designer.datatools,
  org.eclipse.datatools.sqltools.sqleditor,
  net.jcip.annotations,
- org.eclipse.datatools.sqltools.result.ui
+ org.eclipse.datatools.sqltools.result.ui,
+ org.teiid.datatools.connectivity.ui,
+ org.teiid.designer.sdt
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

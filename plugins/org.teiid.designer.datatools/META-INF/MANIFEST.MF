@@ -4,20 +4,19 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.datatools;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Activator: org.teiid.designer.datatools.DatatoolsPlugin
-Bundle-Vendor: %providerName
+Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.teiid.core.designer,
+Require-Bundle: org.teiid.core.designer,
  org.eclipse.core.runtime.compatibility,
  teiid_embedded_query,
  org.teiid.designer.core,
- org.teiid.designer.jdbc,
  org.eclipse.datatools.connectivity,
- org.eclipse.core.resources,
- org.teiid.designer.metamodels.core
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools,
  org.teiid.designer.datatools.connection,
- org.teiid.designer.datatools.profiles.ldap
+ org.teiid.designer.datatools.profiles.ldap,
+ org.teiid.designer.datatools.profiles.modeshape
+Bundle-ClassPath: lib/jackson-all-1.6.1.jar,
+ .

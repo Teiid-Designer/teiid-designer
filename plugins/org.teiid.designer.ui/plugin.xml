@@ -87,7 +87,95 @@
      </viewPage>
    </extension>
 
-<!-- Action set to get Metadata Search Action in Search Menu -->
+<!-- Property Testers, Handlers, Commands, Menus extensions to get Teiid Designer submenu in Search Menu -->
+
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="org.teiid.designer.ui.propertyTester"
+			type="java.lang.Object"
+			namespace="org.teiid.designer.ui"
+			properties="CLONE_ALLOWED,EDITABLE_OBJECT,MODEL_PROJECT_OBJECT,PASTE_SPECIAL_ALLOWED,READONLY_MODEL_OBJECT,RENAME_ALLOWED"
+			class="com.metamatrix.modeler.internal.ui.actions.DesignerUiPropertyTester">
+		</propertyTester>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="com.metamatrix.modeler.internal.ui.search.OpenMetadataSearchPageHandler"
+            commandId="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand">
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.FindModelObjectHandler"
+            commandId="com.metamatrix.modeler.ui.actions.findModelObjectCommand">
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.CloneHandler"
+            commandId="com.metamatrix.modeler.ui.actions.cloneCommand">
+			<enabledWhen>
+				<test property="org.teiid.designer.ui.CLONE_ALLOWED" value="true"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.PasteSpecialHandler"
+            commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<or>
+							<instanceof value="org.eclipse.emf.ecore.EObject"/>
+							<instanceof value="org.eclipse.core.resources.IFile"/>
+						</or>
+						<test property="org.teiid.designer.ui.PASTE_SPECIAL_ALLOWED" value="true"/>
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.OpenHandler"
+            commandId="com.metamatrix.modeler.ui.actions.openCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<not>
+						<with variable="activePartId">
+          					<equals value="views.datatypeHierarchyView"/>
+       					</with>					
+       				</not>
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.EditHandler"
+            commandId="com.metamatrix.modeler.ui.actions.editCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+						<test property="org.teiid.designer.ui.EDITABLE_OBJECT" value="true"/>
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.internal.ui.actions.RenameHandler"
+            commandId="com.metamatrix.modeler.ui.actions.renameCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+						<test property="org.teiid.designer.ui.RENAME_ALLOWED" value="true"/>
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+   </extension>
 
    <extension
          point="org.eclipse.ui.commands">
@@ -96,34 +184,183 @@
             description="%category.modeler.description"
             id="com.metamatrix.modeler.ui.category.modeler">
       </category>
-   </extension>      
-      
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%metadataSearchActionSet.name"
-            visible="true"
-            id="metadataSearchActionSet">
-		 <menu
-			   id="org.eclipse.search.menu"
-			   label="%searchMenu.label"
-			   path="navigate">
-			   <groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
-			   <groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
-			   <groupMarker name="quickPage"/>           <!-- to be used by clients      -->
-			   <separator name="contextMenuActionsGroup"/>
-		 </menu>            
-         <action
-               label="%openMetadataSearchAction.text"
-               icon="icons/full/ctool16/metadata_search.gif"
-               tooltip="%openMetadataSearchAction.tip"
-               class="com.metamatrix.modeler.internal.ui.search.OpenMetadataSearchPageAction"
-               toolbarPath="org.eclipse.search.searchActionSet/Normal/Search"
-               menubarPath="org.eclipse.search.menu/quickPage"
-               id="openMetadataSearchPageAction">
-         </action>              
-      </actionSet>
-   </extension>   
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand"
+			name="%openMetadataSearchAction.text">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.findModelObjectCommand"
+			name="%findModelObject.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.cloneCommand"
+			name="%cloneAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+			name="%pasteSpecialAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.openCommand"
+			name="%openAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.editCommand"
+			name="%editAction.name">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.ui.actions.renameCommand"
+			name="%renameCommand.name"
+			description="%renameCommand.description"> 
+	  </command>
+   </extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
+			<!-- Note: The Search menu (re-) definition has to be here due to bug: -->
+			<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
+			<menu
+				label="%searchMenu.label"
+				id="org.eclipse.search.menu">
+				<separator name="internalDialogGroup" visible="false" />
+           		<separator name="dialogGroup" visible="false" />
+           		<separator name="fileSearchContextMenuActionsGroup" visible="true" />
+           		<separator name="teiidDesignerSearchMenuActionsGroup" visible="true" />
+           		<separator name="contextMenuActionsGroup" visible="true" />
+           		<separator name="occurencesActionsGroup" visible="true" />
+           		<separator name="extraSearchGroup" visible="true" />
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
+			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
+				<command commandId="com.metamatrix.modeler.ui.search.openMetadataSearchPageCommand"
+					label="%openMetadataSearchAction.text"
+                 	icon="icons/full/ctool16/metadata_search.gif"
+                 	tooltip="%openMetadataSearchAction.tip">
+        		</command>
+				<command commandId="com.metamatrix.modeler.ui.actions.findModelObjectCommand"
+					label="%findModelObject.name"
+                 	icon="icons/full/ctool16/opentype.gif"
+                 	tooltip="%findModelObject.tooltip">
+        		</command>
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=paste">
+			<command commandId="com.metamatrix.modeler.ui.actions.pasteSpecialCommand"
+				label="%pasteSpecialAction.name"
+             	tooltip="%pasteSpecialAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+			<command commandId="com.metamatrix.modeler.ui.actions.cloneCommand"
+				label="%cloneAction.name"
+             	tooltip="%cloneAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?before=find.ext">
+			<command commandId="com.metamatrix.modeler.ui.actions.openCommand"
+				label="%openAction.name"
+             	tooltip="%openAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+			<command commandId="com.metamatrix.modeler.ui.actions.editCommand"
+				label="%editAction.name"
+             	tooltip="%editAction.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?before=editStart">
+			<menu id="org.teiid.designer.ui.newChildMenu"
+                label="%newChildMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewChildMenu"
+                    id="com.metamatrix.modeler.ui.actions.newChildMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.newSiblingMenu"
+                label="%newSiblingMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewSiblingMenu"
+                    id="com.metamatrix.modeler.ui.actions.newSiblingMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.newAssociationMenu"
+                label="%newAssociationMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.NewAssociationMenu"
+                    id="com.metamatrix.modeler.ui.actions.newAssociationMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+			<menu id="org.teiid.designer.ui.modelingActionsMenu"
+                label="%modelingActionsMenu.label">
+            	<dynamic class="com.metamatrix.modeler.internal.ui.actions.ModelingActionsMenu"
+                    id="com.metamatrix.modeler.ui.actions.modelingActionsMenu">
+            	</dynamic>
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+        	</menu>
+ 		    <separator name="internalDialogGroup" visible="true" />
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=delete">
+			<command commandId="com.metamatrix.modeler.ui.actions.renameCommand"
+				label="%renameCommand.name"
+             	tooltip="%renameCommand.description">
+            	<visibleWhen
+                   checkEnabled="false">
+					<iterate ifEmpty="false">
+						<instanceof value="org.eclipse.emf.ecore.EObject"/>
+						<test property="org.teiid.designer.ui.MODEL_PROJECT_OBJECT" value="true" />
+					</iterate>
+            	</visibleWhen>
+    		</command>
+		</menuContribution>
+	</extension>
 
 <!--
 	Add Metadata action set. Set visibility to false so that it is not automatically added
@@ -323,9 +560,6 @@
          <actionSet
                id="RefactorActionSet">
          </actionSet>
-         <actionSet
-               id="metadataSearchActionSet">
-         </actionSet>
       </perspectiveExtension>
    </extension>
 <!-- Model Explorer decorator -->
@@ -489,6 +723,8 @@
             <mapping scope="instance">
                 <entry node="org.teiid.designer.core"/>
                 <entry node="org.teiid.designer.diagram.ui"/>
+                <entry node="org.teiid.designer.dqp"/>
+                <entry node="org.teiid.designer.query.ui"/>
                 <entry node="org.teiid.designer.ui"/>
                 <entry node="org.teiid.designer.ui.common"/>
             </mapping>
@@ -583,92 +819,6 @@
             id="views.systemModelView">
       </view>
    </extension>
-<!-- Open editors toolbar button/menu -->
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%navigationActionSet.label"
-            visible="true"
-            id="navigationActionSet">
-         <action
-               label="%editorList.name"
-               icon="icons/full/cview16/editorList.gif"
-               tooltip="%editorList.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.OpenEditorListAction"
-               toolbarPath="org.eclipse.ui.workbench.navigate/history.group"
-               enablesFor="+"
-               style="pulldown"
-               id="OpenEditorListAction">
-         </action>    
-            
-      </actionSet>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%findModelObjectActionSet.label"
-            visible="true"
-            id="findModelObjectActionSet">
-		 <menu
-			   id="org.eclipse.search.menu"
-			   label="%searchMenu.label"
-			   path="navigate">
-			   <groupMarker name="internalDialogGroup"/>   <!-- not to be used by clients  -->
-			   <groupMarker name="dialogGroup"/>           <!-- to be used by clients      -->
-			   <groupMarker name="quickPage"/>           <!-- to be used by clients      -->
-			   <separator name="contextMenuActionsGroup"/>
-		 </menu>    
-         <action
-               label="%findModelObject.name"
-               tooltip="%findModelObject.tooltip"
-               icon="icons/full/ctool16/opentype.gif"               
-               class="com.metamatrix.modeler.internal.ui.actions.FindModelObjectAction"
-               toolbarPath="org.eclipse.search.searchActionSet/Normal/Search"
-               menubarPath="org.eclipse.search.menu/quickPage"
-               enablesFor="-2"
-               id="FindModelObjectAction">
-         </action>             
-      </actionSet>
-   </extension>
-<!-- Save All toolbar button -->
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="%fileActionSet.label"
-            visible="true"
-            id="fileActionSet">
-         <action
-               label="%saveAll.name"
-               icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/saveall_edit.gif"
-               disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dtool16/saveall_edit.gif"
-               tooltip="%saveAll.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.SaveAllAction"
-               toolbarPath="org.eclipse.ui.workbench.file/save.ext"
-               enablesFor="-1"
-               id="SaveAllAction">
-         </action>
-         <action
-               label="%addModelProjectSet.name"
-               icon="platform:/plugin/org.eclipse.ui.ide/icons/full/etool16/newprj_wiz.gif"
-               disabledIcon="platform:/plugin/org.eclipse.ui.ide/icons/full/dtool16/newprj_wiz.gif"
-               tooltip="%addModelProjectSet.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.AddModelProjectSetAction"
-               menubarPath="file/new.ext"
-               enablesFor="-1"
-               id="AddModelProjectSetAction">
-         </action>
-         <action
-               label="%addExistingProject.name"
-               icon="platform:/plugin/org.eclipse.ui.ide/icons/full/etool16/newprj_wiz.gif"
-               disabledIcon="platform:/plugin/org.eclipse.ui.ide/icons/full/dtool16/newprj_wiz.gif"
-               tooltip="%addExistingProject.tooltip"
-               class="com.metamatrix.modeler.internal.ui.actions.AddExistingProjectAction"
-               menubarPath="file/new.ext"
-               enablesFor="-1"
-               id="AddExistingProjectAction">
-         </action>
-      </actionSet>
-   </extension>
    <extension
          id="%modelImportContributions.id"
          name="ModelImportContributions"
@@ -683,19 +833,14 @@
                id="organizeImportsAction">
          </action>
       </objectContribution>
-<!-- Action to open add objects to Metadata Favorites View in context menus -->
-      <objectContribution
-            objectClass="org.eclipse.emf.ecore.EObject"
-            id="addToMetadataFavorites">
-         <action
-               label="%addToMetadataFavoritesAction.label"
-               icon="icons/full/cview16/add_to_favorites.gif"
-               class="com.metamatrix.modeler.internal.ui.favorites.actions.AddToMetadataFavoritesAction"
-               enablesFor="1"
-               id="addToMetadataFavoritesAction">
-         </action>
-      </objectContribution>
-
+   </extension>
+   <!-- Action to open add objects to Metadata Favorites View in context menus -->
+   <extension
+         id="designerModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.internal.ui.actions.DesignerPermanentActionContributor">
+      </class>
    </extension>
    <extension
          id="jdbcRefresh"
@@ -813,23 +958,11 @@
             categoryId="modeler.ui.modelCategory"
             class="com.metamatrix.modeler.internal.ui.preferences.LogicalAsRelationalPreferenceContributor">
       </preference>      
+      <preference
+            id="autoOpenPerspectiveContributor"
+            categoryId="modeler.ui.modelCategory"
+            class="com.metamatrix.modeler.internal.ui.preferences.AutoOpenPerspectivePreferenceContributor">
+      </preference>      
 	</extension>
-   <extension
-         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
-      <category
-            id="org.teiid.designer.ui.category1747310555"
-            name="Designer">
-      </category>
-      <cheatsheet
-            category="org.teiid.designer.ui.category1747310555"
-            composite="false"
-            contentFile="$nl$/cheatsheets/JDBCToWebService.xml"
-            id="org.teiid.designer.ui.cheatsheet310603064"
-            name="Create a new Web Service from Relational Views/Sources">
-         <description>
-            Create Relational Model from JDBC Import
-         </description>
-      </cheatsheet>
-   </extension>
 
 </plugin>

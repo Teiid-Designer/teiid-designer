@@ -83,4 +83,8 @@ public interface InternalModelerWarUiConstants {
     public static int VALIDATEHOST = 3;
     public static int VALIDATEPORT = 4;
     public static int VALIDATEJNDI = 5;
+    public static int VALIDATEREALM = 6;
+    public static int VALIDATEROLE = 7;
+    public static int VALIDATEUSERNAME = 8;
+    public static int VALIDATEPASSWORD = 9;
 }

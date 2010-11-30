@@ -283,17 +283,20 @@ public final class VdbModelEntry extends VdbEntry {
         super.save(out, monitor);
         // Save model index
         save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
-        try {
-            // Convert problems for this model entry to markers on the VDB file
-            final IFile vdbFile = getVdb().getFile();
-            for (final Problem problem : problems) {
-                final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
-                marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
-                marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
-                marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
+        
+        if (!getVdb().isPreview()) {
+            try {
+                // Convert problems for this model entry to markers on the VDB file
+                final IFile vdbFile = getVdb().getFile();
+                for (final Problem problem : problems) {
+                    final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
+                    marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
+                    marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
+                    marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
+                }
+            } catch (final Exception error) {
+                throw CoreModelerPlugin.toRuntimeException(error);
             }
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
 
@@ -356,6 +359,13 @@ public final class VdbModelEntry extends VdbEntry {
         if (workspaceFile == null) return;
         clean();
         try {
+        	final Resource model = findModel();
+            if (getVdb().isPreview() && ModelUtil.isPhysical(model)) {
+                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
+                final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
+                this.translator.set(translator == null ? EMPTY_STR : translator);
+            }
+        	
             // Build model if necessary
             ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
             // Synchronize model problems
@@ -372,7 +382,6 @@ public final class VdbModelEntry extends VdbEntry {
             }
             // Also add imported models if not a preview
             if (!getVdb().isPreview()) {
-                final Resource model = findModel();
                 final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
                 for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
                     // TODO: Does this work for the datatypes model?

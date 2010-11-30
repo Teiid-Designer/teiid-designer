@@ -35,6 +35,8 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ServerUtils;
+
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -47,10 +49,17 @@ public final class ServerPage extends WizardPage {
     // Fields
     // ===========================================================================================================================
 
-    /**
+	private boolean autoConnect = true;
+
+	/**
      * The button used to test the connection to the server. Should only be enabled when server properties are valid.
      */
     private Button btnTestConnection;
+    
+    /**
+     * The Check-box to allow auto-connect on Finish
+     */
+    private Button btnAutoConnectOnFinish;
 
     /**
      * The user password needed to login to the server.
@@ -266,6 +275,24 @@ public final class ServerPage extends WizardPage {
                 handleTestConnection();
             }
         });
+        
+        this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
+        this.btnAutoConnectOnFinish.setText(UTIL.getString("serverPageAutoConnectLabel")); //$NON-NLS-1$
+        this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
+        this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        this.btnAutoConnectOnFinish.setSelection(true);
+        
+        this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleAutoConnect();
+            }
+        });
     }
 
     private void constructUrlPanel( Composite parent ) {
@@ -280,10 +307,16 @@ public final class ServerPage extends WizardPage {
         Text txtUrl = new Text(pnl, SWT.BORDER);
         txtUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
+        
+        Label templateUrl = new Label(pnl, SWT.LEFT);
+        templateUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        templateUrl.setText(UTIL.getString("serverPageProtocolLabel") + //$NON-NLS-1$
+        		StringUtilities.SPACE + StringUtilities.SPACE + ServerUtils.FORMAT_SERVER); 
+
 
         // set initial value
         if (this.url == null) {
-            this.url = ServerUtils.DEFAULT_SERVER;
+            this.url = ServerUtils.DEFAULT_SECURE_SERVER;
         }
 
         txtUrl.setText(this.url);
@@ -343,6 +376,10 @@ public final class ServerPage extends WizardPage {
     ServerManager getServerManager() {
         return ((ServerWizard)getWizard()).getServerManager();
     }
+    
+    void handleAutoConnect() {
+    	this.autoConnect = this.btnAutoConnectOnFinish.getSelection();
+    }
 
     /**
      * Handler for when the password control value is modified
@@ -377,7 +414,7 @@ public final class ServerPage extends WizardPage {
              */
             @Override
             public void run() {
-                success[0] = server.isConnected();
+                success[0] = server.testPing().isOK();
             }
         });
 
@@ -445,6 +482,15 @@ public final class ServerPage extends WizardPage {
             setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
         }
     }
+    
+    /**
+     * 
+     * @return true if autoconnect is checked
+     */
+    public boolean shouldAutoConnect() {
+		return autoConnect;
+	}
+
 
     /**
      * If the initial message is being displayed do a validation.

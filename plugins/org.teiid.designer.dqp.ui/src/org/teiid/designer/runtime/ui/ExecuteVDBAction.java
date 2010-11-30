@@ -11,17 +11,24 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.VDB;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -75,10 +82,10 @@ public class ExecuteVDBAction extends SortableSelectionAction {
             if (obj instanceof IFile) {
                 String extension = ((IFile)obj).getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-                    Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-                    if (server != null) {
+//                    Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+//                    if (server != null) {
                         return true;
-                    }
+//                    }
                 }
             }
         }
@@ -112,32 +119,44 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
         try {
             if (server != null) {
-                ExecutionAdmin admin = server.getAdmin();
-                if (admin != null) {
-                    deployedVDB = admin.getVdb(selectedVDB.getName());
-                    if (deployedVDB == null) {
-                        deployedVDB = DeployVdbAction.deployVdb(server, selectedVDB);
-                        // deployedVDB = admin.deployVdb(selectedVDB);
-                    }
-
-                    if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
-                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
-                                   selectedVDB.getFullPath().removeFileExtension().lastSegment());
-                    } else {
-                        StringBuilder message = new StringBuilder(
-                                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-                        for (String error : deployedVDB.getValidityErrors()) {
-                            message.append("\nERROR:\t").append(error); //$NON-NLS-1$
-                        }
-                        MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveTitle"), //$NON-NLS-1$
-                                                  message.toString());
-                    }
-                }
+            	IStatus connectStatus = server.ping();
+            	if( connectStatus.isOK() ) {
+	                ExecutionAdmin admin = server.getAdmin();
+	                if (admin != null) {
+	                    deployedVDB = admin.getVdb(selectedVDB.getName());
+	                    if (deployedVDB == null) {
+	                        deployedVDB = DeployVdbAction.deployVdb(server, selectedVDB);
+	                    }
+	
+	                    if (deployedVDB != null && deployedVDB.getStatus().equals(VDB.Status.ACTIVE)) {
+	                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(),
+	                                   selectedVDB.getFullPath().removeFileExtension().lastSegment());
+	                    } else {
+	                        StringBuilder message = new StringBuilder(
+	                                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", selectedVDB.getName())); //$NON-NLS-1$
+	                        if(null != deployedVDB) {
+	                        	for (String error : deployedVDB.getValidityErrors()) {
+	                        		message.append("\nERROR:\t").append(error); //$NON-NLS-1$
+	                        	}
+	                        }
+	                        MessageDialog.openWarning(getShell(),
+	                                                  DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveTitle"), //$NON-NLS-1$
+	                                                  message.toString());
+	                    }
+	                }
+            	} else {
+            		MessageDialog.openWarning(getShell(),
+                            DqpUiConstants.UTIL.getString("ExecuteVDBAction.noTeiidServerConnection.title"), //$NON-NLS-1$
+                            DqpUiConstants.UTIL.getString("ExecuteVDBAction.noTeiidServerConnection.message", connectStatus.getMessage())); //$NON-NLS-1$
+            	}
+            } else {
+            	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+                        DqpUiConstants.UTIL.getString("ExecuteVDBAction.noTeiidInstance.title"), //$NON-NLS-1$
+                        DqpUiConstants.UTIL.getString("ExecuteVDBAction.noTeiidInstance.message")); //$NON-NLS-1$
             }
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotDeployedError", //$NON-NLS-1$
-                                                                                    deployedVDB.getName()));
+            		selectedVDB.getName()));
         }
 
     }
@@ -165,33 +184,42 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     }
 
     private static void processForDTP( Server server,
-                                       String vdbName ) throws CoreException {
-        // I have hard coded them here so that I can test with
-        // a fully deployed VDB, see the Teiid down load for this VDB.
+    		String vdbName ) throws CoreException {
 
-        String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    	String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-        String username = DEFAULT_USERNAME;
-        String password = DEFAULT_PASSWORD;
-
-        String currentDefaultServerURL = server.getUrl();
-        String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
-
-        IConnectionProfile profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
-                                                                            connectionURL,
-                                                                            username,
-                                                                            password,
-                                                                            vdbName);
-
-        profile.connectWithoutJob();
-
-        try {
-            PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
-            // jdbcPage.showView(JDBC_CONNECTION_VIEW_ID);
-        } catch (Throwable e) {
-            // TODO Auto-generated catch block
-            DqpUiConstants.UTIL.log(e);
-        }
+    	String currentDefaultServerURL = server.getUrl();
+    	String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
+    	
+    	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
+    	
+    	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
+    	if(null != profile) {
+    		profile.connectWithoutJob();
+    		try {
+    			PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    		} catch (Throwable e) {
+    			DqpUiConstants.UTIL.log(e);
+    		}
+    	} else {
+    		// This call has the effect of creating the driver, which provides the values to the Profile UI.
+    		ConnectivityUtil.createVDBTeiidProfileProperties(driverPath,
+    				connectionURL, null, null, vdbName, profileName);
+    		NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
+    		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+    		wizardDialog.setBlockOnOpen(true);
+    		if (wizardDialog.open() == Window.OK) {
+    			try {
+    				PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    			} catch (Throwable e) {
+    				DqpUiConstants.UTIL.log(e);
+    			}
+    		}
+    	}
     }
 
+    
+    private static Shell getShell() {
+    	return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+    }
 }

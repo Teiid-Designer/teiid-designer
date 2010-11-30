@@ -402,7 +402,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         createMetadataForCatalog(catalog);
         String name = table.getInputXPath();
 
-        String simpleName = NameUtil.normalizeNameForRelationalTable(table.getSimpleName());
+        String simpleName = NameUtil.normalizeName(table.getSimpleName());
 
         addTable(catalog, simpleName, ELEMENT_TABLETYPE);
         addTableNameToMap(catalog, name, simpleName);
@@ -414,7 +414,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         String tableName = table.getInputXPath();
         String columnName = column.getXpath();
 
-        String simpleName = NameUtil.normalizeNameForRelationalTable(column.getSimpleName());
+        String simpleName = NameUtil.normalizeName(column.getSimpleName());
         // Simple element types (xsd:String) that are referenced by several
         // elements are sometimes turned into schemaModel. In this event a column
         // with the name text is created to hold the data. We only want to
@@ -427,7 +427,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
             // Strip the length of "text" and the length of the user defined separator.
             simpleName = simpleName.substring(0, simpleName.length() - 4 - sepLength);
         }
-        String simpleTableName = NameUtil.normalizeNameForRelationalTable(table.getSimpleName());
+        String simpleTableName = NameUtil.normalizeName(table.getSimpleName());
 
         addColumn(catalog, simpleTableName, simpleName, column);
         addColumnNameToMap(catalog, tableName, columnName, simpleName, simpleTableName);
@@ -438,10 +438,10 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
                                         int pkIndex ) {
         String catalog = stateManager.getCatalog(table);
         String tableName = table.getInputXPath();
-        String simpleTableName = NameUtil.normalizeNameForRelationalTable(table.getSimpleName());
+        String simpleTableName = NameUtil.normalizeName(table.getSimpleName());
         String columnName = column.getXpath();
         String primaryKeyName = "pk_" + tableName; //$NON-NLS-1$
-        String simpleName = "pk" + NameUtil.normalizeNameForRelationalTable(table.getSimpleName()); //$NON-NLS-1$
+        String simpleName = "pk" + NameUtil.normalizeName(table.getSimpleName()); //$NON-NLS-1$
 
         addPrimaryKey(pkIndex, catalog, simpleTableName, columnName, simpleName);
         addPrimaryKeyNameToMap(catalog, primaryKeyName, simpleName);
@@ -458,8 +458,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
     }
 
     private String getRelationshipTableSimpleName( Relationship tableRelationship ) {
-        return NameUtil.normalizeNameForRelationalTable(tableRelationship.getChild().getSimpleName()) + "_rel_" //$NON-NLS-1$
-               + NameUtil.normalizeNameForRelationalTable(tableRelationship.getParent().getSimpleName());
+        return NameUtil.normalizeName(tableRelationship.getChild().getSimpleName()) + "_rel_" //$NON-NLS-1$
+               + NameUtil.normalizeName(tableRelationship.getParent().getSimpleName());
     }
 
     private String getRelationshipColumnName( Relationship tableRelationship,
@@ -494,9 +494,9 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         if (selfReferenceChild) {
             retval.append("child_"); //$NON-NLS-1$
         }
-        retval.append(NameUtil.normalizeNameForRelationalTable(table.getSimpleName()));
+        retval.append(NameUtil.normalizeName(table.getSimpleName()));
         retval.append('_');
-        retval.append(NameUtil.normalizeNameForRelationalTable(column.getSimpleName()));
+        retval.append(NameUtil.normalizeName(column.getSimpleName()));
         return retval.toString();
     }
 
@@ -546,10 +546,10 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
                                          Column column ) {
         String catalog = stateManager.getCatalog(tableRelationship.getChild());
         String columnName = tableRelationship.getParentRelativeXpath() + "/" + column.getXpath(); //$NON-NLS-1$
-        String simpleName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getParent().getSimpleName()) + "_" //$NON-NLS-1$
-                            + NameUtil.normalizeNameForRelationalTable(column.getSimpleName());
+        String simpleName = NameUtil.normalizeName(tableRelationship.getParent().getSimpleName()) + "_" //$NON-NLS-1$
+                            + NameUtil.normalizeName(column.getSimpleName());
         String tableName = tableRelationship.getParent().getInputXPath() + "/" + tableRelationship.getChildRelativeXpath(); //$NON-NLS-1$
-        String simpleTableName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getChild().getSimpleName());
+        String simpleTableName = NameUtil.normalizeName(tableRelationship.getChild().getSimpleName());
 
         addColumn(catalog, simpleTableName, simpleName, column);
         addColumnNameToMap(catalog, tableName, columnName, simpleName, simpleTableName);
@@ -565,12 +565,12 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         String importerColumnName = tableRelationship.getParentRelativeXpath() + "/" + column.getXpath(); //$NON-NLS-1$
         String importerTableName = tableRelationship.getParent().getInputXPath() + "/" //$NON-NLS-1$
                                    + tableRelationship.getChildRelativeXpath();
-        String importerTableSimpleName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getChild().getSimpleName());
+        String importerTableSimpleName = NameUtil.normalizeName(tableRelationship.getChild().getSimpleName());
 
         String exporterCatalog = stateManager.getCatalog(tableRelationship.getParent());
         String exporterColumnName = column.getXpath();
         String exporterTableName = tableRelationship.getParent().getInputXPath();
-        String exporterTableSimpleName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getParent().getSimpleName());
+        String exporterTableSimpleName = NameUtil.normalizeName(tableRelationship.getParent().getSimpleName());
 
         String primaryKeyName = "pk_" + exporterTableName; //$NON-NLS-1$
         String foreignKeyName = "fk_" + importerTableName + "_" + exporterTableName; //$NON-NLS-1$ //$NON-NLS-2$
@@ -631,8 +631,8 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         String simpleName;
         String columnNameElementPart = tableRelationship.getChildRelativeXpath();
         String columnNameAttributePart = "/" + column.getXpath(); //$NON-NLS-1$
-        String simpleNameElementPart = NameUtil.normalizeNameForRelationalTable(tableRelationship.getChild().getSimpleName());
-        String simpleNameAttributePart = NameUtil.normalizeNameForRelationalTable(column.getSimpleName());
+        String simpleNameElementPart = NameUtil.normalizeName(tableRelationship.getChild().getSimpleName());
+        String simpleNameAttributePart = NameUtil.normalizeName(column.getSimpleName());
         if (repetition >= 0) {
             columnName = columnNameElementPart + "[" + repetition + "]" + columnNameAttributePart; //$NON-NLS-1$//$NON-NLS-2$
             simpleName = simpleNameElementPart + repetition + "_" + simpleNameAttributePart; //$NON-NLS-1$
@@ -641,7 +641,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
             simpleName = simpleNameElementPart + "_" + simpleNameAttributePart; //$NON-NLS-1$
         }
         String tableName = tableRelationship.getParent().getInputXPath();
-        String simpleTableName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getParent().getSimpleName());
+        String simpleTableName = NameUtil.normalizeName(tableRelationship.getParent().getSimpleName());
 
         addColumn(catalog, simpleTableName, simpleName, column);
         addColumnNameToMap(catalog, tableName, columnName, simpleName, simpleTableName);
@@ -840,13 +840,13 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
             importerColumnName = columnNameElementPart + columnNameAttributePart;
         }
         String importerTableName = tableRelationship.getParent().getInputXPath();
-        String importerTableSimpleName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getParent().getSimpleName());
+        String importerTableSimpleName = NameUtil.normalizeName(tableRelationship.getParent().getSimpleName());
 
         String exporterCatalog = stateManager.getCatalog(tableRelationship.getChild());
         String exporterColumnName = column.getXpath();
         String exporterTableName = tableRelationship.getParent().getInputXPath() + "/" //$NON-NLS-1$
                                    + tableRelationship.getChildRelativeXpath();
-        String exporterTableSimpleName = NameUtil.normalizeNameForRelationalTable(tableRelationship.getChild().getSimpleName());
+        String exporterTableSimpleName = NameUtil.normalizeName(tableRelationship.getChild().getSimpleName());
 
         String primaryKeyName = "pk_" + exporterTableName; //$NON-NLS-1$
         String foreignKeyName = "fk_" + importerTableName + "_" + exporterTableName; //$NON-NLS-1$ //$NON-NLS-2$
@@ -918,7 +918,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
 
         String exporterCatalog = stateManager.getCatalog(column.getTable());
         String exporterTableName = column.getTable().getInputXPath();
-        String exporterTableSimpleName = NameUtil.normalizeNameForRelationalTable(column.getTable().getSimpleName());
+        String exporterTableSimpleName = NameUtil.normalizeName(column.getTable().getSimpleName());
         String exporterColumnName = column.getXpath();
 
         String primaryKeyName = "pk_" + exporterTableName; //$NON-NLS-1$
@@ -927,7 +927,7 @@ public class DatabaseMetaDataImpl extends DatabaseMetaDataBase {
         String foreignKeyName = fkPrefix + importerTableName + "_" + exporterTableName; //$NON-NLS-1$
 
         String simpleName = fkPrefix + getRelationshipTableSimpleName(tableRelationship) + "_" //$NON-NLS-1$
-                            + NameUtil.normalizeNameForRelationalTable(column.getTable().getSimpleName());
+                            + NameUtil.normalizeName(column.getTable().getSimpleName());
 
         addCrossReference(fkIndex,
                           importerCatalog,

@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -51,12 +50,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.modeshape.common.util.IoUtil;
 import org.teiid.core.I18n;
 import org.teiid.core.exception.EmptyArgumentException;
 import org.teiid.designer.ddl.importer.DdlImporter;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
+import com.metamatrix.core.util.FileUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
@@ -343,8 +341,10 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 optToSetModelEntityDescriptionModified();
             }
         });
-        optToSetModelEntityDescriptionCheckBox.setSelection(false);
-        optToSetModelEntityDescriptionCheckBox.setVisible(false);
+        
+        // make sure importer has restored setting
+        optToSetModelEntityDescriptionModified();
+
         optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(panel,
                                                                                          DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
                                                                                          0,
@@ -357,6 +357,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 optToCreateModelEntitiesForUnsupportedDdlModified();
             }
         });
+        
+        // make sure importer has restored setting
+        optToCreateModelEntitiesForUnsupportedDdlModified();
 
         ddlFileContentsExpanderBar = new ExpandBar(panel, SWT.NONE);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
@@ -412,7 +415,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 generateModelName = true;
             }
             try {
-                ddlFileContentsBox.setText(IoUtil.read(new File(ddlFileName)));
+                ddlFileContentsBox.setText(new FileUtil(ddlFileName).readSafe());
             } catch (final IOException error) {
                 throw CoreModelerPlugin.toRuntimeException(error);
             }

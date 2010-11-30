@@ -45,7 +45,7 @@ public final class TestFileUiUtils extends TestCase {
         try {
             UTILS.getExistingCaseVariantFileName((String)null);
             fail("Null input did not throw exception"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // expected result
         } catch (Exception theException) {
             fail("Expected AssertionException when input is null and got " + theException.getClass()); //$NON-NLS-1$
@@ -59,7 +59,7 @@ public final class TestFileUiUtils extends TestCase {
         try {
             UTILS.getExistingCaseVariantFileName(""); //$NON-NLS-1$
             fail("Empty input did not throw exception"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // expected result
         } catch (Exception theException) {
             fail("Expected AssertionException when input is empty and got " + theException.getClass()); //$NON-NLS-1$
@@ -73,7 +73,7 @@ public final class TestFileUiUtils extends TestCase {
         try {
             UTILS.getExistingCaseVariantFileName("          "); //$NON-NLS-1$
             fail("Input consisting of all spaces did not throw exception"); //$NON-NLS-1$
-        } catch (AssertionError theException) {
+        } catch (IllegalArgumentException theException) {
             // expected result
         } catch (Exception theException) {
             fail("Expected AssertionException when input is empty and got " + theException.getClass()); //$NON-NLS-1$

@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.ui;
 
+import static com.metamatrix.modeler.ui.UiConstants.TableEditorAttributes.COLUMN_ORDER;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -17,6 +18,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
@@ -24,8 +27,8 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.BundleContext;
-import com.metamatrix.core.PluginUtil;
 import org.teiid.core.CoreConstants.Debug;
+import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventBroker;
 import com.metamatrix.core.event.SynchEventBroker;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -85,6 +88,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     private EObjectPropertiesOrderPreferences eObjectPropertiesOrderPreferences;
 
     private ModelerActionService service;
+    
+    private IPropertyChangeListener tablePrefPropListener;
 
     /**
      * The constructor.
@@ -110,9 +115,8 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         return this.service;
     }
 
-    private void extractModelTableColumnUtilsToPreferenceStore() {
-        getPreferenceStore().setValue(UiConstants.TableEditorAttributes.COLUMN_ORDER,
-                                      getEObjectPropertiesOrderPreferences().toString());
+    public void extractModelTableColumnUtilsToPreferenceStore() {
+        getPreferenceStore().setValue(COLUMN_ORDER, getEObjectPropertiesOrderPreferences().toString());
     }
 
     /**
@@ -128,7 +132,18 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     }
 
     public EObjectPropertiesOrderPreferences getEObjectPropertiesOrderPreferences() {
-        if (this.eObjectPropertiesOrderPreferences == null) this.eObjectPropertiesOrderPreferences = new EObjectPropertiesOrderPreferences();
+        if (this.eObjectPropertiesOrderPreferences == null) {
+            this.eObjectPropertiesOrderPreferences = new EObjectPropertiesOrderPreferences();
+            this.tablePrefPropListener = new IPropertyChangeListener() {
+                public void propertyChange( PropertyChangeEvent event ) {
+                    // update if new prefs have been imported
+                    if (event.getProperty().equals(COLUMN_ORDER)) {
+                        initializeModelTableColumnUtilsFromPreferenceStore();
+                    }
+                }
+            };
+            getPreferenceStore().addPropertyChangeListener(this.tablePrefPropListener);
+        }
 
         return this.eObjectPropertiesOrderPreferences;
     }
@@ -172,8 +187,28 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
         return warningDecoratorImage;
     }
 
-    private void initializeModelTableColumnUtilsFromPreferenceStore() {
-        getEObjectPropertiesOrderPreferences().initializeFromString(getPreferenceStore().getString(UiConstants.TableEditorAttributes.COLUMN_ORDER));
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void registerActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.addWorkbenchSelectionListener(action);
+    }
+
+    /**
+     * @return
+     * @since 4.0
+     */
+    public static void unregisterActionForSelection(ISelectionListener action) {
+        ActionService actionService =
+            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+        actionService.removeWorkbenchSelectionListener(action);
+    }
+    
+    void initializeModelTableColumnUtilsFromPreferenceStore() {
+        getEObjectPropertiesOrderPreferences().initializeFromString(getPreferenceStore().getString(COLUMN_ORDER));
     }
 
     /**
@@ -395,6 +430,10 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
      */
     @Override
     public void stop( final BundleContext context ) throws Exception {
+        // unregister property change listener before saving table prefs
+        if (this.tablePrefPropListener != null) {
+            getPreferenceStore().removePropertyChangeListener(this.tablePrefPropListener);
+        }
         extractModelTableColumnUtilsToPreferenceStore();
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectListener);
         super.stop(context);

@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,10 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -82,12 +79,12 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.webservice.WebServicePackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
@@ -100,6 +97,7 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
+import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * The <code>PreviewManager</code> is responsible for keeping the hidden Preview VDBs synchronized with the workspace. Also, the
@@ -118,7 +116,7 @@ public final class PreviewManager extends JobChangeAdapter
 
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
     private static final String PROJECT_VDB_SUFFIX = "_project"; //$NON-NLS-1$
-    
+
     private IPasswordProvider passwordProvider;
 
     private static String getPreviewVdbPrefix( IResource resource ) {
@@ -132,8 +130,39 @@ public final class PreviewManager extends JobChangeAdapter
                 name.append(segment).append(delim);
             }
         }
+        String prefix = name.toString();
+        if (prefix.contains(StringUtilities.SPACE)) {
+            prefix = prefix.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
 
-        return name.toString();
+        return prefix;
+    }
+
+    /**
+     * @param modelFile the model whose dependencies are being checked
+     * @param pvdbFile the Preview VDB whose model entry is being checked to see if it is a dependency
+     * @return <code>true</code> if the model depends on the Preview VDBs model entry
+     */
+    private boolean dependsOn( IFile modelFile,
+                               IFile pvdbFile ) {
+        // TODO implement dependsOn
+        assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
+
+        Vdb pvdb = new Vdb(pvdbFile, null);
+        Set<VdbModelEntry> models = pvdb.getModelEntries();
+
+        // project PVDB has no entries
+        if (!models.isEmpty()) {
+            IFile file = models.iterator().next().findFileInWorkspace();
+
+            for (IResource dependency : WorkspaceResourceFinderUtil.getDependentResources(modelFile)) {
+                if (dependency.equals(file)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -143,8 +172,11 @@ public final class PreviewManager extends JobChangeAdapter
     public static String getPreviewProjectVdbName( IProject project ) {
         assert (project != null) : "Project is null"; //$NON-NLS-1$
         StringBuilder name = new StringBuilder(getPreviewVdbPrefix(project));
-        name.append(project.getName()).append(PROJECT_VDB_SUFFIX);
-        return name.toString();
+        String vdbName = name.append(project.getName()).append(PROJECT_VDB_SUFFIX).toString();
+        if (vdbName.contains(StringUtilities.SPACE)) {
+            vdbName = vdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
+        return vdbName;
     }
 
     /**
@@ -188,7 +220,7 @@ public final class PreviewManager extends JobChangeAdapter
 
             // must be from a relational or web service model
             if (RelationalPackage.eNS_URI.equals(metamodelUri) || WebServicePackage.eNS_URI.equals(metamodelUri)
-                || XmlDocumentPackage.eNS_URI.equals(metamodelUri)) {
+                || XmlDocumentPackage.eNS_URI.equals(metamodelUri) || FunctionPackage.eNS_URI.equals(metamodelUri)) {
                 return true;
             }
         }
@@ -276,19 +308,40 @@ public final class PreviewManager extends JobChangeAdapter
         }
     }
 
+    /**
+     * Preview VDBs don't have markers like non-preview VDBs. So we have to go get the model out of the PVDB and see if it has any
+     * errors.
+     * 
+     * @param pvdb the Preview VDB being checked for errors
+     * @return a status indicating if the model inside the PVDB has any errors
+     */
     IStatus checkPreviewVdbForErrors( Vdb pvdb ) {
-        try {
-            for (IMarker marker : pvdb.getProblems()) {
-                if (marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING) == IMarker.SEVERITY_ERROR) {
-                    return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelErrorMarkerExists,
-                                                                         marker.getAttribute(IMarker.MESSAGE, ""))); //$NON-NLS-1$
-                }
-            }
+        // a PVDB will have either zero entries (if a project PVDB) or one model entry
+        Set<VdbModelEntry> modelEntries = pvdb.getModelEntries();
 
-            return Status.OK_STATUS;
-        } catch (Exception e) {
-            return new Status(IStatus.ERROR, PLUGIN_ID, Messages.UnexpectedErrorGettingVdbMarkers, e);
+        if (!modelEntries.isEmpty()) {
+            try {
+                IFile modelFile = modelEntries.iterator().next().findFileInWorkspace();
+
+                // if the model inside the PVDB has errors return an error status
+                for (IMarker marker : modelFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
+                    Object attr = marker.getAttribute(IMarker.SEVERITY);
+
+                    if (attr != null) {
+                        int severity = ((Integer)attr).intValue();
+
+                        if (severity == IMarker.SEVERITY_ERROR) {
+                            return new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelErrorMarkerExists,
+                                                                                 marker.getAttribute(IMarker.MESSAGE, ""))); //$NON-NLS-1$
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                return new Status(IStatus.ERROR, PLUGIN_ID, Messages.UnexpectedErrorGettingVdbMarkers, e);
+            }
         }
+
+        return Status.OK_STATUS;
     }
 
     /**
@@ -522,7 +575,7 @@ public final class PreviewManager extends JobChangeAdapter
 
     /**
      * @param container the container whose Preview VDBs are being requested
-     * @param pvdbPaths the paths to all the Preview VDBs under the specified container
+     * @param pvdbPaths a collection that will be filled with the paths to all the Preview VDBs under the specified container
      */
     private void findPvdbs( IContainer container,
                             List<IPath> pvdbPaths ) throws Exception {
@@ -555,39 +608,57 @@ public final class PreviewManager extends JobChangeAdapter
         String dataSourceType = connInfoProvider.getDataSourceType();
 
         if (!props.isEmpty()) {
+            // 
             IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
+            // The data source property key represents what's needed as a property for the Teiid Data Source
+            // This is provided by the getDataSourcePasswordPropertyKey() method.
+            String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
+            boolean requiresPassword = dsPasswordKey != null;
 
             if (modelConnectionProfile != null) {
-            	String pwd = null;
-            	
-                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
+                String pwd = null;
 
-                if (existingConnectionProfile != null) {
-                    // make sure the password property is there. if not get from connection profile.
-                    if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-                    	pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                // Check Password
+                if (requiresPassword) {
+                    // Check connection info provider. Property will be coming in with a key = "password
+                    pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+
+                    if (pwd == null) {
+                        IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
+
+                        if (existingConnectionProfile != null) {
+                            // make sure the password property is there. if not get from connection profile.
+		                	// Use DTP's constant for profile:  IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID = org.eclipse.datatools.connectivity.db.password
+		                	// DTP's connection profile "password" key, if exists for a profile type, is returned via the provider's
+                            // getPasswordPropertyKey() method. (this can be different than getDataSourcePasswordPropertyKey())
+                            if (requiresPassword && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+                                pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                            }
+                        }
+
+                        if (pwd == null && this.passwordProvider != null) {
+                            pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+                        }
+                    }
+
+                    if (pwd != null) {
+                        props.setProperty(dsPasswordKey, pwd);
                     }
                 }
-                
-                if( pwd == null && this.passwordProvider != null) {
-                	pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+
+                if (requiresPassword && pwd != null) {
+                    TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+                    tds.setPreview(true);
+                    return tds;
                 }
-                
-                if( pwd != null ) {
-                	props.setProperty(connInfoProvider.getPasswordPropertyKey(), pwd);
-                }
-                
-            	TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
-                tds.setPreview(true);
-                return tds;
             }
         }
 
         return null;
     }
-    
-    public void setPasswordProvider(IPasswordProvider provider) {
-    	this.passwordProvider = provider;
+
+    public void setPasswordProvider( IPasswordProvider provider ) {
+        this.passwordProvider = provider;
     }
 
     Server getPreviewServer() {
@@ -648,13 +719,22 @@ public final class PreviewManager extends JobChangeAdapter
         int index = pvdbName.lastIndexOf('.');
 
         if (index == -1) return pvdbName;
-        return pvdbName.substring(0, index);
+        String jndiName = pvdbName.substring(0, index);
+
+        if (jndiName.contains(StringUtilities.SPACE)) {
+            jndiName = jndiName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        }
+        return jndiName;
     }
 
     private String getResourceNameForPreviewVdb( IFile pvdbFile ) {
         // see if a project PVDB
         if (pvdbFile.getFullPath().removeFileExtension().lastSegment().endsWith(PROJECT_VDB_SUFFIX)) {
-            return pvdbFile.getProject().getName();
+            String projectVdbName = pvdbFile.getProject().getName();
+            if (projectVdbName.contains(StringUtilities.SPACE)) {
+                projectVdbName = projectVdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+            }
+            return projectVdbName;
         }
 
         String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();
@@ -771,7 +851,6 @@ public final class PreviewManager extends JobChangeAdapter
      * @param job the job being processed
      */
     private void handleModelProjectOpened( ModelProjectOpenedJob job ) {
-        // delete any PVDBs in the workspace that don't have an associated model
         IProject project = job.getProject();
         List<IPath> pvdbPaths = new ArrayList<IPath>();
 
@@ -789,8 +868,11 @@ public final class PreviewManager extends JobChangeAdapter
                     // these are the PVDBs that have associated models
                     statuses = this.deploymentStatusMap.get(project.getFullPath());
 
-                    // make copy in case another thread is updating
-                    if ((statuses != null) && !statuses.isEmpty()) {
+                    // make sure collection is not null
+                    if (statuses == null) {
+                        statuses = new ArrayList<PreviewVdbStatus>(0);
+                    } else if (!statuses.isEmpty()) {
+                        // make copy in case another thread is updating
                         statuses = new ArrayList<PreviewVdbStatus>(statuses);
                     }
                 } finally {
@@ -807,19 +889,24 @@ public final class PreviewManager extends JobChangeAdapter
                         }
                     }
 
-                    // delete PVDB if there is no associated model
+                    // remove project part of path because it gets added back in later
+                    IPath path = pvdbPath.removeFirstSegments(1);
+                    IFile modelFile = project.getFile(path);
+
                     if (delete) {
-                        // remove project part of path because it gets added back in
-                        IPath path = pvdbPath.removeFirstSegments(1);
-                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(project.getFile(path), this.context);
+                        // delete PVDB if there is no associated model
+                        DeletePreviewVdbJob deletePvdbJob = new DeletePreviewVdbJob(modelFile, this.context);
                         batchJob.add(deletePvdbJob);
+                    } else {
+                        // Make sure PVDB is synchronized. One way a PVDB won't be synchronized is if the model was dirty when
+                        // the project was closed and the user saved the file as part of the project being closed.
+                        UpdatePreviewVdbJob updatePvdbJob = new UpdatePreviewVdbJob(modelFile, getPreviewServer(), this.context);
+                        batchJob.add(updatePvdbJob);
                     }
                 }
 
-                // only schedule if there are jobs to run
-                if (!batchJob.getJobs().isEmpty()) {
-                    batchJob.schedule();
-                }
+                // run job
+                batchJob.schedule();
             }
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.DeleteOrphanedPreviewVdbsJobError, project.getName()));
@@ -1047,8 +1134,11 @@ public final class PreviewManager extends JobChangeAdapter
         if (event.getKey().equals(PreferenceConstants.PREVIEW_ENABLED)) {
             this.previewEnabled = Boolean.parseBoolean(event.getNewValue().toString());
 
-            // mark all deploy statuses as needing to be deployed
-            if (!this.previewEnabled) {
+            // if turning on preview make sure all PVDBs exist and are synchronized
+            if (this.previewEnabled) {
+                synchronizeWorkspace();
+            } else {
+                // mark all deploy statuses as needing to be deployed
                 resetAllDeployedStatuses();
             }
         }
@@ -1138,6 +1228,10 @@ public final class PreviewManager extends JobChangeAdapter
             }
         }
 
+        // collection for PVDBs that will be deployed and merged into the project PVDB
+        List<IFile> pvdbsToMerge = new ArrayList<IFile>(projectPvdbsToDeploy.size());
+        pvdbsToMerge.add(pvdbFile); // add in model being previewed
+
         // deploy any project PVDBs if necessary
         for (IFile projectPvdbFile : projectPvdbsToDeploy) {
             PROJECT_MODEL_DEPLOY_TASK: {
@@ -1148,49 +1242,59 @@ public final class PreviewManager extends JobChangeAdapter
 
                 Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
 
-                // make sure no errors
+                // make sure no errors in any models that are dependencies of the model being previewed
                 String name = getResourceNameForPreviewVdb(projectPvdbFile);
                 monitor.subTask(NLS.bind(Messages.PreviewSetupValidationCheckTask, name));
                 IStatus status = checkPreviewVdbForErrors(projectModelPvdb);
+                boolean error = false;
 
+                // if the model has an error only throw exception if that model is a dependency
                 if (status.getSeverity() == IStatus.ERROR) {
-                    throw new CoreException(status);
+                    error = true;
+
+                    if (dependsOn(modelToPreview, projectPvdbFile)) {
+                        throw new CoreException(status);
+                    }
+                } else {
+                    pvdbsToMerge.add(projectPvdbFile);
                 }
 
-                monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, name));
-                status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
+                if (!error) {
+                    monitor.subTask(NLS.bind(Messages.PreviewSetupConnectionInfoTask, name));
+                    status = this.context.ensureConnectionInfoIsValid(projectModelPvdb, previewServer);
 
-                // save if necessary
-                boolean wasSaved = false;
-                if (projectModelPvdb.isModified()) {
-                    wasSaved = true;
-                    projectModelPvdb.save(monitor);
+                    // save if necessary
+                    boolean wasSaved = false;
+                    if (projectModelPvdb.isModified()) {
+                        wasSaved = true;
+                        projectModelPvdb.save(monitor);
+                    }
+
+                    // make sure parent is in sync with file system
+                    IContainer parent = projectPvdbFile.getParent();
+                    monitor.subTask(NLS.bind(Messages.PreviewSetupRefreshWorkspaceTask, parent.getFullPath()));
+
+                    if (!(parent instanceof IWorkspaceRoot) && (wasSaved || !parents.contains(parent))) {
+                        refreshLocal(parent);
+                        parents.add(parent);
+                    }
+
+                    // deploy PVDB
+                    monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
+                    admin.deployVdb(projectPvdbFile);
+                    setNeedsToBeDeployedStatus(projectPvdbFile, false);
+
+                    if (monitor.isCanceled()) {
+                        throw new InterruptedException();
+                    }
                 }
 
-                // make sure parent is in sync with file system
-                IContainer parent = projectPvdbFile.getParent();
-                monitor.subTask(NLS.bind(Messages.PreviewSetupRefreshWorkspaceTask, parent.getFullPath()));
-
-                if (!(parent instanceof IWorkspaceRoot) && (wasSaved || !parents.contains(parent))) {
-                    refreshLocal(parent);
-                    parents.add(parent);
-                }
-
-                // deploy PVDB
-                monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
-                admin.deployVdb(projectPvdbFile);
-                setNeedsToBeDeployedStatus(projectPvdbFile, false);
-
-                monitor.worked(1);
-
-                if (monitor.isCanceled()) {
-                    throw new InterruptedException();
-                }
+                monitor.worked(1); // end deploy task
             }
         }
 
         // merge into project PVDB
-        for (IFile pvdbToMerge : projectPvdbsToDeploy) {
+        for (IFile pvdbToMerge : pvdbsToMerge) {
             MERGE_TASK: {
                 String name = getResourceNameForPreviewVdb(pvdbToMerge);
                 monitor.subTask(NLS.bind(Messages.PreviewSetupMergeTask, name));
@@ -1327,43 +1431,76 @@ public final class PreviewManager extends JobChangeAdapter
         // set new server
         this.previewServer.set(server);
 
+        boolean serverDeleted = (server == null);
+
         // mark all PVDBs as needing to be deployed
         resetAllDeployedStatuses();
 
         // cleanup old server if it can be reached
-        if ((oldServer != null) && oldServer.isConnected()) {
-            PreviewContext oldContext = new PreviewContext() {
+        if ((oldServer != null)) {
+            if (oldServer.isConnected()) {
+                PreviewContext oldContext = new PreviewContext() {
 
-                @Override
-                public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                            Server previewServer ) throws Exception {
-                    return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
+                    @Override
+                    public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
+                                                                Server previewServer ) throws Exception {
+                        return previewContext.ensureConnectionInfoIsValid(previewVdb, oldServer);
+                    }
+
+                    @Override
+                    public IFile getPreviewVdb( IResource projectOrModel ) {
+                        return previewContext.getPreviewVdb(projectOrModel);
+                    }
+
+                    @Override
+                    public String getPreviewVdbDeployedName( IPath pvdbPath ) {
+                        return previewContext.getPreviewVdbDeployedName(pvdbPath);
+                    }
+
+                    @Override
+                    public String getPreviewVdbJndiName( IPath pvdbPath ) {
+                        return previewContext.getPreviewVdbJndiName(pvdbPath);
+                    }
+                };
+
+                // If the server is being deleted, then we need to set up a job listener so we can close the server when ALL
+                // delete jobs are completed. This removes any "sessions" via the adminAPI objects
+                Collection<Job> jobs = new ArrayList<Job>();
+
+                // delete all Preview VDBs on old server
+                for (IProject project : getAllProjects()) {
+                    for (IFile pvdbFile : findProjectPvdbs(project, false)) {
+                        Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
+                                                                                    getPreviewVdbVersion(pvdbFile),
+                                                                                    getPreviewVdbJndiName(pvdbFile), oldContext,
+                                                                                    oldServer);
+                        jobs.add(deleteDeployedPvdbJob);
+                    }
                 }
 
-                @Override
-                public IFile getPreviewVdb( IResource projectOrModel ) {
-                    return previewContext.getPreviewVdb(projectOrModel);
-                }
+                if (jobs.isEmpty()) {
+                    oldServer.close();
+                } else {
+                    try {
+                        CountDownLatch latch = new CountDownLatch(jobs.size());
+                        IJobChangeListener shutdownJobListener = new ServerDeleteJobListener(latch, oldServer, serverDeleted);
+                        for (Job job : jobs) {
+                            job.addJobChangeListener(shutdownJobListener);
+                            job.schedule();
+                        }
 
-                @Override
-                public String getPreviewVdbDeployedName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbDeployedName(pvdbPath);
+                        // wait for at most 10 seconds plus a quarter second per job
+                        latch.await(10 + (int)(jobs.size() / 4.0), TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        // Make sure we close the old server
+                        if (serverDeleted) {
+                            oldServer.close();
+                        }
+                    }
                 }
-
-                @Override
-                public String getPreviewVdbJndiName( IPath pvdbPath ) {
-                    return previewContext.getPreviewVdbJndiName(pvdbPath);
-                }
-            };
-
-            // delete all Preview VDBs on old server
-            for (IProject project : getAllProjects()) {
-                for (IFile pvdbFile : findProjectPvdbs(project, false)) {
-                    Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
-                                                                                getPreviewVdbVersion(pvdbFile),
-                                                                                getPreviewVdbJndiName(pvdbFile), oldContext,
-                                                                                oldServer);
-                    deleteDeployedPvdbJob.schedule();
+            } else {
+                if (serverDeleted) {
+                    oldServer.close();
                 }
             }
         }
@@ -1384,8 +1521,10 @@ public final class PreviewManager extends JobChangeAdapter
             // cleanup PVDs if necessary
             if ((getPreviewServer() != null)
                 && isPreviewEnabled()
+                && getPreviewServer().isConnected()
                 && prefs.getBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
                                     PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT)) {
+
                 ExecutionAdmin admin = getPreviewServer().getAdmin();
                 Collection<Job> jobs = new ArrayList<Job>();
 
@@ -1445,6 +1584,17 @@ public final class PreviewManager extends JobChangeAdapter
                 if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
                     modelProjectOpened(project);
                 }
+            }
+        }
+    }
+
+    /**
+     * Make sure all PVDBs exist and are synchronized.
+     */
+    private void synchronizeWorkspace() {
+        for (IProject project : getAllProjects()) {
+            if (project.isOpen() && (ModelerCore.hasModelNature(project))) {
+                modelProjectOpened(project);
             }
         }
     }
@@ -1529,4 +1679,32 @@ public final class PreviewManager extends JobChangeAdapter
         }
     }
 
+    class ServerDeleteJobListener extends JobChangeAdapter {
+        private final CountDownLatch latch;
+        private final Server server;
+        private boolean serverDeleted = false;
+
+        public ServerDeleteJobListener( CountDownLatch latch,
+                                        Server server,
+                                        boolean serverDeleted ) {
+            this.latch = latch;
+            this.server = server;
+            this.serverDeleted = serverDeleted;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+         */
+        @Override
+        public void done( IJobChangeEvent event ) {
+            this.latch.countDown();
+            if (this.latch.getCount() == 0) {
+                if (serverDeleted) {
+                    this.server.close();
+                }
+            }
+        }
+    }
 }

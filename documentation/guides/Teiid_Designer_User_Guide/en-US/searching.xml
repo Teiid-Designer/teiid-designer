@@ -6,15 +6,15 @@
 <chapter id="searching-chapter">
     <title>Searching</title>
   
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
-	<para>The Teiid Designer provides multiple search actions located in the main toolbar's 
+	<para>Designer provides multiple search actions located via Teiid Designer sub-menu in Eclipses Search menu.
 		<emphasis role="bold">Search</emphasis> menu. </para>
 	<figure>
 		<title>Search Options</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="images/screencaps/ED_MainMenus_Search.jpg"/>
+				<imagedata fileref="images/screencaps/main-menuearch.png"/>
 			</imageobject>
 		</mediaobject>
 	</figure>
@@ -22,58 +22,25 @@
 	<itemizedlist>
 		<listitem>
 			<para>
-				The individual actions in the <emphasis role="bold">Search</emphasis> menu are described below: 
+				The individual actions in the Teiid Designer sub-menu are described below:
 				<itemizedlist>
 					<listitem>
 						<para><inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/metadata_search.gif"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Search...</emphasis> - Launches the 
-							standard Search dialog, which can be used to find resource containing specific
-							text or expressions and filter based on file name patterns. For standard Eclipse 
-							installations, the default search tile will be File Search. (See Eclipse documentation for details).
-						</para>
-					</listitem>
-					<listitem>
-						<para><inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/metadata_search.gif"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">File...</emphasis> - Launches the 
-							standard Search dialog, which can be used to find resource containing specific
-							text or expressions and filter based on file name patterns. The File Search 
-							tab will be selected in the dialog. (See Eclipse documentation for details).
-						</para>
-					</listitem>
-					<listitem>
-						<para><inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/opentype.gif"/>
-								</imageobject>
-							</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
-							<emphasis role="bold">Find Model Object</emphasis> dialog, which can be used to locate an 
-							object in the workspace by specifying all or part of its name.  Selecting the object 
-							will open it in the appropriate editor.
-						</para>
-					</listitem>
-					<listitem>
-						<para><inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+									<imagedata fileref="images/icons/relationship-search-page.png"/>
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
-							Search dialog and auto-selects the Relationships tab.  Users can search for models in the workspace 
-							by specifying a relationship type, participant locations, and/or names containing specified
+							Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
+							by specifying a relationship type, participant locations, and/or names containing sprcified
 							text.  Search results appear in 
-							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							the <xref linkend="search-results-view" /> view, 
 							and double-clicking a result will open that model in the appropriate editor.
 						</para>
 					</listitem>
 					<listitem>
 						<para><inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/search_transformation.gif"/>
+									<imagedata fileref="images/icons/search-transformation.png"/>
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
 							Transformation Search dialog.  User can search models in 
@@ -84,14 +51,25 @@
 					<listitem>
 						<para><inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/metadata_search.gif"/>
+									<imagedata fileref="images/icons/metadata-search.png"/>
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Metadata...</emphasis> - Launches the 
 							Search dialog.  User can search for models in the workspace by 
 							specifying an Object Type, and/or a Data Type, and/or a property value.  
 							Search results appear in 
-							the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+							the <xref linkend="search-results-view" /> view, 
 							and double-clicking a result will open that model in the appropriate editor.
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/open-type.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
+							Find Model Object dialog, which can be used to find an object in the 
+							workspace by specifying all or part of its name.  Selecting the object 
+							will open it in the appropriate editor.
 						</para>
 					</listitem>
 				</itemizedlist>
@@ -113,27 +91,27 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Open the <emphasis role="bold">Find Model Object</emphasis> dialog 
 							by either selecting the <inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/opentype.gif"/>
+									<imagedata fileref="images/icons/open-type.png"/>
 								</imageobject>
 							</inlinemediaobject> action on the main Teiid Designer tool-bar.</para>
 							<figure>
 								<title>Find Model Object Action In Toolbar</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/FindModelObjectFromToolbar.jpg"/>
+										<imagedata fileref="images/screencaps/find-model-object-action.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 							<para>or select the same action via the main menu's <emphasis role="bold">Search > Find Model Object</emphasis> <inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/opentype.gif"/>
+									<imagedata fileref="images/icons/open-type.png"/>
 								</imageobject>
 							</inlinemediaobject> action. </para>
 							<figure>
 								<title>Find Model Object Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/FindModelObjectDialog.jpg"/>
+										<imagedata fileref="images/screencaps/find-model-object-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -176,14 +154,14 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Relationships...</emphasis> 
 								action on the Teiid Designer main menu <inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+									<imagedata fileref="images/icons/relationship-search-page.png"/>
 								</imageobject>
 							</inlinemediaobject> which opens the <emphasis role="bold">Search</emphasis> dialog.</para>
 							<figure>
 								<title>Relationship Search Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SearchRelationships.jpg"/>
+										<imagedata fileref="images/screencaps/search-relationships-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -196,7 +174,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
 								The search will be performed and the results will be displayed in the 
-								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								<xref linkend="search-results-view" />. 
 								If the view is not yet open, it will be opened automatically.</para>
 						</listitem>
 					</itemizedlist>
@@ -205,7 +183,7 @@
 		</itemizedlist>
 	</sect1>
 	
-	<!-- ####### SEARCH MODEL METADATA OBJECTS ######################################### -->
+	<!-- ####### SEARCH MODEL TRANSFORMATION SQL ######################################### -->
 	
 	<sect1 id="search-transformations-section">
 		<title>Search Transformation SQL</title>
@@ -219,14 +197,14 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Transformations...</emphasis> 
 								action on the Teiid Designer main menu <inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/search_transformation.gif"/>
+									<imagedata fileref="images/icons/search-transformation.png"/>
 								</imageobject>
 							</inlinemediaobject> which opens the <emphasis role="bold">Search Transformations</emphasis> dialog.</para>
 							<figure>
 								<title>Search Transformations Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SearchTransformationsDialog.jpg"/>
+										<imagedata fileref="images/screencaps/search-transformations-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -252,7 +230,7 @@
 			<title>Insert SQL Example</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/SearchTransformationsDialogInsertSQL.jpg"/>
+					<imagedata fileref="images/screencaps/search-transformations-dialog-insert-sql.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -278,14 +256,14 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Metadata...</emphasis> 
 								action on the main Teiid Designer toolbar <inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/metadata_search.gif"/>
+									<imagedata fileref="images/icons/metadata-search.png"/>
 								</imageobject>
 							</inlinemediaobject> which opens the <emphasis role="bold">Search</emphasis> dialog.</para>
 							<figure>
 								<title>Metadata Search Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/SearchMetadata.jpg"/>
+										<imagedata fileref="images/screencaps/search-metadata-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -298,7 +276,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">Search</emphasis>. 
 								The search will be performed and the results will be displayed in the 
-								<link linkend="search-results-view"><emphasis role="bold">Search Results View</emphasis></link>. 
+								<xref linkend="search-results-view" />. 
 								If the view is not yet open, it will be opened automatically.</para>
 						</listitem>
 					</itemizedlist>

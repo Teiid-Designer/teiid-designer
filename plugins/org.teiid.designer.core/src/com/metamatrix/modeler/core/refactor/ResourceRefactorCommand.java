@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.core.refactor;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -28,22 +28,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.metamodels.core.ModelType;
-import com.metamatrix.metamodels.transformation.SqlTransformation;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.TransformationPackage;
+
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.TransactionRunnable;
@@ -55,7 +47,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
 import com.metamatrix.modeler.internal.core.index.IndexUtil;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceFilter;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
@@ -90,6 +81,13 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
     /** IStatus code indicating an exception occurred obtaining the model resource */
     public static final int ERROR_RENAMING_VDB = 1106;
+    
+    /** IStatus code indicating that the call to refactor modified resource in case an internal property contained 
+     * the string name or path of the model being modified
+     */
+    public static final int REFACTOR_MODIFIED_RESOURCE_COMPLETE = 1107;
+    
+    public static final int REFACTOR_MODIFIED_RESOURCE_ERROR = 1108;
 
     private static final boolean UNDO_REQUEST = true;
 
@@ -223,6 +221,11 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                 // tell the subclass to modify the resource
                 result = modifyResource(this.getResource(), monitor);
 
+                if (result == null || result.getSeverity() < IStatus.ERROR) {
+                	final Map refactoredPaths = getMovedResourcePathMap(false);
+                	result = refactorModelContents(monitor, refactoredPaths);
+                }
+                
                 // if modification succeeded, refactor the dependent files
                 if (result == null || result.getSeverity() < IStatus.ERROR) {
                     // Get the map of the refactored paths, that is old path mapped to the new refactored path
@@ -453,6 +456,7 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     //        
     // return rv;
     // }
+    
     /**
      * Rebuilds the model import list and fixes broken references for all model files that use this command's resource.
      * 
@@ -478,24 +482,12 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
                         // defect 16804 - should not try to refactor read-only dependent resources:
                         if (!modelResource.isReadOnly()) {
                             rebuildImports(modelResource, monitor, refactoredPaths);
-                            regenerateUserSql(modelResource, monitor, refactoredPaths);
-                            modelResource.save(null, false);
 
-                            // Send notification for transformation roots to invalidate any transformation cache
-                            final Resource resrc = modelResource.getEmfResource();
-                            if (resrc instanceof EmfResource) {
-                                final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
-                                for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
-                                    final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
-                                    final Notification notification = new ENotificationImpl(
-                                                                                            (InternalEObject)root,
-                                                                                            Notification.SET,
-                                                                                            TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
-                                                                                            refactoredPaths.keySet(),
-                                                                                            refactoredPaths.values());
-                                    root.eNotify(notification);
-                                }
-                            }
+                            modelResource.save(null, false);
+                            
+                            RefactorModelExtensionManager.helpUpdateDependentModelContents(IRefactorModelHandler.RENAME, modelResource, refactoredPaths, monitor);
+                            
+                            modelResource.save(null, false);
                         } // endif -- readonly
                     } else {
                         if (severity < IStatus.WARNING) {
@@ -651,85 +643,6 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
         return status;
     }
 
-    protected IStatus regenerateUserSql( ModelResource modelResource,
-                                         IProgressMonitor monitor,
-                                         Map refactoredPaths ) throws ModelWorkspaceException {
-        final Resource r = modelResource.getEmfResource();
-        // If the model resource being represents a virtual model with transformations ...
-        if (r instanceof EmfResource && ((EmfResource)r).getModelType() == ModelType.VIRTUAL_LITERAL) {
-
-            // Ensure that this model resource is loaded so that we can retrieve and update its contents
-            if (!r.isLoaded()) {
-                Map options = (r.getResourceSet() != null ? r.getResourceSet().getLoadOptions() : Collections.EMPTY_MAP);
-                try {
-                    r.load(options);
-                } catch (IOException e) {
-                    ModelerCore.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
-                    return new Status(IStatus.ERROR, PID, 0, e.getLocalizedMessage(), e);
-                }
-            }
-
-            // Process all transformations in the TransformationContainer
-            final List transformations = ((EmfResource)r).getModelContents().getTransformations();
-            for (Iterator i = transformations.iterator(); i.hasNext();) {
-                EObject eObj = (EObject)i.next();
-                if (eObj instanceof SqlTransformationMappingRoot) {
-                    SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)eObj;
-                    SqlTransformation helper = (SqlTransformation)mappingRoot.getHelper();
-                    SqlTransformation nested = null;
-                    if (helper != null) {
-                        for (Iterator j = helper.getNested().iterator(); j.hasNext();) {
-                            eObj = (EObject)j.next();
-                            if (eObj instanceof SqlTransformation) {
-                                nested = (SqlTransformation)eObj;
-                            }
-                        }
-                    }
-                    if (nested != null) {
-                        try {
-                            // Use all resources in the workspace container to
-                            List eResources = new ArrayList(ModelerCore.getModelContainer().getResources());
-
-                            // Convert select SQL
-                            String uuidFormSql = helper.getSelectSql();
-                            String convertedSql = null;
-                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
-                                convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
-                                nested.setSelectSql(convertedSql);
-                            }
-
-                            // Convert insert SQL
-                            uuidFormSql = helper.getInsertSql();
-                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
-                                convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
-                                nested.setInsertSql(convertedSql);
-                            }
-
-                            // Convert update SQL
-                            uuidFormSql = helper.getUpdateSql();
-                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
-                                convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
-                                nested.setUpdateSql(convertedSql);
-                            }
-
-                            // Convert delete SQL
-                            uuidFormSql = helper.getDeleteSql();
-                            if (!CoreStringUtil.isEmpty(uuidFormSql)) {
-                                convertedSql = SqlStringConverter.convertUUIDsToFullNames(uuidFormSql, eResources);
-                                nested.setDeleteSql(convertedSql);
-                            }
-                        } catch (CoreException e) {
-                            ModelerCore.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
-                            return new Status(IStatus.ERROR, PID, 0, e.getLocalizedMessage(), e);
-                        }
-                    }
-                }
-            }
-        }
-        final String msg = ModelerCore.Util.getString("ResourceRefactorCommand.user_sql_string_regenerated_successfully"); //$NON-NLS-1$
-        return new Status(IStatus.OK, PID, 0, msg, null);
-    }
-
     /* (non-Javadoc)
      * Default implementation returns true.  Override to return false.
      * @see com.metamatrix.modeler.core.refactor.RefactorCommand#canUndo()
@@ -803,7 +716,15 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
         redoResourceModification(monitor);
         final Map refactoredPaths = getMovedResourcePathMap(false);
-        return refactorDependentResources(monitor, refactoredPaths);
+        
+    	IStatus result = refactorModelContents(monitor, refactoredPaths);
+    
+	    // if modification succeeded, refactor the dependent files
+	    if (result == null || result.getSeverity() < IStatus.ERROR) {
+	        result = refactorDependentResources(monitor, refactoredPaths);
+	    }
+        
+        return result;
     }
 
     /**
@@ -812,6 +733,8 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
      * @param monitor
      */
     abstract protected IStatus redoResourceModification( IProgressMonitor monitor );
+    
+    abstract protected IStatus refactorModelContents( IProgressMonitor monitor, Map refactoredPaths);
 
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.refactor.RefactorCommand#undo(org.eclipse.core.runtime.IProgressMonitor)
@@ -827,7 +750,14 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
 
         undoResourceModification(monitor);
         final Map refactoredPaths = getMovedResourcePathMap(true);
-        return refactorDependentResources(monitor, refactoredPaths);
+    	IStatus result = refactorModelContents(monitor, refactoredPaths);
+        
+	    // if modification succeeded, refactor the dependent files
+	    if (result == null || result.getSeverity() < IStatus.ERROR) {
+	        result = refactorDependentResources(monitor, refactoredPaths);
+	    }
+        
+        return result;
     }
 
     /**
@@ -927,7 +857,6 @@ public abstract class ResourceRefactorCommand implements RefactorCommand {
     }
 
     public List getReadOnlyDependentResources() {
-        // TODO: consider caching this value as long as the resource hasn't changed
         IResource res = getModifiedResource();
         if (res == null) {
             res = getResource();

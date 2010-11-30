@@ -2,7 +2,8 @@
 
 <chapter id="importers-chapter">
   <title>Importers</title>
-  	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
   	
 	<para>The <emphasis role="bold">Import Wizard</emphasis> provides a means to create a model based on the 
 		structure of a data source, to convert existing metadata 
@@ -16,131 +17,81 @@
 		<title>Import Wizard</title>
 		<mediaobject>
 			<imageobject>
-				<imagedata fileref="images/screencaps/ImportWizardPage_1.jpg"/>
+				<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
 			</imageobject>
 		</mediaobject>
 	</figure>
 
-	<!-- ####### ARCHIVE IMPORTER ######################################### -->
+	<!-- ####### JDBC IMPORTER ######################################### -->
 	
-	<sect1 id="archive-import-section">
-		<title>Import Archive File</title>
-		<para></para>
+	<sect1 id="ddl-import-section">
+		<title>Import DDL into Relational Model</title>
+		<para>Source relational models can be created by importing DDL.</para>
 		<itemizedlist>
 			<listitem>
-				<para>
-					You can import files from within an archive file using the steps below.
+			   <para>You can create relational source models from your DDL using the steps below.</para>
+					
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
+										<imagedata fileref="images/icons/import-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">General > Archive file</emphasis>  and click <emphasis role="bold">NEXT></emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Click on the <emphasis role="bold">Browse</emphasis> 
-								button to find the archive (i.e. zip) file you wish to import. and click <emphasis role="bold">NEXT></emphasis></para>
+								<emphasis role="bold">Teiid Designer > DDL into Relational Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import Archive File Dialog</title>
+								<title>Import DDL into Relational Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportArchiveFile.jpg"/>
+										<imagedata fileref="images/screencaps/import-ddl-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Open directory 
-								structure tree in left panel. Define which files from archive to 
-								import by checking/unchecking in trees.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Specify valid 
-								<emphasis role="bold">Into Folder</emphasis> by editing the text field, or select 
-								<emphasis role="bold">Browse...</emphasis> button to locate and select a folder 
-								or project in your workspace.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 6 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-	</sect1>
-	
-	<!-- ####### FILE SYSTEM IMPORTER ######################################### -->
-	
-	<sect1 id="file-system-import-section">
-		<title>Import From File System</title>
-		<para></para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					You can import files located on your local file system using the steps below.
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
-								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
-									</imageobject>
-								</inlinemediaobject> in the toolbar or select a project, folder or 
-							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">General > File system</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Click on the <emphasis role="bold">Browse</emphasis> 
-								button to find the archive (i.e. zip) file you wish to import. and click <emphasis role="bold">NEXT></emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Open directory structure tree in left panel. 
-								Define which files to import by checking/unchecking in trees.</para>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select existing DDL from either 
+								"Choose from file system..." or "Choose from workspace...". set the Model 
+								folder location, enter or select valid model name, set Model type (Source Model or View Model), 
+								set desired options and click <emphasis>NEXT></emphasis> (or <emphasis>FINISH></emphasis> if enabled)</para>
 							<figure>
-								<title>Import From File System Dialog</title>
+								<title>DDL Import Options</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportFileSystem.jpg"/>
+										<imagedata fileref="images/screencaps/import-ddl-options-page.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Specify valid 
-								<emphasis role="bold">Into Folder</emphasis> by editing the text field, or select 
-								<emphasis role="bold">Browse...</emphasis> button to locate and select a folder 
-								or project in your workspace.</para>
-						</listitem>
-						<listitem> 
-							<para><emphasis role="bold">Step 6 </emphasis> - Modify any <emphasis role="bold">Options</emphasis> to customize the imported files.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 7 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
+							<para><emphasis role="bold">Step 4 </emphasis> - If <emphasis>NEXT></emphasis> is pressed, 
+								a difference report is presented for viewing or de-selecting individual 
+								relational entities. Press <emphasis>FINISH></emphasis> to complete.</para>
+							<figure>
+								<title>Review DDL Updates Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-ddl-differences-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
 						</listitem>
 					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
+				</listitem>
+			</itemizedlist>
 	</sect1>
 	
 	<!-- ####### JDBC IMPORTER ######################################### -->
 	
 	<sect1 id="jdbc-import-section">
 		<title>Import From JDBC</title>
-		<para></para>
 		<itemizedlist>
 			<listitem>
-				<para>You can create relational source models from your JDBC source schema data using the steps below.
+			   <para>You can create relational source models from your JDBC source schema data using the steps below.</para>
 					<note>
 						<para>Depending the detail provided in the database
 							connection url information and schema, Steps 5 thru 7 may not be
@@ -151,7 +102,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
+										<imagedata fileref="images/icons/import-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -163,33 +114,34 @@
 								<title>Import Metadata from JDBC Database</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcImport_1.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Import Database via JDBC</emphasis> dialog, 
-								select existing or previous source configuration or press <emphasis role="bold">Sources...</emphasis> 
-								to create new source configurations.</para>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
+								connection profile from the drop-down selector or press "<emphasis>New...</emphasis>" button to launch 
+								the "<emphasis>New Connection Profile</emphasis>" dialog (See Eclispe Data Tools documentation) 
+								or "<emphasis>Edit...</emphasis>" to modify/change an existing connection profile prior to selection.</para>
 							<figure>
-								<title>Import Source Configurations Dialog</title>
+								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcSourcesDialog.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-2A.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - After selecting Source, input password 
-								and press <emphasis role="bold">Connect to Database</emphasis>. Press <emphasis role="bold">Next></emphasis>
+							<para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>, 
+								input password (if not provided). Press <emphasis role="bold">Next></emphasis>
 								 (or <emphasis role="bold">Finish></emphasis> if enabled)</para>
 							<figure>
-								<title>Import Database via JDBC Dialog</title>
+								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcImport_2.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-2B.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -202,7 +154,7 @@
 								<title>Select Database Metadata Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcImport_3.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-3.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -216,7 +168,7 @@
 								<title>Select Database Options Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcImport_4.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-4.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -229,15 +181,24 @@
 								<title>Specify Import Options Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/JdbcImport_5.jpg"/>
+										<imagedata fileref="images/screencaps/jdbc-importer-page-5.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 					</itemizedlist>
-				</para>
 			</listitem>
 		</itemizedlist>
+		<para>During the "<emphasis>Finish</emphasis>" processing, a monitor will be 
+			displayed providing feedback on the import progress.</para>
+		<figure>
+			<title>JDBC Import Progress Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/jdbc-importer-page-6.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
 	</sect1>
 	
 	<!-- ####### TEXT FILE SOURCE IMPORTER ######################################### -->
@@ -253,10 +214,10 @@
 					<emphasis role="bold">Import > Metadata from Text Files on file system</emphasis> option. 
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Designer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
+										<imagedata fileref="images/icons/import_wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -269,7 +230,7 @@
 								<title>Import Metadata From Text Files</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportWizard_TextFileOption.jpg"/>
+										<imagedata fileref="images/screencaps/import-from-text-file-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -280,7 +241,7 @@
 								<title>Import Wizard</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportFromTextFile_2_ImportTypes.jpg"/>
+										<imagedata fileref="images/screencaps/import-from-text-file-import-types.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -295,16 +256,16 @@
 				<para>These steps required for each type are defined below:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis><link linkend="relational-tables-text-import-section">Relational Tables</link></emphasis></para>
+							<para><emphasis><xref linkend="relational-tables-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="relational-virtual-tables-text-import-section">Relational Virtual Tables</link></emphasis></para>
+							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="relationships-text-import-section">Relationships</link></emphasis></para>
+							<para><emphasis><xref linkend="relationships-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><link linkend="datatypes-text-import-section">Datatypes</link></emphasis></para>
+							<para><emphasis><xref linkend="datatypes-text-import-section" /></emphasis></para>
 						</listitem>
 					</itemizedlist>
 				</para>
@@ -331,7 +292,7 @@
 									<title>Select Import Type - Relational Tables </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_2_RelationalTables.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-2-relational.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -346,7 +307,7 @@
 									<title>Select Source Text File and Target Relational Model </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_3_RelationalTables.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-3-relational.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -393,7 +354,7 @@
 									<title>Select Import Type - Relational Virtual Tables </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_2_RelationalVirtualTables.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-2-virtual-tables.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -408,7 +369,7 @@
 									<title>Select Source Text File and Target Virtual Relational Model </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_3_RelationalVirtualTables.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-3-virtual-relational.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -454,7 +415,7 @@
 									<title>Select Import Type - Relationships </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_2_Relationships.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-2-relationships.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -469,7 +430,7 @@
 									<title>Select Source Text File and Target Relationships Model </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_3_Relationships.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-3-relationships.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -515,7 +476,7 @@
 									<title>Select Import Type - Datatypes</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_2_Datatypes.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-2-datatypes.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -530,7 +491,7 @@
 									<title>Select Source Text File and Datatypes Model </title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/ImportFromTextFile_3_Datatypes.jpg"/>
+											<imagedata fileref="images/screencaps/import-from-text-file-page-3-datatypes.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -560,10 +521,11 @@
 	<!-- ####### WSDL AS SOURCE IMPORTER ######################################### -->
 	
 	<sect1 id="wsdl-to-relational-import-section">
-		<title>Import WSDL as Relational Source</title>
-		<para>In addition to creating relational source models by importing your metadata 
-			(<emphasis role="bold"><link linkend="jdbc-import-section">Import Relational Data</link></emphasis> ) 
-			you can also turn your <emphasis role="bold">WSDL</emphasis> into relational models. </para>
+		<title>Import WSDL into Relational Source Model</title>
+		<para>You can create a Relational model by selecting an existing 
+			<emphasis>Web Services Connection Profile</emphasis> defined by a WSDL file in your workspace or 
+			defined by a URL. Designer will interpret the WSDL, locate any associated or 
+			dependent XML schema files, generate an XML View of the schema components and create a Web service model representing the interfaces and operations defined in the WSDL. </para>
 		<itemizedlist>
 			<listitem>
 				<para>
@@ -573,7 +535,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
+										<imagedata fileref="images/icons/import_wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -586,7 +548,7 @@
 								<title>Import WSDL as Relational Source Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportWizardWSDLasRelational.jpg"/>
+										<imagedata fileref="images/screencaps/ImportWizardWSDLasRelational.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -598,7 +560,7 @@
 								<title>Source and Target Selection Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationalFromWSDL_Validate.jpg"/>
+										<imagedata fileref="images/screencaps/CreateRelationalFromWSDL_Validate.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -640,7 +602,7 @@
 								<title>WSDL Operations Selection Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationalFromWsdl_SelectOps.jpg"/>
+										<imagedata fileref="images/screencaps/CreateRelationalFromWsdl_SelectOps.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -701,22 +663,23 @@
 						<emphasis role="bold">WSDL</emphasis> file from your workspace.
 						<itemizedlist>
 							<listitem>
-								<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								<para><emphasis role="bold">Step 1 </emphasis> - Choose the <emphasis role="bold">File Import</emphasis> 
 									choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/import_wiz.gif"/>
+											<imagedata fileref="images/icons/import-wiz.png"/>
 										</imageobject>
 									</inlinemediaobject> in the toolbar or select a project, folder or 
 								 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+									<emphasis role="bold">Metadata Modeling > WSDL into Web Service Model </emphasis> option 
+									shown below and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
 									<title>WSDL File Into Web Service Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/importWsdlWizardSelection.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -725,12 +688,14 @@
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
 									<emphasis role="bold">Web Service</emphasis> model and select the 
 									<emphasis role="bold">Workspace...</emphasis> button. Locate your 
-									workspace <emphasis role="bold">WSDL</emphasis> file in the selection dialog and click <emphasis role="bold">OK></emphasis>.</para>
+									workspace <emphasis role="bold">WSDL</emphasis> file in the selection dialog 
+									and click <emphasis role="bold">OK></emphasis>.
+									Click <emphasis role="bold">Next></emphasis> to continue.</para>
 								<figure>
 									<title>WSDL File Selection Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_1_Workspace.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-2.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -738,7 +703,7 @@
 									<title>WSDL File Workspace Selection Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDL_WorkspaceFileSelection_Dialog.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-1.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -772,7 +737,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_2_Workspace.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-3.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -787,7 +752,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_3_Workspace.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-4.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -807,7 +772,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_4_Workspace.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-5.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -823,7 +788,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_5_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-6.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -832,6 +797,19 @@
 					</para>
 				</listitem>
 			</itemizedlist>
+			<para>In order to successfully generate Web Services from WSDL, the 
+				WSDL must be error free. WSDL validation is performed during <emphasis>Step 3</emphasis> above. 
+				If errors do exist, a error summary dialog will be displayed (shown below) 
+				and you will not be able to <emphasis>Finish</emphasis> the wizard until the 
+				WSDL problems are fixed or you re-import and select a valid WSDL file.</para>
+			<figure>
+				<title>WSDL Validation Problems Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/import-wsdl-validation-problems.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
 		</sect2>
 		<sect2 id="file-system-location-wsdl-ws-section">
 			<title>Import WSDL From File System Location</title>
@@ -843,10 +821,10 @@
 						<emphasis role="bold">WSDL</emphasis> file from your local file system.
 						<itemizedlist>
 							<listitem>
-								<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								<para><emphasis role="bold">Step 1 </emphasis> - Choose the <emphasis role="bold">File Import</emphasis> 
 									choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/import_wiz.gif"/>
+											<imagedata fileref="images/icons/import-wiz.png"/>
 										</imageobject>
 									</inlinemediaobject> in the toolbar or select a project, folder or 
 								 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -858,7 +836,7 @@
 								<title>WSDL File Into Web Service Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/importWsdlWizardSelection.jpg"/>
+										<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -872,7 +850,7 @@
 									<title>WSDL File Selection Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_1_FileSystem.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-file-system-page-2.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -906,7 +884,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_2_FileSystem.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-3.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -921,7 +899,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_3_FileSystem.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-4.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -941,7 +919,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_4_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-5.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -957,7 +935,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_5_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-workspace-page-6.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -966,7 +944,19 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-			
+			<para>In order to successfully generate Web Services from WSDL, the 
+				WSDL must be error free. WSDL validation is performed during <emphasis>Step 3</emphasis> above. 
+				If errors do exist, a error summary dialog will be displayed (shown below) 
+				and you will not be able to <emphasis>Finish</emphasis> the wizard until the 
+				WSDL problems are fixed or you re-import and select a valid WSDL file.</para>
+			<figure>
+				<title>WSDL Validation Problems Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/import-wsdl-validation-problems.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
 		</sect2>
 		<sect2 id="url-location-wsdl-ws-section">
 			<title>Import WSDL From URL</title>
@@ -978,10 +968,10 @@
 						<emphasis role="bold">WSDL</emphasis> file based on a URL.
 						<itemizedlist>
 							<listitem>
-								<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								<para><emphasis role="bold">Step 1 </emphasis> - Choose the <emphasis role="bold">File Import</emphasis> 
 									choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/import_wiz.gif"/>
+											<imagedata fileref="images/icons/import-wiz.png"/>
 										</imageobject>
 									</inlinemediaobject> in the toolbar or select a project, folder or 
 								 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -993,7 +983,7 @@
 								<title>WSDL File Into Web Service Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/importWsdlWizardSelection.jpg"/>
+										<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -1001,13 +991,14 @@
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Input a valid name for your 
 									<emphasis role="bold">Web Service</emphasis> model and select the 
-									<emphasis role="bold">URL...</emphasis> button. Locate your 
-									file system <emphasis role="bold">WSDL</emphasis> file in the selection dialog and click <emphasis role="bold">OK></emphasis>.</para>
+									<emphasis role="bold">URL...</emphasis> button. Enter a valid WSDL URL in the 
+									dialog click <emphasis role="bold">OK></emphasis>. 
+									Click <emphasis role="bold">Next></emphasis> to continue.</para>
 								<figure>
-									<title>WSDL File Selection Dialog</title>
+									<title>WSDL URL Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_1_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-url-page-2.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -1041,7 +1032,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_2_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-url-page-3.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -1056,7 +1047,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_3_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-url-page-4.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -1076,7 +1067,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_4_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-url-page-5.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -1092,7 +1083,7 @@
 									<title>Namespace Resolution Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/WSDLtoWS_5_URL.jpg"/>
+											<imagedata fileref="images/screencaps/import-wsdl-ws-url-page-6.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -1101,116 +1092,22 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-			
+			<para>In order to successfully generate Web Services from WSDL, the 
+				WSDL must be error free. WSDL validation is performed during <emphasis>Step 3</emphasis> above. 
+				If errors do exist, a error summary dialog will be displayed (shown below) 
+				and you will not be able to <emphasis>Finish</emphasis> the wizard until the 
+				WSDL problems are fixed or you re-import and select a valid WSDL file.</para>
+			<figure>
+				<title>WSDL Validation Problems Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/import-wsdl-validation-problems.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
 		</sect2>
 	</sect1>
 	
-	<!-- ####### XML SCHEMA AS SOURCE IMPORTER ######################################### -->
-	
-	<sect1 id="xml-schema-as-source-import-section">
-		<title>XML Schema as Relational Source</title>
-		<para>In addition to creating relational source models by importing your metadata 
-			 you can also turn your existing <emphasis role="bold">XML Schema</emphasis> into relational source or view models. 
-			 You can create <emphasis role="bold">XML View</emphasis> models using the steps below. </para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					You can import files located on your local file system using the steps below.
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Choose the <emphasis role="bold">File > Import</emphasis> 
-								action <inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
-									</imageobject>
-								</inlinemediaobject> in the toolbar or select a project, folder or 
-							 	model in the tree and choose <emphasis role="bold">Import...</emphasis> to launch the 
-							 	<emphasis role="bold">Import Wizard</emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > XML Schema as Relational Source </emphasis>  and click <emphasis role="bold">Next ></emphasis></para>
-							<figure>
-								<title>Select XML Schema As Relational Source Model Option</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportWizardXMLSchemaToSource.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - On the next page, specify all options for 
-								defining document source and catalog options then click <emphasis role="bold">Next ></emphasis></para>
-							<figure>
-								<title>WSDL File Into Web Service Introduction Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationalFromSchemaIntro.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - On the <emphasis role="bold">XML Schema File Selection</emphasis> page, 
-								choose a schema file located in your <emphasis role="bold">Workspace...</emphasis> or a 
-								file on your local <emphasis role="bold">File System...</emphasis> . 
-								Click <emphasis role="bold">Next ></emphasis></para>
-							<figure>
-								<title>XML Schema File Selection Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXmlSchema_XmlSchemaFileSelection.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Select <emphasis role="bold">global elements</emphasis> 
-								that will be used as root elements in your XML documents and move them to the 
-								<emphasis role="bold">Document Root Elements</emphasis> list. 
-								Change any <emphasis role="bold">Mapping Options</emphasis>.
-								Click <emphasis role="bold">Next ></emphasis></para>
-							<figure>
-								<title>XML Schema File Selection Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXmlSchema_SelectRootElements.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 6 </emphasis> - Select or deselect schema elements to use in
-								creating relational tables. Click <emphasis role="bold">Next ></emphasis></para>
-							<figure>
-								<title>Select Relational Tables Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXmlSchema_SelectRelationalTables.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 7 </emphasis> - Provide unique model name, model location 
-								(project or folder) and options.
-								Click <emphasis role="bold">Finish</emphasis></para>
-							<figure>
-								<title>Specify Import Options Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXmlSchema_SpecifyImportOptions.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-	</sect1>
-
 	<!-- ####### XSD SCHEMA IMPORTER ######################################### -->
 	
 	<sect1 id="xsd-schema-import-section">
@@ -1225,7 +1122,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
+										<imagedata fileref="images/icons/import-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
@@ -1237,7 +1134,7 @@
 								<title>Import XSD Schemas Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXSD_1.jpg"/>
+										<imagedata fileref="images/screencaps/import-xml-schema-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -1264,153 +1161,46 @@
 								<title>Select XSD From File System</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXsdsDialog.jpg"/>
+										<imagedata fileref="images/screencaps/import-xml-schema-page-2a.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4b </emphasis> - If importing from URL, enter valid 
-								XSD Schema URL and click OK to display the final Add XSD Schema URL's wizard 
-								page displaying the schemas available for import.</para>
+							<para><emphasis role="bold">Step 4b </emphasis> - If importing from URL, select the 
+								<emphasis>Import XML Schemas via URL</emphasis> option and click <emphasis>OK</emphasis> to 
+								display the final <emphasis>Add XML Schema URLs</emphasis> wizard page.</para>
 							<figure>
-								<title>Define XSD Schema URL</title>
+								<title>Add XML Schema URLs Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXSD_URL.jpg"/>
+										<imagedata fileref="images/screencaps/import-xml-schema-url-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - Click the Add XML Schema URL 
+								button <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/new-object.png"/>
+									</imageobject>
+								</inlinemediaobject>. Enter a valid schema URL. Click OK. Schema will be validated 
+								and resulting entry added to the list of XML Schema URLs.</para>
 							<figure>
 								<title>Add XSD Schema URLs</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportXSD_AddURLSchemas.jpg"/>
+										<imagedata fileref="images/screencaps/import-xml-schema-url-page-2.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-		<note>
-			<para>XSD files may have dependent files. This importer will determine these dependencies 
-				and import these as well if Add Dependent Schema Files is checked</para>
-		</note>
-	</sect1>
-	
-	<!-- ####### ROSE IMPORTER ######################################### -->
-	
-	<sect1 id="rose-import-section">
-		<title>Import Rational Rose Model</title>
-		<para>
-			The Teiid Designer provides an option to an importer for files exported from
-			Rational Rose versions 2000 and 2001.
-			</para><para>
-			The importer creates UML models in the workspace. Supported structural
-			features of UML will be defined by the UMLClasses Metamodel Project.
-			The content of the Rose model file that matches these supported
-			features of the UML metamodel are imported.
-			</para><para>
-			The importer allows for subsequent re-importing of the Rose model file
-			which will incorporate changes into the UML model. Any
-			properties of the supported UML constructs that are unique to your use
-			of Rose are implemented using the Teiid Designer's metadata extension
-			functionality.
-		</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					To import an Rose file, follow the steps below.
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
-								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.gif"/>
-									</imageobject>
-								</inlinemediaobject> in the toolbar or select a project, folder or 
-							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Metadata from IBM Rational Rose Model</emphasis>  and click <emphasis role="bold">Next></emphasis> to open
-								the Rose model selection dialog.</para>
-								<figure>
-								<title>Rose Model Selection Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportRose_1.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Click on the <inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/elipsis.gif"/>
-									</imageobject>
-								</inlinemediaobject> button to locate and select your 
-								<emphasis role="bold">IBM Rational Rose Model</emphasis> ( *.mdl or *.cat) file. 
-								Check the appropriate models and/or model children to import.  Click <emphasis role="bold">Next ></emphasis></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Select the target models and folders in editor 
-								panel and click <emphasis role="bold">Next ></emphasis> to display a target models and folders  
-								dialog. A progress monitor will display intermediate processing status.</para>
-							
-							<note><para>If preserving the file system structure of the source Rose Units being 
-								imported is desired, a similar file system structure must exist in the model 
-								target location prior to starting the wizard.</para></note>
-							<para> This wizard page consists of two distinct areas: the selected
-								source Rose Units table and an Editor.</para>
-							<para> The table identifies the Rose Units being imported. For each
-								Rose Unit a target folder and target model name is shown, as well as,
-								an error or warning indicator. The initial value of the target folder
-								will be set to the model project or folder that was selected prior to
-								starting the wizard (or none if there was no previous selection).
-								Selection buttons to the right of the table aid in selecting table
-								rows. Values in the selected table rows are changed via the editor.
-							</para>
-							<para> The Editor allows target folders and model names to be changed.
-								The editor modifies all selected table rows (the top area) with its
-								information once the Apply button is selected. If more than one row is
-								selected, the information area shows only the common information.
-							</para>
-							<para> For example, if two rows are selected that have the same target
-								folder, then that target folder will show in the editor. However, if
-								two rows are selected with different target folders, the editor will
-								not show any information for the folder.</para>
-							<para> When changes are made in the editor, the appropriate checkbox is
-								automatically checked. Unchecking the checkbox will reset the editor
-								back to the original value. For both the target folder and target
-								model properties, using their respective browse buttons can set new
-								values. This allows navigation of the workspace. Selecting a recently
-								used value in the drop-down dialog can also set new values. The editor
-								can be closed and opened either by using the editor's toolbar button
-								or the top areas toolbar button.</para>
+							<para>The schema URL is now displayed in the XML Schema URLs list.</para>
 							<figure>
-								<title>Models and Folders Dialog</title>
+								<title>Add XSD Schema URLs</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportRose_2.jpg"/>
-									</imageobject>
-								</mediaobject>
-							</figure>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Selecting this import option gives you the 
-								opportunity to de-select specific UML model entity(s). All checked elements 
-								will be included in your UML model.</para>
-							<figure>
-								<title>UML Models Change Dialog</title>
-								<mediaobject>
-									<imageobject>
-										<imagedata fileref="images/screencaps/ImportRose_3.jpg"/>
+										<imagedata fileref="images/screencaps/import-xml-schema-url-page-3.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -1422,6 +1212,10 @@
 				</para>
 			</listitem>
 		</itemizedlist>
+		<note>
+			<para>XSD files may have dependent files. This importer will determine these dependencies 
+				and import these as well if Add Dependent Schema Files is checked</para>
+		</note>
 	</sect1>
 	
 </chapter>

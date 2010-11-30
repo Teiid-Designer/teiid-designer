@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -32,10 +33,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
+
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -69,11 +74,12 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
     private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
-    private static final int COLUMN_COUNT = 3;
+    private static final int PROFILE_COLUMN_COUNT = 3;
     private static final int EDIT_PANEL_COLUMN_COUNT = 2;
 
     private static final String SOURCE_LABEL = getString("sourceLabel"); //$NON-NLS-1$
-    private static final String SOURCES_BUTTON = getString("sourcesButton"); //$NON-NLS-1$
+    private static final String NEW_BUTTON = Util.getString("Widgets.newLabel"); //$NON-NLS-1$
+    private static final String EDIT_BUTTON = Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
 
@@ -98,6 +104,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
     private ILabelProvider srcLabelProvider;
     private Combo srcCombo;
+    private Button editCPButton;
     private Composite editPanel;
     private CLabel driverLabel, urlLabel, userNameLabel;
     private Text pwdText;
@@ -163,10 +170,15 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     public void createControl( final Composite parent ) {
         // Create page
         final Composite pg = new Composite(parent, SWT.NONE);
-        pg.setLayout(new GridLayout(COLUMN_COUNT, false));
+        pg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        pg.setLayout(new GridLayout(1, false));
         setControl(pg);
         // Add widgets to page
-        WidgetFactory.createLabel(pg, SOURCE_LABEL);
+        
+        Group profileGroup = WidgetFactory.createGroup(pg, SOURCE_LABEL, SWT.NONE, 2);
+        profileGroup.setLayout(new GridLayout(PROFILE_COLUMN_COUNT, false));
+        profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
         ArrayList sourceList = new ArrayList(this.mgr.getJdbcSources().size());
         for (Iterator iter = this.mgr.getJdbcSources().iterator(); iter.hasNext();) {
             Object source = iter.next();
@@ -181,7 +193,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                 return ((JdbcSource)source).getName();
             }
         };
-        this.srcCombo = WidgetFactory.createCombo(pg,
+        this.srcCombo = WidgetFactory.createCombo(profileGroup,
                                                   SWT.READ_ONLY,
                                                   GridData.FILL_HORIZONTAL,
                                                   sourceList,
@@ -197,17 +209,26 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
         this.srcCombo.setVisibleItemCount(10);
 
-        WidgetFactory.createButton(pg, SOURCES_BUTTON).addSelectionListener(new SelectionAdapter() {
+        WidgetFactory.createButton(profileGroup, NEW_BUTTON).addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 launchSourceWizard();
             }
         });
-        this.editPanel = WidgetFactory.createPanel(pg,
-                                                   SWT.NO_TRIM,
-                                                   GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL,
-                                                   COLUMN_COUNT,
+        
+        editCPButton = WidgetFactory.createButton(profileGroup, EDIT_BUTTON);
+        editCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                editConnectionProfile();
+            }
+        });
+        
+        this.editPanel = WidgetFactory.createGroup(pg, getString("propertiesLabel"), //$NON-NLS-1$
+                                                   GridData.HORIZONTAL_ALIGN_FILL, // | GridData.FILL_VERTICAL,
+                                                   1,
                                                    EDIT_PANEL_COLUMN_COUNT);
         WidgetFactory.createLabel(this.editPanel, DRIVER_LABEL);
         this.driverLabel = WidgetFactory.createLabel(this.editPanel, GridData.FILL_HORIZONTAL);
@@ -224,8 +245,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                 passwordModified();
             }
         });
+        
         sourceModified();
-
+        
         if (validatePage()) {
             setMessage(INITIAL_MESSAGE);
         }
@@ -282,6 +304,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
         CPListener listener = new CPListener();
         ProfileManager.getInstance().addProfileListener(listener);
+        
         if (wizardDialog.open() == Window.OK) {
             try {
                 this.src = listener.getJdbcSource();
@@ -293,12 +316,51 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
                 }
 
             } catch (JdbcException e) {
-                // TODO Auto-generated catch block
-                ProfileManager.getInstance().removeProfileListener(listener);
                 e.printStackTrace();
+            } finally {
+            	// Remove the listener if there is a problem
+            	ProfileManager.getInstance().removeProfileListener(listener);
             }
+        } else {
+        	// Remove the listener if the dialog is canceled
+        	ProfileManager.getInstance().removeProfileListener(listener);
         }
-        ProfileManager.getInstance().removeProfileListener(listener);
+    }
+    
+    void editConnectionProfile() {
+    	if( this.connectionProfile != null ) {
+    		IConnectionProfile currentProfile = this.connectionProfile;
+    		EditConnectionProfileAction action = new EditConnectionProfileAction(getShell(), currentProfile);
+    		
+    		CPListener listener = new CPListener();
+            ProfileManager.getInstance().addProfileListener(listener);
+            
+    		action.run();
+    		
+    		// Update the Combo Box
+    		if( action.wasFinished() )   {
+	            try {
+	            	this.src = listener.getJdbcSource();
+	                this.mgr.reload(null);
+	                WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
+	
+	                WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
+	                
+	                selectConnectionProfile(currentProfile.getName());
+	
+	            } catch (JdbcException e) {
+	                e.printStackTrace();
+	            } finally {
+	            	// Remove the listener if there is a problem
+	            	ProfileManager.getInstance().removeProfileListener(listener);
+	            }
+	    		
+	    		sourceModified();
+    		} else {
+    			// Remove the listener if the dialog is canceled
+    			ProfileManager.getInstance().removeProfileListener(listener);
+    		}
+    	}
     }
 
     /**
@@ -315,6 +377,27 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
      */
     public void removeChangeListener( final IChangeListener listener ) {
         this.notifier.remove(listener);
+    }
+    
+    void selectConnectionProfile(String name) {
+    	if( name == null ) {
+    		return;
+    	}
+    	
+    	int cpIndex = -1;
+    	int i = 0;
+    	for( String item : srcCombo.getItems()) {
+    		if( item != null && item.length() > 0 ) {
+    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+    				cpIndex = i;
+    				break;
+    			}
+    		}
+    		i++;
+    	}
+    	if( cpIndex > -1 ) {
+    		srcCombo.select(cpIndex);
+    	}
     }
 
     /**
@@ -348,6 +431,8 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         }
         this.connection = null;
         validatePage();
+        
+        this.editCPButton.setEnabled(this.connectionProfile != null);
     }
 
     /**
@@ -403,7 +488,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 
         @Override
         public void profileChanged( IConnectionProfile profile ) {
-            // nothing
+        	latestProfile = profile;
         }
 
         @Override

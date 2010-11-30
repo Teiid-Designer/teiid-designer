@@ -21,16 +21,16 @@ import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.transformation.util.TransformationMappingHelper;
+import com.metamatrix.modeler.schema.tools.NameUtil;
 
 public class RequestBuilderTraversalContext extends BaseTraversalContext
 		implements TraversalContext {
 
-	public static final String CREATE = "create_";
-	public static final String XML_OUT = "xml_out";
+	public static final String CREATE = "create_"; //$NON-NLS-1$
+	public static final String XML_OUT = "xml_out"; //$NON-NLS-1$
 
 	private Procedure procedure;
 	private List<ProcedureParameter> cachedParams = new ArrayList();
-	private SqlTransformationMappingRoot transformation;
 	private ProcedureResult procedureResult;
 
 	public RequestBuilderTraversalContext(String procedureName, QName namespace,
@@ -53,7 +53,8 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 		ProcedureParameter param = factory.createProcedureParameter();
 		procedure.getParameters().add(param);
 		param.setDirection(DirectionKind.IN_LITERAL);
-		param.setName(name);
+		
+		param.setName(NameUtil.normalizeName(name));
 		param.setNameInSource(name);
 		param.setNullable(NullableType.NULLABLE_LITERAL);
 		param.setType(datatypeManager.getDatatypeForXsdType(type));
@@ -65,15 +66,16 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 
 	Procedure createProcedure(String procedureNameBase)
 			throws ModelWorkspaceException, ModelerCoreException {
+		
 		Procedure procedure = factory.createProcedure();
 		builder.getSchema().getProcedures().add(procedure);
-		procedure.setName(CREATE + procedureNameBase);
-		procedure.setNameInSource(CREATE + procedureNameBase);
+		procedure.setName(CREATE + NameUtil.normalizeName(procedureNameBase));
+		procedure.setNameInSource(procedureNameBase);
 		builder.addProcedure(procedureNameBase);
 
 		procedureResult = factory.createProcedureResult();
 		procedure.setResult(procedureResult);
-		procedureResult.setName(procedureNameBase);
+		procedureResult.setName(NameUtil.normalizeName(procedureNameBase) + IBuilderConstants.V_FUNC_RESULT);
 		procedureResult.setNameInSource(procedureNameBase);
 		Column resultCol = factory.createColumn();
 		procedureResult.getColumns().add(resultCol);
@@ -82,8 +84,6 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 				.setType(datatypeManager
 						.getBuiltInDatatype(DatatypeConstants.BuiltInNames.XML_LITERAL));
 
-		//transformation = builder.getModelResource().getModelTransformations()
-		//		.createNewSqlTransformation(procedure);
 		return procedure;
 	}
 
@@ -99,7 +99,9 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 			sqlString.append(IBuilderConstants.V_FUNC_NAME);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-			sqlString.append(procedureResult.getName());
+			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
+			sqlString.append(procedureResult.getNameInSource());
+			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
 			sqlString.append(IBuilderConstants.V_FUNC_COMMA);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 			
@@ -128,7 +130,9 @@ public class RequestBuilderTraversalContext extends BaseTraversalContext
 				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 				sqlString.append(IBuilderConstants.V_FUNC_NAME);
 				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-				sqlString.append(param.getName());
+				sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
+				sqlString.append(param.getNameInSource());
+				sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
 				sqlString.append(IBuilderConstants.V_FUNC_COMMA);
 				sqlString.append(IBuilderConstants.V_FUNC_SPACE);
 				sqlString.append(param.getName());

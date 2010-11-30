@@ -20,10 +20,10 @@
    -->
    <extension
          id="oracleDdlStyle"
-         name="Oracle 8i/9i DDL"
+         name="Oracle 10/11g DDL"
          point="org.teiid.designer.ddl.style">
       <description>
-         Generates DDL for Oracle 8i/9i
+         Generates DDL for Oracle 8i and above
       </description>
       <xsltPath>
          platform:/plugin/org.teiid.designer.ddl/xslt/DDL_oracle8_1_6.xsl
@@ -31,7 +31,7 @@
    </extension>
    <extension
          id="db2DdlStyle"
-         name="IBM DB2 7.x DDL"
+         name="IBM DB2 9.7 DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for IBM DB2 7.x and above
@@ -42,10 +42,10 @@
    </extension>
    <extension
          id="sqlServerDdlStyle"
-         name="Microsoft SQL Server DDL"
+         name="MS SQL Server v2008 DDL"
          point="org.teiid.designer.ddl.style">
       <description>
-         Generates DDL for IBM DB2 7.x and above
+         Generates DDL for Microsoft SQL Server 2000 and above
       </description>
       <xsltPath>
          platform:/plugin/org.teiid.designer.ddl/xslt/DDL_sqlserver_7x.xsl
@@ -53,7 +53,7 @@
    </extension>
    <extension
          id="mysqlDdlStyle"
-         name="MySQL DDL"
+         name="MySQL v5.0/v5.1 DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for MySQL 5.0 and above

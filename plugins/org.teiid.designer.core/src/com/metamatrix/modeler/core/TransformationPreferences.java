@@ -34,6 +34,11 @@ public interface TransformationPreferences {
     public int getDefaultStringLength();
     
     /**
+     * @return the default value of the default length of a string
+     */
+    int getDefaultStringLengthDefault();
+    
+    /**
      * Sets the default string length
      * 
      * @param the new default upper recursion limit
@@ -47,6 +52,11 @@ public interface TransformationPreferences {
     public int getUpperRecursionLimit();
     
     /**
+     * @return the upper recursion limit default value
+     */
+    int getUpperRecursionLimitDefault();
+    
+    /**
      * Sets the default upper recursion limit
      * 
      * @param the new default upper recursion limit
@@ -54,10 +64,14 @@ public interface TransformationPreferences {
     public void setUpperRecursionLimit(int val);
     
     /**
-     * Get all the default upper recursion limit property
-     * @return default string length.
+     * @return <code>true</code> if duplicate attributes should be removed
      */
     public boolean getRemoveDuplicateAttibutes();
+    
+    /**
+     * @return <code>true</code> if the default value is to remove duplicate attributes
+     */
+    boolean getRemoveDuplicateAttibutesDefault();
     
     /**
      * Sets the default upper recursion limit

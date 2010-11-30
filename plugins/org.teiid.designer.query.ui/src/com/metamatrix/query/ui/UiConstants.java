@@ -88,30 +88,16 @@ public interface UiConstants {
     }
     
     interface Prefs {
-        // Preferences private constants
-        class PC {
-            private static final String PREFIX = "query.ui.preference."; //$NON-NLS-1$
-        }
-    	
-    	public static final String START_CLAUSES_ON_NEW_LINE = PC.PREFIX + 
-    			"startClausesOnNewLine"; //$NON-NLS-1$
-    	public static final String INDENT_CLAUSE_CONTENT = PC.PREFIX + 
-    			"indentClauseContent"; //$NON-NLS-1$
-        public static final String SQL_OPTIMIZATION_ON = PC.PREFIX +
-                "sqlOptimizationOn"; //$NON-NLS-1$
-        public static final String TREE_DIAGRAM_LAYOUT = PC.PREFIX +
-                "treeDiagramLayout"; //$NON-NLS-1$
-    	
-        public static final PreferenceKeyAndDefaultValue[] PREFERENCES = 
-        		new PreferenceKeyAndDefaultValue[] {
-					new PreferenceKeyAndDefaultValue(START_CLAUSES_ON_NEW_LINE,
-        					new Boolean(true)),
-					new PreferenceKeyAndDefaultValue(INDENT_CLAUSE_CONTENT,
-        					new Boolean(true)),
-                    new PreferenceKeyAndDefaultValue(SQL_OPTIMIZATION_ON,
-                            new Boolean(true)),
-                    new PreferenceKeyAndDefaultValue(TREE_DIAGRAM_LAYOUT,
-                            new Boolean(false))
-        		};
+
+        String START_CLAUSES_ON_NEW_LINE = "startClausesOnNewLine"; //$NON-NLS-1$
+        String INDENT_CLAUSE_CONTENT = "indentClauseContent"; //$NON-NLS-1$
+        String SQL_OPTIMIZATION_ON = "sqlOptimizationOn"; //$NON-NLS-1$
+        String TREE_DIAGRAM_LAYOUT = "treeDiagramLayout"; //$NON-NLS-1$
+
+        public static final PreferenceKeyAndDefaultValue[] PREFERENCES = new PreferenceKeyAndDefaultValue[] {
+            new PreferenceKeyAndDefaultValue(START_CLAUSES_ON_NEW_LINE, new Boolean(true)),
+            new PreferenceKeyAndDefaultValue(INDENT_CLAUSE_CONTENT, new Boolean(true)),
+            new PreferenceKeyAndDefaultValue(SQL_OPTIMIZATION_ON, new Boolean(true)),
+            new PreferenceKeyAndDefaultValue(TREE_DIAGRAM_LAYOUT, new Boolean(false))};
     }
 }

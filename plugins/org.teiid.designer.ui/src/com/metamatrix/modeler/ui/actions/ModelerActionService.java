@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +33,6 @@ import org.eclipse.emf.edit.provider.ItemProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -41,11 +41,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.ActionFactory;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -113,8 +111,6 @@ public final class ModelerActionService extends AbstractActionService
      */
     private static final List MAPPED_ACTION_IDS;
 
-    private static final String DELETE_ID = ActionFactory.DELETE.getId();
-
     static {
         ECLIPSE_GLOBAL_ACTION_IDS = Arrays.asList(EclipseGlobalActions.ALL_ACTIONS);
 
@@ -149,8 +145,6 @@ public final class ModelerActionService extends AbstractActionService
 
     /** The undo manager for this window's refactor actions */
     private RefactorUndoManager refactorUndoManager;
-
-    private IContributionItem[] cachedEditMenuItems;
 
     /**
      * Constructs a <code>ModelerActionService</code> associated with the given <code>IWorkbenchWindow</code>.
@@ -340,67 +334,6 @@ public final class ModelerActionService extends AbstractActionService
 
     }
 
-    void cleanupEditMenu( IMenuManager theEditMenu ) {
-        String id = ModelerActionBarIdManager.getInsertStartMarkerId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = ModelerActionBarIdManager.getInsertChildMenuId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = ModelerActionBarIdManager.getInsertSiblingMenuId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = ModelerActionBarIdManager.getInsertAssociationMenuId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = ModelerActionBarIdManager.getModelingMenuId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = ModelerActionBarIdManager.getInsertEndMarkerId();
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-
-        id = EclipseGlobalActions.RENAME;
-
-        if (theEditMenu.find(id) != null) {
-            theEditMenu.remove(id);
-        }
-    }
-
-    void restoreEditInsertGroup( IMenuManager theEditMenu,
-                                 ISelection theSelection ) {
-        String insertStartId = ModelerActionBarIdManager.getInsertStartMarkerId();
-
-        theEditMenu.insertBefore(ModelerActionBarIdManager.getEditMenuStartMarkerId(), new GroupMarker(insertStartId));
-        theEditMenu.appendToGroup(insertStartId, getInsertChildMenu(theSelection));
-        theEditMenu.appendToGroup(insertStartId, getInsertSiblingMenu(theSelection));
-        theEditMenu.appendToGroup(insertStartId, getCreateAssociationMenu(theSelection));
-
-        MenuManager modelingActionMenu = getModelingActionMenu(theSelection);
-        if (modelingActionMenu != null && modelingActionMenu.getItems().length > 0) {
-            theEditMenu.appendToGroup(insertStartId, modelingActionMenu);
-        }
-
-        theEditMenu.appendToGroup(insertStartId, new GroupMarker(ModelerActionBarIdManager.getInsertEndMarkerId()));
-    }
-
     /**
      * Obtains the Edit Menu.
      * 
@@ -438,22 +371,10 @@ public final class ModelerActionService extends AbstractActionService
      * Called once to add items to the edit menu.
      */
     private void contributeToEditMenu() {
-        IMenuManager tempEditMenu = getEditMenu();
-        cachedEditMenuItems = new IContributionItem[tempEditMenu.getItems().length];
-        for (int i = 0; i < tempEditMenu.getItems().length; i++) {
-            cachedEditMenuItems[i] = tempEditMenu.getItems()[i];
-        }
-        final IMenuManager editMenu = tempEditMenu;
+        IMenuManager editMenu = getEditMenu();
 
         // only allow services from this plugin to be a menu listener
         if (getPlugin().getBundle().getSymbolicName().equals(UiConstants.PLUGIN_ID)) {
-            // add the insert child and insert sibling menu item group
-            editMenu.addMenuListener(new IMenuListener() {
-                public void menuAboutToShow( IMenuManager manager ) {
-                    createEditMenu(editMenu);
-                }
-            });
-
             // hook up undo/redo actions to be edit menu listeners
             IMenuListener action;
 
@@ -471,85 +392,6 @@ public final class ModelerActionService extends AbstractActionService
                 utils.log(IStatus.ERROR, e, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
             }
         }
-    }
-
-    void createEditMenu( IMenuManager editMenu ) {
-        cleanupEditMenu(editMenu);
-
-        // get current selection
-        restoreEditInsertGroup(editMenu, getWorkbenchWindow().getSelectionService().getSelection());
-
-        editMenu.insertAfter(ModelerActionBarIdManager.getInsertEndMarkerId(), new Separator());
-
-        // Eclipse considers the global actions within IWorkbenchActionConstants.GLOBAL_ACTIONS to be dynamic
-        // based upon
-        // the active part. Any additional global actions that the Modeler wants to treat as dynamic in the same
-        // manner
-        // must be replaced below by the respective global action handler set on the current part's action bars.
-
-        // Get the action bars for the active part
-        final IWorkbenchPart part = getWorkbenchWindow().getActivePage().getActivePart();
-        IActionBars bars = null;
-        if (part instanceof IViewPart) {
-            bars = ((IViewPart)part).getViewSite().getActionBars();
-        } else if (part instanceof IEditorPart) {
-            bars = ((IEditorPart)part).getEditorSite().getActionBars();
-        }
-
-        if (isActionSupported(ActionValues.ID_RENAME_ACTION)) {
-            // Add the current rename action if necessary
-            IAction action = bars.getGlobalActionHandler(EclipseGlobalActions.RENAME);
-
-            if (action != null) {
-                // make sure ID is EclipseGlobalActions.RENAME so it can be removed in cleanup section above
-                action.setId(EclipseGlobalActions.RENAME);
-                editMenu.insertAfter(DELETE_ID, action);
-            }
-        }
-
-        try {
-            // if supported by the product, insert the paste special and clones action after the paste
-            String pasteId = ActionFactory.PASTE.getId();
-
-            if (isActionSupported(ActionValues.ID_CLONE_ACTION) && (editMenu.find(ModelerGlobalActions.CLONE) == null)) {
-                editMenu.insertAfter(pasteId, getAction(ModelerGlobalActions.CLONE));
-            }
-
-            if (isActionSupported(ActionValues.ID_PASTE_SPECIAL_ACTION)
-                && (editMenu.find(ModelerGlobalActions.PASTE_SPECIAL) == null)) {
-                editMenu.insertAfter(pasteId, getAction(ModelerGlobalActions.PASTE_SPECIAL));
-            }
-
-            // create the open, edit menu items
-            String openId = ModelerActionBarIdManager.getOpenGroupStartMarkerId();
-
-            if (editMenu.find(ModelerGlobalActions.PASTE_SPECIAL) == null) {
-                editMenu.insertAfter(DELETE_ID, new GroupMarker(openId));
-            }
-            // create the open, edit menu items
-            if (UiPlugin.getDefault().isProductContextSupported(Product.IDE_APPLICATION)) {
-                if (editMenu.find(openId) == null) {
-                    // Add the open group id
-                    editMenu.insertAfter(DELETE_ID, new GroupMarker(openId));
-                }
-            }
-
-            if (isActionSupported(ActionValues.ID_OPEN_ACTION) && (editMenu.find(ModelerGlobalActions.OPEN) == null)) {
-                editMenu.appendToGroup(openId, getAction(ModelerGlobalActions.OPEN));
-            }
-
-            if (isActionSupported(ActionValues.ID_EDIT_ACTION) && (editMenu.find(ModelerGlobalActions.EDIT) == null)) {
-                editMenu.appendToGroup(openId, getAction(ModelerGlobalActions.EDIT));
-            }
-
-            if (editMenu.find(ModelerActionBarIdManager.getOpenGroupExtrasMarkerId()) == null) {
-                editMenu.appendToGroup(openId, new Separator(ModelerActionBarIdManager.getOpenGroupExtrasMarkerId()));
-            }
-        } catch (CoreException theException) {
-            utils.log(IStatus.ERROR, theException, utils.getString(PREFIX + "actionProblem")); //$NON-NLS-1$
-        }
-
-        getActionBars().updateActionBars();
     }
 
     /**
@@ -1135,6 +977,11 @@ public final class ModelerActionService extends AbstractActionService
         if (addedActions) {
             menu.add(new Separator());
         }
+        
+        if (menu.isEmpty()) {
+            // just add a disabled "none allowed" item so menu is not empty
+            menu.add(new NewChildAction());
+        }
 
         return menu;
     }
@@ -1381,6 +1228,7 @@ public final class ModelerActionService extends AbstractActionService
             String classTag = UiConstants.ExtensionPoints.NewChildExtension.CLASS;
             String className = UiConstants.ExtensionPoints.NewChildExtension.CLASSNAME;
             IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(UiConstants.PLUGIN_ID, id);
+
             // get the all extensions to the NewChildAction extension point
             IExtension[] extensions = extensionPoint.getExtensions();
 
@@ -1394,6 +1242,7 @@ public final class ModelerActionService extends AbstractActionService
                     for (int j = 0; j < elements.length; ++j) {
                         if (elements[j].getName().equals(classTag)) {
                             Object action = elements[j].createExecutableExtension(className);
+
                             if (action instanceof INewChildAction) {
                                 actionList.add(action);
                             }

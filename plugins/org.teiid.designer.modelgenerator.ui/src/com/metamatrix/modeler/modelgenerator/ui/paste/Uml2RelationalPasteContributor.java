@@ -101,13 +101,15 @@ public class Uml2RelationalPasteContributor implements IPasteSpecialContributor,
             if ( ! ((IFile) obj).isReadOnly() && ModelUtilities.isModelFile((IFile) obj) ) {
                 try {
                     ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
-                    MetamodelDescriptor descriptor = modelResource.getPrimaryMetamodelDescriptor();
-                    if ( descriptor != null ) {
-                        final String uri = descriptor.getNamespaceURI();
-                        if ( uri != null && uri.equals(RelationalPackage.eNS_URI) ) {
-                            virtualModelResource = modelResource;
-                            enable = true;
-                        }
+                    if( modelResource != null ) {
+	                    MetamodelDescriptor descriptor = modelResource.getPrimaryMetamodelDescriptor();
+	                    if ( descriptor != null ) {
+	                        final String uri = descriptor.getNamespaceURI();
+	                        if ( uri != null && uri.equals(RelationalPackage.eNS_URI) ) {
+	                            virtualModelResource = modelResource;
+	                            enable = true;
+	                        }
+	                    }
                     }
                 } catch (ModelWorkspaceException e) {
                     Util.log(e);

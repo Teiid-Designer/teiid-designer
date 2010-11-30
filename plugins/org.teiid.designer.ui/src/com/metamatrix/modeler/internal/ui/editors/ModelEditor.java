@@ -7,6 +7,8 @@
  */
 package com.metamatrix.modeler.internal.ui.editors;
 
+import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED;
+import static com.metamatrix.modeler.ui.UiConstants.Extensions.PERSPECTIVE;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,14 +42,18 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -1346,6 +1352,52 @@ public class ModelEditor extends MultiPageModelEditor
                             // Default behavior is we save the editor
                             IProgressMonitor monitor = new NullProgressMonitor();
                             doSave(monitor);
+                        }
+                        
+                        if (isClosing) return;
+
+                        // switch to Designer perspective if user wants to and we need to
+                        try {
+                            // if Designer perspective already in focus no need to do anything
+                            if ((UiUtil.getPerspectiveId() != null) && UiUtil.getPerspectiveId().equals(PERSPECTIVE)) {
+                                return;
+                            }
+
+                            // switch to Designer perspective if user wants to
+                            IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
+                            String openPerspective = prefStore.getString(AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED);
+                            boolean shouldOpen = false;
+
+                            if (MessageDialogWithToggle.ALWAYS.equals(openPerspective)) {
+                                shouldOpen = true;
+                            } else if (!MessageDialogWithToggle.NEVER.equals(openPerspective)) {
+                                // show dialog here and set dialog settings
+                                Shell shell = ModelEditor.this.getSite().getShell();
+                                String title = Util.getString(PREFIX + "OpenPerspectiveDialog.title"); //$NON-NLS-1$
+                                String msg = Util.getString(PREFIX + "OpenPerspectiveDialog.msg"); //$NON-NLS-1$
+                                String toggleMsg = Util.getString(PREFIX + "OpenPerspectiveDialog.toggleMsg"); //$NON-NLS-1$
+                                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell,
+                                                                                                           title,
+                                                                                                           msg,
+                                                                                                           toggleMsg,
+                                                                                                           false,
+                                                                                                           UiPlugin.getDefault().getPreferenceStore(),
+                                                                                                           AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED);
+                                shouldOpen = (dialog.getReturnCode() == IDialogConstants.YES_ID);
+                                
+                                // save if user wants decision remembered
+                                if (dialog.getToggleState()) {
+                                    UiPlugin.getDefault().getPreferences().flush();
+                                }
+                            }
+
+                            // switch to Designer perspective if requested
+                            if (shouldOpen) {
+                                UiUtil.openPerspective(UiConstants.Extensions.PERSPECTIVE);
+                            }
+                        } catch (Exception e) {
+                            // don't let any exception here change the state of success
+                            UiConstants.Util.log(e);
                         }
                     }
                 });

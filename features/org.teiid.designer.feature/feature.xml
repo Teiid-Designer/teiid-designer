@@ -182,8 +182,7 @@
          id="org.teiid.designer.sdt"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.transformation"
@@ -243,20 +242,6 @@
 
    <plugin
          id="org.teiid.designer.xsd.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.rose"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.rose.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

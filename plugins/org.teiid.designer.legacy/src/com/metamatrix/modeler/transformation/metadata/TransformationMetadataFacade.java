@@ -15,12 +15,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.teiid.core.TeiidComponentException;
+
 import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.Assertion;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.StringUtil;
+import org.teiid.query.mapping.relational.QueryNode;
+import org.teiid.query.mapping.xml.MappingDocument;
+import org.teiid.query.mapping.xml.MappingNode;
+import org.teiid.query.metadata.BasicQueryMetadataWrapper;
+import org.teiid.query.metadata.GroupInfo;
+import org.teiid.query.metadata.StoredProcedureInfo;
+
+import com.metamatrix.core.util.AssertionUtil;
 import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
@@ -32,20 +41,13 @@ import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord.MetadataRecor
 import com.metamatrix.modeler.core.metadata.runtime.ProcedureRecord.ProcedureRecordProperties;
 import com.metamatrix.modeler.core.metadata.runtime.TableRecord.TableRecordProperties;
 import com.metamatrix.modeler.internal.transformation.util.UuidUtil;
-import org.teiid.query.function.FunctionLibrary;
-import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.mapping.xml.MappingDocument;
-import org.teiid.query.mapping.xml.MappingNode;
-import org.teiid.query.metadata.GroupInfo;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.metadata.StoredProcedureInfo;
 
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, modeles etc. index files for various metadata
  * properties. TransformationMetadataFacade should only be used when the metadata is read only. It is used in the modeler with in
  * the context of validating a Query(when the metadata is read only).
  */
-public class TransformationMetadataFacade implements QueryMetadataInterface {
+public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
 
     /**
      * Default amount of space in the cache
@@ -72,6 +74,7 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     public TransformationMetadataFacade( final TransformationMetadata delegate,
                                          int cacheSize ) {
+    	super(delegate);
         ArgCheck.isNotNull(delegate);
         this.metadata = delegate;
         this.nameToIdCache = Collections.synchronizedMap(new LRUCache<String, Object>(cacheSize));
@@ -87,7 +90,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementID(java.lang.String)
      */
-    public Object getElementID( final String elementName ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Object getElementID( final String elementName ) throws TeiidComponentException, QueryMetadataException {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(elementName, IndexConstants.RECORD_TYPE.COLUMN);
 
@@ -106,7 +110,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupID(java.lang.String)
      */
-    public Object getGroupID( final String groupName ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Object getGroupID( final String groupName ) throws TeiidComponentException, QueryMetadataException {
         // Check the cache first ...
         MetadataRecord record = getRecordByName(groupName, IndexConstants.RECORD_TYPE.TABLE);
 
@@ -125,7 +130,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupsForPartialName(java.lang.String)
      */
-    public Collection getGroupsForPartialName( final String partialGroupName )
+    @Override
+	public Collection getGroupsForPartialName( final String partialGroupName )
         throws TeiidComponentException, QueryMetadataException {
         // Check the cache first ...
         String fullName = getFullNameByPartialName(partialGroupName, IndexConstants.RECORD_TYPE.TABLE);
@@ -157,7 +163,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getModelID(java.lang.Object)
      */
-    public Object getModelID( final Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Object getModelID( final Object groupOrElementID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupOrElementID);
 
         MetadataRecord record = (MetadataRecord)groupOrElementID;
@@ -179,16 +186,10 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFullName(java.lang.Object)
-     */
-    public String getFullName( final Object metadataID ) {
-        return this.metadata.getFullName(metadataID);
-    }
-
-    /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFullElementName(java.lang.String, java.lang.String)
      */
-    public String getFullElementName( final String fullGroupName,
+    @Override
+	public String getFullElementName( final String fullGroupName,
                                       final String shortElementName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotZeroLength(fullGroupName);
         ArgCheck.isNotZeroLength(shortElementName);
@@ -215,16 +216,10 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getShortElementName(java.lang.String)
-     */
-    public String getShortElementName( final String fullElementName ) {
-        return this.metadata.getShortElementName(fullElementName);
-    }
-
-    /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupName(java.lang.String)
      */
-    public String getGroupName( final String fullElementName ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public String getGroupName( final String fullElementName ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isNotZeroLength(fullElementName);
 
         int index = fullElementName.lastIndexOf(TransformationMetadata.DELIMITER_CHAR);
@@ -250,7 +245,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInGroupID(java.lang.Object)
      */
-    public List getElementIDsInGroupID( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public List getElementIDsInGroupID( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -287,7 +283,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupIDForElementID(java.lang.Object)
      */
-    public Object getGroupIDForElementID( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Object getGroupIDForElementID( final Object elementID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(ColumnRecord.class, elementID);
         ColumnRecord columnRecord = (ColumnRecord)elementID;
 
@@ -311,7 +308,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getStoredProcedureInfoForProcedure(java.lang.String)
      */
-    public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
+    @Override
+	public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
         throws TeiidComponentException, QueryMetadataException {
 
         StoredProcedureInfo procInfo = null;
@@ -349,101 +347,10 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementType(java.lang.Object)
-     */
-    public String getElementType( final Object elementID ) {
-        return this.metadata.getElementType(elementID);
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getDefaultValue(java.lang.String)
-     */
-    public Object getDefaultValue( final Object elementID ) {
-        return this.metadata.getDefaultValue(elementID);
-    }
-
-    public Object getMaximumValue( final Object elementID ) {
-        return this.metadata.getMaximumValue(elementID);
-    }
-
-    public Object getMinimumValue( final Object elementID ) {
-        return this.metadata.getMinimumValue(elementID);
-    }
-
-    public int getPosition( final Object elementID ) {
-        return this.metadata.getPosition(elementID);
-    }
-
-    public int getPrecision( final Object elementID ) {
-        return this.metadata.getPrecision(elementID);
-    }
-
-    public int getRadix( final Object elementID ) {
-        return this.metadata.getRadix(elementID);
-    }
-
-    public String getFormat( Object elementID ) {
-        return this.metadata.getFormat(elementID);
-    }
-
-    public int getScale( final Object elementID ) {
-        return this.metadata.getScale(elementID);
-    }
-
-    public int getDistinctValues( final Object elementID ) {
-        return this.metadata.getDistinctValues(elementID);
-    }
-
-    public int getNullValues( final Object elementID ) {
-        return this.metadata.getNullValues(elementID);
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#isVirtualGroup(java.lang.Object)
-     */
-    public boolean isVirtualGroup( final Object groupID ) {
-        return this.metadata.isVirtualGroup(groupID);
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#hasMaterialization(java.lang.Object)
-     * @since 4.2
-     */
-    public boolean hasMaterialization( final Object groupID ) {
-        return this.metadata.hasMaterialization(groupID);
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getMaterialization(java.lang.Object)
-     * @since 4.2
-     */
-    public Object getMaterialization( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
-        return this.metadata.getMaterialization(groupID);
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getMaterializationStage(java.lang.Object)
-     * @since 4.2
-     */
-    public Object getMaterializationStage( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
-        return this.metadata.getMaterializationStage(groupID);
-    }
-
-    public boolean isVirtualModel( final Object modelID ) {
-        return this.metadata.isVirtualModel(modelID);
-    }
-
-    /*
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#isProcedureInputElement(java.lang.Object)
-     */
-    public boolean isProcedure( final Object elementID ) {
-        return this.metadata.isProcedure(elementID);
-    }
-
-    /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getVirtualPlan(java.lang.Object)
      */
-    public QueryNode getVirtualPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public QueryNode getVirtualPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -467,7 +374,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getInsertPlan(java.lang.Object)
      */
-    public String getInsertPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public String getInsertPlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -490,7 +398,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getUpdatePlan(java.lang.Object)
      */
-    public String getUpdatePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public String getUpdatePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -513,7 +422,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getDeletePlan(java.lang.Object)
      */
-    public String getDeletePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public String getDeletePlan( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         TableRecord tableRecord = (TableRecord)groupID;
@@ -534,41 +444,13 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#modelSupports(java.lang.Object, int)
-     */
-    public boolean modelSupports( final Object modelID,
-                                  final int modelConstant ) {
-        return this.metadata.modelSupports(modelID, modelConstant);
-    }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#groupSupports(java.lang.Object, int)
-     */
-    public boolean groupSupports( final Object groupID,
-                                  final int groupConstant ) {
-        return this.metadata.groupSupports(groupID, groupConstant);
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#elementSupports(java.lang.Object, int)
-     */
-    public boolean elementSupports( final Object elementID,
-                                    final int elementConstant ) {
-        return this.metadata.elementSupports(elementID, elementConstant);
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getMaxSetSize(java.lang.Object)
-     */
-    public int getMaxSetSize( final Object modelID ) {
-        return this.metadata.getMaxSetSize(modelID);
-    }
 
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getIndexesInGroup(java.lang.Object)
      */
-    public Collection getIndexesInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Collection getIndexesInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -591,7 +473,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getUniqueKeysInGroup(java.lang.Object)
      */
-    public Collection getUniqueKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Collection getUniqueKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -614,7 +497,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getForeignKeysInGroup(java.lang.Object)
      */
-    public Collection getForeignKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Collection getForeignKeysInGroup( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -637,7 +521,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getPrimaryKeyIDForForeignKeyID(java.lang.Object)
      */
-    public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
+    @Override
+	public Object getPrimaryKeyIDForForeignKeyID( final Object foreignKeyID )
         throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, foreignKeyID);
 
@@ -661,7 +546,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getAccessPatternsInGroup(java.lang.Object)
      */
-    public Collection getAccessPatternsInGroup( final Object groupID )
+    @Override
+	public Collection getAccessPatternsInGroup( final Object groupID )
         throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, groupID);
 
@@ -685,7 +571,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInIndex(java.lang.Object)
      */
-    public List getElementIDsInIndex( final Object index ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public List getElementIDsInIndex( final Object index ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, index);
 
         MetadataRecord record = (MetadataRecord)index;
@@ -721,7 +608,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInKey(java.lang.Object)
      */
-    public List getElementIDsInKey( final Object key ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public List getElementIDsInKey( final Object key ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, key);
 
         MetadataRecord record = (MetadataRecord)key;
@@ -757,7 +645,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getElementIDsInAccessPattern(java.lang.Object)
      */
-    public List getElementIDsInAccessPattern( final Object accessPattern )
+    @Override
+	public List getElementIDsInAccessPattern( final Object accessPattern )
         throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(MetadataRecord.class, accessPattern);
 
@@ -792,16 +681,10 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#isXMLGroup(java.lang.Object)
-     */
-    public boolean isXMLGroup( final Object groupID ) {
-        return this.metadata.isXMLGroup(groupID);
-    }
-
-    /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getMappingNode(java.lang.Object)
      */
-    public MappingNode getMappingNode( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public MappingNode getMappingNode( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -822,17 +705,12 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         return (MappingNode)mappingNode.clone();
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getVirtualDatabaseName()
-     */
-    public String getVirtualDatabaseName() throws TeiidComponentException, QueryMetadataException {
-        return this.metadata.getVirtualDatabaseName();
-    }
 
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getXMLTempGroups(java.lang.Object)
      */
-    public Collection getXMLTempGroups( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public Collection getXMLTempGroups( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -853,14 +731,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         return tempGroups;
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getCardinality(java.lang.Object)
-     */
-    public int getCardinality( final Object groupID ) {
-        return this.metadata.getCardinality(groupID);
-    }
-
-    public List getXMLSchemas( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
+    @Override
+	public List getXMLSchemas( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
         ArgCheck.isInstanceOf(TableRecord.class, groupID);
 
         MetadataRecord record = (MetadataRecord)groupID;
@@ -881,18 +753,12 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         return schemas;
     }
 
-    public String getNameInSource( final Object metadataID ) {
-        return this.metadata.getNameInSource(metadataID);
-    }
-
-    public int getElementLength( final Object elementID ) {
-        return this.metadata.getElementLength(elementID);
-    }
 
     /* 
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getExtensionProperties(java.lang.Object)
      */
-    public Properties getExtensionProperties( final Object metadataID )
+    @Override
+	public Properties getExtensionProperties( final Object metadataID )
         throws TeiidComponentException, QueryMetadataException {
 
         ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
@@ -915,52 +781,8 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         return extentions;
     }
 
-    public String getNativeType( final Object elementID ) {
-        return this.metadata.getNativeType(elementID);
-    }
 
-    public byte[] getBinaryVDBResource( String resourcePath ) {
-        return null;
-    }
 
-    public String getCharacterVDBResource( String resourcePath ) {
-        return null;
-    }
-
-    public String[] getVDBResourcePaths() {
-        return null;
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getModeledType(java.lang.Object)
-     * @since 5.0
-     */
-    public String getModeledType( Object elementID ) throws TeiidComponentException, QueryMetadataException {
-
-        return this.metadata.getModeledType(elementID);
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getModeledBaseType(java.lang.Object)
-     * @since 5.0
-     */
-    public String getModeledBaseType( Object elementID ) throws TeiidComponentException, QueryMetadataException {
-
-        return this.metadata.getModeledBaseType(elementID);
-    }
-
-    /**
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getModeledPrimitiveType(java.lang.Object)
-     * @since 5.0
-     */
-    public String getModeledPrimitiveType( Object elementID ) throws TeiidComponentException, QueryMetadataException {
-
-        return this.metadata.getModeledPrimitiveType(elementID);
-    }
-
-    public boolean isTemporaryTable( final Object groupID ) throws TeiidComponentException, QueryMetadataException {
-        return this.metadata.isTemporaryTable(groupID);
-    }
 
     // ==================================================================================
     // P U B L I C M E T H O D S
@@ -981,7 +803,7 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     private MetadataRecord getRecordByName( final String fullname,
                                             final char recordType ) {
-        Assertion.isNotZeroLength(fullname);
+        AssertionUtil.isNotZeroLength(fullname);
 
         // Check the cache for the identifier corresponding to this name ...
         Object id = this.nameToIdCache.get(getLookupKey(fullname, recordType));
@@ -995,7 +817,7 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
 
     private String getFullNameByPartialName( final String partialName,
                                              final char recordType ) {
-        Assertion.isNotZeroLength(partialName);
+        AssertionUtil.isNotZeroLength(partialName);
 
         // Check the cache for the identifier corresponding to this partialname ...
         return this.partialNameToFullNameCache.get(getLookupKey(partialName, recordType));
@@ -1063,25 +885,5 @@ public class TransformationMetadataFacade implements QueryMetadataInterface {
         }
     }
 
-    @Override
-    public boolean isScalarGroup( Object groupID ) throws TeiidComponentException, QueryMetadataException {
-        return this.metadata.isScalarGroup(groupID);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFunctionLibrary()
-     */
-    @Override
-    public FunctionLibrary getFunctionLibrary() {
-        return null;
-    }
-
-	@Override
-	public Object getPrimaryKey(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

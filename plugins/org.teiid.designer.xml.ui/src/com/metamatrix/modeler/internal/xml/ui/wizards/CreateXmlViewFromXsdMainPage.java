@@ -39,7 +39,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.mapping.factory.MappingClassFactory;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelSelectorDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelSelectorInfo;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceViewerFilter;
 import com.metamatrix.modeler.internal.xml.factory.VirtualDocumentModelPopulator;
 import com.metamatrix.modeler.xml.ui.ModelerXmlUiConstants;

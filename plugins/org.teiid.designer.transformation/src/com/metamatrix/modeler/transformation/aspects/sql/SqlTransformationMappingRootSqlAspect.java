@@ -8,14 +8,18 @@
 package com.metamatrix.modeler.transformation.aspects.sql;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.InputBinding;
@@ -40,9 +44,6 @@ import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.internal.transformation.util.InputSetPramReplacementVisitor;
 import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
 /**
  * SqlTransformationMappingRootSqlAspect
@@ -240,10 +241,10 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
         // get the UUID form of the SqlTransformation
         SqlTransformation transformation = (SqlTransformation)root.getHelper();
         if (transformation != null) {
-            final String selectSql = transformation.getSelectSql();
-            final String insertSql = transformation.getInsertSql();
-            final String updateSql = transformation.getUpdateSql();
-            final String deleteSql = transformation.getDeleteSql();
+            final String selectSql = getSelectSqlUserString(root);
+            final String insertSql = getInsertSqlUserString(root);
+            final String updateSql = getUpdateSqlUserString(root);
+            final String deleteSql = getDeleteSqlUserString(root);
             final List result = new ArrayList(4);
             if (!CoreStringUtil.isEmpty(selectSql)) {
                 final EObject transformedObject = (EObject)getTransformedObject(eObject);
@@ -605,7 +606,6 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
 
         final SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)eObject;
-        final Collection eResources = (context != null ? context.getResourcesInContext() : Collections.EMPTY_LIST);
 
         // Get the UUID form of the SqlTransformation. We assume that the UUID form of the query is
         // valid - validation rules should indicate errors if the tranformation is not. Convert the
@@ -619,12 +619,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.SELECT.equals(type) || SqlTransformationAspect.Types.PROCEDURE.equals(type)) {
 
-                // Get the UUID SQL string
-                final String uuidSql = uuidTransformation.getSelectSql();
-                if (CoreStringUtil.isEmpty(uuidSql)) {
-                    return null;
-                }
-                final String selectSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String selectSql = getSelectSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
 
                 // Get the target of the transformation
                 final Object target = getTransformedObject(eObject);
@@ -711,13 +706,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // INSERT transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.INSERT.equals(type) && uuidTransformation.isInsertAllowed()) {
-
-                // Get the UUID SQL string
-                final String uuidSql = uuidTransformation.getInsertSql();
-                if (CoreStringUtil.isEmpty(uuidSql)) {
-                    return null;
-                }
-                final String insertSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String insertSql = getInsertSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
                 if (!CoreStringUtil.isEmpty(insertSql)) {
                     return new SqlTransformationInfo(insertSql);
                 }
@@ -727,13 +716,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // UPDATE transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.UPDATE.equals(type) && uuidTransformation.isUpdateAllowed()) {
-
-                // Get the UUID SQL string
-                final String uuidSql = uuidTransformation.getUpdateSql();
-                if (CoreStringUtil.isEmpty(uuidSql)) {
-                    return null;
-                }
-                final String updateSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String updateSql = getUpdateSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
                 if (!CoreStringUtil.isEmpty(updateSql)) {
                     return new SqlTransformationInfo(updateSql);
                 }
@@ -743,13 +726,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // DELETE transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.DELETE.equals(type) && uuidTransformation.isDeleteAllowed()) {
-
-                // Get the UUID SQL string
-                final String uuidSql = uuidTransformation.getDeleteSql();
-                if (CoreStringUtil.isEmpty(uuidSql)) {
-                    return null;
-                }
-                final String deleteSql = SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String deleteSql = getDeleteSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
                 if (!CoreStringUtil.isEmpty(deleteSql)) {
                     return new SqlTransformationInfo(deleteSql);
                 }
@@ -810,6 +787,62 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
         }
 
         return command;
+    }
+    
+    /**
+     * Get the SQL Select String, given a SqlTransformationMappingRoot
+     * @param transMappingRoot the transformation mapping root
+     * @return the SQL Select String
+     */
+    private static String getSelectSqlUserString(final SqlTransformationMappingRoot root) {
+        SqlTransformation userSqlTransformation = getUserSqlTransformation(root);
+        String result = null;
+        if(userSqlTransformation!=null) {
+            result = userSqlTransformation.getSelectSql();
+        }
+        return result;
+    }
+
+    /**
+     * Get the SQL Insert String, given a SqlTransformationMappingRoot
+     * @param transMappingRoot the transformation mapping root
+     * @return the SQL Insert String
+     */
+    private static String getInsertSqlUserString(final SqlTransformationMappingRoot root) {
+        SqlTransformation userSqlTransformation = getUserSqlTransformation(root);
+        String result = null;
+        if(userSqlTransformation!=null) {
+            result = userSqlTransformation.getInsertSql();
+        }
+        return result;
+    }
+
+    /**
+     * Get the SQL Update String, given a SqlTransformationMappingRoot
+     * @param transMappingRoot the transformation mapping root
+     * @return the SQL Update String
+     */
+    private static String getUpdateSqlUserString(final SqlTransformationMappingRoot root) {
+        SqlTransformation userSqlTransformation = getUserSqlTransformation(root);
+        String result = null;
+        if(userSqlTransformation!=null) {
+            result = userSqlTransformation.getUpdateSql();
+        }
+        return result;
+    }
+
+    /**
+     * Get the SQL Delete String, given a SqlTransformationMappingRoot
+     * @param transMappingRoot the transformation mapping root
+     * @return the SQL Delete String
+     */
+    private static String getDeleteSqlUserString(final SqlTransformationMappingRoot root) {
+        SqlTransformation userSqlTransformation = getUserSqlTransformation(root);
+        String result = null;
+        if(userSqlTransformation!=null) {
+            result = userSqlTransformation.getDeleteSql();
+        }
+        return result;
     }
 
 }

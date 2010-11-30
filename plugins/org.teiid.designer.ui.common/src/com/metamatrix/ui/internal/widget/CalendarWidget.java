@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TypedListener;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -73,9 +74,9 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
 
     private TDatePanel m_DatePanel;
 
-    private IntegerSpinner m_hourSpinner;
+    private Spinner m_hourSpinner;
 
-    private IntegerSpinner m_minuteSpinner;
+    private Spinner m_minuteSpinner;
 
     Composite pnlCalendar;
 
@@ -125,8 +126,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         m_Day = currentDate.get(Calendar.DATE);
         m_Month = currentDate.get(Calendar.MONTH);
         m_Year = currentDate.get(Calendar.YEAR);
-        m_hourSpinner.setValue(currentDate.get(Calendar.HOUR_OF_DAY));
-        m_minuteSpinner.setValue(currentDate.get(Calendar.MINUTE));
+        m_hourSpinner.setSelection(currentDate.get(Calendar.HOUR_OF_DAY));
+        m_minuteSpinner.setSelection(currentDate.get(Calendar.MINUTE));
     }
 
     private void construct( Composite theParent ) {
@@ -281,7 +282,12 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         // hour spinner
         //
 
-        m_hourSpinner = new IntegerSpinner(pnlTime, 0, 23);
+        m_hourSpinner = new Spinner(pnlTime, SWT.NONE);
+        m_hourSpinner.setMinimum(0);
+        m_hourSpinner.setMaximum(23);
+        m_hourSpinner.setToolTipText(Util.getString(PREFIX + "hourSpinner.toolTip", //$NON-NLS-1$
+                                                    m_hourSpinner.getMinimum(),
+                                                    m_hourSpinner.getMaximum()));
 
         // 
         // minute label
@@ -294,7 +300,12 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         // minute spinner
         //
 
-        m_minuteSpinner = new IntegerSpinner(pnlTime, 0, 59);
+        m_minuteSpinner = new Spinner(pnlTime, SWT.NONE);
+        m_minuteSpinner.setMinimum(0);
+        m_minuteSpinner.setMaximum(59);
+        m_minuteSpinner.setToolTipText(Util.getString(PREFIX + "minuteSpinner.toolTip", //$NON-NLS-1$
+                                                      m_minuteSpinner.getMinimum(),
+                                                      m_minuteSpinner.getMaximum()));
 
         //
         // set initial state
@@ -378,11 +389,11 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
     }
 
     public int getHour() {
-        return m_hourSpinner.getIntegerValue();
+        return m_hourSpinner.getSelection();
     }
 
     public int getMinute() {
-        return m_minuteSpinner.getIntegerValue();
+        return m_minuteSpinner.getSelection();
     }
 
     public int getMonth() {
@@ -395,8 +406,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
 
     public Time getTime() {
         Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getIntegerValue());
-        date.set(Calendar.MINUTE, m_minuteSpinner.getIntegerValue());
+        date.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getSelection());
+        date.set(Calendar.MINUTE, m_minuteSpinner.getSelection());
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
 
@@ -408,8 +419,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         date.set(Calendar.MONTH, getMonth());
         date.set(Calendar.DATE, getDay());
         date.set(Calendar.YEAR, getYear());
-        date.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getIntegerValue());
-        date.set(Calendar.MINUTE, m_minuteSpinner.getIntegerValue());
+        date.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getSelection());
+        date.set(Calendar.MINUTE, m_minuteSpinner.getSelection());
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
 
@@ -447,11 +458,11 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         }
 
         if (m_showTime) {
-            calendar.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getIntegerValue());
-            calendar.set(Calendar.MINUTE, m_minuteSpinner.getIntegerValue());
+            calendar.set(Calendar.HOUR_OF_DAY, m_hourSpinner.getSelection());
+            calendar.set(Calendar.MINUTE, m_minuteSpinner.getSelection());
 
-            m_hourSpinner.setValue(calendar.get(Calendar.HOUR_OF_DAY));
-            m_minuteSpinner.setValue(calendar.get(Calendar.MINUTE));
+            m_hourSpinner.setSelection(calendar.get(Calendar.HOUR_OF_DAY));
+            m_minuteSpinner.setSelection(calendar.get(Calendar.MINUTE));
         }
     }
 
@@ -493,8 +504,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         Calendar date = Calendar.getInstance();
         date.setTime(theTime);
 
-        m_hourSpinner.setValue(date.get(Calendar.HOUR_OF_DAY));
-        m_minuteSpinner.setValue(date.get(Calendar.MINUTE));
+        m_hourSpinner.setSelection(date.get(Calendar.HOUR_OF_DAY));
+        m_minuteSpinner.setSelection(date.get(Calendar.MINUTE));
 
         panelChanged();
     }
@@ -506,8 +517,8 @@ public class CalendarWidget extends Composite implements InternalUiConstants {
         m_Day = date.get(Calendar.DATE);
         m_Month = date.get(Calendar.MONTH);
         m_Year = date.get(Calendar.YEAR);
-        m_hourSpinner.setValue(date.get(Calendar.HOUR_OF_DAY));
-        m_minuteSpinner.setValue(date.get(Calendar.MINUTE));
+        m_hourSpinner.setSelection(date.get(Calendar.HOUR_OF_DAY));
+        m_minuteSpinner.setSelection(date.get(Calendar.MINUTE));
 
         panelChanged();
     }

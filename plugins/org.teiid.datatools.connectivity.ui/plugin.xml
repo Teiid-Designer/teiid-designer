@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
 <plugin>
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
@@ -17,10 +24,15 @@
       <page
             class="org.teiid.datatools.connectivity.ui.TeiidPropertyPage"
             id="org.teiid.datatools.connectivity.ui.profileProperties"
-            name="Driver Properties">
+            name="%driverProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
                value="org.teiid.datatools.connectivity.connectionProfile"/>
+		 <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>               
       </page>
    </extension>
    
@@ -76,5 +88,40 @@
          id="Teiid Result Set Viewer"
          default_viewer_name="Teiid Result Set Viewer"
          class="org.teiid.datatools.results.view.TeiidResultViewerProvider"/>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator">
+         <includes>
+            <contentExtension
+                  pattern="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            id="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            labelProvider="org.teiid.datatools.connectivity.dse.provider.TeiidLableProvider"
+            name="%teiidModelContent.name"
+            priority="highest">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.teiid.datatools.connectivity.sql.TeiidCatalogSchema">
+               </instanceof>
+            </or>
+         </enablement>
+      </navigatorContent>
+      </extension>
+         <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.ui.labelService">
+      <contributor
+            iconLocation="/icons/view.gif"
+            type="org.teiid.datatools.models.teiidsqlmodel.Document">
+      </contributor>
    </extension>
    </plugin>

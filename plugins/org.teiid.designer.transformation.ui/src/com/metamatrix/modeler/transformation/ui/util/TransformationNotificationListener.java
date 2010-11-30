@@ -38,6 +38,7 @@ import org.teiid.query.sql.lang.Select;
 
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
+import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -50,9 +51,11 @@ import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotification;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceNotificationListener;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.transformation.util.AttributeMappingHelper;
@@ -350,7 +353,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     goodNotifications.add(notification);
                 } else if (NotificationUtilities.isRemoved(notification)) {
                     Object removedObj = notification.getOldValue();
-                    if (TransformationHelper.isSqlTable(removedObj)) {
+                    if (TransformationHelper.isSqlTable(removedObj) ||
+                    	changedObj instanceof ModelAnnotation) {
                         goodNotifications.add(notification);
                     }
                 }
@@ -899,11 +903,11 @@ public class TransformationNotificationListener implements INotifyChangedListene
         Iterator iter = notifications.iterator();
         while (iter.hasNext()) {
             Notification notification = (Notification)iter.next();
-            if (NotificationUtilities.isChanged(notification)) {
+            if (NotificationUtilities.isRemoved(notification)) {
                 // Get the object that was changed
                 Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
                 // changed object - MappingRoot, and source RenameRefactorAction
-                if (TransformationHelper.isTransformationMappingRoot(changedObj) && source instanceof RenameRefactorAction) {
+                if (changedObj instanceof ModelAnnotation && source instanceof RenameRefactorAction) {
                     if (result == null) {
                         result = new ArrayList(notifications.size());
                     }
@@ -1486,7 +1490,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
                             String dirtysql = transOEP.getCurrentSqlEditor().getText(); // the Teditor page should be loaded in
                             // transOEP already
                             QueryValidator qv = new TransformationValidator((SqlTransformationMappingRoot)mappingRoot, false);
-                            QueryValidationResult qvr = qv.validateSql(dirtysql, QueryValidator.SELECT_TRNS, false, false);
+                            QueryValidationResult qvr = qv.validateSql(dirtysql, QueryValidator.SELECT_TRNS, false);
                             boolean dirtyValid = qvr.isParsable();
                             if (!dirtyValid) {
                                 // add a warning:
@@ -1744,11 +1748,31 @@ public class TransformationNotificationListener implements INotifyChangedListene
             while (iter.hasNext()) {
                 Notification notification = (Notification)iter.next();
                 if (NotificationUtilities.isChanged(notification)) {
-                    // Get the object that was changed - the MappingRoot
-                    Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
-                    if (TransformationHelper.isTransformationMappingRoot(changedObj)) {
-                        SqlMappingRootCache.invalidateSelectStatus(changedObj, true, txnSource);
-                    }
+                	// Get all Transformation Roots for the resource and clean out the cache for ALL of them
+                	Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
+                	ModelResource modelResource = ModelUtilities.getModelResource(changedObj);
+                	if( modelResource != null ) {
+                		
+	                    try {
+							// Process all transformations in the TransformationContainer
+							final EmfResource emfRes = (EmfResource)modelResource.getEmfResource();
+							
+							final List transformations = emfRes.getModelContents().getTransformations();
+							for (Iterator i = transformations.iterator(); i.hasNext();) {
+							    EObject eObj = (EObject)i.next();
+							    if (eObj instanceof SqlTransformationMappingRoot) {
+							        SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)eObj;
+
+						        	SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
+						        	SqlMappingRootCache.invalidateInsertStatus(mappingRoot, true, txnSource);
+						        	SqlMappingRootCache.invalidateUpdateStatus(mappingRoot, true, txnSource);
+						        	SqlMappingRootCache.invalidateDeleteStatus(mappingRoot, true, txnSource);
+							    }
+							}
+						} catch (ModelWorkspaceException e) {
+							Util.log(IStatus.ERROR, e, e.getMessage());
+						}
+                	}
                 }
             }
         }

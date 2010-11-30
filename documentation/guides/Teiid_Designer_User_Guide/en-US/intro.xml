@@ -2,7 +2,9 @@
 
 <chapter id="intro-chapter">
   <title>Introduction</title>
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+	
 	<para>
 	        The Teiid Designer User's Guide provides detailed descriptions of Teiid Designer features and functionality.
 	</para>
@@ -19,7 +21,7 @@
 			<title>Teiid Designer</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/DesignerSnapshot.png"/>
+					<imagedata fileref="images/screencaps/designer-snapshot.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -115,9 +117,9 @@
 			<para>
 				You can think of this metadata in several contexts:
 				<itemizedlist>
-					<listitem> <para>What information does the metadata contain? (see <link linkend="business-technical-metadata">Business and Technical Metadata</link>)</para> </listitem>
-					<listitem> <para>What data does the metadata represent? (see <link linkend="source-view-metadata">Source and View Metadata</link>)</para> </listitem>
-					<listitem> <para>How will my organization use and manage this metadata? (see <link linkend="design-runtime-metadata">Design-Time and Runtime Metadata</link>)</para> </listitem>
+					<listitem> <para>What information does the metadata contain? (see <xref linkend="business-technical-metadata" />)</para> </listitem>
+					<listitem> <para>What data does the metadata represent? (see <xref linkend="source-view-metadata" />)</para> </listitem>
+					<listitem> <para>How will my organization use and manage this metadata? (see <xref linkend="design-runtime-metadata" />)</para> </listitem>
 				</itemizedlist>
 			</para>
 		</sect2>
@@ -154,7 +156,7 @@
 			</para>
 			<para> 
 				<emphasis role="italic">NOTE: For detailed information about creating models from your
-					metadata, see <link linkend="models-101-section"><emphasis role="bold">Models 101</emphasis></link></emphasis>
+					metadata, see <xref linkend="models-101-section" /></emphasis>
 			</para>
 		</sect2>
 		<sect2 id="business-technical-metadata">
@@ -417,7 +419,7 @@
 				<para> To create this <emphasis role="bold">View Metadata</emphasis>, you create a view and define a
 					<emphasis role="bold">transformation</emphasis> for that view, a special query that enables you to
 					select information from the source (or even other view) metadata
-					models. For more information, see “<link linkend="transformation-editor-section"><emphasis role="bold">Transformation Editor</emphasis></link>.”</para>
+					models. For more information, see “<xref linkend="transformation-editor-section" />.”</para>
 			</sect3>
 			<sect3 id="modeling-transformations">
 				<title>Modeling Metadata Transformations</title>
@@ -435,7 +437,7 @@
 					<figure id="address-transform">
 						<title>Data Flow for View Transformations</title>
 						<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/AddressPoolTransformation.jpg" align="center" />
+							<imagedata fileref="images/screencaps/address-pool-transformation.png" align="center" />
 						</imageobject></mediaobject>
 					</figure>
 					<para>
@@ -465,7 +467,7 @@
 					<figure id="address-xml-transform">
 						<title>Data Flow for XML Transformations</title>
 						<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/AddressPoolXMLTransformation.jpg" align="center" />
+							<imagedata fileref="images/screencaps/address-pool-xml-transformation.png" align="center" />
 						</imageobject></mediaobject>
 					</figure>
 					<para>
@@ -497,7 +499,7 @@
 			<figure>
 				<title>Sample Model File</title>
 				<mediaobject><imageobject>
-					<imagedata fileref="images/screencaps/SampleModelFile.jpg"/>
+					<imagedata fileref="images/screencaps/sample-model-file.png"/>
 				</imageobject></mediaobject>
 			</figure>
 			<para> Model files should never be modified "by hand". While it is
@@ -507,7 +509,7 @@
 				data characteristics of the information contained in data sources.
 				These are referred to as source models (represented by <inlinemediaobject>
 					<imageobject>
-						<imagedata fileref="images/icons/Model.gif"/>
+						<imagedata fileref="images/icons/model.png"/>
 					</imageobject>
 				</inlinemediaobject> ). Teiid Designer
 				uses the information in source models to federate the information in
@@ -516,13 +518,13 @@
 			<figure>
 				<title>Model Internals</title>
 				<mediaobject><imageobject>
-					<imagedata fileref="images/screencaps/ModelInternals.gif"/>
+					<imagedata fileref="images/screencaps/model-internals.png"/>
 				</imageobject></mediaobject>
 			</figure>
 			<para> In addition to source models, Teiid Designer provides the ability to
 				define a variety of view models(represented by <inlinemediaobject>
 					<imageobject>
-						<imagedata fileref="images/icons/ViewModel.gif"/>
+						<imagedata fileref="images/icons/view-model.png"/>
 					</imageobject>
 				</inlinemediaobject> ). These can be used to
 				define a layer of abstraction above the physical (or source) layer, so
@@ -533,12 +535,12 @@
 			<itemizedlist>
 				<listitem> <para>Relational Tables and Views</para> </listitem>
 				<listitem> <para>XML</para> </listitem>
-				<listitem> <para>XML Service</para> </listitem>
 				<listitem> <para>Web services</para> </listitem>
 				<listitem> <para>Relationships</para> </listitem>
 				<listitem> <para>Functions</para> </listitem>
 				<listitem> <para>UML 2.0</para> </listitem>
 			</itemizedlist>
+			<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
 			<para> A third model type, logical, provides the ability to define
 				models from a logical or structural perspective.</para>
 		</sect2>
@@ -551,14 +553,14 @@
 			<itemizedlist>
 				<listitem> 
 					<para>Created via importing source data characteristics. 
-						(see <link linkend="importers-chapter"><emphasis role="bold">Import Wizard</emphasis></link>)</para> 
+						(see <xref linkend="importers-chapter" />)</para> 
 				</listitem>
 				<listitem> 
-					<para>Manual creation via <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link></para> 
+					<para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
 				</listitem>
 				<listitem> 
 					<para>Transforming or copying from one model into another
-						 (see <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link> options)</para> 
+						 (see <xref linkend="newmodels-chapter" /> options)</para> 
 				</listitem>
 				<listitem> <para>Various custom actions</para></listitem>
 			</itemizedlist>
@@ -588,9 +590,6 @@
 						documents.</para>
 				</listitem>
 				<listitem> 
-					<para><emphasis role="bold">XML Service</emphasis> - TBD.</para>
-				</listitem>
-				<listitem> 
 					<para><emphasis role="bold">Web Services</emphasis> - which define Web service
 						interfaces, operations, and operation input and output parameters (in
 						the form of XML Schemas).</para>
@@ -601,76 +600,63 @@
 				</listitem>
 				<listitem> 
 					<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
-						user-defined functions, including binary source jars, to use in custom transformation SQL statements.
-						Currently only a single UDF model is supported by Teiid Designer. 
-						See <link linkend="udfs-view"><emphasis role="bold">UDFs View</emphasis></link> for details.</para>
+						user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
 				</listitem>
 				<listitem> 
-					<para><emphasis role="bold">Relationship</emphasis> - TBD.</para>
+					<para><emphasis role="bold">Relationship</emphasis> - The relationships metamodel supports 
+					creation and management of relationships between any other EMF-based metamodel objects.
+					See <xref linkend="relationships-chapter" /> section for details.</para>
 				</listitem>
 				<listitem> 
-					<para><emphasis role="bold">UML 2.0</emphasis> - TBD.</para>
+					<para><emphasis role="bold">UML 2.0</emphasis> - The UML metamodel supports basic UM2 object management.
+					This metamodel is rich and complex in its definition and is currently used sparingly within Teiid Designer.</para>
 				</listitem>
 			</itemizedlist>
-
-			<para>VDBs contain two primary varieties of model types - source and
-				view. Source models represent the structure and characteristics of
-				physical data sources, whereas view models represent the structure and
-				characteristics of abstract structures you want to expose to your
-				applications.</para>
 		</sect2>
 		<sect2 id="intro-models-and-vdbs">
 			<title>Models and VDBs</title>
 			<para>Models used for data integration are packaged into a virtual
 				database (VDB). The models must be in a complete and consistent state
 				when used for data integration. That is, the VDB must contain all the
-				models and all resources they depend upon. Models contained within a
-				VDB can be imported into the Teiid Designer. In this way, VDBs
-				can be used as a way to exchange a set of related models. (See
-				 description in <link linkend="vdb-editor-section"><emphasis role="bold">VDB Editor</emphasis></link> section)</para>
+				models and all resources they depend upon. VDB's are the transport mechanism to expose
+				both the metadata to query against on a server and the corresponding references to the data sources
+				and connections required to perform the actual DB queries. (See the 
+				<xref linkend="vdb-editor-section" /> section)</para>
 		</sect2>
-		<sect2 id="intro-models-and-connector-bindings">
-			<title>Models and Connectors</title>
+		<sect2 id="intro-models-and-connector-profiles">
+			<title>Models and Connection Profiles</title>
 
-			<para>A connector provides the connectivity to the source for
-				the query engine when it is executing queries to that source.</para>
-			<para>All Source models must have connectors associated with
-				them in a VDB in order to be tested in Teiid Designer or deployed for data
-				access.</para>
-			<para>It is possible that multiple models may use the same connector,
-				but each model must have a connector.</para>
-			<para>In Teiid Designer, connector are automatically created
-				"under the hood" when you import from a specific supported data
-				source. You can also create and maintain your own custom connectors.
-				(see <link linkend="manage-bindings-section"><emphasis role="bold">Manage Connectors</emphasis></link>)</para>
+			<para>A connection profile  provides the connectivity to a data source and is 
+				defined by the DTP framework. Designer utilizes this framework from withing 
+				it's JDBC Importer.
+			</para>
 				
 		</sect2>
 		<sect2 id="intro-model-validation">
 			<title>Model Validation</title>
-			
-			<para>Models must be in a valid state in order to be used for data
-				access. Validation of a single model means that it must be in a
-				self-consistent and complete state, meaning that there are no "missing
-				pieces" and no references to non-existent entities. Validation of
-				multiple models checks that all inter-model dependencies are present
-				and resolvable.</para>
-			<para> Models must always be validated when they are deployed in a VDB
-				for data access purposes.</para>
-			<para> Enterprise Teiid Designer will automatically validate your models
-				whenever the user Saves ( Note: the "Models > Validate Automatically"
-				option must be checked). When editing models, the editor tabs will
-				display a "*" to indicate that the model has unsaved changes.</para>
+			<para>Models must be in a valid state in order to be used for data access. 
+				Validation of a single model means that it must be in a self-consistent and 
+				complete state, meaning that there are no "missing pieces" and 
+				no references to non-existent entities. Validation of multiple models 
+				checks that all inter-model dependencies are present and resolvable.</para>
+			<para>Models must always be validated when they are deployed in a VDB for data 
+				access purposes.</para>
+			<para>Teiid Designer will automatically validate your models 
+				whenever the user Saves ( Note: the "Models > Validate Automatically" option 
+				must be checked). When editing models, the editor tabs will display a "*" 
+				to indicate that the model has unsaved changes.
+			</para>
 		</sect2>
 		<sect2 id="intro-testing-your-models">
 			<title>Testing Your Models</title>
 			<para> Designing and working with data is often much easier when you can
-				see the information you're working with. The Teiid Designer's <emphasis role="bold">Preview Data</emphasis>
+				see the information you're working with. The Teiid Designer's 
+				<emphasis role="bold">Preview Data</emphasis>
 				feature makes this possible and allows you to instantly preview the
 				information described by any object, whether it's a physical table or a
 				virtual view. In other words, you can test the views with actual data
 				by simply selecting the table, view, procedure or XML document. The
-				preview functionality leverages an embedded version of the Teiid Designer
-				Server, so you can be sure that the behavior in the Teiid Designer will
+				preview functionality insures that data access behavior in the Teiid Designer will
 				reliably match when the VDB is deployed to the Server. Previewing
 				information is a fast and easy way to sample the data. Of course, to
 				run more complicated queries like what your application likely uses,
@@ -679,16 +665,12 @@
 			<para> After creating your models, you can test them by using the
 				<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/previewData.gif"/>
+							<imagedata fileref="images/icons/preview-data.png"/>
 						</imageobject>
 					</inlinemediaobject>. By selecting a desired table object and
 				executing the action, the results of a simple query will be displayed
-				in the <link linkend="preview-results-view"><emphasis role="bold">Preview</emphasis></link> results view. This action is accessible throughout the
+				in the Data Tools SQL Results view. This action is accessible throughout the
 				Teiid Designer in various view toolbars and context menus.</para>
-			<para> There are two requirements for previewing your data: the
-				selected object must be one several previewable model object types and
-				all source models within the model dependency tree must be bound to
-				connectors.</para>
 			<para> Previewable objects include:</para>
 			<itemizedlist>
 				<listitem>
@@ -705,10 +687,6 @@
 					<para>XML Document staging table.</para>
 				</listitem>
 			</itemizedlist>
-			<para> Note that any virtual table, view or procedure is previewable as
-				long as all "physical" source models are bound via connectors.
-				(See <link linkend="connectors-view"><emphasis role="bold">Connectors</emphasis></link> view and 
-				<link linkend="manage-bindings-section"><emphasis role="bold">Manage Connectors</emphasis></link>)</para>
 			<note>
 				<para>If attempting to preview a relational access patter, a web service operation or a relational procedure
 					with input parameters, a dialog will be presented to request values for required parameters.</para>

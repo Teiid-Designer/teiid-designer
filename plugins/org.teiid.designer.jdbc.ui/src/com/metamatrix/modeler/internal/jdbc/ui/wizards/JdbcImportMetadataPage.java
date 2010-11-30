@@ -285,7 +285,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             result = db.getDatabaseMetaData().getTableTypes();
             final List types = new ArrayList();
             while (result.next()) {
-                String type = result.getString(1);
+                String type = result.getString(1).trim();
                 if(!types.contains(type)) {
                     types.add(type);
                 }

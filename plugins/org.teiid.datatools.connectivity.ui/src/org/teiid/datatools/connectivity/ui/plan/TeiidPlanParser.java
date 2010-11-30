@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.datatools.connectivity.ui.plan;
 
 import java.io.InputStream;
@@ -33,11 +40,14 @@ import org.xml.sax.InputSource;
 
 public class TeiidPlanParser implements IPlanParser {
 	
+	private static final String NODE = "node"; //$NON-NLS-1$
+	private static final String NAME = "name"; //$NON-NLS-1$
+	
 	private Transformer transformer;
 
 	public TeiidPlanParser() {
 		try {
-			InputStream stylesheetStream = FileLocator.openStream(Activator.getDefault().getBundle(),new Path("PlanToHTML.xsl"), true);
+			InputStream stylesheetStream = FileLocator.openStream(Activator.getDefault().getBundle(),new Path("PlanToHTML.xsl"), true); //$NON-NLS-1$
 			Source xsltSource = new StreamSource(stylesheetStream);
 			TransformerFactory transFact = 
 			       TransformerFactory.newInstance();
@@ -45,7 +55,7 @@ public class TeiidPlanParser implements IPlanParser {
 
 		} catch (Exception e) {
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-            		Messages.getString("TeiidPlanSupportRunnable.errorCreatingParser"), e);
+            		Messages.getString("TeiidPlanSupportRunnable.errorCreatingParser"), e); //$NON-NLS-1$
             Activator.getDefault().getLog().log(status);
 		}
 	}
@@ -62,7 +72,7 @@ public class TeiidPlanParser implements IPlanParser {
 			d = builder.parse( is );
 		} catch (Exception e) {
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e);
+            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e); //$NON-NLS-1$
             Activator.getDefault().getLog().log(status);
 			return null;
 		}
@@ -77,25 +87,25 @@ public class TeiidPlanParser implements IPlanParser {
 	
 	private TreePlanNodeComponent parsePlan(Element elem) {
 		TreePlanNodeComponent rootNode;
-		if(elem.getElementsByTagName("node").getLength() == 0) {
+		if(elem.getElementsByTagName(NODE).getLength() == 0) {
 			rootNode = new TreePlanNodeLeaf();
 		} else {
 			rootNode = new TreePlanNodeComposite();
 		}
 		
-		rootNode.setName(elem.getAttribute("name"));
+		rootNode.setName(elem.getAttribute(NAME));
 		StringWriter writer = new StringWriter();
 		StreamResult result = new StreamResult(writer);
 		try {
 			transformer.transform(new DOMSource(elem), result);
 		} catch (TransformerException e) {
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e);
+            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e); //$NON-NLS-1$
             Activator.getDefault().getLog().log(status);
 		}
 		rootNode.setDetail(writer.toString());
 		
-		NodeList nodes = elem.getElementsByTagName("node");
+		NodeList nodes = elem.getElementsByTagName(NODE);
 		for(int i = 0; i<nodes.getLength(); i++) {
 			Element childElement = (Element) nodes.item(i);
 			handleNode(childElement, rootNode);
@@ -105,13 +115,13 @@ public class TeiidPlanParser implements IPlanParser {
 
 	private void handleNode(Element elem, TreePlanNodeComponent parentNode) {
 		TreePlanNodeComponent node;
-		if(elem.getElementsByTagName("node").getLength() == 0) {
+		if(elem.getElementsByTagName(NODE).getLength() == 0) {
 			node = new TreePlanNodeLeaf();
 		} else {
 			node = new TreePlanNodeComposite();
 		}
 		
-		node.setName(elem.getAttribute("name"));
+		node.setName(elem.getAttribute(NAME));
 		node.setParent(parentNode);
 		StringWriter writer = new StringWriter();
 		StreamResult result = new StreamResult(writer);
@@ -119,12 +129,12 @@ public class TeiidPlanParser implements IPlanParser {
 			transformer.transform(new DOMSource(elem), result);
 		} catch (TransformerException e) {
 			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 
-            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e);
+            		Messages.getString("TeiidPlanSupportRunnable.errorParsingPlan"), e); //$NON-NLS-1$
             Activator.getDefault().getLog().log(status);
 		}
 		parentNode.setDetail(writer.toString());
 		
-		NodeList nodes = elem.getElementsByTagName("node");
+		NodeList nodes = elem.getElementsByTagName(NODE);
 		for(int i = 0; i<nodes.getLength(); i++) {
 			Element childNode = (Element) nodes.item(i);
 			handleNode(childNode, parentNode);

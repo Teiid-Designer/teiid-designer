@@ -312,7 +312,9 @@ public class TableEditorPreferencesComponent implements IEditorPreferencesCompon
 
             }
         }
+        
         this.modelTableColumnUtils.firePropertiesChanged(this.modifiedEObjects);
+        UiPlugin.getDefault().extractModelTableColumnUtilsToPreferenceStore(); // persist changes
         return true;
     }
 

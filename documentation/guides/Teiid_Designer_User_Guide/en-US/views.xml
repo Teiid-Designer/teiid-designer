@@ -3,22 +3,52 @@
 <chapter id="views-chapter">
 	<title>Teiid Designer Views</title>
 	
-	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 	
-	<para> Teiid Designer provides various views to display and allow
-		editing of models and model content. This section describes
-		each view in detail.</para>
+	<para>Views are dockable windows which present data from your models or your 
+		modeling session in various forms. Some views support particular 
+		<xref linkend="editors-chapter" /> and 
+		their content is dependent on workspace selection. This section summarizes most 
+		of the views used and available in Teiid Designer.
+	</para>
+	<para>
+		Below is a short summary of Teiid Designer views. The full list is presented in 
+		the main menu's <emphasis>View > Show View</emphasis> dialog.
+	</para>
+	<para>Designer</para>
+	<itemizedlist>
+		  <listitem><para><xref linkend="model-explorer-view" /></para></listitem>
+		  <listitem><para><xref linkend="datatypes-view" /></para></listitem>
+		  <listitem><para><xref linkend="description-view" /></para></listitem>
+		  <listitem><para><xref linkend="message-log-view" /></para></listitem>
+		  <listitem><para><xref linkend="problems-view" /></para></listitem>
+		  <listitem><para><xref linkend="teiid-view" /></para></listitem>
+		  <listitem><para><xref linkend="system-catalog-view" /></para></listitem>
+	</itemizedlist>
+	<itemizedlist>
+	   <listitem><para><xref linkend="outline-view" /></para></listitem>
+	   <listitem><para><xref linkend="properties-view" /></para></listitem>
+		  <listitem><para><xref linkend="search-results-view" /></para></listitem>
+	</itemizedlist>
+	<figure id="show-view-dialog-image">
+		<title>Eclipse Show View Dialog</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/screencaps/show-view-dialog.png"/>
+			</imageobject>
+		</mediaobject>
+	</figure>
 		
 	<!-- ####### MODEL EXPLORER VIEW ######################################### -->
   
 	<sect1 id="model-explorer-view">
 		<title>Model Explorer View</title>
+
+				
 		<para>
-			Teiid Designer
-			allows you manage multiple projects containing multiple models and
-			any corresponding or dependent resources. The
-			<emphasis role="bold">Model Explorer</emphasis>
-			provides a simple file-structured view of these resources.
+			<emphasis>Teiid Designer</emphasis> allows you manage multiple projects containing multiple models 
+			and any corresponding or dependent resources. The <emphasis>Model Explorer</emphasis> provides a 
+			simple file-structured view of these resources.
 		</para>
 		<para>
 			The
@@ -29,7 +59,7 @@
 			<title>Model Explorer View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ModelExplorer.jpg"/>
+					<imagedata fileref="images/screencaps/model-explorer.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -40,7 +70,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/previewData.gif"/>
+								<imagedata fileref="images/icons/preview-data.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
 					</para>
@@ -49,7 +79,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/alphab_sort.gif"/>
+								<imagedata fileref="images/icons/alphab-sort.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Sort Model Contents</emphasis> - Sorts the contents of the models based on object type and
 						alphabetizing.
@@ -59,7 +89,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/refresh.gif"/>
+								<imagedata fileref="images/icons/refresh.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Refresh Markers</emphasis> - Refreshes error and warning markers for objects in tree.
 					</para>
@@ -68,7 +98,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/backward_nav.gif"/>
+								<imagedata fileref="images/icons/backward-nav.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Back</emphasis> - Displays the last "Go Into" location. (See Eclipse Help)
 					</para>
@@ -77,7 +107,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/forward_nav.gif"/>
+								<imagedata fileref="images/icons/forward-nav.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Forward</emphasis> - Displays the next "Go Into" location. (See Eclipse Help)
 					</para>
@@ -86,7 +116,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/up_nav.gif"/>
+								<imagedata fileref="images/icons/up-nav.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Up</emphasis> - Navigates up one folder/container location. (See Eclipse Help)
 					</para>
@@ -95,7 +125,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/collapseall.gif"/>
+								<imagedata fileref="images/icons/collapse-all.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Collapse All</emphasis> - Collapses all projects.
 					</para>
@@ -104,7 +134,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/synced.gif"/>
+								<imagedata fileref="images/icons/synced.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Link with Editor</emphasis> - When object is selected in an open editor, this option
 						auto-selects and reveals object in Model Explorer.
@@ -114,7 +144,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/selectCheatSheat.gif"/>
+								<imagedata fileref="images/icons/select-cheat-sheet.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Additional Actions</emphasis>
 					</para>
@@ -127,7 +157,7 @@
 				<title>Additional Actions</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ModelExplorerExtraOptions.jpg"/>
+						<imagedata fileref="images/screencaps/model-explorer-extra-options.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -137,7 +167,7 @@
 				<title>Show Model Imports Action</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/SampleModelImports.jpg"/>
+						<imagedata fileref="images/screencaps/sample-model-imports.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -156,7 +186,7 @@
 					<title>Sample Context Menu</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/ContextMenu_RelViewModel.jpg" />
+							<imagedata fileref="images/screencaps/context-menu-relational-view-model.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -189,7 +219,7 @@
 				<title>Outline View</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/OutlineView.jpg"/>
+						<imagedata fileref="images/screencaps/outline-view.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -200,14 +230,14 @@
 				sketch of your diagram regardless of its size. To view this diagram
 				thumbnail from the Outline panel, click the Diagram Overview button <inlinemediaobject>
 				<imageobject>
-					<imagedata fileref="images/icons/Overview.gif"/>
+					<imagedata fileref="images/icons/overview.png"/>
 				</imageobject>
 			</inlinemediaobject> at the top of the view. The diagram overview displays in the Outline View.</para>
 			<figure id="outline-view-thumbnail-image">
 				<title>Outline View</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/OutlineViewThumbnail.jpg"/>
+						<imagedata fileref="images/screencaps/outline-view-thumbnail.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -219,247 +249,66 @@
 				Editor view.</para>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ThumbnailAndDiagramEditor.jpg"/>
+						<imagedata fileref="images/screencaps/thumbnail-and-diagram-editor.png"/>
 					</imageobject>
 				</mediaobject>
 		</sect2>
     </sect1> 
     
-    <!-- ####### UDFS VIEW ######################################### --> 
     
-    <sect1 id="udfs-view">
-        <title>UDFs View</title>
-		<para> <emphasis role="bold">User Defined Functions</emphasis> extend the basic set of functions you can
-			use within data access applications that use Teiid Designer or
-			even within your transformation queries that you use to model View
-			Metadata. Your organization needs to develop Java logic to perform
-			these functions and manage these functions through the Teiid Designer
-			Console. For more information about this complete process, see
-			Creating Custom User-Defined Functions.</para>
-		<para>Before you can model the user-defined functions, you must have
-			exported the <emphasis role="bold">User Defined Functions</emphasis> metadata model from Teiid Designer
-			using the Teiid Designer Console. You should have placed this file in your
-			local directory so that you can open it.</para>
-		<para>The <emphasis role="bold">User Defined Functions</emphasis> model uses a special metamodel, the
-			Function metamodel, which is limited to constructs for this
-			specific purpose. Therefore you cannot create a new model using this
-			metamodel, nor should you use this model in a project or as a source
-			for View Metadata models.</para>
-		<para>Users can edit their <emphasis role="bold">User Defined Functions</emphasis> model from within
-			the UDFs view shown below. The basic functionality of the <emphasis role="bold">UDFs</emphasis> view is
-			identical to the <emphasis role="bold">Model Explorer</emphasis> view but focused the single
-			FunctionsDefinitions model.</para>
-      	<figure id="udfs-view-image">
-			<title>UDFs View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/UDFView.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>
-			The view's toolbar actions include:
-			<itemizedlist>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/alphab_sort.gif" />
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Sort Model Contents</emphasis> - Sorts the contents of the models based on object type and alphabetizing.
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/refresh.gif"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Refresh Markers</emphasis> - Refreshes error and warning markers for objects in tree.
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/importjarorzip.gif"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Import UDF Extension Jar</emphasis> -Import your custom UDF extension jar files.
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/add_udf_jar.png"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Add Connector Jar to UDF</emphasis> - Add connector jar to UDF model. This allows using dual use extension jars.
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/collapseall.gif"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Collapse All</emphasis> - Collapses the tree view.
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/synced.gif"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Link with Editor</emphasis> - When object is selected in an open editor, this option
-						auto-selects and reveals object in Model Explorer.
-					</para>
-				</listitem>
-			</itemizedlist>
-		</para>
-		<para>You can delete your UDF jars by right-click select Delete Jars action.</para>
-		<figure id="delete-udf-jars-image">
-			<title>Delete UDF Jars</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/DeleteUdfJars.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para> Both UDF jars and connector extension jars are utilized by
-			Teiid Designer during VDB execution and data Preview. This provides the
-			ability to utilize a common extension jar to deliver both user defined
-			function code and custom connector code. To facilitate this scenerio,
-			the UDFs view contains an Add Connector Jar to UDF action.</para>
-		<para> To add an existing connector jar to your UDF:</para>
-		<para>
-			<emphasis role="bold">Step 1:</emphasis>
-			Select the Add Connector Jar to UDF toolbar button
-			<inlinemediaobject>
-				<imageobject>
-					<imagedata fileref="images/icons/add_udf_jar.png"/>
-				</imageobject>
-			</inlinemediaobject> or select the UDF jars folder or jar and right-click select the same
-			action.
-		</para>
-		<para>
-			<emphasis role="bold">Step 2 :</emphasis>
-			In the selection dialog below, select one or more connector jars and
-			choose OK to finish.
-		</para>
-		<figure id="select-connector-jars-image">
-			<title>Add Connector Jars Dialog</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/AddConnectorJarsToUdfDialog.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-    </sect1>
+    <!-- ####### TEIID VIEW ######################################### -->
     
-    <!-- ####### CONNECTORS VIEW ######################################### -->
-    
-	<sect1 id="connectors-view">
-		<title>Connectors View</title>
+	<sect1 id="teiid-view">
+		<title>Teiid View</title>
 		<para>
-			The
-			<emphasis role="bold">Connectors View</emphasis>
-			provides a means to display and manage (add or remove) connectors and
-			source bindings in Teiid Designer. For more information on Connectors, 
-			see <link linkend="manage-bindings-section"><emphasis role="bold">Manage Connectors</emphasis></link>.
+			The Teiid View provides a means to display and manage Teiid server instances 
+			and their contents within Designer.
 		</para>
-		<para>
-			To show the
-			<emphasis role="bold">Connectors View</emphasis>
-			click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the <emphasis role="bold">Show View</emphasis> dialog.
-			Choose
-			<emphasis role="bold">Teiid Designer > Connectors</emphasis>
-			view and hit
-			<emphasis role="bold">OK</emphasis>.
-		</para>
-		<figure id="connectors-view-image">
-			<title>Connectors View</title>
+		<para>To show the Teiid View click "<emphasis>Views > Show View > Other...</emphasis>" 
+		to display the Show View dialog. Choose "<emphasis>Teiid Designer > Teiid</emphasis>" 
+		view and hit <emphasis>OK</emphasis>.</para>
+		<figure id="teiid-view-image">
+			<title>Teiid View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ConnectorsView.jpg"/>
+					<imagedata fileref="images/screencaps/teiid-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>
-			The view's toolbar actions include:
-			<itemizedlist>
-				<listitem>
-					<para><inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/new_binding.png"/>
-							</imageobject>
-						</inlinemediaobject> <link linkend="create-new-binding-section"><emphasis role="bold">Create New Connector</emphasis></link> - Launches New Connector wizard.
-					</para>
-				</listitem>
-				<listitem>
-					<para><inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/import_connectors.png"/>
-							</imageobject>
-						</inlinemediaobject> <link linkend="import-bindings-section"><emphasis role="bold">Import Connectors</emphasis></link> - Imports connectors from a *.cdk file.
-					</para>
-				</listitem>
-				<listitem>
-					<para><inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/export_connectors.png"/>
-							</imageobject>
-						</inlinemediaobject> <link linkend="export-bindings-section"><emphasis role="bold">Export Connectors</emphasis></link> - Exports selected connectors to *.cdk file. This action
-						provides a means to transfer your source connection information
-						between Teiid Designer workspaces.
-					</para>
-				</listitem>
-				<listitem>
-					<para><inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/showHideConnectors.png"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Show/Hide Connector Types</emphasis> - Shows or hides connector types in tree view.
-					</para>
-				</listitem>
-				<listitem>
-					<para> <inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/collapseall.gif"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Collapse All</emphasis> - Collapses the tree view.
-					</para>
-				</listitem>
-			</itemizedlist>
+		<para>To create a new Teiid instance, either right-click select
+			 <emphasis>New Teiid Instance</emphasis> action or click the New Server 
+			 button in the toolbar.
 		</para>
+		
 		<para>
-			You can also access these actions via the right-click menu as shown
-			below. Note that the <emphasis role="bold">Clone</emphasis> connector action creates a new connector
-			whose property values are set with those of the originally selected connector.
+			You'll get the <emphasis>New Teiid Instance</emphasis> dialog shown below. Provide a 
+			valid URL, user name and password and click <emphasis>Finish</emphasis>.
 		</para>
-		<figure id="connectors-context-menu-image">
-			<title>Connectors Context Menu</title>
+		<figure id="new-teiid-instance-dialog-image">
+			<title>New Teiid Instance Dialog</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ConnectorsViewContextMenu.jpg"/>
+					<imagedata fileref="images/screencaps/new-teiid-instance-dialog.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para> You can show/hide the connector types by toggling the action <inlinemediaobject>
-			<imageobject>
-				<imagedata fileref="images/icons/showHideConnectors.png"/>
-			</imageobject>
-		</inlinemediaobject> in the toolbar.</para>
-		<para>
-			<figure id="show-connector-types-image">
-				<title>Show Connector Types</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/ConnectorsViewShowTypes.jpg"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</para>
+		<para>Actions available in this view include:</para>
+		<itemizedlist>
+		  <listitem><para>New Teiid Instance - Create a new instance of a running Teiid server</para></listitem>
+		  <listitem><para>Teiid Server Properties - View and edit properties of an existing Teiid instance</para></listitem>
+		  <listitem><para>Reconnect - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
+		  <listitem><para>Discard - Disconnect and delete the selected Teiid instance</para></listitem>
+		  <listitem><para>Execute VDB - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
+		  <listitem><para>Undeploy VDB - Removes the selected VDB from the Teiid instance</para></listitem>
+		</itemizedlist>
+		<itemizedlist>
+			<listitem><para>Create Data Source - Launches the New Data Source wizard</para></listitem>
+			<listitem><para>Delete Data Source - Removes the selected Data Source from the Teiid instance</para></listitem>
+		</itemizedlist>
+		<itemizedlist>
+			<listitem><para>Execute VDB - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
+		   <listitem><para>Undeploy VDB - Removes the selected VDB from the Teiid instance</para></listitem>
+		</itemizedlist>
 	</sect1>
 	
 	<!-- ####### PROPERTIES VIEW ######################################### -->
@@ -470,8 +319,7 @@
 			The
 			<emphasis role="bold">Properties View</emphasis>
 			provides editing capabilities for the currently selected object in
-			Teiid Designer
-			. The selection provided by whichever view or editor is currently in
+			Teiid Designer. The selection provided by whichever view or editor is currently in
 			focus will determine the its contents.
 		</para>
 		<para> To edit a property, click a cell in the Value column. As in the
@@ -481,7 +329,7 @@
 			<title>Properties View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/PropertiesView.jpg"/>
+					<imagedata fileref="images/screencaps/properties-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -494,7 +342,7 @@
 				<title>Open Model Editor Dialog</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/PropertiesViewWithOpenEditorCheck.jpg"/>
+						<imagedata fileref="images/screencaps/properties-view-confirm-edit-check.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -505,7 +353,7 @@
 					<title>Open Model Editor Dialog</title>
 					<mediaobject>
 						<imageobject>
-							<imagedata fileref="images/screencaps/PropertiesViewMenu.jpg"/>
+							<imagedata fileref="images/screencaps/properties-view-menu.png"/>
 						</imageobject>
 					</mediaobject>
 				</figure>
@@ -518,7 +366,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/tree_mode.gif"/>
+								<imagedata fileref="images/icons/tree-model.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Show Categories</emphasis> - toggles between categorized properties and flat alphabetical properties list.
 					</para>
@@ -526,7 +374,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/filter_change.gif"/>
+								<imagedata fileref="images/icons/filter-change.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Show Advanced Properties</emphasis> - shows/hide advanced properties (if available).
 					</para>
@@ -534,7 +382,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/defaults_ps.gif"/>
+								<imagedata fileref="images/icons/defaults-ps.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Restore Default Value</emphasis> - for a selected property, this action will reset the current to a default value (if available).
 					</para>
@@ -552,13 +400,9 @@
 			<emphasis role="bold">Description View</emphasis>
 			provides a means to display and edit (add, change or remove) a
 			description for any model or model object. To show the Description
-			View click "
-			<emphasis role="bold">Views > Show View > Other...</emphasis>
-			" to display the
-			<emphasis role="bold">Show View</emphasis>
-			dialog. Choose "
-			<emphasis role="bold">Teiid Designer > Description</emphasis>
-			" view and hit
+			View click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the
+			<emphasis role="bold"><xref linkend="show-view-dialog-image" /></emphasis>
+			dialog. Choose <emphasis role="bold">Teiid Designer > Description</emphasis> view and hit
 			<emphasis role="bold">OK</emphasis>
 			.
 		</para>
@@ -566,7 +410,7 @@
 			<title>Description View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/DescriptionView.jpg"/>
+					<imagedata fileref="images/screencaps/description-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -577,7 +421,7 @@
 			<title>Description View Context Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/DescriptionViewMenu.jpg"/>
+					<imagedata fileref="images/screencaps/description-view-menu.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -603,7 +447,7 @@
 			<title>Editor Tabs</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ModelEditorTabs.jpg"/>
+					<imagedata fileref="images/screencaps/model-editor-tabs.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -612,13 +456,13 @@
 			<title>Viewing Multiple Editors</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/MultipleModelEditors.jpg"/>
+					<imagedata fileref="images/screencaps/multiple-model-editors.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
 		<para>The Teiid Designer provides main editor views for XMI models and VDBs.</para>
 		<para>The Model Editor contains sub-editors which provide different views of the data or parts of data 
-			within a model. These sub-editors, specific to model types are listed below.</para>
+			within an XMI model. These sub-editors, specific to model types are listed below.</para>
 		<itemizedlist>
 			<listitem>
 				<para><emphasis role="bold">Diagram Editor</emphasis> - All models except XML Schema models.</para>
@@ -630,37 +474,16 @@
 				<para><emphasis role="bold">Simple Datatypes Editor</emphasis> - XML Schema models only.</para>
 			</listitem>
 			<listitem>
-				<para><emphasis role="bold">Semantic Editor</emphasis> - XML Schema models only.</para>
+				<para><emphasis role="bold">Semantics Editor</emphasis> - XML Schema models only.</para>
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Source Editor</emphasis> - XML Schema models only.</para>
 			</listitem>
 		</itemizedlist>
-		<para>The VDB Editor contains sub-editors which provide different views of the data or parts of data 
-			within a VDB. These sub-editors include.</para>
-		<itemizedlist>
-			<listitem>
-				<para><emphasis role="bold">Overview</emphasis> - View and manage contents of VDB.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Problems</emphasis> - Display errors and warnings within VDB and models.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Indexes</emphasis> - View indexes generated for model data within VDB.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">User Files</emphasis> - Manage additional VDB resources or artifacts.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Web Services</emphasis> - Define and view WSDL.</para>
-			</listitem>
-			<listitem>
-				<para><emphasis role="bold">Execute</emphasis> - Create and change connectors and execute queries.</para>
-			</listitem>
-		</itemizedlist>
-		<para> In addition to general Editors for models, there are detailed
-			editors designed for editing specific model object types. These
-			"object" editors include:</para>
+		<para>The <emphasis>VDB Editor</emphasis> is a single page editor containing panels for editing description, 
+			model contents and data roles.</para>
+		<para> In addition to general Editors for models, there are detailed editors designed 
+			for editing specific model object types. These "object" editors include:</para>
 		<itemizedlist>
 			<listitem>
 				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
@@ -684,14 +507,16 @@
     
 	<sect1 id="problems-view">
 		<title>Problems View</title>
-		<para>The <emphasis role="bold">Problems View</emphasis> displays validation errors, warnings, or information associated with a resource contained in open projects within your workspace.
+		<para>The <emphasis role="bold">Problems View</emphasis> displays validation errors, 
+			warnings, or information associated with a resource contained in open projects 
+			within your workspace.
 		</para>
 		<figure id="problems-view-image">
 			<title>Problems View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/ProblemsView.jpg"
-						align="center" scale="100" />
+					<imagedata fileref="images/screencaps/problems-view.png"
+						align="center"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -699,28 +524,23 @@
 			perspective. If the <emphasis role="bold">Problems View</emphasis> is not showing in the current
 			perspective click <emphasis role="bold">Views > Show View > Other > Teiid Designer > Problems</emphasis>.
 		</para>
-		<para> There are 5 columns:</para>
+		<para> There are 5 columns in the view's table which include:</para>
 		<para>
 			<orderedlist>
 				<listitem>
-					<para> <emphasis role="bold">Severity</emphasis> - Indicates the severity of the line item (i.e., error <inlinemediaobject>
+					<para> <emphasis role="bold">Description</emphasis> - A description of the problem preceded
+						 by a severity icon (i.e., error <inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/ProblemMarker_error.gif"/>
+								<imagedata fileref="images/icons/problem-marker-error.png"/>
 							</imageobject>
 						</inlinemediaobject>, warning <inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/ProblemMarker_warning.gif"/>
+								<imagedata fileref="images/icons/problem-marker-warning.png"/>
 							</imageobject>
 						</inlinemediaobject>, or info <inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/ProblemMarker_info.gif"/>
+								<imagedata fileref="images/icons/problem-marker-info.png"/>
 							</imageobject></inlinemediaobject> ).
-					</para>
-				</listitem>
-				<listitem>
-					<para>
-						<emphasis role="bold">Description</emphasis>
-						- A description of the line item.
 					</para>
 				</listitem>
 				<listitem>
@@ -731,57 +551,35 @@
 				</listitem>
 				<listitem>
 					<para>
-						<emphasis role="bold">In Folder</emphasis>
+						<emphasis role="bold">Path</emphasis>
 						- The project name.
 					</para>
 				</listitem>
 				<listitem>
 					<para>
 						<emphasis role="bold">Location</emphasis>
-						- Model object within the resource that has a validation error.
+						- The object within the resource that has a validation error.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">type</emphasis>
+						- Type of validation item.
 					</para>
 				</listitem>
 			</orderedlist>
 		</para>
 		
 		<sect2 id="problems-view-toolbar-items">
-			<title>Toolbar Items</title>
+			<title>Toolbar Menu</title>
 			<para>Click the upside-down triangle 
 			<inlinemediaobject>
 				<imageobject>
-					<imagedata fileref="images/icons/selectCheatSheat.gif"/>
+					<imagedata fileref="images/icons/select-cheat-sheet.png"/>
 				</imageobject>
-			</inlinemediaobject> icon to open the view menu.
+			</inlinemediaobject> icon to open the View Menu icon to see various options including 
+				sorting, filtering, displayed columns and much more.
 			</para>
-			<figure id="problems-view-dropdown-menu-image">
-				<title>Problems View Drop-down Menu</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/ProblemsViewDropDownActions.jpg"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-			<para>The <emphasis role="bold">Sorting</emphasis> action presents a dialog which enables sorting
-				of the problems by severity, resource, and location.</para>
-			<figure id="problems-view-sorting-dialog-image">
-				<title>Problems View Sorting Dialog</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/ProblemsViewSortingDialog.jpg"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-			<para>The <emphasis role="bold">Filters</emphasis> action presents a dialog which enables filtering
-				of the problems by total number, type, resource, severity, and
-				description.</para>
-			<figure id="problems-view-filters-dialog-image">
-				<title>Problems View Filters Dialog</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/ProblemsViewFiltersDialog.jpg"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
 		</sect2>
 		<sect2 id="problems-view-context-menu">
 			<title>Context Menu</title>
@@ -791,7 +589,7 @@
 				<title>Problems View Context Menu</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/ProblemsViewMenu.jpg"/>
+						<imagedata fileref="images/screencaps/problems-view-context-menu.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -868,7 +666,7 @@
 			<title>Message Log View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/MessageLogView.jpg" scalefit="1" />
+					<imagedata fileref="images/screencaps/message-log-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -879,142 +677,12 @@
 			<title>Message Log View Context Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/MessageLogViewerMenu.jpg" scalefit="1" />
+					<imagedata fileref="images/screencaps/message-log-view-context-menu.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
 	</sect1>
-	
-	<!-- ####### PREVIEW DATA RESULTS VIEW ######################################### -->
-	<sect1 id="preview-results-view">
-		<title>Preview Results View</title>
-		<para>
-			Executing the
-			<emphasis role="bold">Preview Data</emphasis>
-			action
-			<inlinemediaobject>
-				<imageobject>
-					<imagedata fileref="images/icons/previewData.gif"/>
-				</imageobject>
-			</inlinemediaobject>
-			, will result in the query results being displayed in the Preview
-			results view, shown below.
-		</para>
-		<figure id="preview-results-view-image">
-			<title>Preview Results View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/PreviewResultsView.jpg" scalefit="1" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para> The view's toolbar actions include:</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/sql_results.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Show Query Results</emphasis> - Shows query results in table row or XML format.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/plan_tree.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Show Query Plan Tree</emphasis> - Shows query plan in tree format.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/plan_document.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Show Query Plan Document</emphasis> - Shows query plan in xml document format.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/debug_log.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Show Debug Log</emphasis> - Shows debug log file contents.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/deletefile.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Close the Selected Results</emphasis> - Removes the selected results from the view.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/copy_edit.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Copy Results to Clipboard</emphasis> - Copies selected results as text to the system clipboard.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/save_to_file.gif"/>
-						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Save Results to File</emphasis> - Provides a file dialog to save selected results to a text file on
-					file system.
-				</para>
-			</listitem>
-		</itemizedlist>
-		<tip><para>The History list can be sorted alphabetically (or
-			reverse) by clicking the "History" column header.</para></tip>
-		<tip><para>The tooltip for each History object will display the
-			underlying base SQL text used in the query.</para></tip>
-		
-		<para>Because the <emphasis role="bold">Preview Data</emphasis> feature is just that, a preview,
-			you are limited to maximum number of rows returned rows. This value
-			is a user preference and can be changed from its default value by
-			selecting <emphasis role="bold">Preferences > Teiid Designer</emphasis> and changing the <emphasis role="bold">Preview Data's</emphasis> row
-			count limit value.</para>
-		<para>
-			By selecting the
-			<emphasis role="bold">Show Query Plan Tree</emphasis>
-			toolbar action the SQL table results are replaced with a tree view of
-			the underlying Query plan and corresponding properties.
-		</para>
-		<figure id="preview-results-plantree-view-image">
-			<title>Search Results View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/PreviewResultsViewPlanTree.jpg" scalefit="1" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>
-			By selecting the
-			<emphasis role="bold">Show Query Plan Document</emphasis>
-			toolbar action the SQL table results are replaced with an XML document
-			view of the underlying Query plan.
-		</para>
-		<figure id="preview-results-plan-doc-view-image">
-			<title>Search Results View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/PreviewResultsViewPlanDocument.jpg" scalefit="1" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		</sect1>
-    
+
     <!-- ####### SEARCH RESULTS VIEW  ############################################# -->
     
 	<sect1 id="search-results-view">
@@ -1022,12 +690,12 @@
 		<para>Below is an example set of search results. The view
 			contains rows representing matches for your search parameters. You
 			can double-click a entry and the object will be opened and selected
-			in an editor and/or the VDB Explorer if applicable.</para>
+			in an editor and/or the Model Explorer if applicable.</para>
 		<figure id="search-results-view-image">
 			<title>Search Results View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/SearchResultsView.jpg" scalefit="1" />
+					<imagedata fileref="images/screencaps/search-results-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -1041,7 +709,7 @@
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/search_next.gif"/>
+							<imagedata fileref="images/icons/search-next.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Show Next Match</emphasis> - Navigates down one row in the view.
 				</para>
@@ -1050,7 +718,7 @@
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/search_prev.gif"/>
+							<imagedata fileref="images/icons/search-prev.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Show Previous Match</emphasis> - Navigates up one row in the view.
 				</para>
@@ -1059,7 +727,7 @@
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/search_rem.gif"/>
+							<imagedata fileref="images/icons/search-rem.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Remove Selected Matches</emphasis> - Removes selected results from the view.
 				</para>
@@ -1068,7 +736,7 @@
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/search_remall.gif"/>
+							<imagedata fileref="images/icons/search-remall.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Remove All Matches</emphasis> - Clears the view.
 				</para>
@@ -1077,18 +745,20 @@
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/metadata_search.gif"/>
+							<imagedata fileref="images/icons/metadata-search.png"/>
 						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
+					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches 
+						the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
 				</para>
 			</listitem>
 			<listitem>
 				<para>
 					<inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/search_history.gif"/>
+							<imagedata fileref="images/icons/search-history.png"/>
 						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Previous Search Results</emphasis> - Select previous search results from history.
+					</inlinemediaobject> <emphasis role="bold">Previous Search Results</emphasis> - Select 
+					previous search results from history.
 				</para>
 			</listitem>
 		</itemizedlist>
@@ -1098,7 +768,7 @@
 				<title>Search Results Context Menu</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/SearchResultsViewMenu.jpg"/>
+						<imagedata fileref="images/screencaps/search-results-view-menu.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -1123,7 +793,7 @@
 			<title>Datatype Hierarchy View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/DatatypesView.jpg"/>
+					<imagedata fileref="images/screencaps/datatypes-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -1132,8 +802,20 @@
 	<!-- ####### MODEL CLASSES VIEW  ############################################# -->
 	
     <sect1 id="model-classes-view">
-      <title>Model Classes View</title>
-      <para>The Model Classes View.... </para>
+      <title>Teiid Model Classes View</title>
+      <para>The Model Classes View provides a hiearchical EMF-centric view of the 
+      	various metamodel classes available within Teiid Designer. This view is primarily
+      	for informational purposes, but can be used as a reference if creating relationships
+      	or searching your workspace for specific metamodel constructs.
+      </para>
+		<figure id="model-classes-view-image">
+			<title>Datatype Hierarchy View</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/model-classes-view.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
     </sect1>
     
     <!-- ####### SYSTEM CATALOG VIEW  ############################################# -->
@@ -1154,82 +836,7 @@
 			<title>System Catalog View</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/SystemCatalogView.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</sect1>
-		
-	<!-- ####### SQL EXPLORER DATABASE STRUCTURE VIEW  ############################################# -->
-	
-	<sect1 id="sql-database-structure-view">
-		<title>Database Structure View</title>
-		<para>The Database Structure View....</para>
-		<figure id="sql-database-structure-view-image">
-			<title>Database Structure View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/databaseStructureView.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</sect1>
-	
-	<!-- ####### SQL EXPLORER HISTORY VIEW  ############################################# -->
-	
-	<sect1 id="sql-history-view">
-		<title>SQL History View</title>
-		<para>The SQL History View....</para>
-		<figure id="sql-history-view-image">
-			<title>SQL History View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/SqlExplorerSqlHistoryView.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</sect1>
-	
-	<!-- ####### SQL EXPLORER CONNECTIONS VIEW  ############################################# -->
-	
-	<sect1 id="sql-connections-view">
-		<title>Connections View</title>
-		<para>The Connections View....</para>
-		<figure id="sql-connections-view-image">
-			<title>Connections View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/SQLExplorerConnectionsView.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</sect1>
-	
-	<!-- ####### SQL EXPLORER EDITOR VIEW  ############################################# -->
-	
-	<sect1 id="sql-editor-view">
-		<title>SQL Editor View</title>
-		<para>The SQL Editor</para>
-		<figure id="sql-editor-view-image">
-			<title>SQL Editor View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/generatedSql.jpg"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</sect1>
-	
-	<!-- ####### SQL EXPLORER RESULTS VIEW  ############################################# -->
-	
-	<sect1 id="sql-results-view">
-		<title>SQL Results View</title>
-		<para>The SQL Results View....</para>
-		<figure id="sql-table-results-view-image">
-			<title>SQL Results View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/sqlTableResults.jpg"></imagedata>
+					<imagedata fileref="images/screencaps/system-catalog-view.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>

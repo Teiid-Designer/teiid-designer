@@ -75,4 +75,12 @@
         name="com.metamatrix.modeler.internal.transformation.util.TransformationNewModelObjectHelper">
       </class>
    </extension>
+   <extension
+		id="TransformationRefactorModelHandler"
+		name="%transformationRefactorModelExtension.name"
+        point="org.teiid.designer.core.refactorModelHandler">
+      <refactorHandler
+         name="com.metamatrix.modeler.internal.transformation.util.TransformationRefactorModelHandler">
+      </refactorHandler>
+   </extension>
 </plugin>

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -35,7 +36,6 @@ import org.eclipse.xsd.XSDWhiteSpace;
 import org.eclipse.xsd.XSDWhiteSpaceFacet;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.core.id.UUID;
 import org.teiid.query.mapping.xml.MappingAllNode;
 import org.teiid.query.mapping.xml.MappingAttribute;
 import org.teiid.query.mapping.xml.MappingBaseNode;
@@ -50,6 +50,7 @@ import org.teiid.query.mapping.xml.MappingOutputter;
 import org.teiid.query.mapping.xml.MappingRecursiveElement;
 import org.teiid.query.mapping.xml.MappingSequenceNode;
 import org.teiid.query.mapping.xml.Namespace;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
@@ -89,7 +90,6 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.internal.xml.aspects.sql.MappingContext;
 import com.metamatrix.modeler.internal.xml.aspects.sql.XmlDocumentMappingHelper;
 import com.metamatrix.modeler.xml.PluginConstants;
@@ -936,10 +936,10 @@ public class MappingDocumentFormatter {
 
     String getCriteria( final ChoiceOption element ) {
         String choiceCriteria = element.getChoiceCriteria();
-        if (choiceCriteria != null && choiceCriteria.indexOf(UUID.PROTOCOL) >= 0) // Defect 23725 - changed call to get the
+//        if (choiceCriteria != null && choiceCriteria.indexOf(UUID.PROTOCOL) >= 0) // Defect 23725 - changed call to get the
         // element's Container object. CANNOT ASSUME
         // RESOURCE SET is CONTAINER
-        choiceCriteria = SqlConverter.convertUUIDsToFullNames(choiceCriteria, ModelerCore.getContainer(element));
+//        choiceCriteria = SqlConverter.convertUUIDsToFullNames(choiceCriteria, ModelerCore.getContainer(element));
         return choiceCriteria;
     }
 

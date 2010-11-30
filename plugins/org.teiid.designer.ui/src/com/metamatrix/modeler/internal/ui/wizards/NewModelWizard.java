@@ -183,7 +183,11 @@ public class NewModelWizard extends AbstractWizard
         } catch (InvocationTargetException e) {
             success = false;
             Throwable realException = e.getTargetException();
-            MessageDialog.openError(getShell(), Util.getString("NewModelWizard.Error_1"), realException.getMessage()); //$NON-NLS-1$
+            String msg = realException.getMessage();
+            if( msg == null || msg.length() == 0 ) {
+            	msg = Util.getString("NewModelWizard.Error_1.msg", realException.getClass().getName().toString()); //$NON-NLS-1$
+            }
+            MessageDialog.openError(getShell(), Util.getString("NewModelWizard.Error_1.title"), msg); //$NON-NLS-1$
             return false;
         } finally {
             if (startedTxn) {

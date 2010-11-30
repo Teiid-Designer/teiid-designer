@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.ui.connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -28,6 +27,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,6 +41,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
+import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.ExecutionAdmin;
 
 import com.metamatrix.core.util.I18nUtil;
@@ -51,17 +53,15 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.jdbc.JdbcManager;
-import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
 /**
  * 
  */
-public class CreateDataSourceWizard extends AbstractWizard {
+public class CreateDataSourceWizard extends AbstractWizard implements IProfileChangedListener {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(CreateDataSourceWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
@@ -72,6 +72,8 @@ public class CreateDataSourceWizard extends AbstractWizard {
     private static final String PASSWORD = getString("passwordStr"); //$NON-NLS-1$
     private static final String HIDDEN_PASSWORD = "********"; //$NON-NLS-1$
     private static final String INVALID_CHARS = "; @ # $ % ^ & * ( ) [ ] { } = | ! < > ? \\"; //$NON-NLS-1$
+    private static final String NEW_BUTTON = DqpUiConstants.UTIL.getString("Button.newLabel"); //$NON-NLS-1$
+    private static final String EDIT_BUTTON = DqpUiConstants.UTIL.getString("Button.editLabel"); //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
@@ -91,6 +93,9 @@ public class CreateDataSourceWizard extends AbstractWizard {
     private Button useModelCheckBox;
     private Combo connectionProfilesCombo;
     private Button useConnectionProfileCheckBox;
+    private Button newCPButton;
+    private Button editCPButton;
+    private ILabelProvider profileLabelProvider;
     private Text dataSourceNameText;
     private TableViewer propsViewer;
     private TableContentProvider propertiesContentProvider;
@@ -98,16 +103,17 @@ public class CreateDataSourceWizard extends AbstractWizard {
     Map<String, ModelResource> relationalModelsMap;
 
     private ExecutionAdmin admin;
-    private JdbcManager jdbcManager;
+//    private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
-    private IConnectionProfile selectedProfile;
+//    private IConnectionProfile selectedProfile;
     private StringNameValidator dataSourceNameValidator;
 
     private boolean hasModelResources = false;
-    private boolean hasConnectionProfiles = false;
 
     private Properties teiidDataSourceProperties;
     private IConnectionInfoProvider currentProvider;
+    
+    private ConnectionProfileWorker profileWorker;
 
     /**
      * @since 4.0
@@ -123,9 +129,8 @@ public class CreateDataSourceWizard extends AbstractWizard {
         this.hasModelResources = !relationalModelsMap.isEmpty();
         this.admin = admin;
         this.selectedModelResource = initialSelection;
-        this.jdbcManager = JdbcUiUtil.getJdbcManager();
-        this.hasConnectionProfiles = !jdbcManager.getJdbcSources().isEmpty();
         this.providerFactory = new ConnectionInfoProviderFactory();
+        this.teiidDataSourceProperties = new Properties();
     }
 
     /**
@@ -151,7 +156,8 @@ public class CreateDataSourceWizard extends AbstractWizard {
      * @since 4.0
      */
     Composite createPageControl( final Composite parent ) {
-
+    	profileWorker = new ConnectionProfileWorker(this.getShell(), null, this);
+    	 
         // ===========>>>> Create page composite
         final Composite mainPanel = new Composite(parent, SWT.NONE);
         mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -178,11 +184,11 @@ public class CreateDataSourceWizard extends AbstractWizard {
 
         // ===========>>>> Create Connections Group
         final Group connectionSourceGroup = WidgetFactory.createGroup(mainPanel,
-                                                                      getString("connectionSourceGroup.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
+                                                                      getString("connectionSourceGroup.label"), GridData.FILL_HORIZONTAL, 2, 4); //$NON-NLS-1$
 
         // ===========>>>> Models selection
         boolean useModelRes = selectedModelResource != null;
-        useModelCheckBox = WidgetFactory.createCheckBox(connectionSourceGroup, getString("useModelInfo.label"), 0, 2, useModelRes); //$NON-NLS-1$
+        useModelCheckBox = WidgetFactory.createCheckBox(connectionSourceGroup, getString("useModelInfo.label"), 0, 4, useModelRes); //$NON-NLS-1$
         useModelCheckBox.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -221,7 +227,7 @@ public class CreateDataSourceWizard extends AbstractWizard {
         if (useModelRes) {
             this.modelsCombo = WidgetFactory.createCombo(connectionSourceGroup,
                                                          SWT.READ_ONLY,
-                                                         GridData.FILL_HORIZONTAL,
+                                                         GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_CENTER,
                                                          modelsList,
                                                          selectedModelResource,
                                                          modelsLabelProvider,
@@ -244,11 +250,14 @@ public class CreateDataSourceWizard extends AbstractWizard {
         });
 
         this.modelsCombo.setVisibleItemCount(10);
+        GridData modelsComboGD = new GridData(GridData.FILL_BOTH);
+        modelsComboGD.horizontalSpan = 3;
+        this.modelsCombo.setLayoutData(modelsComboGD);
 
         // ===========>>>> Connection Profiles
         useConnectionProfileCheckBox = WidgetFactory.createCheckBox(connectionSourceGroup, getString("useProfileInfo.label"), //$NON-NLS-1$
-                                                                    0,
-                                                                    2,
+        															0,
+                                                                    4,
                                                                     !useModelRes);
         useConnectionProfileCheckBox.addSelectionListener(new SelectionAdapter() {
 
@@ -258,7 +267,9 @@ public class CreateDataSourceWizard extends AbstractWizard {
                 modelsCombo.setEnabled(!useConnectionProfileCheckBox.getSelection());
                 useModelCheckBox.setSelection(!useConnectionProfileCheckBox.getSelection());
 
-                handleConnectionProfileSelected();
+                if( useConnectionProfileCheckBox.getSelection() ) {
+                	handleConnectionProfileSelected();
+                }
 
                 propsViewer.refresh();
 
@@ -267,36 +278,65 @@ public class CreateDataSourceWizard extends AbstractWizard {
         });
 
         WidgetFactory.createLabel(connectionSourceGroup, getString("connectionProfile.label")); //$NON-NLS-1$
-        ArrayList sourceList = new ArrayList(this.jdbcManager.getJdbcSources().size());
-        for (Iterator iter = this.jdbcManager.getJdbcSources().iterator(); iter.hasNext();) {
-            Object source = iter.next();
-            if (source != null && !sourceList.contains(source)) {
-                sourceList.add(source);
-            }
-        }
-        ILabelProvider profileLabelProvider = new LabelProvider() {
+//        ArrayList profileList = new ArrayList();
+//        for( IConnectionProfile prof : ProfileManager.getInstance().getProfiles()) {
+//        	profileList.add(prof);
+//        }
+
+        profileLabelProvider = new LabelProvider() {
 
             @Override
             public String getText( final Object source ) {
-                return ((JdbcSource)source).getName();
+                return ((IConnectionProfile)source).getName();
             }
         };
         this.connectionProfilesCombo = WidgetFactory.createCombo(connectionSourceGroup,
                                                                  SWT.READ_ONLY,
                                                                  GridData.FILL_HORIZONTAL,
-                                                                 sourceList,
+                                                                 profileWorker.getProfiles(),
                                                                  profileLabelProvider,
                                                                  true);
-        this.connectionProfilesCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText( final ModifyEvent event ) {
-                if (useConnectionProfileCheckBox.getSelection()) {
-                    handleConnectionProfileSelected();
-                }
-            }
-        });
+        this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Need to sync the worker with the current profile
+				handleConnectionProfileSelected();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+//        .addModifyListener(new ModifyListener() {
+//
+//            public void modifyText( final ModifyEvent event ) {
+//                if (useConnectionProfileCheckBox.getSelection()) {
+//                    handleConnectionProfileSelected();
+//                }
+//            }
+//        });
 
         this.connectionProfilesCombo.setVisibleItemCount(10);
+
+        newCPButton = WidgetFactory.createButton(connectionSourceGroup, NEW_BUTTON);
+        newCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                profileWorker.create();
+            }
+        });
+        
+        editCPButton = WidgetFactory.createButton(connectionSourceGroup, EDIT_BUTTON);
+        editCPButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                profileWorker.edit();
+            }
+        });
 
         this.useConnectionProfileCheckBox.setSelection(!useModelRes);
         this.connectionProfilesCombo.setEnabled(!useModelRes);
@@ -349,14 +389,15 @@ public class CreateDataSourceWizard extends AbstractWizard {
             modelsCombo.setEnabled(false);
         }
 
-        if (!hasConnectionProfiles) {
+        if (profileWorker.getProfiles().isEmpty()) {
             useConnectionProfileCheckBox.setEnabled(false);
             connectionProfilesCombo.setEnabled(false);
         } else {
             this.connectionProfilesCombo.select(0);
+            handleConnectionProfileSelected();
         }
 
-        if (!hasConnectionProfiles && !hasModelResources) {
+        if (profileWorker.getProfiles().isEmpty() && !hasModelResources) {
             wizardPage.setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
         } else {
             setConnectionProperties();
@@ -380,13 +421,16 @@ public class CreateDataSourceWizard extends AbstractWizard {
     }
 
     private void handleConnectionProfileSelected() {
-        if (connectionProfilesCombo.getSelectionIndex() >= 0) {
-            String selectedItem = connectionProfilesCombo.getItem(connectionProfilesCombo.getSelectionIndex());
-            this.selectedProfile = this.jdbcManager.getConnectionProfile(selectedItem);
-        } else {
-            this.selectedProfile = null;
-        }
-        setConnectionProperties();
+		int selIndex = connectionProfilesCombo.getSelectionIndex();
+		
+		if( selIndex >= 0 ) {
+			String name = connectionProfilesCombo.getItem(selIndex);
+			if( name != null ) {
+				IConnectionProfile profile = profileWorker.getProfile(name);
+				profileWorker.setSelection(profile);
+				setConnectionProperties();
+			}
+		}
     }
 
     /**
@@ -415,8 +459,11 @@ public class CreateDataSourceWizard extends AbstractWizard {
         if (this.dataSourceName == null || this.dataSourceName.length() == 0) {
             wizardPage.setErrorMessage(getString("nullNameError.message")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
-        } else if (teiidDataSourceProperties == null || teiidDataSourceProperties.isEmpty()) {
-            wizardPage.setErrorMessage(getString("noValidPropertiesError.message")); //$NON-NLS-1$
+        } else if ( useModelCheckBox != null && useModelCheckBox.getSelection() && teiidDataSourceProperties.isEmpty()) {
+            wizardPage.setErrorMessage(getString("noValidTeiidPropertiesInModelError.message")); //$NON-NLS-1$
+            wizardPage.setPageComplete(false);
+        } else if ( useConnectionProfileCheckBox != null && useConnectionProfileCheckBox.getSelection() && teiidDataSourceProperties.isEmpty()) {
+            wizardPage.setErrorMessage(getString("noValidTeiidPropertiesError.message")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
         } else if (!isValidName(this.dataSourceName)) {
             wizardPage.setErrorMessage(getString("invalidName.message", INVALID_CHARS)); //$NON-NLS-1$
@@ -447,12 +494,12 @@ public class CreateDataSourceWizard extends AbstractWizard {
                     //DqpUiConstants.UTIL.log(e);
                 }
             }
-        } else if (selectedProfile != null) {
+        } else if (profileWorker.getConnectionProfile() != null) {
             try {
-                IConnectionInfoProvider provider = getProvider(selectedProfile);
+                IConnectionInfoProvider provider = getProvider(profileWorker.getConnectionProfile());
                 if (provider != null) {
                     currentProvider = provider;
-                    props = provider.getTeiidRelatedProperties(selectedProfile);
+                    props = provider.getTeiidRelatedProperties(profileWorker.getConnectionProfile());
                 }
             } catch (ModelWorkspaceException e) {
                 DqpUiConstants.UTIL.log(e);
@@ -474,7 +521,7 @@ public class CreateDataSourceWizard extends AbstractWizard {
             }
             propsViewer.setInput(propsColl);
         } else {
-            teiidDataSourceProperties = null;
+            teiidDataSourceProperties.clear();
             propsViewer.setInput(new ArrayList<StringKeyValuePair>());
         }
 
@@ -501,7 +548,47 @@ public class CreateDataSourceWizard extends AbstractWizard {
         }
         return dataSourceNameValidator.isValidName(name);
     }
-
+    
+    public void profileChanged(IConnectionProfile profile) {
+    	resetCPComboItems();
+    	
+    	selectConnectionProfile(profile.getName());
+    	
+    	setConnectionProperties();
+    }
+    
+    void resetCPComboItems() {
+    	if( connectionProfilesCombo != null ) {
+        	ArrayList profileList = new ArrayList();
+            for( IConnectionProfile prof : profileWorker.getProfiles()) {
+            	profileList.add(prof);
+            }
+            
+            WidgetUtil.setComboItems(connectionProfilesCombo, profileList, profileLabelProvider, true);
+    	}
+    }
+    
+    void selectConnectionProfile(String name) {
+    	if( name == null ) {
+    		return;
+    	}
+    	
+    	int cpIndex = -1;
+    	int i = 0;
+    	for( String item : connectionProfilesCombo.getItems()) {
+    		if( item != null && item.length() > 0 ) {
+    			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
+    				cpIndex = i;
+    				break;
+    			}
+    		}
+    		i++;
+    	}
+    	if( cpIndex > -1 ) {
+    		connectionProfilesCombo.select(cpIndex);
+    	}
+    }
+    
     class StringKeyValuePair {
 
         private String key;
@@ -592,5 +679,4 @@ public class CreateDataSourceWizard extends AbstractWizard {
         }
 
     }
-
 }

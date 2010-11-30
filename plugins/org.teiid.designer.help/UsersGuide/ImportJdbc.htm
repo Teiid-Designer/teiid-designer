@@ -1,3 +1,6 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
 <!--
   JBoss, Home of Professional Open Source.
 
@@ -5,41 +8,88 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<link rel="stylesheet" href="designer_help.css" type="text/css" />
+  <link rel="stylesheet" href="designer_help.css" type="text/css">
+</head>
 <body>
-<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png"
+ alt="MMHeader" border="0"></a></p>
 <hr>
 <p class="maintitle_b24">Importing Sources via JDBC</p>
-
-<p class="medium">Source relational models can be created by importing from JDBC sources.</p>
+<p class="medium">Source relational models can be created by importing
+from JDBC sources.</p>
 <p class="medium">Follow the steps below... </p>
 <blockquote>
-  <p class="note">Note: Depending the detail provided in the database connection url information and schema, Steps 5 thru 7 may not be required </p>
-  <p class="medium"><strong>Step 1:</strong> In <strong>Designer</strong> , choose the <strong><a href="ModelingYourData.htm#importWizard">File &gt; Import</a></strong> action <img src="images/icons/import_wiz.gif" width="16" height="16" /> in the toolbar or select a project, folder or model in the tree and choose &quot;<strong>Import...</strong>&quot;</p>
-  <p class="medium"><strong>Step 2:</strong> Select the import option <strong>Metadata from JDBC Database</strong> and choose <strong>NEXT&gt;</strong></p>
-  <p class="medium"><img src="images/views/JdbcImport_1.jpg" hspace="20"></p>
-  <p class="medium"><strong>Step 3:</strong> Select existing or previous connection profile from the drop-down selector or press &quot;<strong>Connection Profiles ...</strong>&quot; button to launch the &quot;<strong>New Connection Profiles</strong>&quot; dialog (See <strong>Eclispe Data Tools</strong> documentation) </p>
-  <p class="medium"><img src="images/views/JdbcImport_1A.jpg" width="440" height="336" hspace="20"></p>
-  <p class="medium"><strong>Step 4:</strong> After selecting a <strong>Connection Profile</strong>, enter password (if not entered yet) and press <strong>NEXT&gt;</strong> (or <strong>FINISH&gt;</strong> if enabled)</p>
-  <p class="medium"><img src="images/views/JdbcImport_2.jpg" hspace="20"></p>
-  <p class="medium"><strong>Step 5:</strong> On the &quot;<strong>Select Database Metadata</strong>&quot; page, choose select the types of objects in the database to import. Press <strong>NEXT&gt;</strong> when finished (or <strong>FINISH&gt;</strong> if  enabled)</p>
-  <p class="medium"><img src="images/views/JdbcImport_3.jpg"  hspace="20"></p>
-  <p class="medium"><strong>Step 6:</strong> On the &quot;<strong>Select Database Objects</strong>&quot; page, view the contents of the schema, or change selections. Select which database schema objects will be used to construct relational objects. Press <strong>NEXT&gt;</strong> when finished (or <strong>FINISH&gt;</strong> if  enabled)</p>
-  <p class="medium"><img src="images/views/JdbcImport_4.jpg" hspace="20"></p>
-  <p class="medium"><strong>Step 7:</strong> On the &quot;<strong>Specify Import Options</strong>&quot; page, specify desired Model Name as well as any other options used to customize the constructed relational objects. Press <strong>FINISH&gt; </strong>to complete. </p>
-  <p class="medium"><img src="images/views/JdbcImport_5.jpg" hspace="20"></p>
+  <p class="note">Note: Depending the detail provided in the database
+connection url information and schema, Steps 5 thru 7 may not be
+required </p>
+  <p class="medium"><strong>Step 1:</strong> In <strong>Designer</strong>
+, choose the <strong><a href="ModelingYourData.htm#importWizard">File
+&gt; Import</a></strong> action <img src="images/icons/import-wiz.png"
+ height="16" width="16"> in the toolbar or select a project, folder or
+model in the tree and choose "<strong>Import...</strong>"</p>
+  <p class="medium"><strong>Step 2:</strong> Select the import option <strong>Metadata
+from JDBC Database</strong> and choose <strong>NEXT&gt;</strong></p>
+  <p class="medium"><img style="width: 460px; height: 489px;"
+ alt="Jdbc Importer - Page 1"
+ src="images/views/jdbc-importer-page-1.png" hspace="20"></p>
+  <p class="medium"><strong>Step 3:</strong> Select existing or
+previous connection profile from the drop-down selector or press "<strong>New...</strong>"
+button to launch the "<strong>New Connection Profiles</strong>" dialog
+(See <strong>Eclispe Data Tools</strong> documentation) or "<span
+ style="font-weight: bold;">Edit...</span>" to modify/change an
+existing connection profile prior to selection.<br>
+  </p>
+  <p class="medium"><img style="width: 572px; height: 425px;"
+ alt="Jdbc Importer - Page 2"
+ src="images/views/jdbc-importer-page-2A.png" hspace="20"></p>
+  <p class="medium"><strong>Step 4:</strong> After selecting a <strong>Connection
+Profile</strong>, enter password (if not entered yet) and press <strong>NEXT&gt;</strong>
+(or <strong>FINISH&gt;</strong> if enabled)</p>
+  <p class="medium"><img style="width: 551px; height: 435px;"
+ alt="Jdbc Importer - Page 2B"
+ src="images/views/jdbc-importer-page-2B.png" hspace="20"></p>
+  <p class="medium"><strong>Step 5:</strong> On the "<strong>Select
+Database Metadata</strong>" page, choose select the types of objects in
+the database to import. Press <strong>NEXT&gt;</strong> when finished
+(or <strong>FINISH&gt;</strong> if enabled)</p>
+  <p class="medium"><img style="width: 572px; height: 425px;"
+ alt="Jdbc Importer - Page 3"
+ src="images/views/jdbc-importer-page-3.png" hspace="20"></p>
+  <p class="medium"><strong>Step 6:</strong> On the "<strong>Select
+Database Objects</strong>" page, view the contents of the schema, or
+change selections. Select which database schema objects will be used to
+construct relational objects. Press <strong>NEXT&gt;</strong> when
+finished (or <strong>FINISH&gt;</strong> if enabled)</p>
+  <p class="medium"><img style="width: 689px; height: 518px;"
+ alt="Jdbc Importer - Page 4"
+ src="images/views/jdbc-importer-page-4.png" hspace="20"></p>
+  <p class="medium"><strong>Step 7:</strong> On the "<strong>Specify
+Import Options</strong>" page, specify desired Model Name as well as
+any other options used to customize the constructed relational objects.
+Press <strong>FINISH&gt; </strong>to complete. </p>
+  <p class="medium"><img style="width: 674px; height: 642px;"
+ alt="Jdbc Importer - Page 5"
+ src="images/views/jdbc-importer-page-5.png" hspace="20"></p>
   <p class="medium">&nbsp;</p>
-  <p class="medium">During the &quot;Finish&quot; processing, a  monitor will be displayed providing feedback on the import progress.</p>
-  <p class="medium"><img src="images/views/ImportJDBCProgressDialog.jpg" width="450" height="189" hspace="20" border="0"> </p>
+  <p class="medium">During the "<span style="font-weight: bold;">Finish</span>"
+processing, a monitor will be displayed providing feedback on the
+import progress.</p>
+  <p class="medium"><img
+ style="border: 0px solid ; width: 542px; height: 191px;"
+ alt="Jdbc Importer - Progress Monitor"
+ src="images/views/jdbc-importer-page-6.png" hspace="20"> </p>
 </blockquote>
-
 <p class="subtitle_b16">Related Topics</p>
 <ul>
   <li><a href="ModelingYourData.htm#newModelWizard">New Model Wizard</a></li>
   <li><a href="ModelingYourData.htm#importWizard">Import Wizard</a></li>
-  <li><a href="ImportingXsdFiles.htm" class="medium">Import XML Schema</a> </li>
-  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer </a> </li>
+  <li><a href="ImportingXsdFiles.htm" class="medium">Import XML Schema</a>
+  </li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting
+Started with Designer </a> </li>
 </ul>
 <hr>
-<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+<p class="copyright">See the LEGAL.txt file distributed with this work
+for information regarding copyright ownership and licensing.</p>
 </body>
+</html>
