@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.teiid.designer.test.feature"
+      label="%featureName"
+      version="7.1.0.qualifier"
+      provider-name="%providerName"
+      plugin="org.teiid.designer"
+      image="feature.gif">
+
+   <description url="www.jboss.org/projects/teiiddesigner">
+      %description
+   </description>
+
+   <copyright url="www.jboss.org/projects/teiiddesigner">
+      %copyright
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="org.teiid.core.designer"/>
+      <import plugin="teiid_embedded_query"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.powermock" version="1.3.7" match="greaterOrEqual"/>
+      <import plugin="org.mockito" version="1.8.4" match="greaterOrEqual"/>
+      <import plugin="org.junit4"/>
+      <import plugin="org.teiid.designer.compare"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.teiid.designer.metamodels.core"/>
+      <import plugin="org.teiid.designer.core"/>
+      <import plugin="org.eclipse.xsd"/>
+      <import plugin="org.eclipse.emf.mapping"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.jdom"/>
+      <import plugin="org.teiid.designer.legacy"/>
+      <import plugin="org.teiid.designer.core.xslt"/>
+      <import plugin="org.teiid.designer.dqp"/>
+      <import plugin="org.teiid.designer.jdbc"/>
+      <import plugin="org.teiid.designer.vdb"/>
+      <import plugin="org.eclipse.datatools.connectivity"/>
+      <import plugin="org.teiid.designer.datatools"/>
+      <import plugin="org.eclipse.emf.edit" version="2.6.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.designer.mapping.ui"/>
+      <import plugin="org.teiid.designer.metamodels.transformation"/>
+      <import plugin="org.teiid.designer.ui"/>
+      <import plugin="org.teiid.designer.metamodels.relational"/>
+      <import plugin="org.teiid.designer.metamodels.relationship"/>
+      <import plugin="org.teiid.designer.metamodels.uml2"/>
+      <import plugin="org.eclipse.uml2.uml"/>
+      <import plugin="org.teiid.designer.metamodels.webservice"/>
+      <import plugin="org.teiid.designer.metamodels.wsdl"/>
+      <import plugin="org.apache.xerces"/>
+      <import plugin="org.teiid.designer.metamodels.xml"/>
+      <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
+      <import plugin="org.teiid.designer.modelgenerator"/>
+      <import plugin="org.teiid.designer.modelgenerator.uml2"/>
+      <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
+      <import plugin="org.wsdl4j"/>
+      <import plugin="org.teiid.designer.schema.tools"/>
+      <import plugin="org.teiid.designer.query.ui"/>
+      <import plugin="org.teiid.designer.relationship"/>
+      <import plugin="org.teiid.designer.sdt"/>
+      <import plugin="org.teiid.designer.ui.common"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.teiid.designer.webservice"/>
+      <import plugin="org.teiid.designer.webservice.ui"/>
+      <import plugin="org.teiid.designer.xml"/>
+      <import plugin="org.teiid.designer.jdbc.relational"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.teiid.designer.metamodels.xsd"/>
+      <import plugin="org.teiid.designer.transformation.ui"/>
+      <import plugin="org.teiid.designer.diagram.ui"/>
+      <import plugin="org.teiid.designer.mapping"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.xsd.edit"/>
+      <import plugin="org.eclipse.emf"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.teiid.designer.tools.textimport.ui"/>
+      <import plugin="org.teiid.designer.relational.ui"/>
+      <import plugin="org.eclipse.ui.forms"/>
+   </requires>
+
+   <plugin
+         id="org.teiid.core.designer.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.compare.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.core.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.core.xslt.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.dqp.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.jdbc.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.mapping.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.core.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.relational.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.relationship.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.transformation.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.uml2.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.webservice.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.wsdl.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.metamodels.xml.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.modelgenerator.salesforce.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.modelgenerator.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.modelgenerator.uml2.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.modelgenerator.wsdl.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.query.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.relationship.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.schema.tools.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.sdt.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.ui.common.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.vdb.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.webservice.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.webservice.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.xml.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.xsd.ui.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.jdbc.relational.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.xml.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.xsd.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
