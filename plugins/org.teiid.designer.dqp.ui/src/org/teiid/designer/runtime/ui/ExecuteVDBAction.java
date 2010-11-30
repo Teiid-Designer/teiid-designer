@@ -188,9 +188,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
     	String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-    	String currentDefaultServerURL = server.getUrl();
-    	String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
-    	
+    	String connectionURL = convertUrl(vdbName, server.getUrl());
     	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
@@ -217,6 +215,16 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     		}
     	}
     }
+
+    /*
+     * Converts a Teiid Admin URL to a Teiid JDBC URL
+     * 
+     */
+	private static String convertUrl(String vdbName, String adminURL) {
+		adminURL = "mm"+ adminURL.substring(adminURL.indexOf(':')); //$NON-NLS-1$
+    	adminURL = adminURL.substring(0, adminURL.lastIndexOf(':') + 1) + "31000"; //$NON-NLS-1$
+    	return "jdbc:teiid:" + vdbName + "@" + adminURL; //$NON-NLS-1$ //$NON-NLS-2$
+	}
 
     
     private static Shell getShell() {
