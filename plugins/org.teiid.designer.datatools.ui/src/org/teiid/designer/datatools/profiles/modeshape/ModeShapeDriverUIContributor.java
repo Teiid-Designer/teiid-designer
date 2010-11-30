@@ -292,7 +292,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             url += hostText.getText().trim();
         }
         if (portText.getText().trim().length() > 0) {
-            url += ":" + portText.getText().trim(); //$NON-NLS-1$
+            url += ":" + portText.getText().trim() + "/modeshape-rest"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (reposCombo.getText().trim().length() > 0) {
             String repos = reposCombo.getText().trim();
