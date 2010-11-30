@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.modeler.internal.core.workspace.FakeIFile;
 import com.metamatrix.modeler.internal.core.workspace.FakeIResource;
 import com.metamatrix.modeler.internal.core.workspace.MockFileResource;
@@ -92,7 +92,7 @@ public class TestModelUtilities extends TestCase {
      * @since 5.0.1
      */
     public void testIsModelingRelatedFile6() {
-        File xsdFile = SmartTestSuite.getTestDataFile("projects/Books Project/Books.xsd"); //$NON-NLS-1$
+        File xsdFile = SmartTestDesignerSuite.getTestDataFile("projects/Books Project/Books.xsd"); //$NON-NLS-1$
         IResource xsdResource = buildModelResource(xsdFile);
         assertTrue("XSD was not considered a modeling-related file", ModelUtilities.isModelingRelatedFile(xsdResource)); //$NON-NLS-1$
     }    
@@ -102,7 +102,7 @@ public class TestModelUtilities extends TestCase {
      * @since 5.0.1
      */
     public void testIsModelingRelatedFile7() {
-        File modelFile = SmartTestSuite.getTestDataFile("projects/Books Project/Books_Oracle.xmi"); //$NON-NLS-1$
+        File modelFile = SmartTestDesignerSuite.getTestDataFile("projects/Books Project/Books_Oracle.xmi"); //$NON-NLS-1$
         IResource modelResource = buildModelResource(modelFile);
         assertTrue("Model was not considered a modeling-related file", ModelUtilities.isModelingRelatedFile(modelResource)); //$NON-NLS-1$
     }    

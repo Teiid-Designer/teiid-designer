@@ -1,22 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.jdbc.relational.test
+Bundle-SymbolicName: org.teiid.designer.jdbc.relational.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.jdbc.relational
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.jdbc.relational,
  com.metamatrix.modeler.jdbc.relational,
  com.metamatrix.modeler.jdbc.relational.impl
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.jdbc.relational,
- org.teiid.designer.jdbc,
- org.teiid.designer.jdbc.test,
- org.eclipse.core.runtime,
- org.teiid.designer.core,
- org.teiid.designer.metamodels.relational.test,
- teiid_embedded_query,
- org.teiid.core.designer,
- org.teiid.designer.metamodels.relational,
- org.eclipse.emf.ecore,
- org.junit4
+Require-Bundle: org.junit4

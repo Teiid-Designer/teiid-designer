@@ -14,7 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 
 /**
  * @since 4.2
@@ -47,7 +47,7 @@ public class TestURLClassLoaderRegistry extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite(CoreModelerPlugin.PLUGIN_ID, "TestURLClassLoaderRegistry"); //$NON-NLS-1$ 
+        TestSuite suite = new SmartTestDesignerSuite(CoreModelerPlugin.PLUGIN_ID, "TestURLClassLoaderRegistry"); //$NON-NLS-1$ 
         suite.addTestSuite(TestURLClassLoaderRegistry.class);
         // One-time setup and teardown
         return new TestSetup(suite) {

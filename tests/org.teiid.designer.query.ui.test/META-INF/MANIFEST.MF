@@ -1,13 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.query.ui.test
+Bundle-SymbolicName: org.teiid.designer.query.ui.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.query.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.query.internal.ui.sqleditor.component
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.query.ui,
- org.junit4,
- teiid_embedded_query,
- org.teiid.designer.legacy
+Require-Bundle: org.junit4

@@ -17,7 +17,7 @@ import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IIndexer;
 import com.metamatrix.core.index.IIndexerOutput;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.core.util.Stopwatch;
 import com.metamatrix.internal.core.index.FileDocument;
 import com.metamatrix.internal.core.index.Index;
@@ -35,9 +35,9 @@ public class TestPerformanceMultipleRecordTypesInOneIndexFile extends TestCase {
 
     private static final List WORD_ENTRIES = new ArrayList(7);
     private static final String TEST_INDEX_FILE_NAME = "test.index"; //$NON-NLS-1$
-    static final String TEST_INDEX_DIRECTORY_PATH = SmartTestSuite.getTestDataPath();
+    static final String TEST_INDEX_DIRECTORY_PATH = SmartTestDesignerSuite.getTestDataPath();
     private static final String TEST_INDEX_FILE_PATH = TEST_INDEX_DIRECTORY_PATH + File.separator + TEST_INDEX_FILE_NAME;
-    private static final String FAKE_FILE_PATH = SmartTestSuite.getTestDataPath() + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
+    private static final String FAKE_FILE_PATH = SmartTestDesignerSuite.getTestDataPath() + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
 
     private static final String MODEL_NAME = "Model"; //$NON-NLS-1$
     private static final String TABLE_NAME = "Table"; //$NON-NLS-1$

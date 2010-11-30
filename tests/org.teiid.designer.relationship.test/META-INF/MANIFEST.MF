@@ -1,19 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.relationship.test
+Bundle-SymbolicName: org.teiid.designer.relationship.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.relationship
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.relationship,
  com.metamatrix.modeler.relationship
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.relationship,
- org.junit4,
- org.teiid.designer.metamodels.relationship,
- org.eclipse.emf.ecore,
- org.teiid.designer.core,
- org.teiid.designer.core.test,
- org.teiid.core.designer.test,
- org.eclipse.core.runtime,
- teiid_embedded_query
+Require-Bundle: org.junit4

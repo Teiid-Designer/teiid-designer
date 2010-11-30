@@ -1,17 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.schema.tools.test
+Bundle-SymbolicName: org.teiid.designer.schema.tools.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.schema.tools
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.schema.tools,
  com.metamatrix.modeler.schema.tools.common,
  com.metamatrix.modeler.schema.tools.model.jdbc.internal,
  com.metamatrix.modeler.schema.tools.model.schema.impl
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.schema.tools,
- org.eclipse.xsd,
- org.junit4,
- teiid_embedded_query,
- org.jdom
+Require-Bundle: org.junit4

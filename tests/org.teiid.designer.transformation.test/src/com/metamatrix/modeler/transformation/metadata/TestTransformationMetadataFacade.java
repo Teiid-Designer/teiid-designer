@@ -30,7 +30,7 @@ import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.IIndexer;
 import com.metamatrix.core.index.IIndexerOutput;
 import com.metamatrix.core.index.IQueryResult;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.internal.core.index.FileDocument;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.internal.core.index.WordEntry;
@@ -54,9 +54,9 @@ public class TestTransformationMetadataFacade extends TestCase {
 
     private static final List WORD_ENTRIES = new ArrayList(7);
     private static final String TEST_INDEX_FILE_NAME = "test.index"; //$NON-NLS-1$
-    static final String TEST_INDEX_DIRECTORY_PATH = SmartTestSuite.getTestScratchPath();
+    static final String TEST_INDEX_DIRECTORY_PATH = SmartTestDesignerSuite.getTestScratchPath();
     private static final String TEST_INDEX_FILE_PATH = TEST_INDEX_DIRECTORY_PATH + File.separator + TEST_INDEX_FILE_NAME;
-    private static final String FAKE_FILE_PATH = SmartTestSuite.getTestDataPath() + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
+    private static final String FAKE_FILE_PATH = SmartTestDesignerSuite.getTestDataPath() + File.separator + "PartsRelational.mmm"; //$NON-NLS-1$
 
     /**
      * Constructor for TestTransformationMetadataFacade.
