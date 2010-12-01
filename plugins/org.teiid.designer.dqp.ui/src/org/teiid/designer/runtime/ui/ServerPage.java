@@ -45,6 +45,11 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  */
 public final class ServerPage extends WizardPage {
 
+    /**
+     * The key in the wizard <code>IDialogSettings</code> for the auto-connect flag.
+     */
+    private static final String AUTO_CONNECT_KEY = "autoConnect"; //$NON-NLS-1$
+    
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
@@ -284,6 +289,13 @@ public final class ServerPage extends WizardPage {
         this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
         this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         this.btnAutoConnectOnFinish.setSelection(true);
+        
+        // set the auto connect flag based on dialog settings
+        if (getDialogSettings().get(AUTO_CONNECT_KEY) != null) {
+            this.autoConnect = getDialogSettings().getBoolean(AUTO_CONNECT_KEY);
+        }
+
+        this.btnAutoConnectOnFinish.setSelection(this.autoConnect);
         
         this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
             /**
@@ -556,4 +568,11 @@ public final class ServerPage extends WizardPage {
         }
     }
 
+    /**
+     * Processing done after wizard 'Finish' button is clicked. Wizard was not canceled.
+     */
+    void performFinish() {
+        // update dialog settings
+        getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
+    }
 }
