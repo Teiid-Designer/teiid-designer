@@ -17,7 +17,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         	<module>org.teiid.designer.vdb.test</module>
 		<module>org.teiid.designer.core.test</module>
 		<module>org.teiid.designer.compare.test</module>
-		<module>org.teiid.designer.core.test</module>
 		<module>org.teiid.designer.core.xslt.test</module>
 		<module>org.teiid.designer.dqp.test</module>
 		<module>org.teiid.designer.jdbc.relational.test</module>
@@ -41,7 +40,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.sdt.test</module>
 		<module>org.teiid.designer.ui.common.test</module>
 		<module>org.teiid.designer.ui.test</module>
-		<module>org.teiid.designer.vdb.test</module>
 		<module>org.teiid.designer.webservice.test</module>
 		<module>org.teiid.designer.webservice.ui.test</module>
 		<module>org.teiid.designer.xml.ui.test</module>
