@@ -35,7 +35,6 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ServerUtils;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -45,17 +44,22 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  */
 public final class ServerPage extends WizardPage {
 
+    /**
+     * The key in the wizard <code>IDialogSettings</code> for the auto-connect flag.
+     */
+    private static final String AUTO_CONNECT_KEY = "autoConnect";
+
     // ===========================================================================================================================
     // Fields
     // ===========================================================================================================================
 
-	private boolean autoConnect = true;
+    private boolean autoConnect = true;
 
-	/**
+    /**
      * The button used to test the connection to the server. Should only be enabled when server properties are valid.
      */
     private Button btnTestConnection;
-    
+
     /**
      * The Check-box to allow auto-connect on Finish
      */
@@ -275,13 +279,19 @@ public final class ServerPage extends WizardPage {
                 handleTestConnection();
             }
         });
-        
+
         this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
         this.btnAutoConnectOnFinish.setText(UTIL.getString("serverPageAutoConnectLabel")); //$NON-NLS-1$
         this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
         this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-        this.btnAutoConnectOnFinish.setSelection(true);
-        
+
+        // set the auto connect flag based on dialog settings
+        if (getDialogSettings().get(AUTO_CONNECT_KEY) != null) {
+            this.autoConnect = getDialogSettings().getBoolean(AUTO_CONNECT_KEY);
+        }
+
+        this.btnAutoConnectOnFinish.setSelection(this.autoConnect);
+
         this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
             /**
              * {@inheritDoc}
@@ -307,12 +317,11 @@ public final class ServerPage extends WizardPage {
         Text txtUrl = new Text(pnl, SWT.BORDER);
         txtUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-        
+
         Label templateUrl = new Label(pnl, SWT.LEFT);
         templateUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         templateUrl.setText(UTIL.getString("serverPageProtocolLabel") + //$NON-NLS-1$
-        		StringUtilities.SPACE + StringUtilities.SPACE + ServerUtils.FORMAT_SERVER); 
-
+                            StringUtilities.SPACE + StringUtilities.SPACE + ServerUtils.FORMAT_SERVER);
 
         // set initial value
         if (this.url == null) {
@@ -376,9 +385,9 @@ public final class ServerPage extends WizardPage {
     ServerManager getServerManager() {
         return ((ServerWizard)getWizard()).getServerManager();
     }
-    
+
     void handleAutoConnect() {
-    	this.autoConnect = this.btnAutoConnectOnFinish.getSelection();
+        this.autoConnect = this.btnAutoConnectOnFinish.getSelection();
     }
 
     /**
@@ -482,15 +491,13 @@ public final class ServerPage extends WizardPage {
             setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
         }
     }
-    
+
     /**
-     * 
      * @return true if autoconnect is checked
      */
     public boolean shouldAutoConnect() {
-		return autoConnect;
-	}
-
+        return autoConnect;
+    }
 
     /**
      * If the initial message is being displayed do a validation.
@@ -542,6 +549,14 @@ public final class ServerPage extends WizardPage {
                 this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer.getUrl())); //$NON-NLS-1$
             }
         }
+    }
+
+    /**
+     * Processing done after wizard 'Finish' button is clicked. Wizard was not canceled.
+     */
+    void performFinish() {
+        // update dialog settings
+        getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
     }
 
 }

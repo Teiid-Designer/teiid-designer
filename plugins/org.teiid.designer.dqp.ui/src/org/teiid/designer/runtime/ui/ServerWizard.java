@@ -8,14 +8,13 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
-
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -42,7 +41,7 @@ public final class ServerWizard extends Wizard {
      * The manager in charge of the server registry.
      */
     private final ServerManager serverManager;
-    
+
     private Server resultServer;
 
     // ===========================================================================================================================
@@ -91,6 +90,29 @@ public final class ServerWizard extends Wizard {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.jface.wizard.Wizard#getDialogSettings()
+     */
+    @Override
+    public IDialogSettings getDialogSettings() {
+        IDialogSettings settings = super.getDialogSettings();
+
+        if (settings == null) {
+            IDialogSettings temp = DqpUiPlugin.getDefault().getDialogSettings();
+            settings = temp.getSection(getClass().getSimpleName());
+
+            if (settings == null) {
+                settings = temp.addNewSection(getClass().getSimpleName());
+            }
+
+            setDialogSettings(settings);
+        }
+
+        return super.getDialogSettings();
+    }
+
+    /**
      * @return the server manager (never <code>null</code>)
      */
     protected ServerManager getServerManager() {
@@ -104,6 +126,9 @@ public final class ServerWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+        // first let page know that wizard finished and was not canceled
+        this.page.performFinish();
+
         IStatus status = Status.OK_STATUS;
         resultServer = this.page.getServer();
 
@@ -132,10 +157,10 @@ public final class ServerWizard extends Wizard {
     }
 
     public boolean shouldAutoConnect() {
-    	return this.page.shouldAutoConnect();
+        return this.page.shouldAutoConnect();
     }
-    
+
     public Server getServer() {
-    	return this.resultServer;
+        return this.resultServer;
     }
 }
