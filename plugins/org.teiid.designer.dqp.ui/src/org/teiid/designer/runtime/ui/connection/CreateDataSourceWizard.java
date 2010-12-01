@@ -168,7 +168,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
         WidgetFactory.createLabel(mainPanel, getString("name.label")); //$NON-NLS-1$
 
-        dataSourceName = DEFAULT_NAME;
+        dataSourceName = getDefaultDataSourceName();
         if (selectedModelResource != null) {
             dataSourceName = ModelUtil.getName(selectedModelResource);
         }
@@ -468,6 +468,9 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         } else if (!isValidName(this.dataSourceName)) {
             wizardPage.setErrorMessage(getString("invalidName.message", INVALID_CHARS)); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
+        } else if (nameExists(this.dataSourceName)) {
+            wizardPage.setErrorMessage(getString("dataSourceExists.message", this.dataSourceName)); //$NON-NLS-1$
+            wizardPage.setPageComplete(false);
         } else {
             wizardPage.setErrorMessage(null);
             wizardPage.setMessage(getString("finish.message")); //$NON-NLS-1$
@@ -537,6 +540,29 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         }
 
         return provider;
+    }
+    
+    private boolean nameExists( String name ) {
+    	try {
+			if( admin.dataSourceExists(name) ) {
+				return true;
+			}
+		} catch (Exception e) {
+			DqpUiConstants.UTIL.log(e);
+		}
+    	
+    	return false;
+    }
+    
+    private String getDefaultDataSourceName() {
+    	int i=1;
+    	String tempName = DEFAULT_NAME + i;
+    	if( nameExists(tempName) ) {
+    		i++;
+    		tempName = DEFAULT_NAME + i;
+    	}
+    	
+    	return tempName;
     }
 
     private boolean isValidName( String name ) {
