@@ -49,6 +49,8 @@ public final class ServerPage extends WizardPage {
     // Fields
     // ===========================================================================================================================
 
+	private boolean isEdit = false;
+	
 	private boolean autoConnect = true;
 
 	/**
@@ -118,6 +120,7 @@ public final class ServerPage extends WizardPage {
         this.user = server.getUser();
         this.password = server.getPassword();
         this.savePassword = server.isPasswordBeingPersisted();
+        this.isEdit = true;
     }
 
     // ===========================================================================================================================
@@ -367,7 +370,9 @@ public final class ServerPage extends WizardPage {
         }
 
         // should never be called if error status
-        throw new RuntimeException(UTIL.getString("serverPageInvalidServerProperties")); //$NON-NLS-1$
+        MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
+                UTIL.getString("serverPageInvalidServerProperties")); //$NON-NLS-1$
+        return null;
     }
 
     /**
@@ -404,26 +409,29 @@ public final class ServerPage extends WizardPage {
      */
     void handleTestConnection() {
         final Server server = getServer();
-        final boolean[] success = new boolean[1];
-
-        BusyIndicator.showWhile(null, new Runnable() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see java.lang.Runnable#run()
-             */
-            @Override
-            public void run() {
-                success[0] = server.testPing().isOK();
-            }
-        });
-
-        if (success[0]) {
-            MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
-                                          UTIL.getString("serverPageTestConnectionDialogSuccessMsg")); //$NON-NLS-1$
-        } else {
-            MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
-                                    UTIL.getString("serverPageTestConnectionDialogFailureMsg")); //$NON-NLS-1$
+        
+        if( server != null ) {
+	        final boolean[] success = new boolean[1];
+	
+	        BusyIndicator.showWhile(null, new Runnable() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see java.lang.Runnable#run()
+	             */
+	            @Override
+	            public void run() {
+	                success[0] = server.testPing().isOK();
+	            }
+	        });
+	
+	        if (success[0]) {
+	            MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
+	                                          UTIL.getString("serverPageTestConnectionDialogSuccessMsg")); //$NON-NLS-1$
+	        } else {
+	            MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
+	                                    UTIL.getString("serverPageTestConnectionDialogFailureMsg")); //$NON-NLS-1$
+	        }
         }
     }
 
@@ -455,8 +463,12 @@ public final class ServerPage extends WizardPage {
         } catch (IllegalArgumentException e) {
             return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageInvalidServerUrl"), e); //$NON-NLS-1$
         }
+        
+        if( !this.isEdit && getServerManager().isRegisteredUrl(url) ) {
+        	return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageExistingServerUrl", url)); //$NON-NLS-1$
+        }
 
-        if (username == null) {
+        if (username == null || username.length() == 0) {
             return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageUsernameCannotBeNull")); //$NON-NLS-1$
         }
 

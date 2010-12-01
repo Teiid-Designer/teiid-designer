@@ -9,11 +9,10 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.ServerManager;
@@ -93,21 +92,15 @@ public class NewServerAction extends Action {
         int result = dialog.open();
         
         if( result == Dialog.OK) {
-	        IStatus status = Status.OK_STATUS;
 	        
 	        if( wizard.shouldAutoConnect() ) {
 	            	try {
 	    				wizard.getServer().getAdmin();
 	    			} catch (Exception e) {
-	    				status = new Status(IStatus.ERROR, 
-	    						DqpUiConstants.PLUGIN_ID, 
-	    						UTIL.getString("serverWizardNewServerAutoConnectError"), e); //$NON-NLS-1$
+	    				MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
+	                            UTIL.getString("serverWizardNewServerAutoConnectError")); //$NON-NLS-1$
 	    			}
-	
-	            // log if necessary
-	            if (!status.isOK()) {
-	                UTIL.log(status);
-	            }
+
 	        }
         }
     }
