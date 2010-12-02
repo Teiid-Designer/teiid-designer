@@ -26,6 +26,10 @@
       %license
    </license>
 
+   <requires>
+      <import plugin="org.jdom"/>
+   </requires>
+
    <plugin
          id="org.teiid.designer.ui"
          download-size="0"
@@ -411,12 +415,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.jdom"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.teiid.designer.udf"
