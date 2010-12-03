@@ -115,6 +115,18 @@
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.ExcelModelProcessor">
       </processorClass>
    </extension>
+<!-- Define the model processor for the ModeShape driver -->
+   <extension
+         id="modeShapeModelProcessor"
+         name="%modeShapeModelProcessor"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <driverClass
+            name="org.modeshape.jdbc.JcrDriver">
+      </driverClass>
+      <processorClass
+            name="com.metamatrix.modeler.jdbc.relational.impl.custom.ModeShapeModelProcessor">
+      </processorClass>
+   </extension>
 <!-- EObject Matcher extensions -->
    <extension
          id="jdbcMatcherFactory"
