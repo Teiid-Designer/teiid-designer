@@ -51,7 +51,7 @@
 					value="2.2" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
-					value="jdbc:jcr:http://localhost:8080/modeshape-rest/repository" required="true"
+					value="jdbc:jcr:http://localhost:8080/modeshape-rest/" required="true"
 					visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.username" name="User ID"
@@ -69,7 +69,7 @@
           allowsConnections="true"
           description="Definition of the ModeShape Database"
           file="src/org/teiid/designer/datatools/profiles/modeshape/database/modeshapeDB.xmi"
-          product="Mo0deShape"
+          product="ModeShape"
           productDisplayString="ModeShape"
           version="2.2"
           versionDisplayString="2.2">
