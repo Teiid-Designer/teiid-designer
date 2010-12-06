@@ -11,8 +11,6 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.core.util,
  com.metamatrix.modeler.core,
  org.teiid.core.designer
-Require-Bundle: org.powermock,
- org.mockito,
- org.junit4,
+Require-Bundle: org.junit4,
  org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

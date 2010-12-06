@@ -7,9 +7,7 @@ Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Require-Bundle: org.junit4,
- org.mockito,
- org.powermock
+Require-Bundle: org.junit4
 Export-Package: com.metamatrix.modeler.core,
  com.metamatrix.modeler.core.compare,
  com.metamatrix.modeler.core.metamodel,

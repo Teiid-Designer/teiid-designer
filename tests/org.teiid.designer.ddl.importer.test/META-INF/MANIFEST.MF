@@ -7,6 +7,4 @@ Bundle-Vendor: %Bundle-Vendor
 Fragment-Host: org.teiid.designer.ddl.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.powermock,
- org.mockito,
- org.junit4
+Require-Bundle: org.junit4

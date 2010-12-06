@@ -6,6 +6,4 @@ Bundle-Version: 7.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Fragment-Host: org.teiid.designer.vdb
-Require-Bundle: org.powermock,
- org.mockito,
- org.junit4
+Require-Bundle: org.junit4
