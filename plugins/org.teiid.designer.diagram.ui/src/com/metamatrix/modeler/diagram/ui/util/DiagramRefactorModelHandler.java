@@ -58,10 +58,12 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 		
 		
 		try {
-			for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
-				DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
-				
-				DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+			if( ModelUtil.isXmiFile(modelResource.getCorrespondingResource())) {
+				for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
+					DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
+					
+					DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+				}
 			}
 		} catch (ModelWorkspaceException e) {
 			DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
@@ -76,10 +78,12 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 		CoreArgCheck.isNotEmpty(refactoredPaths.values(), "refactoredPaths"); //$NON-NLS-1$
 		
 		try {
-			for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
-				DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
-				
-				DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+			if( ModelUtil.isXmiFile(modelResource.getCorrespondingResource())) {
+				for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
+					DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
+					
+					DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+				}
 			}
 		} catch (ModelWorkspaceException e) {
 			DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
@@ -98,7 +102,9 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 			IResource nextRes = (IResource)nextObj;
 			
 			try {
-				cleanUpDiagramReferences(nextRes, deletedResourcePaths, monitor);
+				if( !ModelUtil.isXmiFile(nextRes) ) {
+					cleanUpDiagramReferences(nextRes, deletedResourcePaths, monitor);
+				}
 			} catch (ModelWorkspaceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -113,11 +119,9 @@ public class DiagramRefactorModelHandler implements IRefactorModelHandler {
 		ModelResource mr = ModelUtil.getModelResource((IFile)depResource, true);
 		final Resource r = mr.getEmfResource();
 		
-		if( mr.getModelType() != ModelType.VIRTUAL_LITERAL) {
+		if( !ModelUtil.isXmiFile(mr.getCorrespondingResource()) || mr.getModelType() != ModelType.VIRTUAL_LITERAL) {
 			return false;
 		}
-		
-		
 		
 		// Process all transformations in the TransformationContainer
 		final List diagrams = ((EmfResource) r).getModelContents().getDiagrams();

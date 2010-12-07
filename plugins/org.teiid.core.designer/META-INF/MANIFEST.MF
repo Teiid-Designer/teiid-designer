@@ -21,8 +21,6 @@ Export-Package: com.metamatrix.core,
  org.teiid.core.exception
 Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
- net.sf.saxon,
- org.powermock;resolution:=optional,
- org.mockito;resolution:=optional
+ net.sf.saxon
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

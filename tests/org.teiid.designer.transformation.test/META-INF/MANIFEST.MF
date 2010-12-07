@@ -1,13 +1,22 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.transformation.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.transformation.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.transformation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.transformation.util,
  com.metamatrix.modeler.transformation.aspects.validation.rules,
  com.metamatrix.modeler.transformation.metadata
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.transformation,
+ org.junit4,
+ org.teiid.designer.core,
+ org.teiid.designer.core.test,
+ teiid_embedded_query,
+ org.teiid.core.designer.test,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore,
+ org.teiid.designer.metamodels.transformation,
+ org.eclipse.emf.mapping,
+ org.teiid.designer.legacy

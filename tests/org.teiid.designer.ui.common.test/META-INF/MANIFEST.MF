@@ -4,10 +4,17 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.ui.common.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.ui.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.ui.actions,
  com.metamatrix.ui.dialogs,
  com.metamatrix.ui.internal.eventsupport
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.ui.common,
+ org.junit4,
+ org.eclipse.jface,
+ org.eclipse.emf.ecore,
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ teiid_embedded_query,
+ org.teiid.core.designer.test

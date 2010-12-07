@@ -29,7 +29,7 @@ import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.metamodels.wsdl.Definitions;
 import com.metamatrix.metamodels.wsdl.Types;
 import com.metamatrix.metamodels.wsdl.WsdlFactory;
@@ -175,7 +175,7 @@ public class TestWsdlIo extends TestCase {
     }
 
     public Resource helpRead( final String pathInTestData ) throws Exception {
-        final File wsdlFile = SmartTestDesignerSuite.getTestDataFile(pathInTestData);
+        final File wsdlFile = SmartTestSuite.getTestDataFile(pathInTestData);
         final String wsdlPath = wsdlFile.getAbsolutePath();
         assertNotNull("File not found at " + wsdlPath, wsdlFile); //$NON-NLS-1$
         assertEquals("File doesn't exist at " + wsdlPath, true, wsdlFile.exists()); //$NON-NLS-1$
@@ -234,7 +234,7 @@ public class TestWsdlIo extends TestCase {
     }
 
     public Resource helpCreateNewResource( final String pathInTestData ) {
-        final String testdataPath = SmartTestDesignerSuite.getTestScratchPath();
+        final String testdataPath = SmartTestSuite.getTestScratchPath();
         final String path = (testdataPath.endsWith("/") ? testdataPath : testdataPath + '/') + pathInTestData; //$NON-NLS-1$
 
         final URI resourceUri = URI.createFileURI(path);

@@ -8,7 +8,9 @@ Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.config,
+ com.metamatrix.modeler.dqp.execution,
  com.metamatrix.modeler.dqp.internal.config,
+ com.metamatrix.modeler.dqp.internal.execution,
  com.metamatrix.modeler.dqp.internal.workspace,
  org.teiid.designer.runtime,
  org.teiid.designer.runtime.connection,
@@ -33,9 +35,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.metamodels.relational,
  org.teiid.designer.metamodels.webservice,
  org.teiid.designer.metamodels.xml,
- org.teiid.designer.metamodels.function,
- org.mockito;resolution:=optional,
- org.powermock;resolution:=optional
+ org.teiid.designer.metamodels.function
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.adminapi

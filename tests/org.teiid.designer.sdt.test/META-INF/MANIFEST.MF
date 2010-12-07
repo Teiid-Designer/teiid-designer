@@ -1,12 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.sdt.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.sdt.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.sdt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.sdt.types,
  com.metamatrix.modeler.sdt
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.sdt,
+ org.junit4,
+ org.eclipse.xsd,
+ org.teiid.designer.core,
+ org.eclipse.core.runtime,
+ org.teiid.designer.core.test,
+ org.eclipse.emf.edit,
+ teiid_embedded_query

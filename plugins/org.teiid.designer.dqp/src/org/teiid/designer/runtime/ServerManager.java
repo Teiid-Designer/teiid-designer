@@ -353,6 +353,29 @@ public final class ServerManager implements EventManager {
             this.serverLock.readLock().unlock();
         }
     }
+    
+    /**
+     * @param url the url being tested (never <code>null</code>)
+     * @return <code>true</code> if a server with the url has been registered
+     */
+    public boolean isRegisteredUrl( String url ) {
+        CoreArgCheck.isNotEmpty(url, "url"); //$NON-NLS-1$
+
+        try {
+            this.serverLock.readLock().lock();
+
+            // check to make sure no other registered server has the same key
+            for (Server registeredServer : this.servers) {
+                if (registeredServer.getUrl().equals(url)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } finally {
+            this.serverLock.readLock().unlock();
+        }
+    }
 
     /**
      * {@inheritDoc}

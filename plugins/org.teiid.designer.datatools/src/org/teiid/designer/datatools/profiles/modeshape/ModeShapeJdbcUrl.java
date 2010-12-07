@@ -9,6 +9,8 @@ public class ModeShapeJdbcUrl {
     private String protocol = ""; //$NON-NLS-1$
 
 	private String repos = ""; //$NON-NLS-1$
+	
+	private boolean teiidMetadata;
 
     /**
      * @param url
@@ -53,7 +55,12 @@ public class ModeShapeJdbcUrl {
             //snip off port
             remainingURL = remainingURL.substring(remainingURL.indexOf('/') + 1);
             //snip off modeshape-rest
-            this.repos =  remainingURL.substring(remainingURL.indexOf('/') + 1);
+            if(remainingURL.indexOf('?') == -1) {
+            	this.repos =  remainingURL.substring(remainingURL.indexOf('/') + 1);
+            } else {
+            	this.repos =  remainingURL.substring(remainingURL.indexOf('/') + 1, remainingURL.indexOf('?'));
+            	this.teiidMetadata = true;
+            }
 
         } catch (Exception e) {
         }
@@ -65,5 +72,9 @@ public class ModeShapeJdbcUrl {
     public String getPort() {
         return port;
     }
+
+	public boolean getTeiidMetadata() {
+		return teiidMetadata;
+	}
 
 }

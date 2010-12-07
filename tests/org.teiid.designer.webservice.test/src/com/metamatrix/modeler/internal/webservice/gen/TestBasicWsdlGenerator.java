@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.metamodels.webservice.WebServiceTestUtil;
 
 /**
@@ -68,7 +68,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.webService2 = WebServiceTestUtil.createMinimalWebServiceModel(uri2);
 
         final XSDResourceFactoryImpl xsdFactory = new XSDResourceFactoryImpl();
-        final File xsdFile = SmartTestDesignerSuite.getTestDataFile(PATH_TO_XSD1);
+        final File xsdFile = SmartTestSuite.getTestDataFile(PATH_TO_XSD1);
         if (xsdFile.exists() == false) {
             System.out.println("Missing File " + xsdFile.getCanonicalPath()); //$NON-NLS-1$
         }
@@ -78,7 +78,7 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.xsd1.load(options);
         this.schema1 = this.xsd1.getSchema();
 
-        final File xsdFile2 = SmartTestDesignerSuite.getTestDataFile(PATH_TO_XSD2);
+        final File xsdFile2 = SmartTestSuite.getTestDataFile(PATH_TO_XSD2);
         if (xsdFile2.exists() == false) {
             System.out.println("Missing File " + xsdFile2.getCanonicalPath()); //$NON-NLS-1$
         }
@@ -104,7 +104,7 @@ public class TestBasicWsdlGenerator extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestDesignerSuite("org.teiid.designer.webservice", "TestBasicWsdlGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestBasicWsdlGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestBasicWsdlGenerator.class);
         // One-time setup and teardown
         return new TestSetup(suite) {

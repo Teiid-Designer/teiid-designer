@@ -49,6 +49,7 @@
 </xsl:text>
 
 <xsl:apply-templates select="./model"/>
+<!--
 <xsl:text>
 
 -- Uncomment the following line for use of the logging facility
@@ -56,6 +57,7 @@
 
 commit;
 </xsl:text>
+-->
 </pre>
 </xsl:template>
 
@@ -354,8 +356,10 @@ CREATE TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text>
 <xsl:text>
 )</xsl:text>
 <xsl:value-of select="$terminationString"/>
+<!--
 <xsl:text>
 SET DEFINE OFF</xsl:text>
+-->
 <xsl:call-template name="commentOnTable">
 	<xsl:with-param name="tableName" select="@name"/>
 	<xsl:with-param name="description" select="@description"/>
@@ -369,9 +373,11 @@ SET DEFINE OFF</xsl:text>
 		<xsl:with-param name="terminationString" select="$terminationString"/>
 	</xsl:call-template>
 </xsl:for-each>
+<!--
 <xsl:text>
 SET DEFINE ON
 </xsl:text>
+-->
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
 

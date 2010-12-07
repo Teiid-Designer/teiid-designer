@@ -122,8 +122,14 @@ public class RefactorModelExtensionManager {
 			loadExtensions();
 		}
 		
-		for( IRefactorModelHandler handler : handlers) {
-			handler.helpUpdateModelContents(type, refactoredModelResource, refactoredPaths, monitor);
+		try {
+			if( !ModelUtil.isXsdFile(refactoredModelResource.getCorrespondingResource()) ) {
+				for( IRefactorModelHandler handler : handlers) {
+					handler.helpUpdateModelContents(type, refactoredModelResource, refactoredPaths, monitor);
+				}
+			}
+		} catch (ModelWorkspaceException theException) {
+			ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
 		}
 	}
 	
@@ -131,6 +137,7 @@ public class RefactorModelExtensionManager {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}
+		
 		
 		for( IRefactorModelHandler handler : handlers) {
 			handler.helpUpdateModelContentsForDelete(deletedResourcePaths, directDependentResources, monitor);
@@ -143,8 +150,10 @@ public class RefactorModelExtensionManager {
 			
             try {
             	ModelResource mr = ModelUtil.getModelResource((IFile)iRes, true);
-                ModelBuildUtil.rebuildImports(mr.getEmfResource(), true);
-                mr.save(new NullProgressMonitor(), true);
+            	if( !ModelUtil.isXsdFile(mr.getCorrespondingResource()) ) {
+	                ModelBuildUtil.rebuildImports(mr.getEmfResource(), true);
+	                mr.save(new NullProgressMonitor(), true);
+				}
             } catch (final ModelWorkspaceException theException) {
             	ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
             }

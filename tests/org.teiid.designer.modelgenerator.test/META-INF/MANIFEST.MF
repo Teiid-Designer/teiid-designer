@@ -1,12 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.modelgenerator.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.modelgenerator.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.modelgenerator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.modelgenerator,
  com.metamatrix.modeler.modelgenerator.util
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.modelgenerator,
+ org.eclipse.emf.ecore,
+ org.teiid.designer.core,
+ org.eclipse.core.runtime,
+ org.teiid.core.designer,
+ org.junit4,
+ teiid_embedded_query

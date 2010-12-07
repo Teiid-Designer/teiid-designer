@@ -12,7 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 import com.metamatrix.modeler.compare.selector.ModelSelector;
 import com.metamatrix.modeler.compare.selector.TransientModelSelector;
 import com.metamatrix.modeler.webservice.FakeIWebServiceModelBuilder;
@@ -69,7 +69,7 @@ public class TestWebServiceModelGenerator extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestDesignerSuite("org.teiid.designer.webservice", "TestWebServiceModelGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestWebServiceModelGenerator"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestWebServiceModelGenerator.class);
         // One-time setup and teardown
         return new TestSetup(suite) {

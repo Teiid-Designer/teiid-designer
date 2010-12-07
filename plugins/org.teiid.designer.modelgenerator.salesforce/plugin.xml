@@ -21,19 +21,17 @@
          <category
             id="org.teiid.designer.import.category"
             name="Teiid Importer Connections"/>
-<!--
       <connectionProfile
             category="org.teiid.designer.import.category"
-            icon="icons/salesforce_16.gif"
+            icon="icons/salesforce_wiz_16.gif"
             id="org.teiid.designer.datatools.salesforce.connectionProfile"
-            name="SalesForce"
+            name="%salesForceConnectionProfileName"
             pingFactory="org.teiid.designer.datatools.salesforce.ConnectionFactory"
             propertiesPersistenceHook="org.teiid.designer.datatools.salesforce.PersistanceHook"/>
---> 
       <connectionFactory
             class="org.teiid.designer.datatools.salesforce.ConnectionFactory"
             id="org.teiid.designer.datatools.salesforce.ConnectionFactory"
-            name="SalesForce Connection"
+            name="%salesForceConnectionFactoryName"
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
    </extension>
 

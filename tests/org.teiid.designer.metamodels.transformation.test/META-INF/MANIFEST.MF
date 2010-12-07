@@ -1,11 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.metamodels.transformation.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.metamodels.transformation.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.metamodels.transformation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.metamodels.transformation,
+ org.junit4,
+ org.eclipse.emf.ecore
 Export-Package: com.metamatrix.metamodels.transformation.impl

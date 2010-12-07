@@ -38,7 +38,7 @@ public class TestStreamPipe extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         pipe = new StreamPipe();
-        dataStream = new FileInputStream(SmartTestDesignerSuite.getTestDataFile(DATA_FILE));
+        dataStream = new FileInputStream(SmartTestSuite.getTestDataFile(DATA_FILE));
     }
 
     /*

@@ -15,7 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.teiid.core.TeiidException;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 
 /**
  * TestStyleFromResource
@@ -58,7 +58,7 @@ public class TestStyleFromResource extends TestCase {
         super.setUp();
 
         // Create the class loader ...
-		final File testDataFolder = new File(SmartTestDesignerSuite.getTestDataPath());
+		final File testDataFolder = new File(SmartTestSuite.getTestDataPath());
 
         this.styleWithoutDescription = new StyleFromResource(new File(testDataFolder, PATH_STYLE1).toURI().toURL(), NAME_STYLE1);
         this.styleWithDescription = new StyleFromResource(new File(testDataFolder, PATH_STYLE2).toURI().toURL(), NAME_STYLE2,

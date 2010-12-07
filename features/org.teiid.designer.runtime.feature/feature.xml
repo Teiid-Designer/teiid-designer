@@ -61,6 +61,7 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
       <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0.v200908280400-42-8375LG5BJ93413"/>
       <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0.v200908280400-79--EVVFGMFz0FVTiFT"/>
       <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0.v200908280400-37D-7733L3D753L7BBF"/>
+      <import plugin="org.jdom"/>
    </requires>
 
    <plugin
@@ -72,13 +73,6 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
 
    <plugin
          id="org.teiid.designer.dqp.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.jdom"
          download-size="0"
          install-size="0"
          version="0.0.0"

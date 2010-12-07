@@ -1,11 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.mapping.ui.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.mapping.ui.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.mapping.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.mapping.ui.actions
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.mapping.ui,
+ org.junit4,
+ org.teiid.designer.metamodels.transformation,
+ org.teiid.designer.ui

@@ -21,14 +21,14 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 
 /**
  * @since 5.0.2
  */
 public class LocalTestXsdInstanceNode extends TestCase {
 
-    private static final String FOLDER = SmartTestDesignerSuite.getTestDataPath() + "/Cigna/"; //$NON-NLS-1$
+    private static final String FOLDER = SmartTestSuite.getTestDataPath() + "/Cigna/"; //$NON-NLS-1$
 
     private static final String MEMBER_XSD = FOLDER + "member.xsd"; //$NON-NLS-1$
 

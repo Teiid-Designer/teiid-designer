@@ -1,13 +1,26 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.core.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.core.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.core,
+ org.teiid.designer.metamodels.core,
+ org.eclipse.xsd,
+ org.eclipse.emf.mapping,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.junit4,
+ org.jdom,
+ org.teiid.core.designer,
+ org.teiid.core.designer.test,
+ org.teiid.designer.legacy,
+ teiid_embedded_query,
+ org.mockito;bundle-version="1.8.4",
+ org.powermock;bundle-version="1.3.7"
 Export-Package: com.metamatrix.modeler.core,
  com.metamatrix.modeler.core.compare,
  com.metamatrix.modeler.core.metamodel,

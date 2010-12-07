@@ -17,7 +17,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 
 /**
  * @since 3.1
@@ -30,7 +30,7 @@ public class TestIoUtilities extends TestCase {
 	//############################################################################################################################
     
 //    private static final String SAVE_PATH = "saveAs_library.ecore"; //$NON-NLS-1$
-    private static final String FILE_PATH = SmartTestDesignerSuite.getTestDataPath() + File.separator + "samplePlugin.xml"; //$NON-NLS-1$
+    private static final String FILE_PATH = SmartTestSuite.getTestDataPath() + File.separator + "samplePlugin.xml"; //$NON-NLS-1$
     
     //############################################################################################################################
     //# Main                                                                                                                     #

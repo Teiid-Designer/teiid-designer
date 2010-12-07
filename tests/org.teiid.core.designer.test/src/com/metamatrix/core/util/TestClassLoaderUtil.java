@@ -46,7 +46,7 @@ public class TestClassLoaderUtil extends TestCase {
             final URL[] urls = new URL[JAR_FILE_NAMES.length];
             for (int i = 0; i < JAR_FILE_NAMES.length; i++) {
                 final String filename = JAR_FILE_NAMES[i];
-                final File file = SmartTestDesignerSuite.getTestDataFile(File.separator + filename);
+                final File file = SmartTestSuite.getTestDataFile(File.separator + filename);
                 urls[i] = file.toURI().toURL();
             }
             final URLClassLoader loader = new URLClassLoader(urls, this.getClass().getClassLoader());

@@ -1,12 +1,24 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.modelgenerator.uml2.test;singleton:=true
+Bundle-SymbolicName: org.teiid.designer.modelgenerator.uml2.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.modelgenerator.uml2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.modelgenerator.uml2.processor,
  com.metamatrix.modeler.modelgenerator.uml2.util
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.teiid.designer.modelgenerator.uml2,
+ org.junit4,
+ org.eclipse.uml2.uml,
+ org.eclipse.xsd,
+ org.teiid.core.designer,
+ org.teiid.designer.modelgenerator,
+ org.teiid.designer.modelgenerator.test,
+ org.teiid.designer.core,
+ org.teiid.designer.compare,
+ org.teiid.designer.metamodels.relational,
+ org.teiid.designer.metamodels.relationship,
+ org.eclipse.core.runtime,
+ org.teiid.designer.metamodels.uml2,
+ teiid_embedded_query

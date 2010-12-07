@@ -48,6 +48,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     private static final String PASSWORD_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.PASSWORD_LBL_UI_"); //$NON-NLS-1$
 
     private static final String SSL_BTN_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.SSL_BTN_UI_"); //$NON-NLS-1$
+    
+    private static final String TEIID_BTN_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.TEIID_BTN_UI_"); //$NON-NLS-1$
 
     private static final String BROWSE_BUTTON_LBL_UI_ = DatatoolsUiPlugin.UTIL.getString("Common.BROWSE_BUTTON_LBL_UI_"); //$NON-NLS-1$
     
@@ -64,6 +66,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     private static final String URL_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.url"); //$NON-NLS-1$
 
     private static final String SSL_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.protocol"); //$NON-NLS-1$
+    
+    private static final String TEIID_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.teiid"); //$NON-NLS-1$
 
     private static final String SAVE_PASSWORD_SUMMARY_DATA_TEXT_ = DatatoolsUiPlugin.UTIL.getString("Common.summary.persistpassword.label"); //$NON-NLS-1$
 
@@ -94,6 +98,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
 	private Text passwordText;
 
 	private Button protocolCheck;
+	
+	private Button teiidCheck;
 
 	private Button savePasswordButton;
 
@@ -242,6 +248,13 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             gd = new GridData();
             gd.horizontalSpan = 3;
             protocolCheck.setLayoutData(gd);
+            
+            teiidCheck = new Button(baseComposite, SWT.CHECK);
+            teiidCheck.setText(TEIID_BTN_UI_);
+            teiidCheck.setSelection(true);
+            gd = new GridData();
+            gd.horizontalSpan = 3;
+            teiidCheck.setLayoutData(gd);
 
             savePasswordButton = new Button(baseComposite, SWT.CHECK);
             savePasswordButton.setText(SAVE_PASSWORD_LBL_UI_);
@@ -292,7 +305,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             url += hostText.getText().trim();
         }
         if (portText.getText().trim().length() > 0) {
-            url += ":" + portText.getText().trim(); //$NON-NLS-1$
+            url += ":" + portText.getText().trim() + "/modeshape-rest"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (reposCombo.getText().trim().length() > 0) {
             String repos = reposCombo.getText().trim();
@@ -302,6 +315,9 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
             	url += "/" + repos; //$NON-NLS-1$
             }
         }
+        if (teiidCheck.getSelection()) {
+        	url += "?teiidsupport=true"; //$NON-NLS-1$
+        } 
         urlText.setText(url);
     }
     
@@ -330,6 +346,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         passwordText.removeListener(SWT.Modify, this);
         reposBrowseButton.removeListener(SWT.Selection, this);
         protocolCheck.removeListener(SWT.Selection, this);
+        teiidCheck.removeListener(SWT.Selection, this);
         savePasswordButton.removeListener(SWT.Selection, this);
     }
 
@@ -341,6 +358,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         passwordText.addListener(SWT.Modify, this);
         reposBrowseButton.addListener(SWT.Selection, this);
         protocolCheck.addListener(SWT.Selection, this);
+        teiidCheck.addListener(SWT.Selection, this);
         savePasswordButton.addListener(SWT.Selection, this);
     }
 
@@ -349,6 +367,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
     		savePasswordButton.setSelection(savePasswordButton.getSelection());
     	} else if (event.widget == protocolCheck) {
     		protocolCheck.setSelection(protocolCheck.getSelection());
+    	} else if (event.widget == teiidCheck) {
+    		teiidCheck.setSelection(teiidCheck.getSelection());
     	} else if (event.widget == reposBrowseButton) {
     		browseForRepos();
     	}
@@ -437,6 +457,11 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         } else {
             protocolCheck.setSelection(true);
         }
+        if (!(url.getTeiidMetadata())) { //$NON-NLS-1$
+            teiidCheck.setSelection(false);
+        } else {
+            teiidCheck.setSelection(true);
+        }
         String savePassword = this.properties.getProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID);
         if ((savePassword != null) && Boolean.valueOf(savePassword) == Boolean.TRUE) {
             savePasswordButton.setSelection(true);
@@ -460,6 +485,8 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         summaryData.add(new String[] {USERNAME_SUMMARY_DATA_TEXT_, this.usernameText.getText().trim()});
         summaryData.add(new String[] {SSL_SUMMARY_DATA_TEXT_,
             protocolCheck.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
+        summaryData.add(new String[] {TEIID_SUMMARY_DATA_TEXT_,
+                teiidCheck.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
         summaryData.add(new String[] {SAVE_PASSWORD_SUMMARY_DATA_TEXT_,
             savePasswordButton.getSelection() ? TRUE_SUMMARY_DATA_TEXT_ : FALSE_SUMMARY_DATA_TEXT_});
         summaryData.add(new String[] {URL_SUMMARY_DATA_TEXT_, this.urlText.getText().trim()});

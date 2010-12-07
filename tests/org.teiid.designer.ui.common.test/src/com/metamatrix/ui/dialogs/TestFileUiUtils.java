@@ -12,7 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.teiid.core.util.EquivalenceUtil;
-import com.metamatrix.core.util.SmartTestDesignerSuite;
+import com.metamatrix.core.util.SmartTestSuite;
 
 /**
  * @since 5.0.1
@@ -31,7 +31,7 @@ public final class TestFileUiUtils extends TestCase {
     }
 
     static {
-        TEST_DIR = new File(SmartTestDesignerSuite.getTestDataPath());
+        TEST_DIR = new File(SmartTestSuite.getTestDataPath());
     }
 
     public TestFileUiUtils( String theTestName ) {
