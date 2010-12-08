@@ -523,98 +523,128 @@
 	<sect1 id="wsdl-to-relational-import-section">
 		<title>Import WSDL into Relational Source Model</title>
 		<para>You can create a Relational model by selecting an existing 
-			<emphasis>Web Services Connection Profile</emphasis> defined by a WSDL file in your workspace or 
-			defined by a URL. Designer will interpret the WSDL, locate any associated or 
-			dependent XML schema files, generate an XML View of the schema components and create a Web service model representing the interfaces and operations defined in the WSDL. </para>
+			<emphasis>Web Services Connection Profile</emphasis> defined 
+			by a WSDL file in your workspace or defined by a URL. Designer 
+			will interpret the WSDL, locate any associated or dependent XML 
+			schema files, generate a physical model to invoke the service, 
+			and generate virtual models containg procedures to build and parse
+			the XML declared as the service messages.</para>
 		<itemizedlist>
 			<listitem>
+				<para>The sample WSDL for this section defines the following:
+				<itemizedlist>
+					<listitem>
+						<para>A single <emphasis role="bold">wsdl:service</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portService</para>
+					</listitem>
+					<listitem>
+						<para>A single <emphasis role="bold">wsdl:port</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portPort0"</para>
+					</listitem>
+					<listitem>
+						<para>A single <emphasis role="bold">wsdl:portType</emphasis> named Share_BSM_Real_Time_Data_Design_Server_RealTimeData_portPortType</para>
+					</listitem>
+					<listitem>
+						<para>A single <emphasis role="bold">wsdl:operation</emphasis> named OnHand</para>
+					</listitem>
+				</itemizedlist>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/import-wsdl-into-rel-onhand-decl.png"/>
+						</imageobject>
+					</mediaobject>
+				</para>
 				<para>
 					To create relational models from <emphasis role="bold">WSDL</emphasis> use the steps below.
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
-								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
-									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.png"/>
-									</imageobject>
-								</inlinemediaobject> in the toolbar or select a project, folder or 
+								choose the <emphasis role="bold">File > Import</emphasis> action in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Web Service as Relational Source Model</emphasis>  and 
+								<emphasis role="bold">Teiid Designer > WSDL into Relational Source Model</emphasis>  and 
 									click <emphasis role="bold">Next></emphasis></para>
 							<figure>
 								<title>Import WSDL as Relational Source Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/ImportWizardWSDLasRelational.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-1.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - On the next page provide a source <emphasis role="bold">WSDL</emphasis> file, 
-								either in your workspace, local on your file system or provide a valid URL.</para>
+							<para><emphasis role="bold">Step 3 </emphasis> - On the next page select an existing 
+							Web Service Connection Profile from the list, or click the <emphasis role="bold">New</emphasis> Button to create a new profile.</para>
 							<figure>
 								<title>Source and Target Selection Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationalFromWSDL_Validate.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-2.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - When <emphasis role="bold">WSDL</emphasis> is defined, you'll be required to 
+							<para><emphasis role="bold">Step 4 </emphasis> - When the connection profile is selected, you'll be required to 
 								validate your <emphasis role="bold">WSDL</emphasis> via the <emphasis role="bold">Validate WSDL</emphasis>
-								button (see above figure).</para>
+								button (see above figure).  If the WSDL is not valid, or does not comply with WS-I 1.0, the validation failures will be displayed in an error dialog.</para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Specify a unique target relational model name 
-								in the <emphasis role="bold">Model Name</emphasis> field, or select an existing relational model in your workspace 
-								via the <emphasis role="bold">Browse...</emphasis> button. Click <emphasis role="bold">Next></emphasis> when model name is defined. </para>
+							<para><emphasis role="bold">Step 5 </emphasis> - Select a model project 
+								in the <emphasis role="bold">Target Workspace Folder</emphasis> field via the <emphasis role="bold">Browse...</emphasis> button. Click <emphasis role="bold">Next></emphasis> when the target is defined. </para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 6 </emphasis> - Specify a unique target location in 
-								the <emphasis role="bold">Location</emphasis> field (i.e. project or folder) for the relational model 
-								or select an existing location in your workspace via the <emphasis role="bold">Browse...</emphasis> 
-								button. Click <emphasis role="bold">Next></emphasis> when location is defined.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 7 </emphasis> - The next page allows you to selected 
-								individual <emphasis role="bold">Web Service Operations</emphasis> from which to create relational tables. 
+							<para><emphasis role="bold">Step 6 </emphasis> - The next page allows you to selected 
+								individual <emphasis role="bold">Web Service Operations</emphasis> to model. 
 								The default behavior of this page selects <emphasis role="bold">all</emphasis> available operations in 
-								the tree. For <emphasis role="bold">WSDL</emphasis>s backed with large schemas, there may be numerous operations 
-								which may result in a very large number of tables being generated. 
-								In this case, you may wish choose a limited number of operations at a time 
-								and repeat this process using the same target relational model.</para>
-								<itemizedlist>
-									<listitem>
-										<para>To select all of the XSD files in the directory, click the checkbox next to the folder in the left panel.
-										</para>
-									</listitem>
-									<listitem>
-										<para>To select individual XSD files, click the checkboxes next to the files you want in the right panel</para>
-									</listitem>
-								</itemizedlist>
+								the tree. Operations can be de-selected if they are not being modeled.  The Selection Details editor displays static information
+								about the operation such as the names of the input and output messages, and faults thrown by the operation.</para>
 							<figure>
 								<title>WSDL Operations Selection Dialog</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/CreateRelationalFromWsdl_SelectOps.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-3.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis>. 
-								After generation the new model can be found in the specified location in your workspace..</para>
+							<para><emphasis role="bold">Step 7 </emphasis> - Click <emphasis role="bold">Finish</emphasis>. 
+								After generation the new models can be found in the specified location in your workspace.</para>
 						</listitem>
 					</itemizedlist>
 				</para>
 			</listitem>
 		</itemizedlist>
+		<para>In the <emphasis role="bold">Model Explorer</emphasis> you can see the importer created
+		the following:
+			<itemizedlist>
+				<listitem>
+					<para>A single <emphasis role="bold">physical model</emphasis> containing a single procedure called invoke.  
+					This model and procedure correspond to the single port declared in the WSDL. For a WSDL with multiple <emphasis role="bold">wsdl:port</emphasis> 
+					declarations the importer would create a physical model with an invoke procedure for each <emphasis role="bold">wsdl:port</emphasis> declaration.  
+					This facilitates binding each physical model to its own Teiid WebService Connector and allowing the connector to supply the endpoint.</para>
+				</listitem>
+				<listitem>
+					<para>A single <emphasis role="bold">view model</emphasis> containing a <emphasis role="bold">catalog</emphasis> named after the operation 
+					declared in the WSDL.  For a WSDL with multiple <emphasis role="bold">wsdl:operation</emphasis> declarations, the importer would create
+					multiple catalogs.  The <emphasis role="bold">catalog</emphasis> contains procedure declarations that use the <emphasis role="bold">SQLXML</emphasis> calls
+					supported by Teiid to create and parse the XML defined as the operation messages.   
+				</listitem>
+			</itemizedlist>
+			</para>
+		<figure>  		
+	  		<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/import-wsdl-into-rel-model-explorer.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>The user can now use the procedures defined by the importer in a higher level view model that builds the request, executes the service via the invoke procedure, 
+		and extracts the results from the response.  			
+		</para>
+		
 	</sect1>
 	
 	<!-- ####### WSDL AS WEB SERVICE IMPORTER ######################################### -->
