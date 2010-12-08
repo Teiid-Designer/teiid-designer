@@ -59,7 +59,6 @@ public class CredentialsPage extends AbstractWizardPage
 
     private Combo connectionProfilesCombo;
     private ILabelProvider profileLabelProvider;
-    private IConnectionProfile[] sfProfiles;
     private IConnectionProfile selectedConnectionProfile;
 
     private CLabel textFieldUsername;
@@ -218,22 +217,18 @@ public class CredentialsPage extends AbstractWizardPage
      * 
      */
     protected void handleProfileSelection() {
-        if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
-            
-            if (this.sfProfiles.length == 0) {
-                setErrorMessage(getString("no.profile")); //$NON-NLS-1$
-                textFieldUsername.setText(EMPTY_STR);
-                textFieldPassword.setText(EMPTY_STR);
-                textFieldURL.setText(EMPTY_STR);
-                validateButton.setEnabled(false);
-                return;
-            }
-            setErrorMessage(null);
-            setMessage(getString("select.profile")); //$NON-NLS-1$
-            return;
+    	if (null == connectionProfilesCombo.getItems() || 0 == connectionProfilesCombo.getItems().length) {
+    		setErrorMessage(getString("no.profile")); //$NON-NLS-1$
+    		textFieldUsername.setText(EMPTY_STR);
+    		textFieldPassword.setText(EMPTY_STR);
+    		textFieldURL.setText(EMPTY_STR);
+    		validateButton.setEnabled(false);
+    		return;
         }
         
         if( connectionProfilesCombo.getSelectionIndex() < 0 ) {
+        	setErrorMessage(null);
+            setMessage(getString("select.profile")); //$NON-NLS-1$
         	return;
         }
         
@@ -315,7 +310,7 @@ public class CredentialsPage extends AbstractWizardPage
     
     void resetCPComboItems() {
     	if( connectionProfilesCombo != null ) {
-        	ArrayList profileList = new ArrayList();
+        	ArrayList<IConnectionProfile> profileList = new ArrayList<IConnectionProfile>();
             for( IConnectionProfile prof : profileWorker.getProfiles()) {
             	profileList.add(prof);
             }
