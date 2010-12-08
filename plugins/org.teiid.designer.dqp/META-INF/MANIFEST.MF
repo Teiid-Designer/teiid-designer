@@ -2,15 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.dqp;singleton:=true
-Bundle-Version: 7.1.0.qualifier
+Bundle-Version: 7.2.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.dqp.DqpPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.dqp,
  com.metamatrix.modeler.dqp.config,
- com.metamatrix.modeler.dqp.execution,
  com.metamatrix.modeler.dqp.internal.config,
- com.metamatrix.modeler.dqp.internal.execution,
  com.metamatrix.modeler.dqp.internal.workspace,
  org.teiid.designer.runtime,
  org.teiid.designer.runtime.connection,

@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: teiid_embedded_query;singleton:=true
-Bundle-Version: 7.1.0.qualifier
+Bundle-Version: 7.2.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
  System.vdb,
  jta-1.1.jar,
- teiid-7.1.1-client.jar,
- teiid-api-7.1.1.jar,
- teiid-engine-7.1.1.jar
+ teiid-7.2.0-client.jar,
+ teiid-api-7.2.0.jar,
+ teiid-engine-7.2.0.jar
 Export-Package: javax.transaction,
  javax.transaction.xa,
  org.teiid,

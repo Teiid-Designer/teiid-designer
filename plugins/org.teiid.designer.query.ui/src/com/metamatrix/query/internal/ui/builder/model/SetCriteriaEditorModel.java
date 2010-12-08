@@ -19,6 +19,7 @@ import com.metamatrix.query.internal.ui.builder.util.ICriteriaStrategy;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.AbstractSetCriteria;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.symbol.Expression;
@@ -90,7 +91,7 @@ public class SetCriteriaEditorModel extends AbstractPredicateCriteriaTypeEditorM
         // must be SUBQUERY
         SubquerySetCriteria subquerySetCriteria = new SubquerySetCriteria();
         subquerySetCriteria.setExpression(expModel.getExpression());
-        subquerySetCriteria.setCommand(subqueryCommand);
+        subquerySetCriteria.setCommand((QueryCommand)subqueryCommand);
         return subquerySetCriteria;
     }
 
