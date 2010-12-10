@@ -4,8 +4,9 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.salesforce.test
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.modelgenerator.salesforce
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.modelgenerator.salesforce,
- org.junit4,
- org.eclipse.core.runtime
+Require-Bundle: org.junit4
+Export-Package: com.metamatrix.modeler.modelgenerator.salesforce.model.impl,
+ com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards
