@@ -12,7 +12,7 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.modeler.webservice.IWebServiceResource;
 
 /**
@@ -76,7 +76,7 @@ public class TestAbstractWebServiceResource extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("org.teiid.designer.webservice", "TestAbstractWebServiceResource"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestDesignerSuite("org.teiid.designer.webservice", "TestAbstractWebServiceResource"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestAbstractWebServiceResource.class);
         // One-time setup and teardown
         return new TestSetup(suite) {

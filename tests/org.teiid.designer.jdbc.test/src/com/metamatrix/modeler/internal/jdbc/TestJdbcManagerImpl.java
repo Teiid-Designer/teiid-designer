@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.ProfileManager;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.modeler.jdbc.JdbcDriver;
 import com.metamatrix.modeler.jdbc.JdbcFactory;
 import com.metamatrix.modeler.jdbc.JdbcPlugin;
@@ -123,16 +123,16 @@ public class TestJdbcManagerImpl extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        String jar_path = SmartTestSuite.getProjectPath("com.metamatrix.datadirect");//$NON-NLS-1$
+        String jar_path = SmartTestDesignerSuite.getProjectPath("com.metamatrix.datadirect");//$NON-NLS-1$
 
         JAR_FILES2 = new String[] {(new File(jar_path + "/MJbase.jar")).toURI().toURL().toString(), //$NON-NLS-1$
             (new File(jar_path + "/MJutil.jar")).toURI().toURL().toString(), //$NON-NLS-1$
             (new File(jar_path + "/MJoracle.jar")).toURI().toURL().toString() //$NON-NLS-1$
         };
         JAR_FILES_THAT_DONT_EXIST = new String[] {
-            SmartTestSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJbase.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
-            SmartTestSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJutil.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
-            SmartTestSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJoracle.ZIP" //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJbase.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJutil.ZIP", //$NON-NLS-1$ //$NON-NLS-2$
+            SmartTestDesignerSuite.getTestDataFile("/drivers").toURI().toURL().toString() + "MJoracle.ZIP" //$NON-NLS-1$ //$NON-NLS-2$
         };
 
         mgr = new JdbcDriverManagerForTesting();
@@ -247,7 +247,7 @@ public class TestJdbcManagerImpl extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        TestSuite suite = new SmartTestSuite("com.metamatrix.modeler.jdbc", "TestJdbcManagerImpl"); //$NON-NLS-1$ //$NON-NLS-2$
+        TestSuite suite = new SmartTestDesignerSuite("com.metamatrix.modeler.jdbc", "TestJdbcManagerImpl"); //$NON-NLS-1$ //$NON-NLS-2$
         suite.addTestSuite(TestJdbcManagerImpl.class);
         // One-time setup and teardown
         return new TestSetup(suite) {

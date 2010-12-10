@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 import org.teiid.api.exception.query.QueryMetadataException;
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.RuntimeIndexSelector;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnSetRecord;
@@ -87,7 +87,7 @@ public class TestServerRuntimeMetadata extends TestCase {
 
     public ServerRuntimeMetadata helpGetMetadata(String vdb) throws Exception {
         List<RuntimeIndexSelector> selectors = new ArrayList<RuntimeIndexSelector>();
-        selectors.add(new RuntimeIndexSelector(SmartTestSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb));  //$NON-NLS-1$        
+        selectors.add(new RuntimeIndexSelector(SmartTestDesignerSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb));  //$NON-NLS-1$        
         IndexSelector composite = new CompositeIndexSelector(selectors);
         QueryMetadataContext context = new QueryMetadataContext(composite);
         return new ServerRuntimeMetadata(context);
@@ -96,8 +96,8 @@ public class TestServerRuntimeMetadata extends TestCase {
     public ServerRuntimeMetadata helpGetMetadata( String vdb1,
                                                   String vdb2 ) throws Exception {
         List<RuntimeIndexSelector> selectors = new ArrayList<RuntimeIndexSelector>();
-        selectors.add(new RuntimeIndexSelector(SmartTestSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb1));  //$NON-NLS-1$
-        selectors.add(new RuntimeIndexSelector(SmartTestSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb2));  //$NON-NLS-1$
+        selectors.add(new RuntimeIndexSelector(SmartTestDesignerSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb1));  //$NON-NLS-1$
+        selectors.add(new RuntimeIndexSelector(SmartTestDesignerSuite.getTestDataPath()+DELIMITER+"/indexTestFolder/"+vdb2));  //$NON-NLS-1$
         IndexSelector composite = new CompositeIndexSelector(selectors);
         QueryMetadataContext context = new QueryMetadataContext(composite);
         return new ServerRuntimeMetadata(context);
@@ -127,7 +127,7 @@ public class TestServerRuntimeMetadata extends TestCase {
 
     public void testGetElementID1() {
         try {
-            String url = SmartTestSuite.getTestDataPath()+"/indexTestFolder/BQT.vdb"; //$NON-NLS-1$
+            String url = SmartTestDesignerSuite.getTestDataPath()+"/indexTestFolder/BQT.vdb"; //$NON-NLS-1$
             IndexSelector selector = helpGetRuntimeSelector1(new File(url).toURI().toURL());
 
             QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
@@ -149,7 +149,7 @@ public class TestServerRuntimeMetadata extends TestCase {
 
     public void testGetElementID2() {
         try {
-            String resourcePath =  SmartTestSuite.getTestDataPath()+DELIMITER+RESOURCE_FOLDER+DELIMITER+BQT_VDB; 
+            String resourcePath =  SmartTestDesignerSuite.getTestDataPath()+DELIMITER+RESOURCE_FOLDER+DELIMITER+BQT_VDB; 
             IndexSelector selector = helpGetRuntimeSelector2(resourcePath);
 
             QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);
@@ -171,7 +171,7 @@ public class TestServerRuntimeMetadata extends TestCase {
 
     public void testGetTempGroupsForDocument() {
         try {
-            String url = SmartTestSuite.getTestDataPath()+DELIMITER+"indexTestFolder/QueryTest2.vdb"; //$NON-NLS-1$
+            String url = SmartTestDesignerSuite.getTestDataPath()+DELIMITER+"indexTestFolder/QueryTest2.vdb"; //$NON-NLS-1$
             IndexSelector selector = helpGetRuntimeSelector1(new File(url).toURI().toURL());
 
             QueryMetadataInterface metadata = helpGetTransformatrionMetadata(selector);

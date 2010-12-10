@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import com.metamatrix.core.util.SmartTestSuite;
+import com.metamatrix.core.util.SmartTestDesignerSuite;
 import com.metamatrix.metamodels.relationship.RelationshipFactory;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.index.IndexSelectorFactory;
@@ -74,7 +74,7 @@ public class TestRelationshipSearchImpl extends TestCase {
      * Test suite, with one-time setup.
      */
     public static Test suite() {
-        SmartTestSuite suite = new SmartTestSuite("com.metamatrix.modeler.relationship", "TestRelationshipSearchImpl"); //$NON-NLS-1$//$NON-NLS-2$
+        SmartTestDesignerSuite suite = new SmartTestDesignerSuite("com.metamatrix.modeler.relationship", "TestRelationshipSearchImpl"); //$NON-NLS-1$//$NON-NLS-2$
         suite.addTestSuite(TestRelationshipSearchImpl.class);
         // One-time setup and teardown
         return new TestSetup(suite) {
