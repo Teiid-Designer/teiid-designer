@@ -1,13 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.metamodels.dependency.test
+Bundle-SymbolicName: org.teiid.designer.metamodels.dependency.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.metamodels.dependency
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.metamodels.dependency
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.metamodels.dependency,
- org.eclipse.emf.ecore,
- org.eclipse.core.resources,
- teiid_embedded_query

@@ -13,7 +13,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import junit.framework.TestCase;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
@@ -25,6 +27,7 @@ import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.impl.XSDFactoryImpl;
+
 import com.metamatrix.core.selection.TreeSelection;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.relational.impl.RelationalFactoryImpl;
@@ -39,9 +42,6 @@ import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalOption
 import com.metamatrix.modeler.modelgenerator.util.AnnotationHelper;
 import com.metamatrix.modeler.modelgenerator.util.AnnotationHelperImpl;
 import com.metamatrix.modeler.modelgenerator.util.EObjectUtil;
-import com.metamatrix.modeler.modelgenerator.util.FakeDatatypeFinder;
-import com.metamatrix.modeler.modelgenerator.util.FakeEObjectUtil;
-import com.metamatrix.modeler.modelgenerator.util.FakeTreeSelection;
 import com.metamatrix.modeler.modelgenerator.util.NullSimpleDatatypeUtil;
 import com.metamatrix.modeler.modelgenerator.util.SimpleDatatypeUtil;
 

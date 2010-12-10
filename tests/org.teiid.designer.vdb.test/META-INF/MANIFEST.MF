@@ -1,19 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.teiid.designer.vdb.test
+Bundle-SymbolicName: org.teiid.designer.vdb.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.teiid.designer.vdb,
- org.teiid.designer.core.test,
- org.teiid.designer.core,
- org.teiid.designer.metamodels.core,
- org.teiid.core.designer.test,
- org.eclipse.emf.ecore,
- org.teiid.core.designer,
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.powermock;bundle-version="1.3.7",
- org.mockito;bundle-version="1.8.4",
+Fragment-Host: org.teiid.designer.vdb
+Require-Bundle: org.powermock,
+ org.mockito,
  org.junit4

@@ -1,23 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.webservice.test
+Bundle-SymbolicName: org.teiid.designer.webservice.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.webservice
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.internal.webservice.gen,
  com.metamatrix.modeler.webservice,
  com.metamatrix.modeler.webservice.procedure
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.webservice,
- org.junit4,
- org.eclipse.core.runtime,
- org.eclipse.emf.ecore,
- org.eclipse.xsd,
- org.teiid.core.designer.test,
- org.teiid.designer.compare,
- org.teiid.designer.core,
- org.eclipse.core.resources,
- teiid_embedded_query,
- org.teiid.designer.metamodels.webservice.test
+Require-Bundle: org.junit4

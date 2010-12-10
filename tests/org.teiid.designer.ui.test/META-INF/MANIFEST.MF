@@ -1,21 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.teiid.designer.ui.test
+Bundle-SymbolicName: org.teiid.designer.ui.test;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Fragment-Host: org.teiid.designer.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.ui.explorer,
  com.metamatrix.modeler.internal.ui.viewsupport,
  com.metamatrix.modeler.ui.product
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.designer.ui,
- org.junit4,
- org.teiid.designer.ui.common,
- org.teiid.designer.core.test,
- org.teiid.core.designer.test,
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.eclipse.jface,
- org.eclipse.ui.workbench,
- teiid_embedded_query
+Require-Bundle: org.junit4
