@@ -21,13 +21,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 <!--		<module>org.teiid.designer.jdbc.relational.test</module>  -->
 <!--		<module>org.teiid.designer.jdbc.test</module>  -->
 <!--		<module>org.teiid.designer.mapping.ui.test</module>  -->
-<!--		<module>org.teiid.designer.metamodels.core.test</module>  -->
+		<module>org.teiid.designer.metamodels.core.test</module>
 <!--		<module>org.teiid.designer.metamodels.dependency.test</module>  -->
 <!--		<module>org.teiid.designer.metamodels.relational.test</module>  -->
 <!--		<module>org.teiid.designer.metamodels.relationship.test</module>  -->
 		<module>org.teiid.designer.metamodels.transformation.test</module>
 <!--		<module>org.teiid.designer.metamodels.uml2.test</module>  -->
-		<module>org.teiid.designer.metamodels.webservice.test</module>
+<!--		<module>org.teiid.designer.metamodels.webservice.test</module>  -->
 <!--		<module>org.teiid.designer.metamodels.wsdl.test</module>  -->
 		<module>org.teiid.designer.metamodels.xml.test</module>
 <!--		<module>org.teiid.designer.modelgenerator.salesforce.test</module>  -->
