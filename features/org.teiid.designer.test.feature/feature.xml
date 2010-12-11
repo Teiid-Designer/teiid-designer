@@ -96,7 +96,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+<!--
    <plugin
          id="org.teiid.designer.core.test"
          download-size="0"
@@ -104,7 +104,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.core.xslt.test"
          download-size="0"
@@ -112,7 +113,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.dqp.test"
          download-size="0"
@@ -120,7 +122,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.jdbc.test"
          download-size="0"
@@ -128,7 +131,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.mapping.ui.test"
          download-size="0"
@@ -136,6 +140,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.metamodels.core.test"
@@ -144,7 +149,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+<!--
    <plugin
          id="org.teiid.designer.metamodels.relational.test"
          download-size="0"
@@ -152,7 +157,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.metamodels.relationship.test"
          download-size="0"
@@ -160,6 +166,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.metamodels.transformation.test"
@@ -168,7 +175,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+<!--
    <plugin
          id="org.teiid.designer.metamodels.uml2.test"
          download-size="0"
@@ -176,7 +183,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.metamodels.webservice.test"
          download-size="0"
@@ -184,7 +192,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.metamodels.wsdl.test"
          download-size="0"
@@ -192,6 +201,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.metamodels.xml.test"
@@ -200,7 +210,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+<!--
    <plugin
          id="org.teiid.designer.modelgenerator.salesforce.test"
          download-size="0"
@@ -208,6 +218,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.modelgenerator.test"
@@ -216,13 +227,14 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+<!--
    <plugin
          id="org.teiid.designer.modelgenerator.uml2.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.modelgenerator.wsdl.test"
@@ -232,6 +244,7 @@
          fragment="true"
          unpack="false"/>
 
+<!--
    <plugin
          id="org.teiid.designer.query.ui.test"
          download-size="0"
@@ -239,7 +252,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.relationship.test"
          download-size="0"
@@ -247,6 +261,7 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
    <plugin
          id="org.teiid.designer.schema.tools.test"
@@ -256,6 +271,7 @@
          fragment="true"
          unpack="false"/>
 
+<!--
    <plugin
          id="org.teiid.designer.sdt.test"
          download-size="0"
@@ -263,7 +279,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.ui.common.test"
          download-size="0"
@@ -271,7 +288,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.ui.test"
          download-size="0"
@@ -279,7 +297,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.vdb.test"
          download-size="0"
@@ -287,7 +306,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.webservice.test"
          download-size="0"
@@ -295,7 +315,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.webservice.ui.test"
          download-size="0"
@@ -303,7 +324,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.xml.ui.test"
          download-size="0"
@@ -311,7 +333,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.xsd.ui.test"
          download-size="0"
@@ -319,7 +342,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.jdbc.relational.test"
          download-size="0"
@@ -327,7 +351,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.compare.test"
          download-size="0"
@@ -335,7 +360,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.metamodels.dependency.test"
          download-size="0"
@@ -343,7 +369,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
+-->
+<!--
    <plugin
          id="org.teiid.designer.ddl.importer.test"
          download-size="0"
@@ -351,5 +378,6 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+-->
 
 </feature>
