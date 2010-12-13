@@ -9,6 +9,8 @@ public class JdbcTranslatorHelper {
 	public static final String INFORMIX = "informix"; //$NON-NLS-1$
 	public static final String SYBASE = "sybase"; //$NON-NLS-1$
 	public static final String TEIID = "teiid"; //$NON-NLS-1$
+	// NOTE: For PostgreSQL vendor leaves off the QL, so we need to be careful to map this correctly
+	public static final String POSTGRES = "postgres"; //$NON-NLS-1$
 	public static final String POSTGRESQL = "postgresql"; //$NON-NLS-1$
 	public static final String ACCESS = "access"; //$NON-NLS-1$
 	public static final String HSQL = "hsql"; //$NON-NLS-1$
@@ -51,7 +53,7 @@ public class JdbcTranslatorHelper {
 				return DERBY;
 			}
 			
-			if( vendor.toUpperCase().startsWith(POSTGRESQL.toUpperCase()) ) {
+			if( vendor.toUpperCase().startsWith(POSTGRES.toUpperCase()) ) {
 				return POSTGRESQL;
 			}
 			
