@@ -24,7 +24,7 @@
 
 	<!-- ####### JDBC IMPORTER ######################################### -->
 	
-	<sect1 id="ddl-import-section">
+	<section id="ddl-import-section">
 		<title>Import DDL into Relational Model</title>
 		<para>Source relational models can be created by importing DDL.</para>
 		<itemizedlist>
@@ -83,11 +83,11 @@
 					</itemizedlist>
 				</listitem>
 			</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### JDBC IMPORTER ######################################### -->
 	
-	<sect1 id="jdbc-import-section">
+	<section id="jdbc-import-section">
 		<title>Import From JDBC</title>
 		<itemizedlist>
 			<listitem>
@@ -199,11 +199,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
 	<!-- ####### TEXT FILE SOURCE IMPORTER ######################################### -->
 	
-	<sect1 id="text-file-import-section">
+	<section id="text-file-import-section">
 		<title>Import Metadata From Text File</title>
 		<para></para>
 		<itemizedlist>
@@ -274,7 +274,7 @@
 		
 		<!-- ####### RELATIONAL TABLES TEXT IMPORTER ######################################### -->
 		
-		<sect2 id="relational-tables-text-import-section">
+		<section id="relational-tables-text-import-section">
 			<title>Import Relational Tables Text Importer</title>
 			<para></para>
 			<itemizedlist>
@@ -332,11 +332,11 @@
 				</listitem>
 			</itemizedlist>
 			
-		</sect2>
+		</section>
 		
 		<!-- ####### RELATIONAL VIRTUAL TABLES TEXT IMPORTER ######################################### -->
 		
-		<sect2 id="relational-virtual-tables-text-import-section">
+		<section id="relational-virtual-tables-text-import-section">
 			<title>Import Relational Virtual Tables Text Importer</title>
 			<para></para>
 			<itemizedlist>
@@ -393,11 +393,11 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### RELATIONSHIPS TEXT IMPORTER ######################################### -->
 		
-		<sect2 id="relationships-text-import-section">
+		<section id="relationships-text-import-section">
 			<title>Import Relationships Text Importer</title>
 			<para></para>
 			<itemizedlist>
@@ -454,11 +454,11 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### DATATYPES TEXT IMPORTER ######################################### -->
 		
-		<sect2 id="datatypes-text-import-section">
+		<section id="datatypes-text-import-section">
 			<title>Import Datatypes Text Importer</title>
 			<para></para>
 			<itemizedlist>
@@ -515,12 +515,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### WSDL AS SOURCE IMPORTER ######################################### -->
 	
-	<sect1 id="wsdl-to-relational-import-section">
+	<section id="wsdl-to-relational-import-section">
 		<title>Import WSDL into Relational Source Model</title>
 		<para>You can create a Relational model by selecting an existing 
 			<emphasis>Web Services Connection Profile</emphasis> defined 
@@ -646,11 +646,11 @@
 		and extracts the results from the response.  			
 		</para>
 		
-	</sect1>
+	</section>
 	
 	<!-- ####### WSDL AS WEB SERVICE IMPORTER ######################################### -->
 	
-	<sect1 id="wsdl-to-web-service-import-section">
+	<section id="wsdl-to-web-service-import-section">
 		<title>Import WSDL Into Web Service</title>
 		<para>You can create a <emphasis role="bold">Web Service</emphasis> model by selecting a <emphasis role="bold">WSDL</emphasis> file in
 			your workspace, importing <emphasis role="bold">WSDL</emphasis> files from the file system or by
@@ -684,7 +684,7 @@
 		<para> Detailed steps for each of these options is described below, as
 			well as a description of how the wizard handles <emphasis role="bold">WSDL</emphasis> errors.</para>
 			
-		<sect2 id="workspace-location-wsdl-ws-section">
+		<section id="workspace-location-wsdl-ws-section">
 			<title>Import WSDL From Workspace Location</title>
 			<para></para>
 			<itemizedlist>
@@ -841,8 +841,8 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-		<sect2 id="file-system-location-wsdl-ws-section">
+		</section>
+		<section id="file-system-location-wsdl-ws-section">
 			<title>Import WSDL From File System Location</title>
 			<para></para>
 						<itemizedlist>
@@ -988,8 +988,8 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-		<sect2 id="url-location-wsdl-ws-section">
+		</section>
+		<section id="url-location-wsdl-ws-section">
 			<title>Import WSDL From URL</title>
 			<para></para>
 			<itemizedlist>
@@ -1136,12 +1136,12 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### XSD SCHEMA IMPORTER ######################################### -->
 	
-	<sect1 id="xsd-schema-import-section">
+	<section id="xsd-schema-import-section">
 		<title>XSD Schema File</title>
 		<para></para>
 		<itemizedlist>
@@ -1247,6 +1247,6 @@
 			<para>XSD files may have dependent files. This importer will determine these dependencies 
 				and import these as well if Add Dependent Schema Files is checked</para>
 		</note>
-	</sect1>
+	</section>
 	
 </chapter>

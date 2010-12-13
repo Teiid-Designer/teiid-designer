@@ -79,7 +79,7 @@
 	
 	<!-- ####### FIND MODEL OBJECTS ######################################### -->
 	
-	<sect1 id="find-model-objects-section">
+	<section id="find-model-objects-section">
 		<title>Finding Model Objects</title>
 		<para>The Teiid Designer provides a name-based search capability to quickly locate and display model objects.</para>
 		<itemizedlist>
@@ -137,11 +137,11 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### SEARCH RELATIONSHIPS ######################################### -->
 	
-	<sect1 id="search-relationships-section">
+	<section id="search-relationships-section">
 		<title>Search Models Via Relationship Properties</title>
 		<para>The Teiid Designer provides a search capability to find model objects that are characterized by one
 			or more relationship property values including relationship type, participants and name.</para>
@@ -181,11 +181,11 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### SEARCH MODEL TRANSFORMATION SQL ######################################### -->
 	
-	<sect1 id="search-transformations-section">
+	<section id="search-transformations-section">
 		<title>Search Transformation SQL</title>
 		<para>The Teiid Designer provides a search capability to string values present in transformation SQL text.</para>
 		<itemizedlist>
@@ -239,11 +239,11 @@
 			editor is open its tab will be selected. In addition, the <emphasis role="bold">Transformation Editor</emphasis> will
 			be opened and you can perform <emphasis role="bold">Find/Replace</emphasis> (Ctrl-F) actions to highlight your original
 			searched text string and edit your SQL if you wish.</para>
-	</sect1>
+	</section>
 	
 	<!-- ####### SEARCH MODEL METADATA OBJECTS ######################################### -->
 	
-	<sect1 id="search-metadata-section">
+	<section id="search-metadata-section">
 		<title>Search Models Via Metadata Properties</title>
 		<para>The Teiid Designer provides a search capability to find model objects that are characterized by one
 			or more metadata property values.</para>
@@ -283,5 +283,5 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 </chapter>

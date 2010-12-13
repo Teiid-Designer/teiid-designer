@@ -10,7 +10,7 @@
 		
 	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
 	
-	<sect1 id="create-model-objects-section">
+	<section id="create-model-objects-section">
 		<title>Creating New Model Objects</title>
 		<para>As discussed in the introduction, <xref linkend="metadata-models" /> provide
 			a framework to model various types of metadata.
@@ -39,7 +39,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="create-new-child-section">
+		<section id="create-new-child-section">
 			<title>New Child Action</title>
 			<para></para>
 			<itemizedlist>
@@ -155,9 +155,9 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
-		<sect2 id="create-new-sibling-section">
+		<section id="create-new-sibling-section">
 			<title>New Sibling Action</title>
 			<para></para>
 			<itemizedlist>
@@ -256,9 +256,9 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
-		<sect2 id="create-new-association-section">
+		<section id="create-new-association-section">
 			<title>New Association Action</title>
 			<para></para>
 			<itemizedlist>
@@ -362,13 +362,13 @@
 				</listitem>
 			</itemizedlist>
 			
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 
 	
 	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
 	
-	<sect1 id="model-object-editors-section">
+	<section id="model-object-editors-section">
 		<title>Model Object Editors</title>
 		
 		<para> The primary actions for editing model objects are:
@@ -464,7 +464,7 @@
 		<para>This section describes these editors in detail.</para>
 		<!-- ####### TRANSFORMATION EDITOR ######################################### -->
 		
-		<sect2 id="transformation-editor-section">
+		<section id="transformation-editor-section">
 			<title>Transformation Editor</title>
 			<para>The <emphasis role="bold">Teiid Designer's Transformation Editor</emphasis> enables you to create the
 				query transformations that describe how to derive your virtual
@@ -746,7 +746,7 @@
 			
 			<!-- ####### CRITERIA BUILDER EDITOR ######################################### -->
 			
-			<sect3 id="using-criteria-builder-section">
+			<section id="using-criteria-builder-section">
 				<title>Using the Criteria Builder</title>
 				<para>The Transformation Editor’s <emphasis role="bold">Criteria Builder</emphasis> offers you a
 					quick, graphical means to build criteria clauses in your
@@ -895,11 +895,11 @@
 				<para>
 					Once you have created the complete criteria you want, click OK to add it to your transformation.
 				</para>
-			</sect3>
+			</section>
 			
 			<!-- ####### EXPRESSION BUILDER ######################################### -->
 			
-			<sect3 id="using-expression-builder-section">
+			<section id="using-expression-builder-section">
 				<title>Using the Expression Builder</title>
 				<para> The <emphasis role="bold">Transformation Editor’s Expression Builder</emphasis> offers you a
 					quick, graphical means to build expressions in your transformations.
@@ -1042,12 +1042,12 @@
 					</listitem>
 				</itemizedlist>
 
-			</sect3>
-		</sect2>
+			</section>
+		</section>
 		
 		<!-- ####### INPUT SET EDITOR ######################################### -->
 		
-		<sect2 id="input-set-editor-section">
+		<section id="input-set-editor-section">
 			<title>Input Set Editor (XML)</title>
 			<para> The <emphasis role="bold">Input Set</emphasis> represents a special class that contains
 				attributes from a parent mapping class. When you create mapping
@@ -1127,11 +1127,11 @@
 				Set</emphasis> that you need, you can use the <emphasis role="bold">Input Set Parameters</emphasis> within a
 				mapping class transformation to produce mapping attributes you can map
 				to your XML document.</para>
-		</sect2>
+		</section>
 		
 		<!-- ####### CHOICE EDITOR ######################################### -->
 		
-		<sect2 id="choice-editor-section">
+		<section id="choice-editor-section">
 			<title>Choice Editor (XML)</title>
 			<para>Within an XML Document model, a choice compositor defines
 				all possible document data structures (sometimes called fragments)
@@ -1170,7 +1170,7 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<sect3>
+			<section>
 				<title>Using the Choice Editor</title>
 				<para>You should address each choice option by performing one of the following:</para>
 				<itemizedlist>
@@ -1190,8 +1190,8 @@
 				 			the criteria you set is met.</para>
 				 	</listitem>
 				 </itemizedlist>
-			</sect3>
-			<sect3>
+			</section>
+			<section>
 				<title>Excluding Fragments</title>
 				<para> The XML Schema upon which you based the XML Document model
 					determines the nature of the options available to the choice. A schema
@@ -1226,8 +1226,8 @@
 					exclude an option for which you have established a criteria, Teiid Designer
 					will retain the criteria if you want to include the option in the
 					future.</para>
-			</sect3>
-			<sect3>
+			</section>
+			<section>
 				<title>Editing Choice Criteria</title>
 				<para></para>
 				<itemizedlist>
@@ -1259,8 +1259,8 @@
 				<para>You must set a criterion for each option in your document unless you have selected to exclude that option 
 					or specify that option will be the default option.</para>
 
-			</sect3>
-			<sect3>
+			</section>
+			<section>
 				<title>Setting Choice Element Order</title>
 				<para> To edit the criteria for a choice element:</para>
 				<para> The Teiid Designer Server evaluates the choice criteria in the order
@@ -1284,8 +1284,8 @@
 					</inlinemediaobject> button to move it into a new position in the table. The new order
 					displays both in the table and in the Choice Criteria box and reorders
 					the XML document as well.</para>
-			</sect3>
-			<sect3>
+			</section>
+			<section>
 				<title>Setting a Default Choice Action </title>
 				<para>The default action represents the course the Teiid Designer Server should take if none of the criteria you set evaluates to true.</para>
 			
@@ -1308,12 +1308,12 @@
 					</listitem>
 				</itemizedlist>
     			<para>Note: You must set a default action for your choice criteria.</para>
-			</sect3>
-		</sect2>
+			</section>
+		</section>
 		
 		<!-- ####### RECURSION EDITOR ######################################### -->
 		
-		<sect2 id="recursion-editor-section">
+		<section id="recursion-editor-section">
 			<title>Recursion Editor (XML)</title>
 			<para> Some <emphasis role="bold">XML schemas</emphasis> define data structures that contain
 				self-referencing elements or datatypes. When generating XML documents,
@@ -1357,7 +1357,7 @@
 				the recursive mapping class <xref linkend="mapping-transformation-diagram-section" />, mark the
 				transformation query as recursive, and specify the recursion limit
 				properties.</para>
-			<sect3>
+			<section>
 				<title>The Editor</title>
 				<para>The Recursion Editor lets you enable and limit recursion. The Recursion Editor button only displays on 
 				mapping classes, which have recursive patterns. For example, if you have an element named Employee which 
@@ -1439,11 +1439,11 @@
 				</note>
 				<para>When the Teiid Designer Server dynamically populates your XML documents at runtime, it will use the recursion
 					 specifications you entered here.</para>
-			</sect3>
-		</sect2>
+			</section>
+		</section>
 		
 		<!-- ####### OPERATIONS EDITOR ######################################### -->
-		<sect2 id="operation-editor-section">
+		<section id="operation-editor-section">
 			<title>Operation Editor</title>
 			<para>Editing of <emphasis role="bold">Web Service</emphasis> Operation
 				transformations is simplified via the <emphasis role="bold">Operation Editor</emphasis>. When editing
@@ -1496,6 +1496,6 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 </chapter>

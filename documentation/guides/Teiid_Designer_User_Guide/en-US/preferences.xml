@@ -19,7 +19,7 @@
 	
 	<!-- ####### MODELER PREFERENCES ######################################## -->
 	
-	<sect1 id="modeler-prefs">
+	<section id="modeler-prefs">
 		<title>Teiid Designer Preferences</title>
 		<para>General Teiid Designer preferences include.</para>
 		<itemizedlist>
@@ -76,7 +76,7 @@
 	
 		<!-- ####### DIAGRAM PREFERENCES ######################################## -->
 		
-		<sect2 id="diagram-prefs">
+		<section id="diagram-prefs">
 			<title>Diagram Preferences</title>
 			<para>Several diagram preferences are available to customize your diagrams. </para>
 			<itemizedlist>
@@ -116,11 +116,11 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
+		</section>
 		
 		<!-- ####### DIAGRAM PRINTING PREFERENCES ############################### -->
 		
-		<sect2 id="diagram-printing-prefs">
+		<section id="diagram-printing-prefs">
 			<title>Diagram Printing Preferences</title>
 			<para>Diagram print options are stored as preferences. These can be accessed through 
 			this preference page, by right-click on diagram <emphasis role="bold">Page Setup action</emphasis> <inlinemediaobject>
@@ -141,14 +141,14 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
+		</section>
 		
 		<!-- ####### EDITOR PREFERENCES ######################################### -->
 		
-		<sect2 id="editor-prefs">
+		<section id="editor-prefs">
 			<title>Editor Preferences</title>
 			<para></para>
-			<sect3 id="xml-doc-editor-prefs-section">
+			<section id="xml-doc-editor-prefs-section">
 				<title>XML Document Preferences</title>
 				<para><emphasis role="bold">XML Document Mapping Preferences</emphasis> provide ways to customize
 					 <xref linkend="mapping-diagram-section" /> and
@@ -161,8 +161,8 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			</sect3>
-			<sect3 id="table-editor-prefs-section">
+			</section>
+			<section id="table-editor-prefs-section">
 				<title>Table Editor Preferences</title>
 				<para><emphasis role="bold"><xref linkend="table-editor-section" /> Preferences</emphasis> provide a way to customize the order and the 
 					information content for each model object type.</para>
@@ -174,8 +174,8 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			</sect3>
-			<sect3 id="transformation-editor-prefs-section">
+			</section>
+			<section id="transformation-editor-prefs-section">
 				<title>Transformation Editor Preferences</title>
 				<para><emphasis role="bold"><xref linkend="transformation-editor-section" /> Preferences</emphasis> provide a way to customize SQL formatting, 
 					diagram layout, and default view entity properties.</para>
@@ -187,12 +187,12 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			</sect3>
-		</sect2>
+			</section>
+		</section>
 		
 		<!-- ####### VALIDATION PREFERENCES ##################################### -->
 		
-		<sect2 id="validation-prefs">
+		<section id="validation-prefs">
 			<title>Validation Preferences</title>
 			<para><emphasis role="bold">Validation Preferences</emphasis> provide a way to customize the severity
 				of some of the rules checked during model validation.</para>
@@ -233,6 +233,6 @@
 			<note><para>Increasing the severity level to error will prevent you from testing your VDB or
 				deploying a web service if violations of that preference are found
 				during validation.</para></note>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 </chapter>

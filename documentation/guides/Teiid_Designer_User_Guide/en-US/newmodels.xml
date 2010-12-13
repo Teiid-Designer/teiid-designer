@@ -143,7 +143,7 @@
 	
 	<!-- ####### RELATIONAL SOURCE MODEL ######################################## -->
 	
-	<sect1 id="new-relational-source-model">
+	<section id="new-relational-source-model">
 		<title>Creating New Relational Source Model</title>
 		<para></para>
 		<itemizedlist id="create-empty-relational-source-model-section">
@@ -190,7 +190,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="relational-source-copy-section">
+		<section id="relational-source-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -239,8 +239,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="relational-source-generate-from-uml-section">
+		</section>
+		<section id="relational-source-generate-from-uml-section">
 			<title>Generate From Existing UML Model</title>
 
 			<para>In the Teiid Designer you can also turn your existing UML models 
@@ -338,12 +338,12 @@
 				</listitem>
 			</itemizedlist>
 			
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### RELATIONAL VIEW MODEL ######################################## -->
 	
-	<sect1 id="new-relational-view-model">
+	<section id="new-relational-view-model">
 		<title>Creating New Relational View Model</title>
 		<para></para>
 		
@@ -395,7 +395,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="relational-view-copy-section">
+		<section id="relational-view-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -438,8 +438,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="relational-view-transform-from-model-section">
+		</section>
+		<section id="relational-view-transform-from-model-section">
 			<title>Transform From Existing Model</title>
 
 			<para>This option is only applicable for creating a relational view model from a relational source model 
@@ -448,8 +448,8 @@
 				<xref linkend="relational-view-copy-section" /> described above.</para>
 			<para>There is an additional option in the second page of the wizard which can automatically set the
 				relational table's supports update property to false. If this is unchecked the default value will be true.</para>
-		</sect2>
-		<sect2 id="relational-view-generate-from-uml-section">
+		</section>
+		<section id="relational-view-generate-from-uml-section">
 			<title>Generate From Existing UML Model</title>
 
 			<para>In the Teiid Designer you can also turn your existing UML models 
@@ -457,8 +457,8 @@
 				the <xref linkend="relational-source-generate-from-uml-section" /> with 
 				the one change of setting <emphasis role="bold">Model Type</emphasis> to <emphasis role="bold">View Model</emphasis> instead of 
 				<emphasis role="bold">Source Model</emphasis>.</para>
-		</sect2>
-		<sect2 id="relational-view-create-from-schema-section">
+		</section>
+		<section id="relational-view-create-from-schema-section">
 			<title>Create From XML Schema</title>
 
 			<para>In the Teiid Designer you can use your existing schema models to generate relational view tables.</para>
@@ -498,12 +498,12 @@
 				</listitem>
 			</itemizedlist>
 			<para>When model generation is complete the new model will be opened in an editor for your viewing.</para>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 		
 	<!-- ####### XML DOCUMENT VIEW MODEL ######################################## -->
 	
-	<sect1 id="new-xml-document-view-model">
+	<section id="new-xml-document-view-model">
 		<title>Creating XML Document View Model</title>
 		<para></para>
 		
@@ -552,7 +552,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="xml-document-view-copy-section">
+		<section id="xml-document-view-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -595,8 +595,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="xml-document-view-from-schema-section">
+		</section>
+		<section id="xml-document-view-from-schema-section">
 			<title>Build XML Documents From XML Schema </title>
 
 			<para>This option creates an XML View document model based on a selected XML schema and its dependencies.</para>
@@ -692,12 +692,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 
 	<!-- ####### XML SCHEMA (XSD) MODEL ######################################## -->
 	
-	<sect1 id="new-xml-schema-model">
+	<section id="new-xml-schema-model">
 		<title>Creating XML Schema Model</title>
 		<para></para>
 		
@@ -743,7 +743,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="xml-schema-copy-section">
+		<section id="xml-schema-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -786,12 +786,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### WEB SERVICE MODEL ######################################## -->
 	
-	<sect1 id="new-web-service-view-model">
+	<section id="new-web-service-view-model">
 		<title>Creating Web Service View Model</title>
 		<para></para>
 		
@@ -840,7 +840,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="web-service-view-copy-section">
+		<section id="web-service-view-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -883,8 +883,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="web-service-view-from-wsdl-section">
+		</section>
+		<section id="web-service-view-from-wsdl-section">
 			<title>Build From Existing WSDL File(s) or URL</title>
 
 			<para>This builder option creates a Web service model based on a user-defined WSDL file and its referenced schemas.
@@ -909,8 +909,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="web-service-view-from-relational-section">
+		</section>
+		<section id="web-service-view-from-relational-section">
 			<title>Build From Relational Models</title>
 
 			<para>This method is recommended for experienced users for consistent and rapid deployment of <emphasis role="bold">Web</emphasis> 
@@ -977,8 +977,8 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-		<sect2 id="web-service-view-from-xml-doc-section">
+		</section>
+		<section id="web-service-view-from-xml-doc-section">
 			<title>Build From XML Document View Models</title>
 
 			<para>Web Service models and their corresponding <emphasis role="bold">Interfaces</emphasis> and 
@@ -1037,12 +1037,12 @@
 					use existing <emphasis role="bold">Web service</emphasis> model components. This will create a new 
 					operation in an existing model.</para>
 			</note>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### EXTENSION MODEL ######################################## -->
 	
-	<sect1 id="new-extension-model">
+	<section id="new-extension-model">
 		<title>Creating New Extensions Model</title>
 		<para></para>
 		
@@ -1088,7 +1088,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="extensions-copy-section">
+		<section id="extensions-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -1131,12 +1131,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### RELATIONSHIPS MODEL ######################################## -->
 	
-	<sect1 id="new-relationships-model">
+	<section id="new-relationships-model">
 		<title>Creating New Relationship Model</title>
 		<para></para>
 		
@@ -1182,7 +1182,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="relationships-copy-section">
+		<section id="relationships-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -1230,12 +1230,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### RELATIONAL SOURCE MODEL ######################################## -->
 	
-	<sect1 id="new-uml-model">
+	<section id="new-uml-model">
 		<title>Creating New UML 2.0 Model</title>
 		<para></para>
 		
@@ -1281,7 +1281,7 @@
 			</listitem>
 		</itemizedlist>
 		
-		<sect2 id="uml-copy-section">
+		<section id="uml-copy-section">
 			<title>Copy From Existing Model</title>
 
 			<para>This builder option performs a structural copy of the contents of an existing 
@@ -1324,6 +1324,6 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 </chapter>

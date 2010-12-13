@@ -82,12 +82,12 @@
 	<!--
 		####### MODEL SUB_EDITORS #########################################
 	-->
-	<sect1 id="model-editors-section">
+	<section id="model-editors-section">
 		<title>Model Editor</title>
 		<para>The Model Editor is comprised of sub-editors which provide multiple views of your data. The Diagram Editor provides 
 			a graphical while the Table Editor provides spreadsheet-like editing capabilities.  This section describes these various
 			sub-editors.</para>
-		<sect2 id="diagram-editor-section">
+		<section id="diagram-editor-section">
 			<title>Diagram Editor</title>
 			<para>The Diagram Editor  provides a graphical view of the a set of model components and their relationships.</para>
 			
@@ -221,7 +221,7 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-			<sect3 id="package-diagram-section">
+			<section id="package-diagram-section">
 				<title>Package Diagram</title>
 				<para>The Package Diagram provides a graphical view of the contents of a model container, be it the model itself, a relational catalog or schema.</para>
 				<figure id="package-diagram-image">
@@ -309,8 +309,8 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			</sect3>
-			<sect3 id="custom-diagram-section">
+			</section>
+			<section id="custom-diagram-section">
 				<title>Custom Diagram</title>
 				<para>The <emphasis role="bold">Custom Diagram</emphasis> represents a view of user-defined model
 					objects. Unlike <emphasis role="bold">Package Diagrams</emphasis>, <emphasis role="bold">Custom Diagrams</emphasis> 
@@ -412,8 +412,8 @@
 					contents of container objects(i.e. Model, Category, Schema, etc...)
 					its <emphasis role="bold">context menus</emphasis> are limited to adding/removing objects from diagram
 					and basic diagram-related display options.</para>
-			</sect3>
-			<sect3 id="transformation-diagram-section">
+			</section>
+			<section id="transformation-diagram-section">
 				<title>Transformation Diagram</title>
 				<para>The <emphasis role="bold">Transformation Diagram</emphasis> represents a view of the relationships defined by the 
 					source inputs described in a view table's SQL transformation.</para>
@@ -527,8 +527,8 @@
 					</listitem>
 				</itemizedlist>
 				<para><emphasis role="bold">Context menus</emphasis> for the </para>
-			</sect3>
-			<sect3 id="mapping-diagram-section">
+			</section>
+			<section id="mapping-diagram-section">
 				<title>Mapping Diagram</title>
 				<para>The <emphasis role="bold">Mapping Diagram</emphasis> represents a view of the mapping between virtual mapping
 					class columns and XML document elements. This mapping defines how source data is transformed from row-based results into
@@ -649,8 +649,8 @@
 				<para><emphasis role="bold">Context menus</emphasis> for <emphasis role="bold">Mapping Diagrams</emphasis> provide Edit capability
 					to the mapping class in addition to mapping class manipulation actions
 					(i.e. Merge Mapping Classes, Split Mapping Class, etc..)</para>
-			</sect3>
-			<sect3 id="mapping-transformation-diagram-section">
+			</section>
+			<section id="mapping-transformation-diagram-section">
 				<title>Mapping Transformation Diagram</title>
 				<para>The <emphasis role="bold">Mapping Transformation Diagram</emphasis> is identical to a Transformation Diagram except for 
 					displaying an Input Set and possibily Staging Tables as sources for the Mapping Class's transformation.</para>
@@ -769,8 +769,8 @@
 				</itemizedlist>
 				<para><emphasis role="bold">Context menus</emphasis> for <emphasis role="bold">Mapping Transformation Diagrams</emphasis> identical
 					capabilities to the Transformation Diagram with the addition of managing and editing Input Sets.</para>
-			</sect3>
-			<sect3 id="relationship-diagram-section">
+			</section>
+			<section id="relationship-diagram-section">
 				<title>Relationship Diagram</title>
 				<para>The <emphasis role="bold">Relationship Diagram</emphasis> represents a view of relationships between sources and targets 
 					defined in your Relationship models as well as the relationships and hierarchy between relationship types.</para>
@@ -823,9 +823,9 @@
 						</para>
 					</listitem>
 				</itemizedlist>
-			</sect3>
-		</sect2>
-		<sect2 id="table-editor-section">
+			</section>
+		</section>
+		<section id="table-editor-section">
 			<title>Table Editor</title>
 			<para>The <emphasis role="bold">Table Editor</emphasis> provides a table-based object type
 			structured view of the contents of a model. The figure below shows a
@@ -892,7 +892,7 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<sect3>
+			<section>
 				<title>Editing Properties</title>
 				<para>You can edit properties for an object by double-clicking a table cell.</para>
 				<para>For String properties, the table cell will become an in-place text editor field.</para>
@@ -939,8 +939,8 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			</sect3>
-			<sect3>
+			</section>
+			<section>
 				<title>Inserting Table Rows</title>
 				<para>The Insert Rows action provides an additional way to create objects in a model. Insert Rows action performs the same function as Insert SIbling action, but allows you to create multiple children at the same time. All new rows will correspond to an object of the same type as the selected object and be located under the same parent as the selected object.</para>
 				<para>To Insert Rows in a table: </para>
@@ -957,9 +957,9 @@
 				<para><emphasis role="bold">Step 3:</emphasis> Edit the Number of Rows value in the dialog, or use the up/down buttons to change the value.</para>
 				<para><emphasis role="bold">Step 4:</emphasis> Select OK in dialog.</para>
 				<para>The desired number of rows (new model objects) will be added after the original selected table row. </para>
-			</sect3>
-		</sect2>
-		<sect2 id="datatypes-editor-section">
+			</section>
+		</section>
+		<section id="datatypes-editor-section">
 			<title>Simple Datatypes Editor</title>
 			<para>The Simple Datatype Editor  provides a form-based properties view of XML Schema data.</para>
 			<figure id="datatypes-editor-image">
@@ -970,16 +970,16 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-		<sect2 id="semantic-editor-section">
+		</section>
+		<section id="semantic-editor-section">
 			<title>Semantic Editor</title>
 			<para>The Semantic Editor is a tree based editor for XML Schema elements and attributes.</para>
-		</sect2>
-		<sect2 id="source-editor-section">
+		</section>
+		<section id="source-editor-section">
 			<title>Source Editor</title>
 			<para>The Source Editor is a simple text editor which is aware of XML Schema formatting rules.</para>
-		</sect2>
-		<sect2 id="model-object-editors-sub-section">
+		</section>
+		<section id="model-object-editors-sub-section">
 			<title>Model Object Editors</title>
 			<para>The Model Object Editors represent specialized sub-editors which are available for specific
 				model object types.</para>
@@ -998,10 +998,10 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
-	</sect1>
-	<sect1 id="vdb-editor-section">
+	</section>
+	<section id="vdb-editor-section">
 		<title>VDB Editor</title>
 		<para>A <emphasis role="bold">VDB</emphasis>, or  <emphasis role="bold">virtual database</emphasis> is a container 
 			for components used to integrate data from multiple data sources, so that they can be accessed in a federated manner 
@@ -1036,7 +1036,7 @@
 			</mediaobject>
 		</figure>
 		
-		<sect2 id="editing-data-roles-section">
+		<section id="editing-data-roles-section">
 			<title>Editing Data Roles</title>
 			<para>Teiid Designer provides a means to create, edit and manage data roles specific 
 				to a VDB. Once deployed within a Teiid server with the security option turned on 
@@ -1065,8 +1065,8 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
+		</section>
 
-	</sect1>
+	</section>
     
 </chapter>

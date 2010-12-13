@@ -41,7 +41,7 @@
 		
 	<!-- ####### MODEL EXPLORER VIEW ######################################### -->
   
-	<sect1 id="model-explorer-view">
+	<section id="model-explorer-view">
 		<title>Model Explorer View</title>
 
 				
@@ -172,7 +172,7 @@
 				</mediaobject>
 			</figure>
 		</para>
-		<sect2 id="model-explorer-selection-menus">
+		<section id="model-explorer-selection-menus">
 			<title>Selection-Based Action Menus</title>
 			<para> Selecting specific objects in the <emphasis role="bold">Model Explorer</emphasis> provides a
 				context from which the Teiid Designer presents a customized menu of
@@ -192,12 +192,12 @@
 				</figure>
 			</para>
 				
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### OUTLINE VIEW ######################################### -->
 	
-    <sect1 id="outline-view">
+    <section id="outline-view">
       	<title>Outline View</title>
 		<para>The Outline View is a utility view which provides both at tree
 			view dedicated to a specific model (open in an editor) and a scaled
@@ -209,7 +209,7 @@
 			tree will be the model for the editor that is currently in focus in
 			Teiid Designer (tab on top).</para>
 
-		<sect2 id="outline-tree-view">
+		<section id="outline-tree-view">
 			<title>Outline Tree View</title>
 			<para>This tree view provides the same basic editing and navigation
 				behavior as the Model Explorer. One additional capability is the drag
@@ -223,8 +223,8 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
-		<sect2 id="outline-thumbnail-view">
+		</section>
+		<section id="outline-thumbnail-view">
 			<title>Outline Thumbnail View</title>
 			<para>The Outline View also offers you a way to view a thumbnail
 				sketch of your diagram regardless of its size. To view this diagram
@@ -252,13 +252,13 @@
 						<imagedata fileref="images/screencaps/thumbnail-and-diagram-editor.png"/>
 					</imageobject>
 				</mediaobject>
-		</sect2>
-    </sect1> 
+		</section>
+    </section> 
     
     
     <!-- ####### TEIID VIEW ######################################### -->
     
-	<sect1 id="teiid-view">
+	<section id="teiid-view">
 		<title>Teiid View</title>
 		<para>
 			The Teiid View provides a means to display and manage Teiid server instances 
@@ -309,11 +309,11 @@
 			<listitem><para>Execute VDB - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
 		   <listitem><para>Undeploy VDB - Removes the selected VDB from the Teiid instance</para></listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### PROPERTIES VIEW ######################################### -->
 	
-    <sect1 id="properties-view">
+    <section id="properties-view">
 	    <title>Properties View</title>
 		<para>
 			The
@@ -389,11 +389,11 @@
 				</listitem>
 			</itemizedlist>
 		</para>
-    </sect1>
+    </section>
     
     <!-- ####### DESCRIPTION VIEW ######################################### -->
     
-	<sect1 id="description-view">
+	<section id="description-view">
 		<title>Description View</title>
 		<para>
 			The
@@ -425,10 +425,10 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
 	<!-- ####### MODEL EDITORS VIEW ######################################### -->
-	<sect1 id="editors-view">
+	<section id="editors-view">
 		<title>Editors</title>
 		<para><emphasis role="bold">Editors</emphasis> are the UI components designed to assist
 			editing your models and to maintain the state for a given model or
@@ -501,11 +501,11 @@
 				<para><emphasis role="bold">Operation Editor</emphasis> - Manages SQL and Input Variables for Web Service Operations.</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
     
 	<!-- ####### PROBLEMS VIEW ######################################### -->
     
-	<sect1 id="problems-view">
+	<section id="problems-view">
 		<title>Problems View</title>
 		<para>The <emphasis role="bold">Problems View</emphasis> displays validation errors, 
 			warnings, or information associated with a resource contained in open projects 
@@ -570,7 +570,7 @@
 			</orderedlist>
 		</para>
 		
-		<sect2 id="problems-view-toolbar-items">
+		<section id="problems-view-toolbar-items">
 			<title>Toolbar Menu</title>
 			<para>Click the upside-down triangle 
 			<inlinemediaobject>
@@ -580,8 +580,8 @@
 			</inlinemediaobject> icon to open the View Menu icon to see various options including 
 				sorting, filtering, displayed columns and much more.
 			</para>
-		</sect2>
-		<sect2 id="problems-view-context-menu">
+		</section>
+		<section id="problems-view-context-menu">
 			<title>Context Menu</title>
 			<para>Additional actions are available by selecting a
 				problem and right-click to open a context menu.</para>
@@ -647,12 +647,12 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 	<!-- ####### MESSAGE LOG VIEW ######################################### -->
 	
-	<sect1 id="message-log-view">
+	<section id="message-log-view">
 		<title>Message Log View</title>
 		<para>
 			The
@@ -681,11 +681,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 
     <!-- ####### SEARCH RESULTS VIEW  ############################################# -->
     
-	<sect1 id="search-results-view">
+	<section id="search-results-view">
 		<title>Search Results View</title>
 		<para>Below is an example set of search results. The view
 			contains rows representing matches for your search parameters. You
@@ -773,11 +773,11 @@
 				</mediaobject>
 			</figure>
 		</para>
-	</sect1>
+	</section>
 	
 	<!-- ####### DATATYPE HIERARCHY VIEW  ############################################# -->
 	
-	<sect1 id="datatypes-view">
+	<section id="datatypes-view">
 		<title>Datatype Hierarchy View</title>
 		<para>
 			To open
@@ -797,11 +797,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
 	<!-- ####### MODEL CLASSES VIEW  ############################################# -->
 	
-    <sect1 id="model-classes-view">
+    <section id="model-classes-view">
       <title>Teiid Model Classes View</title>
       <para>The Model Classes View provides a hiearchical EMF-centric view of the 
       	various metamodel classes available within Teiid Designer. This view is primarily
@@ -816,11 +816,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-    </sect1>
+    </section>
     
     <!-- ####### SYSTEM CATALOG VIEW  ############################################# -->
     
-	<sect1 id="system-catalog-view">
+	<section id="system-catalog-view">
 		<title>System Catalog View</title>
 		<para>
 			To open
@@ -840,6 +840,6 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
     
 </chapter>

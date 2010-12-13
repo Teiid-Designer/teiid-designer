@@ -16,7 +16,7 @@
 	
 	<!-- ####### MANAGE CONNECITON PROFILES ######################################### -->
 	
-	<sect1 id="manage-connection-profiles-section">
+	<section id="manage-connection-profiles-section">
 		<title>Manage Connection Profiles</title>
 		<para>Teiid Designer utilizes the Eclipse Datatools' Connection Profile framework for connection management. Connection Profiles
 			provide a mechanism to connect to JDBC and non-JDBC sources to access metadata for constructing metadata source models.
@@ -30,11 +30,11 @@
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>
-	</sect1>
+	</section>
 
 	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
 	
-	<sect1 id="test-preview-data-section">
+	<section id="test-preview-data-section">
 		<title>Previewing Data For a Model</title>
 		<para>Designing and working with data is often much easier when you can see the information 
 			you're working with.  The Designer's Preview Data feature makes this possible and allows 
@@ -106,7 +106,7 @@
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
 		
-		<sect2>
+		<section>
 			<title>Preview Relational Table or View</title>
 			<para></para>
 			<itemizedlist>
@@ -139,11 +139,11 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW WITH ACCESS PATTERNS ######################################### -->
 		
-		<sect2>
+		<section>
 			<title>Preview Relational Table With Access Pattern</title>
 			<para></para>
 			<itemizedlist>
@@ -190,11 +190,11 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### PREVIEW DATA - RELATIONAL PROCEDURE ######################################### -->
 		
-		<sect2>
+		<section>
 			<title>Preview Relational Procedure</title>
 			<para></para>
 			<itemizedlist>
@@ -241,11 +241,11 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### PREVIEW DATA - WEB SERVICE OPERATION ######################################### -->
 		
-		<sect2>
+		<section>
 			<title>Preview Web Service Operation</title>
 			<para></para>
 			<itemizedlist>
@@ -292,9 +292,9 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
-		<sect2 id="preview-results-section">
+		<section id="preview-results-section">
 			<title>Sample SQL Results for Preview Data</title>
 			<para>Prevew Data results are displayed in the Eclipse Datatools SQL Results view as shown below.
 				Note there are a number of display preference and filter options for this view via toolbar buttons and the dropdown menu.			
@@ -307,13 +307,13 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-		</sect2>
+		</section>
 
-	</sect1>
+	</section>
 	
 	<!-- ####### TEST MODELS IN VDB ######################################### -->
 	
-	<sect1 id="test-vdb-section">
+	<section id="test-vdb-section">
 		<title>Testing With Your VDB</title>
 		<para>In Teiid Designer you can execute a VDB to test/query actual data.</para>
 		<para>The requirements for VDB execution are:</para>
@@ -333,7 +333,7 @@
 		<para></para>
 
 		<!-- ####### CREATE DATA SOURCE ######################################### -->
-		<sect2 id="creating-data-sources">
+		<section id="creating-data-sources">
 			<title>Creating Data Sources</title>
 			<para>The mechanism by which VDBs are able to query actual data sources is the Data Source. These are deployed
 				 configurations backed by database or source connection jars. Each source model referenced within a VDB requiries
@@ -360,10 +360,10 @@
 				Info option) or check the Use Model Info option and select an existing source model containing connection info.</para>
 			<para>After creating your new data source it should now be shown in the <emphasis>Data Sources</emphasis> folder of the corresponding 
 				Teiid server.</para>
-		</sect2>
+		</section>
 		
 		<!-- ####### EXECUTE VDB IN MODEL EXPLORER ######################################### -->
-		<sect2 id="execute-vdb-in-model-explorer">
+		<section id="execute-vdb-in-model-explorer">
 			<title>Execute VDB from Model Explorer</title>
 			<para></para>
 			<itemizedlist>
@@ -415,10 +415,10 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
+		</section>
 		
 		<!-- ####### Deploy VDB from Model Explorer ######################################### -->
-		<sect2 id="deploy-vdb-from-model-explorer">
+		<section id="deploy-vdb-from-model-explorer">
 			<title>Deploy VDB from Model Explorer</title>
 			<para>You can also deploy your VDB first by selecting it in the Model Explorer 
 				and dragging/dropping it onto a connected Teiid instance in the Teiid view, 
@@ -441,10 +441,10 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-		</sect2>
+		</section>
 		
 		<!-- ####### Executing a Deployed VDB ######################################### -->
-		<sect2 id="executing-a-deployed-vdb">
+		<section id="executing-a-deployed-vdb">
 			<title>Executing a Deployed VDB</title>
 			<para>To execute a VDB, that's been deployed manually, follow the steps below:</para>
 			<itemizedlist>
@@ -530,7 +530,7 @@
 					</para>
 				</listitem>
 			</itemizedlist>
-		</sect2>
-	</sect1>
+		</section>
+	</section>
 	
 </chapter>

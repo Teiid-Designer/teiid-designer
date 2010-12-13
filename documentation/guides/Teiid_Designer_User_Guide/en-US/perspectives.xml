@@ -17,7 +17,7 @@
 		making your own custom perspective that you can open again later.
 	</para>
 	
-	<sect1 id="teiid-perpective-section">
+	<section id="teiid-perpective-section">
 		<title>Teiid Designer Perspective</title>
 		<para>The Teiid Designer perspective provides access to fundamental 
 			model editing and management capabilities. This perspective includes 
@@ -53,8 +53,8 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>	
-	<sect1 id="opening-perspective-section">
+	</section>	
+	<section id="opening-perspective-section">
 		<title>Opening a Perspective</title>
 		<para>There are two ways to open a perspective:</para>
 		<itemizedlist>
@@ -149,10 +149,10 @@
 				</figure>
 			</listitem>
 		</itemizedlist>
-	</sect1>
-	<sect1>
+	</section>
+	<section>
 	   <title>Further information</title>
 	   <para>For more details on perspectives, views and other Eclipse workbench details, see formal
 	      <ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
-	</sect1>
+	</section>
 </chapter>
