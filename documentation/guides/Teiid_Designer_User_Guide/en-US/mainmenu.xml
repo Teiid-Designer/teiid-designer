@@ -54,7 +54,7 @@
 	
 	<!-- ####### FILE MENU ######################################## -->
 
-	<sect1 id="file-menu-section">
+	<section id="file-menu-section">
 		<title>File Menu</title>
 		<para>The <emphasis role="bold">File</emphasis> menu provides actions to manage your workspace resources.</para>
 		<figure>
@@ -253,11 +253,11 @@
 			</listitem>
 		</itemizedlist>
 		
-	</sect1>
+	</section>
 	
 	<!-- ####### EDIT MENU ######################################## -->
 
-	<sect1 id="edit-menu-section">
+	<section id="edit-menu-section">
 		<title>Edit Menu</title>
 		<para>The <emphasis role="bold">Edit</emphasis> menu provides actions to manage the content, structure and 
 			properties of your model and project resources. </para>
@@ -404,11 +404,11 @@
 			</listitem>
 		</itemizedlist>
 		
-	</sect1>
+	</section>
 	
 	<!-- ####### REFACTOR MENU ######################################## -->
 
-	<sect1 id="refactor-menu-section">
+	<section id="refactor-menu-section">
 		<title>Refactor Menu</title>
 		<para>The <emphasis role="bold">Refactor</emphasis> menu provides Teiid Designer specific actions for file-level changes
 			to the models.</para>
@@ -449,10 +449,10 @@
 			</listitem>
 		</itemizedlist>
 		
-	</sect1>
+	</section>
 	<!-- ####### NAVIGATE MENU ######################################## -->
 
-	<sect1 id="navigate-menu-section">
+	<section id="navigate-menu-section">
 		<title>Navigate Menu</title>
 		<para>Teiid Designer currently does not contribute actions to the Navigate menu. See Eclipse documention for details.</para>
 		
@@ -464,11 +464,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
 	<!-- ####### SEARCH MENU ######################################## -->
 
-	<sect1 id="search-menu-section">
+	<section id="search-menu-section">
 		<title>Search Menu</title>
 		<para>The <emphasis role="bold">Search</emphasis> menu presents several specific search options.</para>
 		
@@ -547,11 +547,11 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### PROJECT MENU ######################################## -->
 
-	<sect1 id="project-menu-section">
+	<section id="project-menu-section">
 		<title>Project Menu</title>
 		<figure>
 			<title>Project Menu</title>
@@ -640,11 +640,11 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
 	<!-- ####### METADATA MENU ######################################## -->
 
-	<sect1 id="metadata-menu-section">
+	<section id="metadata-menu-section">
 		<title>Metadata Menu</title>
 		<para>The <emphasis role="bold">Metadata</emphasis> menu provides Teiid Designer-specific actions.</para>
 		
@@ -709,11 +709,11 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 
 	<!-- ####### RUN MENU ######################################## -->
 
-	<sect1 id="run-menu-section">
+	<section id="run-menu-section">
 		<title>Run Menu</title>
 		<para>Teiid Designer currently does not contribute actions to the Run menu. See Eclipse documention for details.</para>
 		
@@ -725,11 +725,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>	
+	</section>	
 	
 	<!-- ####### WINDOW MENU ######################################## -->
 
-	<sect1 id="window-menu-section">
+	<section id="window-menu-section">
 		<title>Window Menu</title>
 		<para>The <emphasis role="bold">Window</emphasis> menu shown below contains no Teiid Designer-specific actions. See
 			Eclipse Workbench documentation for details.</para>
@@ -759,11 +759,11 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
 	<!-- ####### HELP MENU ######################################## -->
 
-	<sect1 id="help-menu-section">
+	<section id="help-menu-section">
 		<title>Help Menu</title>
 		<para>The <emphasis role="bold">Help Menu</emphasis> menu menu shown below contains no Teiid Designer-specific actions. See
 			Eclipse Workbench documentation for details.</para>
@@ -840,6 +840,6 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 
 </chapter>

@@ -30,7 +30,7 @@
 		for relationships based on some criteria, or diagramming the
 		relationship of various sets of objects</para>
 	
-	<sect1 id="create-relationship-section">
+	<section id="create-relationship-section">
 		<title>Creating Relationships</title>
 		<para></para>
 		<itemizedlist>
@@ -157,9 +157,9 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-	</sect1>
+	</section>
 	
-	<sect1 id="create-relationship-type-section">
+	<section id="create-relationship-type-section">
 		<title>Creating your own Relationship Type</title>
 		<para></para>
 				<itemizedlist>
@@ -267,9 +267,9 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
-	<sect1 id="relationship-navigator-section">
+	<section id="relationship-navigator-section">
 		<title>Relationship Navigator </title>
 		<para>
 			A <emphasis role="bold">Relationship Navigator</emphasis>
@@ -362,5 +362,5 @@
 			the relationship containing the initial focused object.</para>
 		<para> The navigator also provides toolbar and right-click menu actions
 			to perform various functions in the navigator.</para>
-	</sect1>
+	</section>
 </chapter>

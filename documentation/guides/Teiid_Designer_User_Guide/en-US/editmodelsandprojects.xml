@@ -10,7 +10,7 @@
 		<emphasis role="bold">Save As...</emphasis> and one project-related action, <emphasis role="bold">Clone Project</emphasis>. 
 		These actions are described below. </para>
 	
-	<sect1 id="rename-model-section">
+	<section id="rename-model-section">
 		<title>Rename A Model</title>
 		<para></para>
 		<itemizedlist>
@@ -56,9 +56,9 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
-	<sect1 id="move-model-section">
+	<section id="move-model-section">
 		<title>Move Model</title>
 		<para></para>
 		<itemizedlist>
@@ -97,9 +97,9 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
-	<sect1 id="save-as-modelsection">
+	<section id="save-as-modelsection">
 		<title>Save Copy of Model</title>
 		<para>The <emphasis role="bold">Save As...</emphasis> action performs a similar function as the 
 			<emphasis role="bold">Refactor > Rename</emphasis> action except the renamed model is a structural copy of the original model.</para>
@@ -165,9 +165,9 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 	
-	<sect1 id="clone-project-section">
+	<section id="clone-project-section">
 		<title>Clone Project</title>
 		<para>Because each instance of of a model contains a unique ID and each object in each model contains a unique ID,
 			copying a project is a delicate task. For this reason, the Clone Project action was created to manage the creation
@@ -263,6 +263,6 @@
 				</para>
 			</listitem>
 		</itemizedlist>
-	</sect1>
+	</section>
 </chapter>
 	
