@@ -630,11 +630,12 @@
 					<para>A single <emphasis role="bold">view model</emphasis> containing a <emphasis role="bold">catalog</emphasis> named after the operation 
 					declared in the WSDL.  For a WSDL with multiple <emphasis role="bold">wsdl:operation</emphasis> declarations, the importer would create
 					multiple catalogs.  The <emphasis role="bold">catalog</emphasis> contains procedure declarations that use the <emphasis role="bold">SQLXML</emphasis> calls
-					supported by Teiid to create and parse the XML defined as the operation messages.   
+					   supported by Teiid to create and parse the XML defined as the operation messages.</para>   
 				</listitem>
 			</itemizedlist>
 			</para>
-		<figure>  		
+		<figure>  
+		   <title>Importing the WSDL file into the Model Explorer</title>
 	  		<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/screencaps/import-wsdl-into-rel-model-explorer.png"/>
