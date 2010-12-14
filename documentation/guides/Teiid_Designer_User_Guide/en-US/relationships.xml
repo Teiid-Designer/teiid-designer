@@ -148,7 +148,7 @@
 		</itemizedlist>
 		<para>To create a relationship from the <xref linkend="model-explorer-view" /> tree, select two or more 
 			objects in the tree, right-click select <emphasis role="bold">New Association > Relationship</emphasis> action 
-			and follow <emphasis role="bold">Steps 3 thru 8</emphasis> described above.</para>
+			and follow <emphasis role="bold">Steps 3 through 8</emphasis> described above.</para>
 		<figure>
 			<title>New Relationship Action in Model Explorer</title>
 			<mediaobject>

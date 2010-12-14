@@ -71,7 +71,7 @@
 					<para> JDBC / SQL</para>
 				</listitem>
 				<listitem>
-					<para> ODBC / SQ</para>
+					<para> ODBC / SQL</para>
 				</listitem>
 			</itemizedlist>
 		</para>
@@ -142,7 +142,7 @@
 			<para> A <emphasis role="bold">metadata model</emphasis> represents a collection of metadata information
 				that describes a complete structure of data.</para>
 			<para> In a previous example we described the field ZIPCode as a
-				<emphasis role="bold">metadata object</emphasis> in an address book database.. This <emphasis role="bold">meta object</emphasis>
+				<emphasis role="bold">metadata object</emphasis> in an address book database. This <emphasis role="bold">meta object</emphasis>
 				represents a single distinct bit of metadata information. We alluded
 				to its parent table, StreetAddress. These <emphasis role="bold">meta objects</emphasis>, and others
 				that would describe the other tables and columns within the database,
@@ -152,7 +152,7 @@
 				These model physical data storage locations. You can also have
 				<emphasis role="bold">View Models</emphasis>, which model the business view of the data. Each contains
 				one type of metadata or another. For more information about difference
-				between Source and View metadata, see “Source and View Metadata.”
+				   between Source and View metadata, see <emphasis>Source and View Metadata</emphasis>.
 			</para>
 			<para> 
 				<emphasis role="italic">NOTE: For detailed information about creating models from your
@@ -315,13 +315,13 @@
 				Source Metadata can contain both technical and business metadata. When
 				you model Source Metadata, you are modeling the data that your
 				enterprise information systems contain. For more information, see
-				“Modeling Your Teiid Designer Information Systems.”</para>
+				   <emphasis>Modeling Your Teiid Designer Information Systems</emphasis>.</para>
 			<para> View Metadata, on the other hand, represent tailored views that
 				<emphasis role="bold">transform</emphasis> the <emphasis role="bold">Source Metadata</emphasis> into the terminology and domain of
 				different applications. <emphasis role="bold">View Metadata</emphasis>, too, can contain both technical
 				and business metadata. When you model <emphasis role="bold">View Metadata</emphasis>, you’re modeling
 				the data as your applications (and your enterprise) ultimately use it.
-				For more information, see “<emphasis role="bold">Modeling Your Teiid Designer Data Needs</emphasis>.”
+				For more information, see <emphasis role="bold">Modeling Your Teiid Designer Data Needs</emphasis>.
 			</para>
 			<section id="modeling-source-metadata">
 				<title>Modeling Your Source Metadata</title>
@@ -357,7 +357,7 @@
 					information, a comma-separated text file provided by a marketing
 					research vendor. This text file can supply additional demographic
 					information based upon address or ZIP code. This text file would
-					represent another EIS, and the meta objects in its Source Model would
+					represent another Enterprise Information System (EIS), and the meta objects in its Source Model would
 					describe each comma-separated value.</para>
 			</section>
 			<section id="modeling-view-metadata">
@@ -491,7 +491,7 @@
 				relationships between those entities, required to fully define the
 				integration of information sets so that they may be accessed in a
 				uniform manner, using a single API and access protocol. The file
-				extension used for these models is '.xmi' ( Example:
+				   extension used for these models is <filename>.xmi</filename> ( Example:
 				NorthwindOracle.xmi ) which adheres to the XMI syntax defined by the
 				OMG.</para>
 			<para> Below is an example of the partial contents of a model file.
@@ -688,8 +688,8 @@
 				</listitem>
 			</itemizedlist>
 			<note>
-				<para>If attempting to preview a relational access patter, a web service operation or a relational procedure
-					with input parameters, a dialog will be presented to request values for required parameters.</para>
+				<para>If attempting to preview a relational access pattern, a web service operation or a relational procedure
+					with input parameters, a dialog will request values for required parameters.</para>
 			</note>
 		</section>
 	</section>

@@ -296,7 +296,7 @@
 		
 		<section id="preview-results-section">
 			<title>Sample SQL Results for Preview Data</title>
-			<para>Prevew Data results are displayed in the Eclipse Datatools SQL Results view as shown below.
+			<para>Preview Data results are displayed in the Eclipse Datatools SQL Results view as shown below.
 				Note there are a number of display preference and filter options for this view via toolbar buttons and the dropdown menu.			
 			</para>
 				<figure>

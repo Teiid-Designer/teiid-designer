@@ -55,7 +55,7 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing DDL from either 
-								"Choose from file system..." or "Choose from workspace...". set the Model 
+							   <guimenuitem>Choose from file system...</guimenuitem> or <guimenuitem>Choose from workspace...</guimenuitem>. set the Model 
 								folder location, enter or select valid model name, set Model type (Source Model or View Model), 
 								set desired options and click <emphasis>NEXT></emphasis> (or <emphasis>FINISH></emphasis> if enabled)</para>
 							<figure>
@@ -94,7 +94,7 @@
 			   <para>You can create relational source models from your JDBC source schema data using the steps below.</para>
 					<note>
 						<para>Depending the detail provided in the database
-							connection url information and schema, Steps 5 thru 7 may not be
+							connection url information and schema, Steps 5 through 7 may not be
 							required.</para>
 					</note>
 					<itemizedlist>
@@ -121,9 +121,9 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
-								connection profile from the drop-down selector or press "<emphasis>New...</emphasis>" button to launch 
-								the "<emphasis>New Connection Profile</emphasis>" dialog (See Eclispe Data Tools documentation) 
-								or "<emphasis>Edit...</emphasis>" to modify/change an existing connection profile prior to selection.</para>
+								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.</para>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
@@ -189,7 +189,7 @@
 					</itemizedlist>
 			</listitem>
 		</itemizedlist>
-		<para>During the "<emphasis>Finish</emphasis>" processing, a monitor will be 
+		<para>During the <emphasis>Finish</emphasis> processing, a monitor will be 
 			displayed providing feedback on the import progress.</para>
 		<figure>
 			<title>JDBC Import Progress Dialog</title>
@@ -284,7 +284,7 @@
 						<itemizedlist>
 							<listitem>
 								<para>
-									Perform <emphasis role="bold">Steps 1 thru 3</emphasis> (above) 
+									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
 									and select the <emphasis role="bold">Relational Tables</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
@@ -346,7 +346,7 @@
 						<itemizedlist>
 							<listitem>
 								<para>
-									Perform <emphasis role="bold">Steps 1 thru 3</emphasis> (above) 
+									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
 									and select the <emphasis role="bold">Relational Virtual Tables</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
@@ -407,7 +407,7 @@
 						<itemizedlist>
 							<listitem>
 								<para>
-									Perform <emphasis role="bold">Steps 1 thru 3</emphasis> (above) 
+									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
 									and select the <emphasis role="bold">Relationships</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
@@ -468,7 +468,7 @@
 						<itemizedlist>
 							<listitem>
 								<para>
-									Perform <emphasis role="bold">Steps 1 thru 3</emphasis> (above) 
+									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
 									and select the <emphasis role="bold">Datatypes</emphasis> import type, 
 									then click <emphasis role="bold">Next ></emphasis>
 								</para>
@@ -500,7 +500,7 @@
 								<para>
 									<emphasis role="bold">Step 5 </emphasis>
 									- Select an existing datatype model as the target location for your new model
-									components using the <emphasis role="bold">Browse...</emphasis> button to open the Datatypes 
+									components using the <guibutton>Browse...</guibutton> button to open the Datatypes 
 									Model Selector Dialog. Select a datatypes model from your workspace or specify a unique 
 									name to create a new model.
 								</para>

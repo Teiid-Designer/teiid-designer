@@ -31,7 +31,7 @@
 								</imageobject>
 							</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
 							Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
-							by specifying a relationship type, participant locations, and/or names containing sprcified
+							by specifying a relationship type, participant locations, and/or names containing specified
 							text.  Search results appear in 
 							the <xref linkend="search-results-view" /> view, 
 							and double-clicking a result will open that model in the appropriate editor.

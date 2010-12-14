@@ -129,7 +129,7 @@
 		</listitem>
 	</itemizedlist>
 	<note>
-		<para>Model names are required to be unique within Designer. When specifying model names in new model wizards and dialogs
+		<para>Model names are required to be unique within Designer. When specifying model names in new model wizards and dialogues
 		error messages will be presented and you will prevented from entering an existing name.</para>
 	</note>
 	<figure>
@@ -532,7 +532,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>
@@ -726,7 +726,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>
@@ -820,7 +820,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>
@@ -1071,7 +1071,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>
@@ -1165,7 +1165,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>
@@ -1264,7 +1264,7 @@
 		</itemizedlist>					
 		<note>
 			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <emphasis role="bold">Browse...</emphasis> button and selecting a project or folder within 
+				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
 				your workspace.
 			</para>
 		</note>

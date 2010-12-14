@@ -197,7 +197,7 @@
 									of the active editor. In the Teiid Designer, this action prints the diagram in the selected editor. 
 									Allows control over orientation (portrait or landscape), scaling, 
 									margins and page order. User can also specify a subset of the pages to 
-									print (i.e., “2 through 8”).
+									print (i.e., 2 through 8).
 							</para>
 						</listitem>
 						<listitem>
@@ -765,7 +765,7 @@
 
 	<section id="help-menu-section">
 		<title>Help Menu</title>
-		<para>The <emphasis role="bold">Help Menu</emphasis> menu menu shown below contains no Teiid Designer-specific actions. See
+		<para>The <emphasis role="bold">Help Menu</emphasis> shown below contains no Teiid Designer-specific actions. See
 			Eclipse Workbench documentation for details.</para>
 		
 		<figure>
@@ -805,7 +805,7 @@
 							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis>Key Assist</emphasis> (Cntl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
+							<para><emphasis>Key Assist</emphasis> (Ctrl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
 							</para>
 						</listitem>
 						<listitem>

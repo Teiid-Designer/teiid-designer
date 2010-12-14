@@ -204,8 +204,8 @@
 			thumbnail diagram representative of the diagram open in the
 			corresponding Diagram Editor.</para>
 		<para>You can show the Outline View by clicking on its tab. If
-			there is no open editors, the view indicates that "An Outline is not
-			available." If a Model Editor is open, then the root of the displayed
+		   there is no open editors, the view indicates that <errorname>Outline is not
+		      available</errorname>. If a Model Editor is open, then the root of the displayed
 			tree will be the model for the editor that is currently in focus in
 			Teiid Designer (tab on top).</para>
 
@@ -336,7 +336,7 @@
 		<para>
 			If the model for the object being edited is not open in an editor, a dialog may appear 
 			confirming the attempt to modify the model and asking the user to confirm or cancel. 
-			This dialog can be prevented by checking the preference "Always open editor without prompting". 
+			   This dialog can be prevented by checking the preference <property>Always open editor without prompting</property>. 
 			You can re-set/uncheck this property via the Teiid Designer's main preference page. 
 			<figure id="properties-view-open-editor-image">
 				<title>Open Model Editor Dialog</title>
@@ -483,7 +483,7 @@
 		<para>The <emphasis>VDB Editor</emphasis> is a single page editor containing panels for editing description, 
 			model contents and data roles.</para>
 		<para> In addition to general Editors for models, there are detailed editors designed 
-			for editing specific model object types. These "object" editors include:</para>
+			for editing specific model object types. These object editors include:</para>
 		<itemizedlist>
 			<listitem>
 				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>

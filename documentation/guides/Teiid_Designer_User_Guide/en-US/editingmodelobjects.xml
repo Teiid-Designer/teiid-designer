@@ -731,7 +731,7 @@
 											<imagedata fileref="images/icons/export-to-file.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Export SQL Text</emphasis> - allows you to export the 
-									currently displayed sql statement into a text file on your file system. 
+									currently displayed SQL statement into a text file on your file system. 
 									Pressing this button will display an export dialog in which you can choose the location for export.
 								</para>
 							</listitem>
@@ -1481,7 +1481,7 @@
 				<emphasis role="bold">Procedure section</emphasis>.</para>
 			<para>When pasting in SQL, do not include the <emphasis role="bold">CREATE VIRTUAL PROCEDURE
 				BEGIN - END</emphasis> keywords. Input variables will be automatically generated
-				when the "Content via Element" property is set on an operation's input
+				   when the <property>Content via Element</property> property is set on an operation's input
 				parameter. Input variables may be edited using
 				the Edit link in the <emphasis role="bold">Input Variables</emphasis> section, and may only represent
 				XPath values to single attributes and elements within the input
