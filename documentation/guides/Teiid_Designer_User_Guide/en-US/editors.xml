@@ -302,7 +302,7 @@
 					A sample context menu for a relational base table is shown below. 
 				</para>
 				<figure id="package-diagram-context-menu-image">
-					<title>Package Diagram Contenxt Menu</title>
+					<title>Package Diagram Context Menu</title>
 					<mediaobject>
 						<imageobject>
 							<imagedata fileref="images/screencaps/diagram-context-menu-base-table.png" />
@@ -607,7 +607,7 @@
 											<imageobject>
 												<imagedata fileref="images/icons/tb-merge-mapping-classes.png"/>
 											</imageobject>
-										</inlinemediaobject> <emphasis role="bold">Merge Mapping Classe</emphasis> - Merge selected mapping classes.
+										</inlinemediaobject> <emphasis role="bold">Merge Mapping Classes</emphasis> - Merge selected mapping classes.
 									</para>
 								</listitem>
 								<listitem>
@@ -653,7 +653,7 @@
 			<section id="mapping-transformation-diagram-section">
 				<title>Mapping Transformation Diagram</title>
 				<para>The <emphasis role="bold">Mapping Transformation Diagram</emphasis> is identical to a Transformation Diagram except for 
-					displaying an Input Set and possibily Staging Tables as sources for the Mapping Class's transformation.</para>
+					displaying an Input Set and possibly Staging Tables as sources for the Mapping Class's transformation.</para>
 				<figure id="mapping-transformation-diagram-image">
 					<title>Mapping Transformation Diagram Example</title>
 					<mediaobject>
@@ -942,7 +942,7 @@
 			</section>
 			<section>
 				<title>Inserting Table Rows</title>
-				<para>The Insert Rows action provides an additional way to create objects in a model. Insert Rows action performs the same function as Insert SIbling action, but allows you to create multiple children at the same time. All new rows will correspond to an object of the same type as the selected object and be located under the same parent as the selected object.</para>
+				<para>The Insert Rows action provides an additional way to create objects in a model. Insert Rows action performs the same function as Insert Sibling action, but allows you to create multiple children at the same time. All new rows will correspond to an object of the same type as the selected object and be located under the same parent as the selected object.</para>
 				<para>To Insert Rows in a table: </para>
 				<para><emphasis role="bold">Step 1:</emphasis> Select a table row to insert rows after.</para>
 				<para><emphasis role="bold">Step 2:</emphasis> Right-click select "Insert Rows" action or select the Insert Rows action on the main toolbar. The following dialog will be displayed.</para>
