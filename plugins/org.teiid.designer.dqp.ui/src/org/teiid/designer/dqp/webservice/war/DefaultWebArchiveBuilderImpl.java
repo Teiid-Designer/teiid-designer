@@ -769,7 +769,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 					if (ModelIdentifier.isSchemaModel(iResource)) {
 						// Copy the XSD file to the classes folder
 						XSDSchema xsdSchema = importSchema(iResource
-								.getLocation().toOSString());
+								.getLocationURI().toString());
 
 						// Check for an import of the global data types schema
 						if (containsGlobalDataTypeImport(xsdSchema)) {
@@ -797,8 +797,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 									.toOSString()), classesFolder, true);
 						}
 
-						wsdlGenerator.addXsdModel(importSchema(iResource
-								.getLocation().toOSString()), iResource
+						wsdlGenerator.addXsdModel(importSchema(iResource.
+								getLocationURI().toString()), iResource
 								.getLocation());
 					}
 				}
