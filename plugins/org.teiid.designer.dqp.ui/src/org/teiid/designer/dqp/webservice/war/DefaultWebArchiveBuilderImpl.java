@@ -26,11 +26,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import javax.tools.JavaCompiler.CompilationTask;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -768,8 +768,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 				for (IResource iResource : dependentSchemas) {
 					if (ModelIdentifier.isSchemaModel(iResource)) {
 						// Copy the XSD file to the classes folder
-						XSDSchema xsdSchema = importSchema(iResource
-								.getLocation().toOSString());
+						XSDSchema xsdSchema = importSchema(iResource.getLocationURI().toString());
 
 						// Check for an import of the global data types schema
 						if (containsGlobalDataTypeImport(xsdSchema)) {
@@ -798,7 +797,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 						}
 
 						wsdlGenerator.addXsdModel(importSchema(iResource
-								.getLocation().toOSString()), iResource
+								.getLocationURI().toString()), iResource
 								.getLocation());
 					}
 				}
