@@ -58,7 +58,7 @@ public class WSDLImportWizardManager {
      * @param fileUri the specified file uri
      */
     public void setWSDLFileUri( String fileUri ) {
-        this.wsdlReader.setFileUri(fileUri);
+        this.wsdlReader.setWSDLUri(fileUri);
     }
 
     /**
@@ -67,7 +67,7 @@ public class WSDLImportWizardManager {
      * @return the WSDL file uri
      */
     public String getWSDLFileUri() {
-        return this.wsdlReader.getFileUri();
+        return this.wsdlReader.getWSDLUri();
     }
 
     /**
