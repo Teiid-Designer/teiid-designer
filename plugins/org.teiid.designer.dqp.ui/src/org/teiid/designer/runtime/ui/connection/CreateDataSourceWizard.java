@@ -188,7 +188,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
         // ===========>>>> Models selection
         boolean useModelRes = selectedModelResource != null;
-        useModelCheckBox = WidgetFactory.createCheckBox(connectionSourceGroup, getString("useModelInfo.label"), 0, 4, useModelRes); //$NON-NLS-1$
+        useModelCheckBox = WidgetFactory.createRadioButton(connectionSourceGroup, getString("useModelInfo.label"), 0, 4, useModelRes); //$NON-NLS-1$
         useModelCheckBox.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -255,7 +255,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         this.modelsCombo.setLayoutData(modelsComboGD);
 
         // ===========>>>> Connection Profiles
-        useConnectionProfileCheckBox = WidgetFactory.createCheckBox(connectionSourceGroup, getString("useProfileInfo.label"), //$NON-NLS-1$
+        useConnectionProfileCheckBox = WidgetFactory.createRadioButton(connectionSourceGroup, getString("useProfileInfo.label"), //$NON-NLS-1$
         															0,
                                                                     4,
                                                                     !useModelRes);
