@@ -10,6 +10,8 @@ package com.metamatrix.modeler.transformation.ui.actions;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
+
+import com.metamatrix.metamodels.diagram.DiagramEntity;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -349,7 +351,14 @@ public class TransformationGlobalActionsManager {
     public static boolean allSourceObjectsAreDiagramEntities( List sourceEObjects ) {
 
         if (sourceEObjects != null && !sourceEObjects.isEmpty()) {
-
+        	Iterator iter = sourceEObjects.iterator();
+        	
+        	while( iter.hasNext() ) {
+        		Object obj = iter.next();
+        		if( !(obj instanceof DiagramEntity) ) {
+        			return false;
+        		}
+        	}
             return true;
         }
         return false;
