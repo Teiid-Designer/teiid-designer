@@ -159,6 +159,16 @@ public class ExecutionAdmin {
     }
 
     /**
+     * Returns a teiid data source object if it exists in this server
+     * 
+     * @param name
+     * @return the teiid data source object (can be <code>null</code>)
+     */
+    public TeiidDataSource getDataSource(String name) {
+        return this.dataSourceByNameMap.get(name);
+    }
+    
+    /**
      * REturns a list of
      * 
      * @return
