@@ -96,7 +96,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
         getTreeViewer().setSorter(new ViewerSorter());
 
         ((TeiidViewTreeProvider)getTreeViewer().getContentProvider()).setShowTranslators(false);
-        getTreeViewer().expandToLevel(2);
+        getTreeViewer().expandToLevel(3);
 
         return panel;
 

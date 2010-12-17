@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
@@ -70,7 +71,6 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         try {
 			vdbSourceConnection = mapper.getVdbSourceConnection(defaultAdmin, uuid);
 		} catch (ModelWorkspaceException e) {
-			// TODO Auto-generated catch block
 			DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
 					DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_source_connection_info_for_{0}_model", sourceModelname)); //$NON-NLS-1$
 		}
@@ -85,6 +85,11 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 		if( !initialized ) {
 			initialize();
 		}
+		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+		if( defServer == null || !defServer.isConnected() ) {
+			return null;
+		}
+		
 		if( obj instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection)obj;
 			if( sel.getFirstElement() instanceof VdbModelEntry) {
@@ -131,7 +136,21 @@ public class VdbSourceConnectionHandler implements SourceHandler {
             // Get available servers and launch SelectTranslatorDialog
         	// vdbModelEntry should not be null and should be a Physical model only
         	if( vdbModelEntry != null ) {
+        		String jndiName = vdbModelEntry.getJndiName();
+        		
         		SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
+        		
+        		TeiidDataSource initialSelection = null;
+        		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+        		if( defServer != null && defServer.isConnected() ) {
+        			try {
+						initialSelection = defServer.getAdmin().getDataSource(jndiName);
+					} catch (Exception e) {
+						DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
+								DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_data_source_for_name", jndiName)); //$NON-NLS-1$
+					}
+					dialog.setInitialSelection(initialSelection);
+        		}
         		
         		dialog.open();
         		
@@ -164,8 +183,22 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         	// vdbModelEntry should not be null and should be a Physical model only
         	
         	if( vdbModelEntry != null ) {
+        		String transName = vdbModelEntry.getTranslator();
+        		
         		SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
         		
+        		TeiidTranslator initialSelection = null;
+        		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+        		if( defServer != null && defServer.isConnected() ) {
+        			try {
+						initialSelection = defServer.getAdmin().getTranslator(transName);
+					} catch (Exception e) {
+						DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
+								DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_translator_for_name", transName)); //$NON-NLS-1$
+					}
+					dialog.setInitialSelection(initialSelection);
+        		}
+
         		dialog.open();
         		
         		if( dialog.getReturnCode() == Dialog.OK) {

@@ -102,7 +102,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog
 		getTreeViewer().setSorter(new ViewerSorter());
 		((TeiidViewTreeProvider) getTreeViewer().getContentProvider())
 				.setShowTranslators(true);
-		getTreeViewer().expandToLevel(2);
+		getTreeViewer().expandToLevel(3);
 
 		return panel;
 
