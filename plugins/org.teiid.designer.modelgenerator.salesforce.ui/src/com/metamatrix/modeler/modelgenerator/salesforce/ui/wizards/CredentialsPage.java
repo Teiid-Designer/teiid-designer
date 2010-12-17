@@ -55,6 +55,8 @@ public class CredentialsPage extends AbstractWizardPage
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
+    private static final String SF_PROFILE_ID = "org.teiid.designer.datatools.salesforce.connectionProfile"; //$NON-NLS-1$
+    
     SalesforceImportWizardManager importManager;
 
     private Combo connectionProfilesCombo;
@@ -80,7 +82,7 @@ public class CredentialsPage extends AbstractWizardPage
 
     @Override
     public void createControl( Composite theParent ) {
-    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), ConnectionProfileWorker.CATEGORY_TEIID_IMPORT, this);
+    	this.profileWorker = new ConnectionProfileWorker(this.getShell(), SF_PROFILE_ID, this);
     	
         GridData gridData;
         final int COLUMNS = 1;
