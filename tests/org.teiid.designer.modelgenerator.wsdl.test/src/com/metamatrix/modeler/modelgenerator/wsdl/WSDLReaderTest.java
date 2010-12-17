@@ -50,7 +50,7 @@ public class WSDLReaderTest extends TestCase {
         WSDLReader reader = null;
         reader = new WSDLReader(CIS_WSDL);
         assertNotNull(reader);
-        assertEquals(CIS_WSDL, reader.getFileUri());
+        assertEquals(CIS_WSDL, reader.getWSDLUri());
     }
 
     /*
@@ -67,8 +67,8 @@ public class WSDLReaderTest extends TestCase {
      */
     public void testGetSetFileUri() {
         WSDLReader reader = new WSDLReader();
-        reader.setFileUri(CIS_WSDL);
-        assertEquals(CIS_WSDL, reader.getFileUri());
+        reader.setWSDLUri(CIS_WSDL);
+        assertEquals(CIS_WSDL, reader.getWSDLUri());
     }
 
     public void testValidateWSDLNotThereUrl() {
