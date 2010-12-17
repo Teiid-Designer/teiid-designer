@@ -30,7 +30,7 @@ import com.metamatrix.modeler.modelgenerator.wsdl.validation.WSDLValidationMessa
  */
 public class WSDLReader {
 
-    private String m_fileURI;
+    private String wsdlURI;
 	private static WSDLValidator VALIDATOR;
 
     public static final int VALIDATION_SEVERITY_ERROR = 0;
@@ -44,7 +44,7 @@ public class WSDLReader {
      * @param fileUri the URI of the WSDL file
      */
     public WSDLReader( String fileUri ) {
-        m_fileURI = fileUri;
+        wsdlURI = fileUri;
     }
 
     /**
@@ -69,7 +69,7 @@ public class WSDLReader {
 
     private Model buildWSDLStructures() throws Exception {
         ModelBuilder builder = new ModelBuilder();
-        builder.setWSDL(m_fileURI.replace("%20", " ")); //$NON-NLS-1$//$NON-NLS-2$
+        builder.setWSDL(wsdlURI.replace("%20", " ")); //$NON-NLS-1$//$NON-NLS-2$
         if (!builder.isWSDLParsed()) {
             Exception myEx = builder.getWSDLException();
             throw myEx;
@@ -80,15 +80,15 @@ public class WSDLReader {
     /**
      * @return the URI of the given WSDL
      */
-    public String getFileUri() {
-        return m_fileURI;
+    public String getWSDLUri() {
+        return wsdlURI;
     }
 
     /**
      * @param fileUri the URI of the WSDL file
      */
-    public void setFileUri( String fileUri ) {
-        m_fileURI = fileUri;
+    public void setWSDLUri( String fileUri ) {
+        wsdlURI = fileUri;
     }
 
     /**
@@ -103,9 +103,12 @@ public class WSDLReader {
 		if (VALIDATOR == null) {
 			VALIDATOR = new WSDLValidator();
         }
-		String fileUri = getFileUri();
+		String wsdlUri = getWSDLUri();
+		if(!wsdlUri.contains("http://")) {
+			wsdlUri = "file://" + wsdlUri;
+		}
         monitor.worked(1);
-		IValidationReport report = VALIDATOR.validate(fileUri);
+		IValidationReport report = VALIDATOR.validate(wsdlUri);
 		monitor.worked(1);
 		boolean success = !report.hasErrors() && report.isWSDLValid();
 
@@ -133,7 +136,7 @@ public class WSDLReader {
 								.getString("WSDLReader.validation.warning"), null); //$NON-NLS-1$
             } else {
 				try {
-					URL url = new URL(fileUri);
+					URL url = new URL(wsdlUri);
 					URLConnection connection = url.openConnection();
 					String contentType = connection.getContentType();
 					if (messages.length == 0) {
@@ -142,7 +145,7 @@ public class WSDLReader {
 							String messageSuffix = MessageFormat
 									.format(ModelGeneratorWsdlPlugin.Util
 													.getString("WSDLReader.validation.content.type.error"), //$NON-NLS-1$
-											fileUri, contentType);
+											wsdlUri, contentType);
 							String fullMessage = ModelGeneratorWsdlPlugin.Util
 									.getString("WSDLReader.wsdl.invalid") + messageSuffix; //$NON-NLS-1$
 							messages = new WSDLValidationMessage[]{new WSDLValidationMessage(
@@ -167,7 +170,7 @@ public class WSDLReader {
 									.format(
 											ModelGeneratorWsdlPlugin.Util
 													.getString("WSDLReader.validation.content.type.error"), //$NON-NLS-1$
-											fileUri, contentType);
+											wsdlUri, contentType);
 							status = new MultiStatus(ModelGeneratorWsdlPlugin.PLUGIN_ID, code, messages,
 									ModelGeneratorWsdlPlugin.Util
 											.getString("WSDLReader.validation.error") + messageSuffix, new WSDLValidationException()); //$NON-NLS-1$
