@@ -113,6 +113,10 @@ public class ExecuteVDBAction extends SortableSelectionAction {
          * .getString( "DeployVdbAction.problemDeployingVdbToServer",
          * //$NON-NLS-1$ selectedVDB.getName(), server.getUrl())); } }
          */
+    	
+    	if( !VdbRequiresSaveChecker.insureOpenVdbSaved(selectedVDB) ) {
+    		return;
+    	}
 
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
         VDB deployedVDB = null;
@@ -174,6 +178,9 @@ public class ExecuteVDBAction extends SortableSelectionAction {
                     enable = true;
                 }
             }
+        }
+        if( !enable ) {
+        	this.selectedVDB = null;
         }
         setEnabled(enable);
     }

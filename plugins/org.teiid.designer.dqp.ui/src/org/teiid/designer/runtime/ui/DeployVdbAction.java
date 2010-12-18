@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -78,7 +79,10 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     public void run() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
-        deployVdb(server, selectedVDB);
+        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(selectedVDB);
+        if( doDeploy ) {
+        	deployVdb(server, selectedVDB);
+        }
     }
 
     public void selectionChanged( IWorkbenchPart part,
@@ -153,4 +157,5 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
         return deployedVDB;
     }
+ 
 }
