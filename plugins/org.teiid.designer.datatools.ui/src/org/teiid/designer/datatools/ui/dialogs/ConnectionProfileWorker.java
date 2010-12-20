@@ -134,6 +134,9 @@ public class ConnectionProfileWorker {
 			for (IConnectionProfile prof : profileManager.getProfilesByCategory(categoryID)) {
 				allProfiles.add(prof);
 			}
+			for (IConnectionProfile prof : profileManager.getProfileByProviderID(categoryID)) {
+				allProfiles.add(prof);
+			}
 		}
 	}
 
