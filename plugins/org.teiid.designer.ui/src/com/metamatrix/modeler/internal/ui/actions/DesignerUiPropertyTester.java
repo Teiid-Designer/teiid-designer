@@ -41,6 +41,11 @@ public final class DesignerUiPropertyTester extends PropertyTester {
                          String property,
                          Object[] args,
                          Object expectedValue ) {
+        // first make sure the selected object is in a Model Project
+        if (!isModelProjectObject(receiver)) {
+            return false;
+        }
+
         if (Tests.CLONE_ALLOWED.toString().equals(property)) {
             return isCloneAllowed(receiver);
         }
@@ -117,8 +122,8 @@ public final class DesignerUiPropertyTester extends PropertyTester {
 
         return false;
     }
-    
-    private boolean isReadOnlyModelObject( Object receiver) {
+
+    private boolean isReadOnlyModelObject( Object receiver ) {
         if (receiver instanceof EObject) {
             return ModelObjectUtilities.isReadOnly((EObject)receiver);
         }
