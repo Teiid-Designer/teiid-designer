@@ -71,6 +71,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDParticle;
@@ -80,8 +81,6 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import com.metamatrix.common.xmi.XMIHeader;
-import com.metamatrix.common.xmi.XMIHeaderReader;
 import org.teiid.core.TeiidException;
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.id.IDGenerator;
@@ -89,9 +88,11 @@ import org.teiid.core.id.InvalidIDException;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.ObjectIDFactory;
 import org.teiid.core.id.UUID;
+import com.metamatrix.common.xmi.XMIHeader;
+import com.metamatrix.common.xmi.XMIHeaderReader;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.DebuggingStopwatch;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.DebuggingStopwatch;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -3585,7 +3586,13 @@ public class ModelEditorImpl implements ModelEditor {
         for (Iterator iter = descriptors.iterator(); iter.hasNext();) {
             final Object descriptor = iter.next();
             if (descriptor instanceof CommandParameter) {
-                ((CommandParameter)descriptor).setOwner(owner);
+                if (owner instanceof XSDParticle) {
+                    ((CommandParameter)descriptor).setOwner(((XSDParticle)owner).getContent());
+                } else if (owner instanceof XSDAttributeUse) {
+                    ((CommandParameter)descriptor).setOwner(((XSDAttributeUse)owner).getContent());
+                } else {
+                    ((CommandParameter)descriptor).setOwner(owner);
+                }
             }
         }
     }
@@ -4970,7 +4977,7 @@ public class ModelEditorImpl implements ModelEditor {
             resolvedEObject = EcoreUtil.resolve(e, getContainer());
             if (resolvedEObject.eIsProxy()) {
                 throw new TeiidRuntimeException(
-                                                     ModelerCore.Util.getString("ModelEditorImpl.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
+                                                ModelerCore.Util.getString("ModelEditorImpl.Error_EObject_can_not_be_a_proxy", resolvedEObject.toString())); //$NON-NLS-1$
             }
         }
         return resolvedEObject;
