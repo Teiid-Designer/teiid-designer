@@ -73,7 +73,7 @@ public class NewServerAction extends Action {
      */
     @Override
     public void run() {
-        ServerWizard wizard = new ServerWizard(this.serverManager);
+        ServerWizard wizard = new ServerWizard(this.serverManager);      
         WizardDialog dialog = new WizardDialog(this.shell, wizard) {
             /**
              * {@inheritDoc}
@@ -96,6 +96,7 @@ public class NewServerAction extends Action {
 	        if( wizard.shouldAutoConnect() ) {
 	            	try {
 	    				wizard.getServer().getAdmin();
+	    				this.serverManager.setDefaultServer(wizard.getServer());
 	    			} catch (Exception e) {
 	    				MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
 	                            UTIL.getString("serverWizardNewServerAutoConnectError")); //$NON-NLS-1$

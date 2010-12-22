@@ -27,6 +27,7 @@ import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.I18nUtil;
@@ -195,7 +196,10 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
     	String driverPath = Admin.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-    	String connectionURL = convertUrl(vdbName, server.getUrl());
+    	TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, server.getTeiidJdbcInfo());
+    	
+    	String connectionURL = jdbcInfo.getURL();
+    	
     	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
@@ -209,7 +213,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     	} else {
     		// This call has the effect of creating the driver, which provides the values to the Profile UI.
     		ConnectivityUtil.createVDBTeiidProfileProperties(driverPath,
-    				connectionURL, null, null, vdbName, profileName);
+    				connectionURL, jdbcInfo.getUsername(), jdbcInfo.getPassword(), vdbName, profileName);
     		NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
     		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
     		wizardDialog.setBlockOnOpen(true);
@@ -227,11 +231,11 @@ public class ExecuteVDBAction extends SortableSelectionAction {
      * Converts a Teiid Admin URL to a Teiid JDBC URL
      * 
      */
-	private static String convertUrl(String vdbName, String adminURL) {
-		adminURL = "mm"+ adminURL.substring(adminURL.indexOf(':')); //$NON-NLS-1$
-    	adminURL = adminURL.substring(0, adminURL.lastIndexOf(':') + 1) + "31000"; //$NON-NLS-1$
-    	return "jdbc:teiid:" + vdbName + "@" + adminURL; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+//	private static String convertUrl(String vdbName, String adminURL) {
+//		adminURL = "mm"+ adminURL.substring(adminURL.indexOf(':')); //$NON-NLS-1$
+//    	adminURL = adminURL.substring(0, adminURL.lastIndexOf(':') + 1) + "31000"; //$NON-NLS-1$
+//    	return "jdbc:teiid:" + vdbName + "@" + adminURL; //$NON-NLS-1$ //$NON-NLS-2$
+//	}
 
     
     private static Shell getShell() {

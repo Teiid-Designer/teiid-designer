@@ -76,7 +76,7 @@ public final class DeleteServerDialog extends MessageDialog {
 
         if (this.serversBeingDeleted.size() == 1) {
             Server server = this.serversBeingDeleted.iterator().next();
-            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getUrl(), server.getUser()); //$NON-NLS-1$
+            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getTeiidAdminInfo().getURL(), server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         } else {
             msg = UTIL.getString("deleteServerDialogMultipleServersMsg", this.serversBeingDeleted.size()); //$NON-NLS-1$
         }
@@ -99,7 +99,7 @@ public final class DeleteServerDialog extends MessageDialog {
             serverList.setLayoutData(gd);
 
             for (Server server : this.serversBeingDeleted) {
-                serverList.add(server.getUrl() + "::" + server.getUser()); //$NON-NLS-1$
+                serverList.add(server.getTeiidAdminInfo().getURL() + "::" + server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
             }
         }
 

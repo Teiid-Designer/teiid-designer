@@ -279,7 +279,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 	                    }
                 	}
                     manager.add(this.editServerAction);
-                    manager.add(this.deleteServerAction);
+                    
                     if (this.setDefaultServerAction.isEnabled()) {
                         manager.add(this.setDefaultServerAction);
                     }
@@ -289,6 +289,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     if( currentSelectedAdmin != null ) {
                     	manager.add(this.createDataSourceAction);
                     }
+                    manager.add(new Separator());
+                    manager.add(this.deleteServerAction);
 
                 } else if (selection instanceof TeiidTranslator) {
                 	currentSelectedAdmin = ((TeiidTranslator)selection).getAdmin();

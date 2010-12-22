@@ -9,6 +9,7 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -17,7 +18,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,7 +27,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -35,10 +34,12 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.ServerUtils;
+import org.teiid.designer.runtime.TeiidAdminInfo;
+import org.teiid.designer.runtime.TeiidJdbcInfo;
 
-import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
  * The <code>ServerPage</code> is used to create or modify a server.
@@ -69,16 +70,6 @@ public final class ServerPage extends WizardPage {
     private Button btnAutoConnectOnFinish;
 
     /**
-     * The user password needed to login to the server.
-     */
-    private String password;
-
-    /**
-     * Indicates if the password should be persisted.
-     */
-    private boolean savePassword;
-
-    /**
      * The server being editor or <code>null</code> if creating a new server.
      */
     private Server server;
@@ -89,14 +80,65 @@ public final class ServerPage extends WizardPage {
     private IStatus status;
 
     /**
-     * The server URL.
+     * The user needed to login to the teiid server via admin
      */
-    private String url;
-
+    private String adminUsername;
+    
     /**
-     * The user needed to login to the server.
+     * The password needed to login to the teiid server via admin
      */
-    private String user;
+    private String adminPassword;
+    
+    /**
+     * Indicates if the admin password should be persisted.
+     */
+    private boolean saveAdminPassword;
+    
+    /**
+     * The host name needed to login to the teiid server via admin
+     */
+    private String adminHost;
+    
+    /**
+     * The port needed to login to the teiid server via admin
+     */
+    private String adminPort;
+    
+    /**
+     * The SSL true/false protocol for admin URL
+     */
+    private boolean adminURLIsSecure;
+    
+    
+    private Text adminURLText;
+    
+    /**
+     * The user needed to login to the teiid server via jdbc
+     */
+    private String jdbcUsername;
+    
+    /**
+     * The password needed to login to the teiid server via jdbc
+     */
+    private String jdbcPassword;
+    
+    /**
+     * Indicates if the admin password should be persisted.
+     */
+    private boolean saveJdbcPassword;
+    
+    /**
+     * The port needed to login to the teiid server via jdbc
+     */
+    private String jdbcPort;
+    
+    /**
+     * The SSL true/false protocol for jdbc URL
+     */
+    private boolean jdbcURLIsSecure;
+    
+    
+    private Text jdbcURLText;
 
     // ===========================================================================================================================
     // Constructors
@@ -109,6 +151,22 @@ public final class ServerPage extends WizardPage {
         super(ServerPage.class.getSimpleName());
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
         setPageComplete(false);
+        
+    	this.server = new Server( new TeiidAdminInfo(), new TeiidJdbcInfo(), null);
+        
+        this.adminHost = server.getTeiidAdminInfo().getHost();
+        this.adminPort = server.getTeiidAdminInfo().getPort();
+        this.adminUsername = server.getTeiidAdminInfo().getUsername();
+        this.adminPassword = server.getTeiidAdminInfo().getPassword();
+        this.adminURLIsSecure = server.getTeiidAdminInfo().isSecure();
+        this.saveAdminPassword = server.getTeiidAdminInfo().isPasswordBeingPersisted();
+        
+        this.jdbcPort = server.getTeiidJdbcInfo().getPort();
+        this.jdbcUsername = server.getTeiidJdbcInfo().getUsername();
+        this.jdbcPassword = server.getTeiidJdbcInfo().getPassword();
+        this.jdbcURLIsSecure = server.getTeiidJdbcInfo().isSecure();
+        this.saveJdbcPassword = server.getTeiidJdbcInfo().isPasswordBeingPersisted();
+
     }
 
     /**
@@ -121,67 +179,152 @@ public final class ServerPage extends WizardPage {
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
 
         this.server = server;
-        this.url = server.getUrl();
-        this.user = server.getUser();
-        this.password = server.getPassword();
-        this.savePassword = server.isPasswordBeingPersisted();
+        
+        this.adminHost = server.getTeiidAdminInfo().getHost();
+        this.adminPort = server.getTeiidAdminInfo().getPort();
+        this.adminUsername = server.getTeiidAdminInfo().getUsername();
+        this.adminPassword = server.getTeiidAdminInfo().getPassword();
+        this.adminURLIsSecure = server.getTeiidAdminInfo().isSecure();
+        this.saveAdminPassword = server.getTeiidAdminInfo().isPasswordBeingPersisted();
+        
+        this.jdbcPort = server.getTeiidJdbcInfo().getPort();
+        this.jdbcUsername = server.getTeiidJdbcInfo().getUsername();
+        this.jdbcPassword = server.getTeiidJdbcInfo().getPassword();
+        this.jdbcURLIsSecure = server.getTeiidJdbcInfo().isSecure();
+        this.saveJdbcPassword = server.getTeiidJdbcInfo().isPasswordBeingPersisted();
+        
         this.isEdit = true;
     }
 
     // ===========================================================================================================================
     // Methods
     // ===========================================================================================================================
-
-    private void constructAuthenticationPanel( Composite parent ) {
-        Group pnl = new Group(parent, SWT.NONE);
-        pnl.setText(UTIL.getString("serverPageAuthenticationGroupTitle")); //$NON-NLS-1$
-        pnl.setLayout(new GridLayout(2, false));
+    
+    
+    private void constructTeiidAdminConnectionPanel( Composite parent ) {
+    	Group pnl = WidgetFactory.createGroup(parent, UTIL.getString("serverPageAdminConnectionInfoLabel")); //$NON-NLS-1$);
+        pnl.setLayout(new GridLayout(3, false));
         pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        
 
-        { // user row
-            Label lblUser = new Label(pnl, SWT.LEFT);
-            lblUser.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblUser.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
 
-            Text txtUser = new Text(pnl, SWT.BORDER);
-            txtUser.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            txtUser.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
-
-            // set initial value
-            if (this.user != null) {
-                txtUser.setText(this.user);
-            }
-
-            txtUser.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleUserModified(((Text)e.widget).getText());
-                }
-            });
+        { // Host row
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPageHostNameLabel")); //$NON-NLS-1$
+            
+	        Text text = new Text(pnl, SWT.BORDER);
+	        text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	        text.setToolTipText(UTIL.getString("serverPageHostNameTooltip")); //$NON-NLS-1$
+	
+	        // set initial value
+	        if (this.adminHost != null) {
+	        	text.setText(this.adminHost);
+	        }
+	
+	        text.addModifyListener(new ModifyListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+	             */
+	            @Override
+	            public void modifyText( ModifyEvent e ) {
+	                handleAdminHostModified(((Text)e.widget).getText());
+	            }
+	        });
+	        
+	        
+	        {
+	        	Label emptyLabel = new Label(pnl, SWT.LEFT);
+	        	emptyLabel.setText(" "); //$NON-NLS-1$
+	        	
+	        }
         }
-
+        
+        { // PORT ROW
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$
+            
+	        Text text = new Text(pnl, SWT.BORDER);
+	        text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	        text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$
+	
+	        // set initial value
+	        if (this.adminPort != null) {
+	        	text.setText(this.adminPort);
+	        }
+	
+	        text.addModifyListener(new ModifyListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+	             */
+	            @Override
+	            public void modifyText( ModifyEvent e ) {
+	                handleAdminPortModified(((Text)e.widget).getText());
+	            }
+	        });
+	        
+	        {
+	        	Label emptyLabel = new Label(pnl, SWT.LEFT);
+	        	emptyLabel.setText(" "); //$NON-NLS-1$
+	        	
+	        }
+        }
+        
+        { // user row
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
+            
+	        Text text = new Text(pnl, SWT.BORDER);
+	        text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	        text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
+	
+	        // set initial value
+	        if (this.adminUsername != null) {
+	        	text.setText(this.adminUsername);
+	        }
+	
+	        text.addModifyListener(new ModifyListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+	             */
+	            @Override
+	            public void modifyText( ModifyEvent e ) {
+	                handleAdminUserModified(((Text)e.widget).getText());
+	            }
+	        });
+	        
+	        {
+	        	Label emptyLabel = new Label(pnl, SWT.LEFT);
+	        	emptyLabel.setText(" "); //$NON-NLS-1$
+	        	
+	        }
+        }
+        
         { // password row
-            Label lblPassword = new Label(pnl, SWT.LEFT);
-            lblPassword.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblPassword.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
 
-            Text txtPassword = new Text(pnl, SWT.BORDER);
-            txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            txtPassword.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
-            txtPassword.setEchoChar('*');
+            Text text = new Text(pnl, SWT.BORDER);
+            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
+            text.setEchoChar('*');
 
             // set initial value before hooking up listener
-            if (this.password != null) {
-                txtPassword.setText(this.password);
+            if (this.adminPassword != null) {
+            	text.setText(this.adminPassword);
             }
 
             // listener for when value changes
-            txtPassword.addModifyListener(new ModifyListener() {
+            text.addModifyListener(new ModifyListener() {
                 /**
                  * {@inheritDoc}
                  * 
@@ -189,164 +332,289 @@ public final class ServerPage extends WizardPage {
                  */
                 @Override
                 public void modifyText( ModifyEvent e ) {
-                    handlePasswordModified(((Text)e.widget).getText());
+                    handleAdminPasswordModified(((Text)e.widget).getText());
                 }
             });
+            { // save button row
+                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
+                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+                ((GridData)btn.getLayoutData()).horizontalSpan = 1;
+                btn.setText("Save"); //UTIL.getString("serverPageSavePasswordButton")); //$NON-NLS-1$
+                String tooltip = UTIL.getString("serverPageSavePasswordToolTip") + '\n' + '\n' + UTIL.getString("serverPageSavePasswordLabel"); //$NON-NLS-1$ //$NON-NLS-2$
+                btn.setToolTipText(tooltip);
+
+                // set initial value before hooking up listeners
+                if (this.saveAdminPassword) {
+                    btn.setSelection(true);
+                }
+
+                // listener for when value changes
+                btn.addSelectionListener(new SelectionAdapter() {
+                    /**
+                     * {@inheritDoc}
+                     *         
+        
+                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected( SelectionEvent e ) {
+                        handleAdminSavePasswordChanged(((Button)e.widget).getSelection());
+                    }
+                });
+            }
         }
+        
+        {
+	        Label label = new Label(pnl, SWT.LEFT);
+	        label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	        label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
+	
+	        adminURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY );// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+	        adminURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	        adminURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
+	        adminURLText.setText(this.server.getTeiidAdminInfo().getURL());
+	        
+	        { // Secure SSL row
+	            final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
+	            btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	            ((GridData)btn.getLayoutData()).horizontalSpan = 1;
+	            btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
+	            btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
 
-        { // save button row
-            final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
-            btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            ((GridData)btn.getLayoutData()).horizontalSpan = 2;
-            btn.setText(UTIL.getString("serverPageSavePasswordButton")); //$NON-NLS-1$
-            btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
+	            // set initial value before hooking up listeners
+	            btn.setSelection(this.adminURLIsSecure);
 
-            // set initial value before hooking up listeners
-            if (this.savePassword) {
-                btn.setSelection(true);
+	            // listener for when value changes
+	            btn.addSelectionListener(new SelectionAdapter() {
+	                /**
+	                 * {@inheritDoc}
+	                 * 
+	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                 */
+	                @Override
+	                public void widgetSelected( SelectionEvent e ) {
+	                    handleAdminSSLChanged(((Button)e.widget).getSelection());
+	                }
+	            });
+	        }
+
+        }
+        
+        { // AUTO CONNECT ROW
+            this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
+            this.btnAutoConnectOnFinish.setText(UTIL.getString("serverPageAutoConnectLabel")); //$NON-NLS-1$
+            this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
+            this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+            this.btnAutoConnectOnFinish.setSelection(true);
+            
+            // set the auto connect flag based on dialog settings
+            if (getDialogSettings().get(AUTO_CONNECT_KEY) != null) {
+                this.autoConnect = getDialogSettings().getBoolean(AUTO_CONNECT_KEY);
+            }
+
+            this.btnAutoConnectOnFinish.setSelection(this.autoConnect);
+            
+            this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleAutoConnect();
+                }
+            });
+            
+            this.btnTestConnection = new Button(pnl, SWT.PUSH);
+            this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
+            this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
+
+            // add margins to the side of the text
+            GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+            int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+            Point minSize = this.btnTestConnection.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+            gd.widthHint = Math.max(widthHint, minSize.x + 10);
+            this.btnTestConnection.setLayoutData(gd);
+
+            this.btnTestConnection.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleTestConnection();
+                }
+            });
+            
+        }
+    }
+    
+    private void constructTeiidJdbcConnectionPanel( Composite parent ) {
+    	Group pnl = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
+        pnl.setLayout(new GridLayout(3, false));
+        pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+                
+        { // PORT ROW
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$);
+            
+	        Text text = new Text(pnl, SWT.BORDER);
+	        text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	        text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$);
+	
+	        // set initial value
+	        if (this.jdbcPort != null) {
+	        	text.setText(this.jdbcPort);
+	        }
+	
+	        text.addModifyListener(new ModifyListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+	             */
+	            @Override
+	            public void modifyText( ModifyEvent e ) {
+	                handleJdbcPortModified(((Text)e.widget).getText());
+	            }
+	        });
+	        {
+	        	Label emptyLabel = new Label(pnl, SWT.LEFT);
+	        	emptyLabel.setText(" "); //$NON-NLS-1$
+	        	
+	        }
+        }
+        
+        { // user row
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
+            
+	        Text text = new Text(pnl, SWT.BORDER);
+	        text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	        text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
+	
+	        // set initial value
+	        if (this.jdbcUsername != null) {
+	        	text.setText(this.jdbcUsername);
+	        }
+	
+	        text.addModifyListener(new ModifyListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+	             */
+	            @Override
+	            public void modifyText( ModifyEvent e ) {
+	                handleJdbcUserModified(((Text)e.widget).getText());
+	            }
+	        });
+	        
+	        {
+	        	Label emptyLabel = new Label(pnl, SWT.LEFT);
+	        	emptyLabel.setText(" "); //$NON-NLS-1$
+	        	
+	        }
+        }
+        
+        { // password row
+            Label label = new Label(pnl, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
+
+            Text text = new Text(pnl, SWT.BORDER);
+            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
+            text.setEchoChar('*');
+
+            // set initial value before hooking up listener
+            if (this.jdbcPassword != null) {
+            	text.setText(this.jdbcPassword);
             }
 
             // listener for when value changes
-            btn.addSelectionListener(new SelectionAdapter() {
+            text.addModifyListener(new ModifyListener() {
                 /**
                  * {@inheritDoc}
                  * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
                  */
                 @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleSavePasswordChanged(((Button)e.widget).getSelection());
+                public void modifyText( ModifyEvent e ) {
+                    handleJdbcPasswordModified(((Text)e.widget).getText());
                 }
             });
+            { // save button row
+                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
+                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+                ((GridData)btn.getLayoutData()).horizontalSpan = 1;
+                btn.setText("Save"); //UTIL.getString("serverPageSavePasswordButton")); //$NON-NLS-1$
+                String tooltip = UTIL.getString("serverPageSavePasswordToolTip") + '\n' + '\n' + UTIL.getString("serverPageSavePasswordLabel"); //$NON-NLS-1$ //$NON-NLS-2$
+                btn.setToolTipText(tooltip);
 
-            // update page message first time selected to get rid of initial message by forcing validation
-            btn.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    updateInitialMessage();
-                    btn.removeSelectionListener(this);
+                // set initial value before hooking up listeners
+                if (this.saveJdbcPassword) {
+                    btn.setSelection(true);
                 }
-            });
-        }
 
-        { // save password message row
-            Label lblImage = new Label(pnl, SWT.NONE);
-            lblImage.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-            lblImage.setImage(Display.getDefault().getSystemImage(SWT.ICON_INFORMATION));
-
-            StyledText st = new StyledText(pnl, SWT.READ_ONLY | SWT.MULTI | SWT.NO_FOCUS | SWT.WRAP);
-            st.setText(UTIL.getString("serverPageSavePasswordLabel")); //$NON-NLS-1$
-            st.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-            st.setCaret(null);
-            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, true);
-            gd.grabExcessVerticalSpace = false;
-            gd.horizontalIndent = 4;
-            gd.verticalIndent = 8;
-            gd.widthHint = 100;
-            st.setLayoutData(gd);
-        }
-    }
-
-    private void constructTestConnectionPanel( Composite parent ) {
-        Composite pnl = new Composite(parent, SWT.NONE);
-        pnl.setLayout(new GridLayout(2, false));
-        pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-        Label lbl = new Label(pnl, SWT.LEFT);
-        lbl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lbl.setText(UTIL.getString("serverPageTestConnectionLabel")); //$NON-NLS-1$
-
-        this.btnTestConnection = new Button(pnl, SWT.PUSH);
-        this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
-        this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
-
-        // add margins to the side of the text
-        GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-        int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-        Point minSize = this.btnTestConnection.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-        gd.widthHint = Math.max(widthHint, minSize.x + 10);
-        this.btnTestConnection.setLayoutData(gd);
-
-        this.btnTestConnection.addSelectionListener(new SelectionAdapter() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleTestConnection();
+                // listener for when value changes
+                btn.addSelectionListener(new SelectionAdapter() {
+                    /**
+                     * {@inheritDoc}
+                     *         
+        
+                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected( SelectionEvent e ) {
+                        handleJdbcSavePasswordChanged(((Button)e.widget).getSelection());
+                    }
+                });
             }
-        });
-        
-        this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
-        this.btnAutoConnectOnFinish.setText(UTIL.getString("serverPageAutoConnectLabel")); //$NON-NLS-1$
-        this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
-        this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-        this.btnAutoConnectOnFinish.setSelection(true);
-        
-        // set the auto connect flag based on dialog settings
-        if (getDialogSettings().get(AUTO_CONNECT_KEY) != null) {
-            this.autoConnect = getDialogSettings().getBoolean(AUTO_CONNECT_KEY);
         }
-
-        this.btnAutoConnectOnFinish.setSelection(this.autoConnect);
         
-        this.btnAutoConnectOnFinish.addSelectionListener(new SelectionAdapter() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleAutoConnect();
-            }
-        });
-    }
+        {
+	        Label label = new Label(pnl, SWT.LEFT);
+	        label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	        label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
+	
+	        jdbcURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY );// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+	        jdbcURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	        jdbcURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
+	        jdbcURLText.setText(this.server.getTeiidJdbcInfo().getURL());
+	        
+	        { // Secure SSL row
+	            final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
+	            btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+	            ((GridData)btn.getLayoutData()).horizontalSpan = 1;
+	            btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
+	            btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
 
-    private void constructUrlPanel( Composite parent ) {
-        Composite pnl = new Composite(parent, SWT.NONE);
-        pnl.setLayout(new GridLayout(2, false));
-        pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	            // set initial value before hooking up listeners
+	            btn.setSelection(this.jdbcURLIsSecure);
 
-        Label lblUrl = new Label(pnl, SWT.LEFT);
-        lblUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lblUrl.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
+	            // listener for when value changes
+	            btn.addSelectionListener(new SelectionAdapter() {
+	                /**
+	                 * {@inheritDoc}
+	                 * 
+	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                 */
+	                @Override
+	                public void widgetSelected( SelectionEvent e ) {
+	                    handleJdbcSSLChanged(((Button)e.widget).getSelection());
+	                }
+	            });
+	        }
 
-        Text txtUrl = new Text(pnl, SWT.BORDER);
-        txtUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        txtUrl.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-        
-        Label templateUrl = new Label(pnl, SWT.LEFT);
-        templateUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-        templateUrl.setText(UTIL.getString("serverPageProtocolLabel") + //$NON-NLS-1$
-        		StringUtilities.SPACE + StringUtilities.SPACE + ServerUtils.FORMAT_SERVER); 
-
-
-        // set initial value
-        if (this.url == null) {
-            this.url = ServerUtils.DEFAULT_SECURE_SERVER;
         }
-
-        txtUrl.setText(this.url);
-
-        txtUrl.addModifyListener(new ModifyListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-             */
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                handleUrlModified(((Text)e.widget).getText());
-            }
-        });
+        
+        
     }
 
     /**
@@ -359,9 +627,11 @@ public final class ServerPage extends WizardPage {
         Composite pnlMain = new Composite(parent, SWT.NONE);
         pnlMain.setLayout(new GridLayout());
         pnlMain.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        constructUrlPanel(pnlMain);
-        constructAuthenticationPanel(pnlMain);
-        constructTestConnectionPanel(pnlMain);
+        
+        constructTeiidAdminConnectionPanel(pnlMain);
+        
+        constructTeiidJdbcConnectionPanel(pnlMain);
+        
         setControl(pnlMain);
 
         // register with the help system
@@ -378,7 +648,7 @@ public final class ServerPage extends WizardPage {
      */
     public Server getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
-            return new Server(this.url, this.user, this.password, this.savePassword, getServerManager());
+        	return new Server(this.server.getTeiidAdminInfo(), this.server.getTeiidJdbcInfo(), getServerManager());
         }
 
         // should never be called if error status
@@ -403,16 +673,68 @@ public final class ServerPage extends WizardPage {
      * 
      * @param newPassword the new password value
      */
-    void handlePasswordModified( String newPassword ) {
-        this.password = newPassword;
+    void handleAdminPasswordModified( String newPassword ) {
+        this.adminPassword = newPassword;
+        this.server.getTeiidAdminInfo().setPassword(newPassword);
         updateState();
     }
 
     /**
      * @param savePassword <code>true</code> if the password should be persisted on the local file system
      */
-    void handleSavePasswordChanged( boolean savePassword ) {
-        this.savePassword = savePassword;
+    void handleAdminSavePasswordChanged( boolean savePassword ) {
+        this.saveAdminPassword = savePassword;
+        this.server.getTeiidAdminInfo().setPersistPassword(savePassword);
+        updateState();
+    }
+    
+    /**
+     * @param newHost the new host value
+     */
+    void handleAdminHostModified( String newHost ) {
+        this.adminHost = newHost;
+        this.server.getTeiidAdminInfo().setHost(newHost);
+        // Need to update BOTH server info objects with same Host Name
+        this.server.getTeiidJdbcInfo().setHost(newHost);
+        updateState();
+    }
+    
+    /**
+     * @param newPort the new host value
+     */
+    void handleAdminPortModified( String newPort ) {
+        this.adminPort = newPort;
+        this.server.getTeiidAdminInfo().setPort(newPort);
+        updateState();
+    }
+    
+    /**
+     * Handler for when the password control value is modified
+     * 
+     * @param newPassword the new password value
+     */
+    void handleJdbcPasswordModified( String newPassword ) {
+        this.jdbcPassword = newPassword;
+        this.server.getTeiidJdbcInfo().setPassword(newPassword);
+        updateState();
+    }
+
+    /**
+     * @param savePassword <code>true</code> if the password should be persisted on the local file system
+     */
+    void handleJdbcSavePasswordChanged( boolean savePassword ) {
+        this.saveJdbcPassword = savePassword;
+        this.server.getTeiidJdbcInfo().setPersistPassword(savePassword);
+        updateState();
+    }
+    
+    /**
+     * @param newPort the new host value
+     */
+    void handleJdbcPortModified( String newPort ) {
+        this.jdbcPort = newPort;
+        this.server.getTeiidJdbcInfo().setPort(newPort);
+        updateState();
     }
 
     /**
@@ -446,27 +768,48 @@ public final class ServerPage extends WizardPage {
 	        }
         }
     }
-
-    /**
-     * Handler for when the URL control value is modified
-     * 
-     * @param newUrl the new URL value
-     */
-    void handleUrlModified( String newUrl ) {
-        this.url = newUrl;
-        updateState();
-    }
-
+    
     /**
      * Handler for when the user control value is modified
      * 
      * @param newUser the new user value
      */
-    void handleUserModified( String newUser ) {
-        this.user = newUser;
+    void handleAdminUserModified( String newUser ) {
+        this.adminUsername = newUser;
+        this.server.getTeiidAdminInfo().setUsername(newUser);
         updateState();
     }
-
+    /**
+     * Handler for when the user control value is modified
+     * 
+     * @param newUser the new user value
+     */
+    void handleAdminSSLChanged( boolean isSecure ) {
+        this.adminURLIsSecure = isSecure;
+        this.server.getTeiidAdminInfo().setSecure(isSecure);
+        updateState();
+    } 
+    
+    /**
+     * Handler for when the user control value is modified
+     * 
+     * @param newUser the new user value
+     */
+    void handleJdbcUserModified( String newUser ) {
+        this.jdbcUsername = newUser;
+        this.server.getTeiidJdbcInfo().setUsername(newUser);
+        updateState();
+    }
+    /**
+     * Handler for when the user control value is modified
+     * 
+     * @param newUser the new user value
+     */
+    void handleJdbcSSLChanged( boolean isSecure ) {
+        this.jdbcURLIsSecure = isSecure;
+        this.server.getTeiidJdbcInfo().setSecure(isSecure);
+        updateState();
+    } 
     private IStatus isServerValid( String url,
                                    String username,
                                    String password ) {
@@ -529,6 +872,9 @@ public final class ServerPage extends WizardPage {
      * Updates message, message icon, and OK button enablement based on validation results
      */
     private void updateState() {
+    	this.adminURLText.setText(this.server.getTeiidAdminInfo().getURL());
+    	this.jdbcURLText.setText(this.server.getTeiidJdbcInfo().getURL());
+    	
         // get the current status
         validate();
 
@@ -554,7 +900,7 @@ public final class ServerPage extends WizardPage {
      * Validates all inputs and sets the validation status.
      */
     private void validate() {
-        this.status = isServerValid(this.url, this.user, this.password);
+        this.status = isServerValid(this.server.getTeiidAdminInfo().getURL(), this.adminUsername, this.adminPassword);
 
         // now check to see if a server is already registered
         if (this.status.isOK()) {
@@ -563,7 +909,7 @@ public final class ServerPage extends WizardPage {
             // don't check if modifying existing server and identifying properties have not changed
             if (((this.server == null) || !this.server.hasSameKey(changedServer))
                 && getServerManager().isRegistered(changedServer)) {
-                this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer.getUrl())); //$NON-NLS-1$
+                this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer.getTeiidAdminInfo().getURL())); //$NON-NLS-1$
             }
         }
     }
