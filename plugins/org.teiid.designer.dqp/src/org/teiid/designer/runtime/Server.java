@@ -9,11 +9,13 @@ package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -53,32 +55,22 @@ public class Server {
     protected final EventManager eventManager;
 
     private ExecutionManager executionManager;
-
+    
     /**
-     * The password to use when logging on to the server.
+     * The Teiid JDBC connection info object
      */
-    private final String password;
-
+    private TeiidJdbcInfo teiidJdbcInfo;
+    
     /**
-     * Indicates if the password should be stored locally when the server is persisted.
+     * The Teiid Admin connection info object
      */
-    private final boolean persistPassword;
-
-    /**
-     * The server URL (never <code>null</code>).
-     */
-    private final String url;
-
-    /**
-     * The user name to use when logging on to the server (never <code>null</code>).
-     */
-    private final String user;
+    private TeiidAdminInfo teiidAdminInfo;
 
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
-
-    /**
+    
+	/**
      * Constructs on new <code>Server</code>.
      * 
      * @param url the server URL (never <code>null</code>)
@@ -86,20 +78,16 @@ public class Server {
      * @param password the server password (may be <code>null</code>)
      * @throws IllegalArgumentException if the URL or user arguments are <code>null</code>
      */
-    public Server( String url,
-                   String user,
-                   String password,
-                   boolean persistPassword,
+    public Server( TeiidAdminInfo adminInfo,
+                   TeiidJdbcInfo jdbcInfo,
                    EventManager eventManager ) {
-        CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(user, "user"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
 
-        this.url = url;
-        this.user = user;
-        this.password = password;
-        this.persistPassword = persistPassword;
         this.eventManager = eventManager;
+        
+        this.teiidAdminInfo = adminInfo;
+        this.teiidJdbcInfo = jdbcInfo;
     }
 
     // ===========================================================================================================================
@@ -144,17 +132,17 @@ public class Server {
         if ((obj == null) || (getClass() != obj.getClass())) return false;
 
         Server otherServer = (Server)obj;
-        return equivalent(this.url, otherServer.url) && equivalent(this.user, otherServer.user)
-               && equivalent(this.password, otherServer.password) && (this.persistPassword == otherServer.persistPassword);
+        return equivalent(getTeiidAdminInfo().getURL(), otherServer.getTeiidAdminInfo().getURL()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername())
+               && equivalent(getTeiidAdminInfo().getPassword(), otherServer.getTeiidAdminInfo().getPassword()) && (isPasswordBeingPersisted() == otherServer.isPasswordBeingPersisted());
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
         if (this.admin == null) {
             char[] pwd = null;
-            if (this.password != null) {
-                pwd = this.password.toCharArray();
+            if (getTeiidAdminInfo().getPassword() != null) {
+                pwd = getTeiidAdminInfo().getPassword().toCharArray();
             }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(this.user, pwd, this.url), this,
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getTeiidAdminInfo().getUsername(), pwd, getTeiidAdminInfo().getURL()), this,
                                             this.eventManager);
             this.admin.load();
         }
@@ -162,26 +150,13 @@ public class Server {
         return this.admin;
     }
 
-    /**
-     * @return the server authentication password
-     */
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * @return the server URL (never <code>null</code>)
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
-     * @return the server authentication user (never <code>null</code>)
-     */
-    public String getUser() {
-        return this.user;
-    }
+    public TeiidAdminInfo getTeiidAdminInfo() {
+		return teiidAdminInfo;
+	}
+    
+    public TeiidJdbcInfo getTeiidJdbcInfo() {
+		return teiidJdbcInfo;
+	}
 
     public ExecutionManager getExecutionManager() {
         if (this.executionManager == null) {
@@ -198,7 +173,7 @@ public class Server {
      */
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(0, this.url, this.user, this.password);
+        return HashCodeUtil.hashCode(0, getTeiidAdminInfo().getURL(), getTeiidAdminInfo().getUsername(), getTeiidAdminInfo().getPassword());
     }
 
     /**
@@ -210,7 +185,7 @@ public class Server {
      */
     public boolean hasSameKey( Server otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
-        return (equivalent(this.url, otherServer.url) && equivalent(this.user, otherServer.user));
+        return (equivalent(getTeiidAdminInfo().getURL(), otherServer.getTeiidAdminInfo().getURL()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername()));
     }
 
     /**
@@ -227,7 +202,7 @@ public class Server {
      * @return persistPassword <code>true</code> if the password is being persisted
      */
     public boolean isPasswordBeingPersisted() {
-        return this.persistPassword;
+        return this.teiidAdminInfo.isPasswordBeingPersisted();
     }
 
     /**
@@ -239,12 +214,20 @@ public class Server {
         try {
             getAdmin().getAdminApi().getSessions();
         } catch (Exception e) {
-            String msg = Util.getString("cannotConnectToServer", getUrl()); //$NON-NLS-1$
+            String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
 
         return Status.OK_STATUS;
     }
+  
+	public void setTeiidAdminInfo(TeiidAdminInfo adminInfo) {
+		this.teiidAdminInfo = adminInfo;
+	}
+    
+	public void setTeiidJdbcInfo(TeiidJdbcInfo jdbcInfo) {
+		this.teiidJdbcInfo = jdbcInfo;
+	}
     
     /**
      * Attempts to establish communication with the specified server for testing purposes only.
@@ -259,7 +242,7 @@ public class Server {
             adminApi.close();
             this.admin = null;
         } catch (Exception e) {
-            String msg = Util.getString("cannotConnectToServer", getUrl()); //$NON-NLS-1$
+            String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getURL()); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
 
@@ -274,7 +257,7 @@ public class Server {
      */
     @Override
     public String toString() {
-        return getUrl() + "::" + getUser(); //$NON-NLS-1$
+        return getTeiidAdminInfo().getURL() + "::" + getTeiidAdminInfo().getUsername(); //$NON-NLS-1$
     }
 
 }

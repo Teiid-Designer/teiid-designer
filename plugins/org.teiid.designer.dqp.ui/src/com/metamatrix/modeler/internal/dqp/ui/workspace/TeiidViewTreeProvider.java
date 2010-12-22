@@ -366,7 +366,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     @Override
     public String getText( Object element ) {
         if (element instanceof Server) {
-            return ((Server)element).getUrl();
+            return ((Server)element).getTeiidAdminInfo().getURL();
         }
 
         if (element instanceof TeiidFolder) {

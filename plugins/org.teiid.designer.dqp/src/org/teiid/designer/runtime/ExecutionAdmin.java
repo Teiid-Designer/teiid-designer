@@ -214,7 +214,7 @@ public class ExecutionAdmin {
 
         // Verify the "typeName" exists.
         if (!this.dataSourceTypeNames.contains(typeName)) {
-            throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer().getUrl())); //$NON-NLS-1$
+            throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
         }
 
         this.admin.createDataSource(jndiName, typeName, properties);
@@ -233,7 +233,7 @@ public class ExecutionAdmin {
         }
 
         // We shouldn't get here if data source was created
-        throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer().getUrl())); //$NON-NLS-1$
+        throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
     }
 
     /**

@@ -112,7 +112,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         } else if( !server.isConnected() ) {
         	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
                     DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.title"), //$NON-NLS-1$
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.message", server.getUrl())); //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.message", server.getTeiidAdminInfo().getURL())); //$NON-NLS-1$
         	return null;
     	}
 
@@ -149,7 +149,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                             e,
                             DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
                             							  vdbName,
-                                                          server.getUrl()));
+                                                          server.getTeiidAdminInfo().getURL()));
 				}
 			}
 		});

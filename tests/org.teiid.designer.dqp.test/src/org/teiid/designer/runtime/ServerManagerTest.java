@@ -141,7 +141,7 @@ public class ServerManagerTest {
     @Test
     public void shouldGetServerByUrl() {
         this.mgr.addServer(server1);
-        when(server1.getUrl()).thenReturn(SERVER1_URL);
+        when(server1.getTeiidAdminInfo().getURL()).thenReturn(SERVER1_URL);
         assertThat(this.mgr.getServer(SERVER1_URL), is(server1));
     }
 
@@ -198,17 +198,17 @@ public class ServerManagerTest {
 
         Server server = this.mgr.getServer(RESTORED_SERVER1_URL);
         assertThat(server, notNullValue());
-        assertThat(server.getUser(), is(RESTORED_SERVER1_USER));
+        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER1_USER));
         assertThat(server, is(not(this.mgr.getDefaultServer())));
 
         server = this.mgr.getServer(RESTORED_SERVER2_URL);
         assertThat(server, notNullValue());
-        assertThat(server.getUser(), is(RESTORED_SERVER2_USER));
+        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER2_USER));
         assertThat(server, is(sameInstance(this.mgr.getDefaultServer()))); // server was persisted as the default preview server
 
         server = this.mgr.getServer(RESTORED_SERVER3_URL);
         assertThat(server, notNullValue());
-        assertThat(server.getUser(), is(RESTORED_SERVER3_USER));
+        assertThat(server.getTeiidAdminInfo().getUsername(), is(RESTORED_SERVER3_USER));
         assertThat(server, is(not(this.mgr.getDefaultServer())));
     }
 

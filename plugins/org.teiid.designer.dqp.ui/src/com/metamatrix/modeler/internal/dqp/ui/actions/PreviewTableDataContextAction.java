@@ -46,6 +46,7 @@ import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
@@ -272,22 +273,24 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			// TODO: All of these values should be taken from the deployed
     			// pvdb. I have hardcoded them here so that I can test with
     			// a fully depolyed VDB, see the Teiid download for this VDB.
-    			String username = "admin"; //$NON-NLS-1$
-    			String password = "teiid"; //$NON-NLS-1$
+//    			String username = "admin"; //$NON-NLS-1$
+//    			String password = "teiid"; //$NON-NLS-1$
     			String vdbName = PreviewManager.getPreviewProjectVdbName(project);
     			if (vdbName.endsWith(TeiidVdb.VDB_DOT_EXTENSION)) {
     				vdbName = vdbName.substring(0, vdbName.length() - 4);
     			}
-    			String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
-    			String connectionURL = "jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
+//    			String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
+    			TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, DqpPlugin.getInstance().getServerManager().getDefaultServer().getTeiidJdbcInfo());
+    			
+//    			String connectionURL = jdbcInfo.getURL(); //"jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
 
     			// Note that this is a Transient profile, it is not visible in
     			// the
     			// UI and goes away when it is garbage collected.
     			IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
-    					connectionURL,
-    					username,
-    					password,
+    					jdbcInfo.getURL(),
+    					jdbcInfo.getUsername(),
+    					jdbcInfo.getPassword(),
     					vdbName);
 
     			final Connection sqlConnection = getSqlConnection(profile);
