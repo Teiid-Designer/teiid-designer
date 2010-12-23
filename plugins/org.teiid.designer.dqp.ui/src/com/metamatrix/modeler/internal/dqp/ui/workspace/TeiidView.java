@@ -63,6 +63,7 @@ import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
+import org.teiid.designer.runtime.ui.DisconnectFromServerAction;
 import org.teiid.designer.runtime.ui.EditServerAction;
 import org.teiid.designer.runtime.ui.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.NewServerAction;
@@ -140,6 +141,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * Refreshes the server connections.
      */
     private ReconnectToServerAction reconnectAction;
+    
+    private DisconnectFromServerAction disconnectAction;
 
     /**
      * Sets the selected Server as the default server for preview and execution
@@ -282,6 +285,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     
                     if (this.setDefaultServerAction.isEnabled()) {
                         manager.add(this.setDefaultServerAction);
+                    }
+                    if( currentSelectedAdmin != null )  {
+                    	manager.add(this.disconnectAction);
                     }
                     manager.add(this.reconnectAction);
                     manager.add(new Separator());
@@ -736,6 +742,10 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         // the reconnect action tries to ping a selected server
         this.reconnectAction = new ReconnectToServerAction(this.viewer);
         this.viewer.addSelectionChangedListener(this.reconnectAction);
+        
+        // the disconnect action clears the server's object cache, closes connection and null's admin references.
+        this.disconnectAction = new DisconnectFromServerAction(this.viewer);
+        this.viewer.addSelectionChangedListener(this.disconnectAction);
 
         // the delete action will delete one or more servers
         this.deleteServerAction = new DeleteServerAction(shell, getServerManager());

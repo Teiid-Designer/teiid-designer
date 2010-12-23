@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
@@ -119,6 +120,17 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     		return;
     	}
 
+        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+            @Override
+            public void run() {
+            	internalRun();
+            }
+        });
+
+    }
+    
+    private void internalRun() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
         VDB deployedVDB = null;
 
@@ -163,7 +175,6 @@ public class ExecuteVDBAction extends SortableSelectionAction {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e, DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotDeployedError", //$NON-NLS-1$
             		selectedVDB.getName()));
         }
-
     }
 
     @Override
