@@ -85,6 +85,7 @@ public class ConnectivityUtil {
             	if(jarList != driverPath) {
             		mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
             	}
+            	mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.URL_PROP_ID, connectionURL);
             }
             
 
