@@ -9,13 +9,18 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -63,7 +68,33 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
      */
     @Override
     public void run() {
+    	boolean disconnectOldDefault = false;
+    	if( this.serverManager.getDefaultServer().isConnected() ) {
+	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
+	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
+	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", this.serverManager.getDefaultServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+    	}
+    	if( disconnectOldDefault ) {
+    		this.serverManager.getDefaultServer().disconnect();
+    		
+    	}
         this.serverManager.setDefaultServer(this.selectedServer);
+        if( !this.selectedServer.isConnected() ) {
+        	final Server theNewDefaultServer = this.selectedServer;
+            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+                public void run() {
+			        try {
+			        	// Call disconnect() first to clear out Server & admin caches
+			        	theNewDefaultServer.getAdmin().refresh();
+			        } catch (Exception e) {
+			            UTIL.log(e);
+			            String msg = UTIL.getString("serverReconnectErrorMsg", theNewDefaultServer.getTeiidAdminInfo().getURL()); //$NON-NLS-1$
+			            WidgetUtil.showError(msg);
+			        }
+                }
+            });
+        }
     }
 
     /**
@@ -92,5 +123,9 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
         }
 
         return false;
+    }
+    
+    private static Shell getShell() {
+    	return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 }
