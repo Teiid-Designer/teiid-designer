@@ -112,10 +112,10 @@ public interface DqpUiConstants {
         public static final String SOURCE_CONNECTOR_BINDING_ICON = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$
         public static final String IMPORT_WIZ_ICON = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
         // TODO create SERVER images
-        public static final String SERVER_ICON = PC.CTOOL16 + "server.gif"; //$NON-NLS-1$
-        public static final String SERVER_ERROR_ICON = PC.CTOOL16 + "server_error.gif"; //$NON-NLS-1$
-        public static final String SET_DEFAULT_SERVER_ICON = PC.CTOOL16 + "default_server.gif"; //$NON-NLS-1$
-        public static final String SET_DEFAULT_SERVER_ERROR_ICON = PC.CTOOL16 + "default_server_error.gif"; //$NON-NLS-1$
+        public static final String SERVER_ICON = PC.CTOOL16 + "teiid-server.png"; //$NON-NLS-1$
+        public static final String SERVER_ERROR_ICON = PC.CTOOL16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
+        public static final String SET_DEFAULT_SERVER_ICON = PC.CTOOL16 + "teiid-server-default.png"; //$NON-NLS-1$
+        public static final String SET_DEFAULT_SERVER_ERROR_ICON = PC.CTOOL16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
         public static final String NEW_SERVER_ICON = PC.CTOOL16 + "new_server.gif"; //$NON-NLS-1$
         public static final String DELETE_SERVER_ICON = PC.CTOOL16 + "delete_server.gif"; //$NON-NLS-1$
         public static final String EDIT_SERVER_ICON = PC.CTOOL16 + "edit_server.gif"; //$NON-NLS-1$
