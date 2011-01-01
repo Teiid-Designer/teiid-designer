@@ -264,9 +264,9 @@
 			The Teiid View provides a means to display and manage Teiid server instances 
 			and their contents within Designer.
 		</para>
-		<para>To show the Teiid View click "<emphasis>Views > Show View > Other...</emphasis>" 
-		to display the Show View dialog. Choose "<emphasis>Teiid Designer > Teiid</emphasis>" 
-		view and hit <emphasis>OK</emphasis>.</para>
+		<para>To show the Teiid View click "<emphasis role="bold">Views > Show View > Other...</emphasis>" 
+		to display the Show View dialog. Choose "<emphasis role="bold">Teiid Designer > Teiid</emphasis>" 
+		view and hit <emphasis role="bold">OK</emphasis>.</para>
 		<figure id="teiid-view-image">
 			<title>Teiid View</title>
 			<mediaobject>
@@ -276,13 +276,16 @@
 			</mediaobject>
 		</figure>
 		<para>To create a new Teiid instance, either right-click select
-			 <emphasis>New Teiid Instance</emphasis> action or click the New Server 
-			 button in the toolbar.
+			 <emphasis role="bold">New Teiid Instance</emphasis> action or click the same action 
+			 button, <inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/new-teiid-server.png"/>
+							</imageobject>
+						</inlinemediaobject> , in the toolbar.
 		</para>
 		
 		<para>
-			You'll get the <emphasis>New Teiid Instance</emphasis> dialog shown below. Provide a 
-			valid URL, user name and password and click <emphasis>Finish</emphasis>.
+			You'll get the <emphasis role="bold">New Teiid Instance</emphasis> dialog shown below.
 		</para>
 		<figure id="new-teiid-instance-dialog-image">
 			<title>New Teiid Instance Dialog</title>
@@ -292,22 +295,60 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<para>The dialog contains two
+			panels of input. The top panel, <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
+			URL of your installed Teiid instance. The operations Designer exposes deal with deploying and undeploying VDBs
+			as well as managing your test data sources required by those VDBs to successfully connect and query data
+			through the Teiid runtime engine.
+		</para>
+		<para>The second panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
+			same Teiid instance. This information is required for Designer to make JDBC connections during execution of the
+			Preview Data feature.
+		</para>
+		<para>Enter valid <emphasis role="bold">Host, Port, User name</emphasis> and <emphasis role="bold">Password</emphasis> information, edit any options and click <emphasis>Finish</emphasis>.</para>
+		
 		<para>Actions available in this view include:</para>
 		<itemizedlist>
-		  <listitem><para>New Teiid Instance - Create a new instance of a running Teiid server</para></listitem>
-		  <listitem><para>Teiid Server Properties - View and edit properties of an existing Teiid instance</para></listitem>
-		  <listitem><para>Reconnect - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
-		  <listitem><para>Discard - Disconnect and delete the selected Teiid instance</para></listitem>
-		  <listitem><para>Execute VDB - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
-		  <listitem><para>Undeploy VDB - Removes the selected VDB from the Teiid instance</para></listitem>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/new-teiid-server.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">New Teiid Instance</emphasis> - Create a new instance of a running Teiid server</para></listitem>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/edit-teiid-server.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance</para></listitem>
+		  <listitem><para><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/delete-teiid-server.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Disconnect and delete the selected Teiid instance</para></listitem>
+		  </itemizedlist>
+		  <itemizedlist>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/run-vdb.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/delete.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Undeploy VDB</emphasis> - Removes the selected VDB from the Teiid instance</para></listitem>
 		</itemizedlist>
 		<itemizedlist>
-			<listitem><para>Create Data Source - Launches the New Data Source wizard</para></listitem>
-			<listitem><para>Delete Data Source - Removes the selected Data Source from the Teiid instance</para></listitem>
-		</itemizedlist>
-		<itemizedlist>
-			<listitem><para>Execute VDB - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
-		   <listitem><para>Undeploy VDB - Removes the selected VDB from the Teiid instance</para></listitem>
+			<listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/new-binding.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Create Data Source</emphasis> - Launches the New Data Source wizard</para></listitem>
+			<listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/delete.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance</para></listitem>
 		</itemizedlist>
 	</section>
 	
@@ -843,3 +884,4 @@
 	</section>
     
 </chapter>
+
