@@ -69,7 +69,7 @@
       <topic label="Outline Tree View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/outline-view.html#outline-tree-view"></topic>
       <topic label="Outline Thumbnail View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/outline-view.html#outline-thumbnail-view"></topic>
     </topic>
-    <topic label="Connectors View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/teiid-view.html"></topic>
+    <topic label="Teiid View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/teiid-view.html"></topic>
     <topic label="Properties View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/properties-view.html"></topic>
     <topic label="Description View" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/description-view.html"></topic>
     <topic label="Editors" href="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-view.html"></topic>
