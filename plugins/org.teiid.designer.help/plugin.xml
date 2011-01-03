@@ -16,20 +16,4 @@
    <extension point="org.eclipse.help.toc">
       <toc file="toc.xml" primary="true"></toc>
    </extension>
-<!--    <toc file="designer_toc.xml" primary="false" /> -->
-<!-- =============================================== -->
-<!-- Link the sections into the book                 -->
-<!-- =============================================== -->
-<!-- 
-   <extension point="org.eclipse.help.toc">
-      <toc file="getting_started.xml"/>
-      <toc file="designer_overview.xml"/>
-      <toc file="how_tos.xml"/>
-   </extension>
-   -->
-<!-- 
-  <extension point="org.eclipse.help.index">
-    <index file="index.xml"></index>
-  </extension>
-   -->
 </plugin>
