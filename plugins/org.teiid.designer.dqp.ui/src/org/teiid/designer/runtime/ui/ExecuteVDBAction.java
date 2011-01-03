@@ -214,41 +214,19 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
-    	if(null != profile) {
-    		profile.connectWithoutJob();
-    		try {
-    			PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
-    		} catch (Throwable e) {
-    			DqpUiConstants.UTIL.log(e);
-    		}
-    	} else {
+    	if(profile == null) {
     		// This call has the effect of creating the driver, which provides the values to the Profile UI.
-    		ConnectivityUtil.createVDBTeiidProfileProperties(driverPath,
+    		profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
     				connectionURL, jdbcInfo.getUsername(), jdbcInfo.getPassword(), vdbName, profileName);
-    		NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
-    		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
-    		wizardDialog.setBlockOnOpen(true);
-    		if (wizardDialog.open() == Window.OK) {
-    			try {
-    				PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
-    			} catch (Throwable e) {
-    				DqpUiConstants.UTIL.log(e);
-    			}
-    		}
+    	}
+    	profile.connectWithoutJob();
+    	try {
+    		PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    	} catch (Throwable e) {
+    		DqpUiConstants.UTIL.log(e);
     	}
     }
 
-    /*
-     * Converts a Teiid Admin URL to a Teiid JDBC URL
-     * 
-     */
-//	private static String convertUrl(String vdbName, String adminURL) {
-//		adminURL = "mm"+ adminURL.substring(adminURL.indexOf(':')); //$NON-NLS-1$
-//    	adminURL = adminURL.substring(0, adminURL.lastIndexOf(':') + 1) + "31000"; //$NON-NLS-1$
-//    	return "jdbc:teiid:" + vdbName + "@" + adminURL; //$NON-NLS-1$ //$NON-NLS-2$
-//	}
-
-    
     private static Shell getShell() {
     	return DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
