@@ -189,4 +189,36 @@ public class ConnectivityUtil {
 
 		return createDriverProps(driverPath, connectionURL, username, password, vdbName);
     }
+    
+    public static IConnectionProfile createVDBTeiidProfile( String driverPath,
+    		String connectionURL,
+    		String username,
+    		String password,
+    		String vdbName, 
+    		String profileName) throws CoreException {
+    	ProfileManager pm = ProfileManager.getInstance();
+    	try {
+    		DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
+    		if (mDriver == null) {
+    			createTeiidVDBDriverInstance(driverPath, connectionURL, username, password, vdbName, profileName);
+    		} else {
+    			// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
+    			String jarList = mDriver.getJarList();
+    			if(jarList != driverPath) {
+    				mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
+    			}
+    		}
+    		IConnectionProfile existingCP = pm.getProfileByName(profileName);
+    		if (existingCP != null) {
+    			return existingCP;
+    		}
+
+    		return pm.createProfile(profileName, "", //$NON-NLS-1$
+    				TEIID_PROFILE_PROVIDER_ID,
+    				createDriverProps(driverPath, connectionURL, username, password, vdbName));
+    	} catch (ConnectionProfileException e) {
+    		Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
+    		throw new CoreException(status);
+    	}
+    }
 }
