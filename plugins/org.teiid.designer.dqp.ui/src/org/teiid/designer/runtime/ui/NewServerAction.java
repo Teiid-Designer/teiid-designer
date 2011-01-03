@@ -96,10 +96,15 @@ public class NewServerAction extends Action {
 	        if( wizard.shouldAutoConnect() ) {
 	            	try {
 	    				wizard.getServer().getAdmin();
+	    				wizard.getServer().setConnectionError(null);
 	    				this.serverManager.setDefaultServer(wizard.getServer());
+	    				
 	    			} catch (Exception e) {
+	    				String msg = UTIL.getString("serverWizardNewServerAutoConnectError"); //$NON-NLS-1$
 	    				MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
-	                            UTIL.getString("serverWizardNewServerAutoConnectError")); //$NON-NLS-1$
+	    						msg);
+	    				wizard.getServer().setConnectionError(msg);
+	    				wizard.getServer().notifyRefresh();
 	    			}
 
 	        }

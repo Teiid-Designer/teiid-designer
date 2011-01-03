@@ -63,11 +63,13 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                 	// Call disconnect() first to clear out Server & admin caches
                 	server.disconnect();
                     server.getAdmin().refresh();
+                    server.setConnectionError(null);
                 } catch (Exception e) {
                     UTIL.log(e);
-                    getViewer().refresh(server);
                     String msg = UTIL.getString("serverReconnectErrorMsg", server.getTeiidAdminInfo().getURL()); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
+                    server.setConnectionError(msg);
+                    getViewer().refresh(server);
                 }
             }
         });

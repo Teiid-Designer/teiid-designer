@@ -113,7 +113,7 @@ public interface DqpUiConstants {
         public static final String IMPORT_WIZ_ICON = PC.CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
         // TODO create SERVER images
         public static final String SERVER_ICON = PC.CTOOL16 + "teiid-server.png"; //$NON-NLS-1$
-        public static final String SERVER_ERROR_ICON = PC.CTOOL16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
+        public static final String SERVER_ERROR_ICON = PC.CTOOL16 + "teiid-server-error.png"; //$NON-NLS-1$
         public static final String SET_DEFAULT_SERVER_ICON = PC.CTOOL16 + "teiid-server-default.png"; //$NON-NLS-1$
         public static final String SET_DEFAULT_SERVER_ERROR_ICON = PC.CTOOL16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
         public static final String NEW_SERVER_ICON = PC.CTOOL16 + "new-teiid-server.png"; //$NON-NLS-1$
@@ -131,6 +131,7 @@ public interface DqpUiConstants {
         public static final String SERVER_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //"server_wizard_banner.jpg"; //$NON-NLS-1$
         public static final String CREATE_WAR = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String DEPLOY_VDB = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
+        public static final String EXECUTE_VDB = PC.CTOOL16 + "run_vdb.gif"; //$NON-NLS-1$
         public static final String INACTIVE_DEPLOYED_VDB = PC.CTOOL16 + "inactiveDeployedVdb.png"; //$NON-NLS-1$
 
     }

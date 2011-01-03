@@ -57,7 +57,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
     public ExecuteVDBAction() {
         super();
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EXECUTE_VDB));
     }
 
     @Override
