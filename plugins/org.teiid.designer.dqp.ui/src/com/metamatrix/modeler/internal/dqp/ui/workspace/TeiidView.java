@@ -305,16 +305,18 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                     	manager.add(this.createDataSourceAction);
                     }
                 } else if (selection instanceof TeiidDataSource) {
+                	manager.add(this.createDataSourceAction);
+                    manager.add(new Separator());
                     manager.add(this.deleteDataSourceAction);
-                    manager.add(this.createDataSourceAction);
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
                     currentSelectedAdmin = ((TeiidDataSource)selection).getAdmin();
                 } else if (selection instanceof TeiidVdb) {
                 	currentSelectedAdmin = ((TeiidVdb)selection).getAdmin();
                     this.executeVdbAction.setEnabled(((TeiidVdb)selection).isActive());
-                    manager.add(this.undeployVdbAction);
                     manager.add(this.executeVdbAction);
+                    manager.add(new Separator());
+                    manager.add(this.undeployVdbAction);             
                     manager.add(new Separator());
                     manager.add(this.newServerAction);
                     manager.add(this.createDataSourceAction);
@@ -612,6 +614,13 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                     tooltip = getVDBToolTip((TeiidVdb)data);
                                 } else if (data instanceof TeiidViewTreeProvider.TeiidFolder) {
                                     tooltip = ((TeiidViewTreeProvider.TeiidFolder)data).getName();
+                                } else if( data instanceof Server ) {
+                                	Server server = (Server)data;
+                                	String ttip = server.toString();
+                                	if( server.getConnectionError() != null ) {
+                                		ttip = ttip + "\n\n" + server.getConnectionError(); //$NON-NLS-1$
+                                	}
+                                	tooltip = ttip;
                                 } else {
                                     tooltip = data.toString();
                                 }
@@ -683,6 +692,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         };
 
+        this.deleteDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DELETE_ICON));
         this.deleteDataSourceAction.setToolTipText(getString("deleteDataSourceAction.tooltip")); //$NON-NLS-1$
         this.deleteDataSourceAction.setEnabled(true);
 
@@ -708,6 +718,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         };
 
+        this.undeployVdbAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DELETE_ICON));
         this.undeployVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
         this.undeployVdbAction.setEnabled(true);
 
@@ -734,6 +745,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         };
 
+        this.executeVdbAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EXECUTE_VDB));
         this.executeVdbAction.setToolTipText(getString("undeployVdbAction.tooltip")); //$NON-NLS-1$
         this.executeVdbAction.setEnabled(true);
 

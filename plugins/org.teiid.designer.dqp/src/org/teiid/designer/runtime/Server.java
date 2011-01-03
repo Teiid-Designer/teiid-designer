@@ -17,6 +17,7 @@ import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
  *
@@ -65,6 +66,8 @@ public class Server {
      * The Teiid Admin connection info object
      */
     private TeiidAdminInfo teiidAdminInfo;
+    
+    private String connectionError;
 
     // ===========================================================================================================================
     // Constructors
@@ -220,7 +223,23 @@ public class Server {
 
         return Status.OK_STATUS;
     }
+    
+    public void notifyRefresh() {
+    	if( this.admin != null ) {
+    		this.admin.getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
+    	} else {
+    		DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
+    	}
+    }
   
+	public String getConnectionError() {
+		return connectionError;
+	}
+
+	public void setConnectionError(String connectionError) {
+		this.connectionError = connectionError;
+	}
+
 	public void setTeiidAdminInfo(TeiidAdminInfo adminInfo) {
 		this.teiidAdminInfo = adminInfo;
 	}

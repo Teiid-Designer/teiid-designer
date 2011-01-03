@@ -309,8 +309,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
                     return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ICON);
                 }
             }
-            if( isError ) {
+            if( isError) {
+            	if( server.getConnectionError() != null )
             	return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
+            	else
+            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
