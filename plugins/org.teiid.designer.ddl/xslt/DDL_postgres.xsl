@@ -32,7 +32,7 @@
 <xsl:template match="/ddl">
 <pre>
 <xsl:text>-- Build Script
---     RDBMS           : IBM DB2 7.x UDB
+--     RDBMS           : Postgres DDL file
 --     Generated With  : </xsl:text><xsl:value-of select="@exportTool"/><xsl:text> </xsl:text><xsl:value-of select="@exportToolVersion"/>
 <xsl:text>
 --     Generated On    : </xsl:text><xsl:value-of select="@exportDate"/><xsl:text> </xsl:text><xsl:value-of select="@exportTime"/>
@@ -78,102 +78,98 @@
 <xsl:if test="/ddl/@generateDrops='true'">
 	<xsl:apply-templates select="./view" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./foreignKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./primaryKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./uniqueKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./index" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./table" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./procedure" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./schema" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./catalog" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:value-of select="$line-feed"/>
 </xsl:if>
 
-
 <!-- Generate the CREATE statements -->
 <xsl:apply-templates select="./catalog">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./schema">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./table">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./index">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./primaryKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./uniqueKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./foreignKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./procedure">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./view">
 	<xsl:with-param name="terminationString">
-		<xsl:text>%</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
-<xsl:text>
-
-</xsl:text>
 </pre>
 </xsl:template>
 
@@ -192,9 +188,8 @@
 <xsl:template match="schema" mode="generate-table-drops">
 <xsl:param name="terminationString"/>
 <xsl:text>
-DROP SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> RESTRICT</xsl:text>
+DROP SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> CASCADE</xsl:text>
 <xsl:value-of select="$terminationString"/>
-<xsl:value-of select="$line-feed"/>
 </xsl:template>
 
 <!--
@@ -205,7 +200,12 @@ DROP SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> RESTRICT</xsl:te
 <xsl:param name="terminationString"/>
 <xsl:if test="local-name(./..) != 'schema'">
 <xsl:text>
-DROP TABLE </xsl:text><xsl:value-of select="@name"/>
+-- Uncomment the following 'TRUNCATE' line to purge data before dropping
+-- (truncates cannot be rolled back and are therefore permanent)
+--TRUNCATE TABLE </xsl:text><xsl:value-of select="@name"/>
+<xsl:value-of select="$terminationString"/>
+<xsl:text>
+DROP TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text> CASCADE</xsl:text>
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:if>
@@ -235,37 +235,37 @@ DROP VIEW </xsl:text><xsl:value-of select="@name"/>
 <xsl:param name="terminationString"/>
 	<xsl:apply-templates select="./table">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./index">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./primaryKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./uniqueKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./foreignKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./procedure">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./view">
 		<xsl:with-param name="terminationString">
-			<xsl:text>%</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 </xsl:template>
@@ -278,7 +278,7 @@ DROP VIEW </xsl:text><xsl:value-of select="@name"/>
 <xsl:param name="terminationString"/>
 <xsl:text>
 -- ** NOTE: Replace &quot;&lt;USERID>&quot; with the appropriate ID of the user **
-CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> AUTHORIZATION &lt;USERID>
+CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 </xsl:text>
 <xsl:apply-templates select="./table"/>
 <xsl:apply-templates select="./index"/>
@@ -362,6 +362,20 @@ CREATE TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text>
 
 <!--
   ************************************************************************
+  
+  The following is an excerpt from the PostgresSQL 8.4 manual
+  
+  [ CONSTRAINT constraint_name ]
+      { UNIQUE ( column_name [, ... ] ) index_parameters |
+        PRIMARY KEY ( column_name [, ... ] ) index_parameters |
+        CHECK ( expression ) |
+        FOREIGN KEY ( column_name [, ... ] ) REFERENCES reftable [ ( refcolumn [, ... ] ) ]
+         [ MATCH FULL | MATCH PARTIAL | MATCH SIMPLE ] [ ON DELETE action ] [ ON UPDATE action ] 
+      }  [ DEFERRABLE | NOT DEFERRABLE ] [ INITIALLY DEFERRED | INITIALLY IMMEDIATE ]
+  ************************************************************************ -->
+  
+<!--
+  ************************************************************************
   ** Process primary keys
   ************************************************************************ -->
 <xsl:template match="primaryKey">
@@ -380,8 +394,7 @@ ALTER TABLE </xsl:text>
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
-<xsl:text>)
-</xsl:text>
+<xsl:text>)</xsl:text> 
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
@@ -406,8 +419,7 @@ ALTER TABLE </xsl:text>
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
-<xsl:text>)
-</xsl:text>
+<xsl:text>)</xsl:text> 
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
@@ -442,8 +454,7 @@ ALTER TABLE </xsl:text>
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
-<xsl:text>)
-</xsl:text> 
+<xsl:text>)</xsl:text> 
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
@@ -513,6 +524,10 @@ CREATE </xsl:text>
 	    <!--                     *******                         -->
 
 		<!-- If 'string' -->
+		<xsl:when test=". = 'text'">
+			<xsl:text>TEXT</xsl:text>
+		</xsl:when>
+		<!-- If 'string' -->
 		<xsl:when test=". = 'string' and ../@isLengthFixed='true'">
 			<xsl:text>CHAR</xsl:text>
 			<xsl:call-template name="column-stringLength">
@@ -529,17 +544,21 @@ CREATE </xsl:text>
 		<xsl:when test=". = 'integer'">
 			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
-		<!-- If 'unsignedInteger' -->
-		<xsl:when test=". = 'unsignedInteger'">
-			<xsl:text>INTEGER</xsl:text>
+		<!-- If 'int8' -->
+		<xsl:when test=". = 'int8'">
+			<xsl:text>INT8</xsl:text>
+		</xsl:when>
+		<!-- If 'int4' -->
+		<xsl:when test=". = 'int4'">
+			<xsl:text>INT4</xsl:text>
 		</xsl:when>
 		<!-- If 'int' -->
 		<xsl:when test=". = 'int'">
-			<xsl:text>INTEGER</xsl:text>
+			<xsl:text>INT</xsl:text>
 		</xsl:when>
 		<!-- If 'unsignedInt' -->
 		<xsl:when test=". = 'unsignedInt'">
-			<xsl:text>INTEGER</xsl:text>
+			<xsl:text>INT</xsl:text>
 		</xsl:when>
 		<!-- If 'long' -->
 		<xsl:when test=". = 'long'">
@@ -551,15 +570,19 @@ CREATE </xsl:text>
 		</xsl:when>
 		<!-- If 'float' -->
 		<xsl:when test=". = 'float'">
-			<xsl:text>REAL</xsl:text>
+			<xsl:text>FLOAT4</xsl:text>
 		</xsl:when>
 		<!-- If 'double' -->
 		<xsl:when test=". = 'double'">
-			<xsl:text>DOUBLE</xsl:text>
+			<xsl:text>DOUBLE PRECISION</xsl:text>
+		</xsl:when>
+		<!-- If 'float8' -->
+		<xsl:when test=". = 'float8'">
+			<xsl:text>FLOAT8</xsl:text>
 		</xsl:when>
 		<!-- If 'bigdecimal' -->
 		<xsl:when test=". = 'bigdecimal'">
-			<xsl:text>DECIMAL</xsl:text>
+			<xsl:text>NUMERIC</xsl:text>
 			<xsl:call-template name="column-numericLength">
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
@@ -567,11 +590,7 @@ CREATE </xsl:text>
 		</xsl:when>
 		<!-- If 'biginteger' -->
 		<xsl:when test=". = 'biginteger'">
-			<xsl:text>DECIMAL</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-			</xsl:call-template>
+			<xsl:text>BIGINT</xsl:text>
 		</xsl:when>
 		<!-- If 'byte' -->
 		<xsl:when test=". = 'byte'">
@@ -589,6 +608,22 @@ CREATE </xsl:text>
 		<xsl:when test=". = 'unsignedShort'">
 			<xsl:text>SMALLINT</xsl:text>
 		</xsl:when>
+		<!-- If 'nonPositiveInteger' -->
+		<xsl:when test=". = 'nonPositiveInteger'">
+			<xsl:text>INTEGER</xsl:text>
+		</xsl:when>		
+		<!-- If 'negativeInteger' -->
+		<xsl:when test=". = 'negativeInteger'">
+			<xsl:text>INTEGER</xsl:text>
+		</xsl:when>	
+		<!-- If 'nonNegativeInteger' -->
+		<xsl:when test=". = 'nonNegativeInteger'">
+			<xsl:text>INTEGER</xsl:text>
+		</xsl:when>
+		<!-- If 'positiveInteger' -->
+		<xsl:when test=". = 'positiveInteger'">
+			<xsl:text>INTEGER</xsl:text>
+		</xsl:when>								
 		<!-- If 'char' -->
 		<xsl:when test=". = 'char'">
 			<xsl:text>CHAR</xsl:text>
@@ -598,7 +633,11 @@ CREATE </xsl:text>
 		</xsl:when>
 		<!-- If 'boolean' -->
 		<xsl:when test=". = 'boolean'">
-			<xsl:text>SMALLINT</xsl:text>
+			<xsl:text>BOOLEAN</xsl:text>
+		</xsl:when>
+		<!-- If 'bool' -->
+		<xsl:when test=". = 'bool'">
+			<xsl:text>BOOLEAN</xsl:text>
 		</xsl:when>
 		<!-- If 'date' -->
 		<xsl:when test=". = 'date'">
@@ -614,21 +653,35 @@ CREATE </xsl:text>
 		</xsl:when>
 		<!-- If 'object' -->
 		<xsl:when test=". = 'object'">
-			<xsl:text>BLOB</xsl:text>
-			<xsl:call-template name="column-stringLength">
-				<xsl:with-param name="length" select="../@length"/>
-			</xsl:call-template>
+			<xsl:text>TEXT</xsl:text>
 		</xsl:when>
 		<!-- If 'blob' -->
 		<xsl:when test=". = 'blob'">
-			<xsl:text>BLOB</xsl:text>
-			<xsl:call-template name="column-stringLength">
-				<xsl:with-param name="length" select="../@length"/>
-			</xsl:call-template>
+			<xsl:text>TEXT</xsl:text>
 		</xsl:when>
 		<!-- If 'clob' -->
 		<xsl:when test=". = 'clob'">
-			<xsl:text>CLOB</xsl:text>
+			<xsl:text>TEXT</xsl:text>
+		</xsl:when>
+		<!-- If 'serial' -->
+		<xsl:when test=". = 'serial'">
+			<xsl:text>SERIAL</xsl:text>
+		</xsl:when>
+		<!-- If 'serial4' -->
+		<xsl:when test=". = 'serial4'">
+			<xsl:text>SERIAL4</xsl:text>
+		</xsl:when>
+		<!-- If 'serial8 -->
+		<xsl:when test=". = 'serial8'">
+			<xsl:text>SERIAL8</xsl:text>
+		</xsl:when>
+		<!-- If 'bigserial' -->
+		<xsl:when test=". = 'bigserial'">
+			<xsl:text>BIGSERIAL</xsl:text>
+		</xsl:when>
+		<!-- If 'bpchar' -->
+		<xsl:when test=". = 'bpchar'">
+			<xsl:text>CHAR</xsl:text>
 			<xsl:call-template name="column-stringLength">
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
@@ -640,9 +693,16 @@ CREATE </xsl:text>
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
+		<!-- If 'NUMBER' -->
+		<xsl:when test="$upperType = 'NUMBER'">
+			<xsl:text>BIGINT</xsl:text>
+			<xsl:call-template name="column-stringLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
+		</xsl:when>
 		<!-- If 'NUMERIC' -->
 		<xsl:when test="$upperType = 'NUMERIC'">
-			<xsl:text>DECIMAL</xsl:text>
+			<xsl:text>NUMERIC</xsl:text>
 			<xsl:call-template name="column-numericLength">
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
@@ -650,6 +710,13 @@ CREATE </xsl:text>
 		</xsl:when>
 		<!-- If 'VARCHAR' -->
 		<xsl:when test="$upperType = 'VARCHAR'">
+			<xsl:text>VARCHAR</xsl:text>
+			<xsl:call-template name="column-stringLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
+		</xsl:when>
+		<!-- If 'VARCHAR2' -->
+		<xsl:when test="$upperType = 'VARCHAR2'">
 			<xsl:text>VARCHAR</xsl:text>
 			<xsl:call-template name="column-stringLength">
 				<xsl:with-param name="length" select="../@length"/>
@@ -664,11 +731,13 @@ CREATE </xsl:text>
 <!--
   ************************************************************************
   ** Process column length or precision/scale
+  **
+  ** NOTE that a text data
   ************************************************************************ -->
 <xsl:template name="column-stringLength">
 	<xsl:param name="length"/>
 	<xsl:text>(</xsl:text>
-	<xsl:value-of select="$length"/>
+	   <xsl:value-of select="$length"/>
 	<xsl:text>)</xsl:text>
 </xsl:template>
 
@@ -726,7 +795,6 @@ CREATE </xsl:text>
 	<xsl:value-of select="translate($originalString,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
 </xsl:template>
 
-
 <!--
   ************************************************************************
   ** Process column cardinality/multiplicity
@@ -748,8 +816,7 @@ CREATE </xsl:text>
 	<xsl:if test="/ddl/@generateComments='true'">
 		<xsl:if test="string-length($description) != 0">
 			<xsl:value-of select="$line-feed"/>
-			<xsl:text>
-Comment on Table </xsl:text>
+			<xsl:text>Comment on Table </xsl:text>
 			<xsl:value-of select="$tableName"/>
 			<xsl:text> is '</xsl:text>
 			<xsl:call-template name="processDescription">
