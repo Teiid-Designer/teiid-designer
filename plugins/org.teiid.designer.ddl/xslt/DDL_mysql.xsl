@@ -46,9 +46,6 @@
 </xsl:text>
 
 <xsl:apply-templates select="./model"/>
-<xsl:text>
-
-</xsl:text>
 </pre>
 </xsl:template>
 
