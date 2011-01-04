@@ -11,8 +11,9 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,16 +23,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -40,7 +38,6 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
-
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -75,20 +72,27 @@ public final class VdbModelEntry extends VdbEntry {
     private final AtomicReference<String> jndiName = new AtomicReference<String>();
     private transient ModelElement element;
 
+    /**
+     * Constructs a model entry and adds it to the specified VDB. <strong>Callers of this method should call
+     * {@link #synchronizeModelEntry(IProgressMonitor)} immediately after constructing the model entry.</strong>
+     * 
+     * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
+     * @param name the resource path (may not be <code>null</code>)
+     * @param monitor the progress monitor or <code>null</code>
+     */
     VdbModelEntry( final Vdb vdb,
                    final IPath name,
                    final IProgressMonitor monitor ) {
         super(vdb, name, monitor);
         indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
-        synchronizeModelEntry(monitor);
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
         if (ModelUtil.isXmiFile(model)) {
             final EmfResource emfModel = (EmfResource)model;
             type = emfModel.getModelType();
-            
+
             // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
-            //visible.set(false);
+            // visible.set(false);
             // TODO: re-visit in 7.1
             // For now, we're removing the assumption that the user will want to seed the VDB model entry with the model's
             // Description. From a UI standpoint, if the description contains multiple lines, then the row height
@@ -105,15 +109,15 @@ public final class VdbModelEntry extends VdbEntry {
                 jndiName.set(defaultName);
             }
             // TODO: Backing out the auto-set visibility to FALSE for physical models (Preview won't work)
-            //if( ModelUtil.isVirtual(emfModel) ) {
-            	visible.set(true);
-            //}
+            // if( ModelUtil.isVirtual(emfModel) ) {
+            visible.set(true);
+            // }
         } else type = ModelType.TYPE_LITERAL;
-        if( this.translator.get() == null ) {
-        	this.translator.set(EMPTY_STR);
+        if (this.translator.get() == null) {
+            this.translator.set(EMPTY_STR);
         }
-        if( this.description.get() == null ) {
-        	this.description.set(EMPTY_STR);
+        if (this.description.get() == null) {
+            this.description.set(EMPTY_STR);
         }
     }
 
@@ -124,19 +128,19 @@ public final class VdbModelEntry extends VdbEntry {
         this.element = element;
         type = ModelType.get(element.getType());
         visible.set(element.isVisible());
-        if( element.getSources() != null && !element.getSources().isEmpty()) {
-	        for (final SourceElement source : element.getSources()) {
-	            this.source.set(source.getName());
-	            this.translator.set(source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
-	            this.jndiName.set(source.getJndiName());
-	            break; // TODO: support multi-source bindings
-	        }
+        if (element.getSources() != null && !element.getSources().isEmpty()) {
+            for (final SourceElement source : element.getSources()) {
+                this.source.set(source.getName());
+                this.translator.set(source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
+                this.jndiName.set(source.getJndiName());
+                break; // TODO: support multi-source bindings
+            }
         } else {
-        	this.translator.set(EMPTY_STR);
-        	//this.jndiName.set(EMPTY_STR);
-        	//this.source.set(EMPTY_STR);
+            this.translator.set(EMPTY_STR);
+            // this.jndiName.set(EMPTY_STR);
+            // this.source.set(EMPTY_STR);
         }
-        for (final ProblemElement problem : element.getProblems()) 
+        for (final ProblemElement problem : element.getProblems())
             problems.add(new Problem(problem));
         boolean builtIn = false;
         String indexName = null;
@@ -169,14 +173,27 @@ public final class VdbModelEntry extends VdbEntry {
     @Override
     final void dispose() {
         super.dispose();
-        for (final VdbModelEntry entry : importedBy)
+
+        // remove the imported by models
+        Collection<VdbModelEntry> importedByModels = new ArrayList<VdbModelEntry>(importedBy);
+
+        for (final VdbModelEntry entry : importedByModels) {
+            importedBy.remove(entry);
             getVdb().removeEntry(entry);
+        }
+
         clean();
     }
 
     private Resource findModel() {
-        return getFinder().findByURI(URI.createFileURI(ResourcesPlugin.getWorkspace().getRoot().getLocation().append(getName()).toString()),
-                                     false);
+        IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(getName());
+
+        // model not found in workspace
+        if (resource == null) {
+            return null;
+        }
+
+        return getFinder().findByURI(URI.createFileURI(resource.getLocation().toString()), false);
     }
 
     private ResourceFinder getFinder() {
@@ -283,7 +300,7 @@ public final class VdbModelEntry extends VdbEntry {
         super.save(out, monitor);
         // Save model index
         save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
-        
+
         if (!getVdb().isPreview()) {
             try {
                 // Convert problems for this model entry to markers on the VDB file
@@ -354,47 +371,55 @@ public final class VdbModelEntry extends VdbEntry {
         super.synchronize(monitor);
     }
 
-    private void synchronizeModelEntry( final IProgressMonitor monitor ) {
+    void synchronizeModelEntry( final IProgressMonitor monitor ) {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null) return;
         clean();
         try {
-        	final Resource model = findModel();
+            final Resource model = findModel();
             if (getVdb().isPreview() && ModelUtil.isPhysical(model)) {
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
                 final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
                 this.translator.set(translator == null ? EMPTY_STR : translator);
             }
-        	
+
             // Build model if necessary
             ModelBuildUtil.buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
                 Object attr = marker.getAttribute(IMarker.SEVERITY);
-                if( attr == null ) {
-                	continue;
+                if (attr == null) {
+                    continue;
                 }
                 // Asserting attr is an Integer...
                 final int severity = ((Integer)attr).intValue();
                 if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
-                	problems.add(new Problem(marker));
+                    problems.add(new Problem(marker));
                 }
             }
             // Also add imported models if not a preview
             if (!getVdb().isPreview()) {
-                final IPath workspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-                for (final Resource importedModel : getFinder().findReferencesFrom(model, true, false)) {
-                    // TODO: Does this work for the datatypes model?
-                    final IPath name = Path.fromOSString(importedModel.getURI().toFileString()).makeRelativeTo(workspace).makeAbsolute();
-                    VdbModelEntry importedEntry = null;
-                    for (final VdbModelEntry entry : getVdb().getModelEntries())
-                        if (name.equals(entry.getName())) {
-                            importedEntry = entry;
-                            break;
+                Resource[] refs = getFinder().findReferencesFrom(model, true, false);
+
+                if (refs != null) {
+                    for (final Resource importedModel : refs) {
+                        // TODO: Does this work for the datatypes model?
+                        java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
+                        IFile[] modelFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
+                        final IPath name = modelFiles[0].getFullPath();
+                        VdbModelEntry importedEntry = null;
+
+                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
+                            if (name.equals(entry.getName())) {
+                                importedEntry = entry;
+                                break;
+                            }
                         }
-                    if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
-                    imports.add(importedEntry);
-                    importedEntry.importedBy.add(this);
+
+                        if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
+                        imports.add(importedEntry);
+                        importedEntry.importedBy.add(this);
+                    }
                 }
             }
             // Copy snapshot of workspace file index to VDB folder
