@@ -20,7 +20,7 @@
    -->
    <extension
          id="oracleDdlStyle"
-         name="Oracle 10/11g DDL"
+         name="Oracle DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for Oracle 8i and above
@@ -31,7 +31,7 @@
    </extension>
    <extension
          id="db2DdlStyle"
-         name="IBM DB2 9.7 DDL"
+         name="IBM DB2 DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for IBM DB2 7.x and above
@@ -42,7 +42,7 @@
    </extension>
    <extension
          id="sqlServerDdlStyle"
-         name="MS SQL Server v2008 DDL"
+         name="MS SQL Server DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for Microsoft SQL Server 2000 and above
@@ -53,7 +53,7 @@
    </extension>
    <extension
          id="mysqlDdlStyle"
-         name="MySQL v5.0/v5.1 DDL"
+         name="MySQL DDL"
          point="org.teiid.designer.ddl.style">
       <description>
          Generates DDL for MySQL 5.0 and above
@@ -78,7 +78,7 @@
          name="PostgreSQL DDL"
          point="org.teiid.designer.ddl.style">
       <description>
-         Generates DDL for PostgreSQL
+         Generates DDL for PostgreSQL 8.x and above
       </description>
       <xsltPath>
          platform:/plugin/org.teiid.designer.ddl/xslt/DDL_postgres.xsl
