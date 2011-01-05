@@ -139,6 +139,9 @@ public final class ServerPage extends WizardPage {
     
     
     private Text jdbcURLText;
+    
+    private TeiidAdminInfo localAdminInfo;
+    private TeiidJdbcInfo localJdbcInfo;
 
     // ===========================================================================================================================
     // Constructors
@@ -151,8 +154,10 @@ public final class ServerPage extends WizardPage {
         super(ServerPage.class.getSimpleName());
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
         setPageComplete(false);
+        this.localAdminInfo =  new TeiidAdminInfo();
+        this.localJdbcInfo = new TeiidJdbcInfo();
         
-    	this.server = new Server( new TeiidAdminInfo(), new TeiidJdbcInfo(), null);
+    	this.server = new Server( this.localAdminInfo, this.localJdbcInfo, null);
         
         this.adminHost = server.getTeiidAdminInfo().getHost();
         this.adminPort = server.getTeiidAdminInfo().getPort();
@@ -179,6 +184,8 @@ public final class ServerPage extends WizardPage {
         setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
 
         this.server = server;
+        this.localAdminInfo =  server.getTeiidAdminInfo().clone();
+        this.localJdbcInfo = server.getTeiidJdbcInfo().clone();
         
         this.adminHost = server.getTeiidAdminInfo().getHost();
         this.adminPort = server.getTeiidAdminInfo().getPort();
@@ -372,7 +379,7 @@ public final class ServerPage extends WizardPage {
 	        adminURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY );// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 	        adminURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	        adminURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-	        adminURLText.setText(this.server.getTeiidAdminInfo().getURL());
+	        adminURLText.setText(this.localAdminInfo.getURL());
 	        
 	        { // Secure SSL row
 	            final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
@@ -402,8 +409,19 @@ public final class ServerPage extends WizardPage {
         
         { // AUTO CONNECT ROW
             this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
-            this.btnAutoConnectOnFinish.setText(UTIL.getString("serverPageAutoConnectLabel")); //$NON-NLS-1$
-            this.btnAutoConnectOnFinish.setToolTipText(UTIL.getString("serverPageAutoConnectToolTip")); //$NON-NLS-1$
+            String theLabel = UTIL.getString("serverPageSetAsDefaultLabel"); //$NON-NLS-1$
+            String theTooltip = UTIL.getString("serverPageSetAsDefaultToolTip"); //$NON-NLS-1$
+            if( this.isEdit ) {
+            	if( this.server.isConnected() ) {
+            		theLabel = UTIL.getString("serverPageReconnectLabel"); //$NON-NLS-1$
+                    theTooltip = UTIL.getString("serverPageReconnectToolTip"); //$NON-NLS-1$
+            	} else {
+            		theLabel = UTIL.getString("serverPageAutoConnectLabel"); //$NON-NLS-1$
+                    theTooltip = UTIL.getString("serverPageAutoConnectToolTip"); //$NON-NLS-1$	
+            	}
+            }
+            this.btnAutoConnectOnFinish.setText(theLabel); 
+            this.btnAutoConnectOnFinish.setToolTipText(theTooltip);
             this.btnAutoConnectOnFinish.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
             this.btnAutoConnectOnFinish.setSelection(true);
             
@@ -586,7 +604,7 @@ public final class ServerPage extends WizardPage {
 	        jdbcURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY );// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 	        jdbcURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	        jdbcURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-	        jdbcURLText.setText(this.server.getTeiidJdbcInfo().getURL());
+	        jdbcURLText.setText(this.localJdbcInfo.getURL());
 	        
 	        { // Secure SSL row
 	            final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
@@ -648,7 +666,7 @@ public final class ServerPage extends WizardPage {
      */
     public Server getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
-        	return new Server(this.server.getTeiidAdminInfo(), this.server.getTeiidJdbcInfo(), getServerManager());
+        	return new Server(this.localAdminInfo, this.localJdbcInfo, getServerManager());
         }
 
         // should never be called if error status
@@ -675,7 +693,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminPasswordModified( String newPassword ) {
         this.adminPassword = newPassword;
-        this.server.getTeiidAdminInfo().setPassword(newPassword);
+        this.localAdminInfo.setPassword(newPassword);
         updateState();
     }
 
@@ -684,7 +702,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminSavePasswordChanged( boolean savePassword ) {
         this.saveAdminPassword = savePassword;
-        this.server.getTeiidAdminInfo().setPersistPassword(savePassword);
+        this.localAdminInfo.setPersistPassword(savePassword);
         updateState();
     }
     
@@ -693,9 +711,9 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminHostModified( String newHost ) {
         this.adminHost = newHost;
-        this.server.getTeiidAdminInfo().setHost(newHost);
+        this.localAdminInfo.setHost(newHost);
         // Need to update BOTH server info objects with same Host Name
-        this.server.getTeiidJdbcInfo().setHost(newHost);
+        this.localJdbcInfo.setHost(newHost);
         updateState();
     }
     
@@ -704,7 +722,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminPortModified( String newPort ) {
         this.adminPort = newPort;
-        this.server.getTeiidAdminInfo().setPort(newPort);
+        this.localAdminInfo.setPort(newPort);
         updateState();
     }
     
@@ -715,7 +733,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleJdbcPasswordModified( String newPassword ) {
         this.jdbcPassword = newPassword;
-        this.server.getTeiidJdbcInfo().setPassword(newPassword);
+        this.localJdbcInfo.setPassword(newPassword);
         updateState();
     }
 
@@ -724,7 +742,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleJdbcSavePasswordChanged( boolean savePassword ) {
         this.saveJdbcPassword = savePassword;
-        this.server.getTeiidJdbcInfo().setPersistPassword(savePassword);
+        this.localJdbcInfo.setPersistPassword(savePassword);
         updateState();
     }
     
@@ -733,7 +751,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleJdbcPortModified( String newPort ) {
         this.jdbcPort = newPort;
-        this.server.getTeiidJdbcInfo().setPort(newPort);
+        this.localJdbcInfo.setPort(newPort);
         updateState();
     }
 
@@ -776,7 +794,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminUserModified( String newUser ) {
         this.adminUsername = newUser;
-        this.server.getTeiidAdminInfo().setUsername(newUser);
+        this.localAdminInfo.setUsername(newUser);
         updateState();
     }
     /**
@@ -786,7 +804,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleAdminSSLChanged( boolean isSecure ) {
         this.adminURLIsSecure = isSecure;
-        this.server.getTeiidAdminInfo().setSecure(isSecure);
+        this.localAdminInfo.setSecure(isSecure);
         updateState();
     } 
     
@@ -797,7 +815,7 @@ public final class ServerPage extends WizardPage {
      */
     void handleJdbcUserModified( String newUser ) {
         this.jdbcUsername = newUser;
-        this.server.getTeiidJdbcInfo().setUsername(newUser);
+        this.localJdbcInfo.setUsername(newUser);
         updateState();
     }
     /**
@@ -807,16 +825,17 @@ public final class ServerPage extends WizardPage {
      */
     void handleJdbcSSLChanged( boolean isSecure ) {
         this.jdbcURLIsSecure = isSecure;
-        this.server.getTeiidJdbcInfo().setSecure(isSecure);
+        this.localJdbcInfo.setSecure(isSecure);
         updateState();
-    } 
+    }
+    
     private IStatus isServerValid( String url,
                                    String username,
                                    String password ) {
         try {
             ServerUtils.validateServerUrl(url);
         } catch (IllegalArgumentException e) {
-            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageInvalidServerUrl"), e); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageInvalidServerUrl", e.getMessage()), e); //$NON-NLS-1$
         }
         
         if( !this.isEdit && getServerManager().isRegisteredUrl(url) ) {
@@ -829,6 +848,30 @@ public final class ServerPage extends WizardPage {
 
         // TODO actually check server validity
         // Utils.isServerValid(this.url, this.user, this.password);
+        return Status.OK_STATUS;
+    }
+    
+    private IStatus isJdbcInfoValid( String port,
+    								 String username,
+    								 String password ) {
+    	try {
+	    	int portNumber;
+	        try {
+	            portNumber = Integer.parseInt(port);
+	        } catch (NumberFormatException nfe) {
+	            throw new IllegalArgumentException(UTIL.getString("serverPageJdbcPortMustBeNumeric", port)); //$NON-NLS-1$
+	        }
+	        if (portNumber < 0 || portNumber > 0xFFFF) {
+	            throw new IllegalArgumentException(UTIL.getString("serverPageJdbcPortOutOfRange", Integer.toString(portNumber))); //$NON-NLS-1$
+	        }
+    	} catch (IllegalArgumentException e) {
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageInvalidJdbcUrl", e.getMessage()), e); //$NON-NLS-1$
+        }
+    	
+        if (username == null || username.length() == 0) {
+            return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, UTIL.getString("serverPageJdbcUsernameCannotBeNull")); //$NON-NLS-1$
+        }
+        
         return Status.OK_STATUS;
     }
 
@@ -872,8 +915,8 @@ public final class ServerPage extends WizardPage {
      * Updates message, message icon, and OK button enablement based on validation results
      */
     private void updateState() {
-    	this.adminURLText.setText(this.server.getTeiidAdminInfo().getURL());
-    	this.jdbcURLText.setText(this.server.getTeiidJdbcInfo().getURL());
+    	this.adminURLText.setText(this.localAdminInfo.getURL());
+    	this.jdbcURLText.setText(this.localJdbcInfo.getURL());
     	
         // get the current status
         validate();
@@ -900,7 +943,7 @@ public final class ServerPage extends WizardPage {
      * Validates all inputs and sets the validation status.
      */
     private void validate() {
-        this.status = isServerValid(this.server.getTeiidAdminInfo().getURL(), this.adminUsername, this.adminPassword);
+        this.status = isServerValid(this.localAdminInfo.getURL(), this.adminUsername, this.adminPassword);
 
         // now check to see if a server is already registered
         if (this.status.isOK()) {
@@ -912,6 +955,10 @@ public final class ServerPage extends WizardPage {
                 this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverExistsMsg", changedServer.getTeiidAdminInfo().getURL())); //$NON-NLS-1$
             }
         }
+        
+        if( this.status.isOK() ) {
+        	this.status = isJdbcInfoValid(this.jdbcPort, this.jdbcUsername, this.jdbcPassword);
+        }
     }
 
     /**
@@ -920,5 +967,10 @@ public final class ServerPage extends WizardPage {
     void performFinish() {
         // update dialog settings
         getDialogSettings().put(AUTO_CONNECT_KEY, this.autoConnect);
+        // If editing, set local server info values to the original server info
+        if( this.isEdit ) {
+        	this.server.getTeiidAdminInfo().setAll(this.localAdminInfo);
+        	this.server.getTeiidJdbcInfo().setAll(this.localJdbcInfo);
+        }
     }
 }

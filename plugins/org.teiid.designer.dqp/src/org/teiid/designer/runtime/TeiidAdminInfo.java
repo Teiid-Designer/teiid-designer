@@ -39,6 +39,10 @@ public class TeiidAdminInfo {
 		this.secure = true;
 	}
 	
+	public TeiidAdminInfo clone() {
+		return new TeiidAdminInfo(this.host, this.port, this.username, this.password, this.persistPassword, this.secure);
+	}
+	
 	public String getHost() {
 		return this.host;
 	}
@@ -109,6 +113,15 @@ public class TeiidAdminInfo {
             return false;
         }
         return true;
+	}
+	
+	public void setAll(TeiidAdminInfo info) {
+		this.host = info.getHost();
+		this.port = info.getPort();
+		this.password = info.getPassword();
+		this.username = info.username;
+		this.persistPassword = info.isPasswordBeingPersisted();
+		this.secure = info.isSecure();
 	}
 	
 	public void setHost(String host) {

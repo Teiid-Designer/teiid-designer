@@ -8,6 +8,9 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -84,7 +87,25 @@ public final class EditServerAction extends BaseSelectionListenerAction {
             }
         };
 
-        dialog.open();
+        int result = dialog.open();
+        
+        if( result == Dialog.OK) {
+	        
+	        if( wizard.shouldAutoConnect() ) {
+	            	try {
+	    				wizard.getServer().getAdmin();
+	    				wizard.getServer().setConnectionError(null);			
+	    			} catch (Exception e) {
+	    				String msg = UTIL.getString("serverWizardEditServerAutoConnectError"); //$NON-NLS-1$
+	    				MessageDialog.openError(this.shell, UTIL.getString("editServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
+	    						msg);
+	    				UTIL.log(e);
+	    				wizard.getServer().setConnectionError(msg);
+	    				wizard.getServer().notifyRefresh();
+	    			}
+
+	        }
+        }
     }
 
     /**
