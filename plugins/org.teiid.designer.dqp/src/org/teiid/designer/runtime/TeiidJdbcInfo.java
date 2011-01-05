@@ -67,6 +67,10 @@ public class TeiidJdbcInfo {
 		this.port = DEFAULT_PORT;
 		this.secure = false;
 	}
+
+	public TeiidJdbcInfo clone() {
+		return new TeiidJdbcInfo(this.host, this.port, this.username, this.password, this.persistPassword, this.secure);
+	}
 	
 	public String getHost() {
 		return this.host;
@@ -146,6 +150,15 @@ public class TeiidJdbcInfo {
             return false;
         }
         return true;
+	}
+	
+	public void setAll(TeiidJdbcInfo info) {
+		this.host = info.getHost();
+		this.port = info.getPort();
+		this.password = info.getPassword();
+		this.username = info.username;
+		this.persistPassword = info.isPasswordBeingPersisted();
+		this.secure = info.isSecure();
 	}
 	
 	public void setHost(String host) {

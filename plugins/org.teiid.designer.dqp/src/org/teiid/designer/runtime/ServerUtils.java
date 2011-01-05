@@ -85,7 +85,7 @@ public class ServerUtils {
                     throw new IllegalArgumentException(UTIL.getString("serverUtilsPortMustBeNumeric", port)); //$NON-NLS-1$
                 }
                 if (portNumber < 0 || portNumber > 0xFFFF) {
-                    throw new IllegalArgumentException(UTIL.getString("serverUtilsPortOutOfRange", portNumber)); //$NON-NLS-1$
+                    throw new IllegalArgumentException(UTIL.getString("serverUtilsPortOutOfRange", Integer.toString(portNumber))); //$NON-NLS-1$
                 }
             } catch (NoSuchElementException e) {
                 throw new IllegalArgumentException(UTIL.getString("serverUtilsIncompleteUrl", serverURL)); //$NON-NLS-1$
