@@ -23,6 +23,7 @@ public class JdbcTranslatorHelper {
 	public static final String MYSQL = "mysql"; //$NON-NLS-1$
 	public static final String H2 = "h2"; //$NON-NLS-1$
 	public static final String DERBY = "derby"; //$NON-NLS-1$
+	public static final String MODESHAPE = "modeshape"; //$NON-NLS-1$
 
 
     /**
@@ -74,6 +75,65 @@ public class JdbcTranslatorHelper {
 					return MYSQL5;
 				}
 				return MYSQL;
+			}
+		}
+		
+		return JDBC_SIMPLE;
+	}
+	
+	/**
+	 * For a given connection profile, this method returns a model processor type based on vendor names similar to 
+	 * translator mapping.
+	 * 
+	 * Whether or not an actual custom model processor exists is based on what was contributed.
+	 * 
+	 * @param connectionProfile
+	 * @return the processor type
+	 */
+	public static String getModelProcessorType(IConnectionProfile connectionProfile) {
+		
+		String vendor = connectionProfile.getBaseProperties().getProperty(VENDOR_KEY);
+
+		// Assume that vendor has to be a property
+		if( vendor != null ) {
+			if( vendor.toUpperCase().startsWith(INFORMIX.toUpperCase()) ) {
+				return INFORMIX;
+			}
+			
+			if( vendor.toUpperCase().startsWith(ORACLE.toUpperCase()) ) {
+				return ORACLE;
+			}
+			
+			if( vendor.toUpperCase().startsWith("SQL SERVER".toUpperCase()) ) { //$NON-NLS-1$
+				return SQLSERVER;
+			}
+			
+			if( vendor.toUpperCase().startsWith(DERBY.toUpperCase()) ) {
+				return DERBY;
+			}
+			
+			if( vendor.toUpperCase().startsWith(POSTGRES.toUpperCase()) ) {
+				return POSTGRES;
+			}
+			
+			if( vendor.toUpperCase().startsWith(SYBASE.toUpperCase()) ) {
+				return SYBASE;
+			}
+			
+			if( vendor.toUpperCase().startsWith(TEIID.toUpperCase()) ) {
+				return TEIID;
+			}
+			
+			if( vendor.toUpperCase().startsWith(DB2.toUpperCase()) ) {
+				return DB2;
+			}
+			
+			if( vendor.toUpperCase().startsWith(MYSQL.toUpperCase()) ) {
+				return MYSQL;
+			}
+			
+			if( vendor.toUpperCase().startsWith(MODESHAPE.toUpperCase()) ) {
+				return MODESHAPE;
 			}
 		}
 		

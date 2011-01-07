@@ -51,6 +51,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.relational.JdbcImporter;
+import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.jdbc.JdbcFactory;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
@@ -59,7 +60,6 @@ import com.metamatrix.modeler.jdbc.impl.JdbcFactoryImpl;
 import com.metamatrix.modeler.jdbc.metadata.Includes;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
 import com.metamatrix.modeler.jdbc.metadata.impl.JdbcDatabaseImpl;
-import com.metamatrix.modeler.jdbc.relational.JdbcRelationalPlugin;
 import com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 import com.metamatrix.modeler.modelgenerator.xml.IUiConstants;
@@ -408,7 +408,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                         XPackage xPackage = getExtensionPackage(getFolder());
 
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(src);
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src);
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));
@@ -638,7 +638,7 @@ public class XsdAsRelationalImportWizard extends AbstractWizard implements IImpo
                 public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(src);
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src);
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));

@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -40,6 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -60,6 +62,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelResourceImpl;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.relational.JdbcImporter;
+import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -68,7 +71,6 @@ import com.metamatrix.modeler.jdbc.JdbcPlugin;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
-import com.metamatrix.modeler.jdbc.relational.JdbcRelationalPlugin;
 import com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 import com.metamatrix.modeler.jdbc.ui.ModelerJdbcUiConstants;
@@ -318,7 +320,7 @@ public class JdbcImportWizard extends AbstractWizard
                 public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         final JdbcSource src = getSource();
-                        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(src);
+                        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));
@@ -641,7 +643,7 @@ public class JdbcImportWizard extends AbstractWizard
             sWatch.start();
             if (ppProcessorPack == null) {
                 final JdbcSource src = getSource();
-                final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(src);
+                final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
                 // Added for debug performance logging purposes
                 processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
                 final IFile modelFile = getFolder().getFile(new Path(getModelName()));

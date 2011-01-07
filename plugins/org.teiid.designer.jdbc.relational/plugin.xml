@@ -16,29 +16,11 @@
 <!-- Define the model processors for the standard Oracle drivers -->
    <extension
          id="oracleModelProcessor"
-         name="Oracle Model Processor"
+         name="Oracle"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="oracle.jdbc.OracleDriver">
-      </driverClass>
-      <driverClass
-            name="oracle.jdbc.driver.OracleDriver">
-      </driverClass>
-      <processorClass
-            name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
-      </processorClass>
-   </extension>
-<!-- Define the model processors for the MetaMatrix Oracle drivers -->
-   <extension
-         id="oracleMetaMatrixModelProcessor"
-         name="Oracle Model Processor (MetaMatrix Driver)"
-         point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="com.metamatrix.jdbc.oracle.OracleDriver">
-      </driverClass>
-      <driverClass
-            name="com.metamatrix.jdbcx.oracle.OracleDataSource">
-      </driverClass>
+      <processorType
+            name="oracle">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.OracleModelProcessor">
       </processorClass>
@@ -46,14 +28,11 @@
 <!-- Define the model processors for the MetaMatrix SQL Server drivers -->
    <extension
          id="sqlserverMetaMatrixModelProcessor"
-         name="SQL Server Model Processor (MetaMatrix Driver)"
+         name="SQL Server"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="com.metamatrix.jdbc.sqlserver.SQLServerDriver">
-      </driverClass>
-      <driverClass
-            name="com.metamatrix.jdbcx.sqlserver.SQLServerDataSource">
-      </driverClass>
+      <processorType
+            name="sqlserver">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.SqlServerModelProcessor">
       </processorClass>
@@ -61,14 +40,11 @@
 <!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
    <extension
          id="sybaseMetaMatrixModelProcessor"
-         name="Sybase Model Processor (MetaMatrix Driver)"
+         name="Sybase"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="com.metamatrix.jdbc.sybase.SybaseDriver">
-      </driverClass>
-      <driverClass
-            name="com.metamatrix.jdbcx.sybase.SybaseDataSource">
-      </driverClass>
+      <processorType
+            name="sybase">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.SybaseModelProcessor">
       </processorClass>
@@ -76,14 +52,11 @@
 <!-- Define the model processors for the MetaMatrix Sybase Server drivers -->
    <extension
          id="db2MetaMatrixModelProcessor"
-         name="DB2 Model Processor (MetaMatrix Driver)"
+         name="DB2"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="com.metamatrix.jdbc.db2.DB2Driver">
-      </driverClass>
-      <driverClass
-            name="com.metamatrix.jdbcx.db2.DB2DataSource">
-      </driverClass>
+      <processorType
+            name="db2">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.Db2ModelProcessor">
       </processorClass>
@@ -91,14 +64,11 @@
 <!-- Define the model processors for the standard Postgres drivers -->
    <extension
          id="postgresModelProcessor"
-         name="Postgres Model Processor"
+         name="PostgreSQL"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="org.postgresql.Driver">
-      </driverClass>
-      <driverClass
-            name="postgresql.Driver">
-      </driverClass>
+      <processorType
+            name="postgres">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.PostgresModelProcessor">
       </processorClass>
@@ -106,11 +76,11 @@
 <!-- Define the model processors for the standard ODBC drivers -->
    <extension
          id="odbcModelProcessor"
-         name="ODBC Model Processor"
+         name="ODBC"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="sun.jdbc.odbc.JdbcOdbcDriver">
-      </driverClass>
+      <processorType
+            name="excel">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.ExcelModelProcessor">
       </processorClass>
@@ -120,9 +90,9 @@
          id="modeShapeModelProcessor"
          name="%modeShapeModelProcessor"
          point="org.teiid.designer.jdbc.relational.modelProcessor">
-      <driverClass
-            name="org.modeshape.jdbc.JcrDriver">
-      </driverClass>
+      <processorType
+            name="modeshape">
+      </processorType>
       <processorClass
             name="com.metamatrix.modeler.jdbc.relational.impl.custom.ModeShapeModelProcessor">
       </processorClass>
