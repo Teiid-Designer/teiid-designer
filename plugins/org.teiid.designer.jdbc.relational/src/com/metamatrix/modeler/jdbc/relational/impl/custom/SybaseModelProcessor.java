@@ -9,6 +9,7 @@ package com.metamatrix.modeler.jdbc.relational.impl.custom;
 
 import java.util.Iterator;
 import java.util.List;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
@@ -25,7 +26,8 @@ import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
  * SybaseModelProcessor
  */
 public class SybaseModelProcessor extends RelationalModelProcessorImpl {
-
+    private static final int TEXT_TYPE_MAX_LENGTH = 4000;
+    private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$
     /**
      * Construct an instance of SybaseModelProcessor.
      */
@@ -142,5 +144,54 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
     @Override
     protected boolean checkExportedForeignKeysIfNoImportedForeignKeysFound() {
         return false;
+    }
+    
+    /**
+     * @see com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl#setColumnInfo(com.metamatrix.metamodels.relational.Column,
+     *      com.metamatrix.modeler.jdbc.metadata.JdbcTable, com.metamatrix.modeler.jdbc.relational.impl.Context, java.util.List,
+     *      java.lang.String, int, java.lang.String, int, int, int, int, java.lang.String, int)
+     */
+    @Override
+    protected void setColumnInfo( final Column column,
+                                  final JdbcTable tableNode,
+                                  final Context context,
+                                  final List problems,
+                                  final String name,
+                                  final int type,
+                                  final String typeName,
+                                  final int columnSize,
+                                  final int numDecDigits,
+                                  final int numPrecRadix,
+                                  final int nullable,
+                                  final String defaultValue,
+                                  final int charOctetLen ) {
+        super.setColumnInfo(column,
+                            tableNode,
+                            context,
+                            problems,
+                            name,
+                            type,
+                            typeName,
+                            columnSize,
+                            numDecDigits,
+                            numPrecRadix,
+                            nullable,
+                            defaultValue,
+                            charOctetLen);
+        
+        // For some reason Sybase is returning a truncated native type name for DOUBLE PRECISION
+        // The DDL Exporter requires that this string match a valid native type so users can round-trip
+        // the process. We need to intercept it here and set it to the correct value.
+        
+        if( "double precis".equalsIgnoreCase(typeName) ) { //$NON-NLS-1$
+        	column.setNativeType("double precision"); //$NON-NLS-1$
+        }
+        
+        // Teiid only handles 4000 characters for any string type
+        if (TEXT_TYPE_NAME.equalsIgnoreCase(typeName) ) {
+            	if( columnSize > TEXT_TYPE_MAX_LENGTH ) {
+            		column.setLength(TEXT_TYPE_MAX_LENGTH);
+            	}
+            }
     }
 }

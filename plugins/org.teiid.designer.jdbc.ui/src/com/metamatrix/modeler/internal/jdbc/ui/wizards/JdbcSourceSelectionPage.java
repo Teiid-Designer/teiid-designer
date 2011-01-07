@@ -9,6 +9,7 @@ package com.metamatrix.modeler.internal.jdbc.ui.wizards;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 
 import com.metamatrix.core.event.IChangeListener;
@@ -46,6 +48,7 @@ import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
 import com.metamatrix.modeler.jdbc.JdbcException;
@@ -101,6 +104,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private Connection connection;
     private ListenerList notifier;
     private String password;
+    private String metadataProcessor;
 
     private ILabelProvider srcLabelProvider;
     private Combo srcCombo;
@@ -109,6 +113,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private CLabel driverLabel, urlLabel, userNameLabel;
     private Text pwdText;
     private Map enableMap;
+    private Composite processorPanel;
+    private ILabelProvider processorLabelProvider;
+    private Combo processorCombo;
     
     // Need to cash the profile when connection is selected so we can use it in Finish method to 
     // inject the connection info into model.
@@ -175,6 +182,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         setControl(pg);
         // Add widgets to page
         
+        // ---------------------------------------------------------------------------
+        // ----------- Connection Profile SOURCE Panel ---------------------------------
+        // ---------------------------------------------------------------------------
         Group profileGroup = WidgetFactory.createGroup(pg, SOURCE_LABEL, SWT.NONE, 2);
         profileGroup.setLayout(new GridLayout(PROFILE_COLUMN_COUNT, false));
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -226,6 +236,49 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             }
         });
         
+        // ---------------------------------------------------------------------------
+        // ----------- JDBC Metadata Processor Panel ---------------------------------
+        // ---------------------------------------------------------------------------
+        Group processorPanel = WidgetFactory.createGroup(pg, getString("processorCombo"), SWT.NONE, 1); //$NON-NLS-1$
+        processorPanel.setLayout(new GridLayout(1, false));
+        processorPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        Collection<String> processors = JdbcModelProcessorManager.getMetadataProcessorNames();
+        ArrayList processorList = new ArrayList(processors.size());
+        for (Iterator iter = processors.iterator(); iter.hasNext();) {
+            Object source = iter.next();
+            if (source != null && !processorList.contains(source)) {
+            	processorList.add(source);
+            }
+        }
+        this.processorLabelProvider = new LabelProvider() {
+
+            @Override
+            public String getText( final Object source ) {
+                return (String)source;
+            }
+        };
+        this.processorCombo = WidgetFactory.createCombo(processorPanel,
+                                                  SWT.READ_ONLY,
+                                                  GridData.FILL_HORIZONTAL,
+                                                  processorList,
+                                                  this.metadataProcessor,
+                                                  this.processorLabelProvider,
+                                                  true);
+        this.processorCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText( final ModifyEvent event ) {
+                processorModified();
+            }
+        });
+        
+        this.processorCombo.setVisibleItemCount(10);
+        this.processorCombo.setToolTipText(getString("processorComboTooltip")); //$NON-NLS-1$
+
+        
+        // ---------------------------------------------------------------------------
+        // ----------- Connection Properties EDIT Panel ---------------------------------
+        // ---------------------------------------------------------------------------
         this.editPanel = WidgetFactory.createGroup(pg, getString("propertiesLabel"), //$NON-NLS-1$
                                                    GridData.HORIZONTAL_ALIGN_FILL, // | GridData.FILL_VERTICAL,
                                                    1,
@@ -293,6 +346,13 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     public JdbcSource getSource() {
         return this.src;
     }
+    
+    /**
+     * @since 4.0
+     */
+    public String getMetadataProcessor() {
+        return this.metadataProcessor;
+    } 
 
     /**
      * @since 7.0
@@ -318,6 +378,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             } catch (JdbcException e) {
                 e.printStackTrace();
             } finally {
+            	sourceModified();
             	// Remove the listener if there is a problem
             	ProfileManager.getInstance().removeProfileListener(listener);
             }
@@ -386,7 +447,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     	
     	int cpIndex = -1;
     	int i = 0;
-    	for( String item : srcCombo.getItems()) {
+    	for( String item : srcCombo.getItems()) { 
     		if( item != null && item.length() > 0 ) {
     			if( item.toUpperCase().equalsIgnoreCase(name.toUpperCase())) {
     				cpIndex = i;
@@ -430,11 +491,63 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             this.connectionProfile = null;
         }
         this.connection = null;
+        
+        // Need to sync up with the metadata processor
+        if( this.connectionProfile != null ) {
+        	String translator = JdbcTranslatorHelper.getModelProcessorType(this.connectionProfile);
+        	String processorType = JdbcModelProcessorManager.getProcessorNameWithType(translator);
+        	String[] items = this.processorCombo.getItems();
+        	int index = -1;
+        	int matchIndex = -1;
+        	for( String item : items ) {
+        		index++;
+        		if( item.equalsIgnoreCase(processorType) ) {
+        			matchIndex = index;
+        			break;
+        		}
+        	}
+        	
+        	if( matchIndex > -1 ) {
+        		this.processorCombo.select(matchIndex);
+        		processorModified();
+        	} else {
+        		matchIndex = -1;
+        		index = -1;
+            	for( String item : items ) {
+            		index++;
+            		if( item.equalsIgnoreCase(JdbcModelProcessorManager.JDBC_DEFAULT) ) {
+            			matchIndex = index;
+            			break;
+            		}
+            	}
+            	this.processorCombo.select(matchIndex);
+        		processorModified();
+        	}
+        	
+        }
+        
         validatePage();
         
         this.editCPButton.setEnabled(this.connectionProfile != null);
     }
 
+    void processorModified() {
+    	final String text = this.processorCombo.getText();
+        if (text.length() > 0) {
+            if (this.enableMap != null) {
+                WidgetUtil.restore(this.enableMap);
+                this.enableMap = null;
+            }
+            // get the actual processor type and set it's value based on the combo box text
+            this.metadataProcessor = JdbcModelProcessorManager.getProcessorTypeWithName(text);
+        } else {
+            if (this.enableMap == null) {
+                this.enableMap = WidgetUtil.disable(this.processorPanel);
+            }
+        }
+        validatePage();
+    }
+    
     /**
      * @since 4.0
      */

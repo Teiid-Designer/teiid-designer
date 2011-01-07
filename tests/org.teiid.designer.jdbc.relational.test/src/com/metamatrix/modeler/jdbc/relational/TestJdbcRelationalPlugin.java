@@ -8,18 +8,22 @@
 package com.metamatrix.modeler.jdbc.relational;
 
 import java.util.Date;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
 import com.metamatrix.metamodels.relational.util.FakeRelationalTypeMapping;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.relational.ModelerJdbcRelationalConstants;
+import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
 
 /**
@@ -249,14 +253,14 @@ public class TestJdbcRelationalPlugin extends TestCase {
     }
 
     public void testCreateRelationalModelProcessor() {
-        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(null);
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(null);
         assertNotNull(processor);
         assertTrue(processor instanceof RelationalModelProcessorImpl);
     }
 
     public void testCreateRelationalModelProcessorWithTypeMapping() {
         final FakeRelationalTypeMapping mapping = new FakeRelationalTypeMapping();
-        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(null, mapping);
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(null, mapping, "JDBC"); //$NON-NLS-1$
         assertNotNull(processor);
         assertTrue(processor instanceof RelationalModelProcessorImpl);
     }

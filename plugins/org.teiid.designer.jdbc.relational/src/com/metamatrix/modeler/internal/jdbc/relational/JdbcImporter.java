@@ -11,15 +11,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcRelationalUtil;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.jdbc.JdbcImportSettings;
@@ -29,7 +32,6 @@ import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.metadata.Includes;
 import com.metamatrix.modeler.jdbc.metadata.JdbcDatabase;
 import com.metamatrix.modeler.jdbc.metadata.JdbcNode;
-import com.metamatrix.modeler.jdbc.relational.JdbcRelationalPlugin;
 import com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor;
 
 /**
@@ -203,7 +205,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
      * @since 4.0
      */
     public IStatus importModel( final IProgressMonitor monitor ) throws ModelWorkspaceException {
-        final RelationalModelProcessor processor = JdbcRelationalPlugin.createRelationalModelProcessor(this.src);
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(this.src);
 
         // apply the import settings to the model ...
 
