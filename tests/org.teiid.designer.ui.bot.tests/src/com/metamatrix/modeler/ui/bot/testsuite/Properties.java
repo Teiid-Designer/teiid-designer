@@ -26,6 +26,7 @@ public class Properties {
 	public static final String PARTSVIRTUAL_MODEL_NAME = "PartsVirtual.xmi";
 	
 	public static final String TEIID_DRIVER = "teiid-7.2.0.Final-client.jar";
+	public static final String TEIID_HIBDIALECT_DRIVER = "teiid-hibernate-dialect-7.2.0.Final.jar";
 	public static final String TEIID_CONNPROFILE_NAME = "PartsSupplier Teiid";
 	public static final String TEIID_URL = "mms://localhost:31443";
 	
@@ -86,6 +87,18 @@ public class Properties {
 	
 	public static final String TESTSQL_5 = "EXEC PartsVirtual.getOnHandByQuantity( 200 )"; //it should return 30 rows
 	public static final int    TESTSQL5_ROW_COUNT = 30;
+	
+	
+	
+	
+	/* ~~~~~~~~~~~~~~~~~~~~~ TeiidSourceInSeamTest Properties ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+	
+	public static final String SEAM_CONNPROFILE_NAME = "Teiid Seam";
+	public static final String SEAM_PROJECT_NAME = "testseam";
+	
+	/* ~~~~~~~~~~~~~~~~~~~~~ TeiidSourceInHibernateTools Properties ~~~~~~~~~~~~~~~~~~~~ */
+	public static final String HIB_CONNPROFILE_NAME = "Teiid Hibernate";
+	public static final String HIB_PROJECT_NAME = "testhibernate";
 	
 	
 }

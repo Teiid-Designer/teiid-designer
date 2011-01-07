@@ -72,10 +72,10 @@ public class TeiidDesignerTest extends SWTTestExt {
 		
 	}
 	
-	private static void connectTeiidDB(){
+	private static void connectDB(final String profile_name){
 		
 		SWTBot viewBot = bot.viewByTitle("Data Source Explorer").bot();
-		SWTBotTreeItem node = viewBot.tree(0).expandNode("Database Connections").getNode(Properties.TEIID_CONNPROFILE_NAME);
+		SWTBotTreeItem node = viewBot.tree(0).expandNode("Database Connections").getNode(profile_name);
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(0), node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(0), "Connect");
 		
@@ -84,7 +84,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 	
 	public static void prepareWorkspaceForQueries(){
 		openPerspective("Database Development");
-		connectTeiidDB();
+		connectDB(Properties.TEIID_CONNPROFILE_NAME);
 		openSqlScrapbook();
 	}
 	
@@ -92,9 +92,9 @@ public class TeiidDesignerTest extends SWTTestExt {
 	/**
 	 * Copy driver into project
 	 */
-	public static void addOracleDriver() {
+	public static void addOracleDriver(final String projectName) {
 		try {
-			addDriver(Properties.ORACLE_DRIVER);
+			addDriver(Properties.ORACLE_DRIVER, projectName);
 		} catch (FileNotFoundException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
@@ -106,9 +106,9 @@ public class TeiidDesignerTest extends SWTTestExt {
 	/**
 	 * Copy driver into project
 	 */
-	public static void addSQLServerDriver() {
+	public static void addSQLServerDriver(final String projectName) {
 		try {
-			addDriver(Properties.SQLSERVER_DRIVER);
+			addDriver(Properties.SQLSERVER_DRIVER, projectName);
 		} catch (FileNotFoundException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
@@ -120,22 +120,23 @@ public class TeiidDesignerTest extends SWTTestExt {
 	/**
 	 * Copy driver into project
 	 */
-	public static void addTeiidDriver() {
+	public static void addTeiidDriver(final String projectName) {
 		try {
-			addDriver(Properties.TEIID_DRIVER);
+			addDriver(Properties.TEIID_DRIVER,projectName);
+			addDriver(Properties.TEIID_HIBDIALECT_DRIVER, projectName);
 		}catch (FileNotFoundException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
-		//addDriverClassPath(Properties.TEIID_DRIVER);
+		//addDriverClassPath(Properties.TEIID_HIBDIALECT_DRIVER, projectName);
 	}
 	
 	/**
 	 * Add Driver to classpath
 	 * @param driver jar file name
 	 */
-	public static void addDriverClassPath(String driver) {
+	public static void addDriverClassPath(String driver, final String projectName) {
 			
 		eclipse.showView(ViewType.PROJECT_EXPLORER);
 		SWTBotView view = bot.viewByTitle("Project Explorer");
@@ -156,7 +157,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 	    bot.tabItem("Libraries").activate();
 	    bot.button("Add JARs...").click();
 	    bot.sleep(TIME_500MS);
-	    bot.tree().expandNode(Properties.PROJECT_NAME).expandNode(driver).select();
+	    bot.tree().expandNode(projectName).expandNode(driver).select();
 	    
 	    bot.button(IDELabel.Button.OK).click();
 	    bot.sleep(TIME_1S);
@@ -176,24 +177,20 @@ public class TeiidDesignerTest extends SWTTestExt {
 		stringBuilder.append(File.separator);
 		stringBuilder.append(Properties.ORACLE_DRIVER);
 		
-		try {
-			DriverEntity entity = new DriverEntity();
-			entity.setDrvPath(stringBuilder.toString());
-			entity.setDatabaseName("ORCL");
-			entity.setInstanceName("Oracle Thin Driver");
-			entity.setProfileName(Properties.ORACLE_CONNPROFILE_NAME);
-			entity.setProfileDescription("PartsSupplier Oracle database");
-			entity.setJdbcString("jdbc:oracle:thin:@englxdbs11.mm.atl2.redhat.com:1521:ORCL");
-			entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.oracle.10.driverTemplate");
-			entity.setDriverDefId("Oracle DB");
-			entity.setUser("partssupplier");
-			entity.setPassword("mm");
-			DatabaseHelper.createDriver(entity, Properties.ORACLE_CONNPROFILE_NAME);
-		} catch (ConnectionProfileException e) {
-			log.error("Unable to create Oracle Driver" + e);
-			fail();			
-		}
-
+		DriverEntity entity = new DriverEntity();
+		entity.setDrvPath(stringBuilder.toString());
+		entity.setDatabaseName("ORCL");
+		entity.setInstanceName("Oracle Thin Driver");
+		entity.setProfileName(Properties.ORACLE_CONNPROFILE_NAME);
+		entity.setProfileDescription("PartsSupplier Oracle database");
+		entity.setJdbcString("jdbc:oracle:thin:@englxdbs11.mm.atl2.redhat.com:1521:ORCL");
+		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.oracle.10.driverTemplate");
+		entity.setDriverDefId("Oracle DB");
+		entity.setUser("partssupplier");
+		entity.setPassword("mm");
+			
+		prepareDatabase(entity, Properties.ORACLE_CONNPROFILE_NAME);	
+			
 	}
 	
 	/**
@@ -208,23 +205,19 @@ public class TeiidDesignerTest extends SWTTestExt {
 		stringBuilder.append(File.separator);
 		stringBuilder.append(Properties.SQLSERVER_DRIVER);
 		
-		try {
-			DriverEntity entity = new DriverEntity();
-			entity.setDrvPath(stringBuilder.toString());
-			entity.setDatabaseName("PartsSupplier");
-			entity.setInstanceName("Microsoft SQL Server 2008 JDBC Driver");
-			entity.setProfileName(Properties.SQLSERVER_CONNPROFILE_NAME);
-			entity.setProfileDescription("PartsSupplier SQL Server database");
-			entity.setJdbcString("jdbc:sqlserver://slntdb02.mm.atl2.redhat.com:1433;databaseName=PartsSupplier");
-			entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate");
-			entity.setDriverDefId("SQL Server DB");
-			entity.setUser("PartsSupplier");
-			entity.setPassword("mm");
-			DatabaseHelper.createDriver(entity, Properties.SQLSERVER_CONNPROFILE_NAME);
-		} catch (ConnectionProfileException e) {
-			log.error("Unable to create SQL Server Driver" + e);
-			fail();			
-		}
+		DriverEntity entity = new DriverEntity();
+		entity.setDrvPath(stringBuilder.toString());
+		entity.setDatabaseName("PartsSupplier");
+		entity.setInstanceName("Microsoft SQL Server 2008 JDBC Driver");
+		entity.setProfileName(Properties.SQLSERVER_CONNPROFILE_NAME);
+		entity.setProfileDescription("PartsSupplier SQL Server database");
+		entity.setJdbcString("jdbc:sqlserver://slntdb02.mm.atl2.redhat.com:1433;databaseName=PartsSupplier");
+		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate");
+		entity.setDriverDefId("SQL Server DB");
+		entity.setUser("PartsSupplier");
+		entity.setPassword("mm");
+		
+		prepareDatabase(entity, Properties.SQLSERVER_CONNPROFILE_NAME);
 	}
 	
 	/**
@@ -239,24 +232,31 @@ public class TeiidDesignerTest extends SWTTestExt {
 		stringBuilder.append(File.separator);
 		stringBuilder.append(Properties.TEIID_DRIVER);
 		
-		try {
-			DriverEntity entity = new DriverEntity();
-			entity.setDrvPath(stringBuilder.toString());
-			entity.setDatabaseName(Properties.VDB_NAME);
-			entity.setInstanceName("Teiid Server JDBC Driver");
-			entity.setProfileName(Properties.TEIID_CONNPROFILE_NAME);
-			entity.setProfileDescription("PartsSupplier Teiid Server database");
-			entity.setJdbcString("jdbc:teiid:MyFirstVDB@mm://localhost:31000");
-			entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
-			entity.setDriverDefId("Teiid Server DB");
-			entity.setUser("admin");
-			entity.setPassword("teiid");
-			DatabaseHelper.createDriver(entity, Properties.TEIID_CONNPROFILE_NAME);
-		} catch (ConnectionProfileException e) {
-			log.error("Unable to create Teiid Server Driver" + e);
-			fail();			
-		}
+		DriverEntity entity = new DriverEntity();
+		entity.setDrvPath(stringBuilder.toString());
+		entity.setDatabaseName(Properties.VDB_NAME);
+		entity.setInstanceName("Teiid Server JDBC Driver");
+		entity.setProfileName(Properties.TEIID_CONNPROFILE_NAME);
+		entity.setProfileDescription("PartsSupplier Teiid Server database");
+		entity.setJdbcString("jdbc:teiid:MyFirstVDB@mm://localhost:31000");
+		entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
+		entity.setDriverDefId("Teiid Server DB");
+		entity.setUser("teiid");
+		entity.setPassword("teiid");
+
+		prepareDatabase(entity, Properties.TEIID_CONNPROFILE_NAME);
 	}
+	
+	public static void prepareDatabase(DriverEntity entity, final String profileName){
+		
+		try {
+			DatabaseHelper.createDriver(entity, profileName);
+		} catch (ConnectionProfileException e) {
+			log.error("Unable to create Server Driver" + e);
+			fail();	
+		}	
+	}
+	
 	
 	/**
 	 * Add driver into project
@@ -264,11 +264,11 @@ public class TeiidDesignerTest extends SWTTestExt {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void addDriver(String jar_name) throws FileNotFoundException, IOException {
+	public static void addDriver(final String jar_name,final String projectName) throws FileNotFoundException, IOException {
 		
 		
 		File in = SWTUtilExt.getResourceFile(Activator.PLUGIN_ID, "lib",jar_name);
-		File out = new File(Platform.getLocation() + File.separator + Properties.PROJECT_NAME + File.separator + jar_name);
+		File out = new File(Platform.getLocation() + File.separator + projectName + File.separator + jar_name);
 		
         FileChannel inChannel = null;
         FileChannel outChannel = null;

@@ -5,6 +5,8 @@ import org.jboss.tools.ui.bot.ext.RequirementAwareSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.metamatrix.modeler.ui.bot.testcase.TeiidSourceInHibernateToolsTest;
+import com.metamatrix.modeler.ui.bot.testcase.TeiidSourceInSeamTest;
 import com.metamatrix.modeler.ui.bot.testcase.VirtualGroupTutorialTest;
 
 
@@ -13,8 +15,10 @@ import com.metamatrix.modeler.ui.bot.testcase.VirtualGroupTutorialTest;
  * @author psrna
  *
  */
-@SuiteClasses({	
-	VirtualGroupTutorialTest.class
+@SuiteClasses({
+	VirtualGroupTutorialTest.class,
+	TeiidSourceInSeamTest.class,
+	TeiidSourceInHibernateToolsTest.class
 	})
 @RunWith(RequirementAwareSuite.class)
 public class TeiidDesignerAllTests {

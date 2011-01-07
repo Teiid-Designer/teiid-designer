@@ -24,7 +24,7 @@ import org.teiid.designer.ui.bot.ext.teiid.SWTTeiidBot;
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
 import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
 
-//@SWTBotTestRequires(/*server=@Server(type=ServerType.SOA,version="5.1"),*/perspective="Teiid Designer")
+@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1"), perspective="Teiid Designer")
 public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 
 	private static final String CONNERR_MSG = "Unable to connect using the specified server properties." +
@@ -33,11 +33,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	@BeforeClass
 	public static void beforeClass(){
 		createProject();
-		addOracleDriver();
+		addOracleDriver(Properties.PROJECT_NAME);
 		prepareOracleDatabase();
-		addSQLServerDriver();
+		addSQLServerDriver(Properties.PROJECT_NAME);
 		prepareSQLServerDatabase();
-		addTeiidDriver();
+		addTeiidDriver(Properties.PROJECT_NAME);
 		prepareTeiidDatabase();
 		
 		openPerspective("Teiid Designer");
