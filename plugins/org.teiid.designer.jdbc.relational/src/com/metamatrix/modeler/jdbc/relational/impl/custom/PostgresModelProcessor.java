@@ -32,6 +32,7 @@ public class PostgresModelProcessor extends RelationalModelProcessorImpl {
 //    private static final String SMALL_INT_TYPE_NAME = "INT2"; //$NON-NLS-1$
 //    private static final String TIMESTAMP_TYPE_NAME = "TIMESTAMPZ"; //$NON-NLS-1$
     private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$
+    private static final String IMAGE_TYPE_NAME = "IMAGE"; //$NON-NLS-1$
     private static final String CHAR_VARYING_TYPE_NAME = "CHARACTER VARYING"; //$NON-NLS-1$
     private static final String VARCHAR_TYPE_NAME = "VARCHAR"; //$NON-NLS-1$
     private static final String SERIAL_TYPE_NAME = "SERIAL"; //$NON-NLS-1$
@@ -81,6 +82,10 @@ public class PostgresModelProcessor extends RelationalModelProcessorImpl {
         // Map the Postgres type of "BOOL" to our built-in type of Boolean
         if (BOOLEAN_TYPE_NAME.equalsIgnoreCase(typeName)) {
             result = findBuiltinType(DatatypeConstants.BuiltInNames.BOOLEAN,problems);
+        } else if (typeName.startsWith(TEXT_TYPE_NAME)) {
+            result = findBuiltinType(DatatypeConstants.BuiltInNames.CLOB, problems);
+        } else if (typeName.startsWith(IMAGE_TYPE_NAME)) {
+            result = findBuiltinType(DatatypeConstants.BuiltInNames.BLOB, problems);
         }
         if ( result != null ) {
             return result;
@@ -123,8 +128,7 @@ public class PostgresModelProcessor extends RelationalModelProcessorImpl {
                             charOctetLen);
         // If the type of the column is BLOB, then set the length to 0 since the value from the driver
         // does not represent the length of the BLOB
-        if (TEXT_TYPE_NAME.equalsIgnoreCase(typeName) ||
-        	CHAR_VARYING_TYPE_NAME.equalsIgnoreCase(typeName) ||
+        if (CHAR_VARYING_TYPE_NAME.equalsIgnoreCase(typeName) ||
         	VARCHAR_TYPE_NAME.equalsIgnoreCase(typeName) ) {
         	if( columnSize > TEXT_TYPE_MAX_LENGTH ) {
         		column.setLength(TEXT_TYPE_MAX_LENGTH);

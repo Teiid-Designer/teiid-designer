@@ -10,6 +10,8 @@ package com.metamatrix.modeler.jdbc.relational.impl.custom;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
@@ -18,6 +20,7 @@ import com.metamatrix.metamodels.relational.PrimaryKey;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.util.RelationalTypeMapping;
+import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.jdbc.metadata.JdbcTable;
 import com.metamatrix.modeler.jdbc.relational.impl.Context;
 import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -26,8 +29,9 @@ import com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl;
  * SybaseModelProcessor
  */
 public class SybaseModelProcessor extends RelationalModelProcessorImpl {
-    private static final int TEXT_TYPE_MAX_LENGTH = 4000;
     private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$
+    private static final String IMAGE_TYPE_NAME = "IMAGE"; //$NON-NLS-1$
+    
     /**
      * Construct an instance of SybaseModelProcessor.
      */
@@ -147,6 +151,37 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
     }
     
     /**
+     * Find the type given the supplied information. This method is called by the various <code>create*</code> methods, and is
+     * currently implemented to use {@link #findType(int, int, List)} when a numeric type and {@link #findType(String, List)} (by
+     * name) for other types.
+     * 
+     * @param type
+     * @param typeName
+     * @return
+     */
+    @Override
+    protected EObject findType( final int jdbcType,
+                                final String typeName,
+                                final int length,
+                                final int precision,
+                                final int scale,
+                                final List problems ) {
+
+        EObject result = null;
+
+        if (typeName.toUpperCase().startsWith(TEXT_TYPE_NAME)) {
+            result = findBuiltinType(DatatypeConstants.BuiltInNames.CLOB, problems);
+        } else if (typeName.toUpperCase().startsWith(IMAGE_TYPE_NAME)) {
+            result = findBuiltinType(DatatypeConstants.BuiltInNames.BLOB, problems);
+        }
+        if (result != null) {
+            return result;
+        }
+
+        return super.findType(jdbcType, typeName, length, precision, scale, problems);
+    }
+    
+    /**
      * @see com.metamatrix.modeler.jdbc.relational.impl.RelationalModelProcessorImpl#setColumnInfo(com.metamatrix.metamodels.relational.Column,
      *      com.metamatrix.modeler.jdbc.metadata.JdbcTable, com.metamatrix.modeler.jdbc.relational.impl.Context, java.util.List,
      *      java.lang.String, int, java.lang.String, int, int, int, int, java.lang.String, int)
@@ -186,12 +221,5 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
         if( "double precis".equalsIgnoreCase(typeName) ) { //$NON-NLS-1$
         	column.setNativeType("double precision"); //$NON-NLS-1$
         }
-        
-        // Teiid only handles 4000 characters for any string type
-        if (TEXT_TYPE_NAME.equalsIgnoreCase(typeName) ) {
-            	if( columnSize > TEXT_TYPE_MAX_LENGTH ) {
-            		column.setLength(TEXT_TYPE_MAX_LENGTH);
-            	}
-            }
     }
 }
