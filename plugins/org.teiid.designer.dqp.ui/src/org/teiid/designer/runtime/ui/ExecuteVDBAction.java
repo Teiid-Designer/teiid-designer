@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.runtime.ui;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -16,7 +18,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -26,6 +27,7 @@ import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.VDB;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
+import org.teiid.designer.datatools.ui.dialogs.TeiidCPWizardDialog;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
@@ -211,13 +213,33 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     	
     	String connectionURL = jdbcInfo.getURL();
     	
-    	String profileName = vdbName + " - Teiid Connection"; //$NON-NLS-1$
+    	String profileName = vdbName + " - " + jdbcInfo.getHost() + " - Teiid Connection"; //$NON-NLS-1$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
     	if(profile == null) {
-    		// This call has the effect of creating the driver, which provides the values to the Profile UI.
-    		profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
-    				connectionURL, jdbcInfo.getUsername(), jdbcInfo.getPassword(), vdbName, profileName);
+    		// If username or password is not supplied we bring up the New Connection Profile dialog
+    		if(null == jdbcInfo.getUsername() || jdbcInfo.getUsername().isEmpty() ||
+    				null == jdbcInfo.getPassword() || jdbcInfo.getPassword().isEmpty()) {
+    			Properties cpProps = ConnectivityUtil.createVDBTeiidProfileProperties(driverPath,
+    					connectionURL, jdbcInfo.getUsername(), jdbcInfo.getPassword(), vdbName, profileName);
+    			NewTeiidFilteredCPWizard wiz = new NewTeiidFilteredCPWizard(profileName, null);
+    			TeiidCPWizardDialog wizardDialog = new TeiidCPWizardDialog(Display.getCurrent().getActiveShell(), wiz);
+    			wizardDialog.setProperties(cpProps);
+    			wizardDialog.setBlockOnOpen(true);
+    			if (wizardDialog.open() == Window.OK) {
+    				try {
+    					PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE, DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
+    				} catch (Throwable e) {
+    					DqpUiConstants.UTIL.log(e);
+    				}
+    			} else {
+    				return;
+    			}
+    		// if we have all the info we create it w/o user interaction	
+    		} else {
+    			profile = ConnectivityUtil.createVDBTeiidProfile(driverPath,
+    					connectionURL, jdbcInfo.getUsername(), jdbcInfo.getPassword(), vdbName, profileName);	
+    		}     		
     	}
     	profile.connectWithoutJob();
     	try {

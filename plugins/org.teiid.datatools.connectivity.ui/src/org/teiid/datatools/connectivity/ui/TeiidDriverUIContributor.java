@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
@@ -352,6 +353,10 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         this.contributorInformation = contributorInformation;
         this.properties = contributorInformation.getProperties();
         optionalPropsComposite.setDriverUIContributorInformation(contributorInformation);
+        
+        if(parentPage instanceof TeiidProfileDetailsWizardPage) {
+        	((TeiidProfileDetailsWizardPage)parentPage).setDriver(this.properties.getProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID));
+        }
     }
 
     public void loadProperties() {
