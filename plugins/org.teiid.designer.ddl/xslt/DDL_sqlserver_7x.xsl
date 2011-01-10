@@ -631,73 +631,35 @@ CREATE </xsl:text>
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
-		<!-- If 'integer' -->
-		<xsl:when test=". = 'integer'">
-			<xsl:text>NUMERIC</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-				<xsl:with-param name="defaultPrecision">
-					<xsl:text>10</xsl:text>
-				</xsl:with-param>
-				<xsl:with-param name="defaultScale">
-					<xsl:text></xsl:text>
-				</xsl:with-param>
+		<!-- If 'nchar' -->
+		<xsl:when test="$upperType = 'NCHAR'">
+			<xsl:text>NCHAR</xsl:text>
+			<xsl:call-template name="column-integerLength">
+				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
-			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
-			</xsl:if>
+		</xsl:when>
+		<!-- If 'nvarchar' -->
+		<xsl:when test="$upperType = 'NVARCHAR'">
+			<xsl:text>NVARCHAR</xsl:text>
+			<xsl:call-template name="column-integerLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
+		</xsl:when>
+		<!-- If 'integer' -->
+		<xsl:when test="$upperType = 'INTEGER'">
+			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'unsignedInteger' -->
-		<xsl:when test=". = 'unsignedInteger'">
-			<xsl:text>NUMERIC</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-				<xsl:with-param name="defaultPrecision">
-					<xsl:text>10</xsl:text>
-				</xsl:with-param>
-				<xsl:with-param name="defaultScale">
-					<xsl:text></xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
-			</xsl:if>
+		<xsl:when test="$upperType = 'UNSIGNEDINTEGER'">
+			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'int' -->
-		<xsl:when test=". = 'int'">
-			<xsl:text>NUMERIC</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-				<xsl:with-param name="defaultPrecision">
-					<xsl:text>10</xsl:text>
-				</xsl:with-param>
-				<xsl:with-param name="defaultScale">
-					<xsl:text></xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
-			</xsl:if>
+		<xsl:when test="$upperType = 'INT'">
+			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'unsignedInt' -->
-		<xsl:when test=". = 'unsignedInt'">
-			<xsl:text>NUMERIC</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-				<xsl:with-param name="defaultPrecision">
-					<xsl:text>10</xsl:text>
-				</xsl:with-param>
-				<xsl:with-param name="defaultScale">
-					<xsl:text></xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
-			</xsl:if>
+		<xsl:when test="$upperType = 'UNSIGNEDINT'">
+			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'long' -->
 		<xsl:when test=". = 'long'">
@@ -741,6 +703,10 @@ CREATE </xsl:text>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
 		</xsl:when>
+		<!-- If 'double precision' -->
+		<xsl:when test="$upperType = 'DOUBLE PRECISION'">
+			<xsl:text>DOUBLE PRECISION</xsl:text>
+		</xsl:when>
 		<!-- If 'double' -->
 		<xsl:when test=". = 'double'">
 			<xsl:text>NUMERIC</xsl:text>
@@ -749,9 +715,17 @@ CREATE </xsl:text>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
 		</xsl:when>
+		<!-- If 'decimal' -->
+		<xsl:when test=". = 'decimal'">
+			<xsl:text>DECIMAL</xsl:text>
+			<xsl:call-template name="column-numericLength">
+				<xsl:with-param name="precision" select="../@precision"/>
+				<xsl:with-param name="scale" select="../@scale"/>
+			</xsl:call-template>
+		</xsl:when>
 		<!-- If 'bigdecimal' -->
 		<xsl:when test=". = 'bigdecimal'">
-			<xsl:text>NUMERIC</xsl:text>
+			<xsl:text>DECIMAL</xsl:text>
 			<xsl:call-template name="column-numericLength">
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
@@ -807,13 +781,6 @@ CREATE </xsl:text>
 				<xsl:text> IDENTITY(1,1)</xsl:text>
 			</xsl:if>
 		</xsl:when>
-		<!-- If 'char' -->
-		<xsl:when test=". = 'char'">
-			<xsl:text>CHAR</xsl:text>
-			<xsl:call-template name="column-stringLength">
-				<xsl:with-param name="length" select="../@length"/>
-			</xsl:call-template>
-		</xsl:when>
 		<!-- If 'boolean' -->
 		<xsl:when test=". = 'boolean'">
 			<xsl:text>BIT</xsl:text>
@@ -822,30 +789,77 @@ CREATE </xsl:text>
 		<xsl:when test=". = 'date'">
 			<xsl:text>DATETIME</xsl:text>
 		</xsl:when>
+		<!-- If 'datetime' -->
+		<xsl:when test="$upperType = 'DATETIME'">
+			<xsl:text>DATETIME</xsl:text>
+		</xsl:when>
 		<!-- If 'time' -->
 		<xsl:when test=". = 'time'">
 			<xsl:text>DATETIME</xsl:text>
 		</xsl:when>
 		<!-- If 'timestamp' -->
-		<xsl:when test=". = 'timestamp'">
+		<xsl:when test="$upperType = 'TIMESTAMP'">
 			<xsl:text>DATETIME</xsl:text>
 		</xsl:when>
 		<!-- If 'object' -->
 		<xsl:when test=". = 'object'">
 			<xsl:text>IMAGE</xsl:text>
 		</xsl:when>
+		<!-- If 'TEXT' -->
+		<xsl:when test="$upperType = 'TEXT'">
+			<xsl:text>TEXT</xsl:text>
+		</xsl:when>
 		<!-- If 'blob' -->
-		<xsl:when test=". = 'blob'">
+		<xsl:when test="$upperType = 'BLOB'">
 			<xsl:text>IMAGE</xsl:text>
 		</xsl:when>
 		<!-- If 'clob' -->
-		<xsl:when test=". = 'clob'">
+		<xsl:when test="$upperType = 'CLOB'">
 			<xsl:text>TEXT</xsl:text>
+		</xsl:when>
+		<!-- If 'IMAGE' -->
+		<xsl:when test="$upperType = 'IMAGE'">
+			<xsl:text>IMAGE</xsl:text>
+		</xsl:when>
+		<!-- If 'real' -->
+		<xsl:when test="$upperType = 'REAL'">
+			<xsl:text>REAL</xsl:text>
+		</xsl:when>
+		<!-- If 'bit' -->
+		<xsl:when test="$upperType = 'BIT'">
+			<xsl:text>BIT</xsl:text>
+		</xsl:when>
+		<!-- If 'money' -->
+		<xsl:when test="$upperType = 'MONEY'">
+			<xsl:text>MONEY</xsl:text>
+		</xsl:when>
+		<!-- If 'smallmoney' -->
+		<xsl:when test="$upperType = 'SMALLMONEY'">
+			<xsl:text>SMALLMONEY</xsl:text>
+		</xsl:when>
+		<!-- If 'tinyint' -->
+		<xsl:when test="$upperType = 'TINYINT'">
+			<xsl:text>TINYINT</xsl:text>
+		</xsl:when>
+		<!-- If 'smallint' -->
+		<xsl:when test="$upperType = 'SMALLINT'">
+			<xsl:text>SMALLINT</xsl:text>
+		</xsl:when>
+		<!-- If 'VARBINARY' -->
+		<xsl:when test="$upperType = 'VARBINARY'">
+			<xsl:text>VARBINARY</xsl:text>
+		</xsl:when>
+		<!-- If 'BINARY' -->
+		<xsl:when test="$upperType = 'BINARY'">
+			<xsl:text>BINARY</xsl:text>
+			<xsl:call-template name="column-integerLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
 		</xsl:when>
 		<!-- If 'CHAR' -->
 		<xsl:when test="$upperType = 'CHAR'">
 			<xsl:text>CHAR</xsl:text>
-			<xsl:call-template name="column-stringLength">
+			<xsl:call-template name="column-integerLength">
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
@@ -860,7 +874,7 @@ CREATE </xsl:text>
 		<!-- If 'VARCHAR' -->
 		<xsl:when test="$upperType = 'VARCHAR'">
 			<xsl:text>VARCHAR</xsl:text>
-			<xsl:call-template name="column-stringLength">
+			<xsl:call-template name="column-integerLength">
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
@@ -886,6 +900,15 @@ CREATE </xsl:text>
 	<xsl:text>(</xsl:text>
 	<xsl:value-of select="$length"/>
 	<xsl:text>)</xsl:text>
+</xsl:template>
+
+<xsl:template name="column-integerLength">
+	<xsl:param name="length"/>
+	<xsl:if test="$length &gt; 1">
+		<xsl:text>(</xsl:text>
+			<xsl:value-of select="$length"/>
+		<xsl:text>)</xsl:text>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template name="column-numericLength">
