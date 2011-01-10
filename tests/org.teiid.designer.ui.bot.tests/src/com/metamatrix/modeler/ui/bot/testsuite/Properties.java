@@ -29,6 +29,9 @@ public class Properties {
 	public static final String TEIID_HIBDIALECT_DRIVER = "teiid-hibernate-dialect-7.2.0.Final.jar";
 	public static final String TEIID_CONNPROFILE_NAME = "PartsSupplier Teiid";
 	public static final String TEIID_URL = "mms://localhost:31443";
+	public static final String TEIID_HOST = "localhost";
+	public static final String TEIID_ADMIN_PORT = "31443";
+	public static final String TEIID_JDBC_PORT = "31000";
 	
 	public static final String VDB_NAME = "MyFirstVDB";
 	

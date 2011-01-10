@@ -4,6 +4,7 @@ package com.metamatrix.modeler.ui.bot.testcase;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -16,6 +17,7 @@ import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.teiid.designer.ui.bot.ext.teiid.SWTBotTeiidCanvas;
@@ -241,9 +243,14 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		SWTBotShell shell = bot.shell("New Teiid Instance");
 		shell.activate();
 		
-		shell.bot().textWithLabel("URL:").setText(Properties.TEIID_URL);
-		shell.bot().textWithLabel("User:").setText("admin");
-		shell.bot().textWithLabel("Password:").setText("admin");
+		shell.bot().textWithLabel("Host:").setText(Properties.TEIID_HOST);
+		shell.bot().textWithLabelInGroup("Port number:", "Teiid Admin Connection Info").setText(Properties.TEIID_ADMIN_PORT);
+		shell.bot().textWithLabelInGroup("User name:", "Teiid Admin Connection Info").setText("admin");
+		shell.bot().textWithLabelInGroup("Password:", "Teiid Admin Connection Info").setText("admin");
+		
+		shell.bot().textWithLabelInGroup("Port number:", "Teiid JDBC Connection Info").setText(Properties.TEIID_JDBC_PORT);
+		shell.bot().textWithLabelInGroup("User name:", "Teiid JDBC Connection Info",1).setText("teiid");
+		shell.bot().textWithLabelInGroup("Password:", "Teiid JDBC Connection Info",2).setText("teiid");
 		
 		shell.bot().button("Test").click();
 		shell = bot.shell("Test Teiid Connection");
@@ -636,5 +643,49 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 	}
 	
+	@Test
+	public void removeResourcesTest(){
+		openPerspective("Teiid Designer");
+		
+		bot.viewByTitle("Teiid").show();
+		bot.viewByTitle("Teiid").setFocus();
+		
+		SWTBot viewBot = bot.viewByTitle("Teiid").bot();
+		viewBot.tree().getTreeItem(Properties.TEIID_URL);
+		
+		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "Data Sources", Properties.ORACLE_TEIID_SOURCE);
+		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Teiid Data Source");
+		
+		node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "Data Sources", Properties.SQLSERVER_TEIID_SOURCE);
+		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Teiid Data Source");
+		
+		node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "VDBs", Properties.VDB_NAME);
+		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Undeploy VDB");
+		
+		SWTBotTreeItem item = viewBot.tree().getTreeItem(Properties.TEIID_URL);
+		try{
+			node = item.expandNode("Data Sources", Properties.ORACLE_TEIID_SOURCE);
+			if(node.isVisible())
+				fail("Resource " + Properties.ORACLE_TEIID_SOURCE + " not removed!");
+		
+		}catch (WidgetNotFoundException e) {}
+		
+		try{
+			node = item.expandNode("Data Sources", Properties.SQLSERVER_TEIID_SOURCE);
+			if(node.isVisible())
+				fail("Resource " + Properties.SQLSERVER_TEIID_SOURCE + " not removed!");
+		
+		}catch (WidgetNotFoundException e) {}
+		
+		try{
+			node = item.expandNode("VDBs", Properties.VDB_NAME);
+			if(node.isVisible())
+				fail("Resource " + Properties.VDB_NAME + " not removed!");
+		
+		}catch (WidgetNotFoundException e) {}		
+	}
 
 }

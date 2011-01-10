@@ -25,21 +25,23 @@ import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
  * @author psrna
  *
  */
-@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1"), seam=@Seam())
+@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1")/*, seam=@Seam()*/)
 public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTest{
 
 	@BeforeClass
 	public static void beforeClass(){
 	
-		openPerspective("Java");
+		openPerspective("JPA");
 		
 		bot.menu(IDELabel.Menu.FILE).menu(IDELabel.Menu.NEW).menu(IDELabel.Menu.OTHER).click();
 		
 		SWTBotShell shell = bot.shell("New");
-		shell.bot().tree(0).expandNode("Java").select("Java Project");
+		shell.activate();
+		shell.bot().tree(0).expandNode("JPA").select("JPA Project");
 		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().textWithLabel("Project name:").typeText(Properties.HIB_PROJECT_NAME);
-		
+		shell.bot().textWithLabel("Project name:").setText(Properties.HIB_PROJECT_NAME);
+		//shell.bot().button(IDELabel.Button.NEXT).click();
+		//shell.bot().button(IDELabel.Button.NEXT).click();
 		open.finish(shell.bot());
 		
 		setupConnection();
@@ -107,10 +109,12 @@ public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTest{
 	public void dbConnectTest(){
 		openPerspective("Hibernate");
 		
-		bot.viewByTitle("Hibernate Configurations").setFocus();
 		bot.viewByTitle("Hibernate Configurations").show();
+		bot.viewByTitle("Hibernate Configurations").setFocus();
 		
-		SWTBot viewBot = bot.viewByTitle("Hibernate Configurations").bot();
+		SWTBot viewBot = bot.viewByTitle("Hibernate Configurations").bot();		
+		viewBot.tree().setFocus();
+		
 		SWTBotTreeItem item = TreeHelper.expandNode(viewBot, 
 				                                    Properties.HIB_PROJECT_NAME, 
 				                                    "Database", 

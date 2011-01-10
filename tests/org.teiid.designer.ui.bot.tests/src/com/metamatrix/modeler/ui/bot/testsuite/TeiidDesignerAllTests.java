@@ -16,8 +16,8 @@ import com.metamatrix.modeler.ui.bot.testcase.VirtualGroupTutorialTest;
  *
  */
 @SuiteClasses({
-	VirtualGroupTutorialTest.class,
-	TeiidSourceInSeamTest.class,
+	//VirtualGroupTutorialTest.class,
+	//TeiidSourceInSeamTest.class,
 	TeiidSourceInHibernateToolsTest.class
 	})
 @RunWith(RequirementAwareSuite.class)
