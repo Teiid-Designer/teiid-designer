@@ -36,7 +36,7 @@
 					value="7.1" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
-					value="jdbc:teiid:vdb-name@mms://localhost:31000" required="true"
+					value="jdbc:teiid:vdb-name@mms://localhost:31000" required="false"
 					visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.username" name="User ID"

@@ -78,7 +78,7 @@ public class ConnectivityUtil {
         try {
             DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
             if (mDriver == null) {
-                createTeiidPreviewDriverInstance(driverPath, connectionURL, username, password);
+                createTeiidPreviewDriverInstance(driverPath, connectionURL);
             } else {
             	// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
             	String jarList = mDriver.getJarList();
@@ -102,18 +102,12 @@ public class ConnectivityUtil {
     }
 
     private static void createTeiidPreviewDriverInstance( String jarList,
-                                                          String driverURL,
-                                                          String username,
-                                                          String password ) {
+                                                          String driverURL ) {
         IPropertySet pset = new PropertySetImpl(TEIID_PREVIEW_DRIVER_NAME, TEIID_PREVIEW_DRIVER_DEFINITION_ID);
         Properties baseProperties = new Properties();
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID, TEIID_DRIVER_NAME);
-        baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, driverURL);
-        if(null != username) {
-        	baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
-        }
-        if(null != password) {
-        	baseProperties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, password);
+        if(null != driverURL) {
+        	baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, driverURL);
         }
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, TEIID_DATABASE_VERSION);
@@ -169,6 +163,7 @@ public class ConnectivityUtil {
           ProfileManager.getInstance().deleteTransientProfile(profile);
     }
 
+    
     public static Properties createVDBTeiidProfileProperties(String driverPath,
     		String connectionURL,
     		String username,
@@ -178,7 +173,7 @@ public class ConnectivityUtil {
 
     	DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
         if (mDriver == null) {
-            createTeiidVDBDriverInstance(driverPath, connectionURL, username, password, vdbName, profileName);
+            createTeiidPreviewDriverInstance(driverPath, null);
         } else {
 			// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
 			String jarList = mDriver.getJarList();
@@ -200,7 +195,7 @@ public class ConnectivityUtil {
     	try {
     		DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
     		if (mDriver == null) {
-    			createTeiidVDBDriverInstance(driverPath, connectionURL, username, password, vdbName, profileName);
+    			createTeiidPreviewDriverInstance(driverPath, connectionURL);
     		} else {
     			// JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
     			String jarList = mDriver.getJarList();

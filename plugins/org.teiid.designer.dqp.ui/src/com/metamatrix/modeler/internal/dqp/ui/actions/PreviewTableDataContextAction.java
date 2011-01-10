@@ -159,20 +159,12 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
      * @throws SQLException
      * @throws JdbcException
      */
-    private Connection getSqlConnection( IConnectionProfile profile ) throws SQLException, JdbcException {
+    private IConnection getSqlConnection( IConnectionProfile profile ) throws SQLException, JdbcException {
         IConnectionProfileProvider provider = profile.getProvider();
         IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
         final String factoryId = factory.getId();
 
-        final IConnection connection = profile.createConnection(factoryId);
-
-        final Connection sqlConnection = (Connection)connection.getRawConnection();
-        if (null == sqlConnection || sqlConnection.isClosed()) {
-            final Throwable e = connection.getConnectException();
-            throw new JdbcException(e == null ? "Unspecified connection error" //$NON-NLS-1$
-                                             : e.getMessage());
-        }
-        return sqlConnection;
+        return profile.createConnection(factoryId);
     }
 
     /**
@@ -293,7 +285,21 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     					jdbcInfo.getPassword(),
     					vdbName);
 
-    			final Connection sqlConnection = getSqlConnection(profile);
+    			final Connection sqlConnection;
+    			IConnection connection = getSqlConnection(profile);
+    			sqlConnection = (Connection) connection.getRawConnection();
+    			if (null == sqlConnection || sqlConnection.isClosed()) {
+    				final Throwable e = connection.getConnectException();
+    				if(null != e) {
+    					DqpUiConstants.UTIL.log(e);
+    				} else {
+    					DqpUiConstants.UTIL.log("Unspecified connection error"); //$NON-NLS-1$
+    				}
+  					MessageDialog.openError(getShell(),
+							DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_getting_connection.title"), //$NON-NLS-1$
+							DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_getting_connection.message")); //$NON-NLS-1$
+  					return;
+    			}
 
     			DatabaseIdentifier ID = new DatabaseIdentifier(profile.getName(), vdbName);
     			ILaunchConfigurationWorkingCopy config = creatLaunchConfig(sql, ID);
