@@ -32,7 +32,7 @@
 <xsl:template match="/ddl">
 <pre>
 <xsl:text>-- Build Script
---     RDBMS           : Microsoft SQL Server 7.X/2000
+--     RDBMS           : Sybase
 --     Generated With  : </xsl:text><xsl:value-of select="@exportTool"/><xsl:text> </xsl:text><xsl:value-of select="@exportToolVersion"/>
 <xsl:text>
 --     Generated On    : </xsl:text><xsl:value-of select="@exportDate"/><xsl:text> </xsl:text><xsl:value-of select="@exportTime"/>
@@ -75,47 +75,47 @@
 <xsl:if test="/ddl/@generateDrops='true'">
 	<xsl:apply-templates select="./view" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./foreignKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./primaryKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./uniqueKey" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./index" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./table" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./procedure" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./schema" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./catalog" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:value-of select="$line-feed"/>
@@ -125,47 +125,47 @@
 <!-- Generate the CREATE statements -->
 <xsl:apply-templates select="./catalog">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./schema">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./table">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./index">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./primaryKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./uniqueKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./foreignKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./procedure">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./view">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:text>
@@ -182,7 +182,7 @@
 <xsl:param name="terminationString"/>
 	<xsl:apply-templates select="./*" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 </xsl:template>
@@ -198,7 +198,7 @@
 </xsl:text>
 	<xsl:apply-templates select="./*" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 </xsl:template>
@@ -299,37 +299,37 @@ ALTER TABLE </xsl:text><xsl:value-of select="@tableName"/><xsl:text> DROP CONSTR
 <xsl:param name="terminationString"/>
 	<xsl:apply-templates select="./table">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./index">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./primaryKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./uniqueKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./foreignKey">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./procedure">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 	<xsl:apply-templates select="./view">
 		<xsl:with-param name="terminationString">
-			<xsl:text>GO</xsl:text>
+			<xsl:text>;</xsl:text>
 		</xsl:with-param>
 	</xsl:apply-templates>
 </xsl:template>
@@ -346,37 +346,37 @@ CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 </xsl:text>
 <xsl:apply-templates select="./table">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./index">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./primaryKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./uniqueKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./foreignKey">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./procedure">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:apply-templates select="./view">
 	<xsl:with-param name="terminationString">
-		<xsl:text>GO</xsl:text>
+		<xsl:text>;</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
 <xsl:text>
@@ -631,34 +631,20 @@ CREATE </xsl:text>
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
-		<!-- If 'nchar' -->
-		<xsl:when test="$upperType = 'NCHAR'">
-			<xsl:text>NCHAR</xsl:text>
-			<xsl:call-template name="column-integerLength">
-				<xsl:with-param name="length" select="../@length"/>
-			</xsl:call-template>
-		</xsl:when>
-		<!-- If 'nvarchar' -->
-		<xsl:when test="$upperType = 'NVARCHAR'">
-			<xsl:text>NVARCHAR</xsl:text>
-			<xsl:call-template name="column-integerLength">
-				<xsl:with-param name="length" select="../@length"/>
-			</xsl:call-template>
-		</xsl:when>
 		<!-- If 'integer' -->
-		<xsl:when test="$upperType = 'INTEGER'">
+		<xsl:when test=". = 'integer'">
 			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'unsignedInteger' -->
-		<xsl:when test="$upperType = 'UNSIGNEDINTEGER'">
+		<xsl:when test=". = 'unsignedInteger'">
 			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'int' -->
-		<xsl:when test="$upperType = 'INT'">
+		<xsl:when test=". = 'int'">
 			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'unsignedInt' -->
-		<xsl:when test="$upperType = 'UNSIGNEDINT'">
+		<xsl:when test=". = 'unsignedInt'">
 			<xsl:text>INTEGER</xsl:text>
 		</xsl:when>
 		<!-- If 'long' -->
@@ -675,7 +661,7 @@ CREATE </xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
+				<xsl:text> IDENTITY</xsl:text>
 			</xsl:if>
 		</xsl:when>
 		<!-- If 'unsignedLong' -->
@@ -692,28 +678,24 @@ CREATE </xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
+				<xsl:text> IDENTITY</xsl:text>
 			</xsl:if>
 		</xsl:when>
 		<!-- If 'float' -->
-		<xsl:when test=". = 'float'">
-			<xsl:text>NUMERIC</xsl:text>
+		<xsl:when test="$upperType = 'FLOAT'">
+			<xsl:text>FLOAT</xsl:text>
 			<xsl:call-template name="column-numericLength">
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+		</xsl:when>
+		<!-- If 'double' -->
+		<xsl:when test="$upperType = 'DOUBLE'">
+			<xsl:text>DOUBLE PRECISION</xsl:text>
 		</xsl:when>
 		<!-- If 'double precision' -->
 		<xsl:when test="$upperType = 'DOUBLE PRECISION'">
 			<xsl:text>DOUBLE PRECISION</xsl:text>
-		</xsl:when>
-		<!-- If 'double' -->
-		<xsl:when test=". = 'double'">
-			<xsl:text>NUMERIC</xsl:text>
-			<xsl:call-template name="column-numericLength">
-				<xsl:with-param name="precision" select="../@precision"/>
-				<xsl:with-param name="scale" select="../@scale"/>
-			</xsl:call-template>
 		</xsl:when>
 		<!-- If 'decimal' -->
 		<xsl:when test=". = 'decimal'">
@@ -761,7 +743,7 @@ CREATE </xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
+				<xsl:text> IDENTITY</xsl:text>
 			</xsl:if>
 		</xsl:when>
 		<!-- If 'unsignedShort' -->
@@ -778,23 +760,30 @@ CREATE </xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:if test="../@isAutoIncremented='true'">
-				<xsl:text> IDENTITY(1,1)</xsl:text>
+				<xsl:text> IDENTITY</xsl:text>
 			</xsl:if>
+		</xsl:when>
+		<!-- If 'char' -->
+		<xsl:when test=". = 'char'">
+			<xsl:text>CHAR</xsl:text>
+			<xsl:call-template name="column-stringLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
 		</xsl:when>
 		<!-- If 'boolean' -->
 		<xsl:when test=". = 'boolean'">
 			<xsl:text>BIT</xsl:text>
 		</xsl:when>
 		<!-- If 'date' -->
-		<xsl:when test=". = 'date'">
-			<xsl:text>DATETIME</xsl:text>
+		<xsl:when test="$upperType = 'DATE'">
+			<xsl:text>DATE</xsl:text>
+		</xsl:when>
+		<!-- If 'time' -->
+		<xsl:when test="$upperType = 'TIME'">
+			<xsl:text>TIME</xsl:text>
 		</xsl:when>
 		<!-- If 'datetime' -->
 		<xsl:when test="$upperType = 'DATETIME'">
-			<xsl:text>DATETIME</xsl:text>
-		</xsl:when>
-		<!-- If 'time' -->
-		<xsl:when test=". = 'time'">
 			<xsl:text>DATETIME</xsl:text>
 		</xsl:when>
 		<!-- If 'timestamp' -->
@@ -845,20 +834,23 @@ CREATE </xsl:text>
 		<xsl:when test="$upperType = 'SMALLINT'">
 			<xsl:text>SMALLINT</xsl:text>
 		</xsl:when>
-		<!-- If 'VARBINARY' -->
-		<xsl:when test="$upperType = 'VARBINARY'">
-			<xsl:text>VARBINARY</xsl:text>
+		<!-- If 'CHAR' -->
+		<xsl:when test="$upperType = 'CHAR'">
+			<xsl:text>CHAR</xsl:text>
+			<xsl:call-template name="column-integerLength">
+				<xsl:with-param name="length" select="../@length"/>
+			</xsl:call-template>
 		</xsl:when>
-		<!-- If 'BINARY' -->
-		<xsl:when test="$upperType = 'BINARY'">
+		<!-- If 'binary' -->
+		<xsl:when test=". = 'binary'">
 			<xsl:text>BINARY</xsl:text>
 			<xsl:call-template name="column-integerLength">
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
 		</xsl:when>
-		<!-- If 'CHAR' -->
-		<xsl:when test="$upperType = 'CHAR'">
-			<xsl:text>CHAR</xsl:text>
+		<!-- If 'BINARY' -->
+		<xsl:when test="$upperType = 'BINARY'">
+			<xsl:text>BINARY</xsl:text>
 			<xsl:call-template name="column-integerLength">
 				<xsl:with-param name="length" select="../@length"/>
 			</xsl:call-template>
