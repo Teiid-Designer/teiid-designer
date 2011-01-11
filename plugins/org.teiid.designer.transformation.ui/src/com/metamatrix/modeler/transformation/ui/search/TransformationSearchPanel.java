@@ -54,7 +54,7 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.SelectModelObjectLabelProvider;
 import com.metamatrix.modeler.transformation.search.TransformationSearchHelper;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
-import com.metamatrix.query.internal.ui.sqleditor.SqlTextViewer;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.tree.AbstractTreeContentProvider;

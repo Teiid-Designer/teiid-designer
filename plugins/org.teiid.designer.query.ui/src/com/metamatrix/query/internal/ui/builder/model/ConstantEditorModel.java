@@ -22,7 +22,7 @@ import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>ConstantEditorModel</code> class is used as a model for the
- * {@link com.metamatrix.query.internal.ui.builder.expression.ConstantEditor}.
+ * {@link com.metamatrix.modeler.transformation.ui.builder.expression.ConstantEditor}.
  */
 public class ConstantEditorModel extends AbstractLanguageObjectEditorModel implements BuilderUtils.LoggingConstants {
 

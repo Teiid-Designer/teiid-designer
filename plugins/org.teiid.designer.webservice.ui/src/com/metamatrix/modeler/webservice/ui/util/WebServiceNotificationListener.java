@@ -35,8 +35,8 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.modeler.webservice.ui.editor.OperationObjectEditorPage;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 public class WebServiceNotificationListener implements INotifyChangedListener, IInternalUiConstants {

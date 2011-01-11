@@ -11,7 +11,7 @@ import org.teiid.query.sql.LanguageObject;
 
 /**
  * The <code>ILanguageObjectEditorModel</code> interface represents a model of an
- * {@link com.metamatrix.query.ui.builder.ILanguageObjectEditor}'s state. It holds a saved value and a current
+ * {@link com.metamatrix.modeler.transformation.ui.builder.ILanguageObjectEditor}'s state. It holds a saved value and a current
  * value.
  */
 public interface ILanguageObjectEditorModel {

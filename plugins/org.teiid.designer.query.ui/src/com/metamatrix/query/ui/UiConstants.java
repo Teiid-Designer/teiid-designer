@@ -54,22 +54,10 @@ public interface UiConstants {
         class PC {
             private static final String FULL  = "icons/full/"; //$NON-NLS-1$
 //            private static final String CVIEW20 = FULL + "cview20/"; //$NON-NLS-1$
-            private static final String CVIEW16 = FULL + "cview16/"; //$NON-NLS-1$
+//           private static final String CVIEW16 = FULL + "cview16/"; //$NON-NLS-1$
             private static final String OBJ  = FULL + "obj16/"; //$NON-NLS-1$
         }
         
-        String CRITERIA_BUILDER  = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
-        String EXPRESSION_BUILDER= PC.CVIEW16 + "launch_expression_builder.gif"; //$NON-NLS-1$
-        String EXPAND_SELECT     = PC.CVIEW16 + "expand.gif"; //$NON-NLS-1$
-        String UP_FONT           = PC.CVIEW16 + "inc_font.gif"; //$NON-NLS-1$
-        String DOWN_FONT         = PC.CVIEW16 + "dec_font.gif"; //$NON-NLS-1$
-        String VALIDATE          = PC.CVIEW16 + "validate.gif"; //$NON-NLS-1$
-        String SHOW_MESSAGES     = PC.CVIEW16 + "show_message_off.gif"; //$NON-NLS-1$
-        String SHOW_PREFERENCES  = PC.CVIEW16 + "show_preferences.gif"; //$NON-NLS-1$
-        String SHORT_NAMES       = PC.CVIEW16 + "short_names.gif"; //$NON-NLS-1$
-        String IMPORT_FROM_FILE  = PC.CVIEW16 + "import_from_file.gif"; //$NON-NLS-1$
-        String EXPORT_TO_FILE    = PC.CVIEW16 + "export_to_file.gif"; //$NON-NLS-1$
-
         // builder icons
         String CONSTANT_LANG_OBJ = PC.OBJ + "constantLangObj.gif"; //$NON-NLS-1$        
         String COMPOUND_CRITERIA_LANG_OBJ = PC.OBJ + "compoundCriteriaLangObj.gif"; //$NON-NLS-1$        

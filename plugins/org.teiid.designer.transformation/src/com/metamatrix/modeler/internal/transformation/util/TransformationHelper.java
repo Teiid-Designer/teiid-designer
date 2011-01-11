@@ -31,7 +31,6 @@ import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
-import org.teiid.core.util.SqlUtil;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
@@ -50,7 +49,6 @@ import org.teiid.query.validator.ValidatorReport;
 
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.DirectionKind;
@@ -4135,7 +4133,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_SELECT_TXN_DESCRIPTION, txnSource);
                 boolean succeeded = false;
                 try {
-                    userSqlTrans.setSelectSql(SqlUtil.normalize(selectString));
+                    userSqlTrans.setSelectSql(selectString); //SqlUtil.normalize(selectString));
                     changed = true;
                     succeeded = true;
                 } finally {
@@ -4197,7 +4195,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_INSERT_TXN_DESCRIPTION, txnSource);
                 boolean succeeded = false;
                 try {
-                    userSqlTrans.setInsertSql(SqlUtil.normalize(insertString));
+                    userSqlTrans.setInsertSql(insertString); //SqlUtil.normalize(insertString));
                     changed = true;
                     succeeded = true;
                 } finally {
@@ -4259,7 +4257,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_UPDATE_TXN_DESCRIPTION, txnSource);
                 boolean succeeded = false;
                 try {
-                    userSqlTrans.setUpdateSql(SqlUtil.normalize(updateString));
+                    userSqlTrans.setUpdateSql(updateString); //SqlUtil.normalize(updateString));
                     changed = true;
                     succeeded = true;
                 } finally {
@@ -4321,7 +4319,7 @@ public class TransformationHelper implements SqlConstants {
                 boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, CHANGE_DELETE_TXN_DESCRIPTION, txnSource);
                 boolean succeeded = false;
                 try {
-                    userSqlTrans.setDeleteSql(SqlUtil.normalize(deleteString));
+                    userSqlTrans.setDeleteSql(deleteString); //SqlUtil.normalize(deleteString));
                     changed = true;
                     succeeded = true;
                 } finally {
@@ -4356,7 +4354,7 @@ public class TransformationHelper implements SqlConstants {
         boolean isDifferent = true;
         if (transMappingRoot != null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
             String currentSql = getSqlString(transMappingRoot, cmdType);
-            isDifferent = stringsDifferent(SqlUtil.normalize(currentSql), SqlUtil.normalize(sqlString));
+            isDifferent = stringsDifferent(currentSql, sqlString); //SqlUtil.normalize(currentSql), SqlUtil.normalize(sqlString));
         }
         return isDifferent;
     }
@@ -4376,15 +4374,15 @@ public class TransformationHelper implements SqlConstants {
                 isDifferent = false;
             }
         } else if (oldSql != null) {
-            StringBuffer newSb = new StringBuffer(newSql.trim());
-            StringBuffer oldSb = new StringBuffer(oldSql.trim());
-            CoreStringUtil.replaceAll(newSb, CR, BLANK);
-            CoreStringUtil.replaceAll(newSb, TAB, BLANK);
-            String newSbString = CoreStringUtil.collapseWhitespace(newSb.toString());
-            CoreStringUtil.replaceAll(oldSb, CR, BLANK);
-            CoreStringUtil.replaceAll(oldSb, TAB, BLANK);
-            String oldSbString = CoreStringUtil.collapseWhitespace(oldSb.toString());
-            if (newSbString != null && newSbString.equals(oldSbString)) {
+//            StringBuffer newSb = new StringBuffer(newSql.trim());
+//            StringBuffer oldSb = new StringBuffer(oldSql.trim());
+//            CoreStringUtil.replaceAll(newSb, CR, BLANK);
+//            CoreStringUtil.replaceAll(newSb, TAB, BLANK);
+//            String newSbString = CoreStringUtil.collapseWhitespace(newSb.toString());
+//            CoreStringUtil.replaceAll(oldSb, CR, BLANK);
+//            CoreStringUtil.replaceAll(oldSb, TAB, BLANK);
+//            String oldSbString = CoreStringUtil.collapseWhitespace(oldSb.toString());
+            if (newSql.equals(oldSql) ) { //newSbString != null && newSbString.equals(oldSbString)) {
                 isDifferent = false;
             }
         }

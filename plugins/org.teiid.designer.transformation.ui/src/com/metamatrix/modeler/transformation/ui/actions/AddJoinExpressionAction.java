@@ -21,6 +21,7 @@ import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
@@ -33,7 +34,6 @@ import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.UnaryFromClause;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**

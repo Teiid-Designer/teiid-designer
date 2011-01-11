@@ -27,8 +27,8 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.util.EObjectTransfer;
 import com.metamatrix.modeler.transformation.ui.actions.ITransformationDiagramActionConstants;
 import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceManager;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeConstants;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
 
