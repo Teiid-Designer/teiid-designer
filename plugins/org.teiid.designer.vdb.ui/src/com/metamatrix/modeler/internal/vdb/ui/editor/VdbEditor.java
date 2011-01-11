@@ -178,6 +178,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
     VdbDataRoleResolver dataRoleResolver;
+    
+    boolean disposed = false;
 
     /**
      * Method which adds models to the VDB.
@@ -852,6 +854,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void dispose() {
+    	this.disposed = true;
         if (vdb != null) try {
             vdb.removeChangeListener(vdbListener);
             vdb.close();
@@ -917,7 +920,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 UiUtil.runInSwtThread(new Runnable() {
                     @Override
                     public void run() {
-                        vdbNotification(event.getPropertyName());
+                    	if( !disposed ) {
+                    		vdbNotification(event.getPropertyName());
+                    	}
                     }
                 }, true);
             }
