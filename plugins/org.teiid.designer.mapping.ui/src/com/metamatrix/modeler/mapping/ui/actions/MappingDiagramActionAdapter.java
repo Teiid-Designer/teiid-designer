@@ -62,7 +62,6 @@ import com.metamatrix.modeler.mapping.ui.PluginConstants;
 import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.editor.MappingDiagramController;
 import com.metamatrix.modeler.transformation.ui.actions.AddJoinExpressionAction;
-import com.metamatrix.modeler.transformation.ui.actions.AddToSqlFromAction;
 import com.metamatrix.modeler.transformation.ui.actions.AddToSqlSelectAction;
 import com.metamatrix.modeler.transformation.ui.actions.AddTransformationSourceAction;
 import com.metamatrix.modeler.transformation.ui.actions.AddUnionSourceAction;
@@ -74,10 +73,10 @@ import com.metamatrix.modeler.transformation.ui.actions.TransformationSelectionH
 import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceManager;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
+import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.modeler.ui.actions.ModelerGlobalActionsMap;
 import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
-import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.ControlledPopupMenuExtender;
@@ -129,7 +128,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
     private TransformationAction clearSourcesAction;
     private TransformationAction reconcileAction;
     private TransformationAction addToSqlSelectAction;
-    private TransformationAction addToSqlFromAction;
     private TransformationAction addJoinExpressionAction;
 
     // overrides of global actions
@@ -173,7 +171,8 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         if (selProvider != null) {
             // Need to create a PopupMenuExtender to include any external actions here
             final IEditorPart editor = ((ModelEditorSite)getEditorPage().getEditorSite()).getEditor();
-            final ControlledPopupMenuExtender popupMenuExtender = new ControlledPopupMenuExtender(ContextMenu.DIAGRAM_EDITOR_PAGE,
+            final ControlledPopupMenuExtender popupMenuExtender = new ControlledPopupMenuExtender(
+                                                                                                  ContextMenu.DIAGRAM_EDITOR_PAGE,
                                                                                                   (MenuManager)theMenuMgr,
                                                                                                   selProvider, editor);
             popupMenuExtender.menuAboutToShow(theMenuMgr);
@@ -463,7 +462,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
                     theMenuMgr.add(new GroupMarker(T_MARKER));
                     theMenuMgr.appendToGroup(T_MARKER, this.removeSourcesAction);
                     theMenuMgr.appendToGroup(T_MARKER, this.clearSourcesAction);
-                    theMenuMgr.appendToGroup(T_MARKER, this.addToSqlFromAction);
 
                     if (selectionHelper.isVirtual()) addExternalExportedActions(theMenuMgr, selection);
                     theMenuMgr.add(new Separator());
@@ -722,8 +720,8 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
     }
 
     /**
-     * Gets a list of the extension for the ModelObjectActionContributor extension point. This was copied from ModelerActionService
-     * and changed to only process the trasformation.ui contributor to find the showDependencyAction.
+     * Gets a list of the extension for the ModelObjectActionContributor extension point. This was copied from
+     * ModelerActionService and changed to only process the trasformation.ui contributor to find the showDependencyAction.
      * 
      * @return the list of <code>IModelObjectActionContributor</code> implementations
      */
@@ -834,13 +832,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         if (this.reconcileAction == null) {
             this.reconcileAction = new ReconcileTransformationAction(transformationEObject, currentDiagram);
             registerAction(this.reconcileAction);
-        }
-
-        // ----- AddToSqlFromAction -----//
-        this.addToSqlFromAction = (TransformationAction)getRegisteredAction(AddToSqlFromAction.class.getName());
-        if (this.addToSqlFromAction == null) {
-            this.addToSqlFromAction = new AddToSqlFromAction(transformationEObject, currentDiagram);
-            registerAction(this.addToSqlFromAction);
         }
 
         // ----- AddToSqlSelectAction -----//
@@ -1167,7 +1158,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         this.clearSourcesAction.setTransformation(transformationEObject);
         this.reconcileAction.setTransformation(transformationEObject);
         this.addToSqlSelectAction.setTransformation(transformationEObject);
-        this.addToSqlFromAction.setTransformation(transformationEObject);
         this.addJoinExpressionAction.setTransformation(transformationEObject);
         this.deleteAction.setTransformation(transformationEObject);
         this.cutAction.setTransformation(transformationEObject);
@@ -1182,7 +1172,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         this.clearSourcesAction.setDiagram(currentDiagram);
         this.reconcileAction.setDiagram(currentDiagram);
         this.addToSqlSelectAction.setDiagram(currentDiagram);
-        this.addToSqlFromAction.setDiagram(currentDiagram);
         this.addJoinExpressionAction.setDiagram(currentDiagram);
     }
 
