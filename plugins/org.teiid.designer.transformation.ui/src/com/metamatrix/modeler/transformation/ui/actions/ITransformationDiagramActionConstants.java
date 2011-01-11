@@ -16,7 +16,6 @@ public interface ITransformationDiagramActionConstants {
     interface DiagramActions {
 
         String RECONCILE_TRANSFORMATION = ReconcileTransformationAction.class.getName();
-        String ADD_TO_SQL_FROM = AddToSqlFromAction.class.getName();
         String ADD_TO_SQL_SELECT = AddToSqlSelectAction.class.getName();
         String ADD_JOIN_EXPRESSION = AddJoinExpressionAction.class.getName();
 

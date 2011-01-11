@@ -58,6 +58,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -105,9 +108,6 @@ import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
 import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -1122,10 +1122,7 @@ public class TransformationObjectEditorPage
 
             // If the tab is NOT SELECT TAB, then get the status of that command type so we can pass it to the SQL Editor Panel
             if (cmdType != QueryValidator.SELECT_TRNS) {
-                existingStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
-                                                                                cmdType,
-                                                                                true,
-                                                                                null);
+                existingStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot, cmdType, true, null);
             }
 
             boolean statusExists = selectStatus != null;
@@ -1570,10 +1567,10 @@ public class TransformationObjectEditorPage
                         // changed and we need to re-set the Editor from the SQL T-Root object and it's SQL
                         UiUtil.runInSwtThread(new Runnable() {
                             public void run() {
-                            	setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
+                                setEditorContent(getSelectedItem(), reconcileTarget, txnSource, overwriteDirty, true);
                             }
                         }, true);
-                        
+
                         didSetText = true;
                     }
                 }
@@ -1806,35 +1803,9 @@ public class TransformationObjectEditorPage
      * @param theMenuMgr the context menu being contributed to
      */
     public void contributeExportedActions( IMenuManager theMenuMgr ) {
-        // -----------------------------------------
-        // Contribute the AddToSqlFrom Action
-        // -----------------------------------------
         IAction action = null;
         IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         DiagramActionService service = (DiagramActionService)DiagramUiPlugin.getDefault().getActionService(window.getActivePage());
-        try {
-            IEditorPart editorPart = window.getActivePage().getActiveEditor();
-            if (editorPart instanceof ModelEditor) {
-                ModelEditorPage editorPage = (ModelEditorPage)((ModelEditor)editorPart).getCurrentPage();
-                String actionKey = DiagramActionService.constructKey(DiagramActions.ADD_TO_SQL_FROM, editorPage);
-                if (service.isRegistered(actionKey)) {
-                    action = service.getAction(actionKey);
-                }
-            }
-        } catch (final CoreException err) {
-            Util.log(err);
-        }
-
-        if (action != null) {
-            // check to see if menu is edit menu or just a context menu
-            if (theMenuMgr.find(ModelerActionBarIdManager.getMenuAdditionsMarkerId()) == null) {
-                // must be a context menu. just add to end.
-                theMenuMgr.add(action);
-            } else {
-                // edit menu. add before end marker.
-                theMenuMgr.appendToGroup(ModelerActionBarIdManager.getMenuAdditionsMarkerId(), action);
-            }
-        }
 
         // -----------------------------------------
         // Contribute the AddToSqlSelect Action
@@ -1897,33 +1868,13 @@ public class TransformationObjectEditorPage
      */
     public List<IAction> getAdditionalModelingActions( ISelection selection ) {
         List<IAction> addedActions = new ArrayList<IAction>();
-        // -----------------------------------------
-        // Contribute the AddToSqlFrom Action
-        // -----------------------------------------
         IAction action = null;
         IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         DiagramActionService service = (DiagramActionService)DiagramUiPlugin.getDefault().getActionService(window.getActivePage());
-        try {
-            IEditorPart editorPart = window.getActivePage().getActiveEditor();
-            if (editorPart instanceof ModelEditor) {
-                ModelEditorPage editorPage = (ModelEditorPage)((ModelEditor)editorPart).getCurrentPage();
-                String actionKey = DiagramActionService.constructKey(DiagramActions.ADD_TO_SQL_FROM, editorPage);
-                if (service.isRegistered(actionKey)) {
-                    action = service.getAction(actionKey);
-                }
-            }
-        } catch (final CoreException err) {
-            Util.log(err);
-        }
-
-        if (action != null && action.isEnabled()) {
-            addedActions.add(action);
-        }
 
         // -----------------------------------------
         // Contribute the AddToSqlSelect Action
         // -----------------------------------------
-        action = null;
         try {
             IEditorPart editorPart = window.getActivePage().getActiveEditor();
             if (editorPart instanceof ModelEditor) {
@@ -2119,7 +2070,7 @@ public class TransformationObjectEditorPage
 
         setTargetAllowsUpdates(getCheckBoxContributionForSupportsUpdates().getSelection());
         getCheckBoxContributionForSupportsUpdates().getControl().update();
-        
+
         // refresh content as select editor was clearing the first time button was checked
         refreshEditorContent();
     }
