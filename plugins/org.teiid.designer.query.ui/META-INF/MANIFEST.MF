@@ -6,22 +6,14 @@ Bundle-Version: 7.2.0.qualifier
 Bundle-Activator: com.metamatrix.query.ui.UiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.query.internal.ui.builder,
- com.metamatrix.query.internal.ui.builder.actions,
- com.metamatrix.query.internal.ui.builder.criteria,
- com.metamatrix.query.internal.ui.builder.expression,
- com.metamatrix.query.internal.ui.builder.model,
+Export-Package: com.metamatrix.query.internal.ui.builder.model,
  com.metamatrix.query.internal.ui.builder.util,
- com.metamatrix.query.internal.ui.sqleditor,
- com.metamatrix.query.internal.ui.sqleditor.actions,
  com.metamatrix.query.internal.ui.sqleditor.component,
  com.metamatrix.query.internal.ui.sqleditor.sql,
  com.metamatrix.query.internal.ui.tree,
  com.metamatrix.query.ui,
  com.metamatrix.query.ui.actions,
- com.metamatrix.query.ui.builder,
- com.metamatrix.query.ui.preferences,
- com.metamatrix.query.ui.sqleditor
+ com.metamatrix.query.ui.preferences
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

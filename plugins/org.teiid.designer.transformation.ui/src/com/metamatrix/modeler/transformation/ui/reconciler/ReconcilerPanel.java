@@ -33,7 +33,8 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.query.internal.ui.builder.ExpressionBuilder;
+import com.metamatrix.modeler.transformation.ui.builder.ExpressionBuilder;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlDisplayPanel;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.symbol.AliasSymbol;
@@ -41,7 +42,6 @@ import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
-import com.metamatrix.query.ui.sqleditor.SqlDisplayPanel;
 import com.metamatrix.ui.graphics.GlobalUiFontManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

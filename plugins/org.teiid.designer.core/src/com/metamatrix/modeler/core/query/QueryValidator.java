@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.core.query;
 
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.metadata.QueryMetadataInterface;
 
 
@@ -47,4 +48,6 @@ public interface QueryValidator {
      * @since 5.0.2
      */
     boolean isValidRoot();
+    
+    EObject getTransformationRoot();
 }

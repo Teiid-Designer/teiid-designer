@@ -46,9 +46,9 @@ import com.metamatrix.modeler.mapping.ui.UiConstants;
 import com.metamatrix.modeler.mapping.ui.UiPlugin;
 import com.metamatrix.modeler.mapping.ui.recursion.actions.ClearCriteria;
 import com.metamatrix.modeler.mapping.ui.recursion.actions.LaunchCriteriaBuilder;
+import com.metamatrix.modeler.transformation.ui.builder.CriteriaBuilder;
 import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import com.metamatrix.query.internal.ui.builder.CriteriaBuilder;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

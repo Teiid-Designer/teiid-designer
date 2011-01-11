@@ -75,11 +75,11 @@ import com.metamatrix.modeler.transformation.ui.actions.ITransformationDiagramAc
 import com.metamatrix.modeler.transformation.ui.actions.ImportTransformationSqlFromTextAction;
 import com.metamatrix.modeler.transformation.ui.actions.ReconcileTransformationAction;
 import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.dialog.RadioMessageDialog;
 import com.metamatrix.ui.internal.util.UiUtil;
 

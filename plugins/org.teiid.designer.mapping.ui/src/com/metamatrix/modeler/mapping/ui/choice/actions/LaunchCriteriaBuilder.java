@@ -8,9 +8,9 @@
 package com.metamatrix.modeler.mapping.ui.choice.actions;
 
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
+import com.metamatrix.modeler.mapping.ui.UiConstants;
+import com.metamatrix.modeler.mapping.ui.UiPlugin;
 import com.metamatrix.modeler.mapping.ui.choice.ChoicePanel;
-import com.metamatrix.query.ui.UiConstants;
-import com.metamatrix.query.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;
 
 /**

@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +30,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -304,7 +302,7 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
     }
 
     private void notifyUserOfLeftovers( final ModelResource modelResource,
-    									final List leftOverTables,
+                                        final List leftOverTables,
                                         final List<SqlRow> leftOverRows ) {
         if (!isTestingMode && !leftOverTables.isEmpty()) {
             final Shell shell = getShell();
@@ -318,30 +316,29 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                                                                     null);
                     if (result) {
                         // TODO: we need to create virtual tables
-							
-	                    VirtualRelationalObjectProcessor virtualRelationalObjectProcessor = new VirtualRelationalObjectProcessor();
-	                    Object location = null;
-	                    
-	                    
-	                    for( SqlRow row : leftOverRows ) {
-	                    	location = modelResource;
-	                    	IPath path = new Path(row.getPath());
-	                    	String tableName = null;
-	                    	if( path.segmentCount() == 2 ) {
-	                    		Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
-	                    		tableName = path.lastSegment();
-	                    		// Need to create a schema here
-	                    		String schemaName = path.segment(0);
-	                    		location = virtualRelationalObjectProcessor.createSchema(modelResource, schemaName);
-	                    		virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
-	                    		virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
-	                    	} else {
-	                    		Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
-	                    		tableName = path.toString();
-	                    		virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
-	                    		virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
-	                    	}
-	                    }
+
+                        VirtualRelationalObjectProcessor virtualRelationalObjectProcessor = new VirtualRelationalObjectProcessor();
+                        Object location = null;
+
+                        for (SqlRow row : leftOverRows) {
+                            location = modelResource;
+                            IPath path = new Path(row.getPath());
+                            String tableName = null;
+                            if (path.segmentCount() == 2) {
+                                Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
+                                tableName = path.lastSegment();
+                                // Need to create a schema here
+                                String schemaName = path.segment(0);
+                                location = virtualRelationalObjectProcessor.createSchema(modelResource, schemaName);
+                                virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
+                                virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
+                            } else {
+                                Collection<VirtualTableRowObject> virtTableRows = new ArrayList<VirtualTableRowObject>();
+                                tableName = path.toString();
+                                virtTableRows.add(new VirtualTableRowObject(tableName, null, row.getSql()));
+                                virtualRelationalObjectProcessor.generateObjsFromRowObjs(modelResource, location, virtTableRows);
+                            }
+                        }
                     }
                 }
             });
@@ -350,7 +347,27 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
 
     private SqlRow createSqlRow( String rowString ) {
         String[] parsedString = rowString.split(DELIMETER);
-        return new SqlRow(getSqlTypeFromString(parsedString[1]), parsedString[0], parsedString[2]);
+        String sql = parsedString[2];
+        StringBuilder sb = new StringBuilder();
+        boolean escaped = false;
+        for (int i = 0; i < sql.length(); i++) {
+            char c = sql.charAt(i);
+            if (escaped) {
+                escaped = false;
+                if (c == 'n') {
+                    c = '\n';
+                }
+            } else if (c == '\\') {
+                escaped = true;
+                continue;
+            }
+            sb.append(c);
+        }
+        if (escaped) {
+            // probably an error, but just in case
+            sb.append('\\');
+        }
+        return new SqlRow(getSqlTypeFromString(parsedString[1]), parsedString[0], sb.toString());
     }
 
     boolean setTransformationSql( ModelResource modelResource,

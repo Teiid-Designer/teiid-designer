@@ -14,9 +14,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.language.SQLConstants;
@@ -34,6 +36,7 @@ import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.SelectSymbol;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.util.ElementSymbolOptimizer;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -1518,5 +1521,17 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         } // for
         
         return null;
+    }
+    
+    public EObject getMappingRoot() {
+    	if( this.queryValidator != null ) {
+    		return this.queryValidator.getTransformationRoot();
+    	}
+    	
+    	return null;
+    }
+    
+    public int getQueryType() {
+    	return this.queryType;
     }
 }

@@ -8,9 +8,11 @@
 package com.metamatrix.modeler.mapping.ui;
 
 import java.util.ResourceBundle;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.diagram.ui.DiagramUiConstants;
@@ -100,6 +102,7 @@ public interface UiConstants {
         String SYNC_TREE_AND_DIAGRAM_WHEN_EXPANDING = PC.CVIEW16 + "synced.gif"; //$NON-NLS-1$
         String POPULATE_DIAGRAM_FROM_TREE_SELECTION = PC.CVIEW16 + "filter_change.gif"; //$NON-NLS-1$
         String COLUMN_FOR_SUMMARY_EXTENT = PC.COBJ + "Column.gif"; //$NON-NLS-1$
+        String CRITERIA_BUILDER  = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
 
         //        String UP_PACKAGE_DIAGRAM       = PC.CVIEW16 + "tb_up_package_diagram.gif";       //$NON-NLS-1$
     }

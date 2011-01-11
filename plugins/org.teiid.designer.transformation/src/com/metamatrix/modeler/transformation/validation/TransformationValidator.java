@@ -714,4 +714,11 @@ public class TransformationValidator implements QueryValidator {
 
         return result;
     }
+
+	@Override
+	public EObject getTransformationRoot() {
+		// TODO Auto-generated method stub
+		return this.mappingRoot;
+	}
+    
 }

@@ -327,7 +327,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
     }
 
     /**
-     * @see com.metamatrix.query.internal.ui.builder.AbstractLanguageObjectEditor#createUi(org.eclipse.swt.widgets.Composite)
+     * 
+     * @param theParent
      */
     protected void createTree( Composite theParent ) {
         pnlTreePanel = new Composite(theParent, SWT.NONE);

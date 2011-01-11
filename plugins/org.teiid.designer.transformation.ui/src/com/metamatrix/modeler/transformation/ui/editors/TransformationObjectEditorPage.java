@@ -87,6 +87,11 @@ import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.actions.EditTransformationAction;
 import com.metamatrix.modeler.transformation.ui.actions.ITransformationDiagramActionConstants;
 import com.metamatrix.modeler.transformation.ui.actions.ReconcileTransformationAction;
+import com.metamatrix.modeler.transformation.ui.builder.criteria.QueryCriteriaStrategy;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorEvent;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanelWrapper;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.ToggleOptimizer;
 import com.metamatrix.modeler.transformation.ui.search.OpenTransformationSearchPageAction2;
 import com.metamatrix.modeler.transformation.ui.util.BuilderTreeProvider;
 import com.metamatrix.modeler.transformation.ui.util.TransformationUiResourceHelper;
@@ -99,15 +104,10 @@ import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
 import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
-import com.metamatrix.query.internal.ui.builder.criteria.QueryCriteriaStrategy;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import com.metamatrix.query.internal.ui.sqleditor.actions.ToggleOptimizer;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
-import com.metamatrix.query.ui.sqleditor.SqlEditorEvent;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanelWrapper;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -1086,8 +1086,10 @@ public class TransformationObjectEditorPage
             // Get valid status for the transformation
             boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
 
-            showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
-
+            if( sourceIsEvent ) {
+            	showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
+            }
+            
             // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
             // Go ahead and check the command regardless if it's resolved or not.
             Command newCommand = TransformationHelper.getCommand(currentMappingRoot, cmdType);

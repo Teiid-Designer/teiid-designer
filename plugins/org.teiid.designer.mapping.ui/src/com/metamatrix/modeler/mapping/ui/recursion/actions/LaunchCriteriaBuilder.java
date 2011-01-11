@@ -8,8 +8,8 @@
 package com.metamatrix.modeler.mapping.ui.recursion.actions;
 
 import com.metamatrix.modeler.mapping.ui.recursion.RecursionPanel;
-import com.metamatrix.query.ui.UiConstants;
-import com.metamatrix.query.ui.UiPlugin;
+import com.metamatrix.modeler.mapping.ui.UiConstants;
+import com.metamatrix.modeler.mapping.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;
 
 /**

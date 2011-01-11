@@ -21,9 +21,9 @@ import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.modeler.transformation.ui.util.TransformationUiResourceHelper;
 import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
-import com.metamatrix.query.ui.sqleditor.SqlEditorPanel;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
