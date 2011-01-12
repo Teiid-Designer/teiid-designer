@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,7 +51,6 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
-
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -465,7 +463,10 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
             dialog.run(true, true, runnable);
         } catch (InterruptedException e) {
             // canceled by user
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            if (e instanceof InvocationTargetException) {
+                e = ((InvocationTargetException)e).getTargetException();
+            }
             DqpUiConstants.UTIL.log(e);
             MessageDialog.openError(getShell(),
                                     null,
