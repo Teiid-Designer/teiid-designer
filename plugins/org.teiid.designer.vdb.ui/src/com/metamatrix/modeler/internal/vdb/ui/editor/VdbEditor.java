@@ -284,6 +284,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	element.synchronize(new NullProgressMonitor());
                 	
                 	dataRoleResolver.modelSynchronized(element);
+                	VdbEditor.this.doSave(new NullProgressMonitor());
                 }
             }
         };
@@ -835,6 +836,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 otherFilesGroup.getTable().getViewer().refresh();
                 
                 dataRoleResolver.allSynchronized();
+                VdbEditor.this.doSave(new NullProgressMonitor());
             }
         });
         synchronizeAllButton.setEnabled(!vdb.isSynchronized());
