@@ -96,6 +96,7 @@
 		Use one of the following options to launch the New Model Wizard.
 	</para>
 	<itemizedlist id="launch-new-model-wizard">
+		<title>New Model Wizard</title>
 		<listitem>
 			<para>Choose the
 				<emphasis role="bold">File > New... > Metadata Model</emphasis>
@@ -147,6 +148,7 @@
 		<title>Creating New Relational Source Model</title>
 		<para></para>
 		<itemizedlist id="create-empty-relational-source-model-section">
+			<title>Create New Relational Source Model</title>
 			<listitem>
 				<para>To create a new empty relational source model:
 					<itemizedlist>
@@ -348,6 +350,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-relational-view-model-section">
+			<title>Create New Relational View Model</title>
 			<listitem>
 				<para>To create a new empty relational view model:
 					<itemizedlist>
@@ -508,6 +511,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-xml-document-view-model-section">
+			<title>Create XML Document View Model</title>
 			<listitem>
 				<para>To create a new empty xml document view model:
 					<itemizedlist>
@@ -702,6 +706,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-xml-schema-model-section">
+			<title>Create XML Schema Model</title>
 			<listitem>
 				<para>To create a new empty xml schema (.xsd) model:
 					<itemizedlist>
@@ -796,6 +801,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-web-service-view-model-section">
+			<title>Create Web Service View Model</title>
 			<listitem>
 				<para>To create a new empty web service view model:
 					<itemizedlist>
@@ -1047,6 +1053,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-extensions-model-section">
+			<title>Create New Extensions Model</title>
 			<listitem>
 				<para>To create a new empty extensions model:
 					<itemizedlist>
@@ -1141,6 +1148,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-relationships-model-section">
+			<title>Create New Relationship Model</title>
 			<listitem>
 				<para>To create a new empty relationships model:
 					<itemizedlist>
@@ -1240,6 +1248,7 @@
 		<para></para>
 		
 		<itemizedlist id="create-empty-uml-model-section">
+			<title>Create New UML 2.0 Model</title>
 			<listitem>
 				<para>To create a new empty UML 2.0 model:
 					<itemizedlist>
