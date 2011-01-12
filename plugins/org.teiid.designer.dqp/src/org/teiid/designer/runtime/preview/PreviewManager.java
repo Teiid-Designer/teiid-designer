@@ -62,13 +62,13 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.jobs.CompositePreviewJob;
 import org.teiid.designer.runtime.preview.jobs.CreatePreviewVdbJob;
@@ -225,6 +225,14 @@ public final class PreviewManager extends JobChangeAdapter
             }
         }
 
+        return false;
+    }
+    
+    private static boolean isProjectPreviewVdb(IFile pvdbFile) {
+        if (PreviewManager.isPreviewVdb(pvdbFile)) {
+            return pvdbFile.getFullPath().removeFileExtension().toString().endsWith("tion");
+        }
+        
         return false;
     }
 
@@ -1281,8 +1289,22 @@ public final class PreviewManager extends JobChangeAdapter
 
                     // deploy PVDB
                     monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
-                    admin.deployVdb(projectPvdbFile);
-                    setNeedsToBeDeployedStatus(projectPvdbFile, false);
+                    
+                    try {
+                        admin.deployVdb(projectPvdbFile);
+                        setNeedsToBeDeployedStatus(projectPvdbFile, false);
+                    } catch (Exception e) {
+                        // only care if server exception when deploying a PVDB that is a dependency or a project PVDB
+                        if (dependsOn(modelToPreview, projectPvdbFile) || PreviewManager.isProjectPreviewVdb(projectPvdbFile)) {
+                            String modelName = getResourceNameForPreviewVdb(projectPvdbFile);
+                            status = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeployPreviewVdbDependencyError,
+                                                                                   modelName), e);
+                            throw new CoreException(status);
+                        }
+                        
+                        // make sure this PVDB does not get merged since it didn't get deployed
+                        pvdbsToMerge.remove(projectPvdbFile);
+                    }
 
                     if (monitor.isCanceled()) {
                         throw new InterruptedException();
