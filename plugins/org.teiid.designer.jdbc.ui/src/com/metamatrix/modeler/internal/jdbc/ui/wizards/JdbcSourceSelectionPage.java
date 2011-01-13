@@ -368,11 +368,12 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         if (wizardDialog.open() == Window.OK) {
             try {
                 this.src = listener.getJdbcSource();
+                JdbcSource theNewJdbcSource = this.src;
                 this.mgr.reload(null);
                 WidgetUtil.setComboItems(this.srcCombo, this.mgr.getJdbcSources(), this.srcLabelProvider, true);
 
-                if (src != null) {
-                    WidgetUtil.setComboText(this.srcCombo, src, this.srcLabelProvider);
+                if (theNewJdbcSource != null) {
+                    WidgetUtil.setComboText(this.srcCombo, theNewJdbcSource, this.srcLabelProvider);
                 }
 
             } catch (JdbcException e) {
