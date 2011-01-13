@@ -36,9 +36,14 @@ public interface ColumnProvider<T, V> extends Comparator<T> {
     Image getImage( T element );
 
     /**
-     * @return the name of the {@link TableColumn column}
+     * @return the header name of the {@link TableColumn column}
      */
     String getName();
+    
+    /**
+     * @return the header image of the {@link TableColumn column}
+     */
+    Image getImage();
 
     /**
      * @param element

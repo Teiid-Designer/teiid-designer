@@ -247,6 +247,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public String getName() {
                 return PATH_COLUMN_NAME;
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getValue( final VdbEntry element ) {
@@ -257,7 +262,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             @Override
             public String getName() {
-                return SYNCHRONIZED_COLUMN_NAME;
+                return null;
+            }
+            
+            @Override
+            public Image getImage() {
+                return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.SYNCHRONIZE_MODELS_ICON);
             }
 
             @Override
@@ -293,6 +303,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             @Override
             public String getName() {
                 return DESCRIPTION_COLUMN_NAME;
+            }
+            
+            @Override
+            public Image getImage() {
+                return null;
             }
 
             @Override
@@ -339,6 +354,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public String getName() {
                 return MODEL_COLUMN_NAME;
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getValue( final VdbModelEntry element ) {
@@ -348,7 +368,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             @Override
             public String getName() {
-                return VISIBLE_COLUMN_NAME;
+                return null;
+            }
+            
+            @Override
+            public Image getImage() {
+                return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.VISIBLE_ICON);
             }
 
             @Override
@@ -377,6 +402,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public String getName() {
                 return SOURCE_NAME_COLUMN_NAME;
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getValue( final VdbModelEntry element ) {
@@ -400,6 +430,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public String getName() {
                 return TRANSLATOR_COLUMN_NAME;
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getValue( final VdbModelEntry element ) {
@@ -422,6 +457,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             @Override
             public String getName() {
                 return JNDI_NAME_COLUMN_NAME;
+            }
+            
+            @Override
+            public Image getImage() {
+                return null;
             }
 
             @Override
@@ -560,6 +600,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public Image getImage( final VdbEntry element ) {
                 return workbenchLabelProvider.getImage(element.findFileInWorkspace());
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getName() {
@@ -622,6 +667,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public String getName() {
                 return DATA_POLICY_COLUMN_NAME;
             }
+            
+            @Override
+            public Image getImage() {
+                return null;
+            }
 
             @Override
             public String getValue( final VdbDataRole element ) {
@@ -632,6 +682,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             @Override
             public String getName() {
                 return DESCRIPTION_COLUMN_NAME;
+            }
+            
+            @Override
+            public Image getImage() {
+                return null;
             }
 
             @Override

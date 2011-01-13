@@ -127,7 +127,11 @@ public class Table<T> {
                 }
             });
             final TableColumn col = viewerCol.getColumn();
-            col.setText(columnProvider.getName());
+            if( columnProvider.getName() != null ) {
+            	col.setText(columnProvider.getName());
+            } else if( columnProvider.getImage() != null ) {
+            	col.setImage(columnProvider.getImage());
+            }
             col.setMoveable(false);
             col.setResizable(columnProvider.isResizable());
         }

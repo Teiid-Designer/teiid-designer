@@ -78,7 +78,9 @@ public interface VdbUiConstants {
     interface Images extends UiConstants.Images {
         String IMPORT_VDB_ICON = WIZBAN + "import_vdb.gif"; //$NON-NLS-1$
         String SYNCRONIZE_VDB_ICON = FULL + "cview20/" + "synchronizemodels.gif"; //$NON-NLS-1$ //$NON-NLS-2$
-        String REBUILD_VDB_ICON = FULL + "ctool16/" + "rebuild_vdb.gif"; //$NON-NLS-1$ //$NON-NLS-2$
+        String REBUILD_VDB_ICON = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
+        String SYNCHRONIZE_MODELS_ICON = CVIEW16 + "synchronizemodels.gif"; //$NON-NLS-1$
+        String VISIBLE_ICON = CVIEW16 + "visible.gif"; //$NON-NLS-1$
     }
 
     /**
