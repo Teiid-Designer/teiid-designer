@@ -14,7 +14,9 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.roles.Crud.Type;
 
+import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 
@@ -191,7 +193,7 @@ public class PermissionHandler {
 	}
 	
 	/**
-	 * Performs the necessary permission CRUD value changes based on the target element and the CRUD type.
+	 * Performs the necessary permission CRUDDELETE value changes based on the target element and the CRUD type.
 	 * This method is targeted for use by a single-click editor changing ONE CRUD boolean value for one object.
 	 * 
 	 * @param element
@@ -258,8 +260,11 @@ public class PermissionHandler {
 	
 	public boolean supportsUpdates(Object element, Crud.Type crudType) {
 		Object targetObj = element;
-		if( TransformationHelper.isSqlColumn(element) ) {
+		if( TransformationHelper.isSqlColumn(element) || element instanceof ProcedureParameter ) {
 			targetObj = ((EObject)element).eContainer();
+			if( crudType == Type.DELETE ) {
+				return false;
+			}
 		}
 		
 		boolean isVirtualTable = TransformationHelper.isVirtualSqlTable(targetObj);
