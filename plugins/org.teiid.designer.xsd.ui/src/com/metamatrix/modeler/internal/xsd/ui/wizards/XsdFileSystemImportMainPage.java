@@ -132,7 +132,7 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
 
         //List xsdFiles, boolean addDependentXsds, IPath destinationFullPath, Shell shell, IWizardContainer container, IOverwriteQuery overwriteQuery, boolean createContainerStructure, boolean overwriteExistingResources) {
 
-        return XsdFileSystemImportUtil.importXsds(fileSystemObjects, addDependentXsdsCheckbox.getSelection(), getContainerFullPath(), getContainer(), this, this.createContainerStructureButton.getSelection(), this.overwriteExistingResourcesCheckbox.getSelection());
+        return XsdFileSystemImportUtil.importXsds(fileSystemObjects, addDependentXsdsCheckbox.getSelection(), getContainerFullPath(), getContainer(), this, this.createTopLevelFolderCheckbox.getSelection(), this.overwriteExistingResourcesCheckbox.getSelection());
     } 
     
     /** 
@@ -151,8 +151,8 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
             setContainerFieldValue(path);
         }
         
-        this.createContainerStructureButton.setEnabled(false);
-        this.createOnlySelectedButton.setEnabled(false);
+        this.createTopLevelFolderCheckbox.setEnabled(false);
+//        this.createOnlySelectedButton.setEnabled(false);
     }
 
     /**
@@ -216,10 +216,13 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
             this.overwriteExistingResourcesCheckbox.setSelection(settings
                     .getBoolean(STORE_OVERWRITE_EXISTING_RESOURCES_ID));
 
-            boolean createStructure = settings
+            if( this.createTopLevelFolderCheckbox != null ) {
+            	boolean createStructure = settings
                     .getBoolean(STORE_CREATE_CONTAINER_STRUCTURE_ID);
-            this.createContainerStructureButton.setSelection(createStructure);
-            this.createOnlySelectedButton.setSelection(!createStructure);
+            		this.createTopLevelFolderCheckbox.setSelection(createStructure);
+            		this.createTopLevelFolderCheckbox.setEnabled(true);
+            }
+//            this.createOnlySelectedButton.setSelection(!createStructure);
             
             boolean addDependencies = settings.getBoolean(ADD_DEPENDENT_XSD_FILES_ID);
             addDependentXsdsCheckbox.setSelection(addDependencies);
@@ -243,7 +246,7 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
                     overwriteExistingResourcesCheckbox.getSelection());
 
             settings.put(STORE_CREATE_CONTAINER_STRUCTURE_ID,
-                    createContainerStructureButton.getSelection());
+                    createTopLevelFolderCheckbox.getSelection());
             
             settings.put(ADD_DEPENDENT_XSD_FILES_ID,
                          addDependentXsdsCheckbox.getSelection());
