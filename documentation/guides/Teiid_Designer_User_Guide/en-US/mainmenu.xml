@@ -61,7 +61,7 @@
 			<title>File Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/main-menus-file.png"/>
+					<imagedata fileref="images/screencaps/main-menu-file.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -72,7 +72,7 @@
 			<title>File Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/main-menus-file-new.png"/>
+					<imagedata fileref="images/screencaps/main-menu-file-new.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
@@ -116,7 +116,7 @@
 							<para>
 								<inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/ne-vdb-wiz.png"/>
+										<imagedata fileref="images/icons/new-vdb-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">New > Virtual Database Definition</emphasis> - Create a new VDB, or
 								Virtual Database Definition.

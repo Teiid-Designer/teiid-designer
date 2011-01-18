@@ -125,12 +125,12 @@
 			<para>Diagram print options are stored as preferences. These can be accessed through 
 			this preference page, by right-click on diagram <emphasis role="bold">Page Setup action</emphasis> <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/tb_page_setup.png" />
+							<imagedata fileref="images/icons/tb-page-setup.png" />
 						</imageobject>
 					</inlinemediaobject>, 
 			or via the <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/tb_page_setup.png" />
+							<imagedata fileref="images/icons/tb-page-setup.png" />
 						</imageobject>
 					</inlinemediaobject> located on the vertical diagram toolbar .</para>
 			<figure>

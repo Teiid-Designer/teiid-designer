@@ -211,7 +211,7 @@
 								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
 									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
 										<imageobject>
-											<imagedata fileref="images/icons/previewData.png"/>
+											<imagedata fileref="images/icons/preview-data.png"/>
 										</imageobject>
 									</inlinemediaobject>. You can also select the same action in the tool-bar of either
 									the <xref linkend="model-explorer-view" /> or diagram.  </para>

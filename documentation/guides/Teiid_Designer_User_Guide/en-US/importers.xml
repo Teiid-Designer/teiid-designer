@@ -217,7 +217,7 @@
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Designer</emphasis> 
 								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
 									<imageobject>
-										<imagedata fileref="images/icons/import_wiz.png"/>
+										<imagedata fileref="images/icons/import-wiz.png"/>
 									</imageobject>
 								</inlinemediaobject> in the toolbar or select a project, folder or 
 							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>

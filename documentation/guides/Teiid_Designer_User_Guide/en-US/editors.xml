@@ -597,7 +597,7 @@
 								<listitem>
 									<para><inlinemediaobject>
 											<imageobject>
-												<imagedata fileref="images/icons/tb_new_temp_table.png"/>
+												<imagedata fileref="images/icons/tb-new-temp-table.png"/>
 											</imageobject>
 										</inlinemediaobject> <emphasis role="bold">New Staging Table</emphasis> - Insert new staging table referenced to the selected XML document element or attribute.
 									</para>
@@ -871,7 +871,11 @@
 				These actions, described and shown below include:
 				<itemizedlist>
 					<listitem>
-						<para><emphasis role="bold">Table Paste</emphasis> - Paste common spreadsheet data (like Microsoft Excel) to set object properties.</para>
+						<para><inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/table-paste.png"/>
+						</imageobject>
+					</inlinemediaobject><emphasis role="bold">Table Paste</emphasis> - Paste common spreadsheet data (like Microsoft Excel) to set object properties.</para>
 					</listitem>
 					<listitem>
 						<para><emphasis role="bold">Table Editor Preferences</emphasis> - Change table editor preferences, including customizing visible properties.</para>
@@ -880,7 +884,11 @@
 						<para><emphasis role="bold">Insert Rows</emphasis> - Create multiple new sibling objects.</para>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Refresh Table</emphasis> - Refreshes the contents of the current Table Editor to insure it is in sync with the model.</para>
+						<para><inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/refresh.png"/>
+						</imageobject>
+					</inlinemediaobject><emphasis role="bold">Refresh Table</emphasis> - Refreshes the contents of the current Table Editor to insure it is in sync with the model.</para>
 					</listitem>
 				</itemizedlist>
 			</para>

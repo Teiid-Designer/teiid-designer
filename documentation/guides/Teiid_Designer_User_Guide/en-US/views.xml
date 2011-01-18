@@ -407,7 +407,7 @@
 				<listitem>
 					<para><inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/tree-model.png"/>
+								<imagedata fileref="images/icons/tree-mode.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Show Categories</emphasis> - toggles between categorized properties and flat alphabetical properties list.
 					</para>
@@ -462,7 +462,7 @@
 			<title>Description View Context Menu</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/description-view-menu.png"/>
+					<imagedata fileref="images/screencaps/description-view-context-menu.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
