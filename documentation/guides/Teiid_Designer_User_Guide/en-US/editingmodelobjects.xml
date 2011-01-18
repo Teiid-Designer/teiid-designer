@@ -377,7 +377,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/cut_edit.png" />
+								<imagedata fileref="images/icons/cut-edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) and copies it to the clipboard.
 					</para>
@@ -386,7 +386,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/copy_edit.png" />
+								<imagedata fileref="images/icons/copy-edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected object(s) to the clipboard.
 					</para>
@@ -395,7 +395,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/paste_edit.png" />
+								<imagedata fileref="images/icons/paste-edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the clipboard to the selected context.
 					</para>
@@ -408,7 +408,7 @@
 					<para>
 						<inlinemediaobject>
 							<imageobject>
-								<imagedata fileref="images/icons/delete_edit.png" />
+								<imagedata fileref="images/icons/delete-edit.png" />
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
 					</para>

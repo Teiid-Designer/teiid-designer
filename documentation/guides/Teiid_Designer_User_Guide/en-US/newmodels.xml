@@ -67,14 +67,14 @@
 								<imageobject>
 									<imagedata fileref="images/icons/extension-model.png"/>
 								</imageobject>
-							     </inlinemediaobject> <link linkend="new-extension-model" />
+							     </inlinemediaobject> <xref linkend="new-extension-model" />
 						</para>
 					</listitem>
 					<listitem>
 						<para>
 							<inlinemediaobject>
 								<imageobject>
-									<imagedata fileref="images/icons/relationships.png"/>
+									<imagedata fileref="images/icons/relationship-model.png"/>
 								</imageobject>
 							     </inlinemediaobject> <xref linkend="new-relationships-model" />
 						</para>
@@ -102,7 +102,7 @@
 				<emphasis role="bold">File > New... > Metadata Model</emphasis>
 				action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/newmodel-wiz.png"/>
+							<imagedata fileref="images/icons/new-model-wiz.png"/>
 						</imageobject>
 					</inlinemediaobject> .
 			</para>
@@ -117,13 +117,13 @@
 				<emphasis role="bold">New</emphasis>
 				button on the main toolbar <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/new-resoure-button.png"/>
+							<imagedata fileref="images/icons/new-resource-button.png"/>
 						</imageobject>
 					</inlinemediaobject> and select the
 				<emphasis role="bold">Metadata Model</emphasis>
 				action <inlinemediaobject>
 						<imageobject>
-							<imagedata fileref="images/icons/newmodel-wiz.png"/>
+							<imagedata fileref="images/icons/new-model-wiz.png"/>
 						</imageobject>
 					</inlinemediaobject> .
 			</para>
