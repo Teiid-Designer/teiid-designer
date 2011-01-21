@@ -39,6 +39,35 @@
          </enabledWhen>
       </page>
    </extension>
+
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.ws.ConnectionProfileWizard"
+         description="Create an non-SOAP Web Service connection profile."
+         icon="icons/wsdswiz.ico"
+         id="org.teiid.designer.datatools.profiles.ws.ConnectionProfileWizard"
+         name="Web Services Data Source (non-SOAP)"
+         profile="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.ws.PropertyPage"
+            icon="icons/wsdswiz.ico"
+            id="org.teiid.designer.datatools.profiles.ws.profileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
       
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">

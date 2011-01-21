@@ -24,6 +24,26 @@
             name="LDAP"/>
    </extension>
    
+   <extension
+       id="org.teiid.designer.datatools.profiles.ws.ConnectionInfoProvider"
+       name="%wsConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"
+            class="org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"
+            name="Web Service"/>
+   </extension>
+   
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
 		<category parentCategory="org.eclipse.datatools.connectivity.db.driverCategory"
 			id="org.teiid.designer.datatools.connectivity.driver.modeShapeCategory"
