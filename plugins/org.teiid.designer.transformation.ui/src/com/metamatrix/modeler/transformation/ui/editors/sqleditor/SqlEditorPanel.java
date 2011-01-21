@@ -415,7 +415,7 @@ public class SqlEditorPanel extends SashForm
             // System.out.println("         ---------------   SQL Changed = " + setSqlText + "   SQL = " + proposedSqlText);
             if (setSqlText) {
                 panelSqlText = proposedSqlText;
-                System.out.println("  >> SEP.setText() Called:  calling queryDisplayComponent.setText() SQL = " + panelSqlText);
+                //System.out.println("  >> SEP.setText() Called:  calling queryDisplayComponent.setText() SQL = " + panelSqlText);
                 
                 TransformationHelper.setSqlString(
                 		queryDisplayComponent.getMappingRoot(), 
