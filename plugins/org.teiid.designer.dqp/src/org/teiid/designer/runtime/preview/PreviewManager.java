@@ -230,7 +230,7 @@ public final class PreviewManager extends JobChangeAdapter
     
     private static boolean isProjectPreviewVdb(IFile pvdbFile) {
         if (PreviewManager.isPreviewVdb(pvdbFile)) {
-            return pvdbFile.getFullPath().removeFileExtension().toString().endsWith("tion");
+            return pvdbFile.getFullPath().removeFileExtension().toString().endsWith("tion"); //$NON-NLS-1$
         }
         
         return false;
@@ -654,7 +654,7 @@ public final class PreviewManager extends JobChangeAdapter
                     }
                 }
 
-                if (requiresPassword && pwd != null) {
+                if (! requiresPassword || (requiresPassword&& pwd != null) ) {
                     TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
                     tds.setPreview(true);
                     return tds;
