@@ -24,6 +24,17 @@ public class JdbcTranslatorHelper {
 	public static final String H2 = "h2"; //$NON-NLS-1$
 	public static final String DERBY = "derby"; //$NON-NLS-1$
 	public static final String MODESHAPE = "modeshape"; //$NON-NLS-1$
+	public static final String FILE = "file"; //$NON-NLS-1$
+	public static final String LDAP = "ldap"; //$NON-NLS-1$
+	public static final String LOOPBACK = "loopback"; //$NON-NLS-1$
+	public static final String SALESFORCE = "salesforce"; //$NON-NLS-1$
+	public static final String TERADATA = "teradata"; //$NON-NLS-1$
+	public static final String WS = "ws"; //$NON-NLS-1$
+	
+	// Teiid Data Source Type names:
+	//
+	// connector-jdbc-xa, connector-file, connector-ldap, connector-ws, connector-salesforce, connector-jdbc
+	//
 
 
     /**
