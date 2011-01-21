@@ -18,4 +18,18 @@
         name="com.metamatrix.modeler.internal.relational.ui.wizards.ImportRelationalTablesMainPage">
       </class>
    </extension>
+   <extension
+         id="flatFileRelationalModelContributor"
+         name="%flatFileRelationalModelContributor"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.relational.ui.flatfile.FlatFileRelationalModelContributor"
+            icon="icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/Relational"
+            isPhysical="true"
+            isVirtual="false">
+      </metamodelDescriptorType>
+   </extension>
 </plugin>
