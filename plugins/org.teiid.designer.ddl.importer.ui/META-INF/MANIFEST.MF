@@ -5,20 +5,20 @@ Bundle-SymbolicName: org.teiid.designer.ddl.importer.ui;singleton:=true
 Bundle-Version: 7.2.0.qualifier
 Bundle-Activator: org.teiid.designer.ddl.importer.ui.DdlImporterUiPlugin
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.teiid.designer.ddl.importer;bundle-version="7.0.0",
- org.teiid.designer.compare.ui;bundle-version="7.0.0",
- org.teiid.designer.compare;bundle-version="7.0.0",
- org.teiid.designer.ui;bundle-version="7.0.0",
- org.teiid.designer.ui.common;bundle-version="7.0.0",
- org.teiid.designer.metamodels.relational;bundle-version="7.0.0",
- org.teiid.designer.core;bundle-version="7.0.0",
- org.teiid.designer.metamodels.core;bundle-version="7.0.0",
- org.teiid.core.designer;bundle-version="7.0.0",
- teiid_embedded_query;bundle-version="7.0.0",
- org.eclipse.emf.ecore;bundle-version="2.5.0",
- org.eclipse.emf.common;bundle-version="2.5.0",
+Require-Bundle: org.teiid.designer.ddl.importer,
+ org.teiid.designer.compare.ui,
+ org.teiid.designer.compare,
+ org.teiid.designer.ui,
+ org.teiid.designer.ui.common,
+ org.teiid.designer.metamodels.relational,
+ org.teiid.designer.core,
+ org.teiid.designer.metamodels.core,
+ org.teiid.core.designer,
+ teiid_embedded_query,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
  org.eclipse.ui,
- org.eclipse.core.resources;bundle-version="3.5.1",
+ org.eclipse.core.resources,
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

@@ -15,4 +15,4 @@ Export-Package: .,
  org.jdom.output,
  org.jdom.transform,
  org.jdom.xpath
-Require-Bundle: org.apache.xerces;bundle-version="2.9.0"
+Require-Bundle: org.apache.xerces
