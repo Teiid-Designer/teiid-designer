@@ -246,9 +246,10 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         }
         setErrorMessage(null);
         try {
-        	URL url = new URL(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
+        	@SuppressWarnings("unused")
+			URL url = new URL(properties.get(IWSProfileConstants.URL_PROP_ID).toString());
         } catch(MalformedURLException e) {
-        	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + e.getMessage());
+        	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + e.getMessage()); //$NON-NLS-1$
         	return;
         }
         

@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -61,6 +62,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -108,9 +110,6 @@ import com.metamatrix.modeler.ui.editors.ModelObjectEditorPage;
 import com.metamatrix.modeler.ui.undo.IUndoManager;
 import com.metamatrix.modeler.ui.viewsupport.StatusBarUpdater;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 

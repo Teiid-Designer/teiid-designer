@@ -213,7 +213,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
     	
     	String connectionURL = jdbcInfo.getURL();
     	
-    	String profileName = vdbName + " - " + jdbcInfo.getHost() + " - Teiid Connection"; //$NON-NLS-1$
+    	String profileName = vdbName + " - " + jdbcInfo.getHost() + " - Teiid Connection"; //$NON-NLS-1$ //$NON-NLS-2$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
     	if(profile == null) {
