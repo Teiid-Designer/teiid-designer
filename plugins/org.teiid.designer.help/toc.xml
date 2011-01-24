@@ -1,232 +1,224 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE toc PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<toc label="Teiid Designer User Guide" topic="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/index.html">
-  <topic label="Preface" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/pr01.html">
-    <topic label="Document Conventions" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/pr01.html#id1851302">
-      <topic label="Typographic Conventions" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/pr01.html#id751162"></topic>
-      <topic label="Pull-quote Conventions" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/pr01.html#id928597"></topic>
-      <topic label="Notes and Warnings" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/pr01.html#id932681"></topic>
-    </topic>
-    <topic label="We Need Feedback!" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/sect-Beginners_Guide-We_Need_Feedback.html"></topic>
-  </topic>
-  <topic label="Introduction" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/intro-chapter.html">
-    <topic label="What is Teiid Designer?" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/intro-chapter.html#what-is-modeler"></topic>
-    <topic label="Why Use Teiid Designer?" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/why-use-modeler.html"></topic>
-    <topic label="Metadata Overview" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html">
-      <topic label="What is Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#what-is-metadata"></topic>
-      <topic label="Editing Metadata vs. Editing Data" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#editing-metadata-vs-data"></topic>
-      <topic label="Metadata Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#metadata-models"></topic>
-      <topic label="Business and Technical Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#business-technical-metadata">
-        <topic label="Technical Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#technical-metadata"></topic>
-        <topic label="Business Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#business-metadata"></topic>
+
+<!DOCTYPE toc
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<toc label="Teiid Designer User Guide" topic="index.html">
+   <topic label="Introduction" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html">
+      <topic label="What is Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#what-is-modeler"/>
+      <topic label="Why Use Teiid Designer?" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#why-use-modeler"/>
+      <topic label="Metadata Overview" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#metadata-overview">
+         <topic label="What is Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#what-is-metadata"/>
+         <topic label="Editing Metadata vs. Editing Data" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#editing-metadata-vs-data"/>
+         <topic label="Metadata Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#metadata-models"/>
+         <topic label="Business and Technical Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#business-technical-metadata">
+            <topic label="Technical Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#technical-metadata"/>
+            <topic label="Business Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#business-metadata"/>
+         </topic>
+         <topic label="Design-Time and Runtime Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#design-runtime-metadata">
+            <topic label="Design-Time Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#design-time-metadata"/>
+            <topic label="Runtime Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#runtime-metadata"/>
+         </topic>
+         <topic label="Source and View Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#source-view-metadata">
+            <topic label="Modeling Your Source Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#modeling-source-metadata"/>
+            <topic label="Modeling Your View Metadata" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#modeling-view-metadata"/>
+            <topic label="Modeling Metadata Transformations" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#modeling-transformations">
+               <topic label="Metadata Transformations" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#metadata-transformations"/>
+               <topic label="SQL in Transformations " href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#sql-transformations"/>
+               <topic label="Mapping XML Transformations " href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#mapping-xml-transformations"/>
+            </topic>
+         </topic>
       </topic>
-      <topic label="Design-Time and Runtime Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#design-runtime-metadata">
-        <topic label="Design-Time Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#design-time-metadata"></topic>
-        <topic label="Runtime Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#runtime-metadata"></topic>
+      <topic label="Models 101" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#models-101-section">
+         <topic label="What Are Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-what-are-models"/>
+         <topic label="How is a Model Defined?" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-how-is-a-model-defined"/>
+         <topic label="Model Classes and Types" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-model-classes-and-types"/>
+         <topic label="Models and VDBs" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-models-and-vdbs"/>
+         <topic label="Models and Connection Profiles" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-models-and-connector-profiles"/>
+         <topic label="Model Validation" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-model-validation"/>
+         <topic label="Testing Your Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/intro-chapter.html#intro-testing-your-models"/>
       </topic>
-      <topic label="Source and View Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#source-view-metadata">
-        <topic label="Modeling Your Source Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#modeling-source-metadata"></topic>
-        <topic label="Modeling Your View Metadata" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#modeling-view-metadata"></topic>
-        <topic label="Modeling Metadata Transformations" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#modeling-transformations">
-          <topic label="Metadata Transformations" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#metadata-transformations"></topic>
-          <topic label="SQL in Transformations" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#sql-transformations"></topic>
-          <topic label="Mapping XML Transformations" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-overview.html#mapping-xml-transformations"></topic>
-        </topic>
+   </topic>
+   <topic label="Teiid Designer Perspectives" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/perspectives-chapter.html">
+      <topic label="Teiid Designer Perspective" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/perspectives-chapter.html#teiid-perpective-section"/>
+      <topic label="Opening a Perspective" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/perspectives-chapter.html#opening-perspective-section"/>
+      <topic label="Further information" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/perspectives-chapter.html#d0e899"/>
+   </topic>
+   <topic label="Teiid Designer Main Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html">
+      <topic label="File Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#file-menu-section"/>
+      <topic label="Edit Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#edit-menu-section"/>
+      <topic label="Refactor Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#refactor-menu-section"/>
+      <topic label="Navigate Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#navigate-menu-section"/>
+      <topic label="Search Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#search-menu-section"/>
+      <topic label="Project Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#project-menu-section"/>
+      <topic label="Metadata Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#metadata-menu-section"/>
+      <topic label="Run Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#run-menu-section"/>
+      <topic label="Window Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#window-menu-section"/>
+      <topic label="Help Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/main-menu-chapter.html#help-menu-section"/>
+   </topic>
+   <topic label="Teiid Designer Views" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html">
+      <topic label="Model Explorer View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#model-explorer-view">
+         <topic label="Selection-Based Action Menus" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#model-explorer-selection-menus"/>
       </topic>
-    </topic>
-    <topic label="Models 101" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html">
-      <topic label="What Are Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-what-are-models"></topic>
-      <topic label="How is a Model Defined?" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-how-is-a-model-defined"></topic>
-      <topic label="Model Classes and Types" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-model-classes-and-types"></topic>
-      <topic label="Models and VDBs" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-models-and-vdbs"></topic>
-      <topic label="Models and Connection Profiles" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-models-and-connector-profiles"></topic>
-      <topic label="Model Validation" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-model-validation"></topic>
-      <topic label="Testing Your Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/models-101-section.html#intro-testing-your-models"></topic>
-    </topic>
-  </topic>
-  <topic label="Teiid Designer Perspectives" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/perspectives-chapter.html">
-    <topic label="Teiid Designer Perspective" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/perspectives-chapter.html#teiid-perpective-section"></topic>
-    <topic label="Opening a Perspective" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/opening-perspective-section.html"></topic>
-    <topic label="Further information" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/ch02s03.html"></topic>
-  </topic>
-  <topic label="Teiid Designer Main Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/main-menu-chapter.html">
-    <topic label="File Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/main-menu-chapter.html#file-menu-section"></topic>
-    <topic label="Edit Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/edit-menu-section.html"></topic>
-    <topic label="Refactor Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/refactor-menu-section.html"></topic>
-    <topic label="Navigate Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/navigate-menu-section.html"></topic>
-    <topic label="Search Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/search-menu-section.html"></topic>
-    <topic label="Project Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/project-menu-section.html"></topic>
-    <topic label="Metadata Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/metadata-menu-section.html"></topic>
-    <topic label="Run Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/run-menu-section.html"></topic>
-    <topic label="Window Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/window-menu-section.html"></topic>
-    <topic label="Help Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/help-menu-section.html"></topic>
-  </topic>
-  <topic label="Teiid Designer Views" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/views-chapter.html">
-    <topic label="Model Explorer View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/views-chapter.html#model-explorer-view">
-      <topic label="Selection-Based Action Menus" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/views-chapter.html#model-explorer-selection-menus"></topic>
-    </topic>
-    <topic label="Outline View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/outline-view.html">
-      <topic label="Outline Tree View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/outline-view.html#outline-tree-view"></topic>
-      <topic label="Outline Thumbnail View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/outline-view.html#outline-thumbnail-view"></topic>
-    </topic>
-    <topic label="Connectors View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/teiid-view.html"></topic>
-    <topic label="Properties View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/properties-view.html"></topic>
-    <topic label="Description View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/description-view.html"></topic>
-    <topic label="Editors" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-view.html"></topic>
-    <topic label="Problems View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/problems-view.html">
-      <topic label="Toolbar Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/problems-view.html#problems-view-toolbar-items"></topic>
-      <topic label="Context Menu" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/problems-view.html#problems-view-context-menu"></topic>
-    </topic>
-    <topic label="Message Log View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/message-log-view.html"></topic>
-    <topic label="Search Results View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/search-results-view.html"></topic>
-    <topic label="Datatype Hierarchy View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/datatypes-view.html"></topic>
-    <topic label="Teiid Model Classes View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-classes-view.html"></topic>
-    <topic label="System Catalog View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/system-catalog-view.html"></topic>
-  </topic>
-  <topic label="Editors" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html">
-    <topic label="Model Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#model-editors-section">
-      <topic label="Diagram Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#diagram-editor-section">
-        <topic label="Package Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#package-diagram-section"></topic>
-        <topic label="Custom Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#custom-diagram-section"></topic>
-        <topic label="Transformation Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#transformation-diagram-section"></topic>
-        <topic label="Mapping Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#mapping-diagram-section"></topic>
-        <topic label="Mapping Transformation Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#mapping-transformation-diagram-section"></topic>
-        <topic label="Relationship Diagram" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#relationship-diagram-section"></topic>
+      <topic label="Outline View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#outline-view">
+         <topic label="Outline Tree View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#outline-tree-view"/>
+         <topic label="Outline Thumbnail View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#outline-thumbnail-view"/>
       </topic>
-      <topic label="Table Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#table-editor-section">
-        <topic label="Editing Properties" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#id621176"></topic>
-        <topic label="Inserting Table Rows" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#id1825748"></topic>
+      <topic label="Teiid View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#teiid-view"/>
+      <topic label="Properties View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#properties-view"/>
+      <topic label="Description View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#description-view"/>
+      <topic label="Editors" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#editors-view"/>
+      <topic label="Problems View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#problems-view">
+         <topic label="Toolbar Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#problems-view-toolbar-items"/>
+         <topic label="Context Menu" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#problems-view-context-menu"/>
       </topic>
-      <topic label="Simple Datatypes Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#datatypes-editor-section"></topic>
-      <topic label="Semantic Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#semantic-editor-section"></topic>
-      <topic label="Source Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#source-editor-section"></topic>
-      <topic label="Model Object Editors" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editors-chapter.html#model-object-editors-sub-section"></topic>
-    </topic>
-    <topic label="VDB Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/vdb-editor-section.html">
-      <topic label="Editing Data Roles" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/vdb-editor-section.html#editing-data-roles-section"></topic>
-    </topic>
-  </topic>
-  <topic label="Importers" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/importers-chapter.html">
-    <topic label="Import DDL into Relational Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/importers-chapter.html#ddl-import-section"></topic>
-    <topic label="Import From JDBC" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/jdbc-import-section.html"></topic>
-    <topic label="Import Metadata From Text File" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/text-file-import-section.html">
-      <topic label="Import Relational Tables Text Importer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/text-file-import-section.html#relational-tables-text-import-section"></topic>
-      <topic label="Import Relational Virtual Tables Text Importer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/text-file-import-section.html#relational-virtual-tables-text-import-section"></topic>
-      <topic label="Import Relationships Text Importer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/text-file-import-section.html#relationships-text-import-section"></topic>
-      <topic label="Import Datatypes Text Importer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/text-file-import-section.html#datatypes-text-import-section"></topic>
-    </topic>
-    <topic label="Import WSDL into Relational Source Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/wsdl-to-relational-import-section.html"></topic>
-    <topic label="Import WSDL Into Web Service" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/wsdl-to-web-service-import-section.html">
-      <topic label="Import WSDL From Workspace Location" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/wsdl-to-web-service-import-section.html#workspace-location-wsdl-ws-section"></topic>
-      <topic label="Import WSDL From File System Location" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/wsdl-to-web-service-import-section.html#file-system-location-wsdl-ws-section"></topic>
-      <topic label="Import WSDL From URL" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/wsdl-to-web-service-import-section.html#url-location-wsdl-ws-section"></topic>
-    </topic>
-    <topic label="XSD Schema File" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/xsd-schema-import-section.html"></topic>
-    <topic label="Import Rational Rose Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/rose-import-section.html"></topic>
-  </topic>
-  <topic label="New Model Wizards" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/newmodels-chapter.html">
-    <topic label="Creating New Relational Source Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/newmodels-chapter.html#new-relational-source-model">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/newmodels-chapter.html#relational-source-copy-section"></topic>
-      <topic label="Generate From Existing UML Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/newmodels-chapter.html#relational-source-generate-from-uml-section"></topic>
-    </topic>
-    <topic label="Creating New Relational View Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relational-view-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relational-view-model.html#relational-view-copy-section"></topic>
-      <topic label="Transform From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relational-view-model.html#relational-view-transform-from-model-section"></topic>
-      <topic label="Generate From Existing UML Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relational-view-model.html#relational-view-generate-from-uml-section"></topic>
-      <topic label="Create From XML Schema" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relational-view-model.html#relational-view-create-from-schema-section"></topic>
-    </topic>
-    <topic label="Creating XML Document View Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-xml-document-view-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-xml-document-view-model.html#xml-document-view-copy-section"></topic>
-      <topic label="Build XML Documents From XML Schema" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-xml-document-view-model.html#xml-document-view-from-schema-section"></topic>
-    </topic>
-    <topic label="Creating XML Schema Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-xml-schema-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-xml-schema-model.html#xml-schema-copy-section"></topic>
-    </topic>
-    <topic label="Creating Web Service View Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-web-service-view-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-web-service-view-model.html#web-service-view-copy-section"></topic>
-      <topic label="Build From Existing WSDL File(s) or URL" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-web-service-view-model.html#web-service-view-from-wsdl-section"></topic>
-      <topic label="Build From Relational Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-web-service-view-model.html#web-service-view-from-relational-section"></topic>
-      <topic label="Build From XML Document View Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-web-service-view-model.html#web-service-view-from-xml-doc-section"></topic>
-    </topic>
-    <topic label="Creating New Extensions Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-extension-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-extension-model.html#extensions-copy-section"></topic>
-    </topic>
-    <topic label="Creating New Relationship Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relationships-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-relationships-model.html#relationships-copy-section"></topic>
-    </topic>
-    <topic label="Creating New UML 2.0 Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-uml-model.html">
-      <topic label="Copy From Existing Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/new-uml-model.html#uml-copy-section"></topic>
-    </topic>
-  </topic>
-  <topic label="Creating and Editing Model Objects" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editing-model-objects-chapter.html">
-    <topic label="Creating New Model Objects" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editing-model-objects-chapter.html#create-model-objects-section">
-      <topic label="New Child Action" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editing-model-objects-chapter.html#create-new-child-section"></topic>
-      <topic label="New Sibling Action" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editing-model-objects-chapter.html#create-new-sibling-section"></topic>
-      <topic label="New Association Action" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/editing-model-objects-chapter.html#create-new-association-section"></topic>
-    </topic>
-    <topic label="Model Object Editors" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html">
-      <topic label="Transformation Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#transformation-editor-section">
-        <topic label="Using the Criteria Builder" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#using-criteria-builder-section"></topic>
-        <topic label="Using the Expression Builder" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#using-expression-builder-section"></topic>
+      <topic label="Message Log View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#message-log-view"/>
+      <topic label="Search Results View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#search-results-view"/>
+      <topic label="Datatype Hierarchy View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#datatypes-view"/>
+      <topic label="Teiid Model Classes View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#model-classes-view"/>
+      <topic label="System Catalog View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/views-chapter.html#system-catalog-view"/>
+   </topic>
+   <topic label="Editors" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html">
+      <topic label="Model Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#model-editors-section">
+         <topic label="Diagram Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#diagram-editor-section">
+            <topic label="Package Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#package-diagram-section"/>
+            <topic label="Custom Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#custom-diagram-section"/>
+            <topic label="Transformation Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#transformation-diagram-section"/>
+            <topic label="Mapping Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#mapping-diagram-section"/>
+            <topic label="Mapping Transformation Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#mapping-transformation-diagram-section"/>
+            <topic label="Relationship Diagram" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#relationship-diagram-section"/>
+         </topic>
+         <topic label="Table Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#table-editor-section">
+            <topic label="Editing Properties" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#d0e3648"/>
+            <topic label="Inserting Table Rows" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#d0e3691"/>
+         </topic>
+         <topic label="Simple Datatypes Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#datatypes-editor-section"/>
+         <topic label="Semantic Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#semantic-editor-section"/>
+         <topic label="Source Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#source-editor-section"/>
+         <topic label="Model Object Editors" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#model-object-editors-sub-section"/>
       </topic>
-      <topic label="Input Set Editor (XML)" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#input-set-editor-section"></topic>
-      <topic label="Choice Editor (XML)" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#choice-editor-section">
-        <topic label="Using the Choice Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id882422"></topic>
-        <topic label="Excluding Fragments" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id770893"></topic>
-        <topic label="Editing Choice Criteria" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id770946"></topic>
-        <topic label="Setting Choice Element Order" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id900635"></topic>
-        <topic label="Setting a Default Choice Action" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id900696"></topic>
+      <topic label="VDB Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#vdb-editor-section">
+         <topic label="Editing Data Roles" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editors-chapter.html#editing-data-roles-section"/>
       </topic>
-      <topic label="Recursion Editor (XML)" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#recursion-editor-section">
-        <topic label="The Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#id714442"></topic>
+   </topic>
+   <topic label="Importers" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html">
+      <topic label="Import DDL into Relational Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#ddl-import-section"/>
+      <topic label="Import From JDBC" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#jdbc-import-section"/>
+      <topic label="Import Metadata From Text File" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#text-file-import-section">
+         <topic label="Import Relational Tables Text Importer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#relational-tables-text-import-section"/>
+         <topic label="Import Relational Virtual Tables Text Importer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#relational-virtual-tables-text-import-section"/>
+         <topic label="Import Relationships Text Importer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#relationships-text-import-section"/>
+         <topic label="Import Datatypes Text Importer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#datatypes-text-import-section"/>
       </topic>
-      <topic label="Operation Editor" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/model-object-editors-section.html#operation-editor-section"></topic>
-    </topic>
-  </topic>
-  <topic label="Editing Models and Projects" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/edit-models-and-projects-chapter.html">
-    <topic label="Rename A Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/edit-models-and-projects-chapter.html#rename-model-section"></topic>
-    <topic label="Move Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/move-model-section.html"></topic>
-    <topic label="Save Copy of Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/save-as-modelsection.html"></topic>
-    <topic label="Clone Project" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/clone-project-section.html"></topic>
-  </topic>
-  <topic label="Testing Your Models" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-models-chapter.html">
-    <topic label="Manage Connection Profiles" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-models-chapter.html#manage-connection-profiles-section"></topic>
-    <topic label="Previewing Data For a Model" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html">
-      <topic label="Preview Relational Table or View" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html#id837174"></topic>
-      <topic label="Preview Relational Table With Access Pattern" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html#id837911"></topic>
-      <topic label="Preview Relational Procedure" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html#id766270"></topic>
-      <topic label="Preview Web Service Operation" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html#id719507"></topic>
-      <topic label="Sample SQL Results for Preview Data" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-preview-data-section.html#preview-results-section"></topic>
-    </topic>
-    <topic label="Testing With Your VDB" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-vdb-section.html">
-      <topic label="Creating Data Sources" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-vdb-section.html#creating-data-sources"></topic>
-      <topic label="Execute VDB from Model Explorer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-vdb-section.html#execute-vdb-in-model-explorer"></topic>
-      <topic label="Deploy VDB from Model Explorer" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-vdb-section.html#deploy-vdb-from-model-explorer"></topic>
-      <topic label="Executing a Deployed VDB" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/test-vdb-section.html#executing-a-deployed-vdb"></topic>
-    </topic>
-  </topic>
-  <topic label="Searching" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/searching-chapter.html">
-    <topic label="Finding Model Objects" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/searching-chapter.html#find-model-objects-section"></topic>
-    <topic label="Search Models Via Relationship Properties" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/search-relationships-section.html"></topic>
-    <topic label="Search Transformation SQL" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/search-transformations-section.html"></topic>
-    <topic label="Search Models Via Metadata Properties" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/search-metadata-section.html"></topic>
-  </topic>
-  <topic label="Relationships" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/relationships-chapter.html">
-    <topic label="Creating Relationships" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/relationships-chapter.html#create-relationship-section"></topic>
-    <topic label="Creating your own Relationship Type" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/create-relationship-type-section.html"></topic>
-    <topic label="Relationship Navigator" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/relationship-navigator-section.html"></topic>
-  </topic>
-  <topic label="User Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html">
-    <topic label="Teiid Designer Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#modeler-prefs">
-      <topic label="Diagram Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#diagram-prefs"></topic>
-      <topic label="Diagram Printing Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#diagram-printing-prefs"></topic>
-      <topic label="Editor Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#editor-prefs">
-        <topic label="XML Document Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#xml-doc-editor-prefs-section"></topic>
-        <topic label="Table Editor Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#table-editor-prefs-section"></topic>
-        <topic label="Transformation Editor Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#transformation-editor-prefs-section"></topic>
+      <topic label="Import WSDL into Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#wsdl-to-relational-import-section"/>
+      <topic label="Import WSDL Into Web Service" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#wsdl-to-web-service-import-section">
+         <topic label="Import WSDL From Workspace Location" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#workspace-location-wsdl-ws-section"/>
+         <topic label="Import WSDL From File System Location" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#file-system-location-wsdl-ws-section"/>
+         <topic label="Import WSDL From URL" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#url-location-wsdl-ws-section"/>
       </topic>
-      <topic label="Validation Preferences" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/preferences-chapter.html#validation-prefs"></topic>
-    </topic>
-  </topic>
-  <topic label="Revision History" href="http://documentation-stage.bne.redhat.com/docs/en-US/JBoss_Developer_Studio/4.0/html/Teiid_Designer_User_Guide/apa.html"></topic>
+      <topic label="XSD Schema File" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/importers-chapter.html#xsd-schema-import-section"/>
+   </topic>
+   <topic label="New Model Wizards" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html">
+      <topic label="Creating New Relational Source Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-relational-source-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-source-copy-section"/>
+         <topic label="Generate From Existing UML Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-source-generate-from-uml-section"/>
+      </topic>
+      <topic label="Creating New Relational View Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-relational-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-view-copy-section"/>
+         <topic label="Transform From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-view-transform-from-model-section"/>
+         <topic label="Generate From Existing UML Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-view-generate-from-uml-section"/>
+         <topic label="Create From XML Schema" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relational-view-create-from-schema-section"/>
+      </topic>
+      <topic label="Creating XML Document View Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-xml-document-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#xml-document-view-copy-section"/>
+         <topic label="Build XML Documents From XML Schema " href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#xml-document-view-from-schema-section"/>
+      </topic>
+      <topic label="Creating XML Schema Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-xml-schema-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#xml-schema-copy-section"/>
+      </topic>
+      <topic label="Creating Web Service View Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-web-service-view-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#web-service-view-copy-section"/>
+         <topic label="Build From Existing WSDL File(s) or URL" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-wsdl-section"/>
+         <topic label="Build From Relational Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-relational-section"/>
+         <topic label="Build From XML Document View Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#web-service-view-from-xml-doc-section"/>
+      </topic>
+      <topic label="Creating New Extensions Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-extension-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#extensions-copy-section"/>
+      </topic>
+      <topic label="Creating New Relationship Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-relationships-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#relationships-copy-section"/>
+      </topic>
+      <topic label="Creating New UML 2.0 Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#new-uml-model">
+         <topic label="Copy From Existing Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/newmodels-chapter.html#uml-copy-section"/>
+      </topic>
+   </topic>
+   <topic label="Creating and Editing Model Objects" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html">
+      <topic label="Creating New Model Objects" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#create-model-objects-section">
+         <topic label="New Child Action" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-child-section"/>
+         <topic label="New Sibling Action" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-sibling-section"/>
+         <topic label="New Association Action" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#create-new-association-section"/>
+      </topic>
+      <topic label="Model Object Editors" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#model-object-editors-section">
+         <topic label="Transformation Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#transformation-editor-section">
+            <topic label="Using the Criteria Builder" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#using-criteria-builder-section"/>
+            <topic label="Using the Expression Builder" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#using-expression-builder-section"/>
+         </topic>
+         <topic label="Input Set Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#input-set-editor-section"/>
+         <topic label="Choice Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#choice-editor-section">
+            <topic label="Using the Choice Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8397"/>
+            <topic label="Excluding Fragments" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8424"/>
+            <topic label="Editing Choice Criteria" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8443"/>
+            <topic label="Setting Choice Element Order" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8487"/>
+            <topic label="Setting a Default Choice Action " href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8506"/>
+         </topic>
+         <topic label="Recursion Editor (XML)" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#recursion-editor-section">
+            <topic label="The Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#d0e8590"/>
+         </topic>
+         <topic label="Operation Editor" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/editing-model-objects-chapter.html#operation-editor-section"/>
+      </topic>
+   </topic>
+   <topic label="Editing Models and Projects" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/edit-models-and-projects-chapter.html">
+      <topic label="Rename A Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/edit-models-and-projects-chapter.html#rename-model-section"/>
+      <topic label="Move Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/edit-models-and-projects-chapter.html#move-model-section"/>
+      <topic label="Save Copy of Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/edit-models-and-projects-chapter.html#save-as-modelsection"/>
+      <topic label="Clone Project" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/edit-models-and-projects-chapter.html#clone-project-section"/>
+   </topic>
+   <topic label="Testing Your Models" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html">
+      <topic label="Manage Connection Profiles" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#manage-connection-profiles-section"/>
+      <topic label="Previewing Data For a Model" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#test-preview-data-section">
+         <topic label="Preview Relational Table or View" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#d0e9135"/>
+         <topic label="Preview Relational Table With Access Pattern" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#d0e9176"/>
+         <topic label="Preview Relational Procedure" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#d0e9229"/>
+         <topic label="Preview Web Service Operation" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#d0e9282"/>
+         <topic label="Sample SQL Results for Preview Data" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#preview-results-section"/>
+      </topic>
+      <topic label="Testing With Your VDB" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#test-vdb-section">
+         <topic label="Creating Data Sources" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#creating-data-sources"/>
+         <topic label="Execute VDB from Model Explorer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#execute-vdb-in-model-explorer"/>
+         <topic label="Deploy VDB from Model Explorer" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#deploy-vdb-from-model-explorer"/>
+         <topic label="Executing a Deployed VDB" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/test-models-chapter.html#executing-a-deployed-vdb"/>
+      </topic>
+   </topic>
+   <topic label="Searching" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/searching-chapter.html">
+      <topic label="Finding Model Objects" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/searching-chapter.html#find-model-objects-section"/>
+      <topic label="Search Models Via Relationship Properties" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/searching-chapter.html#search-relationships-section"/>
+      <topic label="Search Transformation SQL" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/searching-chapter.html#search-transformations-section"/>
+      <topic label="Search Models Via Metadata Properties" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/searching-chapter.html#search-metadata-section"/>
+   </topic>
+   <topic label="Relationships" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/relationships-chapter.html">
+      <topic label="Creating Relationships" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/relationships-chapter.html#create-relationship-section"/>
+      <topic label="Creating your own Relationship Type" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/relationships-chapter.html#create-relationship-type-section"/>
+      <topic label="Relationship Navigator " href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/relationships-chapter.html#relationship-navigator-section"/>
+   </topic>
+   <topic label="User Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html">
+      <topic label="Teiid Designer Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#modeler-prefs">
+         <topic label="Diagram Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#diagram-prefs"/>
+         <topic label="Diagram Printing Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#diagram-printing-prefs"/>
+         <topic label="Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#editor-prefs">
+            <topic label="XML Document Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#xml-doc-editor-prefs-section"/>
+            <topic label="Table Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#table-editor-prefs-section"/>
+            <topic label="Transformation Editor Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#transformation-editor-prefs-section"/>
+         </topic>
+         <topic label="Validation Preferences" href="http://docs.jboss.org/teiid/designer/7.2/user-guide/en-US/html/preferences-chapter.html#validation-prefs"/>
+      </topic>
+   </topic>
 </toc>
