@@ -21,8 +21,11 @@ Visit the project home page at:  http://www.teiid.org  for details.
    <feature url="features/org.teiid.datatools.connectivity.feature_0.0.0.jar" id="org.teiid.datatools.connectivity.feature" version="0.0.0">
     <category name="MetadataModeling"/>
    </feature>
-   <category-def name="MetadataModeling" label="Metadata Modeling">
-	<description>Metadata Modeling
+   <feature url="features/org.teiid.designer.test.feature_0.0.0.jar" id="org.teiid.designer.test.feature" version="0.0.0">
+    <category name="MetadataModeling"/>
+   </feature>
+   <category-def name="MetadataModeling" label="Teiid Designer">
+	<description>Metadata Modeling using Teiid Designer
 	</description>
    </category-def>
 </site>
