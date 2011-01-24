@@ -6,13 +6,9 @@ Bundle-Version: 7.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.core.designer
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.core,
- com.metamatrix.core.classloader,
- com.metamatrix.core.util,
- com.metamatrix.modeler.core,
- org.teiid.core.designer
 Require-Bundle: org.powermock,
  org.mockito,
  org.junit4,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.teiid.core.designer.test.framework
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

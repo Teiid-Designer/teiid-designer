@@ -10,4 +10,6 @@ Export-Package: com.metamatrix.modeler.internal.jdbc.relational,
  com.metamatrix.modeler.jdbc.relational,
  com.metamatrix.modeler.jdbc.relational.impl
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.sdt,
+ org.teiid.designer.jdbc.test.framework

@@ -11,4 +11,6 @@ Export-Package: com.metamatrix.modeler.internal.webservice,
  com.metamatrix.modeler.webservice,
  com.metamatrix.modeler.webservice.procedure
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework,
+ org.teiid.designer.sdt

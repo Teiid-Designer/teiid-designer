@@ -18,11 +18,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.core.util.SmartTestDesignerSuite;
-import com.metamatrix.metamodels.webservice.WebServiceTestUtil;
+import com.metamatrix.metamodels.webservice.Interface;
+import com.metamatrix.metamodels.webservice.WebServiceFactory;
 
 /**
  * @since 4.2
@@ -31,6 +33,18 @@ public class TestBasicWsdlGenerator extends TestCase {
 
     public static final String PATH_TO_XSD1 = "BookRequests.xsd"; //$NON-NLS-1$
     public static final String PATH_TO_XSD2 = "BookDatatypes.xsd"; //$NON-NLS-1$
+
+    private static Resource createMinimalWebServiceModel( final URI uri ) {
+        final Resource resource = new XMIResourceImpl(uri);
+        
+        // Create a single web service component ...
+        final Interface inter = WebServiceFactory.eINSTANCE.createInterface();
+        
+        // Add to the resource ...
+        resource.getContents().add(inter);
+        
+        return resource;
+    }
 
     private Resource webService1;
     private Resource webService2;
@@ -62,10 +76,10 @@ public class TestBasicWsdlGenerator extends TestCase {
         this.generator = new BasicWsdlGenerator();
 
         final URI uri1 = URI.createURI("/someProject/webservice1"); //$NON-NLS-1$
-        this.webService1 = WebServiceTestUtil.createMinimalWebServiceModel(uri1);
+        this.webService1 = TestBasicWsdlGenerator.createMinimalWebServiceModel(uri1);
 
         final URI uri2 = URI.createURI("/someProject/webservice2"); //$NON-NLS-1$
-        this.webService2 = WebServiceTestUtil.createMinimalWebServiceModel(uri2);
+        this.webService2 = TestBasicWsdlGenerator.createMinimalWebServiceModel(uri2);
 
         final XSDResourceFactoryImpl xsdFactory = new XSDResourceFactoryImpl();
         final File xsdFile = SmartTestDesignerSuite.getTestDataFile(PATH_TO_XSD1);

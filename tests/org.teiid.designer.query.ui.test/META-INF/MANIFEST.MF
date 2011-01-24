@@ -8,4 +8,5 @@ Fragment-Host: org.teiid.designer.query.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.query.internal.ui.sqleditor.component
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.sdt

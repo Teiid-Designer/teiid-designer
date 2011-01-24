@@ -20,6 +20,7 @@ public final class TestModelEditor extends TestCase {
         builder.append("cloneProject"); //$NON-NLS-1$
         builder.append(File.separatorChar);
         ModelEditorImpl editor = new ModelEditorImpl();
+System.err.println("\n\n\n**********************************\n\n\nPath="+builder+"\n\n\n");
         File[] files = new File(builder.toString()).listFiles();
         File tmpProject = new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
         tmpProject.deleteOnExit();

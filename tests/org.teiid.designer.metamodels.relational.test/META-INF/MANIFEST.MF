@@ -10,4 +10,5 @@ Bundle-Localization: plugin
 Export-Package: com.metamatrix.metamodels.relational.aspects.validation.rules,
  com.metamatrix.metamodels.relational.provider,
  com.metamatrix.metamodels.relational.util
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.core.test.framework

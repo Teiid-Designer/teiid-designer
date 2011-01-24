@@ -10,4 +10,6 @@ Export-Package: com.metamatrix.modeler.internal.transformation.util,
  com.metamatrix.modeler.transformation.aspects.validation.rules,
  com.metamatrix.modeler.transformation.metadata
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework,
+ org.teiid.designer.core.test.framework

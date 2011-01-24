@@ -8,4 +8,5 @@ Fragment-Host: org.teiid.designer.mapping.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.mapping.ui.actions
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.sdt

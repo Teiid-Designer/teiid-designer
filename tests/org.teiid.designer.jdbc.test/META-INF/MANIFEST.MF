@@ -14,4 +14,6 @@ Export-Package: com.metamatrix.jdbctest,
  com.metamatrix.modeler.jdbc.metadata,
  com.metamatrix.modeler.jdbc.metadata.impl
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework,
+ org.teiid.designer.jdbc.test.framework

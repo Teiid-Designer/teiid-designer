@@ -8,5 +8,6 @@ Fragment-Host: org.teiid.designer.core.xslt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.core.xslt,
  com.metamatrix.core.xslt.impl
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework
 Bundle-Localization: plugin

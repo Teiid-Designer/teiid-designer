@@ -10,4 +10,5 @@ Export-Package: com.metamatrix.ui.actions,
  com.metamatrix.ui.dialogs,
  com.metamatrix.ui.internal.eventsupport
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework

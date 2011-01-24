@@ -9,4 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.metamatrix.modeler.internal.relationship,
  com.metamatrix.modeler.relationship
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework,
+ org.teiid.designer.core.test.framework,
+ org.teiid.designer.sdt

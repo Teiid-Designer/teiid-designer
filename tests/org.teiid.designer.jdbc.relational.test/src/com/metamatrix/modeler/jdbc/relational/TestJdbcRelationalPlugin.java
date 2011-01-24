@@ -8,19 +8,18 @@
 package com.metamatrix.modeler.jdbc.relational;
 
 import java.util.Date;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-
+import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.metamodels.relational.RelationalPlugin;
-import com.metamatrix.metamodels.relational.util.FakeRelationalTypeMapping;
+import com.metamatrix.metamodels.relational.SearchabilityType;
+import com.metamatrix.metamodels.relational.util.RelationalTypeMapping;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.relational.ModelerJdbcRelationalConstants;
 import com.metamatrix.modeler.internal.jdbc.relational.util.JdbcModelProcessorManager;
@@ -259,8 +258,29 @@ public class TestJdbcRelationalPlugin extends TestCase {
     }
 
     public void testCreateRelationalModelProcessorWithTypeMapping() {
-        final FakeRelationalTypeMapping mapping = new FakeRelationalTypeMapping();
-        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(null, mapping, "JDBC"); //$NON-NLS-1$
+        RelationalTypeMapping fakeMapping = new RelationalTypeMapping() {
+            @Override
+            public EObject getDatatype( String jdbcTypeName ) {
+                return null;
+            }
+
+            @Override
+            public EObject getDatatype( int jdbcType ) {
+                return null;
+            }
+
+            @Override
+            public String getJdbcTypeName( EObject type ) {
+                return null;
+            }
+
+            @Override
+            public SearchabilityType getSearchabilityType( EObject datatype ) {
+                return null;
+            }
+        };
+
+        final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(null, fakeMapping, "JDBC"); //$NON-NLS-1$
         assertNotNull(processor);
         assertTrue(processor instanceof RelationalModelProcessorImpl);
     }

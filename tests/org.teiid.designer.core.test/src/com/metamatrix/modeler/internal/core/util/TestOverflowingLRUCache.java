@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.core.util;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
+import com.metamatrix.modeler.internal.core.util.FakeOverflowingLRUCache.CacheItem;
 
 /**
  * TestOverflowingLRUCache
@@ -106,7 +107,7 @@ public class TestOverflowingLRUCache extends TestCase {
         final int spaceLimit = this.cache.getSpaceLimit() + 1;
         for ( int i=0; i!= spaceLimit; ++i ) {
             final Object key = "Key" + i; //$NON-NLS-1$
-            final Object item = new CacheItem(key);
+            final Object item = ((FakeOverflowingLRUCache)this.cache).createCacheItem(key);
             final Object result = this.cache.put(key,item);
             assertNull(result);
             boolean shouldOverflow = false;
@@ -119,7 +120,7 @@ public class TestOverflowingLRUCache extends TestCase {
         final int spaceLimit = this.cache.getSpaceLimit() + 1;
         for ( int i=0; i!= spaceLimit; ++i ) {
             final Object key = "Key" + i; //$NON-NLS-1$
-            final CacheItem item = new CacheItem(key);
+            final CacheItem item = ((FakeOverflowingLRUCache)this.cache).createCacheItem(key);
             item.setChanged(true);
             final Object result = this.cache.put(key,item);
             assertNull(result);
@@ -133,7 +134,7 @@ public class TestOverflowingLRUCache extends TestCase {
         final List items = new ArrayList();
         for ( int i=0; i!= spaceLimit; ++i ) {
             final Object key = "Key" + i; //$NON-NLS-1$
-            final CacheItem item = new CacheItem(key);
+            final CacheItem item = ((FakeOverflowingLRUCache)this.cache).createCacheItem(key);
             item.setChanged(true);
             items.add(item);
             final Object result = this.cache.put(key,item);
@@ -152,7 +153,7 @@ public class TestOverflowingLRUCache extends TestCase {
         assertEquals(1, this.cache.getOverflow());
 
         // Add one more item to make it shrink ...
-        final CacheItem item = new CacheItem("Some other key"); //$NON-NLS-1$
+        final CacheItem item = ((FakeOverflowingLRUCache)this.cache).createCacheItem("Some other key"); //$NON-NLS-1$
         item.setChanged(true);
         this.cache.put(item.getKey(),item);
 

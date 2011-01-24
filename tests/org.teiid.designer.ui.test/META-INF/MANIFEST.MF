@@ -10,4 +10,6 @@ Export-Package: com.metamatrix.modeler.internal.ui.explorer,
  com.metamatrix.modeler.internal.ui.viewsupport,
  com.metamatrix.modeler.ui.product
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.core.designer.test.framework,
+ org.teiid.designer.core.test.framework

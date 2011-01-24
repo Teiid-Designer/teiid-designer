@@ -6,5 +6,6 @@ Bundle-Version: 7.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.compare
 Bundle-Localization: plugin
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.teiid.designer.sdt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

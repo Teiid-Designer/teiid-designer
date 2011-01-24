@@ -25,20 +25,22 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.exception.EmptyArgumentException;
 
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
+//@RunWith( PowerMockRunner.class )
 @PrepareForTest( {ResourcesPlugin.class} )
 public class DdlImporterTest {
-
+    @Rule
+    public PowerMockRule rule = new PowerMockRule();
+    
     private static final String TEST_DDL_FILE = "createTables.ddl";
 
     @Test
