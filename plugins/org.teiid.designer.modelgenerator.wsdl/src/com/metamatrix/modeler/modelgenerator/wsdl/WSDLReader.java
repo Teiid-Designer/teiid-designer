@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.wst.wsdl.validation.internal.IValidationMessage;
 import org.eclipse.wst.wsdl.validation.internal.IValidationReport;
 import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
+import org.eclipse.wst.wsdl.validation.internal.eclipse.URIResolverWrapper;
 
 import com.metamatrix.modeler.modelgenerator.wsdl.model.Model;
 import com.metamatrix.modeler.modelgenerator.wsdl.model.ModelGenerationException;
@@ -102,7 +103,9 @@ public class WSDLReader {
 		monitor.worked(1);
 		if (VALIDATOR == null) {
 			VALIDATOR = new WSDLValidator();
+			VALIDATOR.addURIResolver(new URIResolverWrapper());
         }
+		
 		String wsdlUri = getWSDLUri();
 		if(!wsdlUri.contains("http://")) { //$NON-NLS-1$
 			wsdlUri = "file://" + wsdlUri; //$NON-NLS-1$
