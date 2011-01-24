@@ -32,4 +32,18 @@
             isVirtual="false">
       </metamodelDescriptorType>
    </extension>
+   <extension
+         id="webServiceRelationalModelContributor"
+         name="%webServiceRelationalModelContributor"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.relational.ui.webservice.WebServiceRelationalModelContributor"
+            icon="icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/Relational"
+            isPhysical="true"
+            isVirtual="false">
+      </metamodelDescriptorType>
+   </extension>
 </plugin>
