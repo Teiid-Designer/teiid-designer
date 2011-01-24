@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: org.teiid.core.designer.test.framework;singleton:=true
+Bundle-Version: 7.2.0.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.mockito,
+ org.powermock,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.teiid.core.designer,
+ org.junit4
+Export-Package: com.metamatrix.core.util,
+ org.teiid.core.designer
