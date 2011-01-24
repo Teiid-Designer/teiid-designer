@@ -143,7 +143,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	result.setProcedure(proc);
     	result.setName("result"); //$NON-NLS-1$
     	Column column = factory.createColumn();
-    	column.setName("result");
+    	column.setName("result"); //$NON-NLS-1$
     	column.setOwner(result);
     	if( xmlLiteralType != null) {
     		column.setType(xmlLiteralType);
@@ -185,7 +185,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	result.setProcedure(proc);
     	result.setName("result"); //$NON-NLS-1$
     	Column column = factory.createColumn();
-    	column.setName("result");
+    	column.setName("result"); //$NON-NLS-1$
     	column.setOwner(result);
     	if( blobType != null) {
     		column.setType(blobType);

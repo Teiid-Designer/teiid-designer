@@ -457,7 +457,7 @@ public class ModeShapeDriverUIContributor implements IDriverUIContributor, Liste
         } else {
             protocolCheck.setSelection(true);
         }
-        if (!(url.getTeiidMetadata())) { //$NON-NLS-1$
+        if (!(url.getTeiidMetadata())) {
             teiidCheck.setSelection(false);
         } else {
             teiidCheck.setSelection(true);

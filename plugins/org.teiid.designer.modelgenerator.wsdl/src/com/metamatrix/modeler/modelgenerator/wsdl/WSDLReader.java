@@ -104,8 +104,8 @@ public class WSDLReader {
 			VALIDATOR = new WSDLValidator();
         }
 		String wsdlUri = getWSDLUri();
-		if(!wsdlUri.contains("http://")) {
-			wsdlUri = "file://" + wsdlUri;
+		if(!wsdlUri.contains("http://")) { //$NON-NLS-1$
+			wsdlUri = "file://" + wsdlUri; //$NON-NLS-1$
 		}
         monitor.worked(1);
 		IValidationReport report = VALIDATOR.validate(wsdlUri);
