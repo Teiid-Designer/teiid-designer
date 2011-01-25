@@ -18,6 +18,8 @@ import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
+
+import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.NonModelViewerFilter;
 
@@ -39,7 +41,7 @@ public class ShowNonModelsAction extends Action
      * The key used to store/obtain the value in/from the preference store 
      * @since 5.0.1
      */
-    public static final String PREF_ID = "showNonModelsInModelExplorer"; //$NON-NLS-1$
+    public static final String PREF_ID = PluginConstants.Prefs.General.SHOW_NON_MODELS_IN_MODEL_EXPLORER;
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -90,7 +92,7 @@ public class ShowNonModelsAction extends Action
      */
     protected boolean getPreferenceValue() {
         IPreferenceStore store = getPreferenceStore();
-        boolean result = false;
+        boolean result = true;
 
         if (store.contains(PREF_ID)) {
             result = store.getBoolean(PREF_ID);
