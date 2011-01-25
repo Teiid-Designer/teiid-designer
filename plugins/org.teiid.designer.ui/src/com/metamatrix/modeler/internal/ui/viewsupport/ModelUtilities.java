@@ -64,6 +64,7 @@ import com.metamatrix.modeler.jdbc.JdbcPackage;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
@@ -296,7 +297,7 @@ public abstract class ModelUtilities implements UiConstants {
      */
     public static boolean isAllModelProjectMembers(ISelection selection) {
         // nothing selected
-        if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) return false;
+        if (SelectionUtilities.isEmptySelection(selection) || !(selection instanceof IStructuredSelection)) return false;
         
         // check each selected object
         IStructuredSelection structuredSelection = (IStructuredSelection)selection;
