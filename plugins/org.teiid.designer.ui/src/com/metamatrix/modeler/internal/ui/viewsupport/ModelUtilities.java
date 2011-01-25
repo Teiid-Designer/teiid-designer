@@ -33,6 +33,8 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -286,6 +288,34 @@ public abstract class ModelUtilities implements UiConstants {
             }
         }
         return false;
+    }
+    
+    /**
+     * @param selection the objects being checked
+     * @return <code>true</code> if all selected objects are model projects or model project members
+     */
+    public static boolean isAllModelProjectMembers(ISelection selection) {
+        // nothing selected
+        if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) return false;
+        
+        // check each selected object
+        IStructuredSelection structuredSelection = (IStructuredSelection)selection;
+        
+        // only need to check resources and EObjects
+        for (Object obj : structuredSelection.toArray()) {
+            if (obj instanceof IResource) {
+                // return false if resource is not contained in a model project
+                if (!isModelProjectResource((IResource)obj)) return false;
+            }
+
+            if (obj instanceof EObject) {
+                // return false if an EObject but not in a model project
+                if (getModelResourceForModelObject((EObject)obj) == null) return false;
+            }
+        }
+        
+        // all model projects and model project members are selected
+        return true;
     }
 
     /**

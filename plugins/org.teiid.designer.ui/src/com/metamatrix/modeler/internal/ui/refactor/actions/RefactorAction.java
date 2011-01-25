@@ -30,6 +30,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.refactor.RefactorUndoManager;
 import com.metamatrix.modeler.internal.ui.refactor.SaveModifiedResourcesDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.ModelerActionService;
@@ -105,17 +106,21 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
 
     protected void setEnabledState() {
         boolean enable = false;
-        if (selection != null && SelectionUtilities.isAllIResourceObjects(selection)
-            && SelectionUtilities.isSingleSelection(selection)) {
 
+        if (selection != null && SelectionUtilities.isSingleSelection(selection)
+            && SelectionUtilities.isAllIResourceObjects(selection)) {
             IResource resTemp = (IResource)SelectionUtilities.getSelectedIResourceObjects(selection).get(0);
 
-            if (!ModelUtil.isIResourceReadOnly(resTemp) && !(resTemp instanceof IProject)) {
+            if (!ModelUtil.isIResourceReadOnly(resTemp) && !(resTemp instanceof IProject)
+                && ModelUtilities.isModelProjectResource(resTemp)) {
                 enable = true;
                 resSelectedResource = resTemp;
             }
         }
-        action.setEnabled(enable);
+        
+        if (action.isEnabled() != enable) {
+            action.setEnabled(enable);
+        }
     }
 
     protected IProgressMonitor executeCommand( final RefactorCommand command ) {

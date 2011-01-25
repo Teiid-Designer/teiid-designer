@@ -344,4 +344,67 @@ public final class TestSelectionUtilities extends TestCase {
                     SelectionUtilities.isSingleSelection(multiSelection));
     }
 
+    public void testGetSelectedEObjectsWithNonEObjectWithBadEqualsImplementation() {
+        ISelection selection = new StructuredSelection(new Object[] {new ClassWithBadEqualsMethod(1),
+            new ClassWithBadEqualsMethod(1)});
+        assertEquals(0, SelectionUtilities.getSelectedEObjects(selection).size());
+    }
+
+    public void testGetSelectedEObjectsWithNonEObjectWithGoodEqualsImplementation() {
+        ISelection selection = new StructuredSelection(new Object[] {new ClassWithGoodEqualsMethod(1),
+            new ClassWithGoodEqualsMethod(1)});
+        assertEquals(0, SelectionUtilities.getSelectedEObjects(selection).size());
+    }
+
+    public void testGetSelectedIResourceObjectsWithNonIResourceWithBadEqualsImplementation() {
+        ISelection selection = new StructuredSelection(new Object[] {new ClassWithBadEqualsMethod(1),
+            new ClassWithBadEqualsMethod(2)});
+        assertEquals(0, SelectionUtilities.getSelectedIResourceObjects(selection).size());
+    }
+
+    public void testGetSelectedIResourceObjectsWithNonIResourceWithGoodEqualsImplementation() {
+        ISelection selection = new StructuredSelection(new Object[] {new ClassWithGoodEqualsMethod(1),
+            new ClassWithGoodEqualsMethod(2)});
+        assertEquals(0, SelectionUtilities.getSelectedIResourceObjects(selection).size());
+    }
+
+    public class ClassWithBadEqualsMethod {
+        private final int id;
+
+        public ClassWithBadEqualsMethod( int id ) {
+            this.id = id;
+        }
+
+        @Override
+        public boolean equals( Object obj ) {
+            // a bad implementation
+            if (obj instanceof ClassWithBadEqualsMethod) {
+                return false;
+            }
+
+            return super.equals(obj);
+        }
+
+        protected int getId() {
+            return this.id;
+        }
+    }
+
+    public class ClassWithGoodEqualsMethod extends ClassWithBadEqualsMethod {
+
+        public ClassWithGoodEqualsMethod( int id ) {
+            super(id);
+        }
+
+        @Override
+        public boolean equals( Object obj ) {
+            if (obj instanceof ClassWithGoodEqualsMethod) {
+                return getId() == (((ClassWithGoodEqualsMethod)obj).getId());
+            }
+
+            return super.equals(obj);
+        }
+
+    }
+
 }
