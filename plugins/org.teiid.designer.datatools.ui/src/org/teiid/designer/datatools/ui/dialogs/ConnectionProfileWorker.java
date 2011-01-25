@@ -8,7 +8,9 @@
 package org.teiid.designer.datatools.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -38,7 +40,7 @@ public class ConnectionProfileWorker {
 
 	private String categoryID;
 	private IConnectionProfile selectedProfile;
-	private List<IConnectionProfile> allProfiles;
+	private Set<IConnectionProfile> allProfiles;
 	private Shell shell;
 	private IProfileChangedListener listener;
 
@@ -56,7 +58,7 @@ public class ConnectionProfileWorker {
 		this.shell = shell;
 		this.categoryID = categoryID;
 		this.listener = listener;
-		this.allProfiles = new ArrayList<IConnectionProfile>();
+		this.allProfiles = new HashSet<IConnectionProfile>();
 		reloadProfiles();
 	}
 
@@ -114,7 +116,7 @@ public class ConnectionProfileWorker {
 	}
 
 	public List<IConnectionProfile> getProfiles() {
-		return this.allProfiles;
+		return new ArrayList<IConnectionProfile>(this.allProfiles);
 	}
 
 	private void notifyProfileChanged() {
