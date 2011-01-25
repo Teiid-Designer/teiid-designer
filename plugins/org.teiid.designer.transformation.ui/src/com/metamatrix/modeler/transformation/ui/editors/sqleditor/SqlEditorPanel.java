@@ -79,6 +79,8 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.builder.CriteriaBuilder;
 import com.metamatrix.modeler.transformation.ui.builder.ExpressionBuilder;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.DownFont;
@@ -107,8 +109,6 @@ import com.metamatrix.query.internal.ui.sqleditor.component.SqlIndexLocator;
 import com.metamatrix.query.internal.ui.sqleditor.component.UpdateDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.WhereDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import com.metamatrix.query.ui.UiConstants;
-import com.metamatrix.query.ui.UiPlugin;
 import com.metamatrix.ui.text.ScaledFontManager;
 import com.metamatrix.ui.text.StyledTextEditor;
 import com.metamatrix.ui.text.TextFontManager;
@@ -118,7 +118,7 @@ public class SqlEditorPanel extends SashForm
     KeyListener, MouseListener {
 
     /** Changes Pending Message */
-    private static final String QUERY_CHANGES_PENDING_MESSAGE = UiPlugin.getDefault().getPluginUtil().getString("SqlEditorPanel.changesPendingMsg"); //$NON-NLS-1$
+    private static final String QUERY_CHANGES_PENDING_MESSAGE = Util.getString("SqlEditorPanel.changesPendingMsg"); //$NON-NLS-1$
     private static final String IMPORT_PROBLEM = "SqlEditorPanel.importProb"; //$NON-NLS-1$
     private static final String EXPORT_PROBLEM = "SqlEditorPanel.exportProb"; //$NON-NLS-1$
     private static final String EXPORT_SQL_DIALOG_TITLE = "SqlEditorPanel.exportSqlDialog.title"; //$NON-NLS-1$
@@ -301,7 +301,7 @@ public class SqlEditorPanel extends SashForm
 
         // Initialize optimization
         IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
-        boolean optimizationOn = prefStore.getBoolean(UiConstants.Prefs.SQL_OPTIMIZATION_ON);
+        boolean optimizationOn = prefStore.getBoolean(com.metamatrix.query.ui.UiConstants.Prefs.SQL_OPTIMIZATION_ON);
         queryDisplayComponent.setOptimizerOn(optimizationOn);
 
         sqlTextViewer.setRangeIndicator(new DefaultRangeIndicator());
@@ -360,7 +360,8 @@ public class SqlEditorPanel extends SashForm
     public void propertyChange( PropertyChangeEvent e ) {
         String propStr = e.getProperty();
         if (propStr != null
-            && (propStr.equals(UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE) || propStr.equals(UiConstants.Prefs.INDENT_CLAUSE_CONTENT))) {
+            && (propStr.equals(com.metamatrix.query.ui.UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE) || 
+            		propStr.equals(com.metamatrix.query.ui.UiConstants.Prefs.INDENT_CLAUSE_CONTENT))) {
             if (!this.isDisposed() && this.isVisible()) {
                 setText(getText());
             }
@@ -911,9 +912,9 @@ public class SqlEditorPanel extends SashForm
     public void setOptimizerOn( boolean status ) {
         // Sets the optimization preference - the panel in turn responds to preference change
         IPreferenceStore prefStore = UiPlugin.getDefault().getPreferenceStore();
-        boolean currentValue = prefStore.getBoolean(UiConstants.Prefs.SQL_OPTIMIZATION_ON);
+        boolean currentValue = prefStore.getBoolean(com.metamatrix.query.ui.UiConstants.Prefs.SQL_OPTIMIZATION_ON);
         if (status != currentValue) {
-            prefStore.setValue(UiConstants.Prefs.SQL_OPTIMIZATION_ON, status);
+            prefStore.setValue(com.metamatrix.query.ui.UiConstants.Prefs.SQL_OPTIMIZATION_ON, status);
         }
 
         boolean isEnabled = isOptimizerEnabled();
@@ -1939,42 +1940,52 @@ public class SqlEditorPanel extends SashForm
             actionList = new ArrayList<IAction>(11);
             if (includedActionsList.contains(ACTION_ID_VALIDATE)) {
                 validateAction = new Validate(this);
+                validateAction.setToolTipText(Util.getString("SqlEditorPanel.Validate.tooltip")); //$NON-NLS-1$
                 actionList.add(validateAction);
             }
             if (includedActionsList.contains(ACTION_ID_LAUNCH_CRITERIA_BUILDER)) {
                 launchCriteriaBuilderAction = new LaunchCriteriaBuilder(this);
+                launchCriteriaBuilderAction.setToolTipText(Util.getString("SqlEditorPanel.LaunchCriteriaBuilder.tooltip")); //$NON-NLS-1$
                 actionList.add(launchCriteriaBuilderAction);
             }
             if (includedActionsList.contains(ACTION_ID_LAUNCH_EXPRESSION_BUILDER)) {
                 launchExpressionBuilderAction = new LaunchExpressionBuilder(this);
+                launchExpressionBuilderAction.setToolTipText(Util.getString("SqlEditorPanel.LaunchExpressionBuilder.tooltip")); //$NON-NLS-1$
                 actionList.add(launchExpressionBuilderAction);
             }
             if (includedActionsList.contains(ACTION_ID_EXPAND_SELECT)) {
                 expandSelectAction = new ExpandSelect(this);
+                expandSelectAction.setToolTipText(Util.getString("SqlEditorPanel.ExpandSelect.tooltip")); //$NON-NLS-1$
                 actionList.add(expandSelectAction);
             }
             if (includedActionsList.contains(ACTION_ID_UP_FONT)) {
                 upFontAction = new UpFont(this);
+                upFontAction.setToolTipText(Util.getString("SqlEditorPanel.UpFont.tooltip")); //$NON-NLS-1$
                 actionList.add(upFontAction);
             }
             if (includedActionsList.contains(ACTION_ID_DOWN_FONT)) {
                 downFontAction = new DownFont(this);
+                downFontAction.setToolTipText(Util.getString("SqlEditorPanel.DownFont.tooltip")); //$NON-NLS-1$
                 actionList.add(downFontAction);
             }
             if (includedActionsList.contains(ACTION_ID_TOGGLE_MESSAGE)) {
                 toggleMessageAction = new ToggleMessage(this);
+                toggleMessageAction.setToolTipText(Util.getString("SqlEditorPanel.ToggleMessage.tooltip")); //$NON-NLS-1$
                 actionList.add(toggleMessageAction);
             }
             if (includedActionsList.contains(ACTION_ID_TOGGLE_OPTIMIZER)) {
                 toggleOptimizerAction = new ToggleOptimizer(this);
+                toggleOptimizerAction.setToolTipText(Util.getString("SqlEditorPanel.ToggleOptimizer.tooltip")); //$NON-NLS-1$
                 actionList.add(toggleOptimizerAction);
             }
             if (includedActionsList.contains(ACTION_ID_IMPORT_FROM_FILE)) {
                 importFromFileAction = new ImportFromFile(this);
+                importFromFileAction.setToolTipText(Util.getString("SqlEditorPanel.ImportFromFile.tooltip")); //$NON-NLS-1$
                 actionList.add(importFromFileAction);
             }
             if (includedActionsList.contains(ACTION_ID_EXPORT_TO_FILE)) {
                 exportToFileAction = new ExportToFile(this);
+                exportToFileAction.setToolTipText(Util.getString("SqlEditorPanel.ExportToFile.tooltip")); //$NON-NLS-1$
                 actionList.add(exportToFileAction);
             }
         }
@@ -2293,12 +2304,12 @@ public class SqlEditorPanel extends SashForm
         Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         FileDialog dlg = new FileDialog(shell, SWT.SAVE);
         dlg.setFilterExtensions(new String[] {"*.*"}); //$NON-NLS-1$ 
-        dlg.setText(UiConstants.Util.getString(EXPORT_SQL_DIALOG_TITLE));
-        dlg.setFileName(UiConstants.Util.getString(EXPORT_DEFAULT_FILENAME));
+        dlg.setText(Util.getString(EXPORT_SQL_DIALOG_TITLE));
+        dlg.setFileName(Util.getString(EXPORT_DEFAULT_FILENAME));
         String fileStr = dlg.open();
         // If there is no file extension, add .sql
         if (fileStr != null && fileStr.indexOf('.') == -1) {
-            fileStr = fileStr + "." + UiConstants.Util.getString(EXPORT_DEFAULT_FILEEXT); //$NON-NLS-1$
+            fileStr = fileStr + "." + Util.getString(EXPORT_DEFAULT_FILEEXT); //$NON-NLS-1$
         }
         if (fileStr != null) {
             FileWriter fw = null;
@@ -2312,9 +2323,8 @@ public class SqlEditorPanel extends SashForm
                 pw.write(sqlText);
 
             } catch (Exception e) {
-                PluginUtil pluginUtil = UiPlugin.getDefault().getPluginUtil();
-                String msg = pluginUtil.getString(EXPORT_PROBLEM);
-                pluginUtil.log(IStatus.ERROR, e, msg);
+                String msg = Util.getString(EXPORT_PROBLEM);
+                Util.log(IStatus.ERROR, e, msg);
             } finally {
                 pw.close();
                 try {
@@ -2336,7 +2346,7 @@ public class SqlEditorPanel extends SashForm
         Shell shell = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
         FileDialog dlg = new FileDialog(shell, SWT.OPEN);
         dlg.setFilterExtensions(new String[] {"*.sql;*.txt", "*.*"}); //$NON-NLS-1$ //$NON-NLS-2$ 
-        dlg.setText(UiConstants.Util.getString(IMPORT_SQL_DIALOG_TITLE));
+        dlg.setText(Util.getString(IMPORT_SQL_DIALOG_TITLE));
         String fileStr = dlg.open();
         if (fileStr != null) {
             FileReader fr = null;
@@ -2359,25 +2369,23 @@ public class SqlEditorPanel extends SashForm
                 String msg = pluginUtil.getString(IMPORT_PROBLEM);
                 pluginUtil.log(IStatus.ERROR, e, msg);
                 String dialogMessage = msg + "\n" + e.getMessage(); //$NON-NLS-1$
-                displayError(shell, UiConstants.Util.getString(IMPORT_SQL_PROBLEM_DIALOG_TITLE), dialogMessage);
+                displayError(shell, Util.getString(IMPORT_SQL_PROBLEM_DIALOG_TITLE), dialogMessage);
             } finally {
                 try {
                     if (fr != null) {
                         fr.close();
                     }
                 } catch (java.io.IOException e) {
-                    PluginUtil pluginUtil = UiPlugin.getDefault().getPluginUtil();
-                    String msg = pluginUtil.getString(IMPORT_PROBLEM);
-                    pluginUtil.log(IStatus.ERROR, e, msg);
+                    String msg = Util.getString(IMPORT_PROBLEM);
+                    Util.log(IStatus.ERROR, e, msg);
                 }
                 try {
                     if (in != null) {
                         in.close();
                     }
                 } catch (java.io.IOException e) {
-                    PluginUtil pluginUtil = UiPlugin.getDefault().getPluginUtil();
-                    String msg = pluginUtil.getString(IMPORT_PROBLEM);
-                    pluginUtil.log(IStatus.ERROR, e, msg);
+                    String msg = Util.getString(IMPORT_PROBLEM);
+                    Util.log(IStatus.ERROR, e, msg);
                 }
 
             }
