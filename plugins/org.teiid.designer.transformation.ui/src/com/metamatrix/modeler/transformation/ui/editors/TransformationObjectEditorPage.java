@@ -2059,6 +2059,7 @@ public class TransformationObjectEditorPage
         //      System.out.println("[ChoicePanel.getComboBoxContributionForDefault] TOP"); //$NON-NLS-1$
         if (chkSupportsUpdatesContribution == null) {
             chkSupportsUpdatesContribution = new CheckBoxContribution(SUPPORTS_UPDATE_TEXT);
+            chkSupportsUpdatesContribution.setToolTipText(getString("supportsUpdatesCheckBox.toolTip")); //$NON-NLS-1$
         }
         return chkSupportsUpdatesContribution;
     }
@@ -3107,6 +3108,8 @@ public class TransformationObjectEditorPage
 
     class CheckBoxContribution extends ControlContribution {
         private Button chkSupportsUpdates;
+        private String toolTip;
+        
         // Style Contants
         private static final int BUTTON_GRID_STYLE = GridData.HORIZONTAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_CENTER;
         Combo cbx = null;
@@ -3122,7 +3125,9 @@ public class TransformationObjectEditorPage
         protected Control createControl( Composite parent ) {
 
             chkSupportsUpdates = WidgetFactory.createCheckBox(parent, SUPPORTS_UPDATE_TEXT, BUTTON_GRID_STYLE);
-
+            if( toolTip != null ) {
+            	chkSupportsUpdates.setToolTipText(toolTip);
+            }
             chkSupportsUpdates.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
@@ -3169,6 +3174,10 @@ public class TransformationObjectEditorPage
             if (chkSupportsUpdates != null) {
                 chkSupportsUpdates.setEnabled(enabled);
             } // endif
+        }
+        
+        public void setToolTipText(String text) {
+        	toolTip = text;
         }
     }
 

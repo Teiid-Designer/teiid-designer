@@ -17,7 +17,6 @@ import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.ImportFromFile;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.LaunchCriteriaBuilder;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.actions.LaunchExpressionBuilder;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 
@@ -185,8 +184,8 @@ public class SqlEditorPanelWrapper extends SqlEditorPanel
     @Override
     public void propertyChange(PropertyChangeEvent e) {
         String propStr = e.getProperty();
-        if(propStr!=null && ( propStr.equals(UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE) ||
-                              propStr.equals(UiConstants.Prefs.INDENT_CLAUSE_CONTENT) ) ) {
+        if(propStr!=null && ( propStr.equals(com.metamatrix.query.ui.UiConstants.Prefs.START_CLAUSES_ON_NEW_LINE) ||
+                              propStr.equals(com.metamatrix.query.ui.UiConstants.Prefs.INDENT_CLAUSE_CONTENT) ) ) {
             if(!this.isDisposed() && this.isVisible()) {
                 getCurrentSqlEditorPanel().setText(getCurrentSqlEditorPanel().getText());
             }
