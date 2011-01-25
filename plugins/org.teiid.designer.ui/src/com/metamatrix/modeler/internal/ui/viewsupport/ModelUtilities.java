@@ -33,6 +33,8 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -62,6 +64,7 @@ import com.metamatrix.modeler.jdbc.JdbcPackage;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
@@ -286,6 +289,34 @@ public abstract class ModelUtilities implements UiConstants {
             }
         }
         return false;
+    }
+
+    /**
+     * @param selection the objects being checked
+     * @return <code>true</code> if all selected objects are model projects or model project members
+     */
+    public static boolean isAllModelProjectMembers( ISelection selection ) {
+        // nothing selected
+        if (SelectionUtilities.isEmptySelection(selection) || !(selection instanceof IStructuredSelection)) return false;
+
+        // check each selected object
+        IStructuredSelection structuredSelection = (IStructuredSelection)selection;
+
+        // only need to check resources and EObjects
+        for (Object obj : structuredSelection.toArray()) {
+            if (obj instanceof IResource) {
+                // return false if resource is not contained in a model project
+                if (!isModelProjectResource((IResource)obj)) return false;
+            }
+
+            if (obj instanceof EObject) {
+                // return false if an EObject but not in a model project
+                if (getModelResourceForModelObject((EObject)obj) == null) return false;
+            }
+        }
+
+        // all model projects and model project members are selected
+        return true;
     }
 
     /**
@@ -1248,8 +1279,7 @@ public abstract class ModelUtilities implements UiConstants {
             boolean allDepsPresent = allDependenciesOpenInWorkspace(ModelUtil.getModelResource(iFile, true));
             if (!allDepsPresent) {
                 final String message = getString(MODEL_IMPORTED_NOT_FOUND_MSG_KEY,
-                                                 instigator.getFullPath().makeRelative().toString())
-                                       + failString;
+                                                 instigator.getFullPath().makeRelative().toString()) + failString;
                 MessageDialog.openError(null, MODEL_IMPORTED_NOT_FOUND_TITLE, message);
                 return false;
             } // endif -- deps not present in WS

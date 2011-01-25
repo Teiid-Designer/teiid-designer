@@ -57,17 +57,16 @@ public class SelectionUtilities implements UiConstants {
      * @return the selected <code>EObject</code>s or an empty <code>List</code>
      */
     public static List getSelectedEObjects(ISelection theSelection) {
-        List temp = getSelectedObjects(theSelection);
-        List result = new ArrayList(temp);
+        List result = getSelectedObjects(theSelection);
 
         if (!result.isEmpty()) {
-            Iterator itr = temp.iterator();
+            Iterator itr = result.iterator();
 
             while (itr.hasNext()) {
                 Object obj = itr.next();
 
                 if (!(obj instanceof EObject)) {
-                    result.remove(obj);
+                    itr.remove();
                 }
             }
         }
@@ -81,17 +80,16 @@ public class SelectionUtilities implements UiConstants {
      * @return the selected <code>IResource</code>s or an empty <code>List</code>
      */
     public static List getSelectedIResourceObjects(ISelection theSelection) {
-        List temp = getSelectedObjects(theSelection);
-        List result = new ArrayList(temp);
+        List result = getSelectedObjects(theSelection);
 
         if (!result.isEmpty()) {
-            Iterator itr = temp.iterator();
+            Iterator itr = result.iterator();
 
             while (itr.hasNext()) {
                 Object obj = itr.next();
 
                 if (!(obj instanceof IResource)) {
-                    result.remove(obj);
+                    itr.remove();
                 }
             }
         }
@@ -125,7 +123,7 @@ public class SelectionUtilities implements UiConstants {
 
         if ((theSelection != null) && !theSelection.isEmpty()) {
             if (theSelection instanceof IStructuredSelection) {
-                result = ((IStructuredSelection)theSelection).toList();
+                result = new ArrayList(((IStructuredSelection)theSelection).toList());
             }
         }
 

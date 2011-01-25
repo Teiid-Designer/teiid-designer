@@ -72,8 +72,13 @@ public abstract class ModelObjectAction extends AbstractModelerAction {
     public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
         super.selectionChanged(thePart, theSelection);
-        if( this.actionWorker != null ) {
-           setEnabled(actionWorker.selectionChanged(theSelection));
+        if (this.actionWorker != null && ModelUtilities.isAllModelProjectMembers(theSelection)) {
+            setEnabled(actionWorker.selectionChanged(theSelection));
+        } else {
+            // make sure action is disabled
+            if (isEnabled()) {
+                setEnabled(false);
+            }
         }
     }
     /**
