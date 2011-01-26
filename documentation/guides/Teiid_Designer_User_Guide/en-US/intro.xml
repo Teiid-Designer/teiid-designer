@@ -152,7 +152,7 @@
 				These model physical data storage locations. You can also have
 				<emphasis role="bold">View Models</emphasis>, which model the business view of the data. Each contains
 				one type of metadata or another. For more information about difference
-				   between Source and View metadata, see <emphasis>Source and View Metadata</emphasis>.
+				   between Source and View metadata, (see <xref linkend="source-view-metadata" />).
 			</para>
 			<para> 
 				<emphasis role="italic">NOTE: For detailed information about creating models from your
@@ -187,7 +187,7 @@
 				content of the metadata, namely what type of information is contained
 				in the metadata. Don’t confuse these with the terms “physical” and
 				“view” metadata that indicate what the metadata represents. For more
-				information, see Source and View Metadata.
+				information, (see <xref linkend="source-view-metadata" />).
 			</para>
 			<section id="technical-metadata">
 				<title>Technical Metadata</title>
@@ -314,14 +314,12 @@
 				maintained. Source Metadata sounds similar to technical metadata, but
 				Source Metadata can contain both technical and business metadata. When
 				you model Source Metadata, you are modeling the data that your
-				enterprise information systems contain. For more information, see
-				   <emphasis>Modeling Your Teiid Designer Information Systems</emphasis>.</para>
+				enterprise information systems contain.</para>
 			<para> View Metadata, on the other hand, represent tailored views that
 				<emphasis role="bold">transform</emphasis> the <emphasis role="bold">Source Metadata</emphasis> into the terminology and domain of
 				different applications. <emphasis role="bold">View Metadata</emphasis>, too, can contain both technical
 				and business metadata. When you model <emphasis role="bold">View Metadata</emphasis>, you’re modeling
 				the data as your applications (and your enterprise) ultimately use it.
-				For more information, see <emphasis role="bold">Modeling Your Teiid Designer Data Needs</emphasis>.
 			</para>
 			<section id="modeling-source-metadata">
 				<title>Modeling Your Source Metadata</title>
