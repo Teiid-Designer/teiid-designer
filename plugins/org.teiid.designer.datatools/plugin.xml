@@ -119,7 +119,6 @@
        name="%flatFileConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
-            category="org.eclipse.datatools.connectivity.db.category"
             profile="org.eclipse.datatools.connectivity.oda.flatfile"
             class="org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider"/>
    </extension>
