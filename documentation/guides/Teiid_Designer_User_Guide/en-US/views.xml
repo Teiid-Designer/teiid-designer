@@ -365,7 +365,7 @@
 		</para>
 		<para> To edit a property, click a cell in the Value column. As in the
 			<emphasis role="bold">Table Editor</emphasis>, each cell provides a UI editor specific to the property
-			type. See Editing Table Properties for a detailed summary.</para>
+			type.</para>
       	<figure id="properties-view-image">
 			<title>Properties View</title>
 			<mediaobject>

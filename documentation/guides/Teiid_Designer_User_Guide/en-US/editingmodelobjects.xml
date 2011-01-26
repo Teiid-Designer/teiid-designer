@@ -846,7 +846,7 @@
 											</figure>
 											<para>Click the Edit button to use the Expression Builder to construct a 
 												function to use in the predicate of your SQL Criterion. For more information 
-												about the Expression Builder, see “Using the Expression Builder.”</para>
+												about the Expression Builder, see <xref linkend="using-expression-builder-section" /></para>
 										</listitem>
 									</itemizedlist>
 								</listitem>
@@ -1461,7 +1461,7 @@
 				</listitem>
 				<listitem>
 					<para><emphasis role="bold">Procedure</emphasis> section providing SQL editing of the
-						procedure (See Mapping Web Service Operations).</para>
+						procedure.</para>
 				</listitem>
 			</itemizedlist>
 			<figure>
