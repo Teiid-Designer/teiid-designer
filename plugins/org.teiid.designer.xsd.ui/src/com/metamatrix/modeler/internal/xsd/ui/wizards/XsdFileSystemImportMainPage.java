@@ -48,21 +48,39 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
     private final static String NO_RESOURCES_SELECTED_MESSAGE = getString("noResourcesSelectedMethod"); //$NON-NLS-1$
     private final static boolean allowEditLocation = ProductCustomizerMgr.getInstance().getProductCharacteristics().workspaceLocationExposed();
     
-    private static boolean PRE_362;
+    /**
+     * Value that indicates an Eclipse target platform prior to 3.6.2.
+     */
+    private static final int TP_PRE_362 = 0;
+
+    /**
+     * Value that indicates an Eclipse target platform of 3.6.2 or later.
+     */
+    private static final int TP_362 = 1;
+
+    /**
+     * Indicates which Eclipse target platform is being used. <strong>This variable should not be referenced directly.</strong>
+     * @see #isPre362()
+     */
+    private static int targetPlatform = -1;
     
-    static {
-        boolean temp = false;
-        
-        try {
-            // this field exists prior to 3.6.2 only
-            Class superClass = XsdFileSystemImportMainPage.class.getSuperclass();
-            superClass.getDeclaredField("createContainerStructureButton"); //$NON-NLS-1$
-            temp = true;
-        } catch (Throwable t) {
-            // must be 3.6.2 or later
+    /**
+     * @return <code>true</code> if the Eclipse target platform is earlier than 3.6.2
+     */
+    private static boolean isPre362() {
+        if (targetPlatform == -1) {
+            try {
+                // this field exists prior to 3.6.2 only
+                Class superClass = XsdFileSystemImportMainPage.class.getSuperclass();
+                superClass.getDeclaredField("createContainerStructureButton"); //$NON-NLS-1$
+                targetPlatform = TP_PRE_362;
+            } catch (Throwable t) {
+                // must be 3.6.2 or later
+                targetPlatform = TP_362;
+            }
         }
         
-        PRE_362 = temp;
+        return (targetPlatform == TP_PRE_362);
     }
 
     //============================================================================================================================
@@ -176,7 +194,8 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
         }
 
         //List xsdFiles, boolean addDependentXsds, IPath destinationFullPath, Shell shell, IWizardContainer container, IOverwriteQuery overwriteQuery, boolean createContainerStructure, boolean overwriteExistingResources) {
-        boolean createContainer = PRE_362 ? isSelected("createContainerStructureButton") : isSelected("createTopLevelFolderCheckbox"); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean createContainer = isPre362() ? isSelected("createContainerStructureButton") //$NON-NLS-1$
+                                             : isSelected("createTopLevelFolderCheckbox"); //$NON-NLS-1$
         return XsdFileSystemImportUtil.importXsds(fileSystemObjects,
                                                   addDependentXsdsCheckbox.getSelection(),
                                                   getContainerFullPath(),
@@ -202,7 +221,7 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
             setContainerFieldValue(path);
         }
         
-        if (PRE_362) {
+        if (isPre362()) {
             setEnabled("createContainerStructureButton", false); //$NON-NLS-1$
             setEnabled("createOnlySelectedButton", false); //$NON-NLS-1$
         } else {
@@ -272,7 +291,7 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
                     .getBoolean(STORE_OVERWRITE_EXISTING_RESOURCES_ID));
             boolean createStructure = settings.getBoolean(STORE_CREATE_CONTAINER_STRUCTURE_ID);
             
-            if (PRE_362) {
+            if (isPre362()) {
                 setSelection("createContainerStructureButton", createStructure); //$NON-NLS-1$
                 setSelection("createOnlySelectedButton", !createStructure); //$NON-NLS-1$
             } else {
@@ -301,7 +320,7 @@ public class XsdFileSystemImportMainPage extends WizardFileSystemResourceImportP
             settings.put(STORE_OVERWRITE_EXISTING_RESOURCES_ID,
                     overwriteExistingResourcesCheckbox.getSelection());
 
-            if (PRE_362) {
+            if (isPre362()) {
                 settings.put(STORE_CREATE_CONTAINER_STRUCTURE_ID, isSelected("createContainerStructureButton")); //$NON-NLS-1$
             } else {
                 settings.put(STORE_CREATE_CONTAINER_STRUCTURE_ID, isSelected("createTopLevelFolderCheckbox")); //$NON-NLS-1$
