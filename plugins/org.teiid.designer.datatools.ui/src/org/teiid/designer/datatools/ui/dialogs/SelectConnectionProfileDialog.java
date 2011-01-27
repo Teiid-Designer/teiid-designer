@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -97,7 +98,12 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
                 action.run();
                 selectedCP = action.getAddedProfile();
                 if( selectedCP != null ) {
-                	fileNameText.setText(selectedCP.getName());
+                	// Reset the input to this dialog since a new CP has been added
+                	setInput(ProfileManager.getInstance());
+                	// Refresh the tree
+                	getTreeViewer().refresh();
+                	// Set selection on the tree to drive the text field and validation
+                	getTreeViewer().setSelection(new StructuredSelection(selectedCP));
                 }
             }
         });
