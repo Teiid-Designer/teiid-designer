@@ -8,10 +8,10 @@
 package com.metamatrix.modeler.transformation.ui.builder.criteria;
 
 import com.metamatrix.metamodels.transformation.InputParameter;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.query.internal.ui.builder.util.CriteriaStrategy;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.symbol.ElementSymbol;
-import com.metamatrix.query.ui.UiConstants;
 
 /**
  * QueryCriteriaStrategy

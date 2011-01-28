@@ -28,9 +28,9 @@ import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.lang.Command;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
-import com.metamatrix.ui.UiConstants;
 
 /**
  * SqlEditorPanel

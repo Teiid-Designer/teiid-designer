@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.builder.util.LanguageObjectContentProvider;
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import com.metamatrix.query.internal.ui.builder.util.LanguageObjectLabelProvider;
@@ -28,7 +29,6 @@ import org.teiid.query.sql.lang.PredicateCriteria;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
-import com.metamatrix.query.ui.UiConstants;
 
 public class LanguageObjectBuilderTreeViewer extends TreeViewer implements ILanguageObjectInputProvider, UiConstants {
 

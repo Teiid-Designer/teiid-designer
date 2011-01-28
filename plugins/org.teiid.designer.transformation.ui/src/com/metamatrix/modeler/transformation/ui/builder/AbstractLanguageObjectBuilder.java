@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.builder.actions.DeleteViewerObjectAction;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlDisplayPanel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
@@ -42,7 +43,6 @@ import com.metamatrix.query.internal.ui.builder.model.LanguageObjectEditorModelE
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.Dialog;
 

@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.builder.ILanguageObjectEditor;
 import com.metamatrix.modeler.transformation.ui.builder.expression.ConstantEditor;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
@@ -29,7 +30,6 @@ import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.Reference;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.internal.util.UiUtil;
 
 /**

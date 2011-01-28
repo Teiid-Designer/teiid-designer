@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.builder.util;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.builder.ILanguageObjectInputProvider;
 
 import org.teiid.query.sql.LanguageObject;
@@ -21,7 +22,6 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 
 import com.metamatrix.query.internal.ui.builder.util.BuilderUtils;
-import com.metamatrix.query.ui.UiConstants;
 
 /**
  * LanguageObjectContentProvider

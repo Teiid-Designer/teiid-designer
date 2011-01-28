@@ -14,8 +14,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import com.metamatrix.query.ui.UiConstants;
-import com.metamatrix.query.ui.UiPlugin;
+
+import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.ui.actions.AbstractAction;
 
 /**

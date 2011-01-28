@@ -13,10 +13,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModel;
 import com.metamatrix.query.internal.ui.builder.model.ILanguageObjectEditorModelListener;
 import org.teiid.query.sql.LanguageObject;
-import com.metamatrix.query.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
