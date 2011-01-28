@@ -70,6 +70,10 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
      */
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
+        if (monitor.isCanceled()) {
+            return Status.CANCEL_STATUS;
+        }
+
         Server server = getPreviewServer();
         int errors = 0;
         IStatus deleteVdbErrorStatus = null;
@@ -81,6 +85,10 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
             ++errors;
             deleteVdbErrorStatus = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.DeleteDeployedPreviewVdbJobError,
                                                                                  this.pvdbName), e);
+        }
+
+        if (monitor.isCanceled()) {
+            return Status.CANCEL_STATUS;
         }
 
         // delete data source from server

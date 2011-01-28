@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -88,6 +90,13 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
      */
     public DqpUiPlugin() {
         plugin = this;
+    }
+    
+    void cancelCleanupJobsRequested() {
+        for (Job job : Job.getJobManager().find(TeiidPreviewVdbCleanupJob.TEIID_CLEANUP_FAMILY)) {
+            // canceling the job will set the job's progress monitor state to canceled and the job can notice that
+            job.cancel();
+        }
     }
 
     @Override
@@ -180,8 +189,16 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     @Override
     public void stop( BundleContext context ) throws Exception {
         try {
-            // the server manager shutdown can take a bit of time since there are preview jobs that run
-            ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
+            // the server manager shutdown can take a bit of time because of the preview jobs so listen for cancel
+            // button selection in order to cancel any remaining cleanup jobs
+            ProgressMonitorDialog dialog = new ProgressMonitorDialog(null) {
+                @Override
+                protected void cancelPressed() {
+                    super.cancelPressed();
+                    cancelCleanupJobsRequested();
+                }
+            };
+
             IRunnableWithProgress runnable = new IRunnableWithProgress() {
                 @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
@@ -189,8 +206,10 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
                         ServerManager serverMgr = DqpPlugin.getInstance().getServerManager();
                         serverMgr.shutdown(monitor);
                     } catch (InterruptedException e) {
+                        monitor.setCanceled(true);
                         throw e;
                     } catch (Exception e) {
+                        monitor.setCanceled(true);
                         throw new InvocationTargetException(e);
                     }
                 }

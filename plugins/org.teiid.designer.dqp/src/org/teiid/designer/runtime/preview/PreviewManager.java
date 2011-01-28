@@ -1576,9 +1576,8 @@ public final class PreviewManager extends JobChangeAdapter
                         }
                     }
 
-                    // wait for at most 10 seconds plus a quarter second per job
                     if (!monitor.isCanceled()) monitor.subTask(NLS.bind(Messages.PreviewShutdownTeiidCleanupTask, jobs.size()));
-                    latch.await(10 + (int)(jobs.size() / 4.0), TimeUnit.SECONDS);
+                    latch.await(); // wait until all cleanup jobs are finished
                 }
             }
         } finally {
