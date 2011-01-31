@@ -12,8 +12,8 @@
 
   <properties>
     <translation>en-US</translation>
-    <docname>Teiid_Designer_User_Guide</docname>
-    <bookname>Teiid Designer User Guide</bookname>
+    <docname>Parts_Example</docname>
+    <bookname>Parts Example</bookname>
   </properties> 
 
   <repositories>
@@ -69,19 +69,9 @@
         					<stylesheetResource>classpath:/xslt/org/jboss/pdf.xsl</stylesheetResource>
         					<finalName>${docname}.pdf</finalName>
         				</format>
-    					  <format>
-    					    <formatName>html</formatName>
-    						  <stylesheetResource>classpath:/xslt/org/jboss/xhtml.xsl</stylesheetResource>
-    						  <finalName>index.html</finalName>
-    					  </format>
         				<format>
         				  <formatName>html_single</formatName>
         					<stylesheetResource>classpath:/xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
-        					<finalName>index.html</finalName>
-        				</format>
-					<format>
-        				  <formatName>eclipse</formatName>
-        					<stylesheetResource>classpath:/xslt/org/jboss/eclipse.xsl</stylesheetResource>
         					<finalName>index.html</finalName>
         				</format>
     					</formats>
