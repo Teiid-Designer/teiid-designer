@@ -648,6 +648,9 @@ CREATE </xsl:text>
 		<!-- If 'integer' -->
 		<xsl:when test="$upperType = 'INTEGER'">
 			<xsl:text>INTEGER</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'unsignedInteger' -->
 		<xsl:when test="$upperType = 'UNSIGNEDINTEGER'">
@@ -656,10 +659,16 @@ CREATE </xsl:text>
 		<!-- If 'int' -->
 		<xsl:when test="$upperType = 'INT'">
 			<xsl:text>INTEGER</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'unsignedInt' -->
 		<xsl:when test="$upperType = 'UNSIGNEDINT'">
 			<xsl:text>INTEGER</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'long' -->
 		<xsl:when test=". = 'long'">
@@ -702,6 +711,9 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'double precision' -->
 		<xsl:when test="$upperType = 'DOUBLE PRECISION'">
@@ -714,6 +726,9 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'decimal' -->
 		<xsl:when test=". = 'decimal'">
@@ -722,6 +737,9 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'bigdecimal' -->
 		<xsl:when test=". = 'bigdecimal'">
@@ -730,6 +748,9 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'biginteger' -->
 		<xsl:when test=". = 'biginteger'">
@@ -738,14 +759,23 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'byte' -->
 		<xsl:when test=". = 'byte'">
 			<xsl:text>TINYINT</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'unsignedByte' -->
 		<xsl:when test=". = 'unsignedByte'">
 			<xsl:text>TINYINT</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'short' -->
 		<xsl:when test=". = 'short'">
@@ -840,10 +870,23 @@ CREATE </xsl:text>
 		<!-- If 'tinyint' -->
 		<xsl:when test="$upperType = 'TINYINT'">
 			<xsl:text>TINYINT</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'smallint' -->
 		<xsl:when test="$upperType = 'SMALLINT'">
 			<xsl:text>SMALLINT</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
+		</xsl:when>
+		<!-- If 'bigint' -->
+		<xsl:when test="$upperType = 'BIGINT'">
+			<xsl:text>BIGINT</xsl:text>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'VARBINARY' -->
 		<xsl:when test="$upperType = 'VARBINARY'">
@@ -870,6 +913,9 @@ CREATE </xsl:text>
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
+			<xsl:if test="../@isAutoIncremented='true'">
+				<xsl:text> IDENTITY(1,1)</xsl:text>
+			</xsl:if>
 		</xsl:when>
 		<!-- If 'VARCHAR' -->
 		<xsl:when test="$upperType = 'VARCHAR'">
