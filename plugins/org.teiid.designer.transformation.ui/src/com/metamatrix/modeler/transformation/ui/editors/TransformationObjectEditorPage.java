@@ -131,8 +131,6 @@ public class TransformationObjectEditorPage
     private static final String SELECT_TAB_TOOLTIP = getString("selectTab.toolTip"); //$NON-NLS-1$
     private static final String UPDATE_TAB_TEXT = getString("updateTab.text"); //$NON-NLS-1$
     private static final String UPDATE_TAB_TOOLTIP = getString("updateTab.toolTip"); //$NON-NLS-1$
-    private static final String UPDATE_CHECKBOX_TEXT = getString("updateCheckbox.text"); //$NON-NLS-1$
-    private static final String UPDATE_CHECKBOX_TOOLTIP = getString("updateCheckbox.toolTip"); //$NON-NLS-1$
 
     private static final String SELECT_SQL_MSG = getString("selectSqlMsg.text"); //$NON-NLS-1$
     private static final String INSERT_SQL_MSG = getString("insertSqlMsg.text"); //$NON-NLS-1$
@@ -142,13 +140,9 @@ public class TransformationObjectEditorPage
 
     private static final String INSERT_TAB_TEXT = getString("insertTab.text"); //$NON-NLS-1$
     private static final String INSERT_TAB_TOOLTIP = getString("insertTab.toolTip"); //$NON-NLS-1$
-    private static final String INSERT_CHECKBOX_TEXT = getString("insertCheckbox.text"); //$NON-NLS-1$
-    private static final String INSERT_CHECKBOX_TOOLTIP = getString("insertCheckbox.toolTip"); //$NON-NLS-1$
 
     private static final String DELETE_TAB_TEXT = getString("deleteTab.text"); //$NON-NLS-1$
     private static final String DELETE_TAB_TOOLTIP = getString("deleteTab.toolTip"); //$NON-NLS-1$
-    private static final String DELETE_CHECKBOX_TEXT = getString("deleteCheckbox.text"); //$NON-NLS-1$
-    private static final String DELETE_CHECKBOX_TOOLTIP = getString("deleteCheckbox.toolTip"); //$NON-NLS-1$
 
     private static final String SAVE_PENDING_TITLE = getString("savePendingChanges.title"); //$NON-NLS-1$
     private static final String SAVE_PENDING_MSG = getString("savePendingChanges.msg"); //$NON-NLS-1$
@@ -230,10 +224,6 @@ public class TransformationObjectEditorPage
 
     private SqlPanelDropTargetListener seSelectUpdateDropListener;
     private SqlPanelDropTargetListener seSelectNoUpdateDropListener;
-
-    Button chkInsertEnabled;
-    Button chkUpdateEnabled;
-    Button chkDeleteEnabled;
 
     Button chkUseDefaultForInsert;
     Button chkUseDefaultForUpdate;
@@ -434,7 +424,8 @@ public class TransformationObjectEditorPage
         sqlOuterUpdatePanel.setLayoutData(createTextViewGridData());
 
         // create/add the controls
-        createUpdateControlPanel(sqlOuterUpdatePanel);
+        chkUseDefaultForUpdate = WidgetFactory.createCheckBox(sqlOuterUpdatePanel, USE_DEFAULT_CHECKBOX_TEXT, true);
+        chkUseDefaultForUpdate.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlUpdateEditor = createEditorPanel(sqlOuterUpdatePanel, QueryValidator.UPDATE_TRNS);
 
@@ -453,6 +444,7 @@ public class TransformationObjectEditorPage
 
         updateTab.setText(UPDATE_TAB_TEXT);
         updateTab.setToolTipText(UPDATE_TAB_TOOLTIP);
+        updateTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlUpdateEditor);
@@ -473,7 +465,8 @@ public class TransformationObjectEditorPage
         sqlOuterInsertPanel.setLayoutData(createTextViewGridData());
 
         // create/add the controls
-        createInsertControlPanel(sqlOuterInsertPanel);
+        chkUseDefaultForInsert = WidgetFactory.createCheckBox(sqlOuterInsertPanel, USE_DEFAULT_CHECKBOX_TEXT, true);
+        chkUseDefaultForInsert.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlInsertEditor = createEditorPanel(sqlOuterInsertPanel, QueryValidator.INSERT_TRNS);
 
@@ -490,6 +483,7 @@ public class TransformationObjectEditorPage
 
         insertTab.setText(INSERT_TAB_TEXT);
         insertTab.setToolTipText(INSERT_TAB_TOOLTIP);
+        insertTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlInsertEditor);
@@ -510,7 +504,8 @@ public class TransformationObjectEditorPage
         sqlOuterDeletePanel.setLayoutData(createTextViewGridData());
 
         // create/add the controls
-        createDeleteControlPanel(sqlOuterDeletePanel);
+        chkUseDefaultForDelete = WidgetFactory.createCheckBox(sqlOuterDeletePanel, USE_DEFAULT_CHECKBOX_TEXT, true);
+        chkUseDefaultForDelete.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlDeleteEditor = createEditorPanel(sqlOuterDeletePanel, QueryValidator.DELETE_TRNS);
 
@@ -519,161 +514,23 @@ public class TransformationObjectEditorPage
 
         if (TransformationHelper.isDeleteAllowed(currentMappingRoot)) {
             deleteTab.getControl().setEnabled(true);
-            sqlDeleteEditor.getTextViewer().setEditable(true);
+            sqlDeleteEditor.getTextViewer().setEditable(false);
 
-            sqlDeleteEditor.setEditable(true);
+            sqlDeleteEditor.setEditable(false);
 
-            sqlDeleteEditor.getTextViewer().getTextWidget().setEnabled(true);
+            sqlDeleteEditor.getTextViewer().getTextWidget().setEnabled(false);
 
             new DropTarget(sqlDeleteEditor.getTextViewer().getTextWidget(), DND.DROP_NONE);
         }
+        
+        getSqlEditorForItem(deleteTab).setEditable(false);
 
         deleteTab.setText(DELETE_TAB_TEXT);
         deleteTab.setToolTipText(DELETE_TAB_TOOLTIP);
+        deleteTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlDeleteEditor);
-    }
-
-    /**
-     * Create the Update Tab Controls subpanel (with checkboxes)
-     * 
-     * @param cmpParent the composite that it is contained in
-     */
-    private Composite createUpdateControlPanel( Composite cmpParent ) {
-
-        Composite cmpControlPanel = new Composite(cmpParent, SWT.NONE);
-
-        // establish the grid data on the panel itself
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-
-        cmpControlPanel.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-        gridData.horizontalIndent = CHECKBOX_INDENT;
-
-        cmpControlPanel.setLayoutData(gridData);
-
-        // add the buttons
-        chkUpdateEnabled = WidgetFactory.createCheckBox(cmpControlPanel, UPDATE_CHECKBOX_TEXT, true);
-        chkUpdateEnabled.setToolTipText(UPDATE_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalAlignment = GridData.BEGINNING;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkUpdateEnabled.setLayoutData(gridData);
-
-        chkUseDefaultForUpdate = WidgetFactory.createCheckBox(cmpControlPanel, USE_DEFAULT_CHECKBOX_TEXT, true);
-        chkUseDefaultForUpdate.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.END;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessHorizontalSpace = false;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkUseDefaultForUpdate.setLayoutData(gridData);
-
-        return cmpControlPanel;
-    }
-
-    /**
-     * Create the Insert Tab Controls subpanel (with checkboxes)
-     * 
-     * @param cmpParent the composite that it is contained in
-     */
-    private Composite createInsertControlPanel( Composite cmpParent ) {
-
-        Composite cmpControlPanel = new Composite(cmpParent, SWT.NONE);
-
-        // establish the grid data on the panel itself
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-
-        cmpControlPanel.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-        gridData.horizontalIndent = CHECKBOX_INDENT;
-
-        cmpControlPanel.setLayoutData(gridData);
-
-        // add the buttons
-        chkInsertEnabled = WidgetFactory.createCheckBox(cmpControlPanel, INSERT_CHECKBOX_TEXT, true);
-        chkInsertEnabled.setToolTipText(INSERT_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalAlignment = GridData.BEGINNING;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkInsertEnabled.setLayoutData(gridData);
-
-        chkUseDefaultForInsert = WidgetFactory.createCheckBox(cmpControlPanel, USE_DEFAULT_CHECKBOX_TEXT, true);
-        chkUseDefaultForInsert.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.END;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessHorizontalSpace = false;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkUseDefaultForInsert.setLayoutData(gridData);
-
-        return cmpControlPanel;
-    }
-
-    /**
-     * Create the Delete Tab Controls subpanel (with checkboxes)
-     * 
-     * @param cmpParent the composite that it is contained in
-     */
-    private Composite createDeleteControlPanel( Composite cmpParent ) {
-
-        Composite cmpControlPanel = new Composite(cmpParent, SWT.NONE);
-
-        // establish the grid data on the panel itself
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-
-        cmpControlPanel.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-        gridData.horizontalIndent = CHECKBOX_INDENT;
-
-        cmpControlPanel.setLayoutData(gridData);
-
-        // add the buttons
-        chkDeleteEnabled = WidgetFactory.createCheckBox(cmpControlPanel, DELETE_CHECKBOX_TEXT, true);
-        chkDeleteEnabled.setToolTipText(DELETE_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalAlignment = GridData.BEGINNING;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkDeleteEnabled.setLayoutData(gridData);
-
-        chkUseDefaultForDelete = WidgetFactory.createCheckBox(cmpControlPanel, USE_DEFAULT_CHECKBOX_TEXT, true);
-        chkUseDefaultForDelete.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.END;
-        gridData.verticalAlignment = GridData.BEGINNING;
-        gridData.grabExcessHorizontalSpace = false;
-        gridData.grabExcessVerticalSpace = false;
-
-        chkUseDefaultForDelete.setLayoutData(gridData);
-
-        return cmpControlPanel;
     }
 
     /**
@@ -725,23 +582,23 @@ public class TransformationObjectEditorPage
      */
     private void removeCheckBoxListeners( Object item ) {
         if (item == insertTab) {
-            if (!chkInsertEnabled.isDisposed()) {
-                chkInsertEnabled.removeSelectionListener(checkBoxListener);
-            }
+//            if (!chkInsertEnabled.isDisposed()) {
+//                chkInsertEnabled.removeSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForInsert.isDisposed()) {
                 chkUseDefaultForInsert.removeSelectionListener(checkBoxListener);
             }
         } else if (item == updateTab) {
-            if (!chkUpdateEnabled.isDisposed()) {
-                chkUpdateEnabled.removeSelectionListener(checkBoxListener);
-            }
+//            if (!chkUpdateEnabled.isDisposed()) {
+//                chkUpdateEnabled.removeSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForUpdate.isDisposed()) {
                 chkUseDefaultForUpdate.removeSelectionListener(checkBoxListener);
             }
         } else if (item == deleteTab) {
-            if (!chkDeleteEnabled.isDisposed()) {
-                chkDeleteEnabled.removeSelectionListener(checkBoxListener);
-            }
+//            if (!chkDeleteEnabled.isDisposed()) {
+//                chkDeleteEnabled.removeSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForDelete.isDisposed()) {
                 chkUseDefaultForDelete.removeSelectionListener(checkBoxListener);
             }
@@ -753,23 +610,23 @@ public class TransformationObjectEditorPage
      */
     private void addCheckBoxListeners( Object item ) {
         if (item == insertTab) {
-            if (!chkInsertEnabled.isDisposed()) {
-                chkInsertEnabled.addSelectionListener(checkBoxListener);
-            }
+//            if (!chkInsertEnabled.isDisposed()) {
+//                chkInsertEnabled.addSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForInsert.isDisposed()) {
                 chkUseDefaultForInsert.addSelectionListener(checkBoxListener);
             }
         } else if (item == updateTab) {
-            if (!chkUpdateEnabled.isDisposed()) {
-                chkUpdateEnabled.addSelectionListener(checkBoxListener);
-            }
+//            if (!chkUpdateEnabled.isDisposed()) {
+//                chkUpdateEnabled.addSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForUpdate.isDisposed()) {
                 chkUseDefaultForUpdate.addSelectionListener(checkBoxListener);
             }
         } else if (item == deleteTab) {
-            if (!chkDeleteEnabled.isDisposed()) {
-                chkDeleteEnabled.addSelectionListener(checkBoxListener);
-            }
+//            if (!chkDeleteEnabled.isDisposed()) {
+//                chkDeleteEnabled.addSelectionListener(checkBoxListener);
+//            }
             if (!chkUseDefaultForDelete.isDisposed()) {
                 chkUseDefaultForDelete.addSelectionListener(checkBoxListener);
             }
@@ -1325,7 +1182,7 @@ public class TransformationObjectEditorPage
         // Try to get generated error message
         String errorMsg = null;
         if (currentMappingRoot != null) {
-            errorMsg = TransformationHelper.getProcedureGenerationErrorMsg(mappingRoot);
+            errorMsg = null;
         }
         if (errorMsg != null) {
             couldntGenerateReasonsMsg = errorMsg;
@@ -2244,11 +2101,7 @@ public class TransformationObjectEditorPage
         setCheckBoxEnabledStates(selectedItem);
 
         // boolean abortedUseDefault = false;
-        // One of the Enable Checkboxes Changed
-        if (eventSource == chkInsertEnabled || eventSource == chkUpdateEnabled || eventSource == chkDeleteEnabled) {
-            handleEnabledCheckBoxChanged(eventSource, allowed);
-            // One of the useDefault Checkboxes Changed
-        } else if (eventSource == chkUseDefaultForInsert || eventSource == chkUseDefaultForUpdate
+        if (eventSource == chkUseDefaultForInsert || eventSource == chkUseDefaultForUpdate
                    || eventSource == chkUseDefaultForDelete) {
             // abortedUseDefault = handleUseDefaultCheckBoxChanged(eventSource,useDefault,allowed);
             handleUseDefaultCheckBoxChanged(eventSource, useDefault, allowed);
@@ -2263,20 +2116,20 @@ public class TransformationObjectEditorPage
      * @param eventSource the source of the event
      * @param isAllowed the isAllowed state
      */
-    private void handleEnabledCheckBoxChanged( Object eventSource,
-                                               boolean isAllowed ) {
-        Object selectedItem = getSelectedItem();
-        // -------------------------------------------------------------------
-        // Set MetaObject property, based on currentItem and source of event
-        // -------------------------------------------------------------------
-        if (selectedItem == insertTab && eventSource == chkInsertEnabled) {
-            TransformationHelper.setSupportsInsert(currentMappingRoot, isAllowed, false, this);
-        } else if (selectedItem == updateTab && eventSource == chkUpdateEnabled) {
-            TransformationHelper.setSupportsUpdate(currentMappingRoot, isAllowed, false, this);
-        } else if (selectedItem == deleteTab && eventSource == chkDeleteEnabled) {
-            TransformationHelper.setSupportsDelete(currentMappingRoot, isAllowed, false, this);
-        }
-    }
+//    private void handleEnabledCheckBoxChanged( Object eventSource,
+//                                               boolean isAllowed ) {
+//        Object selectedItem = getSelectedItem();
+//        // -------------------------------------------------------------------
+//        // Set MetaObject property, based on currentItem and source of event
+//        // -------------------------------------------------------------------
+//        if (selectedItem == insertTab) {
+//            TransformationHelper.setSupportsInsert(currentMappingRoot, isAllowed, false, this);
+//        } else if (selectedItem == updateTab) {
+//            TransformationHelper.setSupportsUpdate(currentMappingRoot, isAllowed, false, this);
+//        } else if (selectedItem == deleteTab) {
+//            TransformationHelper.setSupportsDelete(currentMappingRoot, isAllowed, false, this);
+//        }
+//    }
 
     /**
      * handler for useDefault checkbox state changes
@@ -2325,7 +2178,7 @@ public class TransformationObjectEditorPage
                         TransformationHelper.setDeleteSqlDefault(currentMappingRoot, true, false, this);
                     }
                     // Set the generated Procedure
-                    String generatedProc = TransformationHelper.getGeneratedProcedureStr(currentMappingRoot, cmdType);
+                    String generatedProc = null;
                     if (TransformationHelper.isUserSqlDifferent(generatedProc, currentMappingRoot, cmdType)) {
                         TransformationHelper.setSqlString(currentMappingRoot, generatedProc, cmdType, false, this);
                     }
@@ -2435,14 +2288,6 @@ public class TransformationObjectEditorPage
             // -------------------------------------------------------------------
             boolean isAllowed = TransformationHelper.isAllowed(transMappingRoot, cmdType);
 
-            if (cmdType == QueryValidator.INSERT_TRNS && !chkInsertEnabled.isDisposed()) {
-                chkInsertEnabled.setSelection(isAllowed);
-            } else if (cmdType == QueryValidator.UPDATE_TRNS && !chkUpdateEnabled.isDisposed()) {
-                chkUpdateEnabled.setSelection(isAllowed);
-            } else if (cmdType == QueryValidator.DELETE_TRNS && !chkDeleteEnabled.isDisposed()) {
-                chkDeleteEnabled.setSelection(isAllowed);
-            }
-
             // -------------------------------------------------------------------
             // Set useDefault selection states for the statement type.
             // -------------------------------------------------------------------
@@ -2529,11 +2374,11 @@ public class TransformationObjectEditorPage
     boolean isEnableSelected( Object item ) {
         boolean result = false;
         if (item == insertTab) {
-            result = chkInsertEnabled.getSelection();
+            result = true;
         } else if (item == updateTab) {
-            result = chkUpdateEnabled.getSelection();
+            result = true;
         } else if (item == deleteTab) {
-            result = chkDeleteEnabled.getSelection();
+            result = true;
         }
         return result;
     }
@@ -2972,9 +2817,6 @@ public class TransformationObjectEditorPage
     private void updateReadOnlyStateOfCheckBoxes( final boolean isReadOnly ) {
         UiUtil.runInSwtThread(new Runnable() {
             public void run() {
-                if (chkInsertEnabled != null) chkInsertEnabled.setEnabled(!isReadOnly);
-                if (chkUpdateEnabled != null) chkUpdateEnabled.setEnabled(!isReadOnly);
-                if (chkDeleteEnabled != null) chkDeleteEnabled.setEnabled(!isReadOnly);
                 if (chkUseDefaultForInsert != null) chkUseDefaultForInsert.setEnabled(!isReadOnly);
                 if (chkUseDefaultForUpdate != null) chkUseDefaultForUpdate.setEnabled(!isReadOnly);
                 if (chkUseDefaultForDelete != null) chkUseDefaultForDelete.setEnabled(!isReadOnly);

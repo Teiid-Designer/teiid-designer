@@ -38,14 +38,10 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
-import org.teiid.query.sql.util.UpdateProcedureGenerator;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-import org.teiid.query.validator.UpdateValidationVisitor;
-import org.teiid.query.validator.ValidatorReport;
 
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -94,7 +90,6 @@ import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
 
 /**
  * TransformationHelper This class contains helper methods for getting "properties" from TransformationMappings
@@ -604,7 +599,7 @@ public class TransformationHelper implements SqlConstants {
                                              Object txnSource ) {
         // If this mappingRoot allows insert, and default is being used, reset it
         if (isInsertAllowed(transMappingRoot) && isInsertSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.INSERT_TRNS);
+            String generatedProc = null;
 
             String currentInsertUserStr = getInsertSqlUserString(transMappingRoot);
 
@@ -615,7 +610,7 @@ public class TransformationHelper implements SqlConstants {
         }
         // If this mappingRoot allows update, and default is being used, reset it
         if (isUpdateAllowed(transMappingRoot) && isUpdateSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.UPDATE_TRNS);
+            String generatedProc = null;
 
             String currentUpdateUserStr = getUpdateSqlUserString(transMappingRoot);
 
@@ -626,7 +621,7 @@ public class TransformationHelper implements SqlConstants {
         }
         // If this mappingRoot allows delete, and default is being used, reset it
         if (isDeleteAllowed(transMappingRoot) && isDeleteSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = getGeneratedProcedureStr(transMappingRoot, QueryValidator.DELETE_TRNS);
+            String generatedProc = null;
 
             String currentDeleteUserStr = getDeleteSqlUserString(transMappingRoot);
 
@@ -3697,73 +3692,73 @@ public class TransformationHelper implements SqlConstants {
      * @param type the type of the statement to generate the procedure for
      * @return the generated procedure text string
      */
-    public static String getGeneratedProcedureStr( Object transMappingRoot,
-                                                   int type ) {
-        // Get the generated procedure (if possible)
-        CreateUpdateProcedureCommand generatedProc = getGeneratedProcedure(transMappingRoot, type);
+//    public static String getGeneratedProcedureStr( Object transMappingRoot,
+//                                                   int type ) {
+//        // Get the generated procedure (if possible)
+//        CreateUpdateProcedureCommand generatedProc = getGeneratedProcedure(transMappingRoot, type);
+//
+//        // If non-null, return the string
+//        if (generatedProc != null) {
+//            return generatedProc.toString();
+//        }
+//        return null;
+//    }
 
-        // If non-null, return the string
-        if (generatedProc != null) {
-            return generatedProc.toString();
-        }
-        return null;
-    }
-
-    /**
-     * Get the generated procedure for a given SELECT query command
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param type the type of the statement to generate the procedure for
-     * @return the generated procedure
-     */
-    public static CreateUpdateProcedureCommand getGeneratedProcedure( Object transMappingRoot,
-                                                                      int type ) {
-        CreateUpdateProcedureCommand generatedProc = null;
-
-        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
-
-            EObject targetGroup = getTransformationTarget(transMappingRoot);
-
-            if (targetGroup == null) {
-                return null;
-            }
-
-            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-
-            // Get the corresponding procedure type
-            int procType = 0;
-            if (type == QueryValidator.INSERT_TRNS) {
-                procType = UpdateProcedureGenerator.INSERT_PROCEDURE;
-            } else if (type == QueryValidator.UPDATE_TRNS) {
-                procType = UpdateProcedureGenerator.UPDATE_PROCEDURE;
-            } else if (type == QueryValidator.DELETE_TRNS) {
-                procType = UpdateProcedureGenerator.DELETE_PROCEDURE;
-            }
-
-            // Get the generated procedure from generator utility
-            if (isValid
-                && (procType == UpdateProcedureGenerator.INSERT_PROCEDURE
-                    || procType == UpdateProcedureGenerator.UPDATE_PROCEDURE || procType == UpdateProcedureGenerator.DELETE_PROCEDURE)) {
-                String virtualTargetFullName = getSqlEObjectFullName(targetGroup);
-                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-                // Can only generate procedures for Query Commands
-                if (selectCommand != null && selectCommand instanceof Query) {
-                    try {
-                        QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
-                        generatedProc = UpdateProcedureGenerator.createProcedure(procType,
-                                                                                 virtualTargetFullName,
-                                                                                 selectCommand,
-                                                                                 resolver);
-                    } catch (TeiidComponentException e) {
-                        // Exception leaves generatedProc null
-                        String message = "[TransformationHelper.getGeneratedProcedure()] INFO:  Couldnt generate procedure\n"; //$NON-NLS-1$
-                        TransformationPlugin.Util.log(IStatus.INFO, message + e.getMessage());
-                    }
-                }
-            }
-        }
-        return generatedProc;
-    }
+//    /**
+//     * Get the generated procedure for a given SELECT query command
+//     * 
+//     * @param transMappingRoot the transformation mapping root
+//     * @param type the type of the statement to generate the procedure for
+//     * @return the generated procedure
+//     */
+//    public static CreateUpdateProcedureCommand getGeneratedProcedure( Object transMappingRoot,
+//                                                                      int type ) {
+//        CreateUpdateProcedureCommand generatedProc = null;
+//
+//        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
+//
+//            EObject targetGroup = getTransformationTarget(transMappingRoot);
+//
+//            if (targetGroup == null) {
+//                return null;
+//            }
+//
+//            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
+//
+//            // Get the corresponding procedure type
+//            int procType = 0;
+//            if (type == QueryValidator.INSERT_TRNS) {
+//                procType = UpdateProcedureGenerator.INSERT_PROCEDURE;
+//            } else if (type == QueryValidator.UPDATE_TRNS) {
+//                procType = UpdateProcedureGenerator.UPDATE_PROCEDURE;
+//            } else if (type == QueryValidator.DELETE_TRNS) {
+//                procType = UpdateProcedureGenerator.DELETE_PROCEDURE;
+//            }
+//
+//            // Get the generated procedure from generator utility
+//            if (isValid
+//                && (procType == UpdateProcedureGenerator.INSERT_PROCEDURE
+//                    || procType == UpdateProcedureGenerator.UPDATE_PROCEDURE || procType == UpdateProcedureGenerator.DELETE_PROCEDURE)) {
+//                String virtualTargetFullName = getSqlEObjectFullName(targetGroup);
+//                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+//                // Can only generate procedures for Query Commands
+//                if (selectCommand != null && selectCommand instanceof Query) {
+//                    try {
+//                        QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
+//                        generatedProc = UpdateProcedureGenerator.createProcedure(procType,
+//                                                                                 virtualTargetFullName,
+//                                                                                 selectCommand,
+//                                                                                 resolver);
+//                    } catch (TeiidComponentException e) {
+//                        // Exception leaves generatedProc null
+//                        String message = "[TransformationHelper.getGeneratedProcedure()] INFO:  Couldnt generate procedure\n"; //$NON-NLS-1$
+//                        TransformationPlugin.Util.log(IStatus.INFO, message + e.getMessage());
+//                    }
+//                }
+//            }
+//        }
+//        return generatedProc;
+//    }
 
     /**
      * Get the generated procedure errors for a query
@@ -3771,35 +3766,35 @@ public class TransformationHelper implements SqlConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the procedure generation errors
      */
-    public static String getProcedureGenerationErrorMsg( Object transMappingRoot ) {
-        String errorMsg = null;
-
-        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
-
-            EObject targetGroup = getTransformationTarget(transMappingRoot);
-
-            if (targetGroup == null) {
-                return null;
-            }
-
-            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
-
-            // If SELECT statement is valid, attempt to get validation error message
-            if (isValid) {
-                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
-                QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
-                // validate that a procedure can be generated
-                UpdateValidationVisitor updateVisitor = new UpdateValidationVisitor(resolver);
-                PreOrderNavigator.doVisit(selectCommand, updateVisitor);
-                ValidatorReport report = updateVisitor.getReport();
-                if (report.hasItems()) {
-                    errorMsg = report.getFailureMessage();
-                }
-            }
-        }
-
-        return errorMsg;
-    }
+//    public static String getProcedureGenerationErrorMsg( Object transMappingRoot ) {
+//        String errorMsg = null;
+//
+//        if (transMappingRoot != null && isSqlTransformationMappingRoot(transMappingRoot)) {
+//
+//            EObject targetGroup = getTransformationTarget(transMappingRoot);
+//
+//            if (targetGroup == null) {
+//                return null;
+//            }
+//
+//            boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
+//
+//            // If SELECT statement is valid, attempt to get validation error message
+//            if (isValid) {
+//                Command selectCommand = SqlMappingRootCache.getSelectCommand(transMappingRoot);
+//                QueryMetadataInterface resolver = TransformationMetadataFactory.getInstance().getModelerMetadata(targetGroup);
+//                // validate that a procedure can be generated
+//                UpdateValidationVisitor updateVisitor = new UpdateValidationVisitor(resolver);
+//                PreOrderNavigator.doVisit(selectCommand, updateVisitor);
+//                ValidatorReport report = updateVisitor.getReport();
+//                if (report.hasItems()) {
+//                    errorMsg = report.getFailureMessage();
+//                }
+//            }
+//        }
+//
+//        return errorMsg;
+//    }
 
     /**
      * For the provided TransformationMappingRoot, get all of the Source Attributes for the supplied Target Attribute.
