@@ -21,7 +21,6 @@
          <choice minOccurs="0" maxOccurs="unbounded">
             <element ref="category"/>
             <element ref="preference"/>
-            <element ref="primaryWizard"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -84,10 +83,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-            <element ref="description" minOccurs="0" maxOccurs="1"/>
-            <element ref="selection" minOccurs="0" maxOccurs="unbounded"/>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
