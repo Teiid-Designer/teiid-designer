@@ -35,12 +35,12 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.teiid.designer.udf.UdfModelEvent.Type;
+import org.teiid.metadata.FunctionMethod;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.function.FunctionTree;
 import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 import org.teiid.query.function.metadata.FunctionMetadataReader;
-import org.teiid.query.function.metadata.FunctionMethod;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.ModelType;
@@ -359,11 +359,12 @@ public final class UdfManager implements IResourceChangeListener {
     public FunctionLibrary getFunctionLibrary() {
         if (functionLibrary == null) {
             Set<URL> urls = UdfManager.INSTANCE.getUDFs();
-            List<FunctionMethod> methods = new ArrayList<FunctionMethod>();
+            Collection<FunctionMethod> methods = new ArrayList<FunctionMethod>();
             if (!urls.isEmpty()) {
                 for (URL url : urls) {
                     try {
-                        methods.addAll(FunctionMetadataReader.loadFunctionMethods(url.openStream()));
+                    	Collection functionMethods = FunctionMetadataReader.loadFunctionMethods(url.openStream());
+                        methods.addAll(functionMethods);
                     } catch (IOException e) {
                         //
                     } catch (JAXBException e) {
