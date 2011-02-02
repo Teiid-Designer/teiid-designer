@@ -187,7 +187,10 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
             }
         }
 
-        IPath theModelPath = folder.getFullPath();
+        IPath theModelPath = null;
+        if (folder!=null) {
+        	theModelPath = folder.getFullPath();
+        }
         MetamodelDescriptor theDescriptor = getGenerateFromWsdlDescriptor();
 
         this.builder = WebServicePlugin.createModelBuilder(folder, theModelPath, theDescriptor);
