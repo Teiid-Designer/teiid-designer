@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -33,7 +31,6 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
@@ -369,7 +366,13 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     @Override
     public String getText( Object element ) {
         if (element instanceof Server) {
-            return ((Server)element).getTeiidAdminInfo().getURL();
+            Server server = (Server)element;
+            
+            if (server.getCustomLabel() == null) {
+                return server.getUrl();
+            }
+
+            return server.getCustomLabel();
         }
 
         if (element instanceof TeiidFolder) {

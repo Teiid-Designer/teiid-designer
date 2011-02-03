@@ -164,7 +164,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         mainPanel.setLayout(new GridLayout(2, false));
 
         WidgetFactory.createLabel(mainPanel, getString("teiidServer.label")); //$NON-NLS-1$
-        WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, admin.getServer().getTeiidAdminInfo().getURL());
+        WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, admin.getServer().getUrl());
 
         WidgetFactory.createLabel(mainPanel, getString("name.label")); //$NON-NLS-1$
 

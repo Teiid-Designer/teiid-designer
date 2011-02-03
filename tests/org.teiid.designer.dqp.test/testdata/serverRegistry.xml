@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <servers>
-  <server url="mm://localhost:8080" user="user8080"/>
-  <server url="mm://localhost:8180" user="user8180" default="true"/>
-  <server url="mm://localhost:8280" user="user8280"/>
+  <server customLabel="My Custom Label" default="true">
+    <admin host="localhost" password="YWRtaW4=" port="31443" secure="true" user="admin"/>
+    <jdbc jdbchost="localhost" jdbcport="31000" jdbcsecure="false" jdbcuser="teiid"/>
+  </server>
+  <server>
+    <admin host="myserver.com" port="31444" secure="false" user="admin2"/>
+    <jdbc jdbchost="myserver.com" jdbcpassword="dGVpaWQ=" jdbcport="31001" jdbcsecure="true" jdbcuser="teiid2"/>
+  </server>
 </servers>

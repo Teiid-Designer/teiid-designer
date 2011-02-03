@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
@@ -23,6 +25,7 @@ import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -214,7 +217,7 @@ public class ExecutionAdmin {
 
         // Verify the "typeName" exists.
         if (!this.dataSourceTypeNames.contains(typeName)) {
-            throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+            throw new Exception(Util.getString("dataSourceTypeDoesNotExist", typeName, getServer())); //$NON-NLS-1$
         }
 
         this.admin.createDataSource(jndiName, typeName, properties);
@@ -233,7 +236,7 @@ public class ExecutionAdmin {
         }
 
         // We shouldn't get here if data source was created
-        throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+        throw new Exception(Util.getString("errorCreatingDataSource", jndiName, typeName, getServer())); //$NON-NLS-1$
     }
 
     /**

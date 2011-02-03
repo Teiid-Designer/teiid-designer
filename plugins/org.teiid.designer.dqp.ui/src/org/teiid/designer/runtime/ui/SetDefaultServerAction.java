@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -72,7 +74,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
     	if( this.serverManager.getDefaultServer().isConnected() ) {
 	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
 	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
-	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", this.serverManager.getDefaultServer().getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", this.serverManager.getDefaultServer().getUrl())); //$NON-NLS-1$
     	}
     	if( disconnectOldDefault ) {
     		this.serverManager.getDefaultServer().disconnect();
@@ -89,7 +91,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction {
 			        	theNewDefaultServer.getAdmin().refresh();
 			        } catch (Exception e) {
 			            UTIL.log(e);
-			            String msg = UTIL.getString("serverReconnectErrorMsg", theNewDefaultServer.getTeiidAdminInfo().getURL()); //$NON-NLS-1$
+			            String msg = UTIL.getString("serverReconnectErrorMsg", theNewDefaultServer.getUrl()); //$NON-NLS-1$
 			            WidgetUtil.showError(msg);
 			        }
                 }

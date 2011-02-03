@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import java.util.Collection;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -19,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.Server;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
@@ -76,7 +79,7 @@ public final class DeleteServerDialog extends MessageDialog {
 
         if (this.serversBeingDeleted.size() == 1) {
             Server server = this.serversBeingDeleted.iterator().next();
-            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getTeiidAdminInfo().getURL(), server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+            msg = UTIL.getString("deleteServerDialogOneServerMsg", server.getUrl(), server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
         } else {
             msg = UTIL.getString("deleteServerDialogMultipleServersMsg", this.serversBeingDeleted.size()); //$NON-NLS-1$
         }
@@ -99,7 +102,7 @@ public final class DeleteServerDialog extends MessageDialog {
             serverList.setLayoutData(gd);
 
             for (Server server : this.serversBeingDeleted) {
-                serverList.add(server.getTeiidAdminInfo().getURL() + "::" + server.getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+                serverList.add(server.toString());
             }
         }
 

@@ -53,7 +53,7 @@ public class DisconnectFromServerAction extends BaseSelectionListenerAction {
                 	server.disconnect();
                 } catch (Exception e) {
                     UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", server.getTeiidAdminInfo().getURL()); //$NON-NLS-1$
+                    String msg = UTIL.getString("serverReconnectErrorMsg", server); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
                 } finally {
                 	getViewer().refresh(server);

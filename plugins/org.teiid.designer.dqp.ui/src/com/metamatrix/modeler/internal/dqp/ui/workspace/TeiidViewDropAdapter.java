@@ -17,6 +17,7 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.ui.DeployVdbAction;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -80,12 +81,12 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
                         // message.toString());
                         // }
                     } catch (Exception e) {
-                        DqpUiConstants.UTIL.log(IStatus.ERROR,
-                                                e,
-                                                DqpUiConstants.UTIL.getString("TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
-                                                                              theFile.getName(),
-                                                                              theTargetServer.getTeiidAdminInfo().getURL()));
-                    }
+						DqpUiConstants.UTIL.log(IStatus.ERROR,
+												e,
+												DqpUiConstants.UTIL.getString(	"TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
+																				theFile.getName(),
+																				theTargetServer));
+           }
                 }
             }
         }

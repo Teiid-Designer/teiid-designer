@@ -8,9 +8,10 @@
 package org.teiid.designer.runtime;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -120,5 +121,45 @@ public class ServerTest {
 //        Server server1 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
 //        Server server2 = new Server("mm://server:1234", "userA", "pwdA", true, mock(EventManager.class));
 //        assertThat(server1.equals(server2), is(false));
+    }
+
+    @Test
+    public void shouldSetCustomLabelWithNonNullValue() {
+    	// setup
+    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
+    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
+    	EventManager eventMgr = mock(EventManager.class);
+    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
+    	
+    	// test
+    	String CUSTOM_LABEL = "customLabel";
+    	server.setCustomLabel(CUSTOM_LABEL);
+    	assertThat(server.getCustomLabel(), is(CUSTOM_LABEL));
+    }
+
+    @Test
+    public void shouldSetCustomLabelWithNullValue() {
+    	// setup
+    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
+    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
+    	EventManager eventMgr = mock(EventManager.class);
+    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
+    	
+    	// test
+    	server.setCustomLabel("oldLabel");
+    	server.setCustomLabel(null);
+    	assertThat(server.getCustomLabel(), nullValue());
+    }
+
+    @Test
+    public void shouldVerifyCustomLabelIsNullAfterConstruction() {
+    	// setup
+    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
+    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
+    	EventManager eventMgr = mock(EventManager.class);
+    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
+    	
+    	// test
+    	assertThat(server.getCustomLabel(), nullValue());
     }
 }

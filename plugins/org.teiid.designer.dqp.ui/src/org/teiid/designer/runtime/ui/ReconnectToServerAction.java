@@ -8,12 +8,14 @@
 package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
+
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -66,7 +68,7 @@ public final class ReconnectToServerAction extends BaseSelectionListenerAction {
                     server.setConnectionError(null);
                 } catch (Exception e) {
                     UTIL.log(e);
-                    String msg = UTIL.getString("serverReconnectErrorMsg", server.getTeiidAdminInfo().getURL()); //$NON-NLS-1$
+                    String msg = UTIL.getString("serverReconnectErrorMsg", server); //$NON-NLS-1$
                     WidgetUtil.showError(msg);
                     server.setConnectionError(msg);
                     getViewer().refresh(server);

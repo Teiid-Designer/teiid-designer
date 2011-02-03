@@ -17,6 +17,7 @@ import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 
 /**
@@ -68,6 +69,11 @@ public class Server {
     private TeiidAdminInfo teiidAdminInfo;
     
     private String connectionError;
+    
+    /**
+     * An optional property that can be used for display purposes. May be <code>null</code>.
+     */
+    private String customLabel;
 
     // ===========================================================================================================================
     // Constructors
@@ -76,21 +82,21 @@ public class Server {
 	/**
      * Constructs on new <code>Server</code>.
      * 
-     * @param url the server URL (never <code>null</code>)
-     * @param user the server user (may be <code>null</code>)
-     * @param password the server password (may be <code>null</code>)
-     * @throws IllegalArgumentException if the URL or user arguments are <code>null</code>
+     * @param adminInfo the server admin connection properties (never <code>null</code>)
+     * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
+     * @param eventManager the event manager (never <code>null</code>)
+     * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
     public Server( TeiidAdminInfo adminInfo,
                    TeiidJdbcInfo jdbcInfo,
                    EventManager eventManager ) {
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(jdbcInfo, "eventManager"); //$NON-NLS-1$
 
-        this.eventManager = eventManager;
-        
         this.teiidAdminInfo = adminInfo;
         this.teiidJdbcInfo = jdbcInfo;
+        this.eventManager = eventManager;
     }
 
     // ===========================================================================================================================
@@ -135,8 +141,12 @@ public class Server {
         if ((obj == null) || (getClass() != obj.getClass())) return false;
 
         Server otherServer = (Server)obj;
-        return equivalent(getTeiidAdminInfo().getURL(), otherServer.getTeiidAdminInfo().getURL()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername())
-               && equivalent(getTeiidAdminInfo().getPassword(), otherServer.getTeiidAdminInfo().getPassword()) && (isPasswordBeingPersisted() == otherServer.isPasswordBeingPersisted());
+		return equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
+																		otherServer.getTeiidAdminInfo().getUsername())
+				&& equivalent(	getTeiidAdminInfo().getPassword(),
+								otherServer.getTeiidAdminInfo().getPassword())
+				&& (isPasswordBeingPersisted() == otherServer.isPasswordBeingPersisted() && equivalent(	this.customLabel,
+																										otherServer.customLabel));
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
@@ -145,7 +155,7 @@ public class Server {
             if (getTeiidAdminInfo().getPassword() != null) {
                 pwd = getTeiidAdminInfo().getPassword().toCharArray();
             }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getTeiidAdminInfo().getUsername(), pwd, getTeiidAdminInfo().getURL()), this,
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getTeiidAdminInfo().getUsername(), pwd, getUrl()), this,
                                             this.eventManager);
             this.admin.load();
         }
@@ -160,6 +170,20 @@ public class Server {
     public TeiidJdbcInfo getTeiidJdbcInfo() {
 		return teiidJdbcInfo;
 	}
+    
+    /**
+     * @return the host URL (never <code>null</code>)
+     */
+    public String getUrl() {
+        return getTeiidAdminInfo().getURL();
+    }
+    
+    /**
+     * @return the custom label or <code>null</code> if not being used
+     */
+    public String getCustomLabel() {
+        return this.customLabel;
+    }
 
     public ExecutionManager getExecutionManager() {
         if (this.executionManager == null) {
@@ -176,7 +200,7 @@ public class Server {
      */
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(0, getTeiidAdminInfo().getURL(), getTeiidAdminInfo().getUsername(), getTeiidAdminInfo().getPassword());
+        return HashCodeUtil.hashCode(0, getUrl(), getTeiidAdminInfo().getUsername(), getTeiidAdminInfo().getPassword());
     }
 
     /**
@@ -188,7 +212,7 @@ public class Server {
      */
     public boolean hasSameKey( Server otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
-        return (equivalent(getTeiidAdminInfo().getURL(), otherServer.getTeiidAdminInfo().getURL()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername()));
+        return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername()));
     }
 
     /**
@@ -239,6 +263,13 @@ public class Server {
 	public void setConnectionError(String connectionError) {
 		this.connectionError = connectionError;
 	}
+	
+	/**
+	 * @param customLabel the new custom label or <code>null</code> or empty if the custom label is not being used
+	 */
+    public void setCustomLabel( String customLabel ) {
+        this.customLabel = StringUtilities.isEmpty(customLabel) ? null : customLabel;
+    }
 
 	public void setTeiidAdminInfo(TeiidAdminInfo adminInfo) {
 		this.teiidAdminInfo = adminInfo;
@@ -261,7 +292,7 @@ public class Server {
             adminApi.close();
             this.admin = null;
         } catch (Exception e) {
-            String msg = Util.getString("cannotConnectToServer", getTeiidAdminInfo().getURL()); //$NON-NLS-1$
+            String msg = Util.getString("cannotConnectToServer", this); //$NON-NLS-1$
             return new Status(IStatus.ERROR, PLUGIN_ID, msg, e);
         }
 
@@ -275,8 +306,22 @@ public class Server {
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString() {
-        return getTeiidAdminInfo().getURL() + "::" + getTeiidAdminInfo().getUsername(); //$NON-NLS-1$
-    }
+	public String toString() {
+		StringBuilder txt = new StringBuilder();
+
+		// add URL
+		txt.append(getUrl());
+
+		// add custom label if it exists
+		if (this.customLabel != null) {
+			txt.append(" (").append(this.customLabel).append(')'); //$NON-NLS-1$
+		}
+
+		// add user
+		txt.append("::"); //$NON-NLS-1$
+		txt.append(getTeiidAdminInfo().getUsername());
+
+		return txt.toString();
+	}
 
 }

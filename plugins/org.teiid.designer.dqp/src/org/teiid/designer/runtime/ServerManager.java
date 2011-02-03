@@ -42,6 +42,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid servers.
@@ -59,6 +60,11 @@ public final class ServerManager implements EventManager {
     // Constants
     // ===========================================================================================================================
 
+    /**
+     * The attribute used to persist a server's custom label. May not exist if server is not using a custom label.
+     */
+    private static final String CUSTOM_LABEL_ATTR = "customLabel"; //$NON-NLS-1$
+    
     /**
      * The attribute indicating if the server is currently the preview server.
      */
@@ -261,7 +267,7 @@ public final class ServerManager implements EventManager {
         CoreArgCheck.isNotNull(url, "url"); //$NON-NLS-1$
 
         for (Server server : getServers()) {
-            if (url.equals(server.getTeiidAdminInfo().getURL())) {
+            if (url.equals(server.getUrl())) {
                 return server;
             }
         }
@@ -330,7 +336,7 @@ public final class ServerManager implements EventManager {
         }
 
         // server already exists
-        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverExistsMsg", server.getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverExistsMsg", server)); //$NON-NLS-1$
     }
 
     /**
@@ -375,7 +381,7 @@ public final class ServerManager implements EventManager {
         }
 
         // server could not be removed
-        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryRemoveUnexpectedError", server.getTeiidAdminInfo().getURL())); //$NON-NLS-1$
+        return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("serverManagerRegistryRemoveUnexpectedError", server)); //$NON-NLS-1$
     }
 
     public boolean isDefaultServer( Server server ) {
@@ -421,7 +427,7 @@ public final class ServerManager implements EventManager {
 
             // check to make sure no other registered server has the same key
             for (Server registeredServer : this.servers) {
-                if (registeredServer.getTeiidAdminInfo().getURL().equals(url)) {
+                if (registeredServer.getUrl().equals(url)) {
                     return true;
                 }
             }
@@ -484,9 +490,9 @@ public final class ServerManager implements EventManager {
 
                     for (int size = servers.getLength(), i = 0; i < size; ++i) {
                         Node serverNode = servers.item(i);
-                        NodeList connectionNodes = serverNode.getChildNodes();
+						NodeList connectionNodes = serverNode.getChildNodes();
                         // Check for newer XML structure where server contains child nodes (admin & jdbc elements)
-                        if( connectionNodes.getLength() > 0 ) {
+						if( connectionNodes.getLength() > 0 ) {
                             TeiidAdminInfo teiidAdminInfo = null;
                             TeiidJdbcInfo teiidJdbcInfo = null;
                         	for (int connSize = connectionNodes.getLength(), j = 0; j < connSize; ++j) {
@@ -497,86 +503,88 @@ public final class ServerManager implements EventManager {
 										if (attributeMap == null)
 											continue;
 
-										Node adminHostNode = attributeMap
-												.getNamedItem(HOST_ATTR);
-										String adminHost = ((adminHostNode == null) ? TeiidAdminInfo.DEFAULT_HOST
-												: adminHostNode.getNodeValue());
-										Node adminPortNode = attributeMap
-												.getNamedItem(PORT_ATTR);
-										String adminPort = ((adminPortNode == null) ? TeiidAdminInfo.DEFAULT_PORT
-												: adminPortNode.getNodeValue());
-										Node userNode = attributeMap
-												.getNamedItem(USER_ATTR);
-										String adminUsername = ((userNode == null) ? TeiidAdminInfo.DEFAULT_PORT
-												: userNode.getNodeValue());
-										Node passwordNode = attributeMap
-												.getNamedItem(PASSWORD_ATTR);
-										String adminPassword = ((passwordNode == null) ? null
-												: new String(
-														Base64
-																.decode(passwordNode
-																		.getNodeValue()),
-														"UTF-8")); //$NON-NLS-1$
+										Node adminHostNode = attributeMap.getNamedItem(HOST_ATTR);
+										String adminHost = ((adminHostNode == null)	? TeiidAdminInfo.DEFAULT_HOST
+																					: adminHostNode.getNodeValue());
+										Node adminPortNode = attributeMap.getNamedItem(PORT_ATTR);
+										String adminPort = ((adminPortNode == null)	? TeiidAdminInfo.DEFAULT_PORT
+																					: adminPortNode.getNodeValue());
+										Node userNode = attributeMap.getNamedItem(USER_ATTR);
+										String adminUsername = ((userNode == null)	? TeiidAdminInfo.DEFAULT_PORT
+																					: userNode.getNodeValue());
+										Node passwordNode = attributeMap.getNamedItem(PASSWORD_ATTR);
+										String adminPassword = ((passwordNode == null)	? null
+																						: new String(	Base64.decode(passwordNode.getNodeValue()),
+																										"UTF-8")); //$NON-NLS-1$
 										Node adminSecureNode = attributeMap.getNamedItem(SECURE_ATTR);
-										String adminSecureStr = ((adminSecureNode == null) ? Boolean.FALSE.toString()
-												: adminSecureNode.getNodeValue());
+										String adminSecureStr = ((adminSecureNode == null)	? Boolean.FALSE.toString()
+																							: adminSecureNode.getNodeValue());
 
-										teiidAdminInfo = new TeiidAdminInfo(
-												adminHost,
-												adminPort,
-												adminUsername,
-												adminPassword,
-												(adminPassword != null),
-												Boolean.parseBoolean(adminSecureStr));
+										teiidAdminInfo = new TeiidAdminInfo(adminHost,
+																			adminPort,
+																			adminUsername,
+																			adminPassword,
+																			(adminPassword != null),
+																			Boolean.parseBoolean(adminSecureStr));
 									} else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
 										NamedNodeMap attributeMap = connNode.getAttributes();
-										if (attributeMap == null) continue;
-										
-										Node jdbcHostNode = attributeMap
-												.getNamedItem(JDBC_HOST_ATTR);
-										String jdbcHost = ((jdbcHostNode == null) ? TeiidJdbcInfo.DEFAULT_HOST
-												: jdbcHostNode.getNodeValue());
-										Node jdbcPortNode = attributeMap
-												.getNamedItem(JDBC_PORT_ATTR);
-										String jdbcPort = ((jdbcPortNode == null) ? TeiidJdbcInfo.DEFAULT_PORT
-												: jdbcPortNode.getNodeValue());
-										Node jdbcUserNode = attributeMap
-												.getNamedItem(JDBC_USER_ATTR);
-										String jdbcUsername = ((jdbcUserNode == null) ? TeiidJdbcInfo.DEFAULT_USERNAME
-												: jdbcUserNode.getNodeValue());
-										Node jdbcPasswordNode = attributeMap
-												.getNamedItem(JDBC_PASSWORD_ATTR);
-										String jdbcPassword = ((jdbcPasswordNode == null) ? null
-												: new String(Base64.decode(jdbcPasswordNode.getNodeValue()),"UTF-8")); //$NON-NLS-1$
-										Node jdbcSecureNode = attributeMap
-												.getNamedItem(JDBC_SECURE_ATTR);
-										String jdbcSecureStr = ((jdbcSecureNode == null) ? Boolean.FALSE.toString()
-												: jdbcSecureNode.getNodeValue());
-										teiidJdbcInfo = new TeiidJdbcInfo(
-												jdbcHost,
-												jdbcPort,
-												jdbcUsername,
-												jdbcPassword,
-												(jdbcPassword != null),
-												Boolean.parseBoolean(jdbcSecureStr));
-									}
+										if (attributeMap == null)
+											continue;
 
+										Node jdbcHostNode = attributeMap.getNamedItem(JDBC_HOST_ATTR);
+										String jdbcHost = ((jdbcHostNode == null)	? TeiidJdbcInfo.DEFAULT_HOST
+																					: jdbcHostNode.getNodeValue());
+										Node jdbcPortNode = attributeMap.getNamedItem(JDBC_PORT_ATTR);
+										String jdbcPort = ((jdbcPortNode == null)	? TeiidJdbcInfo.DEFAULT_PORT
+																					: jdbcPortNode.getNodeValue());
+										Node jdbcUserNode = attributeMap.getNamedItem(JDBC_USER_ATTR);
+										String jdbcUsername = ((jdbcUserNode == null)	? TeiidJdbcInfo.DEFAULT_USERNAME
+																						: jdbcUserNode.getNodeValue());
+										Node jdbcPasswordNode = attributeMap.getNamedItem(JDBC_PASSWORD_ATTR);
+										String jdbcPassword = ((jdbcPasswordNode == null)	? null
+																							: new String(	Base64.decode(jdbcPasswordNode.getNodeValue()),
+																											"UTF-8")); //$NON-NLS-1$
+										Node jdbcSecureNode = attributeMap.getNamedItem(JDBC_SECURE_ATTR);
+										String jdbcSecureStr = ((jdbcSecureNode == null) ? Boolean.FALSE.toString()
+																						: jdbcSecureNode.getNodeValue());
+										teiidJdbcInfo = new TeiidJdbcInfo(	jdbcHost,
+																			jdbcPort,
+																			jdbcUsername,
+																			jdbcPassword,
+																			(jdbcPassword != null),
+																			Boolean.parseBoolean(jdbcSecureStr));
+                                    }
 								}
                         	}
-                        	NamedNodeMap attributeMap = serverNode.getAttributes();
-                    		// add server to registry
-                            Server server = new Server(teiidAdminInfo, teiidJdbcInfo, this);
-                            addServer(server);
 
-                            // set as default server if necessary
-                            Node previewServerNode = attributeMap.getNamedItem(DEFAULT_ATTR);
-                            boolean previewServer = ((previewServerNode == null) ? false
-                                                                                : Boolean.parseBoolean(previewServerNode.getNodeValue()));
+							// server attributes (custom label, default server)
+							NamedNodeMap serverAttributeMap = serverNode.getAttributes();
+							String customLabel = null;
 
-                            if (previewServer) {
-                                setDefaultServer(server);
-                                server.ping();
-                            }
+							if (serverAttributeMap != null) {
+								Node customLabelNode = serverAttributeMap.getNamedItem(CUSTOM_LABEL_ATTR);
+
+								if (customLabelNode != null) {
+									customLabel = customLabelNode.getNodeValue();
+								}
+							}
+
+							// add server to registry
+							Server server = new Server(	teiidAdminInfo,
+														teiidJdbcInfo,
+														this);
+							server.setCustomLabel(customLabel);
+							addServer(server);
+
+							// set as default server if necessary
+							Node previewServerNode = serverAttributeMap.getNamedItem(DEFAULT_ATTR);
+							boolean previewServer = ((previewServerNode == null) ? false
+																				: Boolean.parseBoolean(previewServerNode.getNodeValue()));
+
+							if (previewServer) {
+								setDefaultServer(server);
+								server.ping();
+							}
                         } else // Check for OLD xml structure where there were only attributes for each server node
                         if (serverNode.getNodeType() != Node.TEXT_NODE) {
                         	
@@ -680,6 +688,12 @@ public final class ServerManager implements EventManager {
                     for (Server server : getServers()) {
                         Element serverElement = doc.createElement(SERVER_TAG);
                         root.appendChild(serverElement);
+                        
+                        { // CUSTOM LABEL
+                            if (!StringUtilities.isEmpty(server.getCustomLabel())) {
+                                serverElement.setAttribute(CUSTOM_LABEL_ATTR, server.getCustomLabel());
+                            }
+                        }
                         
                         { // ADMIN CONNECTION INFO
 	                        Element adminElement = doc.createElement(ADMIN_TAG);
