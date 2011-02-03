@@ -169,7 +169,7 @@
 	
 	<section id="clone-project-section">
 		<title>Clone Project</title>
-		<para>Because each instance of of a model contains a unique ID and each object in each model contains a unique ID,
+		<para>Because each instance of a model contains a unique ID and each object in each model contains a unique ID,
 			copying a project is a delicate task. For this reason, the Clone Project action was created to manage the creation
 			of exact structural copies of all models in the source project.</para>
 			

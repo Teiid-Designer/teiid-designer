@@ -604,7 +604,7 @@
 				</listitem>
 				<listitem>
 					<para>
-						<emphasis role="bold">type</emphasis>
+						<emphasis role="bold">Type</emphasis>
 						- Type of validation item.
 					</para>
 				</listitem>
@@ -789,7 +789,7 @@
 							<imagedata fileref="images/icons/metadata-search.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches 
-						the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
+						the <emphasis role="bold">Teiid Designer Search Dialog</emphasis>.
 				</para>
 			</listitem>
 			<listitem>

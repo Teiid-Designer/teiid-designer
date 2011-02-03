@@ -109,7 +109,7 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Metadata from JDBC Database</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+								<emphasis role="bold">Teiid Designer > Metadata from JDBC Database</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
 								<title>Import Metadata from JDBC Database</title>
 								<mediaobject>
@@ -224,7 +224,7 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Metadata from Text Files on file system</emphasis> 
+								<emphasis role="bold">Teiid Designer > Metadata from Text Files on file system</emphasis> 
 								and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
 								<title>Import Metadata From Text Files</title>
@@ -704,7 +704,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL into Web Service Model </emphasis> option 
+									<emphasis role="bold">Teiid Designer > WSDL into Web Service Model </emphasis> option 
 									shown below and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
 									<title>WSDL File Into Web Service Dialog</title>
@@ -813,7 +813,7 @@
 								<emphasis role="bold">XML Model Generation</emphasis> allows you to change the name of the 
 								<emphasis role="bold">XML View</emphasis> model if the 
 								<emphasis role="bold">Generate virtual XML document model</emphasis> is checked. 
-								Input desired name or use the default name provide. 
+								Input desired name or use the default name provided. 
 								Select <emphasis role="bold">Finish</emphasis> to complete. </para>
 								<figure>
 									<title>Namespace Resolution Dialog</title>
@@ -862,7 +862,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+									<emphasis role="bold">Teiid Designer > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
 								<title>WSDL File Into Web Service Dialog</title>
 								<mediaobject>
@@ -960,7 +960,7 @@
 								<emphasis role="bold">XML Model Generation</emphasis> allows you to change the name of the 
 								<emphasis role="bold">XML View</emphasis> model if the 
 								<emphasis role="bold">Generate virtual XML document model</emphasis> is checked. 
-								Input desired name or use the default name provide. 
+								Input desired name or use the default name provided. 
 								Select <emphasis role="bold">Finish</emphasis> to complete. </para>
 								<figure>
 									<title>Namespace Resolution Dialog</title>
@@ -1009,7 +1009,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+									<emphasis role="bold">Teiid Designer > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
 								<title>WSDL File Into Web Service Dialog</title>
 								<mediaobject>
@@ -1108,7 +1108,7 @@
 								<emphasis role="bold">XML Model Generation</emphasis> allows you to change the name of the 
 								<emphasis role="bold">XML View</emphasis> model if the 
 								<emphasis role="bold">Generate virtual XML document model</emphasis> is checked. 
-								Input desired name or use the default name provide. 
+								Input desired name or use the default name provided. 
 								Select <emphasis role="bold">Finish</emphasis> to complete. </para>
 								<figure>
 									<title>Namespace Resolution Dialog</title>
@@ -1160,7 +1160,7 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > XSD Schema files on file system</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+								<emphasis role="bold">Teiid Designer > XSD Schema files on file system</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
 								<title>Import XSD Schemas Dialog</title>
 								<mediaobject>

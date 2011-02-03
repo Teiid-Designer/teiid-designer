@@ -99,7 +99,7 @@
 		<title>New Model Wizard</title>
 		<listitem>
 			<para>Choose the
-				<emphasis role="bold">File > New... > Metadata Model</emphasis>
+				<emphasis role="bold">File > New... > Teiid Metadata Model</emphasis>
 				action <inlinemediaobject>
 						<imageobject>
 							<imagedata fileref="images/icons/new-model-wiz.png"/>

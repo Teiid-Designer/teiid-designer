@@ -7,7 +7,7 @@
 	
 	<para>The Teiid Designer  provides options or preferences 
 	which enable customization of various modeling and UI behaviors. Preferences can be accessed 
-	via the Edit > Preferences action on the Main toolbar.</para>
+	via the Window > Preferences action on the Main toolbar.</para>
 	<figure>
 		<title>Preferences Dialog</title>
 		<mediaobject>
