@@ -44,6 +44,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.runtime.Server;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -164,7 +165,13 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         mainPanel.setLayout(new GridLayout(2, false));
 
         WidgetFactory.createLabel(mainPanel, getString("teiidServer.label")); //$NON-NLS-1$
-        WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, admin.getServer().getUrl());
+        Server server = admin.getServer();
+        
+        if (StringUtilities.isEmpty(server.getCustomLabel())) {
+        	WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, server.getUrl());
+        } else {
+        	WidgetFactory.createLabel(mainPanel, GridData.FILL_HORIZONTAL, 1, server.getCustomLabel());
+        }
 
         WidgetFactory.createLabel(mainPanel, getString("name.label")); //$NON-NLS-1$
 
