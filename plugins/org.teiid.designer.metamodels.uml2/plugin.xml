@@ -23,8 +23,8 @@
          mtkplugin:///com.metamatrix.metamodels.Uml2
       </alternateUri>
       <properties
-            createAsNewModel="true"
-            createAsPhysical="true"
+            createAsNewModel="false"
+            createAsPhysical="false"
             requiresProxies="false"
             participatoryOnly="false"
             createAsVirtual="false"

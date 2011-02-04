@@ -61,6 +61,7 @@
       </specialAction>
    </extension>
 <!-- Actions contributed to the object/model generation -->
+<!-- 
    <extension
 		id="ViewXmlMessageStructureAction"
 		name="%viewXmlMessageStructureAction.name"
@@ -70,5 +71,5 @@
          label="%viewXmlMessageStructureAction.label">
       </specialAction>
    </extension>
-
+ -->
 </plugin>
