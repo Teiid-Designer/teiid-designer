@@ -41,7 +41,8 @@
             name="com.metamatrix.metamodels.relationship.UriReference">
       </rootEntityClass>
       <properties
-            createAsPhysical="true"
+      		createAsNewModel="false"
+            createAsPhysical="false"
             requiresProxies="false"
             supportsDiagrams="true"
             participatoryOnly="false"
