@@ -20,11 +20,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -32,8 +29,6 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.refactor.IRefactorModelHandler;
@@ -69,27 +64,28 @@ public class TransformationRefactorModelHandler extends
 		try {
 			switch( type ) {
 				case IRefactorModelHandler.RENAME: {
-                    boolean sqlChanged = regenerateUserSql(modelResource, monitor, refactoredPaths);
+                    //boolean sqlChanged = 
+                    regenerateUserSql(modelResource, monitor, refactoredPaths);
                     
-                    if( sqlChanged ) {
-	                    // Send notification for transformation roots to invalidate any transformation cache
-	                    final Resource resrc = modelResource.getEmfResource();
-	                    if (resrc instanceof EmfResource) {
-	                        final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
-	                        for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
-	                            final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
-	                            if( root instanceof SqlTransformationMappingRoot ) {
-		                            final Notification notification = new ENotificationImpl(
-		                                                                                    (InternalEObject)root,
-		                                                                                    Notification.SET,
-		                                                                                    TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
-		                                                                                    refactoredPaths.keySet(),
-		                                                                                    refactoredPaths.values());
-		                            root.eNotify(notification);
-	                            }
-	                        }
-	                    }
-                    }
+//                    if( sqlChanged ) {
+//	                    // Send notification for transformation roots to invalidate any transformation cache
+//	                    final Resource resrc = modelResource.getEmfResource();
+//	                    if (resrc instanceof EmfResource) {
+//	                        final List xformations = ((EmfResource)resrc).getModelContents().getTransformations();
+//	                        for (final Iterator rootIter = xformations.iterator(); rootIter.hasNext();) {
+//	                            final TransformationMappingRoot root = (TransformationMappingRoot)rootIter.next();
+//	                            if( root instanceof SqlTransformationMappingRoot ) {
+//		                            final Notification notification = new ENotificationImpl(
+//		                                                                                    (InternalEObject)root,
+//		                                                                                    Notification.SET,
+//		                                                                                    TransformationPackage.TRANSFORMATION_MAPPING_ROOT__TARGET,
+//		                                                                                    refactoredPaths.keySet(),
+//		                                                                                    refactoredPaths.values());
+//		                            root.eNotify(notification);
+//	                            }
+//	                        }
+//	                    }
+//                    }
 				}break;
 				case IRefactorModelHandler.DELETE: {
 					
@@ -143,6 +139,7 @@ public class TransformationRefactorModelHandler extends
 			final List transformations = ((EmfResource) r).getModelContents()
 					.getTransformations();
 			for (Iterator i = transformations.iterator(); i.hasNext();) {
+				boolean invalidateStatus = false;
 				EObject eObj = (EObject) i.next();
 				if (eObj instanceof SqlTransformationMappingRoot) {
 					SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot) eObj;
@@ -168,6 +165,7 @@ public class TransformationRefactorModelHandler extends
 							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
 								nested.setSelectSql(convertedSql);
 								sqlChanged = true;
+								invalidateStatus = true;
 							}
 						}
 
@@ -179,6 +177,7 @@ public class TransformationRefactorModelHandler extends
 							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
 								nested.setInsertSql(convertedSql);
 								sqlChanged = true;
+								invalidateStatus = true;
 							}
 						}
 
@@ -190,6 +189,7 @@ public class TransformationRefactorModelHandler extends
 							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
 								nested.setUpdateSql(convertedSql);
 								sqlChanged = true;
+								invalidateStatus = true;
 							}
 						}
 
@@ -201,8 +201,12 @@ public class TransformationRefactorModelHandler extends
 							if( !userFormSql.equalsIgnoreCase(convertedSql)) {
 								nested.setDeleteSql(convertedSql);
 								sqlChanged = true;
+								invalidateStatus = true;
 							}
 						}
+					}
+					if( invalidateStatus ) {
+						SqlMappingRootCache.invalidateStatus(mappingRoot, false, this);
 					}
 				}
 			}
