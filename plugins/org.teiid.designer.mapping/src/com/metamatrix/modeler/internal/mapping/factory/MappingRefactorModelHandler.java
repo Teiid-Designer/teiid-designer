@@ -7,12 +7,10 @@
  */
 package com.metamatrix.modeler.internal.mapping.factory;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -127,23 +125,38 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     	// Only need to fix SQL if Models are renamed, so looking for 
     	Map<String, String> changedModelNames = getChangedNameMap(refactoredPaths);
     	
-    	// Break the SQL up into managable tokens and look for tokens that start with "ModelName."
-    	// and replace with "NewModelName."
-    	// Reconstruct the SQL as we go.
-    	Collection<String> tokens = tokenize(sqlStr);
-    	StringBuffer sb = new StringBuffer(sqlStr.length());
+    	// So we need to walk through the String and check for 
     	
-    	for( String token : tokens ) {
-    		String appendStr = token;
-    		for( String key: changedModelNames.keySet() ) {
-	    		String oldName = (String)key + '.';
-	    		String newName = (String)changedModelNames.get(key) + '.';
-	    		if( token.startsWith(oldName) ) {
-	    			appendStr = token.replaceFirst(oldName, newName);
-	    			break;
-	    		}
+    	String copyOfSql = new StringBuffer(sqlStr).toString();
+    	
+    	for( String key: changedModelNames.keySet() ) {
+    		// Replace all names with ' ' preceeding
+    		String oldName = ' ' + (String)key + '.';
+    		String newName = ' ' + (String)changedModelNames.get(key) + '.';
+    		if( copyOfSql.contains(oldName) ) {
+    			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
-    		sb.append(appendStr);
+    		// Replace all names with ',' preceeding
+    		oldName = ',' + (String)key + '.';
+    		newName = ',' + (String)changedModelNames.get(key) + '.';
+    		if( copyOfSql.contains(oldName) ) {
+    			copyOfSql = copyOfSql.replaceAll(oldName, newName);
+    		}
+		}
+    	
+    	// We've taken care of everything but the '(' preceeding char. Seems the replaceAll() can't handle it
+    	// So we should find all indexes of the old name
+    	StringBuffer sb = new StringBuffer(copyOfSql.length());
+    	for( String key: changedModelNames.keySet() ) {
+    		String oldName = '(' + (String)key + '.';
+    		String newName = '(' + (String)changedModelNames.get(key) + '.';
+    		while( copyOfSql.contains(oldName) ) {
+    			int startIndex = copyOfSql.indexOf(oldName);
+    			int endIndex = startIndex + oldName.length();
+    			sb.append(copyOfSql.subSequence(0, startIndex)).append(newName);
+    			copyOfSql = copyOfSql.substring(endIndex);
+    		}
+    		sb.append(copyOfSql);
     	}
     	return sb.toString();
     }
@@ -168,19 +181,5 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
 			IProgressMonitor monitor) {
 		// TODO Auto-generated method stub
 	}
-    
-    private Collection<String> tokenize(String sqlStr) {
-    	Collection<String> tokens = new ArrayList<String>();
-    	String token;
-    	StringTokenizer st = new StringTokenizer(sqlStr, " ", true); //$NON-NLS-1$
-		while (st.hasMoreTokens()) {
-			token = st.nextToken();
-			if( token != null && token.length() > 0 ) {
-				tokens.add(token);
-			}
-		}
-		return tokens;
-    }
-    
 
 }

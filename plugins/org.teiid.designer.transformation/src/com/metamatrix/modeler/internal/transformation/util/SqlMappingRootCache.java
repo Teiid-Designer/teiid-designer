@@ -109,6 +109,13 @@ public class SqlMappingRootCache implements SqlConstants {
     public static void invalidateDeleteStatus(final Object transMappingRoot, final boolean notifyListeners, final Object source) {
         invalidateStatus(transMappingRoot,QueryValidator.DELETE_TRNS,notifyListeners,source,false);
     }
+    
+    public static void invalidateStatus(final Object transMappingRoot, final boolean notifyListeners, final Object source) {
+    	invalidateStatus(transMappingRoot,QueryValidator.SELECT_TRNS,notifyListeners,source, false);
+    	invalidateStatus(transMappingRoot,QueryValidator.UPDATE_TRNS,notifyListeners,source, false);
+    	invalidateStatus(transMappingRoot,QueryValidator.INSERT_TRNS,notifyListeners,source, false);
+        invalidateStatus(transMappingRoot,QueryValidator.DELETE_TRNS,notifyListeners,source, false);
+    }
 
     /**
      * Invalidate any Status that uses the provided sourceGroup.  This means that the next
