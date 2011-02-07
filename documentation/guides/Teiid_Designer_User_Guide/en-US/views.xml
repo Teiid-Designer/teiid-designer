@@ -319,7 +319,11 @@
 								<imagedata fileref="images/icons/edit-teiid-server.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance</para></listitem>
-		  <listitem><para><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
+		  <listitem><para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/refresh.png"/>
+		 					</imageobject>
+						</inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
 		  <listitem><para><inlinemediaobject>
 							<imageobject>
 								<imagedata fileref="images/icons/delete-teiid-server.png"/>
