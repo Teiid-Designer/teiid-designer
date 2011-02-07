@@ -139,14 +139,12 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     		param.setType(stringType);
     	}
     	
-    	ProcedureResult result = factory.createProcedureResult();
-    	result.setProcedure(proc);
-    	result.setName("result"); //$NON-NLS-1$
-    	Column column = factory.createColumn();
-    	column.setName("result"); //$NON-NLS-1$
-    	column.setOwner(result);
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
     	if( xmlLiteralType != null) {
-    		column.setType(xmlLiteralType);
+    		param.setType(xmlLiteralType);
     	}
     	
     	addValue(mr, proc, getModelResourceContents(mr));
@@ -181,14 +179,12 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     		param.setType(stringType);
     	}
     	
-    	ProcedureResult result = factory.createProcedureResult();
-    	result.setProcedure(proc);
-    	result.setName("result"); //$NON-NLS-1$
-    	Column column = factory.createColumn();
-    	column.setName("result"); //$NON-NLS-1$
-    	column.setOwner(result);
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
     	if( blobType != null) {
-    		column.setType(blobType);
+    		param.setType(blobType);
     	}
     	
     	param = factory.createProcedureParameter();
