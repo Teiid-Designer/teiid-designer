@@ -17,6 +17,8 @@ import org.teiid.core.util.LRUCache;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.ValidationAspect;
+import com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules.DeletedXmlRelationalExtensionRule;
+import com.metamatrix.modeler.core.metamodel.core.aspects.validation.rules.DeletedXmlRelationalImportRule;
 import com.metamatrix.modeler.core.validation.ValidationContext;
 import com.metamatrix.modeler.core.validation.ValidationRule;
 import com.metamatrix.modeler.core.validation.ValidationRuleSet;
@@ -39,6 +41,8 @@ public class ValidationRuleManager {
     private static final ValidationRule EOBJECT_UUID_RULE = new EObjectUuidRule();
     private static final ValidationRule EMF_RESOURCE_RULE = new EmfResourceValidationRule();
     private static final ValidationRule RESOURCE_IN_SCOPE_RULE = new ResourceInScopeValidationRule();
+    private static final ValidationRule DELETED_XML_RELATIONAL_IMPORT_RULE = new DeletedXmlRelationalImportRule();
+    private static final ValidationRule DELETED_XML_RELATIONAL_EXTENSION_RULE = new DeletedXmlRelationalExtensionRule();
     private LRUCache cache;
 
     // ==================================================================================
@@ -161,6 +165,8 @@ public class ValidationRuleManager {
             ruleSet.addRule(FILE_EXTENSION_RULE);
             ruleSet.addRule(TABLE_TRANFORMATION_RULE);
             ruleSet.addRule(EMF_RESOURCE_RULE);
+            ruleSet.addRule(DELETED_XML_RELATIONAL_IMPORT_RULE);
+            ruleSet.addRule(DELETED_XML_RELATIONAL_EXTENSION_RULE);
         } else if (eResource instanceof XSDResourceImpl) {
             //ruleSet.addRule(FILE_EXTENSION_RULE);
         }
