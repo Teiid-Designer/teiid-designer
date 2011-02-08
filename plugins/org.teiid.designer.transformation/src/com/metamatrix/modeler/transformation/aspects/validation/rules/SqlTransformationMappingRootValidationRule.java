@@ -51,6 +51,7 @@ import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.Table;
+import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TreeMappingRoot;
@@ -340,7 +341,11 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             return;
         }
 
-        if (transformResult.hasInsertResult()) {
+        // Adding changes to check if "User Default" is checked for each update procedure
+        // IF NOT, then we don't want to validate this SQL and create Problems.
+        SqlTransformation transform = (SqlTransformation)transRoot.getHelper();
+        
+        if (!transform.isInsertSqlDefault() && transformResult.hasInsertResult()) {
             // validate insert procedure
             Command insertCommand = transformResult.getInsertResult().getCommand();
             if (insertCommand != null) {
@@ -349,7 +354,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             }
         }
 
-        if (transformResult.hasUpdateResult()) {
+        if (!transform.isUpdateSqlDefault() && transformResult.hasUpdateResult()) {
             // validate update procedure
             Command updateCommand = transformResult.getUpdateResult().getCommand();
             if (updateCommand != null) {
@@ -358,7 +363,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             }
         }
 
-        if (transformResult.hasDeleteResult()) {
+        if (!transform.isDeleteSqlDefault() && transformResult.hasDeleteResult()) {
             // validate delete procedure
             Command deleteCommand = transformResult.getDeleteResult().getCommand();
             if (deleteCommand != null) {
@@ -768,14 +773,14 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             return;
         } else if (com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isUpdatableGroup(target)) {
             // no Insert/Update/Delete transform but the table is updatable
-            if ((transformResult.isInsertAllowed() && !transformResult.hasInsertResult())
-                || (transformResult.isUpdateAllowed() && !transformResult.hasUpdateResult())
-                || (transformResult.isDeleteAllowed() && !transformResult.hasDeleteResult())) {
-                String msg = TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_transformation_on_the_updatable_virtual_group_{0},_allows_Insert/Update/Delete_but_does_not_define_the_necessary_transformation._1", targetPath); //$NON-NLS-1$
-                ValidationProblem failureProblem = new ValidationProblemImpl(0, IStatus.ERROR, msg);
-                validationResult.addProblem(failureProblem);
-                return;
-            }
+//            if ((transformResult.isInsertAllowed() && !transformResult.hasInsertResult())
+//                || (transformResult.isUpdateAllowed() && !transformResult.hasUpdateResult())
+//                || (transformResult.isDeleteAllowed() && !transformResult.hasDeleteResult())) {
+//                String msg = TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_transformation_on_the_updatable_virtual_group_{0},_allows_Insert/Update/Delete_but_does_not_define_the_necessary_transformation._1", targetPath); //$NON-NLS-1$
+//                ValidationProblem failureProblem = new ValidationProblemImpl(0, IStatus.ERROR, msg);
+//                validationResult.addProblem(failureProblem);
+//                return;
+//            }
 
             // furthur validation checks on the update procedure.
             validateUpdateProcedures(transformResult, transRoot, validationResult);

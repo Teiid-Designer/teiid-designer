@@ -287,6 +287,17 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         this.isResolvable = validationResult.isResolvable();
         this.isValidatable = validationResult.isValidatable();
         statusList= validationResult.getStatusList();
+        Collection moreStatus = Collections.EMPTY_LIST;
+        if( this.queryType == QueryValidator.INSERT_TRNS ) {
+        	moreStatus = validationResult.getUpdateStatusList(QueryValidator.INSERT_TRNS);
+        } else if( this.queryType == QueryValidator.UPDATE_TRNS ) {
+        	moreStatus = validationResult.getUpdateStatusList(QueryValidator.UPDATE_TRNS);
+        } else if( this.queryType == QueryValidator.DELETE_TRNS ) {
+        	moreStatus = validationResult.getUpdateStatusList(QueryValidator.DELETE_TRNS);
+        }
+        if( moreStatus != null && !moreStatus.isEmpty() ) {
+        	statusList.addAll(moreStatus);
+        }
         setCommand(validationResult.getCommand());
         
         if(!this.isParsable) {

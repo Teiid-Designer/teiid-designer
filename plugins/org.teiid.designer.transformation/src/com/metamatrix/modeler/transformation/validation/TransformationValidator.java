@@ -26,16 +26,17 @@ import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.parser.QueryParser;
-import org.teiid.query.report.ReportItem;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
+import org.teiid.query.validator.UpdateValidator;
 import org.teiid.query.validator.Validator;
+import org.teiid.query.validator.ValidatorFailure;
 import org.teiid.query.validator.ValidatorReport;
+import org.teiid.query.validator.UpdateValidator.UpdateType;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
@@ -288,8 +289,54 @@ public class TransformationValidator implements QueryValidator {
             return null;
         }
         SqlTransformationResult commandValidationResult = null;
-
+        
+        switch( transformType ) {
+	        case QueryValidator.INSERT_TRNS: {
+	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isInsertSqlDefault()) {
+	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0,  "\"Use Default\" option is turned on for Insert procedure.", null); //$NON-NLS-1$
+	        		Command command = null;
+	        		if( sql != null && sql.length() > 0 ) {
+	        			SqlTransformationResult parsedResult = parseSQL(sql);
+	        			command = parsedResult.getCommand();
+	        		}
+	        		commandValidationResult = new SqlTransformationResult(command, status);
+	        		commandValidationResult.setSqlString(sql);
+	        		return commandValidationResult;
+	        	}
+	        } break;
+	        case QueryValidator.UPDATE_TRNS: {
+	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isUpdateSqlDefault()) {
+	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0,  "\"Use Default\" option is turned on for UPDATE procedure.", null); //$NON-NLS-1$
+	        		Command command = null;
+	        		if( sql != null && sql.length() > 0 ) {
+	        			SqlTransformationResult parsedResult = parseSQL(sql);
+	        			command = parsedResult.getCommand();
+	        		}
+	        		commandValidationResult = new SqlTransformationResult(command, status);
+	        		commandValidationResult.setSqlString(sql);
+	        		return commandValidationResult;
+	        	}
+	        } break;
+	        case QueryValidator.DELETE_TRNS: {
+	        	if( ((SqlTransformation)this.mappingRoot.getHelper()).isDeleteSqlDefault()) {
+	        		IStatus status = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID, 0, "\"Use Default\" option is turned on for DELETE procedure.", null); //$NON-NLS-1$
+	        		Command command = null;
+	        		if( sql != null && sql.length() > 0 ) {
+	        			SqlTransformationResult parsedResult = parseSQL(sql);
+	        			command = parsedResult.getCommand();
+	        		}
+	        		commandValidationResult = new SqlTransformationResult(command, status);
+	        		commandValidationResult.setSqlString(sql);
+	        		return commandValidationResult;
+	        	}
+	        } break;
+	    }
+        
         commandValidationResult = parseSQL(sql);
+        
+
+        
+        
         if (commandValidationResult.isParsable() && transformType != UNKNOWN_TRNS) {
             Command command = commandValidationResult.getCommand();
 
@@ -298,7 +345,7 @@ public class TransformationValidator implements QueryValidator {
             // aTODO commandValidationResult = resolveCommand(command, transformType, this.targetGroup);
             if (commandValidationResult.isResolvable()) {
                 // validate command
-                commandValidationResult = validateCommand(command);
+                commandValidationResult = validateCommand(command, transformType);
                 commandValidationResult.setResolvable(true);
             }
         }
@@ -384,9 +431,10 @@ public class TransformationValidator implements QueryValidator {
      * @param command the Command languageObject
      * @return the SqlTransformationResult object
      */
-    public SqlTransformationResult validateCommand( final Command command ) {
+    public SqlTransformationResult validateCommand( final Command command, final int cmdType) {
         CoreArgCheck.isNotNull(command);
         Collection<IStatus> statusList = null;
+        Collection<IStatus> updateStatusList = null;
         try {
             // Validate
             ValidatorReport report = Validator.validate(command, getQueryMetadata());
@@ -408,11 +456,72 @@ public class TransformationValidator implements QueryValidator {
             statusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
         }
 
-        SqlTransformationResult result = new SqlTransformationResult(command, statusList);
+        boolean validateAndResolve = false;
+        
         if (statusList == null || statusList.isEmpty()) {
-            result.setValidatable(true);
-            result.setResolvable(true);
+        	statusList = Collections.EMPTY_LIST;
+        	validateAndResolve = true;
         }
+        
+        // If Select SQL is OK, now we need to check if any of the update SQL are using "Default" and run
+        // additional validation
+        
+        if( validateAndResolve ) {
+        	updateStatusList = new ArrayList();
+        	UpdateType insertType = UpdateType.INSTEAD_OF;
+        	UpdateType updateType = UpdateType.INSTEAD_OF;
+        	UpdateType deleteType = UpdateType.INSTEAD_OF;
+        	SqlTransformation transformation = (SqlTransformation)mappingRoot.getHelper();
+        	boolean doUpdateValidation = false;
+        	if( transformation.isInsertSqlDefault() ) {
+        		insertType = UpdateType.INHERENT;
+        		doUpdateValidation = true;
+        	}
+        	if( transformation.isUpdateSqlDefault() ) {
+        		updateType = UpdateType.INHERENT;
+        		doUpdateValidation = true;
+        	} 
+        	if( transformation.isDeleteSqlDefault() ) {
+        		deleteType = UpdateType.INHERENT;
+        		doUpdateValidation = true;
+        	} 
+        	if( doUpdateValidation ) {
+	        	UpdateValidator updateValidator = new UpdateValidator(metadata, insertType, updateType, deleteType );
+	        	List<ElementSymbol> elemSymbols = null;
+	        	
+	        	try {
+	        		elemSymbols = getProjectedSymbols();
+	        		if( !elemSymbols.isEmpty() ) {
+	        			updateValidator.validate(command, elemSymbols);
+	        		}
+	        	} catch (TeiidComponentException e) {
+	                // Add exception to the problems list
+	        		updateStatusList = new ArrayList<IStatus>(1);
+	                updateStatusList.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e));
+	            }
+	
+	            if (updateStatusList == null || updateStatusList.isEmpty()) {
+	            	updateStatusList = new ArrayList<IStatus>();
+	            	if( insertType == UpdateType.INHERENT) {
+	            		updateStatusList.addAll(getReportStatusList(updateValidator.getInsertReport(), INSERT_SQL_PROBLEM));
+	            	}
+	            	if( updateType == UpdateType.INHERENT) {
+	            		updateStatusList.addAll(getReportStatusList(updateValidator.getUpdateReport(), UPDATE_SQL_PROBLEM));
+	            	}
+	            	if( deleteType == UpdateType.INHERENT) {
+	            		updateStatusList.addAll(getReportStatusList(updateValidator.getDeleteReport(), DELETE_SQL_PROBLEM));
+	            	}
+	            	
+	            	updateStatusList.addAll(getReportStatusList(updateValidator.getReport(), ALL_UPDATE_SQL_PROBLEM));
+	            }
+        	}
+        }
+
+        SqlTransformationResult result = new SqlTransformationResult(command, statusList, updateStatusList);
+
+        result.setValidatable(validateAndResolve);
+        result.setResolvable(validateAndResolve);
+        
         return result;
     }
 
@@ -562,12 +671,12 @@ public class TransformationValidator implements QueryValidator {
      */
     private List<IStatus> createStatusList( final ValidatorReport report ) {
         if (report != null && report.hasItems()) {
-            Collection items = report.getItems();
+        	Collection<ValidatorFailure> items = report.getItems();
             List<IStatus> statusList = new ArrayList<IStatus>(items.size());
-            Iterator itemIter = items.iterator();
-            while (itemIter.hasNext()) {
-                ReportItem item = (ReportItem)itemIter.next();
-                IStatus status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, item.toString(), null);
+            for (ValidatorFailure item : items) {
+            	IStatus status = new Status(
+            	item.getStatus() == org.teiid.query.validator.ValidatorFailure.Status.ERROR ? IStatus.ERROR : IStatus.WARNING,
+            			TransformationPlugin.PLUGIN_ID, 0, item.toString(), null);
                 statusList.add(status);
             }
             return statusList;
@@ -587,8 +696,16 @@ public class TransformationValidator implements QueryValidator {
         try {
             // Attempt to resolve the command
             final QueryMetadataInterface metadata = getQueryMetadata();
+            QueryResolver.buildExternalGroups(externalMetadata, command);
             QueryResolver.resolveCommand(command, metadata, true);
             // If unsuccessful, an exception is thrown
+
+            if (command instanceof CreateUpdateProcedureCommand
+            		&& ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
+            		&& !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
+            	List<ElementSymbol> projectedSymbols = getProjectedSymbols();
+            	((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
+            }
         } catch (TeiidComponentException e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
@@ -607,27 +724,6 @@ public class TransformationValidator implements QueryValidator {
         // set resolvable
         if (status == null) {
             resolverResult.setResolvable(true);
-        }
-
-        if (command instanceof CreateUpdateProcedureCommand
-            && ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
-            && !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
-            List<EObject> outputColumns = getOutputColumns(this.mappingRoot);
-            List<SingleElementSymbol> projectedSymbols = new ArrayList<SingleElementSymbol>(outputColumns.size());
-            for (EObject outputColumn : outputColumns) {
-                String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
-                SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
-                EObject datatype = columnAspect.getDatatype(outputColumn);
-                SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
-                Class<?> targetType = null;
-                if (typeAspect != null) {
-                    targetType = DataTypeManager.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
-                }
-                ElementSymbol column = new ElementSymbol(outputColumnName);
-                column.setType(targetType);
-                projectedSymbols.add(column);
-            }
-            ((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
         }
 
         return resolverResult;
@@ -655,6 +751,43 @@ public class TransformationValidator implements QueryValidator {
             }
         }
         return outputColumns;
+    }
+    
+    private List<ElementSymbol> getProjectedSymbols() throws QueryMetadataException, TeiidComponentException {
+        List<EObject> outputColumns = getOutputColumns(this.mappingRoot);
+        List<ElementSymbol> projectedSymbols = new ArrayList<ElementSymbol>(outputColumns.size());
+        for (EObject outputColumn : outputColumns) {
+            String outputColumnName = TransformationHelper.getSqlColumnName(outputColumn);
+            SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
+            EObject datatype = columnAspect.getDatatype(outputColumn);
+            SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
+            Class<?> targetType = null;
+            if (typeAspect != null) {
+                targetType = DataTypeManager.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
+            }
+            ElementSymbol column = new ElementSymbol(outputColumnName);
+            column.setType(targetType);
+            column.setMetadataID(getQueryMetadata().getElementID(columnAspect.getFullName(outputColumn)));
+            projectedSymbols.add(column);
+        }
+        
+        return projectedSymbols;
+    }
+    
+    private List<IStatus> getReportStatusList(ValidatorReport report, int errorCode) {
+    	Collection<ValidatorFailure> items = report.getItems();
+    	
+    	List<IStatus> statusList = new ArrayList<IStatus>(items.size());
+    	for( ValidatorFailure item : items ) {
+    		int statusID = IStatus.WARNING;
+    		if( item.getStatus() == ValidatorFailure.Status.ERROR ) {
+    			statusID = IStatus.ERROR; 
+    		}
+    		IStatus status = new Status(statusID, TransformationPlugin.PLUGIN_ID, errorCode, item.toString(), null);
+    		statusList.add(status);
+    	}
+    	
+    	return statusList;
     }
 
     /**

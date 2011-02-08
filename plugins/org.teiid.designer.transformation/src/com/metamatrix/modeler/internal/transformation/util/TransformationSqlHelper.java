@@ -755,7 +755,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 SqlTransformationResult resolverResult = validator.resolveCommand(resultQuery, cmdType);
                 isResolvable = resolverResult.isResolvable();
                 if (isResolvable) {
-                    SqlTransformationResult validationResult = validator.validateCommand(resultQuery);
+                    SqlTransformationResult validationResult = validator.validateCommand(resultQuery, cmdType);
                     isValid = validationResult.isValidatable();
                 }
             }
@@ -1271,7 +1271,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 SqlTransformationResult resolverResult = validator.resolveCommand(resultQuery, cmdType);
                 isResolvable = resolverResult.isResolvable();
                 if (isResolvable) {
-                    SqlTransformationResult validationResult = validator.validateCommand(resultQuery);
+                    SqlTransformationResult validationResult = validator.validateCommand(resultQuery, cmdType);
                     isValid = validationResult.isValidatable();
                 }
             } else {

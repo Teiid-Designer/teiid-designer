@@ -46,4 +46,19 @@ public interface QueryValidationResult {
      * @return the Collection of IStatus objects
      */
     Collection<IStatus> getStatusList();
+    
+    /**
+     * Get the status List indicating the success/ failure of update SQL validation
+     * @return the Collection of IStatus objects
+     */
+    Collection<IStatus> getUpdateStatusList();
+    
+    /**
+     * Get the status List indicating the success/ failure of update SQL validation for the given
+     * command type, INSERT, UPDATE, DELETE (see QueryValidator constants)
+     * 
+     * @param cmdType
+     * @return the Collection of IStatus objects
+     */
+    Collection<IStatus> getUpdateStatusList(int cmdType);
 }

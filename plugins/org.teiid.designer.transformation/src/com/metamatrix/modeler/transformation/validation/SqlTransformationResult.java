@@ -7,17 +7,21 @@
  */
 package com.metamatrix.modeler.transformation.validation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
+import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 
 /**
@@ -34,6 +38,7 @@ public class SqlTransformationResult implements QueryValidationResult {
     private Collection sourceGroups = Collections.EMPTY_LIST;
     private Map externalMetadataMap = null;
     private Collection<IStatus> statuses = null;
+    private Collection<IStatus> updateStatuses = null;
 
     /**
      * Construct an instance of SqlTransformationResult.
@@ -46,6 +51,16 @@ public class SqlTransformationResult implements QueryValidationResult {
     public SqlTransformationResult(final Command command, Collection<IStatus> statuses) {
         this.command = command;
         this.statuses = statuses;
+        isParsable = command != null ? true : false;        
+    }
+    
+    /**
+     * Construct an instance of SqlTransformationResult with both Standard Select status list and Update SQL Status list
+     */
+    public SqlTransformationResult(final Command command, Collection<IStatus> statuses, Collection<IStatus> updateStatuses ) {
+        this.command = command;
+        this.statuses = statuses;
+        this.updateStatuses = updateStatuses;
         isParsable = command != null ? true : false;        
     }
     
@@ -248,6 +263,14 @@ public class SqlTransformationResult implements QueryValidationResult {
      */
     public Collection<IStatus> getStatusList() {
         return this.statuses;
+    }
+
+    /** 
+     * @see com.metamatrix.query.resolver.util.QueryValidationResult#getUpdateStatusList()
+     * @since 4.2
+     */
+    public Collection<IStatus> getUpdateStatusList() {
+        return this.updateStatuses;
     }	
 
     /** 
@@ -256,5 +279,201 @@ public class SqlTransformationResult implements QueryValidationResult {
      */
     public void setTargetValidStatus(IStatus targetValidStatus) {
         this.targetValidStatus = targetValidStatus;
+    }
+    
+    /**
+     * Utility method to check of Update is OK based on existing Update Status values.
+     * @param cmdType
+     * @return true if no problems of the specified SQL command type exist
+     */
+    public boolean isOkToUpdate(int cmdType) {
+    	if(getUpdateStatusList() == null || getUpdateStatusList().isEmpty() ) return true;
+    	
+    	
+    	for( IStatus status : getUpdateStatusList() ) {
+    		int code = status.getCode();
+    		
+    		switch (cmdType) {
+	    		case QueryValidator.INSERT_TRNS: {
+	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
+	    				return false;
+	    			}
+	    		} break;
+	    		case QueryValidator.UPDATE_TRNS: {
+	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
+	    				return false;
+	    			}
+	    		} break;
+	    		case QueryValidator.DELETE_TRNS: {
+	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
+	    				return false;
+	    			}
+	    		} break;
+	    		case QueryValidator.SELECT_TRNS: {
+	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
+	    				return false;
+	    			}
+	    		} break;
+    		}
+    		
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+	 * @see com.metamatrix.query.resolver.util.QueryValidationResult#getUpdateStatusList(int cmdType)
+     * @since 7.3
+     */
+    public Collection<IStatus> getUpdateStatusList(int cmdType) {
+    	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return getUpdateStatusList();
+    	
+    	Collection<IStatus> cmdStatusList = new ArrayList<IStatus>();
+    	for( IStatus status : getUpdateStatusList() ) {
+    		int code = status.getCode();
+    		
+    		switch (cmdType) {
+	    		case QueryValidator.INSERT_TRNS: {
+	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
+	    				cmdStatusList.add(status);
+	    			}
+	    		} break;
+	    		case QueryValidator.UPDATE_TRNS: {
+	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
+	    				cmdStatusList.add(status);
+	    			}
+	    		} break;
+	    		case QueryValidator.DELETE_TRNS: {
+	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
+	    				cmdStatusList.add(status);
+	    			}
+	    		} break;
+	    		case QueryValidator.SELECT_TRNS: {
+	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
+	    				cmdStatusList.add(status);
+	    			}
+	    		} break;
+    		}
+    	}
+    	
+    	return cmdStatusList;
+    }
+    
+    /**
+     * Utility method to check this result if there is any status objects coded to requested SQL command type 
+     * @param cmdType
+     * @return true if status exists for command type
+     */
+    public boolean hasUpdateStatus(int cmdType) {
+    	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return false;
+
+    	for( IStatus status : getUpdateStatusList() ) {
+    		int code = status.getCode();
+    		
+    		switch (cmdType) {
+	    		case QueryValidator.INSERT_TRNS: {
+	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
+	    				return true;
+	    			}
+	    		} break;
+	    		case QueryValidator.UPDATE_TRNS: {
+	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
+	    				return true;
+	    			}
+	    		} break;
+	    		case QueryValidator.DELETE_TRNS: {
+	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
+	    				return true;
+	    			}
+	    		} break;
+	    		case QueryValidator.SELECT_TRNS: {
+	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
+	    				return true;
+	    			}
+	    		} break;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * Utility method to determine the maximum severity of list of statuses for a given SQL command type
+     * @param cmdType
+     * @return maximum severity value
+     */
+    public int getUpdateMaxSeverity(int cmdType) {
+    	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return IStatus.OK;
+    	int resultSeverity = IStatus.OK;
+    	
+    	for( IStatus status : getUpdateStatusList(cmdType) ) {
+	    	if( status.getSeverity() > resultSeverity ) resultSeverity = status.getSeverity();
+    	}
+    	
+    	return resultSeverity;
+    }
+    
+    /**
+     * Utility method to determine the maximum severity of the list of statuses
+     * @param cmdType
+     * @return maximum severity value
+     */
+    public int getMaxSeverity() {
+    	if( getStatusList() == null || getStatusList().isEmpty() )  return IStatus.OK;
+    	int resultSeverity = IStatus.OK;
+    	
+    	for( IStatus status : getStatusList() ) {
+	    	if( status.getSeverity() > resultSeverity ) resultSeverity = status.getSeverity();
+    	}
+    	
+    	return resultSeverity;
+    }
+    
+    /**
+     * Get a string value for the list of status messages for the basic status list
+     * @return
+     */
+    public String getFullMessage() {
+    	if( getStatusList() == null || getStatusList().isEmpty() )  return null;
+    	StringBuffer sb = new StringBuffer();
+    	boolean more = false;
+    	for( IStatus status : getStatusList() ) {
+    		if( more ) {
+    			sb.append('\n');
+    		}
+    		if( status.getSeverity() == IStatus.ERROR){
+    			sb.append("ERROR: "); //$NON-NLS-1$
+    		} else if( status.getSeverity() == IStatus.WARNING){
+    			sb.append("WARNING: "); //$NON-NLS-1$
+    		}
+    		sb.append(status.getMessage());
+    		more = true;
+    	}
+    	
+    	return sb.toString();
+    }
+    
+    /**
+     * Get a string value for the list of status messages for the statuses for a given SQL command type
+     * @return
+     */
+    public String getUpdateFullMessage(int cmdType) {
+    	if( getUpdateStatusList(cmdType) == null || getUpdateStatusList(cmdType).isEmpty() )  return null;
+    	StringBuffer sb = new StringBuffer();
+    	boolean more = false;
+    	for( IStatus status : getUpdateStatusList(cmdType) ) {
+    		if( more ) {
+    			sb.append('\n');
+    		}
+    		if( status.getSeverity() == IStatus.ERROR){
+    			sb.append("ERROR: "); //$NON-NLS-1$
+    		} else if( status.getSeverity() == IStatus.WARNING){
+    			sb.append("WARNING: "); //$NON-NLS-1$
+    		}
+    		sb.append(status.getMessage());
+    		more = true;
+    	}
+    	
+    	return sb.toString();
     }
 }

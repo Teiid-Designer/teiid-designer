@@ -23,7 +23,11 @@ public interface QueryValidator {
     int INSERT_TRNS = 1;
     int UPDATE_TRNS = 2;
     int DELETE_TRNS = 3;
-    int UNKNOWN_TRNS = -1;    
+    int UNKNOWN_TRNS = -1;
+    int ALL_UPDATE_SQL_PROBLEM = 699;
+    int INSERT_SQL_PROBLEM = 700;
+    int UPDATE_SQL_PROBLEM = 701;
+    int DELETE_SQL_PROBLEM = 702;
 
     /**
      * Validate the sqlString of the given type, valid types are 

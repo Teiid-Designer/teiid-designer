@@ -258,13 +258,13 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                     result.add(SqlTransformationAspect.Types.PROCEDURE);
                 }
             }
-            if (!CoreStringUtil.isEmpty(insertSql)) {
+            if (!CoreStringUtil.isEmpty(insertSql) && !transformation.isInsertSqlDefault()) {
                 result.add(SqlTransformationAspect.Types.INSERT);
             }
-            if (!CoreStringUtil.isEmpty(updateSql)) {
+            if (!CoreStringUtil.isEmpty(updateSql) && !transformation.isUpdateSqlDefault()) {
                 result.add(SqlTransformationAspect.Types.UPDATE);
             }
-            if (!CoreStringUtil.isEmpty(deleteSql)) {
+            if (!CoreStringUtil.isEmpty(deleteSql) && !transformation.isDeleteSqlDefault()) {
                 result.add(SqlTransformationAspect.Types.DELETE);
             }
             return (String[])result.toArray(new String[result.size()]);
@@ -706,7 +706,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // INSERT transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.INSERT.equals(type) && uuidTransformation.isInsertAllowed()) {
-                final String insertSql = getInsertSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String insertSql = getInsertSqlUserString(root);
                 if (!CoreStringUtil.isEmpty(insertSql)) {
                     return new SqlTransformationInfo(insertSql);
                 }
@@ -716,7 +716,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // UPDATE transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.UPDATE.equals(type) && uuidTransformation.isUpdateAllowed()) {
-                final String updateSql = getUpdateSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String updateSql = getUpdateSqlUserString(root);
                 if (!CoreStringUtil.isEmpty(updateSql)) {
                     return new SqlTransformationInfo(updateSql);
                 }
@@ -726,7 +726,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             // DELETE transformation
             // -------------------------------------------------------------------------
             if (SqlTransformationAspect.Types.DELETE.equals(type) && uuidTransformation.isDeleteAllowed()) {
-                final String deleteSql = getDeleteSqlUserString(root); // SqlConverter.convertUUIDsToFullNames(uuidSql, eResources);
+                final String deleteSql = getDeleteSqlUserString(root);
                 if (!CoreStringUtil.isEmpty(deleteSql)) {
                     return new SqlTransformationInfo(deleteSql);
                 }

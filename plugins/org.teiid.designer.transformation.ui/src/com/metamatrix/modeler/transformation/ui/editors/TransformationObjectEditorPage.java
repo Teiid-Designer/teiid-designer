@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -61,6 +62,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -157,13 +159,6 @@ public class TransformationObjectEditorPage
     private static final String DELETE_SQL_TYPE = getString("delete.sqlType"); //$NON-NLS-1$
 
     private static final String LOST_SQL_TITLE = getString("lostSql.title"); //$NON-NLS-1$
-    private static final String LOST_SQL_TEXT = getString("lostSqlText.text"); //$NON-NLS-1$
-    private static final String LOST_SQL_MESSAGE = getString("lostSqlMessage.text"); //$NON-NLS-1$
-
-    private static final String COULDNT_GENERATE_INSERT_PROC = getString("couldntGenerateInsertProc"); //$NON-NLS-1$
-    private static final String COULDNT_GENERATE_UPDATE_PROC = getString("couldntGenerateUpdateProc"); //$NON-NLS-1$
-    private static final String COULDNT_GENERATE_DELETE_PROC = getString("couldntGenerateDeleteProc"); //$NON-NLS-1$
-    private static final String COULDNT_GENERATE_PROC_REASONS = getString("couldntGenerateProcReasons"); //$NON-NLS-1$
 
     private static final String IS_VALID_AND_RECONCILABLE = getString("isValidAndReconcilableMsg"); //$NON-NLS-1$
     private static final String IS_VALID_NOT_RECONCILABLE = getString("isValidNotReconcilableMsg"); //$NON-NLS-1$
@@ -181,6 +176,10 @@ public class TransformationObjectEditorPage
 
     public static final String TRANSACTIONS = "modelerTransactions"; //$NON-NLS-1$
     public static final String THIS_CLASS = "TransformationObjectEditorPage"; //$NON-NLS-1$
+    
+    private static final Image ERROR_IMAGE = UiPlugin.getDefault().getImage(UiConstants.Images.ERROR);
+    private static final Image WARNING_IMAGE = UiPlugin.getDefault().getImage(UiConstants.Images.WARNING);
+    private static final Image NOT_ALLOWED_IMAGE = UiPlugin.getDefault().getImage(UiConstants.Images.NOT_ALLOWED);
 
     private static String getString( String key ) {
         return UiConstants.Util.getString(THIS_CLASS + '.' + key);
@@ -240,8 +239,6 @@ public class TransformationObjectEditorPage
     private boolean isDirty = false;
 
     private ModelObjectEditorPage override;
-
-    private int CHECKBOX_INDENT = SqlEditorPanel.getVerticalRulerWidth();
 
     /** List of listeners registered for this panels events */
     private List eventListeners;
@@ -444,7 +441,6 @@ public class TransformationObjectEditorPage
 
         updateTab.setText(UPDATE_TAB_TEXT);
         updateTab.setToolTipText(UPDATE_TAB_TOOLTIP);
-        updateTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlUpdateEditor);
@@ -483,7 +479,6 @@ public class TransformationObjectEditorPage
 
         insertTab.setText(INSERT_TAB_TEXT);
         insertTab.setToolTipText(INSERT_TAB_TOOLTIP);
-        insertTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlInsertEditor);
@@ -527,7 +522,6 @@ public class TransformationObjectEditorPage
 
         deleteTab.setText(DELETE_TAB_TEXT);
         deleteTab.setToolTipText(DELETE_TAB_TOOLTIP);
-        deleteTab.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_FONT));
 
         // remove the undo caused by setting the text the first time
         resetUndoManager(sqlDeleteEditor);
@@ -1102,9 +1096,193 @@ public class TransformationObjectEditorPage
                 notifyEventListeners(new QueryEditorStatusEvent(this, QueryEditorStatusEvent.QUERY_NOT_PARSABLE));
             }
             setDirty(editor.hasPendingChanges());
+            if( allowsUpdates ) {
+	            selectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+	            if( selectStatus != null ) {
+	            	updateUpdateTabs(selectStatus);
+	            }
+            }
 
             updateReadOnlyState();
         }
+    }
+    
+    private void updateUpdateTabs(SqlTransformationResult validationResult) {
+    	// ASSUME SUPPORTS UPDATE == TRUE
+    	if( validationResult == null ) return; // DO NOTHING
+    	
+    	// -------------
+    	// WORK ON EACH TAB TYPE
+    	// -------------
+    	
+    	// -----------------------------
+    	// SELECT TAB
+    	// -----------------------------
+    	boolean selectSqlOk = validationResult.isOkToUpdate(QueryValidator.SELECT_TRNS);
+    	
+    	if( selectSqlOk ) { // NO ERRORS WITH TYPE = QueryValidator.ALL_UPDATE_SQL_PROBLEM
+    		this.selectTabForUpdate.setImage(null);
+    		this.selectTabForUpdate.setToolTipText(null);
+    	} else { // ERRORS FOUND WITH TYPE = QueryValidator.ALL_UPDATE_SQL_PROBLEM
+    		this.selectTabForUpdate.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.WARNING));
+    		IStatus firstStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
+    		this.selectTabForUpdate.setToolTipText(firstStatus.getMessage());
+    	}
+    	
+    	
+    	insertTab.setImage(null);
+    	updateTab.setImage(null);
+    	deleteTab.setImage(null);
+    	// -----------------------------
+    	// UPDATE TAB
+    	// -----------------------------
+
+    	// If USE DEFAULT is Checked, decorate with NOT_ALLOWED else check for specific UPDATE errors, then decorate with error or NONE
+    	// and if error, set the message based on first Update Error.
+    	// But if SELECT has ERRORS FOUND WITH TYPE = QueryValidator.ALL_UPDATE_SQL_PROBLEM then set message from the SELECT status if NO Update Errors.
+    	String toolTipText = null;
+    	Image displayImage = null;
+    	String tabText = INSERT_TAB_TEXT;
+    	if( isUseDefault(QueryValidator.INSERT_TRNS) ) {
+    		tabText = INSERT_TAB_TEXT + " (default)"; //$NON-NLS-1$
+    		// Now we check for "insert" default errors and warnings
+    		IStatus displayStatus = null;
+    		if( validationResult.hasUpdateStatus(QueryValidator.INSERT_TRNS) ) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.INSERT_TRNS).iterator().next();
+    		} else if(!selectSqlOk) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
+    		}
+    		if( displayStatus != null ) {
+    			toolTipText = displayStatus.getMessage();
+    			displayImage = NOT_ALLOWED_IMAGE;
+    		}
+    	} else {
+    		// Now we check for "insert" SQL errors and warnings
+    		SqlTransformationResult insertResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot, QueryValidator.INSERT_TRNS, true, null);
+
+    		IStatus displayStatus = null;
+    		if( insertResult != null && !insertResult.getStatusList().isEmpty() ) {
+    			displayStatus = insertResult.getStatusList().iterator().next();
+    		}
+
+    		if( displayStatus != null ) {
+	    		displayImage = getSeverityImage(insertResult.getMaxSeverity());
+	    		toolTipText = displayStatus.getMessage();
+    		} else {
+    			displayImage = null;
+    			toolTipText = null;
+    		}
+    	}
+    	
+    	this.insertTab.setImage(displayImage);
+    	this.insertTab.setToolTipText(toolTipText);
+    	this.insertTab.setText(tabText);
+    	
+    	// -----------------------------
+    	// INSERT TAB
+    	// -----------------------------
+    	displayImage = null;
+    	toolTipText = null;
+    	tabText = UPDATE_TAB_TEXT;
+    	if( isUseDefault(QueryValidator.UPDATE_TRNS) ) {
+    		tabText = UPDATE_TAB_TEXT + " (default)"; //$NON-NLS-1$
+    		// Now we check for "insert" default errors and warnings
+    		IStatus displayStatus = null;
+    		if( validationResult.hasUpdateStatus(QueryValidator.UPDATE_TRNS) ) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.UPDATE_TRNS).iterator().next();
+    		} else if( displayStatus == null && !selectSqlOk) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
+    		}
+    		if( displayStatus != null ) {
+    			toolTipText = displayStatus.getMessage();
+    			displayImage = NOT_ALLOWED_IMAGE;
+    		}
+    	} else {
+    		// Now we check for "insert" SQL errors and warnings
+    		SqlTransformationResult updateResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot, QueryValidator.UPDATE_TRNS, true, null);
+
+    		IStatus displayStatus = null;
+    		
+    		if( updateResult != null && !updateResult.getStatusList().isEmpty()) {
+    			displayStatus = updateResult.getStatusList().iterator().next();
+    		}
+
+    		if( displayStatus != null ) {
+	    		displayImage = getSeverityImage(updateResult.getMaxSeverity());
+	    		toolTipText = displayStatus.getMessage();
+    		} else {
+    			displayImage = null;
+    			toolTipText = null;
+    		}
+    	}
+    	
+    	this.updateTab.setImage(displayImage);
+    	this.updateTab.setToolTipText(toolTipText);
+    	this.updateTab.setText(tabText);
+    	
+    	// -----------------------------
+    	// DELETE TAB
+    	// -----------------------------
+    	displayImage = null;
+    	toolTipText = null;
+    	tabText = DELETE_TAB_TEXT;
+    	if( isUseDefault(QueryValidator.DELETE_TRNS) ) {
+    		tabText = DELETE_TAB_TEXT + " (default)"; //$NON-NLS-1$
+    		// Now we check for "insert" default errors and warnings
+    		IStatus displayStatus = null;
+    		if( validationResult.hasUpdateStatus(QueryValidator.DELETE_TRNS) ) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.DELETE_TRNS).iterator().next();
+    		} else if( displayStatus == null && !selectSqlOk) {
+    			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
+    		}
+    		if( displayStatus != null ) {
+    			toolTipText = displayStatus.getMessage();
+    			displayImage = NOT_ALLOWED_IMAGE;
+    		}
+    	} else {
+    		// Now we check for "insert" SQL errors and warnings
+    		SqlTransformationResult deleteResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot, QueryValidator.DELETE_TRNS, true, null);
+
+    		IStatus displayStatus = null;
+    		if( deleteResult != null && !deleteResult.getStatusList().isEmpty()) {
+    			displayStatus = deleteResult.getStatusList().iterator().next();
+    		}
+
+    		if( displayStatus != null ) {
+	    		displayImage = getSeverityImage(deleteResult.getMaxSeverity());
+	    		toolTipText = displayStatus.getMessage();
+    		} else {
+    			displayImage = null;
+    			toolTipText = null;
+    		}
+    	}
+    	
+    	this.deleteTab.setImage(displayImage);
+    	this.deleteTab.setToolTipText(toolTipText);
+    	this.deleteTab.setText(tabText);
+    }
+    
+    private boolean isUseDefault(int updateType) {
+    	SqlTransformation helper = ((SqlTransformation)currentMappingRoot.getHelper());
+    	if( helper == null ) {
+    		return false;
+    	}
+    	
+    	switch( updateType ) {
+	    	case QueryValidator.INSERT_TRNS: return helper.isInsertSqlDefault();
+	    	case QueryValidator.UPDATE_TRNS: return helper.isUpdateSqlDefault();
+	    	case QueryValidator.DELETE_TRNS: return helper.isDeleteSqlDefault();
+    	}
+    	return false;
+    }
+    
+    private Image getSeverityImage(int severity) {
+    	if( severity == IStatus.ERROR ) {
+			return ERROR_IMAGE;
+		} else if( severity == IStatus.WARNING){
+			return WARNING_IMAGE;
+		}
+    	return null;
     }
 
     /**
@@ -1142,83 +1320,84 @@ public class TransformationObjectEditorPage
     private void setEditorMessage( Object item,
                                    String sqlString ) {
         int cmdType = getCommandTypeForItem(item);
+        
+        // This is the "Editor message panel" at the bottom of each SQL Editor.
+        // We need to Display the panel if ERRORS/Warnings exist for the specific cmdType
+        String message = null;
+        boolean showMessage = false;
+        
 
         boolean isTargetValid = TransformationHelper.isTargetValid(currentMappingRoot, cmdType);
-        boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
+        //boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
 
-        // useDefault is Selected, but couldnt generate the procedure
-        if (isInsUpdDelTab(item) && isUseDefaultSelected(item) && sqlString == null) {
-            // set the message
-            setMessageDisplayCouldNotGenerate(item, currentMappingRoot);
-            // open message area
-            currentSqlEditor.showMessageArea(true);
-            // If SQL valid and valid target, reset to more specific error message
-        } else if (isValid && isTargetValid) {
-            setMessageDisplayForValidSQL();
-            // If target is not valid, display the status error message
-        } else if (!isTargetValid) {
-            IStatus status = TransformationHelper.getTargetValidStatus(currentMappingRoot, cmdType);
-            if (status != null) {
-                String message = status.getMessage();
-                currentSqlEditor.setMessage(message);
-                currentSqlEditor.showMessageArea(true);
-            }
-            // If SQL not valid, just open message area
-        } else if (!isValid) {
-            currentSqlEditor.showMessageArea(true);
+        switch( cmdType ) {
+	        case QueryValidator.SELECT_TRNS: {
+	        	SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+	        	if( !isTargetValid ) {
+	        		IStatus status = TransformationHelper.getTargetValidStatus(currentMappingRoot, cmdType);
+	                if (status != null) {
+	                    message = status.getMessage();
+	                    showMessage = true;
+	                }
+	        	} else if( statusResult != null && statusResult.getMaxSeverity() > IStatus.OK ) {
+	        		message = statusResult.getFullMessage();
+	        		showMessage = true;
+	        	}
+	        } break;
+	        case QueryValidator.INSERT_TRNS: {
+	        	if( !isUseDefault(QueryValidator.INSERT_TRNS)) {
+		        	SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.INSERT_TRNS, true, null);
+		        	if( statusResult != null && statusResult.getMaxSeverity() > IStatus.OK ) {
+		        		message = statusResult.getFullMessage();
+		        		showMessage = true;
+		        	}
+	        	} else {
+	        		SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+	        		if( statusResult != null && statusResult.getUpdateMaxSeverity(QueryValidator.INSERT_TRNS) > IStatus.OK ) {
+		        		message = statusResult.getUpdateFullMessage(QueryValidator.INSERT_TRNS);
+		        		showMessage = true;
+		        	}
+	        	}
+	        } break;
+	        case QueryValidator.UPDATE_TRNS: {
+	        	if( !isUseDefault(QueryValidator.UPDATE_TRNS)) {
+		        	SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.UPDATE_TRNS, true, null);
+		        	if( statusResult != null && statusResult.getMaxSeverity() > IStatus.OK ) {
+		        		message = statusResult.getFullMessage();
+		        		showMessage = true;
+		        	}
+	        	} else {
+	        		SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+	        		if( statusResult != null && statusResult.getUpdateMaxSeverity(QueryValidator.UPDATE_TRNS) > IStatus.OK ) {
+		        		message = statusResult.getUpdateFullMessage(QueryValidator.UPDATE_TRNS);
+		        		showMessage = true;
+		        	}
+	        	}
+	        } break;
+	        case QueryValidator.DELETE_TRNS: {
+	        	if( !isUseDefault(QueryValidator.DELETE_TRNS)) {
+		        	SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.DELETE_TRNS, true, null);
+		        	if( statusResult != null && statusResult.getMaxSeverity() > IStatus.OK ) {
+		        		message = statusResult.getFullMessage();
+		        		showMessage = true;
+		        	}
+	        	} else {
+	        		SqlTransformationResult statusResult = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,QueryValidator.SELECT_TRNS, true, null);
+	        		if( statusResult != null && statusResult.getUpdateMaxSeverity(QueryValidator.DELETE_TRNS) > IStatus.OK ) {
+		        		message = statusResult.getUpdateFullMessage(QueryValidator.DELETE_TRNS);
+		        		showMessage = true;
+		        	}
+	        	}
+	        } break;
+	        
         }
-    }
-
-    /**
-     * Set QueryEditorPanel Message For the case where "useDefault" procedure is desired, but the procedure could not be
-     * generated.
-     * 
-     * @param item.
-     */
-    private void setMessageDisplayCouldNotGenerate( Object item,
-                                                    EObject mappingRoot ) {
-        // Couldnt Generate Reasons
-        String couldntGenerateReasonsMsg = COULDNT_GENERATE_PROC_REASONS;
-        // Try to get generated error message
-        String errorMsg = null;
-        if (currentMappingRoot != null) {
-            errorMsg = null;
+        
+        if( message != null ) {
+	        currentSqlEditor.setMessage(message);
+	        currentSqlEditor.showMessageArea(showMessage);
+        } else if( isTargetValid ){
+        	setMessageDisplayForValidSQL();
         }
-        if (errorMsg != null) {
-            couldntGenerateReasonsMsg = errorMsg;
-        }
-        String messg = BLANK;
-        // ------------------------------------------------------------------------
-        // InsertTab showing, display Insert Valid Message and close messagePanel
-        // ------------------------------------------------------------------------
-        if (item == insertTab) {
-            messg = COULDNT_GENERATE_INSERT_PROC + couldntGenerateReasonsMsg;
-            // ------------------------------------------------------------------------
-            // UpdateTab showing, display Update Valid Message and close messagePanel
-            // ------------------------------------------------------------------------
-        } else if (item == updateTab) {
-            messg = COULDNT_GENERATE_UPDATE_PROC + couldntGenerateReasonsMsg;
-            // ------------------------------------------------------------------------
-            // DeleteTab showing, display Delete Valid Message and close messagePanel
-            // ------------------------------------------------------------------------
-        } else if (item == deleteTab) {
-            messg = COULDNT_GENERATE_DELETE_PROC + couldntGenerateReasonsMsg;
-        }
-        currentSqlEditor.setMessage(messg);
-        currentSqlEditor.showMessageArea(true);
-    }
-
-    /**
-     * Determine if the selected item is INSERT, UPDATE, or DELETE
-     * 
-     * @param item the type to check
-     * @param true if item is INSERT,UPDATE,or DELETE
-     */
-    private boolean isInsUpdDelTab( Object item ) {
-        if (item == insertTab || item == updateTab || item == deleteTab) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -1987,7 +2166,7 @@ public class TransformationObjectEditorPage
             }
 
             if (saveChanges) {
-                // Set text without source so that it propogates back and sets the metadata
+                // Set text without source so that it propagates back and sets the metadata
                 theEditor.setQueryValidator(this.validator);
                 theEditor.setText(theEditor.getText());
             } else {
@@ -2041,7 +2220,7 @@ public class TransformationObjectEditorPage
             // Save Current Tab Sql first, so changes aren't lost
             // ---------------------------------------------------
             if (currentSqlEditor.hasPendingChanges()) {
-                // Get Previous Editor Sql First
+                // Get Previous Editor SQL First
                 String previousSql = this.currentSqlEditor.getText();
                 int cmdType = getCommandTypeForItem(previousItem);
                 if (TransformationHelper.isUserSqlDifferent(previousSql, currentMappingRoot, cmdType)) {
@@ -2077,7 +2256,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * handler for checkbox state changes
+     * handler for check-box state changes
      * 
      * @param e the selection event
      */
@@ -2111,28 +2290,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * handler for enabled checkbox state changes
-     * 
-     * @param eventSource the source of the event
-     * @param isAllowed the isAllowed state
-     */
-//    private void handleEnabledCheckBoxChanged( Object eventSource,
-//                                               boolean isAllowed ) {
-//        Object selectedItem = getSelectedItem();
-//        // -------------------------------------------------------------------
-//        // Set MetaObject property, based on currentItem and source of event
-//        // -------------------------------------------------------------------
-//        if (selectedItem == insertTab) {
-//            TransformationHelper.setSupportsInsert(currentMappingRoot, isAllowed, false, this);
-//        } else if (selectedItem == updateTab) {
-//            TransformationHelper.setSupportsUpdate(currentMappingRoot, isAllowed, false, this);
-//        } else if (selectedItem == deleteTab) {
-//            TransformationHelper.setSupportsDelete(currentMappingRoot, isAllowed, false, this);
-//        }
-//    }
-
-    /**
-     * handler for useDefault checkbox state changes
+     * handler for useDefault check-box state changes
      * 
      * @param eventSource the source of the event
      * @param useDefault UseDefault state
@@ -2177,14 +2335,11 @@ public class TransformationObjectEditorPage
                     } else if (cmdType == QueryValidator.DELETE_TRNS) {
                         TransformationHelper.setDeleteSqlDefault(currentMappingRoot, true, false, this);
                     }
-                    // Set the generated Procedure
-                    String generatedProc = null;
-                    if (TransformationHelper.isUserSqlDifferent(generatedProc, currentMappingRoot, cmdType)) {
-                        TransformationHelper.setSqlString(currentMappingRoot, generatedProc, cmdType, false, this);
-                    }
+                    SqlMappingRootCache.invalidateStatus(currentMappingRoot, true, this);
+                    
                     setEditorContent(selectedItem, true, this, true, false);
                 } else {
-                    // re-enable the checkbox
+                    // re-enable the check-box
                     abortUseDefault = true;
                     removeCheckBoxListeners(selectedItem);
                     if (selectedItem == insertTab) {
@@ -2197,7 +2352,7 @@ public class TransformationObjectEditorPage
 
                     addCheckBoxListeners(selectedItem);
                 }
-                // UseDefault was deselected, set the properties from the editorPanel
+                // UseDefault was de-selected, set the properties from the editorPanel
             } else if (!useDefault) {
                 // Set the UseDefault flag
                 if (cmdType == QueryValidator.INSERT_TRNS) {
@@ -2208,8 +2363,10 @@ public class TransformationObjectEditorPage
                     TransformationHelper.setDeleteSqlDefault(currentMappingRoot, false, false, this);
                 }
                 // This gets the text from the EditorPanel and sets properties
+                SqlMappingRootCache.invalidateStatus(currentMappingRoot, true, this);
                 String sql = currentSqlEditor.getText();
                 TransformationHelper.setSqlString(currentMappingRoot, sql, cmdType, false, this);
+                setEditorContent(selectedItem, true, this, true, false);
             }
         }
         return abortUseDefault;
@@ -2270,7 +2427,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * Set the checkbox states for the supplied mappingRoot and item.
+     * Set the check-box states for the supplied mappingRoot and item.
      * 
      * @param transMappingRoot The MappingRoot
      * @param item The select, update, insert or delete item
@@ -2278,15 +2435,11 @@ public class TransformationObjectEditorPage
     private void setCheckBoxStates( Object transMappingRoot,
                                     Object item ) {
         if (TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
-            // Remove checkbox Listeners
+            // Remove check-box Listeners
             removeCheckBoxListeners(item);
 
             // Get the command type for the tab
             int cmdType = getCommandTypeForItem(item);
-            // -------------------------------------------------------------------
-            // Set isAllowed Checkboxes for the statement type from properties
-            // -------------------------------------------------------------------
-            boolean isAllowed = TransformationHelper.isAllowed(transMappingRoot, cmdType);
 
             // -------------------------------------------------------------------
             // Set useDefault selection states for the statement type.
@@ -2320,11 +2473,11 @@ public class TransformationObjectEditorPage
                 }
             }
             // -------------------------------------------------------------------
-            // Disable useDefault checkboxes if type not allowed
+            // Disable useDefault check-boxes if type not allowed
             // -------------------------------------------------------------------
             setCheckBoxEnabledStates(item);
 
-            // Add checkbox listeners
+            // Add check-box listeners
             addCheckBoxListeners(item);
 
             setSupportsUpdatesCheckBoxState();
@@ -2343,7 +2496,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * This just sets the correct checkbox enabled states based on selection state of the enable checkboxes.
+     * This just sets the correct check-box enabled states based on selection state of the enable checkboxes.
      */
     private void setCheckBoxEnabledStates( final Object item ) {
         // FIX for Invalid SWT Thread Access
@@ -2366,7 +2519,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * Determine if the enabled checkbox is selected for this item.
+     * Determine if the enabled check-box is selected for this item.
      * 
      * @param item
      * @param true if useDefault is selected.
@@ -2384,7 +2537,7 @@ public class TransformationObjectEditorPage
     }
 
     /**
-     * Determine if the useDefault checkbox is selected for this item.
+     * Determine if the useDefault check-box is selected for this item.
      * 
      * @param item the type to check
      * @param true if useDefault is selected.
@@ -2403,8 +2556,7 @@ public class TransformationObjectEditorPage
 
     private boolean shouldReplaceSqlText( String typeStr ) {
         MessageBox box = new MessageBox(parent.getShell(), SWT.YES | SWT.NO | SWT.APPLICATION_MODAL);
-        box.setMessage(LOST_SQL_TEXT + SPACE + typeStr + ". " //$NON-NLS-1$  
-                       + LOST_SQL_MESSAGE);
+        box.setMessage(getString("lostSqlText.text", typeStr));  //$NON-NLS-1$
         box.setText(LOST_SQL_TITLE);
 
         Boolean bShouldDropSqlText = new Boolean(box.open() == SWT.YES);

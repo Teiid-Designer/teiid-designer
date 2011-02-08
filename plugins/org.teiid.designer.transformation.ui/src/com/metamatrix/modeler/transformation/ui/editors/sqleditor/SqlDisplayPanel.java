@@ -262,5 +262,17 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
             return this.statuses;
         }
 
+		@Override
+		public Collection<IStatus> getUpdateStatusList() {
+			// TODO Auto-generated method stub
+			return Collections.EMPTY_LIST;
+		}
+
+		@Override
+		public Collection<IStatus> getUpdateStatusList(int cmdType) {
+			// TODO Auto-generated method stub
+			return Collections.EMPTY_LIST;
+		}
+
     }
 }

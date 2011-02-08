@@ -66,6 +66,9 @@ public interface UiConstants {
         String LOCK_VIRTUAL_GROUP = PC.OVR16 + "lock_vg.gif"; //$NON-NLS-1$
         String LOCK_MAPPING_CLASS = PC.CVIEW16 + "lock_mapping_class.gif"; //$NON-NLS-1$
         String UNLOCK_MAPPING_CLASS = PC.CVIEW16 + "unlock_mapping_class.gif"; //$NON-NLS-1$
+        String NOT_ALLOWED    = PC.CVIEW16 + "not-allowed.png"; //$NON-NLS-1$
+        String WARNING    = PC.OVR16 + "warning_co.gif"; //$NON-NLS-1$
+        String ERROR    = PC.OVR16 + "error_co.gif"; //$NON-NLS-1$
 
         String SAVE = PC.CVIEW16 + "save.gif"; //$NON-NLS-1$
         String SAVE_DISABLED = PC.DVIEW16 + "save.gif"; //$NON-NLS-1$
