@@ -41,7 +41,9 @@ public class ExtensionManager {
 	static final String MODEL_FILE_NAME = "SalesforceExtensions.xmi"; //$NON-NLS-1$
 	public static final String PACKAGE_NAME = "salesforce"; //$NON-NLS-1$
 	static final String PACKAGE_PREFIX = "sf"; //$NON-NLS-1$
-	static final String PACKAGE_NS_URI = "http://www.metamatrix.com/metamodels/Salesforce"; //$NON-NLS-1$
+	//This NS_URI is versioned.  The version should be incremented if the model is changed so that code can
+	//recognized different versions and react accordingly.
+	static final String PACKAGE_NS_URI = "http://www.metamatrix.com/metamodels/Salesforce/2"; //$NON-NLS-1$
 	static final String SALESFORCE_TABLE = "Salesforce Table"; //$NON-NLS-1$
 	static final String SALESFORCE_COLUMN = "Salesforce Column"; //$NON-NLS-1$
 
