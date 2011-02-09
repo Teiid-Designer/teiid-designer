@@ -142,6 +142,18 @@ public class MappingRefactorModelHandler implements IRefactorModelHandler {
     		if( copyOfSql.contains(oldName) ) {
     			copyOfSql = copyOfSql.replaceAll(oldName, newName);
     		}
+    		// Replace all names with ',' preceeding
+    		oldName = '\t' + (String)key + '.';
+    		newName = '\t' + (String)changedModelNames.get(key) + '.';
+    		if( copyOfSql.contains(oldName) ) {
+    			copyOfSql = copyOfSql.replaceAll(oldName, newName);
+    		}
+    		// Replace all names with ',' preceeding
+    		oldName = '\n' + (String)key + '.';
+    		newName = '\n' + (String)changedModelNames.get(key) + '.';
+    		if( copyOfSql.contains(oldName) ) {
+    			copyOfSql = copyOfSql.replaceAll(oldName, newName);
+    		}
 		}
     	
     	// We've taken care of everything but the '(' preceeding char. Seems the replaceAll() can't handle it
