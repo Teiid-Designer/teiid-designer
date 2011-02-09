@@ -7,6 +7,11 @@
  */
 package org.teiid.designer.runtime.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -34,7 +39,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     private static VDB deployedVDB = null;
     private static String vdbName = null;
     
-    IFile selectedVDB;
+    Collection<IFile> selectedVDBs;
     Vdb vdb;
     boolean contextIsLocal = false;
 
@@ -60,15 +65,23 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     public boolean isApplicable( ISelection selection ) {
         boolean result = false;
-        if (!SelectionUtilities.isMultiSelection(selection)) {
-            Object obj = SelectionUtilities.getSelectedObject(selection);
-            if (obj instanceof IFile) {
-                String extension = ((IFile)obj).getFileExtension();
+        
+        List objs = SelectionUtilities.getSelectedObjects(selection);
+        Iterator iter = objs.iterator();
+        
+        while( iter.hasNext() ) {
+        	Object next = iter.next();
+            if (next instanceof IFile) {
+                String extension = ((IFile)next).getFileExtension();
                 if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
                     result = true;
                 }
             }
+            if (!result ) {
+            	break;
+            }
         }
+
         return result;
     }
 
@@ -79,24 +92,37 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     public void run() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
-        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(selectedVDB);
-        if( doDeploy ) {
-        	deployVdb(server, selectedVDB);
+        for( IFile nextVDB : this.selectedVDBs ) {
+	        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
+	        if( doDeploy ) {
+	        	deployVdb(server, nextVDB);
+	        }
         }
     }
 
     public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         boolean enable = false;
-        if (!SelectionUtilities.isMultiSelection(selection)) {
-            Object obj = SelectionUtilities.getSelectedObject(selection);
-            if (obj instanceof IFile) {
-                String extension = ((IFile)obj).getFileExtension();
+        List objs = SelectionUtilities.getSelectedObjects(selection);
+        Iterator iter = objs.iterator();
+        
+        this.selectedVDBs = new ArrayList<IFile>();
+        
+        while( iter.hasNext() ) {
+        	Object next = iter.next();
+            if (next instanceof IFile) {
+                String extension = ((IFile)next).getFileExtension();
                 if (extension != null && extension.equals(VDB_EXTENSION)) {
-                    this.selectedVDB = (IFile)obj;
+                    this.selectedVDBs.add((IFile)next);
                     enable = true;
                 }
             }
+            if( !enable ) {
+            	break;
+            }
+    	}
+        if( !enable ) {
+        	this.selectedVDBs.clear();
         }
         setEnabled(enable);
     }

@@ -53,40 +53,26 @@ public class TeiidViewDropAdapter extends PluginDropAdapter {
     public boolean performDrop( Object theData ) {
         if (theData instanceof IResource[]) {
             IResource[] resources = (IResource[])theData;
-            ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resources[0]);
-
-            if (mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
-                currentTransfer = null;
-                return true;
-            } else if (resources[0] instanceof IFile) {
-                IFile theFile = (IFile)resources[0];
-                String extension = theFile.getFileExtension();
-                if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-                    try {
-                        DeployVdbAction.deployVdb(theTargetServer, theFile);
-
-                        // VDB deployedVDB = theTargetServer.getAdmin().deployVdb(theFile);
-                        // if (deployedVDB == null) {
-                        // MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                        //                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
-                        //                                                    DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", theFile.getName())); //$NON-NLS-1$
-                        // } else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
-                        // StringBuilder message = new StringBuilder(
-                        //                                                                      DqpUiConstants.UTIL.getString("ExecuteVDBAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-                        // for (String error : deployedVDB.getValidityErrors()) {
-                        //                                message.append("\nERROR:\t").append(error); //$NON-NLS-1$
-                        // }
-                        // MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                        //                                                      DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
-                        // message.toString());
-                        // }
-                    } catch (Exception e) {
-						DqpUiConstants.UTIL.log(IStatus.ERROR,
-												e,
-												DqpUiConstants.UTIL.getString(	"TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
-																				theFile.getName(),
-																				theTargetServer));
-           }
+            for( IResource resource : resources ) {
+	            ModelResource mr = ModelerCore.getModelWorkspace().findModelResource(resource);
+	
+	            if (mr != null && ModelIdentifier.isPhysicalModelType(mr)) {
+	                currentTransfer = null;
+	                return true;
+	            } else if (resource instanceof IFile) {
+	                IFile theFile = (IFile)resource;
+	                String extension = theFile.getFileExtension();
+	                if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
+	                    try {
+	                        DeployVdbAction.deployVdb(theTargetServer, theFile);
+	                    } catch (Exception e) {
+							DqpUiConstants.UTIL.log(IStatus.ERROR,
+													e,
+													DqpUiConstants.UTIL.getString(	"TeiidViewDropAdapter.problemDeployingVdbToServer", //$NON-NLS-1$
+																					theFile.getName(),
+																					theTargetServer));
+	                    }
+	                }
                 }
             }
         }
