@@ -51,7 +51,6 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
       <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.7.0.v200908280400-7E45F9NiNWvOOXxPdVT"/>
       <import feature="org.eclipse.datatools.intro" version="1.7.0.v200908280400-26-7w311A17142212"/>
       <import feature="org.eclipse.datatools.modelbase.feature" version="1.7.0.v200908280400-77-3CcNBC0BkBNNN_0"/>
-      <import feature="org.eclipse.datatools.sdk.feature" version="1.7.0.v200908280400-7O9I2FD0IVGI8_B7adJMUQbHyqiC"/>
       <import feature="org.eclipse.datatools.sqldevtools.data.feature" version="1.7.0.v200908280400-611BgJ99r9gBQFYDK"/>
       <import feature="org.eclipse.datatools.sqldevtools.ddl.feature" version="1.7.0.v200908280400-26-78B01G8S_IJYJ9JaYkMe"/>
       <import feature="org.eclipse.datatools.sqldevtools.ddlgen.feature" version="1.7.0.v200908280400-7A-0F7RZHIXI8I_XjLd"/>
