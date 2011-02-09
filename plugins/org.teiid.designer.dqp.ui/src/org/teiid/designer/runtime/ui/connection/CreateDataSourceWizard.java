@@ -72,7 +72,6 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     private static final String DEFAULT_NAME = getString("defaultName"); //$NON-NLS-1$
     private static final String PASSWORD = getString("passwordStr"); //$NON-NLS-1$
     private static final String HIDDEN_PASSWORD = "********"; //$NON-NLS-1$
-    private static final String INVALID_CHARS = "; @ # $ % ^ & * ( ) [ ] { } = | ! < > ? \\"; //$NON-NLS-1$
     private static final String NEW_BUTTON = DqpUiConstants.UTIL.getString("Button.newLabel"); //$NON-NLS-1$
     private static final String EDIT_BUTTON = DqpUiConstants.UTIL.getString("Button.editLabel"); //$NON-NLS-1$
 
@@ -473,7 +472,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
             wizardPage.setErrorMessage(getString("noValidTeiidPropertiesError.message")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
         } else if (!isValidName(this.dataSourceName)) {
-            wizardPage.setErrorMessage(getString("invalidName.message", INVALID_CHARS)); //$NON-NLS-1$
+        	String msg = checkValidName(this.dataSourceName);
+            wizardPage.setErrorMessage(msg);
             wizardPage.setPageComplete(false);
         } else if (nameExists(this.dataSourceName)) {
             wizardPage.setErrorMessage(getString("dataSourceExists.message", this.dataSourceName)); //$NON-NLS-1$
@@ -572,9 +572,19 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     	return tempName;
     }
 
+    private String checkValidName( String name ) {
+        if (dataSourceNameValidator == null) {
+            dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
+                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@',
+                                                                  '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}',
+                                                                  '=', '|', '!', '<', '>', '?', '\''});
+        }
+        return dataSourceNameValidator.checkValidName(name);
+    }
+    
     private boolean isValidName( String name ) {
         if (dataSourceNameValidator == null) {
-            dataSourceNameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
+            dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                               StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@',
                                                                   '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}',
                                                                   '=', '|', '!', '<', '>', '?', '\''});
@@ -646,6 +656,25 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         public String getValue() {
             return value;
         }
+
+    }
+    
+    class DataSourceNameValidator extends StringNameValidator {
+
+		public DataSourceNameValidator(int minLength, int maxLength,char[] invalidCharacters) {
+			super(minLength, maxLength,invalidCharacters);
+		}
+
+		@Override
+		public boolean isValidNonLetterOrDigit(char c) {
+	        if( c == UNDERSCORE_CHARACTER || c == '-' || c == '.') return true;
+	        return false;
+		}
+
+		@Override
+		public String getValidNonLetterOrDigitMessageSuffix() {
+			return DqpUiConstants.UTIL.getString("DataSourceNameValidator.or_other_valid_characters"); //$NON-NLS-1$
+		}
 
     }
 

@@ -231,8 +231,8 @@ public class StringNameValidator {
 
         // The remaining characters must be either alphabetic, digit or underscore character ...
         while (c != CharacterIterator.DONE) {
-            if (!(Character.isUnicodeIdentifierPart(c) || Character.isLetterOrDigit(c) || c == UNDERSCORE_CHARACTER)) {
-                final Object[] params = new Object[] {new Character(c), new Integer(index)};
+            if (!(Character.isUnicodeIdentifierPart(c) || Character.isLetterOrDigit(c) || isValidNonLetterOrDigit(c))) {
+                final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
                 final String msg = ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
                 return msg;
             }
@@ -247,6 +247,20 @@ public class StringNameValidator {
 
         // Valid, so return no error message
         return null;
+    }
+    
+    /**
+     * Allows additional non-letter or non-digit characters to be valid. Subclasses should override this method to add
+     * additional valid characters.
+     * @param c
+     * @return true if valid character
+     */
+    public boolean isValidNonLetterOrDigit(char c) {
+    	return c == UNDERSCORE_CHARACTER;
+    }
+    
+    public String getValidNonLetterOrDigitMessageSuffix() {
+    	return ModelerCore.Util.getString("StringNameValidator.or_other_valid_characters"); //$NON-NLS-1$
     }
 
     /**
