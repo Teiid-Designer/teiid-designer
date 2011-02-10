@@ -316,21 +316,48 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getStoredProcedureInfoForProcedure(java.lang.String)
      */
     @Override
-    public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String fullyQualifiedProcedureName )
+    public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String procedureName )
         throws TeiidComponentException, QueryMetadataException {
-        ArgCheck.isNotEmpty(fullyQualifiedProcedureName);
+        ArgCheck.isNotEmpty(procedureName);
 
         ProcedureRecord procRecord = null;
+        
+        // procedure full names always contain atlest 2 segments(modelname.procedureName)
+        if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)
+            || StringUtil.getTokens(procedureName, DELIMITER_STRING).size() >= 2) {
 
-        // procedurefull names always contain atlest 2 segments(modelname.procedureName)
-        if (StringUtil.startsWithIgnoreCase(fullyQualifiedProcedureName, UUID.PROTOCOL)
-            || StringUtil.getTokens(fullyQualifiedProcedureName, DELIMITER_STRING).size() >= 2) {
-            // Query the index files
-            procRecord = (ProcedureRecord)getRecordByType(fullyQualifiedProcedureName, IndexConstants.RECORD_TYPE.CALLABLE);
+            final Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.CALLABLE, procedureName, false);
+
+            int resultSize = results.size();
+            if (resultSize == 1) {
+                // get the columnset record for this result
+                procRecord = (ProcedureRecord)results.iterator().next();
+            } else if (resultSize == 0) {
+                if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)) {
+                    throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
+                }
+            } else {
+                // there should be only one for the full name
+                throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
+            }
         }
-
+        
         if (procRecord == null) {
-            throw new QueryMetadataException(fullyQualifiedProcedureName + NOT_EXISTS_MESSAGE);
+        
+            String partialName = DELIMITER_CHAR + procedureName;
+    
+            final Collection results = findMetadataRecords(IndexConstants.RECORD_TYPE.CALLABLE, partialName, true);
+            
+            int resultSize = results.size();
+            if (resultSize == 1) {
+                // get the columnset record for this result
+                procRecord = (ProcedureRecord)results.iterator().next();
+            } else if (resultSize == 0) {
+                throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
+            } else {
+                // there should be only one for the UUID
+                throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
+            }
         }
 
         String procedureFullName = procRecord.getFullName();
