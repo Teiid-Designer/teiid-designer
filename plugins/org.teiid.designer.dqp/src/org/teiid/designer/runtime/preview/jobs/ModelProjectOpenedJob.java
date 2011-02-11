@@ -45,7 +45,7 @@ public final class ModelProjectOpenedJob extends CompositePreviewJob {
         CreatePreviewVdbJob job = new CreatePreviewVdbJob(project, context);
         add(job);
 
-        process(this.project);
+//        process(this.project);
     }
 
     /**
