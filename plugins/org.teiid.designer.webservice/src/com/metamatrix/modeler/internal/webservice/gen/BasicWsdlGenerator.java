@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -43,7 +44,8 @@ import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
-import org.teiid.core.CoreConstants;
+import org.teiid.core.util.StringUtil;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.webservice.Input;
@@ -108,12 +110,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
     public static final String XSD_SCHEMA_FOR_SCHEMA_TARGET_NAMESPACE = XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001;
     public static final String XSD_SCHEMA_FOR_SCHEMA_PREFIX = XSDPackage.eNS_PREFIX;
-
-    /*
-     * Prefix for the SOAP Action string token replacement value. Required
-     * to make the value a valid URI.
-     */
-    public static final String SOAP_ACTION_PREFIX = "mm:&"; //$NON-NLS-1$
 
     private Map operationToProcedureMap;
 
@@ -759,28 +755,6 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
             }
         }
 
-        protected String doGetFullyQualifiedName( final WebServiceComponent object ) {
-            return doGetFullyQualifiedNameImpl(object);
-        }
-
-        protected String doGetFullyQualifiedName( final XmlServiceComponent object ) {
-            return doGetFullyQualifiedNameImpl(object);
-        }
-
-        private String doGetFullyQualifiedNameImpl( final EObject object ) {
-            final IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(object);
-            final StringBuffer sb = new StringBuffer();
-            final String[] segments = path.segments();
-            sb.append(SOAP_ACTION_PREFIX).append(CoreConstants.ACTION_PREFIX_FOR_DATA_WEBSERVICE).append(CoreConstants.ACTION_PARAMETER_FOR_DATA_WEBSERVICE_PROCEDURE);
-            for (int i = 0; i < segments.length; i++) {
-                if (i != 0) {
-                    sb.append('.');
-                }
-                final String segment = segments[i];
-                sb.append(segment);
-            }
-            return sb.toString();
-        }
 
         private void addToOperationToProcedureMap( final EObject object ) {
             final IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(object);
@@ -1146,7 +1120,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = doGetFullyQualifiedName(object);
+            final String action = StringUtil.Constants.EMPTY_STRING;
             soapOp.setAction(action);
             addToOperationToProcedureMap(object);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
@@ -1456,7 +1430,7 @@ public class BasicWsdlGenerator implements IWsdlGenerator {
 
             // Add the SOAP operation information ...
             final SoapOperation soapOp = this.soapFactory.createSoapOperation();
-            final String action = doGetFullyQualifiedName(object);
+            final String action = StringUtil.Constants.EMPTY_STRING;
             soapOp.setAction(action);
             soapOp.setStyle(SoapStyleType.DOCUMENT_LITERAL);
             soapOp.setBindingOperation(this.bindingOp);
