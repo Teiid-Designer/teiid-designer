@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,6 +52,7 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
+
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -278,7 +280,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     			// the
     			// UI and goes away when it is garbage collected.
     			IConnectionProfile profile = ConnectivityUtil.createTransientTeiidProfile(driverPath,
-    					jdbcInfo.getURL(),
+    					jdbcInfo.getUrl(),
     					jdbcInfo.getUsername(),
     					jdbcInfo.getPassword(),
     					vdbName);

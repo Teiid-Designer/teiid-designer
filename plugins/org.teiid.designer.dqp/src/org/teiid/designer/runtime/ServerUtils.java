@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -78,15 +79,9 @@ public class ServerUtils {
                 if (!isValidHostName(host)) {
                     throw new IllegalArgumentException(UTIL.getString("serverUtilsHostNameContainsInvalidCharacters")); //$NON-NLS-1$
                 }
-                int portNumber;
-                try {
-                    portNumber = Integer.parseInt(port);
-                } catch (NumberFormatException nfe) {
-                    throw new IllegalArgumentException(UTIL.getString("serverUtilsPortMustBeNumeric", port)); //$NON-NLS-1$
-                }
-                if (portNumber < 0 || portNumber > 0xFFFF) {
-                    throw new IllegalArgumentException(UTIL.getString("serverUtilsPortOutOfRange", Integer.toString(portNumber))); //$NON-NLS-1$
-                }
+                
+                // validate port number
+                validPortNumber(port);
             } catch (NoSuchElementException e) {
                 throw new IllegalArgumentException(UTIL.getString("serverUtilsIncompleteUrl", serverURL)); //$NON-NLS-1$
             } catch (NullPointerException ne) {
@@ -103,6 +98,25 @@ public class ServerUtils {
                                                             '>', '?', '\''});
         }
         return hostNameValidator.isValidName(host);
+    }
+    
+    /**
+     * @param port the port number being validated
+     * @return <code>true</code> if the port number is valid
+     * @throws IllegalArgumentException if port number is not numeric or out of range
+     */
+    public static void validPortNumber(String port) {
+        int portNumber;
+
+        try {
+            portNumber = Integer.parseInt(port);
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException(UTIL.getString("serverUtilsPortMustBeNumeric", port)); //$NON-NLS-1$
+        }
+
+        if (portNumber < 0 || portNumber > 0xFFFF) {
+            throw new IllegalArgumentException(UTIL.getString("serverUtilsPortOutOfRange", Integer.toString(portNumber))); //$NON-NLS-1$
+        }
     }
 
 }

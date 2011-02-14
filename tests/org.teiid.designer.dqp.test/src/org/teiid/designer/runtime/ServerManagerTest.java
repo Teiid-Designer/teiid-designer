@@ -36,8 +36,8 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 /**
  * 
  */
-@RunWith( PowerMockRunner.class )
-@PrepareForTest( {DqpPlugin.class, ModelerCore.class, ResourcesPlugin.class} )
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ DqpPlugin.class, ModelerCore.class, ResourcesPlugin.class })
 public class ServerManagerTest {
 
     private static final String RESTORED_SERVER1_URL = "mm://localhost:8080";
@@ -86,7 +86,7 @@ public class ServerManagerTest {
         this.mgr.addServer(this.server1);
 
         // test to make sure listener was called twice (once for adding server, once for setting default server)
-        verify(listener, times(2)).configurationChanged((ExecutionConfigurationEvent)anyObject());
+        verify(listener, times(2)).configurationChanged((ExecutionConfigurationEvent) anyObject());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ServerManagerTest {
         this.mgr.addServer(this.server1);
 
         // test to make sure listener was called once
-        verify(listener, never()).configurationChanged((ExecutionConfigurationEvent)anyObject());
+        verify(listener, never()).configurationChanged((ExecutionConfigurationEvent) anyObject());
     }
 
     @Test
@@ -148,42 +148,42 @@ public class ServerManagerTest {
         assertThat(this.mgr.getServer(SERVER1_URL), is(server1));
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullListenerForAddListener() {
         this.mgr.addListener(null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullListenerForRemoveListener() {
         this.mgr.removeListener(null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullReplacedServerForUpdateServer() {
         this.mgr.updateServer(null, null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullServerForAddServer() {
         this.mgr.addServer(null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullServerForIsRegistered() {
         this.mgr.isRegistered(null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullServerForRemoveServer() {
         this.mgr.removeServer(null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullUpdatedServerForUpdateServer() {
         this.mgr.updateServer(mock(Server.class), null);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullUrlForGetServer() {
         this.mgr.getServer(null);
     }
@@ -216,107 +216,87 @@ public class ServerManagerTest {
     }
 
     @Test
-	public void shouldRestoreServerRegistry() throws Exception {
-		// setup
-		MockObjectFactory.createModelContainer();
-		MockObjectFactory.createDqpPlugin();
-		MockObjectFactory.createResourcesPlugin();
+    public void shouldRestoreServerRegistry() throws Exception {
+        // setup
+        MockObjectFactory.createModelContainer();
+        MockObjectFactory.createDqpPlugin();
+        MockObjectFactory.createResourcesPlugin();
 
-		this.mgr = new ServerManager("testdata");
-		this.mgr.restoreState();
-		assertThat(this.mgr.getServers().size(), is(2));
+        this.mgr = new ServerManager("testdata");
+        this.mgr.restoreState();
+        assertThat(this.mgr.getServers().size(), is(2));
 
-		String host = "localhost";
-		String customLabel = "My Custom Label";
-		String adminPort = "31443";
-		boolean adminSecure = true;
-		String adminUser = "admin";
-		String adminPassword = "admin";
-		boolean adminPersistPassword = true;
-		String jdbcPort = "31000";
-		boolean jdbcSecure = false;
-		String jdbcUser = "teiid";
-		String jdbcPassword = null;
-		boolean jdbcPersistPassword = false;
-		EventManager eventMgr = mock(EventManager.class);
+        String customLabel = "My Custom Label";
+        String adminPort = "31443";
+        boolean adminSecure = true;
+        String adminUser = "admin";
+        String adminPassword = "admin";
+        boolean adminPersistPassword = true;
+        String jdbcPort = "31000";
+        boolean jdbcSecure = false;
+        String jdbcUser = "teiid";
+        String jdbcPassword = null;
+        boolean jdbcPersistPassword = false;
+        EventManager eventMgr = mock(EventManager.class);
 
-		Server testServer = new Server(	new TeiidAdminInfo(	host,
-															adminPort,
-															adminUser,
-															adminPassword,
-															adminPersistPassword,
-															adminSecure),
-										new TeiidJdbcInfo(	host,
-															jdbcPort,
-															jdbcUser,
-															jdbcPassword,
-															jdbcPersistPassword,
-															jdbcSecure),
-										eventMgr);
+        // construct a server just to get its URL
+        TeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
+        TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
+        Server testServer = new Server(null, adminInfo, jdbcInfo, eventMgr);
+        adminInfo.setHostProvider(testServer);
+        jdbcInfo.setHostProvider(testServer);
 
-		Server server = this.mgr.getServer(testServer.getUrl());
-		assertThat(server, notNullValue());
-		assertThat(server, is(this.mgr.getDefaultServer()));
-		assertThat(server.getCustomLabel(), is(customLabel));
-		assertThat(server.getTeiidAdminInfo().getHost(), is(host));
-		assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
-		assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
-		assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
-		assertThat(	server.getTeiidAdminInfo().isPasswordBeingPersisted(),
-					is(adminPersistPassword));
-		assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
-		assertThat(server.getTeiidJdbcInfo().getHost(), is(host));
-		assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
-		assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
-		assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
-		assertThat(	server.getTeiidJdbcInfo().isPasswordBeingPersisted(),
-					is(jdbcPersistPassword));
-		assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
+        Server server = this.mgr.getServer(testServer.getUrl());
+        assertThat(server, notNullValue());
+        assertThat(server, is(this.mgr.getDefaultServer()));
+        assertThat(server.getCustomLabel(), is(customLabel));
+        assertThat(server.getHost(), is(HostProvider.DEFAULT_HOST));
+        assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
+        assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
+        assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
+        assertThat(server.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
+        assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
+        assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
+        assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
+        assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
+        assertThat(server.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
+        assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
 
-		host = "myserver.com";
-		customLabel = "";
-		adminPort = "31444";
-		adminSecure = false;
-		adminUser = "admin2";
-		adminPassword = null;
-		adminPersistPassword = false;
-		jdbcPort = "31001";
-		jdbcSecure = true;
-		jdbcUser = "teiid2";
-		jdbcPassword = "teiid";
-		jdbcPersistPassword = true;
+        String host = "myserver.com";
+        customLabel = "";
+        adminPort = "31444";
+        adminSecure = false;
+        adminUser = "admin2";
+        adminPassword = null;
+        adminPersistPassword = false;
+        jdbcPort = "31001";
+        jdbcSecure = true;
+        jdbcUser = "teiid2";
+        jdbcPassword = "teiid";
+        jdbcPersistPassword = true;
 
-		testServer = new Server(new TeiidAdminInfo(	host,
-													adminPort,
-													adminUser,
-													adminPassword,
-													adminPersistPassword,
-													adminSecure),
-								new TeiidJdbcInfo(	host,
-													jdbcPort,
-													jdbcUser,
-													jdbcPassword,
-													jdbcPersistPassword,
-													jdbcSecure),
-								eventMgr);
-		server = this.mgr.getServer(testServer.getUrl());
-		assertThat(server, notNullValue());
-		assertThat(server, is(not(this.mgr.getDefaultServer())));
-		assertThat(server.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null
-		assertThat(server.getTeiidAdminInfo().getHost(), is(host));
-		assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
-		assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
-		assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
-		assertThat(	server.getTeiidAdminInfo().isPasswordBeingPersisted(),
-					is(adminPersistPassword));
-		assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
-		assertThat(server.getTeiidJdbcInfo().getHost(), is(host));
-		assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
-		assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
-		assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
-		assertThat(	server.getTeiidJdbcInfo().isPasswordBeingPersisted(),
-					is(jdbcPersistPassword));
-		assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
-	}
+        // construct a server just to get its URL
+        adminInfo = new TeiidAdminInfo(adminPort, adminUser, adminPassword, adminPersistPassword, adminSecure);
+        jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, jdbcPassword, jdbcPersistPassword, jdbcSecure);
+        testServer = new Server(host, adminInfo, jdbcInfo, eventMgr);
+        adminInfo.setHostProvider(testServer);
+        jdbcInfo.setHostProvider(testServer);
+
+        server = this.mgr.getServer(testServer.getUrl());
+        assertThat(server, notNullValue());
+        assertThat(server, is(not(this.mgr.getDefaultServer())));
+        assertThat(server.getCustomLabel(), nullValue()); // customLabel is empty string but gets set as a null
+        assertThat(server.getHost(), is(host));
+        assertThat(server.getTeiidAdminInfo().getPort(), is(adminPort));
+        assertThat(server.getTeiidAdminInfo().getUsername(), is(adminUser));
+        assertThat(server.getTeiidAdminInfo().getPassword(), is(adminPassword));
+        assertThat(server.getTeiidAdminInfo().isPasswordBeingPersisted(), is(adminPersistPassword));
+        assertThat(server.getTeiidAdminInfo().isSecure(), is(adminSecure));
+        assertThat(server.getTeiidJdbcInfo().getPort(), is(jdbcPort));
+        assertThat(server.getTeiidJdbcInfo().getUsername(), is(jdbcUser));
+        assertThat(server.getTeiidJdbcInfo().getPassword(), is(jdbcPassword));
+        assertThat(server.getTeiidJdbcInfo().isPasswordBeingPersisted(), is(jdbcPersistPassword));
+        assertThat(server.getTeiidJdbcInfo().isSecure(), is(jdbcSecure));
+    }
 
 }

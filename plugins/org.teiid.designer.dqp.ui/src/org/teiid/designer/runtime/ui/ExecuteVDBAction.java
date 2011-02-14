@@ -132,7 +132,7 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
     }
     
-    private void internalRun() {
+    void internalRun() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
         VDB deployedVDB = null;
 
@@ -211,9 +211,9 @@ public class ExecuteVDBAction extends SortableSelectionAction {
 
     	TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, server.getTeiidJdbcInfo());
     	
-    	String connectionURL = jdbcInfo.getURL();
+    	String connectionURL = jdbcInfo.getUrl();
     	
-    	String profileName = vdbName + " - " + jdbcInfo.getHost() + " - Teiid Connection"; //$NON-NLS-1$ //$NON-NLS-2$
+    	String profileName = DqpUiConstants.UTIL.getString("ExecuteVDBAction.profileName", vdbName, server.getHost()); //$NON-NLS-1$
     	
     	IConnectionProfile profile = ProfileManager.getInstance().getProfileByName(profileName);
     	if(profile == null) {

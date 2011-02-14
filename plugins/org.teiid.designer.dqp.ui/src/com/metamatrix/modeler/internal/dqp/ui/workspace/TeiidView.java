@@ -52,6 +52,8 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.adminapi.Model;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
+import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
@@ -59,8 +61,6 @@ import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
-import org.teiid.designer.runtime.ExecutionConfigurationEvent.TargetType;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DeleteServerAction;
 import org.teiid.designer.runtime.ui.DisconnectFromServerAction;
@@ -893,6 +893,13 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     @Override
     public void setFocus() {
         viewer.getControl().setFocus();
+    }
+    
+    /**
+     * @param object the object needing to be updated in the viewer
+     */
+    public void updateLabel(Object object) {
+        this.viewer.update(object, null);
     }
 
     /**

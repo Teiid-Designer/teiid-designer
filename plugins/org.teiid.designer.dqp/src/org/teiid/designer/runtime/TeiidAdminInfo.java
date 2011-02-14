@@ -1,167 +1,64 @@
 package org.teiid.designer.runtime;
 
-public class TeiidAdminInfo {
-	
-	private String host;
-	private String password;
-	private String port;
-	private boolean secure;
-	private String username;
-	
-	private boolean persistPassword = false;
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 
-	private static String MMS = "mms://"; //$NON-NLS-1$
-	private static String MM = "mm://"; //$NON-NLS-1$
-	private static String HOST = "host"; //$NON-NLS-1$
-	private static String PORT = "port"; //$NON-NLS-1$
-	
-	public static String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
-	public static String DEFAULT_PORT = "31443"; //$NON-NLS-1$
-	
-	public TeiidAdminInfo(String host, String port, String username,
-			String password, boolean persistPassword, boolean secure) {
-		super();
 
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.persistPassword = persistPassword;
-		this.secure = secure;
-	}
-	
-	public TeiidAdminInfo() {
-		super();
-		
-		this.host = DEFAULT_HOST;
-		this.port = DEFAULT_PORT;
-		this.persistPassword = true;
-		this.secure = true;
-	}
-	
-	public TeiidAdminInfo clone() {
-		return new TeiidAdminInfo(this.host, this.port, this.username, this.password, this.persistPassword, this.secure);
-	}
-	
-	public String getHost() {
-		return this.host;
-	}
-	
-	public String getPassword() {
-		return this.password;
-	}
-	
-	public String getPort() {
-		return this.port;
-	}
-	
+/**
+ * The <code>TeiidAdminInfo</code> defines the properties needed to make a Teiid Admin connection.
+ */
+public class TeiidAdminInfo extends TeiidConnectionInfo {
+
     /**
-    * @return the URL (never <code>null</code>)
-    */
-	public String getURL() {
-		// mm<s>://host:port
-		StringBuffer sb = new StringBuffer();
-
-		if( this.secure) {
-			sb.append(MMS);
-		} else { 
-			sb.append(MM);
-		}
-		
-		if( this.host == null ) {
-			sb.append(HOST);
-		} else {
-			sb.append(this.host);
-		}
-		sb.append(':');
-		if( this.port == null ) {
-			sb.append(PORT);
-		} else {
-			sb.append(this.port);
-		}
-		
-		return sb.toString();
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
-    /**
-     * @return persistPassword <code>true</code> if the password is being persisted
+     * The default Teiid Admin persist password flag. Value is {@value} .
      */
-    public boolean isPasswordBeingPersisted() {
-        return this.persistPassword;
+    public static final boolean DEFAULT_PERSIST_PASSWORD = true;
+
+    /**
+     * The default Teiid Admin port number. Value is {@value} .
+     */
+    public static final String DEFAULT_PORT = "31443"; //$NON-NLS-1$
+
+    /**
+     * The default Teiid Admin secure protocol flag. Value is {@value} .
+     */
+    public static final boolean DEFAULT_SECURE = true;
+
+    /**
+     * @param port the connection port (can be <code>null</code> or empty)
+     * @param username the connection user name (can be <code>null</code> or empty)
+     * @param password the connection password (can be <code>null</code> or empty)
+     * @param persistPassword <code>true</code> if the password should be persisted
+     * @param secure <code>true</code> if a secure connection should be used
+     * @see #validate()
+     */
+    public TeiidAdminInfo( String port,
+                           String username,
+                           String password,
+                           boolean persistPassword,
+                           boolean secure ) {
+        super(port, username, password, persistPassword, secure);
     }
-	
-	public boolean isSecure() {
-		return this.secure;
-	}
-	
-	public boolean isValidHost() {
-		return ServerUtils.isValidHostName(this.host);
-	}
-	
-	public boolean isValidPortNumber() {
-        int portNumber;
-        try {
-            portNumber = Integer.parseInt(port);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        if (portNumber < 0 || portNumber > 0xFFFF) {
-            return false;
-        }
-        return true;
-	}
-	
-	public void setAll(TeiidAdminInfo info) {
-		this.host = info.getHost();
-		this.port = info.getPort();
-		this.password = info.getPassword();
-		this.username = info.username;
-		this.persistPassword = info.isPasswordBeingPersisted();
-		this.secure = info.isSecure();
-	}
-	
-	public void setHost(String host) {
-		this.host = host;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public void setPersistPassword(boolean persist) {
-		this.persistPassword = persist;
-	}
-	
 
-	public void setPort(String port) {
-		this.port = port;
-	}
-	
-	public void setSecure(boolean secure) {
-		this.secure = secure;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public TeiidAdminInfo clone() {
+        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getPassword(), isPasswordBeingPersisted(), isSecure());
+        cloned.setHostProvider(getHostProvider());
+        return cloned;
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#getType()
+     */
+    @Override
+    public String getType() {
+        return Util.getString("adminInfoType"); //$NON-NLS-1$
+    }
 
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(TeiidAdminInfo.class.getName()).append('\n')
-		.append("Host: \t").append(this.host) //$NON-NLS-1$
-		.append("Port: \t").append(this.port) //$NON-NLS-1$
-		.append("Username:\t").append(this.username) //$NON-NLS-1$
-		.append("password:\t").append(this.password) //$NON-NLS-1$
-		.append("SSL:\t").append(this.secure) //$NON-NLS-1$
-		.append("Save Pwd:\t").append(this.persistPassword); //$NON-NLS-1$
-		return super.toString();
-	}
-
-	
-	
 }

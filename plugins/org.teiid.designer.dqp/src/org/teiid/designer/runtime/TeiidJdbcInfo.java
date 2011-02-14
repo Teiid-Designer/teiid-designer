@@ -1,200 +1,180 @@
 package org.teiid.designer.runtime;
 
-public class TeiidJdbcInfo {
-	
-	private String host;
-	private String password;
-	private String port;
-	private boolean secure;
-	private String username;
-	
-	private boolean persistPassword = false;
-	
-	private String vdbname;
-	private static String VDB_PLACEHOLDER = "<vdbname>"; //$NON-NLS-1$
-	private static String MMS = "mms://"; //$NON-NLS-1$
-	private static String MM = "mm://"; //$NON-NLS-1$
-	private static String JDBC_TEIID_PREFIX = "jdbc:teiid:"; //$NON-NLS-1$
-	private static String HOST = "host"; //$NON-NLS-1$
-	private static String PORT = "port"; //$NON-NLS-1$
-	
-	public static String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
-	public static String DEFAULT_PORT = "31000"; //$NON-NLS-1$
-	public static String DEFAULT_USERNAME = "teiid"; //$NON-NLS-1$
-	public static String DEFAULT_PWD = "teiid"; //$NON-NLS-1$
-	
-	public TeiidJdbcInfo(String host, String port, String username,
-			String password, boolean persistPassword, boolean secure) {
-		super();
+import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
+import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.persistPassword = persistPassword;
-		this.secure = secure;
-	}
-	
-	public TeiidJdbcInfo(String vdbname, String host, String port,
-			String username, String password, boolean persistPassword, boolean secure) {
-		super();
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.teiid.core.util.HashCodeUtil;
 
-		this.vdbname = vdbname;
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.persistPassword = persistPassword;
-		this.secure = secure;
-	}
-	
-	public TeiidJdbcInfo(String vdbname, TeiidJdbcInfo teiidJdbcInfo) {
-		super();
+import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.dqp.DqpPlugin;
 
-		this.vdbname = vdbname;
-		this.host = teiidJdbcInfo.getHost();
-		this.port = teiidJdbcInfo.getPort();
-		this.username = teiidJdbcInfo.getUsername();
-		this.password = teiidJdbcInfo.getPassword();
-		this.persistPassword = teiidJdbcInfo.isPasswordBeingPersisted();
-		this.secure = teiidJdbcInfo.isSecure();
-	}
-	
-	public TeiidJdbcInfo() {
-		super();
-		
-		this.host = DEFAULT_HOST;
-		this.port = DEFAULT_PORT;
-		this.secure = false;
-	}
+/**
+ * The <code>TeiidJdbcInfo</code> defines the properties needed to make a Teiid JDBC connection.
+ */
+public class TeiidJdbcInfo extends TeiidConnectionInfo {
 
-	public TeiidJdbcInfo clone() {
-		return new TeiidJdbcInfo(this.host, this.port, this.username, this.password, this.persistPassword, this.secure);
-	}
-	
-	public String getHost() {
-		return this.host;
-	}
-	
-	public String getPassword() {
-		return this.password;
-	}
-	
-	public String getPort() {
-		return this.port;
-	}
-	
+    private static final String VDB_PLACEHOLDER = "<vdbname>"; //$NON-NLS-1$
+    private static final String JDBC_TEIID_PREFIX = "jdbc:teiid:"; //$NON-NLS-1$
+
     /**
-	* @return the URL (never <code>null</code>)
-	*/
-	public String getURL() {
-		// jdbc:teiid:PartsVDB@mm://localhost:31000
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append(JDBC_TEIID_PREFIX);
-		
-		if( vdbname != null ) {
-			sb.append(this.vdbname);
-		} else {
-			sb.append(VDB_PLACEHOLDER);
-		}
-		sb.append('@');
-		if( this.secure) {
-			sb.append(MMS);
-		} else { 
-			sb.append(MM);
-		}
-		
-		if( this.host == null ) {
-			sb.append(HOST);
-		} else {
-			sb.append(this.host);
-		}
-		sb.append(':');
-		if( this.port == null ) {
-			sb.append(PORT);
-		} else {
-			sb.append(this.port);
-		}
-		
-		return sb.toString();
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
-    /**
-     * @return persistPassword <code>true</code> if the password is being persisted
+     * The default Teiid Admin persist password flag. Value is {@value} .
      */
-    public boolean isPasswordBeingPersisted() {
-        return this.persistPassword;
+    public static final boolean DEFAULT_PERSIST_PASSWORD = false;
+
+    /**
+     * The default Teiid JDBC port number. Value is {@value} .
+     */
+    public static final String DEFAULT_PORT = "31000"; //$NON-NLS-1$
+
+    /**
+     * The default Teiid Admin secure protocol flag. Value is {@value} .
+     */
+    public static final boolean DEFAULT_SECURE = true;
+
+    /**
+     * The name of the VDB that this connection will connect to (never empty or <code>null</code>)
+     */
+    private String vdbname;
+
+    /**
+     * @param port the connection port (can be <code>null</code> or empty)
+     * @param username the connection user name (can be <code>null</code> or empty)
+     * @param password the connection password (can be <code>null</code> or empty)
+     * @param persistPassword <code>true</code> if the password should be persisted
+     * @param secure <code>true</code> if a secure connection should be used
+     * @see #validate()
+     */
+    public TeiidJdbcInfo( String port,
+                          String username,
+                          String password,
+                          boolean persistPassword,
+                          boolean secure ) {
+        this(VDB_PLACEHOLDER, port, username, password, persistPassword, secure);
     }
-	
-	public boolean isSecure() {
-		return this.secure;
-	}
-	
-	public boolean isValidHost() {
-		return ServerUtils.isValidHostName(this.host);
-	}
-	
-	public boolean isValidPortNumber() {
-        int portNumber;
+
+    /**
+     * @param vdbname the VDB name (never empty or <code>null</code>)
+     * @param port the connection port (can be <code>null</code> or empty)
+     * @param username the connection user name (can be <code>null</code> or empty)
+     * @param password the connection password (can be <code>null</code> or empty)
+     * @param persistPassword <code>true</code> if the password should be persisted
+     * @param secure <code>true</code> if a secure connection should be used
+     * @see #validate()
+     */
+    private TeiidJdbcInfo( String vdbname,
+                           String port,
+                           String username,
+                           String password,
+                           boolean persistPassword,
+                           boolean secure ) {
+        super(port, username, password, persistPassword, secure);
+        CoreArgCheck.isNotEmpty(vdbname, "vdbname"); //$NON-NLS-1$
+        this.vdbname = vdbname;
+    }
+
+    /**
+     * @param vdbname the VDB name (may not be empty or <code>null</code>)
+     * @param teiidJdbcInfo the connection properties whose values are being used to construct this object
+     * @throws IllegalArgumentException if vdbname is empty or <code>null</code>
+     * @see #validate()
+     */
+    public TeiidJdbcInfo( String vdbname,
+                          TeiidJdbcInfo teiidJdbcInfo ) {
+        this(vdbname, teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getPassword(),
+                teiidJdbcInfo.isPasswordBeingPersisted(), teiidJdbcInfo.isSecure());
+        setHostProvider(teiidJdbcInfo.getHostProvider());
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public TeiidJdbcInfo clone() {
+        TeiidJdbcInfo cloned = new TeiidJdbcInfo(getPort(), getUsername(), getPassword(), isPasswordBeingPersisted(), isSecure());
+        cloned.setHostProvider(getHostProvider());
+        return cloned;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( Object object ) {
+        if (super.equals(object) && this.vdbname.equals(((TeiidJdbcInfo) object).vdbname)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#getType()
+     */
+    @Override
+    public String getType() {
+        return Util.getString("jdbcInfoType"); //$NON-NLS-1$
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#getUrl()
+     */
+    @Override
+    public String getUrl() {
+        // jdbc:teiid:<vdbname>@mm<s>://host:port
+        StringBuilder sb = new StringBuilder();
+        sb.append(JDBC_TEIID_PREFIX);
+        sb.append(this.vdbname);
+        sb.append('@');
+
+        return sb.append(super.getUrl()).toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeUtil.hashCode(super.hashCode(), this.vdbname);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#toString()
+     */
+    @Override
+    public String toString() {
+        return DqpPlugin.Util.getString("jdbcConnectionInfoProperties", //$NON-NLS-1$
+                                        super.toString(),
+                                        this.vdbname);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.runtime.TeiidConnectionInfo#validateUrl()
+     */
+    @Override
+    protected IStatus validateUrl() {
         try {
-            portNumber = Integer.parseInt(port);
-        } catch (NumberFormatException nfe) {
-            return false;
+            ServerUtils.validPortNumber(getPort());
+        } catch (Exception e) {
+            return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }
-        if (portNumber < 0 || portNumber > 0xFFFF) {
-            return false;
-        }
-        return true;
-	}
-	
-	public void setAll(TeiidJdbcInfo info) {
-		this.host = info.getHost();
-		this.port = info.getPort();
-		this.password = info.getPassword();
-		this.username = info.username;
-		this.persistPassword = info.isPasswordBeingPersisted();
-		this.secure = info.isSecure();
-	}
-	
-	public void setHost(String host) {
-		this.host = host;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public void setPersistPassword(boolean persist) {
-		this.persistPassword = persist;
-	}
-	
-	public void setPort(String port) {
-		this.port = port;
-	}
-	
-	public void setSecure(boolean secure) {
-		this.secure = secure;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(TeiidAdminInfo.class.getName()).append('\n')
-		.append("Host: \t").append(this.host) //$NON-NLS-1$
-		.append("Port: \t").append(this.port) //$NON-NLS-1$
-		.append("Username:\t").append(this.username) //$NON-NLS-1$
-		.append("password:\t").append(this.password) //$NON-NLS-1$
-		.append("SSL:\t").append(this.secure) //$NON-NLS-1$
-		.append("Save Pwd:\t").append(this.persistPassword); //$NON-NLS-1$
-		return super.toString();
-	}
+
+        return Status.OK_STATUS;
+    }
+
 }

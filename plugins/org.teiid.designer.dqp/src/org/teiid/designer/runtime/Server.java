@@ -23,7 +23,7 @@ import com.metamatrix.modeler.dqp.DqpPlugin;
 /**
  *
  */
-public class Server {
+public class Server implements HostProvider {
 
     // ===========================================================================================================================
     // Class Methods
@@ -57,43 +57,51 @@ public class Server {
     protected final EventManager eventManager;
 
     private ExecutionManager executionManager;
-    
+
     /**
      * The Teiid JDBC connection info object
      */
     private TeiidJdbcInfo teiidJdbcInfo;
-    
+
     /**
      * The Teiid Admin connection info object
      */
     private TeiidAdminInfo teiidAdminInfo;
-    
+
     private String connectionError;
-    
+
     /**
      * An optional property that can be used for display purposes. May be <code>null</code>.
      */
     private String customLabel;
 
+    /**
+     * The host this server connects to (never empty or <code>null</code>).
+     */
+    private String host;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
-    
-	/**
+
+    /**
      * Constructs on new <code>Server</code>.
      * 
+     * @param host the server host (<code>null</code> or empty if default host should be used)
      * @param adminInfo the server admin connection properties (never <code>null</code>)
      * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
      * @param eventManager the event manager (never <code>null</code>)
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
-    public Server( TeiidAdminInfo adminInfo,
+    public Server( String host,
+                   TeiidAdminInfo adminInfo,
                    TeiidJdbcInfo jdbcInfo,
                    EventManager eventManager ) {
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(jdbcInfo, "eventManager"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(eventManager, "eventManager"); //$NON-NLS-1$
 
+        this.host = host;
         this.teiidAdminInfo = adminInfo;
         this.teiidJdbcInfo = jdbcInfo;
         this.eventManager = eventManager;
@@ -107,29 +115,29 @@ public class Server {
      * Perform cleanup
      */
     public void close() {
-    	if( this.admin != null ) {
-        	Admin adminApi = this.admin.getAdminApi();
-        	if( adminApi != null) {
-        		adminApi.close();
-        	}
-        	this.admin = null;
-    	}
-    	//System.out.println(" >>>> Server.close() CLOSED  Server = " + getUrl());
+        if (this.admin != null) {
+            Admin adminApi = this.admin.getAdminApi();
+            if (adminApi != null) {
+                adminApi.close();
+            }
+            this.admin = null;
+        }
+        // System.out.println(" >>>> Server.close() CLOSED  Server = " + getUrl());
     }
-    
+
     /**
      * Basically closes the connection and admin and nulls out the admin reference so next call to connect will
      * reconstruct the Teiid connection from scratch.
      */
     public void disconnect() {
-    	close();
-    	
-    	if( this.admin != null ) {
-    		this.admin.disconnect();
-    		this.admin = null;
-    	}
+        close();
+
+        if (this.admin != null) {
+            this.admin.disconnect();
+            this.admin = null;
+        }
     }
-    
+
     /**
      * {@inheritDoc}
      * 
@@ -137,16 +145,27 @@ public class Server {
      */
     @Override
     public boolean equals( Object obj ) {
-        if (this == obj) return true;
-        if ((obj == null) || (getClass() != obj.getClass())) return false;
+        if (this == obj) {
+            return true;
+        }
 
-        Server otherServer = (Server)obj;
-		return equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
-																		otherServer.getTeiidAdminInfo().getUsername())
-				&& equivalent(	getTeiidAdminInfo().getPassword(),
-								otherServer.getTeiidAdminInfo().getPassword())
-				&& (isPasswordBeingPersisted() == otherServer.isPasswordBeingPersisted() && equivalent(	this.customLabel,
-																										otherServer.customLabel));
+        if ((obj == null) || (getClass() != obj.getClass())) {
+            return false;
+        }
+
+        Server otherServer = (Server) obj;
+
+        if (!getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())) {
+            return false;
+        }
+
+        if (!getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo())) {
+            return false;
+        }
+
+        return equivalent(getHost(), otherServer.getHost()) && equivalent(getCustomLabel(), otherServer.getCustomLabel())
+               && getTeiidAdminInfo().equals(otherServer.getTeiidAdminInfo())
+               && getTeiidJdbcInfo().equals(otherServer.getTeiidJdbcInfo());
     }
 
     public ExecutionAdmin getAdmin() throws Exception {
@@ -155,7 +174,9 @@ public class Server {
             if (getTeiidAdminInfo().getPassword() != null) {
                 pwd = getTeiidAdminInfo().getPassword().toCharArray();
             }
-            this.admin = new ExecutionAdmin(AdminFactory.getInstance().createAdmin(getTeiidAdminInfo().getUsername(), pwd, getUrl()), this,
+            this.admin = new ExecutionAdmin(AdminFactory.getInstance()
+                                                        .createAdmin(getTeiidAdminInfo().getUsername(), pwd, getUrl()),
+                                            this,
                                             this.eventManager);
             this.admin.load();
         }
@@ -164,20 +185,20 @@ public class Server {
     }
 
     public TeiidAdminInfo getTeiidAdminInfo() {
-		return teiidAdminInfo;
-	}
-    
+        return teiidAdminInfo;
+    }
+
     public TeiidJdbcInfo getTeiidJdbcInfo() {
-		return teiidJdbcInfo;
-	}
-    
+        return teiidJdbcInfo;
+    }
+
     /**
      * @return the host URL (never <code>null</code>)
      */
     public String getUrl() {
-        return getTeiidAdminInfo().getURL();
+        return getTeiidAdminInfo().getUrl();
     }
-    
+
     /**
      * @return the custom label or <code>null</code> if not being used
      */
@@ -196,11 +217,25 @@ public class Server {
     /**
      * {@inheritDoc}
      * 
+     * @see org.teiid.designer.runtime.HostProvider#getHost()
+     */
+    @Override
+    public String getHost() {
+        if (this.host == null) {
+            return HostProvider.DEFAULT_HOST;
+        }
+
+        return this.host;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        return HashCodeUtil.hashCode(0, getUrl(), getTeiidAdminInfo().getUsername(), getTeiidAdminInfo().getPassword());
+        return HashCodeUtil.hashCode(0, getHost(), getCustomLabel(), getTeiidAdminInfo(), getTeiidJdbcInfo());
     }
 
     /**
@@ -212,24 +247,18 @@ public class Server {
      */
     public boolean hasSameKey( Server otherServer ) {
         CoreArgCheck.isNotNull(otherServer, "otherServer"); //$NON-NLS-1$
-        return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(), otherServer.getTeiidAdminInfo().getUsername()));
+        return (equivalent(getUrl(), otherServer.getUrl()) && equivalent(getTeiidAdminInfo().getUsername(),
+                                                                         otherServer.getTeiidAdminInfo().getUsername()));
     }
 
     /**
      * @return <code>true</code> if a connection to this server exists and is working
      */
     public boolean isConnected() {
-    	if( this.admin == null ) {
-    		return false;
-    	}
+        if (this.admin == null) {
+            return false;
+        }
         return ping().isOK();
-    }
-
-    /**
-     * @return persistPassword <code>true</code> if the password is being persisted
-     */
-    public boolean isPasswordBeingPersisted() {
-        return this.teiidAdminInfo.isPasswordBeingPersisted();
     }
 
     /**
@@ -247,38 +276,45 @@ public class Server {
 
         return Status.OK_STATUS;
     }
-    
-    public void notifyRefresh() {
-    	if( this.admin != null ) {
-    		this.admin.getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
-    	} else {
-    		DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
-    	}
-    }
-  
-	public String getConnectionError() {
-		return connectionError;
-	}
 
-	public void setConnectionError(String connectionError) {
-		this.connectionError = connectionError;
-	}
-	
-	/**
-	 * @param customLabel the new custom label or <code>null</code> or empty if the custom label is not being used
-	 */
+    public void notifyRefresh() {
+        if (this.admin != null) {
+            this.admin.getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
+        } else {
+            DqpPlugin.getInstance().getServerManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this));
+        }
+    }
+
+    public String getConnectionError() {
+        return connectionError;
+    }
+
+    public void setConnectionError( String connectionError ) {
+        this.connectionError = connectionError;
+    }
+
+    /**
+     * @param customLabel the new custom label or <code>null</code> or empty if the custom label is not being used
+     */
     public void setCustomLabel( String customLabel ) {
         this.customLabel = StringUtilities.isEmpty(customLabel) ? null : customLabel;
     }
 
-	public void setTeiidAdminInfo(TeiidAdminInfo adminInfo) {
-		this.teiidAdminInfo = adminInfo;
-	}
-    
-	public void setTeiidJdbcInfo(TeiidJdbcInfo jdbcInfo) {
-		this.teiidJdbcInfo = jdbcInfo;
-	}
-    
+    /**
+     * @param host the new host value (<code>null</code> if default host should be used)
+     */
+    public void setHost( String host ) {
+        this.host = host;
+    }
+
+    public void setTeiidAdminInfo( TeiidAdminInfo adminInfo ) {
+        this.teiidAdminInfo = adminInfo;
+    }
+
+    public void setTeiidJdbcInfo( TeiidJdbcInfo jdbcInfo ) {
+        this.teiidJdbcInfo = jdbcInfo;
+    }
+
     /**
      * Attempts to establish communication with the specified server for testing purposes only.
      * 
@@ -288,7 +324,7 @@ public class Server {
      */
     public IStatus testPing() {
         try {
-        	Admin adminApi = getAdmin().getAdminApi();
+            Admin adminApi = getAdmin().getAdminApi();
             adminApi.close();
             this.admin = null;
         } catch (Exception e) {
@@ -298,7 +334,6 @@ public class Server {
 
         return Status.OK_STATUS;
     }
-    
 
     /**
      * {@inheritDoc}
@@ -306,22 +341,14 @@ public class Server {
      * @see java.lang.Object#toString()
      */
     @Override
-	public String toString() {
-		StringBuilder txt = new StringBuilder();
+    public String toString() {
+        String txt = Util.getString("serverToStringWithNoCustomLabel", getUrl(), getTeiidAdminInfo().getUsername()); //$NON-NLS-1$
+        
+        if (this.customLabel != null) {
+            txt = Util.getString("serverToStringWithCustomLabel", this.customLabel, txt); //$NON-NLS-1$
+        }
 
-		// add URL
-		txt.append(getUrl());
-
-		// add custom label if it exists
-		if (this.customLabel != null) {
-			txt.append(" (").append(this.customLabel).append(')'); //$NON-NLS-1$
-		}
-
-		// add user
-		txt.append("::"); //$NON-NLS-1$
-		txt.append(getTeiidAdminInfo().getUsername());
-
-		return txt.toString();
-	}
+        return txt;
+    }
 
 }

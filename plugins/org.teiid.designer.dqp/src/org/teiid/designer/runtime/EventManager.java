@@ -30,5 +30,27 @@ public interface EventManager {
      * @return <code>true</code> if listener was removed
      */
     boolean removeListener( IExecutionConfigurationListener listener );
+    
+    /**
+     * An <code>EventManager</code> that does not do anything.
+     */
+    EventManager EVENT_MANAGER_ADAPTER = new EventManager() {
+
+        @Override
+        public boolean addListener( IExecutionConfigurationListener listener ) {
+            return true;
+        }
+
+        @Override
+        public void notifyListeners( ExecutionConfigurationEvent event ) {
+            // nothing to do
+        }
+
+        @Override
+        public boolean removeListener( IExecutionConfigurationListener listener ) {
+            return true;
+        }
+        
+    };
 
 }

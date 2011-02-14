@@ -17,7 +17,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
+
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
+import com.metamatrix.modeler.internal.dqp.ui.workspace.TeiidView;
+import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * The <code>EditServerAction</code> runs a UI that allows {@link PersistedServer server} properties to be changed.
@@ -104,6 +108,13 @@ public final class EditServerAction extends BaseSelectionListenerAction {
 	    				wizard.getServer().notifyRefresh();
 	    			}
 
+	        }
+	        
+	        // refresh viewer in Teiid View to display latest label
+	        TeiidView teiidView = (TeiidView)UiUtil.getViewPart(DqpUiConstants.Extensions.CONNECTORS_VIEW_ID);
+	        
+	        if (teiidView != null) {
+	            teiidView.updateLabel(this.serverBeingEdited);
 	        }
         }
     }

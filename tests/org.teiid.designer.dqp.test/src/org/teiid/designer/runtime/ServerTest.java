@@ -14,152 +14,104 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
-import org.teiid.adminapi.AdminComponentException;
 
 /**
  * 
  */
 public class ServerTest {
 
+    private static final String PORT = "31000";
+    private static final String USER = "user";
+    private static final String PSWD = "pswd";
+    private static final boolean PERSIST = true;
+    private static final boolean SECURE = true;
+
+    private TeiidAdminInfo adminInfo;
+    private TeiidJdbcInfo jdbcInfo;
+    private EventManager eventMgr;
+    private Server server;
+
     @Before
     public void beforeEach() {
-        MockitoAnnotations.initMocks(this);
+        this.adminInfo = mock(TeiidAdminInfo.class);
+        this.jdbcInfo = mock(TeiidJdbcInfo.class);
+        this.eventMgr = mock(EventManager.class);
+        this.server = new Server(null, adminInfo, jdbcInfo, eventMgr);
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateServerWithNullUrl() {
-//        new Server(null, null, null, false, null);
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotCreateServerWithNullAdminInfo() {
+        new Server(null, null, this.jdbcInfo, this.eventMgr);
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotCreateServerWithNullUser() {
-//        new Server("", null, null, false, null);
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotCreateServerWithNullJdbcInfo() {
+        new Server(null, this.adminInfo, null, this.eventMgr);
     }
 
-    @Test( expected = IllegalArgumentException.class )
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotCreateServerWithNullEventManager() {
-//        new Server("", "", null, false, null);
-    }
-
-    @Test
-    public void shouldCreateServer() {
-//        new Server("", "", null, false, mock(EventManager.class));
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetAdminWithEmptyUrl() throws Exception {
-        //new Server("", "", null, false, mock(EventManager.class)).getAdmin();
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotAllowGetAdminWithEmptyUser() throws Exception {
-//        new Server("mm://server:1234", "", null, false, mock(EventManager.class)).getAdmin();
-    }
-
-    @Test( expected = AdminComponentException.class )
-    public void shouldAllowGetAdmin() throws Exception {
-//        new Server("mm://server:1234", "user", null, false, mock(EventManager.class)).getAdmin();
-    }
-
-    @Test
-    public void shouldAllowGetPassword() {
-//        assertThat(new Server("mm://server:1234", "user", "pwd", false, mock(EventManager.class)).getPassword(), notNullValue());
-    }
-
-    @Test
-    public void shouldAllowGetUrl() {
-//        assertThat(new Server("mm://server:1234", "user", "pwd", false, mock(EventManager.class)).getUrl(), notNullValue());
-    }
-
-    @Test
-    public void shouldAllowGetUser() {
-        //assertThat(new Server("mm://server:1234", "user", "pwd", false, mock(EventManager.class)).getUser(), notNullValue());
+        new Server(null, this.adminInfo, this.jdbcInfo, null);
     }
 
     @Test
     public void shouldReturnFalseForEqualsWithNull() {
-//        assertThat(new Server("mm://server:1234", "user", "pwd", false, mock(EventManager.class)).equals(null), is(false));
+        assertThat(this.server.equals(null), is(false));
     }
 
     @Test
     public void shouldReturnTrueForEqualsWithSelf() {
-//        Server server = new Server("mm://server:1234", "user", "pwd", false, mock(EventManager.class));
-//        assertThat(server.equals(server), is(true));
-    }
-
-    @Test
-    public void shouldReturnTrueForEqualsWithSameInfoServer() {
-//        Server server1 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        Server server2 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        assertThat(server1.equals(server2), is(true));
-    }
-
-    @Test
-    public void shouldReturnFalseForEqualsWithDifferentURLServer() {
-//        Server server1 = new Server("mm://server:4321", "userA", "pwdA", false, mock(EventManager.class));
-//        Server server2 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        assertThat(server1.equals(server2), is(false));
-    }
-
-    @Test
-    public void shouldReturnFalseForEqualsWithDifferentUserServer() {
-//        Server server1 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        Server server2 = new Server("mm://server:1234", "userB", "pwdA", false, mock(EventManager.class));
-//        assertThat(server1.equals(server2), is(false));
-    }
-
-    @Test
-    public void shouldReturnFalseForEqualsWithDifferentPasswordsServer() {
-//        Server server1 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        Server server2 = new Server("mm://server:1234", "userA", null, false, mock(EventManager.class));
-//        assertThat(server1.equals(server2), is(false));
-    }
-
-    @Test
-    public void shouldReturnFalseForEqualsWithDifferentPersistPasswordServer() {
-//        Server server1 = new Server("mm://server:1234", "userA", "pwdA", false, mock(EventManager.class));
-//        Server server2 = new Server("mm://server:1234", "userA", "pwdA", true, mock(EventManager.class));
-//        assertThat(server1.equals(server2), is(false));
+        assertThat(this.server.equals(this.server), is(true));
     }
 
     @Test
     public void shouldSetCustomLabelWithNonNullValue() {
-    	// setup
-    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
-    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
-    	EventManager eventMgr = mock(EventManager.class);
-    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
-    	
-    	// test
-    	String CUSTOM_LABEL = "customLabel";
-    	server.setCustomLabel(CUSTOM_LABEL);
-    	assertThat(server.getCustomLabel(), is(CUSTOM_LABEL));
+        String CUSTOM_LABEL = "customLabel";
+        this.server.setCustomLabel(CUSTOM_LABEL);
+        assertThat(this.server.getCustomLabel(), is(CUSTOM_LABEL));
     }
 
     @Test
     public void shouldSetCustomLabelWithNullValue() {
-    	// setup
-    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
-    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
-    	EventManager eventMgr = mock(EventManager.class);
-    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
-    	
-    	// test
-    	server.setCustomLabel("oldLabel");
-    	server.setCustomLabel(null);
-    	assertThat(server.getCustomLabel(), nullValue());
+        this.server.setCustomLabel("oldLabel");
+        this.server.setCustomLabel(null);
+        assertThat(this.server.getCustomLabel(), nullValue());
     }
 
     @Test
     public void shouldVerifyCustomLabelIsNullAfterConstruction() {
-    	// setup
-    	TeiidAdminInfo adminInfo = mock(TeiidAdminInfo.class);
-    	TeiidJdbcInfo jdbcInfo = mock(TeiidJdbcInfo.class);
-    	EventManager eventMgr = mock(EventManager.class);
-    	Server server = new Server(adminInfo, jdbcInfo, eventMgr);
-    	
-    	// test
-    	assertThat(server.getCustomLabel(), nullValue());
+        assertThat(this.server.getCustomLabel(), nullValue());
     }
+
+    @Test
+    public void shouldVerifyDefaultHostAfterConstruction() {
+        assertThat(this.server.getHost(), is(HostProvider.DEFAULT_HOST));
+    }
+
+    @Test
+    public void shouldSetHost() {
+        String newHost = "newHost";
+        this.server.setHost(newHost);
+        assertThat(this.server.getHost(), is(newHost));
+    }
+
+    @Test
+    public void shouldVerifySettingNullHostSetsToDefaultHost() {
+        this.server.setHost(null);
+        assertThat(this.server.getHost(), is(HostProvider.DEFAULT_HOST));
+    }
+
+    @Test
+    public void shouldBeEqualsWhenAllPropertiesAreTheSame() {
+        Server server1 = new Server(null,
+                                    new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    this.eventMgr);
+        Server server2 = new Server(null,
+                                    new TeiidAdminInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    new TeiidJdbcInfo(PORT, USER, PSWD, PERSIST, SECURE),
+                                    this.eventMgr);
+        assertThat(server1.equals(server2), is(true));
+    }
+
 }
