@@ -41,7 +41,8 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
  */
 @ThreadSafe
 public class VdbEntry {
-
+	private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
+	
     private final IPath name;
     private final Vdb vdb;
     private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
@@ -83,6 +84,9 @@ public class VdbEntry {
             }
         };
         ResourcesPlugin.getWorkspace().addResourceChangeListener(fileListener);
+        if (this.description.get() == null) {
+            this.description.set(EMPTY_STR);
+        }
     }
 
     VdbEntry( final Vdb vdb,
