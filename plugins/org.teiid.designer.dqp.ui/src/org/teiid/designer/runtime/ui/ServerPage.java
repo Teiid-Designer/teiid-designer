@@ -517,6 +517,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
             this.btnTestConnection = new Button(pnl, SWT.PUSH);
             this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
             this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
+            this.btnTestConnection.setEnabled(false);
 
             // add margins to the side of the text
             GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
@@ -961,7 +962,6 @@ public final class ServerPage extends WizardPage implements HostProvider {
 
         // update OK/Finish button and test button enablement
         setPageComplete(this.status.getSeverity() != IStatus.ERROR);
-        this.btnTestConnection.setEnabled(isPageComplete());
 
         // update message
         if (this.status.getSeverity() == IStatus.ERROR) {
@@ -984,7 +984,10 @@ public final class ServerPage extends WizardPage implements HostProvider {
         // validate admin connection info
         this.status = this.localAdminInfo.validate();
 
-        if (!this.status.isOK()) {
+        if (this.status.isOK()) {
+            this.btnTestConnection.setEnabled(true);
+        } else {
+            this.btnTestConnection.setEnabled(false);
             return;
         }
 
