@@ -51,13 +51,22 @@ public class ZoomOutWrapper extends DiagramAction
     }
     
     public void initialize() {
-		if (getZoomManager() != null) {
-			getZoomManager().setZoomLevels(zoomValues);
+        ModelEditor editor = getActiveEditor();
+        
+        if ( editor != null && editor.getCurrentPage() instanceof ZoomableEditor) {
+
+            DiagramEditor deEditorPage = ((ZoomableEditor)editor.getCurrentPage()).getDiagramEditor();
+            if ( deEditorPage != null ) {             
+                zoomManager = (ZoomManager)deEditorPage.getAdapter(ZoomManager.class);
+            } 
+        }
+		if (this.zoomManager != null) {
+			this.zoomManager.setZoomLevels(zoomValues);
 			if( !wasInitialized ) {
 				wasInitialized = true;
-				getZoomManager().setZoom(getEditorZoomLevel());
+				this.zoomManager.setZoom(getEditorZoomLevel());
 			}  
-			getZoomManager().addZoomListener(this);
+			this.zoomManager.addZoomListener(this);
 		}
 		setEnableState();
 		addAsPartListener();       
@@ -118,16 +127,7 @@ public class ZoomOutWrapper extends DiagramAction
     
     private ZoomManager getZoomManager() {
     	if( zoomManager == null ) {
-	        ModelEditor editor = getActiveEditor();
-	        
-	        if ( editor != null && editor.getCurrentPage() instanceof ZoomableEditor) {
-	
-	            DiagramEditor deEditorPage = ((ZoomableEditor)editor.getCurrentPage()).getDiagramEditor();
-	            if ( deEditorPage != null ) {             
-	                zoomManager = (ZoomManager)deEditorPage.getAdapter(ZoomManager.class);
-	                initialize();
-	            } 
-	        }
+	        initialize();
 		}
         return zoomManager;   
     }
