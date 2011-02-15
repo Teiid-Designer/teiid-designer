@@ -466,7 +466,9 @@ public class TransformationValidator implements QueryValidator {
         // If Select SQL is OK, now we need to check if any of the update SQL are using "Default" and run
         // additional validation
         
-        if( validateAndResolve ) {
+        boolean allowsUpdates = TransformationHelper.tableSupportsUpdate(targetGroup);
+        
+        if( validateAndResolve && cmdType == QueryValidator.SELECT_TRNS && allowsUpdates) {
         	updateStatusList = new ArrayList();
         	UpdateType insertType = UpdateType.INSTEAD_OF;
         	UpdateType updateType = UpdateType.INSTEAD_OF;
