@@ -16,6 +16,7 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
+
 import com.metamatrix.modeler.core.ModelerCore;
 
 /**
@@ -46,6 +47,16 @@ public final class ModelProjectOpenedJob extends CompositePreviewJob {
         add(job);
 
         process(this.project);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+     */
+    @Override
+    public boolean belongsTo( Object family ) {
+        return (WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY == family);
     }
 
     /**

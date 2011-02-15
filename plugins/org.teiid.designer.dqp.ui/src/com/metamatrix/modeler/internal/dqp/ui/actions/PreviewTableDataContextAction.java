@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -32,15 +33,27 @@ import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfi
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.adminapi.Admin;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
@@ -51,6 +64,8 @@ import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
+import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
+import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
 
 import com.metamatrix.metamodels.webservice.Operation;
@@ -400,6 +415,26 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
      */
     @Override
     public void run() {
+        if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
+                (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
+            PreviewUnavailableDialog dialog = new PreviewUnavailableDialog(getShell());
+            dialog.open();
+            
+            if (dialog.shouldOpenProgressView()) {
+                IWorkbenchPage page = UiUtil.getWorkbenchPage();
+                
+                if (page != null) {
+                    try {
+                        page.showView(IProgressConstants.PROGRESS_VIEW_ID);
+                    } catch (PartInitException e) {
+                        DqpUiConstants.UTIL.log(e);
+                    }
+                }
+            }
+
+            return;
+        }
+
         final EObject eObj = SelectionUtilities.getSelectedEObject(getSelection());
         
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
@@ -497,5 +532,53 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
     @SuppressWarnings( "unused" )
     private void showResults( final IResults theResults ) {
         // REPLACE
+    }
+    
+    class PreviewUnavailableDialog extends MessageDialog {
+        boolean openProgressView = false;
+
+        public PreviewUnavailableDialog( Shell parent ) {
+            super(parent, DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.title"), null, //$NON-NLS-1$
+                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.message"), //$NON-NLS-1$
+                    MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
+            setShellStyle(getShellStyle() | SWT.RESIZE);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+         */
+        @Override
+        protected Control createCustomArea( Composite parent ) {
+            Composite panel = new Composite(parent, SWT.NONE);
+            panel.setLayout(new GridLayout(2, false));
+            panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+            Button btnOpenProgressView = new Button(panel, SWT.CHECK);
+            btnOpenProgressView.setText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.btnShowProgressView.text")); //$NON-NLS-1$
+            btnOpenProgressView.setToolTipText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.btnShowProgressView.toolTip")); //$NON-NLS-1$
+            btnOpenProgressView.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    setOpenProgressView(((Button)e.widget).getSelection());
+                }
+            });
+
+            return panel;
+        }
+
+        void setOpenProgressView( boolean openProgressView ) {
+            this.openProgressView = openProgressView;
+        }
+
+        public boolean shouldOpenProgressView() {
+            return this.openProgressView;
+        }
     }
 }
