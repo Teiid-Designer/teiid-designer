@@ -47,7 +47,7 @@ public class WebServiceRelationalModelWizardPage extends WizardPage implements U
         		Util.getString("WebServiceRelationalModelWizardPage.optionsGroup.title"),  //$NON-NLS-1$
         		GridData.FILL_HORIZONTAL, 2, 1);
         
-        invokeCB = WidgetFactory.createCheckBox(optionsGroup, "invokeHttp(binding in String, action in STRING, request in OBJECT, endpoint in STRING) returns XML", 0, 2, true); //$NON-NLS-1$
+        invokeCB = WidgetFactory.createCheckBox(optionsGroup, "invoke(binding in String, action in STRING, request in OBJECT, endpoint in STRING, result out XML)", 0, 2, true); //$NON-NLS-1$
         invokeCB.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -56,7 +56,7 @@ public class WebServiceRelationalModelWizardPage extends WizardPage implements U
             }
         });
         
-        invokeHttpCB = WidgetFactory.createCheckBox(optionsGroup, "invokeHttp(action in STRING, request in OBJECT, endpoint in STRING, contentType out STRING) returns BLOB", 0, 2, true); //$NON-NLS-1$
+        invokeHttpCB = WidgetFactory.createCheckBox(optionsGroup, "invokeHttp(action in STRING, request in OBJECT, endpoint in STRING, result out BLOB, contentType out STRING)", 0, 2, true); //$NON-NLS-1$
         invokeHttpCB.addSelectionListener(new SelectionAdapter() {
 
             @Override
