@@ -9,6 +9,8 @@ package com.metamatrix.modeler.diagram.ui.pakkage.actions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.GroupMarker;
@@ -30,9 +32,11 @@ import com.metamatrix.modeler.diagram.ui.connection.NodeConnectionEditPart;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramActionAdapter;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
+import com.metamatrix.modeler.diagram.ui.notation.uml.part.UmlClassifierEditPart;
 import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
+import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.GlobalActionsMap;
@@ -106,6 +110,27 @@ public class PackageDiagramActionAdapter
             }
         }
         return false;
+    }
+    
+    private boolean doRemoveOpen() {
+        List selectedEPs = getSelectedInDiagram();
+        if( ! selectedEPs.isEmpty() && selectedEPs.size() == 1) {
+            Object selectedEP = selectedEPs.get(0);
+            if( selectedEP instanceof UmlClassifierEditPart )
+                return true;
+        }
+        
+        return false;
+    }
+    
+    private IAction getAction( String theActionId ) {
+        IAction action = null;
+        try {
+            action = getActionService().getAction(theActionId);
+        } catch (CoreException err) {
+        }
+
+        return action;
     }
 
     //============================================================================================================================
@@ -236,6 +261,14 @@ public class PackageDiagramActionAdapter
             addDiagramActions(theMenuMgr);
         } else {
             addDiagramActions(theMenuMgr);
+            
+            if( doRemoveOpen() ) {
+                // Remove Open
+                IAction openAction = getAction(ModelerGlobalActions.OPEN);
+                if (openAction != null && theMenuMgr.find(openAction.getId()) != null) {
+                	theMenuMgr.remove(openAction.getId());
+                }
+            }
         }
     }
     

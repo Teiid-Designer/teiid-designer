@@ -498,6 +498,18 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                         theMenuMgr.add(new GroupMarker(T_MARKER));
                         theMenuMgr.appendToGroup(T_MARKER, this.lockAction);
                         addDiagramActions(theMenuMgr);
+                        
+                        // Remove Open
+                        IAction openAction = getAction(ModelerGlobalActions.OPEN);
+                        if (openAction != null && theMenuMgr.find(openAction.getId()) != null) {
+                        	theMenuMgr.remove(openAction.getId());
+                        }
+                        
+                     // Remove Edit action
+                        IAction editAction = getAction(ModelerGlobalActions.EDIT);
+                        if (editAction != null && theMenuMgr.find(editAction.getId()) != null) {
+                        	theMenuMgr.remove(editAction.getId());
+                        }
                     }
                         break;
 
