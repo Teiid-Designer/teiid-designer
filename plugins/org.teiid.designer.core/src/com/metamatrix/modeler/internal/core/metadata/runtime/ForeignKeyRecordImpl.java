@@ -9,12 +9,13 @@ package com.metamatrix.modeler.internal.core.metadata.runtime;
 
 import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.modeler.core.index.IndexConstants;
+import com.metamatrix.modeler.core.metadata.runtime.ForeignKeyRecord;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlForeignKeyAspect;
 
 /**
  * ForeignKeyRecordImpl
  */
-public class ForeignKeyRecordImpl extends com.metamatrix.metadata.runtime.impl.ForeignKeyRecordImpl {
+public class ForeignKeyRecordImpl extends ColumnSetRecordImpl implements ForeignKeyRecord {
 
     private static final long serialVersionUID = 8403148788957708630L;
 
@@ -22,16 +23,14 @@ public class ForeignKeyRecordImpl extends com.metamatrix.metadata.runtime.impl.F
 	 * Flags to determine if values have been set.
 	 */
 	private boolean uniqueKeyIDSet;
-
+    private Object uniqueKeyID;
 
     // ==================================================================================
     //                        C O N S T R U C T O R S
     // ==================================================================================
 
     public ForeignKeyRecordImpl(final SqlForeignKeyAspect sqlAspect, final EObject eObject) {
-        super(new ModelerMetadataRecordDelegate(sqlAspect, eObject));
-        setRecordType(IndexConstants.RECORD_TYPE.FOREIGN_KEY);
-        this.eObject = eObject;
+        super(sqlAspect, eObject, IndexConstants.RECORD_TYPE.FOREIGN_KEY);
 	}
 
 	private SqlForeignKeyAspect getForeignKeyAspect() {
@@ -51,7 +50,7 @@ public class ForeignKeyRecordImpl extends com.metamatrix.metadata.runtime.impl.F
 			EObject primaryKey = (EObject) getForeignKeyAspect().getUniqueKey((EObject)eObject);
 			setUniqueKeyID(((ModelerMetadataRecordDelegate)this.delegate).getObjectID(primaryKey));    		
     	}
-        return super.getUniqueKeyID();
+        return this.uniqueKeyID;
     }
 
     // ==================================================================================
@@ -61,9 +60,8 @@ public class ForeignKeyRecordImpl extends com.metamatrix.metadata.runtime.impl.F
     /**
      * @param object
      */
-    @Override
     public void setUniqueKeyID(Object keyID) {
-        super.setUniqueKeyID(keyID);
+        this.uniqueKeyID = keyID;
 		uniqueKeyIDSet = true;
     }    
 }

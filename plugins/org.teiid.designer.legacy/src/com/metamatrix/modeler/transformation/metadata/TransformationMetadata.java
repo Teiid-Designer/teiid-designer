@@ -23,6 +23,7 @@ import java.util.Properties;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidException;
+import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.id.UUID;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.core.util.ArgCheck;
@@ -2019,6 +2020,31 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         IEntryResult[] results = queryIndex(indexes, prefixString.toCharArray(), true, false);
 
         return results;
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.query.metadata.BasicQueryMetadata#getPrimaryKey(java.lang.Object)
+     */
+    @Override
+    public Object getPrimaryKey( Object metadataID ) {
+        ArgCheck.isInstanceOf(TableRecord.class, metadataID);
+        TableRecord tableRecord = (TableRecord)metadataID;
+
+        final String groupUUID = tableRecord.getUUID();
+        Assertion.isNotNull(groupUUID);
+
+        Collection pk;
+        try {
+            pk = findChildRecords(tableRecord, IndexConstants.RECORD_TYPE.PRIMARY_KEY);
+        } catch (TeiidComponentException e) {
+            throw new TeiidRuntimeException(e);
+        }
+        if (pk.size() > 1) {
+            throw new TeiidRuntimeException("Multiple primary keys for table");
+        }
+        return pk.iterator().next();
     }
 
 }

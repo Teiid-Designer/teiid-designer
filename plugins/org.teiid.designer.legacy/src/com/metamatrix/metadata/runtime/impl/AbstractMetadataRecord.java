@@ -301,7 +301,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
             return true;
         }
 
-        if (obj == null || obj.getClass() != this.getClass()) {
+        if (!(obj instanceof AbstractMetadataRecord)) {
             return false;
         }
 
