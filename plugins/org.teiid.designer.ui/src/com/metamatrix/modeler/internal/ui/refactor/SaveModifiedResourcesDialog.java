@@ -139,7 +139,7 @@ public class SaveModifiedResourcesDialog extends SelectionDialog {
 
         GridData gd = new GridData( GridData.FILL_BOTH );
         gd.heightHint = 400;
-        gd.widthHint = 400;
+        gd.widthHint = 500;
         parent.setLayoutData( gd );
         
         // establish the message
