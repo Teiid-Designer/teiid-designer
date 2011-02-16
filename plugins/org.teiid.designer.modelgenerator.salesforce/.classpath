@@ -4,12 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="salesforce.jar" sourcepath="com.metamatrix.modeler.modelgenerator.salesforcesrc.zip"/>
-	<classpathentry kind="lib" path="axis.jar"/>
-	<classpathentry kind="lib" path="jaxrpc.jar"/>
 	<classpathentry kind="lib" path="saaj.jar"/>
-	<classpathentry kind="lib" path="commons-discovery-0.2.jar"/>
-	<classpathentry kind="lib" path="wsdl4j-1.5.1.jar"/>
-	<classpathentry kind="lib" path="commons-httpclient-3.0.1.jar"/>
-	<classpathentry kind="lib" path="commons-codec-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
