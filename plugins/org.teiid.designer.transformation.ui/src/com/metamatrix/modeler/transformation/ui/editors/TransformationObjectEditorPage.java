@@ -1147,7 +1147,7 @@ public class TransformationObjectEditorPage
     		tabText = INSERT_TAB_TEXT + " (default)"; //$NON-NLS-1$
     		// Now we check for "insert" default errors and warnings
     		IStatus displayStatus = null;
-    		if( validationResult.hasUpdateStatus(QueryValidator.INSERT_TRNS) ) {
+    		if( !validationResult.isOkToUpdate(QueryValidator.INSERT_TRNS) ) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.INSERT_TRNS).iterator().next();
     		} else if(!selectSqlOk) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
@@ -1188,9 +1188,9 @@ public class TransformationObjectEditorPage
     		tabText = UPDATE_TAB_TEXT + " (default)"; //$NON-NLS-1$
     		// Now we check for "insert" default errors and warnings
     		IStatus displayStatus = null;
-    		if( validationResult.hasUpdateStatus(QueryValidator.UPDATE_TRNS) ) {
+    		if( !validationResult.isOkToUpdate(QueryValidator.UPDATE_TRNS) ) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.UPDATE_TRNS).iterator().next();
-    		} else if( displayStatus == null && !selectSqlOk) {
+    		} else if(!selectSqlOk) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
     		}
     		if( displayStatus != null ) {
@@ -1230,9 +1230,9 @@ public class TransformationObjectEditorPage
     		tabText = DELETE_TAB_TEXT + " (default)"; //$NON-NLS-1$
     		// Now we check for "insert" default errors and warnings
     		IStatus displayStatus = null;
-    		if( validationResult.hasUpdateStatus(QueryValidator.DELETE_TRNS) ) {
+    		if( !validationResult.isOkToUpdate(QueryValidator.DELETE_TRNS) ) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.DELETE_TRNS).iterator().next();
-    		} else if( displayStatus == null && !selectSqlOk) {
+    		} else if( !selectSqlOk) {
     			displayStatus = validationResult.getUpdateStatusList(QueryValidator.SELECT_TRNS).iterator().next();
     		}
     		if( displayStatus != null ) {

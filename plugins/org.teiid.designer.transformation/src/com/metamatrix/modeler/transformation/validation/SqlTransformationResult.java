@@ -7,18 +7,16 @@
  */
 package com.metamatrix.modeler.transformation.validation;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
-
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -287,38 +285,7 @@ public class SqlTransformationResult implements QueryValidationResult {
      * @return true if no problems of the specified SQL command type exist
      */
     public boolean isOkToUpdate(int cmdType) {
-    	if(getUpdateStatusList() == null || getUpdateStatusList().isEmpty() ) return true;
-    	
-    	
-    	for( IStatus status : getUpdateStatusList() ) {
-    		int code = status.getCode();
-    		
-    		switch (cmdType) {
-	    		case QueryValidator.INSERT_TRNS: {
-	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
-	    				return false;
-	    			}
-	    		} break;
-	    		case QueryValidator.UPDATE_TRNS: {
-	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
-	    				return false;
-	    			}
-	    		} break;
-	    		case QueryValidator.DELETE_TRNS: {
-	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
-	    				return false;
-	    			}
-	    		} break;
-	    		case QueryValidator.SELECT_TRNS: {
-	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
-	    				return false;
-	    			}
-	    		} break;
-    		}
-    		
-    	}
-    	
-    	return true;
+    	return getUpdateMaxSeverity(cmdType) < IStatus.ERROR;
     }
     
     /**
@@ -328,75 +295,41 @@ public class SqlTransformationResult implements QueryValidationResult {
     public Collection<IStatus> getUpdateStatusList(int cmdType) {
     	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return getUpdateStatusList();
     	
-    	Collection<IStatus> cmdStatusList = new ArrayList<IStatus>();
+    	LinkedList<IStatus> cmdStatusList = new LinkedList<IStatus>();
     	for( IStatus status : getUpdateStatusList() ) {
     		int code = status.getCode();
     		
-    		switch (cmdType) {
-	    		case QueryValidator.INSERT_TRNS: {
-	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
-	    				cmdStatusList.add(status);
-	    			}
-	    		} break;
-	    		case QueryValidator.UPDATE_TRNS: {
-	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
-	    				cmdStatusList.add(status);
-	    			}
-	    		} break;
-	    		case QueryValidator.DELETE_TRNS: {
-	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
-	    				cmdStatusList.add(status);
-	    			}
-	    		} break;
-	    		case QueryValidator.SELECT_TRNS: {
-	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
-	    				cmdStatusList.add(status);
-	    			}
-	    		} break;
-    		}
+            if (code != QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
+        		switch (cmdType) {
+    	    		case QueryValidator.INSERT_TRNS: {
+    	    			if( code != QueryValidator.INSERT_SQL_PROBLEM) {
+    	    			    continue;
+    	    			}
+    	    		} break;
+    	    		case QueryValidator.UPDATE_TRNS: {
+    	    			if( code != QueryValidator.UPDATE_SQL_PROBLEM) {
+    	    			    continue;
+    	    			}
+    	    		} break;
+    	    		case QueryValidator.DELETE_TRNS: {
+    	    			if( code != QueryValidator.DELETE_SQL_PROBLEM) {
+    	    			    continue;
+    	    			}
+    	    		} break;
+        		}
+            }
+    		
+            if (status.getSeverity() > IStatus.WARNING) {
+                cmdStatusList.addFirst(status);
+            } else {
+                cmdStatusList.add(status);
+            }
+            
     	}
     	
     	return cmdStatusList;
     }
-    
-    /**
-     * Utility method to check this result if there is any status objects coded to requested SQL command type 
-     * @param cmdType
-     * @return true if status exists for command type
-     */
-    public boolean hasUpdateStatus(int cmdType) {
-    	if( getUpdateStatusList() == null || getUpdateStatusList().isEmpty() )  return false;
-
-    	for( IStatus status : getUpdateStatusList() ) {
-    		int code = status.getCode();
-    		
-    		switch (cmdType) {
-	    		case QueryValidator.INSERT_TRNS: {
-	    			if( code == QueryValidator.INSERT_SQL_PROBLEM) {
-	    				return true;
-	    			}
-	    		} break;
-	    		case QueryValidator.UPDATE_TRNS: {
-	    			if( code == QueryValidator.UPDATE_SQL_PROBLEM) {
-	    				return true;
-	    			}
-	    		} break;
-	    		case QueryValidator.DELETE_TRNS: {
-	    			if( code == QueryValidator.DELETE_SQL_PROBLEM) {
-	    				return true;
-	    			}
-	    		} break;
-	    		case QueryValidator.SELECT_TRNS: {
-	    			if( code == QueryValidator.ALL_UPDATE_SQL_PROBLEM) {
-	    				return true;
-	    			}
-	    		} break;
-    		}
-    	}
-    	
-    	return false;
-    }
-    
+        
     /**
      * Utility method to determine the maximum severity of list of statuses for a given SQL command type
      * @param cmdType
