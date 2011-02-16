@@ -13,13 +13,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
-
 import com.metamatrix.query.ui.UiPlugin;
 
 /**
@@ -28,132 +26,6 @@ import com.metamatrix.query.ui.UiPlugin;
  * sorted alphabetically.
  */
 public class SqlSyntax {
-	public static final String DEBUG = "DEBUG"; //$NON-NLS-1$
-	public static final String PLANONLY = "PLANONLY"; //$NON-NLS-1$
-	public static final String SHOWPLAN = "SHOWPLAN"; //$NON-NLS-1$
-	public static final String VIRTUAL_DEP_JOIN = "VIRTUALDEP";  //$NON-NLS-1$  
-
-    public static final String[] ALL_RESERVED_WORDS = new String[] {
-    	SQLConstants.Reserved.ALL,
-    	SQLConstants.Tokens.ALL_COLS,
-        SQLConstants.Reserved.AND,
-        SQLConstants.Reserved.ANY,
-        SQLConstants.Reserved.AS,
-        SQLConstants.Reserved.ASC,
-        SQLConstants.NonReserved.AVG,
-        SQLConstants.Reserved.BEGIN,
-        SQLConstants.Reserved.BETWEEN,
-        SQLConstants.Reserved.BIGINTEGER,
-        SQLConstants.Reserved.BIGDECIMAL,
-        SQLConstants.Reserved.BLOB,
-        SQLConstants.Reserved.BREAK,
-        SQLConstants.Reserved.BY,
-        SQLConstants.Reserved.BYTE,
-        SQLConstants.Reserved.CASE,
-        SQLConstants.Reserved.CAST,
-        SQLConstants.Reserved.CHAR,
-        SQLConstants.Reserved.CLOB,
-        SQLConstants.Reserved.CONVERT,
-        SQLConstants.Reserved.CONTINUE,
-        SQLConstants.NonReserved.COUNT,
-        SQLConstants.Reserved.CREATE,
-        SQLConstants.Reserved.CRITERIA,
-        SQLConstants.Reserved.CROSS,
-        SQLConstants.Reserved.DATE,
-        DEBUG,
-        SQLConstants.Reserved.DECLARE,
-        SQLConstants.Reserved.DELETE,
-        SQLConstants.Reserved.DESC,
-        SQLConstants.Reserved.DISTINCT,
-        SQLConstants.Reserved.DOUBLE,
-        SQLConstants.Reserved.DROP,
-        SQLConstants.Reserved.ELSE,
-        SQLConstants.Reserved.END,
-        SQLConstants.Reserved.ERROR,        
-        SQLConstants.Reserved.ESCAPE,
-        SQLConstants.Reserved.EXCEPT,
-        SQLConstants.Reserved.EXEC,
-        SQLConstants.Reserved.EXECUTE,
-        SQLConstants.Reserved.EXISTS,
-        SQLConstants.Reserved.FALSE,
-        SQLConstants.Reserved.FLOAT,
-        SQLConstants.Reserved.FOR,
-        SQLConstants.Reserved.FROM,
-        SQLConstants.Reserved.FULL,
-        SQLConstants.Reserved.GROUP,
-        SQLConstants.Reserved.HAS,
-        SQLConstants.Reserved.HAVING,
-        SQLConstants.Reserved.IF,
-        SQLConstants.Reserved.IN,
-        SQLConstants.Reserved.INNER,
-        SQLConstants.Reserved.INSERT,
-        SQLConstants.Reserved.INTEGER,
-        SQLConstants.Reserved.INTERSECT,
-        SQLConstants.Reserved.INTO,
-        SQLConstants.Reserved.IS,    
-        SQLConstants.Reserved.JOIN,
-        SQLConstants.Reserved.LEFT,
-        SQLConstants.Reserved.LIKE,
-        SQLConstants.Reserved.LIMIT,
-        SQLConstants.Reserved.LOCAL,
-        SQLConstants.Reserved.LONG,
-        SQLConstants.Reserved.LOOP,
-        SQLConstants.Reserved.MAKEDEP,
-        SQLConstants.Reserved.MAKENOTDEP,
-        SQLConstants.NonReserved.MIN,
-        SQLConstants.NonReserved.MAX,
-        SQLConstants.Reserved.NOCACHE,
-        SQLConstants.Reserved.NOT,
-        SQLConstants.Reserved.NULL,
-        SQLConstants.Reserved.OBJECT,
-        SQLConstants.Reserved.ON,
-        SQLConstants.Reserved.OR,
-        SQLConstants.Reserved.ORDER,
-        SQLConstants.Reserved.OPTION,
-        SQLConstants.Reserved.OUTER,
-        PLANONLY,
-        SQLConstants.Reserved.PROCEDURE,
-        SQLConstants.Reserved.RIGHT,
-        SQLConstants.Reserved.SELECT,
-        SQLConstants.Reserved.SET,
-        SQLConstants.Reserved.SHORT,
-        SHOWPLAN,
-        SQLConstants.Reserved.SOME,
-        SQLConstants.NonReserved.SQL_TSI_FRAC_SECOND,
-        SQLConstants.NonReserved.SQL_TSI_SECOND,
-        SQLConstants.NonReserved.SQL_TSI_MINUTE,
-        SQLConstants.NonReserved.SQL_TSI_HOUR,
-        SQLConstants.NonReserved.SQL_TSI_DAY,
-        SQLConstants.NonReserved.SQL_TSI_WEEK,
-        SQLConstants.NonReserved.SQL_TSI_MONTH,
-        SQLConstants.NonReserved.SQL_TSI_QUARTER,
-        SQLConstants.NonReserved.SQL_TSI_YEAR,        
-        SQLConstants.Reserved.STRING,
-        SQLConstants.NonReserved.SUM,
-        SQLConstants.Reserved.TABLE,
-        SQLConstants.Reserved.TEMPORARY,
-        SQLConstants.Reserved.THEN,
-        SQLConstants.Reserved.TIME,
-        SQLConstants.Reserved.TIMESTAMP,
-        SQLConstants.NonReserved.TIMESTAMPADD,
-        SQLConstants.NonReserved.TIMESTAMPDIFF,
-        SQLConstants.Reserved.TRANSLATE,
-        SQLConstants.Reserved.TRUE,
-        SQLConstants.Reserved.UNION,
-        SQLConstants.Reserved.UNKNOWN,
-        SQLConstants.Reserved.UPDATE,
-        SQLConstants.Reserved.USING,   
-        SQLConstants.Reserved.VALUES,
-        SQLConstants.Reserved.VIRTUAL,
-        VIRTUAL_DEP_JOIN,
-        SQLConstants.Reserved.WHEN,
-        SQLConstants.Reserved. WITH,    
-        SQLConstants.Reserved.WHERE,
-        SQLConstants.Reserved.WHILE,
-        SQLConstants.Reserved.XML,
-    };
-	
-
     // Word Lists
     public static final List<String> RESERVED_WORDS = new ArrayList<String>();
     public static final List<String> FUNCTION_NAMES = new ArrayList<String>();
@@ -168,17 +40,22 @@ public class SqlSyntax {
 
     static {
     	
-    	
         try {
 			// RESERVED WORDS List
-			for (int i = 0; i != ALL_RESERVED_WORDS.length; ++i) {
-			    String reservedWord = ALL_RESERVED_WORDS[i];
+			for (String reservedWord : SQLConstants.getReservedWords()) {
 			    RESERVED_WORDS.add(reservedWord);
 			    String start = reservedWord.substring(0, 1);
 			    if (!RESERVED_WORD_START_CHARS.contains(start)) {
 			        RESERVED_WORD_START_CHARS.add(start);
 			    }
 			}
+			for (String reservedWord : SQLConstants.getNonReservedWords()) {
+                RESERVED_WORDS.add(reservedWord);
+                String start = reservedWord.substring(0, 1);
+                if (!RESERVED_WORD_START_CHARS.contains(start)) {
+                    RESERVED_WORD_START_CHARS.add(start);
+                }
+            }
 			Collections.sort(RESERVED_WORDS);
 		} catch (Exception e) {
 			UiPlugin.Util.log(e);
