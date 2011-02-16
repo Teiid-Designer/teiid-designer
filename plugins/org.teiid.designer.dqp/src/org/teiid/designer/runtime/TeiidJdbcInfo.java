@@ -31,7 +31,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo {
     /**
      * The default Teiid Admin secure protocol flag. Value is {@value} .
      */
-    public static final boolean DEFAULT_SECURE = true;
+    public static final boolean DEFAULT_SECURE = false;
 
     /**
      * The name of the VDB that this connection will connect to (never empty or <code>null</code>)
