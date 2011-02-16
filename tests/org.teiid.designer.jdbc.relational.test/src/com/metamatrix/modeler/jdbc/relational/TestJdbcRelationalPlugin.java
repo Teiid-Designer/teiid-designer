@@ -270,11 +270,6 @@ public class TestJdbcRelationalPlugin extends TestCase {
             }
 
             @Override
-            public String getJdbcTypeName( EObject type ) {
-                return null;
-            }
-
-            @Override
             public SearchabilityType getSearchabilityType( EObject datatype ) {
                 return null;
             }
