@@ -11,6 +11,7 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,11 +24,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -38,6 +42,7 @@ import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
+
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.StringUtilities;
@@ -112,7 +117,9 @@ public final class VdbModelEntry extends VdbEntry {
             // if( ModelUtil.isVirtual(emfModel) ) {
             visible.set(true);
             // }
-        } else type = ModelType.TYPE_LITERAL;
+        } else {
+            type = ModelType.TYPE_LITERAL;
+        }
         if (this.translator.get() == null) {
             this.translator.set(EMPTY_STR);
         }
@@ -193,7 +200,18 @@ public final class VdbModelEntry extends VdbEntry {
             return null;
         }
 
-        return getFinder().findByURI(URI.createFileURI(resource.getLocation().toString()), false);
+        Resource emfResource = getFinder().findByURI(URI.createFileURI(resource.getLocation().toString()), false);
+
+        // as a last resort force loading the resource
+        if (emfResource == null) {
+            try {
+                emfResource = ModelerCore.getModelContainer().getResource(URI.createFileURI(resource.getLocation().toString()), true);
+            } catch (CoreException e) {
+                throw CoreModelerPlugin.toRuntimeException(e);
+            }
+        }
+
+        return emfResource;
     }
 
     private ResourceFinder getFinder() {

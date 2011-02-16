@@ -1074,7 +1074,7 @@ public final class PreviewManager extends JobChangeAdapter
             ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, this.context);
             job.addChildJobChangeListener(this);
             job.addJobChangeListener(this);
-            job.schedule(500); // delay to let build start
+            job.schedule(1000); // delay to let build start
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.ModelProjectOpenedJobError, project.getName()));
         }
