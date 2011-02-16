@@ -1335,29 +1335,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // (assume zero length means the length isn't known)
         EObject result = null;
 
-        // If the type corresponds to a string ...
-        // Defect 15386 - Removed the length > 1 check on the Types.CHAR JDBC type
-        // The CHAR runtime type is now deprecated, and thus we import JDBC chars of
-        // length 1 as strings
-        if (jdbcType == Types.CHAR || jdbcType == Types.VARCHAR || jdbcType == Types.LONGVARCHAR || jdbcType == Types.NCHAR
-            || jdbcType == Types.NVARCHAR || RelationalTypeMapping.SQL_TYPE_NAMES.NCHAR.equals(typeName)
-            || RelationalTypeMapping.SQL_TYPE_NAMES.NVARCHAR.equals(typeName)) {
-            result = findType(RelationalTypeMapping.SQL_TYPE_NAMES.VARCHAR, problems);
-        }
+        // First look up by type code ...
+        result = findType(jdbcType, problems);
         if (result != null) {
             return result;
         }
 
-        // Still have found one, so look it up by type code ...
-        if (jdbcType != Types.OTHER) {
-            // First look up by type code ...
-            result = findType(jdbcType, problems);
-            if (result != null) {
-                return result;
-            }
-        }
-
-        // Still have found one, so look it up by name ...
+        // Still haven't found one, so look it up by name ...
         result = findType(typeName, problems);
         return result;
     }

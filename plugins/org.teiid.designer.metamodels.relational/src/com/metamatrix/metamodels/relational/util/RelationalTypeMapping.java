@@ -74,17 +74,6 @@ public interface RelationalTypeMapping {
     public EObject getDatatype( final int jdbcType ) throws ModelerCoreException;
 
     /**
-     * Find the name of the JDBC type that corresponds to the supplied datatype. If there is not corresponding JDBC type, this
-     * method obtains the base type for the supplied type and looks for its corresponding JDBC type. This process continues until
-     * either the
-     * 
-     * @param type the datatype for which the corresponding JDBC type is to be found
-     * @return the name of the JDBC type that best corresponds to the supplied type; never null
-     * @throws ModelerCoreException if there is a problem with the datatype manager
-     */
-    public String getJdbcTypeName( final EObject type ) throws ModelerCoreException; // NO_UCD
-
-    /**
      * Find the searchability type for the supplied Datatype.
      * 
      * @param datatype the datatype for which the searchability is to be found; may not be null
