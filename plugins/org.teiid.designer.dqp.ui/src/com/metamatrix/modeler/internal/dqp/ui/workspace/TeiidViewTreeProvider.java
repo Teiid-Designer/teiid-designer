@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.adminapi.AdminComponentException;
@@ -48,69 +47,6 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  * @since 5.0
  */
 public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILightweightLabelDecorator, ITreeContentProvider {
-    
-    /**
-     * A <code>ViewerFilter</code> that hides Preview Data Sources.
-     */
-    public static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select( Viewer viewer,
-                               Object parentElement,
-                               Object element ) {
-            if (element instanceof TeiidDataSource) {
-                if (((TeiidDataSource)element).isPreview()) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    };
-    
-    /**
-     * A <code>ViewerFilter</code> that hides Preview VDBs.
-     */
-    public static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select( Viewer viewer,
-                               Object parentElement,
-                               Object element ) {
-            if (element instanceof TeiidVdb) {
-                if (((TeiidVdb)element).isPreviewVdb()) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    };
-    
-    /**
-     * A <code>ViewerFilter</code> that hides Translators.
-     */
-    public static final ViewerFilter TRANSLATOR_FILTER = new ViewerFilter() {
-        /**
-         * {@inheritDoc}
-         *
-         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public boolean select( Viewer viewer,
-                               Object parentElement,
-                               Object element ) {
-            return (!(element instanceof TranslatorsFolder));
-        }
-    };
 
     /**
      * If a server connection cannot be established, wait this amount of time before trying again.
@@ -123,8 +59,9 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
     private ServerManager serverMgr;
 
-    private boolean showVDBs = false;
-    private boolean showDataSources = false;
+    private boolean showVDBs = true;
+    private boolean showDataSources = true;
+    private boolean showTranslators = true;
 
     /**
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
@@ -139,6 +76,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
     private final ReadWriteLock offlineServersLock = new ReentrantReadWriteLock();
 
     /**
+     * Content will include VDBs, translators, and data sources.
      * @since 5.0
      */
     public TeiidViewTreeProvider() {
@@ -149,9 +87,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @since 5.0
      */
     public TeiidViewTreeProvider( boolean showVDBs,
+                                  boolean showTranslators,
                                   boolean showDataSources ) {
         super();
         this.showVDBs = showVDBs;
+        this.showTranslators = showTranslators;
         this.showDataSources = showDataSources;
     }
 
@@ -236,62 +176,76 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
+//    @SuppressWarnings("unused")
     @Override
     public Object[] getChildren( Object parentElement ) {
-
         if ((parentElement instanceof Server)) {
-        	Server server = (Server)parentElement;
-        	
-        	//System.out.println(" >>>> TVTP.getChildren() IS CONNECTED = " + server.isConnected() + "  Server = " + server.getUrl());
-        	
-        	if( !server.isConnected() ) {
-        		return new Object[0];
-        	}
-        	
-            Object[] result = null;
+            Collection<Object> allObjects = new ArrayList<Object>();
+            Server server = (Server)parentElement;
+
+            if (!server.isConnected()) {
+                return new Object[0];
+            }
 
             try {
-                Collection<TeiidTranslator> translators = new ArrayList<TeiidTranslator>();
-                Collection<TeiidDataSource> dataSources = new ArrayList<TeiidDataSource>();
+                // hide Data Sources related variables from other local variables
+                DATA_SOURCES: {
+                    Collection<TeiidDataSource> dataSources;
 
-                if (this.showDataSources) {
-                    dataSources = new ArrayList(server.getAdmin().getDataSources());
-                } else {
-                    dataSources = Collections.emptyList();
+                    if (this.showDataSources) {
+                        dataSources = new ArrayList(server.getAdmin().getDataSources());
+
+                        if (!dataSources.isEmpty()) {
+                            allObjects.add(new DataSourcesFolder(server, dataSources.toArray()));
+                        }
+                    } else {
+                        dataSources = Collections.emptyList();
+                    }
+                    
+                    break DATA_SOURCES;
                 }
 
-                Collection<TeiidVdb> vdbs = null;
+                // hide VDBs related variables from other local variables
+                VDBS: {
+                    Collection<TeiidVdb> vdbs;
 
-                if (this.showVDBs) {
-                    vdbs = new ArrayList<TeiidVdb>(server.getAdmin().getVdbs());
-                } else {
-                    vdbs = Collections.emptyList();
+                    if (this.showVDBs) {
+                        vdbs = new ArrayList<TeiidVdb>(server.getAdmin().getVdbs());
+
+                        if (!vdbs.isEmpty()) {
+                            allObjects.add(new VdbsFolder(server, vdbs.toArray()));
+                        }
+                    } else {
+                        vdbs = Collections.emptyList();
+                    }
+                    
+                    break VDBS;
                 }
 
-                translators = server.getAdmin().getTranslators();
+                // hide translators related variables from other local variables
+                TRANSLATORS: {
+                    Collection<TeiidTranslator> translators;
 
-                Collection<Object> allObjects = new ArrayList<Object>();
-                if (!translators.isEmpty()) {
-                    allObjects.add(new TranslatorsFolder(server, translators.toArray()));
-                }
-                if (!dataSources.isEmpty()) {
-                    allObjects.add(new DataSourcesFolder(server, dataSources.toArray()));
-                }
-                if (!vdbs.isEmpty()) {
-                    allObjects.add(new VdbsFolder(server, vdbs.toArray()));
+                    if (this.showTranslators) {
+                        translators = server.getAdmin().getTranslators();
+
+                        if (!translators.isEmpty()) {
+                            allObjects.add(new TranslatorsFolder(server, translators.toArray()));
+                        }
+                    } else {
+                        translators = Collections.emptyList();
+                    }
+                    
+                    break TRANSLATORS;
                 }
 
-                result = allObjects.toArray();
-
+                return allObjects.toArray();
             } catch (AdminComponentException ace) {
                 return new Object[0];
             } catch (Exception e) {
                 DqpPlugin.Util.log(e);
                 return new Object[0];
             }
-
-            return result;
-
         } else if (parentElement instanceof TeiidFolder) {
             return ((TeiidFolder)parentElement).getChildren();
         } else if (parentElement instanceof SourceConnectionBinding) {
@@ -549,6 +503,18 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
         // OK to try and connect
         return true;
+    }
+    
+    public void setShowDataSources(boolean show) {
+        this.showDataSources = show;
+    }
+    
+    public void setShowTranslators(boolean show) {
+        this.showTranslators = show;
+    }
+    
+    public void setShowVdbs(boolean show) {
+        this.showVDBs = show;
     }
 
     class TeiidFolder {

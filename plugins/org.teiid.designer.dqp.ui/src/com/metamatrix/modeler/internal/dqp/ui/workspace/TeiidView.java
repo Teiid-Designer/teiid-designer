@@ -25,8 +25,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
@@ -92,6 +92,52 @@ import com.metamatrix.ui.internal.widget.Label;
  * corresponding model-to-connector mappings in a WorkspaceBindings.def file.
  */
 public class TeiidView extends ViewPart implements IExecutionConfigurationListener {
+    
+    /**
+     * A <code>ViewerFilter</code> that hides Preview Data Sources.
+     */
+    private static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof TeiidDataSource) {
+                if (((TeiidDataSource)element).isPreview()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
+    
+    /**
+     * A <code>ViewerFilter</code> that hides Preview VDBs.
+     */
+    private static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof TeiidVdb) {
+                if (((TeiidVdb)element).isPreviewVdb()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidView.class);
 
@@ -253,7 +299,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         initDragAndDrop();
 
-        treeProvider = new TeiidViewTreeProvider(true, true);
+        treeProvider = new TeiidViewTreeProvider();
         viewer.setContentProvider(treeProvider);
         ILabelDecorator decorator = DqpUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
         viewer.setLabelProvider(new DecoratingLabelProvider(treeProvider, decorator));
@@ -414,22 +460,11 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      * For each connected server, refreshes the Data Sources folder item and its child items.
      */
     void refreshTranslatorFolders() {
-        TreePath[] expandedPaths = this.viewer.getExpandedTreePaths();
-
         for (Server server : getServerManager().getServers()) {
             if (server.isConnected()) {
-                Object translatorFolder = this.treeProvider.getTranslatorFolder(server);
-                
-                // if the translators folder is not displayed then refresh server
-                if (translatorFolder == null) {
-                    this.viewer.refresh(server);
-                } else {
-                    this.viewer.refresh(translatorFolder);
-                }
+                this.viewer.refresh(server);
             }
         }
-
-        this.viewer.setExpandedTreePaths(expandedPaths);
     }
     
     /**
@@ -938,6 +973,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                 this.showPreviewDataSources = menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES);
                 this.showPreviewVdbs = menuMemento.getBoolean(SHOW_PREVIEW_VDBS);
                 this.showTranslators = menuMemento.getBoolean(SHOW_TRANSLATORS);
+                this.treeProvider.setShowTranslators(this.showTranslators);
             }
         }
     }
@@ -985,7 +1021,8 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      */
     void toggleShowTranslators() {
         this.showTranslators = !this.showTranslators;
-        updateViewerFilters();
+        this.treeProvider.setShowTranslators(this.showTranslators);
+        refreshTranslatorFolders();
     }
     
     /**
@@ -1027,21 +1064,15 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         List<ViewerFilter> filters = new ArrayList<ViewerFilter>(3);
 
         if (!this.showPreviewDataSources) {
-            filters.add(TeiidViewTreeProvider.PREVIEW_DATA_SOURCE_FILTER);
+            filters.add(TeiidView.PREVIEW_DATA_SOURCE_FILTER);
         }
 
         if (!this.showPreviewVdbs) {
-            filters.add(TeiidViewTreeProvider.PREVIEW_VDB_FILTER);
+            filters.add(TeiidView.PREVIEW_VDB_FILTER);
         }
 
-        if (!this.showTranslators) {
-            filters.add(TeiidViewTreeProvider.TRANSLATOR_FILTER);
-        }
-
-        // reset content filters and maintain expansion state
-        Object[] expandedObjects = this.viewer.getExpandedElements();
+        // set new content filters
         this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
-        this.viewer.setExpandedElements(expandedObjects);
     }
 
     class NameSorter extends ViewerSorter {
