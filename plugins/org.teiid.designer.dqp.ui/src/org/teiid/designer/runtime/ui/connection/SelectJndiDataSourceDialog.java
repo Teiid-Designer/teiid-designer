@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.designer.runtime.TeiidDataSource;
+
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -38,7 +40,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
 
     private static final String UNDEFINED = DqpUiConstants.UTIL.getString("SelectJndiDataSourceDialog.undefined"); //$NON-NLS-1$ 
 
-    private static final TeiidViewTreeProvider treeProvider = new TeiidViewTreeProvider(false, false, true);
+    private static final TeiidViewTreeProvider treeProvider = new TeiidViewTreeProvider(false, true);
 
     public SelectJndiDataSourceDialog( Shell parent ) {
         this(parent, DEFAULT_TITLE, treeProvider, treeProvider);
@@ -94,8 +96,7 @@ public class SelectJndiDataSourceDialog extends ElementTreeSelectionDialog imple
 
         getTreeViewer().getTree().setEnabled(true);
         getTreeViewer().setSorter(new ViewerSorter());
-
-        ((TeiidViewTreeProvider)getTreeViewer().getContentProvider()).setShowTranslators(false);
+        getTreeViewer().setFilters(new ViewerFilter[] {TeiidViewTreeProvider.TRANSLATOR_FILTER});
         getTreeViewer().expandToLevel(3);
 
         return panel;

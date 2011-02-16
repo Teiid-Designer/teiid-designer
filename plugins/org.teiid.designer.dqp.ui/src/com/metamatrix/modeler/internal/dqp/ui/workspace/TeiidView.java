@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.dqp.ui.workspace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +25,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -167,7 +170,22 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     private IAction showTranslatorsAction;
 
     ExecutionAdmin currentSelectedAdmin;
-
+    
+    /**
+     * <code>true</code> if the viewer should show preview VDBs
+     */
+    private boolean showPreviewVdbs;
+    
+    /**
+     * <code>true</code> if the viewer should show preview data sources
+     */
+    private boolean showPreviewDataSources;
+    
+    /**
+     * <code>true</code> if the viewer should show translators
+     */
+    private boolean showTranslators;
+    
     /**
      * The constructor.
      */
@@ -189,15 +207,23 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         }
 
         UiUtil.runInSwtThread(new Runnable() {
+            @Override
             public void run() {
                 if (!viewer.getTree().isDisposed()) {
                     if ((event.getEventType() == EventType.REFRESH) && (event.getTargetType() == TargetType.SERVER)) {
                         viewer.refresh(event.getServer());
                     } else {
-                        viewer.refresh();
+                        TargetType targetType = event.getTargetType();
+
+                        if (targetType == TargetType.VDB) {
+                            refreshVdbFolders();
+                        } else if (targetType ==TargetType.DATA_SOURCE) {
+                            refreshDataSourceFolders();
+                        } else {
+                            viewer.refresh();
+                        }
                     }
 
-                    viewer.expandAll();
                     // Get Selected Index
                     if (viewer.getTree().getSelectionCount() == 1) {
                         ISelection currentSelection = viewer.getSelection();
@@ -227,7 +253,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
 
         initDragAndDrop();
 
-        treeProvider = new TeiidViewTreeProvider(true, false, true);
+        treeProvider = new TeiidViewTreeProvider(true, true);
         viewer.setContentProvider(treeProvider);
         ILabelDecorator decorator = DqpUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
         viewer.setLabelProvider(new DecoratingLabelProvider(treeProvider, decorator));
@@ -237,6 +263,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         viewer.setSorter(new NameSorter());
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
             public void selectionChanged( SelectionChangedEvent event ) {
                 handleSelectionChanged(event);
             }
@@ -254,8 +281,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         getViewSite().setSelectionProvider(viewer);
         
         // populate viewer
+        updateViewerFilters();
         viewer.setInput(DqpPlugin.getInstance().getServerManager());
-        viewer.expandAll();
+        viewer.expandToLevel(2);
 
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(this);
@@ -370,6 +398,50 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         // Other plug-ins can contribute there actions here
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
+    
+    /**
+     * For each connected server, refreshes the Data Sources folder item and its child items.
+     */
+    void refreshDataSourceFolders() {
+        for (Server server : getServerManager().getServers()) {
+            if (server.isConnected()) {
+                this.viewer.refresh(this.treeProvider.getDataSourceFolder(server));
+            }
+        }
+    }
+    
+    /**
+     * For each connected server, refreshes the Data Sources folder item and its child items.
+     */
+    void refreshTranslatorFolders() {
+        TreePath[] expandedPaths = this.viewer.getExpandedTreePaths();
+
+        for (Server server : getServerManager().getServers()) {
+            if (server.isConnected()) {
+                Object translatorFolder = this.treeProvider.getTranslatorFolder(server);
+                
+                // if the translators folder is not displayed then refresh server
+                if (translatorFolder == null) {
+                    this.viewer.refresh(server);
+                } else {
+                    this.viewer.refresh(translatorFolder);
+                }
+            }
+        }
+
+        this.viewer.setExpandedTreePaths(expandedPaths);
+    }
+    
+    /**
+     * For each connected server, refreshes the VDBs folder item its child items.
+     */
+    void refreshVdbFolders() {
+        for (Server server : getServerManager().getServers()) {
+            if (server.isConnected()) {
+                this.viewer.refresh(this.treeProvider.getVdbFolder(server));
+            }
+        }
+    }
 
     private void fillLocalPullDown( IMenuManager menuMgr ) {
         // restore settings from last session
@@ -379,28 +451,24 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         this.showPreviewVdbsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
-                TeiidView.this.treeProvider.setShowPreviewVdbs(!TeiidView.this.treeProvider.isShowingPreviewVdbs());
-                TeiidView.this.viewer.refresh(false);
-                TeiidView.this.viewer.expandAll();
+                toggleShowPreviewVdbs();
             }
         };
 
         // restore state and add to menu
-        this.showPreviewVdbsAction.setChecked(this.treeProvider.isShowingPreviewVdbs());
+        this.showPreviewVdbsAction.setChecked(this.showPreviewVdbs);
         menuMgr.add(this.showPreviewVdbsAction);
 
         // add the show translators action
         this.showTranslatorsAction = new Action(DqpUiConstants.UTIL.getString(PREFIX + "showTranslatorsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
-                treeProvider.setShowTranslators(!TeiidView.this.treeProvider.isShowingTranslators());
-                viewer.refresh(false);
-                viewer.expandAll();
+                toggleShowTranslators();
             }
         };
 
         // restore state and add to menu
-        this.showTranslatorsAction.setChecked(this.treeProvider.isShowingTranslators());
+        this.showTranslatorsAction.setChecked(this.showTranslators);
         menuMgr.add(this.showTranslatorsAction);
 
         // add the show preview data sources action
@@ -408,14 +476,12 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                                                        DqpUiConstants.UTIL.getString(PREFIX + "showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
             @Override
             public void run() {
-                treeProvider.setShowPreviewDataSources(!TeiidView.this.treeProvider.isShowingPreviewDataSources());
-                viewer.refresh(false);
-                viewer.expandAll();
+                toggleShowPreviewDataSources();
             }
         };
 
         // restore state and add to menu
-        this.showPreviewDataSourcesAction.setChecked(this.treeProvider.isShowingPreviewDataSources());
+        this.showPreviewDataSourcesAction.setChecked(this.showPreviewDataSources);
         menuMgr.add(this.showPreviewDataSourcesAction);
 
         final IAction enablePreviewAction = new Action(
@@ -491,7 +557,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     /**
      * @return the server manager being used by this view
      */
-    private ServerManager getServerManager() {
+    ServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
     }
 
@@ -535,6 +601,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
+            @Override
             public void menuAboutToShow( IMenuManager manager ) {
                 TeiidView.this.fillContextMenu(manager);
             }
@@ -549,6 +616,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
      */
     private void hookToolTips() {
         final Listener labelListener = new Listener() {
+            @Override
             public void handleEvent( Event event ) {
                 Label label = (Label)event.widget;
                 Shell shell = label.getShell();
@@ -577,6 +645,7 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
                 }
             }
 
+            @Override
             public void handleEvent( Event event ) {
                 switch (event.type) {
                     case SWT.MouseMove: {
@@ -866,9 +935,9 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             
             // also need to check for null here if running an existing workspace that didn't have this memento created
             if (menuMemento != null) {
-                this.treeProvider.setShowPreviewDataSources(menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES));
-                this.treeProvider.setShowPreviewVdbs(menuMemento.getBoolean(SHOW_PREVIEW_VDBS));
-                this.treeProvider.setShowTranslators(menuMemento.getBoolean(SHOW_TRANSLATORS));
+                this.showPreviewDataSources = menuMemento.getBoolean(SHOW_PREVIEW_DATA_SOURCES);
+                this.showPreviewVdbs = menuMemento.getBoolean(SHOW_PREVIEW_VDBS);
+                this.showTranslators = menuMemento.getBoolean(SHOW_TRANSLATORS);
             }
         }
     }
@@ -893,6 +962,30 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
     @Override
     public void setFocus() {
         viewer.getControl().setFocus();
+    }
+    
+    /**
+     * Handler for when the show preview data sources menu action is selected
+     */
+    void toggleShowPreviewDataSources() {
+        this.showPreviewDataSources = !this.showPreviewDataSources;
+        updateViewerFilters();
+    }
+    
+    /**
+     * Handler for when the show preview VDBs menu action is selected
+     */
+    void toggleShowPreviewVdbs() {
+        this.showPreviewVdbs = !this.showPreviewVdbs;
+        updateViewerFilters();
+    }
+    
+    /**
+     * Handler for when the show translator menu action is selected
+     */
+    void toggleShowTranslators() {
+        this.showTranslators = !this.showTranslators;
+        updateViewerFilters();
     }
     
     /**
@@ -925,6 +1018,30 @@ public class TeiidView extends ViewPart implements IExecutionConfigurationListen
             }
         }
         getViewSite().getActionBars().getStatusLineManager().setMessage(msg);
+    }
+    
+    /**
+     * Applies the current viewer filters.
+     */
+    private void updateViewerFilters() {
+        List<ViewerFilter> filters = new ArrayList<ViewerFilter>(3);
+
+        if (!this.showPreviewDataSources) {
+            filters.add(TeiidViewTreeProvider.PREVIEW_DATA_SOURCE_FILTER);
+        }
+
+        if (!this.showPreviewVdbs) {
+            filters.add(TeiidViewTreeProvider.PREVIEW_VDB_FILTER);
+        }
+
+        if (!this.showTranslators) {
+            filters.add(TeiidViewTreeProvider.TRANSLATOR_FILTER);
+        }
+
+        // reset content filters and maintain expansion state
+        Object[] expandedObjects = this.viewer.getExpandedElements();
+        this.viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
+        this.viewer.setExpandedElements(expandedObjects);
     }
 
     class NameSorter extends ViewerSorter {

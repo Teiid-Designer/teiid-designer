@@ -44,8 +44,7 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog
 	private static final String UNDEFINED = DqpUiConstants.UTIL
 			.getString("SelectJndiDataSourceDialog.undefined"); //$NON-NLS-1$ 
 
-	private static final TeiidViewTreeProvider treeProvider = new TeiidViewTreeProvider(
-			false, true, false);
+    private static final TeiidViewTreeProvider treeProvider = new TeiidViewTreeProvider(false, false);
 
 	public SelectTranslatorDialog(Shell parent) {
 		this(parent, DEFAULT_TITLE, treeProvider, treeProvider);
@@ -100,8 +99,6 @@ public class SelectTranslatorDialog extends ElementTreeSelectionDialog
 
 		getTreeViewer().getTree().setEnabled(true);
 		getTreeViewer().setSorter(new ViewerSorter());
-		((TeiidViewTreeProvider) getTreeViewer().getContentProvider())
-				.setShowTranslators(true);
 		getTreeViewer().expandToLevel(3);
 
 		return panel;

@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import org.teiid.adminapi.VDB;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 
@@ -26,16 +28,8 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SERVER, server);
     }
 
-    public static ExecutionConfigurationEvent createAddSourceBindingEvent( SourceConnectionBinding binding ) {
-        return new ExecutionConfigurationEvent(EventType.ADD, TargetType.SOURCE_BINDING, binding);
-    }
-
     public static ExecutionConfigurationEvent createDeployVDBEvent( VDB vdb ) {
         return new ExecutionConfigurationEvent(EventType.ADD, TargetType.VDB, vdb);
-    }
-
-    public static ExecutionConfigurationEvent createRefreshSourceBindingsEvent() {
-        return new ExecutionConfigurationEvent(TargetType.SOURCE_BINDING);
     }
 
     public static ExecutionConfigurationEvent createRemoveDataSourceEvent( TeiidDataSource dataSource ) {
@@ -44,10 +38,6 @@ public final class ExecutionConfigurationEvent {
 
     public static ExecutionConfigurationEvent createRemoveServerEvent( Server server ) {
         return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SERVER, server);
-    }
-
-    public static ExecutionConfigurationEvent createRemoveSourceBindingEvent( SourceConnectionBinding binding ) {
-        return new ExecutionConfigurationEvent(EventType.REMOVE, TargetType.SOURCE_BINDING, binding);
     }
 
     public static ExecutionConfigurationEvent createServerRefreshEvent( Server server ) {

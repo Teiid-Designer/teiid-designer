@@ -14,7 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -22,15 +24,18 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.adminapi.AdminComponentException;
+import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidDataSource;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
@@ -43,23 +48,83 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  * @since 5.0
  */
 public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILightweightLabelDecorator, ITreeContentProvider {
+    
+    /**
+     * A <code>ViewerFilter</code> that hides Preview Data Sources.
+     */
+    public static final ViewerFilter PREVIEW_DATA_SOURCE_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof TeiidDataSource) {
+                if (((TeiidDataSource)element).isPreview()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
+    
+    /**
+     * A <code>ViewerFilter</code> that hides Preview VDBs.
+     */
+    public static final ViewerFilter PREVIEW_VDB_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof TeiidVdb) {
+                if (((TeiidVdb)element).isPreviewVdb()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    };
+    
+    /**
+     * A <code>ViewerFilter</code> that hides Translators.
+     */
+    public static final ViewerFilter TRANSLATOR_FILTER = new ViewerFilter() {
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            return (!(element instanceof TranslatorsFolder));
+        }
+    };
 
     /**
      * If a server connection cannot be established, wait this amount of time before trying again.
      */
     private static final long RETRY_DURATION = 2000;
-    private static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.vdbsFolder.label"); //$NON-NLS-1$
-    private static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.dataSourcesFolder.label"); //$NON-NLS-1$
-    private static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.translatorsFolder.label"); //$NON-NLS-1$
+
+    static final String VDBS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.vdbsFolder.label"); //$NON-NLS-1$
+    static final String DATA_SOURCES_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.dataSourcesFolder.label"); //$NON-NLS-1$
+    static final String TRANSLATORS_FOLDER_NAME = DqpUiConstants.UTIL.getString("TeiidViewTreeProvider.translatorsFolder.label"); //$NON-NLS-1$
 
     private ServerManager serverMgr;
 
-    // private boolean showWorkspaceItems = false;
-    private boolean showTranslators = false;
     private boolean showVDBs = false;
     private boolean showDataSources = false;
-    private boolean showPreviewDataSources = false;
-    private boolean showPreviewVdbs = false;
 
     /**
      * Servers that a connection can't be established. Value is the last time establishing a connection was tried.
@@ -84,11 +149,9 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @since 5.0
      */
     public TeiidViewTreeProvider( boolean showVDBs,
-                                  boolean showTranslators,
                                   boolean showDataSources ) {
         super();
         this.showVDBs = showVDBs;
-        this.showTranslators = showTranslators;
         this.showDataSources = showDataSources;
     }
 
@@ -173,6 +236,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public Object[] getChildren( Object parentElement ) {
 
         if ((parentElement instanceof Server)) {
@@ -192,18 +256,6 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
                 if (this.showDataSources) {
                     dataSources = new ArrayList(server.getAdmin().getDataSources());
-                    Collection<TeiidDataSource> previewDataSources = new ArrayList<TeiidDataSource>();
-
-                    if (!this.showPreviewDataSources) {
-                        for (TeiidDataSource dss : dataSources) {
-
-                            if (dss.isPreview()) {
-                                previewDataSources.add(dss);
-                            }
-                        }
-
-                        dataSources.removeAll(previewDataSources);
-                    }
                 } else {
                     dataSources = Collections.emptyList();
                 }
@@ -212,25 +264,11 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 
                 if (this.showVDBs) {
                     vdbs = new ArrayList<TeiidVdb>(server.getAdmin().getVdbs());
-                    Collection<TeiidVdb> previewVdbs = new ArrayList<TeiidVdb>();
-
-                    if (!this.showPreviewVdbs) {
-                        for (TeiidVdb vdb : vdbs) {
-
-                            if (vdb.isPreviewVdb()) {
-                                previewVdbs.add(vdb);
-                            }
-                        }
-
-                        vdbs.removeAll(previewVdbs);
-                    }
                 } else {
                     vdbs = Collections.emptyList();
                 }
 
-                if (showTranslators) {
-                    translators = server.getAdmin().getTranslators();
-                }
+                translators = server.getAdmin().getTranslators();
 
                 Collection<Object> allObjects = new ArrayList<Object>();
                 if (!translators.isEmpty()) {
@@ -267,6 +305,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public Object[] getElements( Object inputElement ) {
         if (inputElement instanceof ServerManager) {
             serverMgr = (ServerManager)inputElement;
@@ -309,8 +348,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
             if( isError) {
             	if( server.getConnectionError() != null )
             	return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ERROR_ICON);
-            	else
-            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
+                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SET_DEFAULT_SERVER_ERROR_ICON);
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.SERVER_ICON);
         }
@@ -344,6 +382,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public Object getParent( Object element ) {
         return null;
     }
@@ -407,11 +446,54 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         return DqpUiConstants.UTIL.getString(I18nUtil.getPropertyPrefix(TeiidViewTreeProvider.class), new Object[] {
             element.toString(), element.getClass().getName()});
     }
+    
+    /**
+     * @param server the server whose Data Source folder is being requested
+     * @return the folder
+     */
+    public Object getDataSourceFolder(Object server) {
+        for (Object child : getChildren(server)) {
+            if (child instanceof DataSourcesFolder) {
+                return child;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @param server the server whose Translators folder is being requested
+     * @return the folder
+     */
+    public Object getTranslatorFolder(Object server) {
+        for (Object child : getChildren(server)) {
+            if (child instanceof TranslatorsFolder) {
+                return child;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @param server the server whose VDBs folder is being requested
+     * @return the folder
+     */
+    public Object getVdbFolder(Object server) {
+        for (Object child : getChildren(server)) {
+            if (child instanceof VdbsFolder) {
+                return child;
+            }
+        }
+        
+        return null;
+    }
 
     /**
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      * @since 4.2
      */
+    @Override
     public boolean hasChildren( Object element ) {
         return getChildren(element).length > 0;
     }
@@ -421,6 +503,7 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
      *      java.lang.Object)
      * @since 4.2
      */
+    @Override
     public void inputChanged( Viewer viewer,
                               Object oldInput,
                               Object newInput ) {
@@ -468,47 +551,6 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         return true;
     }
 
-    /**
-     * @return <code>true</code> if Preview VDBs are being shown
-     */
-    public boolean isShowingPreviewVdbs() {
-        return this.showPreviewVdbs;
-    }
-
-    /**
-     * @return <code>true</code> if Translators are being shown
-     */
-    public boolean isShowingTranslators() {
-        return this.showTranslators;
-    }
-
-    /**
-     * @return <code>true</code> if Translators are being shown
-     */
-    public boolean isShowingPreviewDataSources() {
-        return this.showPreviewDataSources;
-    }
-
-    public void setShowPreviewDataSources( boolean value ) {
-        this.showPreviewDataSources = value;
-    }
-
-    public void setShowDataSources( boolean value ) {
-        this.showPreviewDataSources = value;
-    }
-
-    public void setShowPreviewVdbs( boolean value ) {
-        this.showPreviewVdbs = value;
-    }
-
-    public void setShowTranslators( boolean value ) {
-        this.showTranslators = value;
-    }
-
-    public void setShowVDBs( boolean value ) {
-        this.showVDBs = value;
-    }
-
     class TeiidFolder {
         Object[] theValues;
         Server server;
@@ -516,6 +558,21 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
         public TeiidFolder(Server server, Object[] values ) {
         	this.server = server;
             theValues = values;
+        }
+        
+        /**
+         * {@inheritDoc}
+         *
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals( Object obj ) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (!getClass().equals(obj.getClass())) return false;
+
+            TeiidFolder folder = (TeiidFolder)obj;
+            return getServer().equals(folder.getServer());
         }
 
         public Object[] getChildren() {
@@ -535,6 +592,20 @@ public class TeiidViewTreeProvider extends ColumnLabelProvider implements ILight
 				DqpUiConstants.UTIL.log(IStatus.ERROR, e, e.getMessage());
 			}
         	return admin;
+        }
+        
+        private Server getServer() {
+            return this.server;
+        }
+        
+        /**
+         * {@inheritDoc}
+         *
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            return HashCodeUtil.hashCode(this.server.hashCode(), getClass().hashCode());
         }
     }
 
