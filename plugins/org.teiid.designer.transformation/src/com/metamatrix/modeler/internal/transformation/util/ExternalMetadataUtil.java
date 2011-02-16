@@ -16,6 +16,7 @@ import java.util.Map;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -24,6 +25,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
+import com.metamatrix.modeler.core.query.QueryValidator;
 
 /**
  * Utilities used to get external metadata.
@@ -117,6 +119,54 @@ public class ExternalMetadataUtil {
         }
 
         externalMetadata.put(changeGroup, changingElments);
+
+        return externalMetadata;
+    }
+    
+    public static Map getTriggerActionExternalMetadata( GroupSymbol virtualGroup,
+                                                    QueryMetadataInterface metadata, int commandType )
+        throws QueryMetadataException, TeiidComponentException {
+        Map externalMetadata = new HashMap();
+
+        // Look up elements for the virtual group
+        List elements = ExternalMetadataUtil.resolveElementsInGroup(virtualGroup, metadata);
+        // virtual group metadata info
+        externalMetadata.put(virtualGroup, elements);
+
+        if (commandType == QueryValidator.UPDATE_TRNS || commandType == QueryValidator.DELETE_TRNS) {
+            GroupSymbol inputGroup1 = new GroupSymbol(SQLConstants.Reserved.OLD);
+            List inputElments1 = new ArrayList(elements.size());
+            for (int i = 0; i < elements.size(); i++) {
+                ElementSymbol virtualElmnt = (ElementSymbol)elements.get(i);
+                ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
+                inputElments1.add(inputElement);
+            }
+            externalMetadata.put(inputGroup1, inputElments1);
+        }
+
+        if (commandType == QueryValidator.UPDATE_TRNS || commandType == QueryValidator.INSERT_TRNS) {
+            GroupSymbol inputGroup2 = new GroupSymbol(SQLConstants.Reserved.NEW);
+            List inputElments2 = new ArrayList(elements.size());
+            for (int i = 0; i < elements.size(); i++) {
+                ElementSymbol virtualElmnt = (ElementSymbol)elements.get(i);
+                ElementSymbol inputElement = (ElementSymbol)virtualElmnt.clone();
+                inputElments2.add(inputElement);
+            }
+            
+            externalMetadata.put(inputGroup2, inputElments2);
+            
+            // CHANGING group metadata info
+            // Switch type to be boolean for all CHANGING variables
+            GroupSymbol changeGroup = new GroupSymbol(ProcedureReservedWords.CHANGING);
+            List changingElments = new ArrayList(elements.size());
+            for (int i = 0; i < elements.size(); i++) {
+                ElementSymbol changeElement = (ElementSymbol)((ElementSymbol)elements.get(i)).clone();
+                changeElement.setType(DataTypeManager.DefaultDataClasses.BOOLEAN);
+                changingElments.add(changeElement);
+            }
+
+            externalMetadata.put(changeGroup, changingElments);
+        }
 
         return externalMetadata;
     }

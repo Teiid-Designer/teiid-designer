@@ -10,29 +10,23 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.GroupBy;
-import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.Option;
 import org.teiid.query.sql.lang.OrderBy;
-import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetCriteria;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ScalarSubquery;
@@ -423,23 +417,7 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @return true if the node is a command, false if not.
      */
     public static boolean isCommandNode( DisplayNode node ) {
-        if (node.getLanguageObject() instanceof Query) {
-            return true;
-        } else if (node.languageObject instanceof SetQuery) {
-            return true;
-        } else if (node.languageObject instanceof Update) {
-            return true;
-        } else if (node.languageObject instanceof Insert) {
-            return true;
-        } else if (node.languageObject instanceof Delete) {
-            return true;
-        } else if (node.languageObject instanceof StoredProcedure) {
-            return true;
-        } else if (node.languageObject instanceof CreateUpdateProcedureCommand) {
-            return true;
-        } else {
-            return false;
-        }
+        return node.getLanguageObject() instanceof Command;
     }
 
     /**

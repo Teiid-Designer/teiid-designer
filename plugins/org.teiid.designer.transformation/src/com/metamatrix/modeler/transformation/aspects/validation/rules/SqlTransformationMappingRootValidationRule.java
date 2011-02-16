@@ -408,27 +408,25 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                     }
                     break;
                 case Command.TYPE_INSERT:
-                    if (superType == Command.TYPE_UPDATE_PROCEDURE) {
-                        if (containsTarget(subCommand, target)) {
+                    if (containsTarget(subCommand, target)) {
+                        // create validation problem and addition to the results
+                        typeProblem = new ValidationProblemImpl(
+                                                                0,
+                                                                IStatus.ERROR,
+                                                                TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_insert_procedure_for_the_virtualGroup_{0},_is_trying_to_execute_an_insert_against_itself._1", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
+                    } else {
+                        // if insert procedure has translate/has criteria, warn
+                        if (hasTranslateCriteria(subCommand)) {
                             // create validation problem and addition to the results
                             typeProblem = new ValidationProblemImpl(
                                                                     0,
-                                                                    IStatus.ERROR,
-                                                                    TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_insert_procedure_for_the_virtualGroup_{0},_is_trying_to_execute_an_insert_against_itself._1", TransformationHelper.getSqlEObjectName(target))); //$NON-NLS-1$
-                        } else {
-                            // if insert procedure has translate/has criteria, warn
-                            if (hasTranslateCriteria(subCommand)) {
-                                // create validation problem and addition to the results
-                                typeProblem = new ValidationProblemImpl(
-                                                                        0,
-                                                                        IStatus.WARNING,
-                                                                        TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Translate/Has_Criteria_on_an_insert_procedure_would_always_evaluate_to_false._3")); //$NON-NLS-1$
-                            }
+                                                                    IStatus.WARNING,
+                                                                    TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.Translate/Has_Criteria_on_an_insert_procedure_would_always_evaluate_to_false._3")); //$NON-NLS-1$
                         }
                     }
                     break;
                 case Command.TYPE_UPDATE:
-                    if (superType == Command.TYPE_UPDATE_PROCEDURE && containsTarget(subCommand, target)) {
+                    if (containsTarget(subCommand, target)) {
                         // create validation problem and addition to the results
                         typeProblem = new ValidationProblemImpl(
                                                                 0,
@@ -437,7 +435,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                     }
                     break;
                 case Command.TYPE_DELETE:
-                    if (superType == Command.TYPE_UPDATE_PROCEDURE && containsTarget(subCommand, target)) {
+                    if (containsTarget(subCommand, target)) {
                         // create validation problem and addition to the results
                         typeProblem = new ValidationProblemImpl(
                                                                 0,

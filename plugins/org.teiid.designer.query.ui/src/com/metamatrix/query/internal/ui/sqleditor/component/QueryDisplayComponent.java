@@ -31,6 +31,7 @@ import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.TriggerAction;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.SelectSymbol;
@@ -296,6 +297,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         	moreStatus = validationResult.getUpdateStatusList(QueryValidator.DELETE_TRNS);
         }
         if( moreStatus != null && !moreStatus.isEmpty() ) {
+            statusList = new ArrayList(statusList);
         	statusList.addAll(moreStatus);
         }
         setCommand(validationResult.getCommand());
@@ -410,9 +412,11 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     	if(!isResolvable()) {
     		result = false;
     	// If resolvable, check further.  Should not optimze CreateUpdateProcedureCommands
-    	} else if (getCommand()!=null && getCommand() instanceof CreateUpdateProcedureCommand) {
+    	} else if (getCommand() instanceof CreateUpdateProcedureCommand) {
     		result = false;
-    	}
+    	} else if (getCommand() instanceof TriggerAction) {
+            result = false;
+        }
     	return result;
     }
 

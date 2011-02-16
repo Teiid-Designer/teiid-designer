@@ -2786,7 +2786,7 @@ public class TransformationHelper implements SqlConstants {
      */
     public static Map getExternalMetadataMap( final Command command,
                                               final SqlTransformationMappingRoot mappingRoot,
-                                              final QueryMetadataInterface metadata )
+                                              final QueryMetadataInterface metadata, int transformType )
         throws TeiidComponentException, QueryMetadataException {
         if (mappingRoot != null) {
             final Object targetGroup = mappingRoot.getTarget();
@@ -2805,6 +2805,8 @@ public class TransformationHelper implements SqlConstants {
                 // Generate External Map for CreateUpdateProcedureCommand
                 if (command != null && command.getType() == Command.TYPE_UPDATE_PROCEDURE) {
                     return getExternalMetadataMapForUpdateProcedure((Table)targetGroup, metadata);
+                } else if (command != null && command.getType() == Command.TYPE_TRIGGER_ACTION) {
+                    return getExternalMetadataMapForTriggerAction((Table)targetGroup, metadata, transformType);
                 }
 
                 // If the transformation has source procedures, Generate External Map from Target Group AccessPatterns
@@ -2896,18 +2898,6 @@ public class TransformationHelper implements SqlConstants {
     public static Map getExternalMetadataMapForTable( final Table targetGroup,
                                                       final QueryMetadataInterface metadata )
         throws TeiidComponentException, QueryMetadataException {
-        if (targetGroup == null) {
-            return Collections.EMPTY_MAP;
-        }
-        String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
-        String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
-        GroupSymbol gSymbol = new GroupSymbol(targetGroupFullName);
-        Object groupID = metadata.getGroupID(targetGroupUUID);
-        if (groupID != null) {
-            gSymbol.setMetadataID(groupID);
-        }
-
-        // If no external metadata map was defined, set to empty map
         return Collections.EMPTY_MAP;
     }
 
@@ -2920,19 +2910,39 @@ public class TransformationHelper implements SqlConstants {
     public static Map getExternalMetadataMapForUpdateProcedure( final Table targetGroup,
                                                                 final QueryMetadataInterface metadata )
         throws TeiidComponentException, QueryMetadataException {
-        if (targetGroup != null) {
-            String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
-            String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
-            GroupSymbol gSymbol = new GroupSymbol(targetGroupFullName);
-            Object groupID = metadata.getGroupID(targetGroupUUID);
-            if (groupID != null) {
-                gSymbol.setMetadataID(groupID);
-                return ExternalMetadataUtil.getProcedureExternalMetadata(gSymbol, metadata);
-            }
+        GroupSymbol gSymbol = getTargetGroupSymbol(targetGroup, metadata);
+        if (gSymbol != null) {
+            return ExternalMetadataUtil.getProcedureExternalMetadata(gSymbol, metadata);
         }
-
         // If no external metadata map was defined, set to empty map
         return Collections.EMPTY_MAP;
+    }
+    
+    public static Map getExternalMetadataMapForTriggerAction( final Table targetGroup,
+                                                                final QueryMetadataInterface metadata, int commandType )
+        throws TeiidComponentException, QueryMetadataException {
+        GroupSymbol gSymbol = getTargetGroupSymbol(targetGroup, metadata);
+        if (gSymbol != null) {
+            return ExternalMetadataUtil.getTriggerActionExternalMetadata(gSymbol, metadata, commandType);
+        }
+        // If no external metadata map was defined, set to empty map
+        return Collections.EMPTY_MAP;
+    }
+    
+    public static GroupSymbol getTargetGroupSymbol(final Table targetGroup,
+                              final QueryMetadataInterface metadata) throws QueryMetadataException, TeiidComponentException {
+        if (targetGroup == null) {
+            return null;
+        }
+        String targetGroupFullName = TransformationHelper.getSqlEObjectFullName(targetGroup);
+        String targetGroupUUID = TransformationHelper.getSqlEObjectUUID(targetGroup);
+        GroupSymbol gSymbol = new GroupSymbol(targetGroupFullName);
+        Object groupID = metadata.getGroupID(targetGroupUUID);
+        if (groupID != null) {
+            gSymbol.setMetadataID(groupID);
+            return gSymbol;
+        }
+        return null;
     }
 
     /**

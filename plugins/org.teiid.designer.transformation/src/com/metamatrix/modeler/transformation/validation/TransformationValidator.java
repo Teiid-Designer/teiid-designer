@@ -378,7 +378,7 @@ public class TransformationValidator implements QueryValidator {
             try {
                 // QueryParser is not thread-safe, get new parser each time
                 QueryParser parser = new QueryParser();
-                command = parser.parseCommand(sqlString);
+                command = parser.parseDesignerCommand(sqlString);
             } catch (Exception e) {
                 status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             }
@@ -412,7 +412,7 @@ public class TransformationValidator implements QueryValidator {
         Map externalMetadata = Collections.EMPTY_MAP;
         try {
             // look up external metadata
-            externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata());
+            externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata(), transformType);
         } catch (QueryMetadataException e) {
             IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             return new SqlTransformationResult(command, errorStatus);
@@ -647,7 +647,7 @@ public class TransformationValidator implements QueryValidator {
             case QueryValidator.INSERT_TRNS:
             case QueryValidator.UPDATE_TRNS:
             case QueryValidator.DELETE_TRNS:
-                if (!(cmdType == Command.TYPE_UPDATE_PROCEDURE && ((CreateUpdateProcedureCommand)command).isUpdateProcedure())) {
+                if (cmdType != Command.TYPE_TRIGGER_ACTION && !(cmdType == Command.TYPE_UPDATE_PROCEDURE && ((CreateUpdateProcedureCommand)command).isUpdateProcedure())) {
                     // create validation problem and addition to the results
                     String msg = TransformationPlugin.Util.getString("TransformationValidator.Only_update_procedures_are_allowed_in_the_INSERT/UPDATE/DELETE_tabs._1"); //$NON-NLS-1$
                     return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, msg, null);

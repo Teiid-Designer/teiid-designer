@@ -781,7 +781,7 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
         try {
             // QueryParser is not thread-safe, get new parser each time
             QueryParser parser = new QueryParser();
-            command = parser.parseCommand(sqlString);
+            command = parser.parseDesignerCommand(sqlString);
         } catch (Exception e) {
             TransformationPlugin.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
         }

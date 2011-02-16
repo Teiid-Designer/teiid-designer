@@ -163,7 +163,7 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
             try {
                 // QueryParser is not thread-safe, get new parser each time
                 QueryParser parser = new QueryParser();
-                command = parser.parseCommand(sqlString);
+                command = parser.parseDesignerCommand(sqlString);
             } catch (Exception e) {
                 status = new Status(IStatus.ERROR, com.metamatrix.query.ui.UiConstants.PLUGIN_ID, 0, e.getMessage(), e);
             }
