@@ -2177,12 +2177,17 @@ public class TransformationHelper implements SqlConstants {
      */
     public static boolean isSetMaterializedTableChangeNotification( Notification notification ) {
         if (NotificationUtilities.isChanged(notification)) {
-            if (notification.getFeature() instanceof EStructuralFeature) {
-                EStructuralFeature esf = (EStructuralFeature)notification.getFeature();
-                if (esf.getFeatureID() == RelationalPackage.TABLE__MATERIALIZED) {
-                    return true;
-                }
-            }
+        	if( notification.getNotifier() instanceof EObject ) {
+        		if( !TransformationHelper.isMappingClass(notification.getNotifier())) {
+		            if (notification.getFeature() instanceof EStructuralFeature) {
+		                EStructuralFeature esf = (EStructuralFeature)notification.getFeature();
+		                if (esf.getFeatureID() == RelationalPackage.TABLE__MATERIALIZED &&
+		                		esf.getEContainingClass().getEPackage() == RelationalPackage.eINSTANCE) {
+		                    return true;
+		                }
+		            }
+        		}
+        	}
         }
         return false;
     }
@@ -2195,12 +2200,17 @@ public class TransformationHelper implements SqlConstants {
      */
     public static boolean isSupportsUpdateTableChangeNotification( Notification notification ) {
         if (NotificationUtilities.isChanged(notification)) {
-            if (notification.getFeature() instanceof EStructuralFeature) {
-                EStructuralFeature esf = (EStructuralFeature)notification.getFeature();
-                if (esf.getFeatureID() == RelationalPackage.TABLE__SUPPORTS_UPDATE) {
-                    return true;
-                }
-            }
+        	if( notification.getNotifier() instanceof EObject ) {
+        		if( !TransformationHelper.isMappingClass(notification.getNotifier())) {
+		            if (notification.getFeature() instanceof EStructuralFeature) {
+		                EStructuralFeature esf = (EStructuralFeature)notification.getFeature();
+		                if (esf.getFeatureID() == RelationalPackage.TABLE__SUPPORTS_UPDATE &&
+		                		esf.getEContainingClass().getEPackage() == RelationalPackage.eINSTANCE) {
+		                    return true;
+		                }
+		            }
+        		}
+        	}
         }
         return false;
     }
