@@ -22,11 +22,8 @@ import org.teiid.query.sql.lang.Option;
 import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetCriteria;
-import org.teiid.query.sql.lang.SubqueryCompareCriteria;
-import org.teiid.query.sql.lang.SubqueryFromClause;
-import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ScalarSubquery;
@@ -105,15 +102,25 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      * @param index the index to test
      * @return the List of nodes that the Index is within
      */
-    public static List getDisplayNodesAtIndex( List displayNodes,
+    public static List<DisplayNode> getDisplayNodesAtIndex( List<DisplayNode> displayNodes,
                                                int index ) {
-        ArrayList validNodes = new ArrayList(0);
+        ArrayList<DisplayNode> validNodes = new ArrayList<DisplayNode>(2);
 
-        Iterator iter = displayNodes.iterator();
-        while (iter.hasNext()) {
-            DisplayNode node = (DisplayNode)iter.next();
-            if (node.isAnywhereWithin(index)) {
-                validNodes.add(node);
+        //TODO: could perform a binary search
+        for (DisplayNode displayNode : displayNodes) {
+            if (displayNode.getStartIndex() > index) {
+                break;
+            }
+            if (displayNode.getEndIndex() + 1 < index) {
+                continue;
+            }
+            List<DisplayNode> childNodes = getDisplayNodesAtIndex(displayNode.getChildren(), index);
+            if (childNodes.isEmpty()) {
+                validNodes.add(displayNode);
+            } else if (childNodes.size() == 1) {
+                validNodes.addAll(childNodes);
+            } else {
+                return childNodes;
             }
         }
 
@@ -475,7 +482,9 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
                 if (commandNode instanceof QueryDisplayNode) {
                     QueryDisplayNode queryNode = (QueryDisplayNode)commandNode;
                     DisplayNode whereClause = queryNode.getClauseDisplayNode(WHERE);
-                    if (whereClause == null) {
+                    //from is required for criteria
+                    DisplayNode fromClause = queryNode.getClauseDisplayNode(FROM);
+                    if (whereClause == null && fromClause != null) {
                         result = true;
                     }
                 } else if (commandNode instanceof DeleteDisplayNode) {
@@ -684,80 +693,12 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     public static boolean isWithinSubQueryNode( DisplayNode displayNode ) {
         DisplayNode parentNode = displayNode;
         while (parentNode != null) {
-            if (parentNode.languageObject instanceof SubqueryFromClause || parentNode.languageObject instanceof ScalarSubquery
-                || parentNode.languageObject instanceof SubqueryCompareCriteria
-                || parentNode.languageObject instanceof SubquerySetCriteria) {
+            if (parentNode.languageObject instanceof SubqueryContainer) {
                 return true;
             }
             parentNode = parentNode.getParent();
         }
         return false;
-    }
-
-    /**
-     * Method to determine whether a DisplayNode is within a Setquery .
-     * 
-     * @param displayNode the display Node to test
-     * @return true if the node is within a subquery displayNode, false if not.
-     */
-    public static boolean isWithinSetQueryNodeBeforeSubQueryNode( DisplayNode displayNode ) {
-        boolean hitSubQueryFirst = false;
-        if (displayNode instanceof SetQueryDisplayNode) {
-            return true;
-        }
-        DisplayNode parentNode = displayNode.getParent();
-        while (parentNode != null) {
-            if (parentNode.languageObject instanceof SubqueryFromClause || parentNode.languageObject instanceof ScalarSubquery
-                || parentNode.languageObject instanceof SubqueryCompareCriteria
-                || parentNode.languageObject instanceof SubquerySetCriteria) {
-                hitSubQueryFirst = true;
-            } else if (!hitSubQueryFirst && parentNode instanceof SetQueryDisplayNode) {
-                return true;
-            }
-            parentNode = parentNode.getParent();
-        }
-        return false;
-    }
-
-    /**
-     * Get the SubQuery Command DisplayNode that this DisplayNode is within.
-     * 
-     * @param displayNode the display Node to test
-     * @return the subQuery DisplayNode if available, null if not.
-     */
-    public static DisplayNode getSubQueryCommandDisplayNode( DisplayNode displayNode ) {
-        if (!isWithinSubQueryNode(displayNode)) {
-            return null;
-        }
-        DisplayNode result = null;
-        if (displayNode.languageObject instanceof SubqueryFromClause) {
-            result = displayNode.getChildren().get(0);
-        } else if (displayNode.languageObject instanceof SubquerySetCriteria) {
-            result = displayNode.getChildren().get(1);
-        } else if (displayNode.languageObject instanceof ScalarSubquery) {
-            result = displayNode.getChildren().get(0);
-        } else if (displayNode.languageObject instanceof SubqueryCompareCriteria) {
-            result = displayNode.getChildren().get(1);
-        } else {
-            DisplayNode parentNode = displayNode.getParent();
-            while (parentNode != null) {
-                if (parentNode.languageObject instanceof SubqueryFromClause) {
-                    result = parentNode.getChildren().get(0);
-                    break;
-                } else if (parentNode.languageObject instanceof SubquerySetCriteria) {
-                    result = parentNode.getChildren().get(1);
-                    break;
-                } else if (parentNode.languageObject instanceof ScalarSubquery) {
-                    result = parentNode.getChildren().get(0);
-                    break;
-                } else if (parentNode.languageObject instanceof SubqueryCompareCriteria) {
-                    result = parentNode.getChildren().get(1);
-                    break;
-                }
-                parentNode = parentNode.getParent();
-            }
-        }
-        return result;
     }
 
     /**
@@ -813,8 +754,8 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
             // --------------------------------------------------
         } else if (nodes.size() == 1) {
             // can type be inserted after node
-        	DisplayNode nodeAtIndex = getNodeAtIndex((DisplayNode)nodes.get(0), index);
-            if (nodeAtIndex != null && DisplayNodeUtils.canInsertAfter(nodeAtIndex, nodeType)) {
+            DisplayNode node1 = (DisplayNode)nodes.get(0);
+            if (DisplayNodeUtils.canInsertAfter(node1, nodeType)) {
                 result = true;
             }
 //            if (DisplayNodeUtils.canInsertAfter((DisplayNode)nodes.get(0), nodeType)) {
@@ -867,21 +808,6 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
     	
     	for( DisplayNode node : parentNode.getChildren()) {
     		DisplayNode theNode = getNodeTypeAtIndex(node, index, nodeType);
-    		if( theNode != null ) {
-    			return theNode;
-    		}
-    	}
-    	
-    	return null;
-    }
-    
-    public static DisplayNode getNodeAtIndex(DisplayNode parentNode, int index) {
-    	if( parentNode != null && parentNode.isAnywhereWithin(index) && parentNode.getChildren().isEmpty() ) {
-    		return parentNode;
-    	}
-    	
-    	for( DisplayNode node : parentNode.getChildren()) {
-    		DisplayNode theNode = getNodeAtIndex(node, index);
     		if( theNode != null ) {
     			return theNode;
     		}
@@ -977,25 +903,14 @@ public final class DisplayNodeUtils implements DisplayNodeConstants {
      */
     public static DisplayNode getCommandForNode( DisplayNode node ) {
         if (node == null) return null;
-        DisplayNode result = null;
-        if (!isWithinSetQueryNodeBeforeSubQueryNode(node) && isWithinSubQueryNode(node)) {
-            result = getSubQueryCommandDisplayNode(node);
-        } else {
-            DisplayNode parentNode = node.getParent();
-            while (parentNode != null) {
-                if (isCommandNode(parentNode)) {
-                    result = parentNode;
-                    break;
-                } else if (parentNode.languageObject instanceof CommandStatement) {
-                    List childList = ((DisplayNode)parentNode).getChildren();
-                    result = (DisplayNode)childList.get(0);
-                    break;
-                } else {
-                    parentNode = parentNode.getParent();
-                }
-            }
+        DisplayNode parentNode = node;
+        while (parentNode != null) {
+            if (isCommandNode(parentNode)) {
+                return parentNode;
+            } 
+            parentNode = parentNode.getParent();
         }
-        return result;
+        return null;
     }
 
     /**

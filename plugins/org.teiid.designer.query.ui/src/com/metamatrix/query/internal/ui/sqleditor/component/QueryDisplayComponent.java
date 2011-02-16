@@ -585,23 +585,13 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @return true if the query can be expanded, false if not. 
      */
     public boolean canExpandSelect(int index) {
-        boolean canExpand = false;
         // Get the command displayNode at the cursor index
         DisplayNode commandNode = getCommandDisplayNodeAtIndex(index);
-        if(isParsable && commandNode!=null) {
+        if(isParsable && commandNode instanceof QueryDisplayNode) {
         	// command DisplayNode is a QueryDisplayNode
-            if ( commandNode instanceof QueryDisplayNode ) {
-                canExpand = canExpand((Query)commandNode.getLanguageObject());
-        	// command DisplayNode is a SetQueryDisplayNode (Union)
-            } else if ( commandNode instanceof SetQueryDisplayNode ) {
-            	// Get the query at the index
-            	QueryDisplayNode qdn = ((SetQueryDisplayNode)commandNode).getQueryAtIndex(index);
-            	if(qdn!=null) {
-                	canExpand = canExpand((Query)qdn.getLanguageObject());
-            	}
-            }
+            return canExpand((Query)commandNode.getLanguageObject());
         }
-        return canExpand;
+        return false;
     }
 
     /**
@@ -696,12 +686,21 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     
     /**
      * Returns the DisplayNode for the command at a given index.  If the index is within
-     * a SubQuery, the subQuery is returned.  If not within a SubQuery, the Command that the
+     * a SubQuery, the subQuery is returned.  If not within a SubQuery, the non-SetQuery Command (that is a specific branch) that the
      * index is within is returned.
      * @param index the cursor index.
      * @return the command DisplayNode that the cursor is within.
      */
     public DisplayNode getCommandDisplayNodeAtIndex(int index) {
+        DisplayNode result = getCommandDisplayNodeAtIndexIncludingSetQueries(index);
+        if ( result instanceof SetQueryDisplayNode ) {
+            // Get the query at the index
+            result = ((SetQueryDisplayNode)result).getQueryAtIndex(index);
+        }
+        return result;
+    }
+    
+    private DisplayNode getCommandDisplayNodeAtIndexIncludingSetQueries(int index) {
         DisplayNode commandDisplayNode = null;
         List nodes = getDisplayNodesAtIndex(index);
         //--------------------------------------------------
@@ -712,18 +711,10 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             DisplayNode node1 = (DisplayNode)nodes.get(0);
             DisplayNode node2 = (DisplayNode)nodes.get(1);
             // If second node is within a SubQuery, return SubQuery node
-            if(DisplayNodeUtils.isWithinSubQueryNode(node2)) {
-            	commandDisplayNode = DisplayNodeUtils.getSubQueryCommandDisplayNode(node2);
-            // If first node is within a SubQuery, return SubQuery node
-            } else if(DisplayNodeUtils.isWithinSubQueryNode(node1)) {
-            	commandDisplayNode = DisplayNodeUtils.getSubQueryCommandDisplayNode(node1);
-            // Otherwise, return command for either node, looking at second node first
-            } else {
-            	commandDisplayNode = DisplayNodeUtils.getCommandForNode(node2);
-                // If node2 resulted in null, try first node
-                if(commandDisplayNode==null) {
-                    commandDisplayNode = DisplayNodeUtils.getCommandForNode(node1);
-                }
+        	commandDisplayNode = DisplayNodeUtils.getCommandForNode(node2);
+            // If node2 resulted in null, try first node
+            if(commandDisplayNode==null) {
+                commandDisplayNode = DisplayNodeUtils.getCommandForNode(node1);
             }
         //--------------------------------------------------
         // Index is within a node
