@@ -665,12 +665,14 @@
       </category>
 <!-- New model project wizard -->
       <wizard
-            name="%newModelProjectWizard"
-            icon="icons/full/ctool16/newproject_wiz.gif"
             category="com.metamatrix.modeler.ui"
             class="com.metamatrix.modeler.ui.wizards.NewModelProjectWizard"
-            project="true"
-            id="newModelProject">
+            finalPerspective="modelerPerspective"
+            icon="icons/full/ctool16/newproject_wiz.gif"
+            id="newModelProject"
+            name="%newModelProjectWizard"
+            preferredPerspectives="modelerPerspective"
+            project="true">
          <description>
             %newModelProjectWizardDescription
          </description>
