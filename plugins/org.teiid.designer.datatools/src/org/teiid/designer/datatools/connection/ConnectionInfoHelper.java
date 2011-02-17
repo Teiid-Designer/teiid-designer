@@ -363,4 +363,17 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         }
         return DataSourceConnectionConstants.DataSource.UNKNOWN;
     }
+    
+    /**
+     * Utility method to clear all connection info properties from a source model
+     * 
+     * @param modelResource
+     * @throws ModelWorkspaceException
+     */
+	public void clearConnectionInfo(ModelResource modelResource) throws ModelWorkspaceException {
+		// Remove old connection properties
+        getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
+        getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
+        getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+	}
 }

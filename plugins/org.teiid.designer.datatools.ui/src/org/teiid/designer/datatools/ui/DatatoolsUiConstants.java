@@ -45,5 +45,7 @@ public interface DatatoolsUiConstants {
 	
 	interface Images {
 		public static final String SOURCE_BINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
+		public static final String SET_CONNECTION_ICON = PC.OBJ16 + "set-connection.png"; //$NON-NLS-1$
+		public static final String REMOVE_CONNECTION_ICON = PC.OBJ16 + "remove-connection.png"; //$NON-NLS-1$
 	}
 }

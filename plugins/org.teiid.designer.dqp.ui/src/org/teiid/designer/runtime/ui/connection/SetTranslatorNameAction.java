@@ -48,7 +48,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction {
      */
     public SetTranslatorNameAction() {
         super(ACTION_TITLE, SWT.DEFAULT);
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_CONNECTION_ICON));
         this.connectionInfoHelper = new ConnectionInfoHelper();
     }
 

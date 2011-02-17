@@ -8,6 +8,9 @@
 package com.metamatrix.modeler.dqp.ui;
 
 import java.util.ResourceBundle;
+
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants.PC;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 
@@ -107,6 +110,7 @@ public interface DqpUiConstants {
 
         public static final String CONNECTOR_ICON = PC.OBJ16 + "connector.gif"; //$NON-NLS-1$
         public static final String SOURCE_BINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
+        public static final String SET_CONNECTION_ICON = PC.OBJ16 + "set-connection.png"; //$NON-NLS-1$
         public static final String SOURCE_UNBINDING_ICON = PC.OBJ16 + "sourceBinding.gif"; //$NON-NLS-1$
         public static final String SOURCE_MODEL_ICON = PC.OBJ16 + "Model.gif"; //$NON-NLS-1$
         public static final String SOURCE_CONNECTOR_BINDING_ICON = PC.OBJ16 + "sourceModelBinding.png"; //$NON-NLS-1$

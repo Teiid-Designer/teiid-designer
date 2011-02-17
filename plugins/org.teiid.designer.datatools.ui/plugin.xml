@@ -10,6 +10,15 @@
          label="%setConnectionProfileAction.label">
       </resourceAction>
    </extension>
+<extension
+        id="RemoveConnectionInfoAction"
+        name="%removeConnectionInfoAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.datatools.ui.actions.RemoveConnectionInfoAction"
+         label="%removeConnectionInfoAction.label">
+      </resourceAction>
+   </extension>
    
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
