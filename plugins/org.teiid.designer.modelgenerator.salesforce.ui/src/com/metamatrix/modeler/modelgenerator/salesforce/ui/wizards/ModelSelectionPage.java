@@ -25,10 +25,12 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -217,16 +219,27 @@ public class ModelSelectionPage extends AbstractWizardPage
     }
 
     private void createImportOptionsControls( Composite pnl ) {
-        // target model group
-        final GridData labelData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
-        Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.WRAP);
+    	Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.FILL);
         optionsGroup.setText(getString("importOptionsGroup.text")); //$NON-NLS-1$
-
         GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
         optionsGroup.setLayoutData(gData);
         optionsGroup.setLayout(new GridLayout(1, false));
-        modelAuditFieldsCheck = WidgetFactory.createCheckBox(optionsGroup,
-                                                             getString("modelAuditFields.text"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
+
+        final ScrolledComposite c1 = new ScrolledComposite(optionsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FILL);
+        c1.setLayout(new GridLayout());
+        c1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        c1.setExpandHorizontal(true);
+        c1.setExpandVertical(true);
+        
+        final Composite c2 = WidgetFactory.createPanel(c1);
+        gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        c2.setLayoutData(gData);
+        c2.setLayout(new GridLayout(2, false));
+        c1.setContent(c2);
+        
+        
+        modelAuditFieldsCheck = WidgetFactory.createCheckBox(c2,
+                                                             getString("modelAuditFields.text")); //$NON-NLS-1$
         modelAuditFieldsCheck.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -238,10 +251,13 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.modelAuditFields(((Button)e.getSource()).getSelection());
             }
         });
-        Label label = WidgetFactory.createLabel(optionsGroup, getString("modelAuditFieldsWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        final GridData labelData = new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1);
+        Label label = WidgetFactory.createLabel(c2, getString("modelAuditFieldsWarning.text"), SWT.FILL); //$NON-NLS-1$
+        label.setLayoutData(labelData);
+        label = WidgetFactory.createLabel(c2, getString("modelAuditFieldsWarning.text2"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
 
-        cardinalitiesCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherCardianalitiesLabel.text")); //$NON-NLS-1$
+        cardinalitiesCheckBox = WidgetFactory.createCheckBox(c2, getString("gatherCardianalitiesLabel.text")); //$NON-NLS-1$
         cardinalitiesCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -253,11 +269,13 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.supressCollectCardinalities(((Button)e.getSource()).getSelection());
             }
         });
-
-        label = WidgetFactory.createLabel(optionsGroup, getString("gatherCardianalitiesWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        
+        label = WidgetFactory.createLabel(c2, getString("gatherCardianalitiesWarning.text"), SWT.FILL); //$NON-NLS-1$
+        label.setLayoutData(labelData);
+        label = WidgetFactory.createLabel(c2, getString("gatherCardianalitiesWarning.text2"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
 
-        uniqueValueCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("gatherColumnDistinctValueLabel.text")); //$NON-NLS-1$
+        uniqueValueCheckBox = WidgetFactory.createCheckBox(c2, getString("gatherColumnDistinctValueLabel.text")); //$NON-NLS-1$
         uniqueValueCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -269,10 +287,13 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setCollectColumnDistinctValue(((Button)e.getSource()).getSelection());
             }
         });
-        label = WidgetFactory.createLabel(optionsGroup, getString("gatherColumnDistinctValueWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        
+        label = WidgetFactory.createLabel(c2, getString("gatherColumnDistinctValueWarning.text"), SWT.FILL); //$NON-NLS-1$
+        label.setLayoutData(labelData);
+        label = WidgetFactory.createLabel(c2, getString("gatherColumnDistinctValueWarning.text2"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
 
-        namesAslabelCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("namesAsNameInSourceLabel.text")); //$NON-NLS-1$
+        namesAslabelCheckBox = WidgetFactory.createCheckBox(c2, getString("namesAsNameInSourceLabel.text")); //$NON-NLS-1$
         namesAslabelCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -284,10 +305,13 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setNameAsLabel(((Button)e.getSource()).getSelection());
             }
         });
-        label = WidgetFactory.createLabel(optionsGroup, getString("namesAsNameInSourceWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        
+        label = WidgetFactory.createLabel(c2, getString("namesAsNameInSourceWarning.text"), SWT.FILL); //$NON-NLS-1$
+        label.setLayoutData(labelData);
+        label = WidgetFactory.createLabel(c2, getString("namesAsNameInSourceWarning.text2"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
 
-        generateUpdatedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateUpdatedLabel.text")); //$NON-NLS-1$
+        generateUpdatedCheckBox = WidgetFactory.createCheckBox(c2, getString("generateUpdatedLabel.text")); //$NON-NLS-1$
         generateUpdatedCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -299,10 +323,10 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setGenerateUpdated(((Button)e.getSource()).getSelection());
             }
         });
-        label = WidgetFactory.createLabel(optionsGroup, getString("generateUpdatedWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        label = WidgetFactory.createLabel(c2, getString("generateUpdatedWarning.text"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
 
-        generateDeletedCheckBox = WidgetFactory.createCheckBox(optionsGroup, getString("generateDeletedLabel.text")); //$NON-NLS-1$
+        generateDeletedCheckBox = WidgetFactory.createCheckBox(c2, getString("generateDeletedLabel.text")); //$NON-NLS-1$
         generateDeletedCheckBox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -314,8 +338,13 @@ public class ModelSelectionPage extends AbstractWizardPage
                 importManager.setGenerateDeleted(((Button)e.getSource()).getSelection());
             }
         });
-        label = WidgetFactory.createLabel(optionsGroup, getString("generateDeletedWarning.text"), SWT.WRAP); //$NON-NLS-1$
+        
+        label = WidgetFactory.createLabel(c2, getString("generateDeletedWarning.text"), SWT.FILL); //$NON-NLS-1$
         label.setLayoutData(labelData);
+        Point point = c2.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        point.x += 150;
+        point.y += 20;
+        c1.setMinSize(point);
     }
 
     /**
