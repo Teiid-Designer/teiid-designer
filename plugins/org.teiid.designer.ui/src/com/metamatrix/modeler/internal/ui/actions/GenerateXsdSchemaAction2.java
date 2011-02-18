@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -226,7 +228,7 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
                     if (modelResource != null) {
                         try {
                             // defect 19183 - do not load models on selection:
-                            isValid = ModelUtilities.isRelationalModel(modelResource);
+                            isValid = ModelUtilities.isRelationalModel(modelResource) && hasTableOrProcedure(modelResource);
                         } catch (ModelWorkspaceException err) {
                             UiConstants.Util.log(err);
                             isValid = false;
@@ -251,6 +253,19 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
     @Override
     public boolean isApplicable( ISelection selection ) {
         return isValidSelection(selection);
+    }
+    
+    /*
+     * A relational model may be Empty or have no tables or procedures. In this case the wizard can't create anything.
+     */
+    private boolean hasTableOrProcedure(ModelResource mr) throws ModelWorkspaceException {
+    	for( Object eObj : mr.getEObjects() ) {
+    		if( eObj instanceof Table || eObj instanceof Procedure ) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
 
     /**
