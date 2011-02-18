@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="perspectives-chapter">
+	<title>Teiid Designer Perspectives</title>
+	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+	<para>Teiid Designer utilizes <ulink url="http://www.eclipse.org">Eclipse's</ulink> Workbench environment
+		which controls visual layout via perspectives. A perspective defines
+		the initial set and layout of views and editors. Within the
+		application window, each perspective shares the same set of editors.
+		Each perspective provides a set of functionality aimed at
+		accomplishing a specific set of tasks.</para>
+	<para> Perspectives also control what appears in certain menus and toolbars.
+		They define visible action sets, which you can change to customize a
+		perspective. You can save a perspective that you build in this manner,
+		making your own custom perspective that you can open again later.
+	</para>
+	<para> Teiid Designer perspectives include:</para>
+	<itemizedlist>
+		<listitem>
+			<para>Teiid Designer - Default perspective providing fundamental model
+				editing and management capability.</para>
+		</listitem>
+		<listitem>
+			<para><emphasis role="bold">SQL Explorer</emphasis> - Provides views and actions to perform tests on
+				your VDB by connecting to your data sources and executing your test
+				queries.</para>
+		</listitem>
+	</itemizedlist>
+	
+	<para>For more details on perspectives, views and other Eclipse workbench details, see formal
+		<ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
+	
+	<bridgehead>Opening a Perspective</bridgehead>
+	<para>There are two ways to open a perspective:</para>
+	<itemizedlist>
+		<listitem>
+			<para>Using the Open Perspective button <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/selectPerspective.png"/>
+						</imageobject>
+					</inlinemediaobject> on the shortcut bar.</para>
+		</listitem>
+		<listitem>
+			<para>Choosing a perspective from the <emphasis role="bold">Window > Open Perspective</emphasis> menu.</para>
+		</listitem>
+	</itemizedlist>
+	
+	<itemizedlist>
+		<listitem>
+			<para>
+				To search for string values in your transformations SQL:
+				<itemizedlist>
+					<listitem>
+						<para><emphasis role="bold">Step 1 </emphasis> - Click on the Open Perspective button <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/selectPerspective.png"/>
+								</imageobject>
+							</inlinemediaobject> </para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 2 </emphasis> - A menu appears showing the same 
+							choices as shown on the <emphasis role="bold">Window > Open Perspective</emphasis> menu. 
+							Choose Other from the menu.</para>
+						<figure>
+							<title>Perspectives Menu</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/OpenPerspectiveMenu.jpg"/>
+								</imageobject>
+							</mediaobject>
+						</figure>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Select Perspective</emphasis> dialog 
+							choose Teiid Designer and click <emphasis role="bold">OK</emphasis>.</para>
+						<figure>
+							<title>Select Perspective Dialog</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/SelectPerspectiveDialog.jpg"/>
+								</imageobject>
+							</mediaobject>
+						</figure>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</itemizedlist>
+	
+	<para>The Teiid Designer perspective is now displayed.  </para>
+	
+	<para>There are few additional features of perspectives to take note of.</para>
+	<itemizedlist>
+		<listitem>
+			<para>The title of the window will indicate which perspective is in use.</para>
+			<figure>
+				<title>Workbench Window Title Bar</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/PerspectiveNamedHeader.jpg"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</listitem>
+		<listitem>
+			<para>The shortcut bar may contain multiple perspectives. The perspective button which is pressed in, 
+				indicates that it is the current perspective.</para>
+		</listitem>
+		<listitem>
+			<para>To display the full name of the perspectives, right click the perspective bar and select 
+				<emphasis role="bold">Show Text</emphasis> and conversely select <emphasis role="bold">Hide Text</emphasis> to 
+				only show icons.</para>
+		</listitem>
+		<listitem>
+			<para>To quickly switch between open perspectives, select the desired  perspective button. Notice that the set
+				 of views is different for each of the perspectives.</para>
+			<figure>
+				<title>Workbench Window Title Bar</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/PerspectiveButtonsWithText.jpg"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</listitem>
+	</itemizedlist>
+		
+	
+	<sect1 id="designer-perspective">
+		<title>Teiid Designer Perspective</title>
+		<para> The Teiid Designer perspective includes several main UI components or
+			groups of components as shown below. They include:</para>
+		<itemizedlist>
+			<listitem>
+				<para> <link linkend="model-explorer-view">Model Explorer</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="outline-view">Outline</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="udfs-view">UDFs</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="connectors-view">Connectors View</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="properties-view">Properties View</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="description-view">Description</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="editors-view">Model Editors</link></para>
+			</listitem>
+		</itemizedlist>
+		<figure id="designer-perspective-image">
+			<title>Teiid Designer Perspective Layout</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/designer_perspective.jpg"
+						align="center" scale="100" />
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+	<sect1 id="sql-explorer-perspective">
+		<title>SQL Explorer Perspective</title>
+		<para> The SQL Explorer perspective includes 4 main UI components or
+			groups of components as shown below. They include:</para>
+		<itemizedlist>
+			<listitem>
+				<para> <link linkend="sql-database-structure-view">Database Structure View</link></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="sql-history-view">SQL History View</link></para>
+			</listitem>
+			<listitem>
+			  <para> <xref linkend="sql-connections-view" /></para>
+			</listitem>
+			<listitem>
+				<para> <link linkend="sql-results-view">SQL Results View</link></para>
+			</listitem>
+		</itemizedlist>
+		<figure id="sql-explorer-perspective-image">
+			<title>SQL Explorer Perspective Layout</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/SqlExplorerPerspective.jpg"
+						align="center" scalefit="1" />
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+</chapter>

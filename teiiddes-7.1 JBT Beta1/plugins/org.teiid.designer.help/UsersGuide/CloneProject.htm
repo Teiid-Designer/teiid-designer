@@ -1,0 +1,55 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style4 {font-weight: bold}
+.style5 {font-style: italic}
+-->
+</style>
+<body>
+<p ><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Clone Project  </p>
+
+<p><strong>Teiid Designer </strong>provides the ability to create a designer model project that  is structurally identical to an existing model project including  directories as well as XMI and XSD model files.</p>
+<p><strong>Notes:</strong></p>
+
+<UL>
+  <LI>
+This action clones a complete model project containing any  	number of model (XMI or XSD) files organized in a user-defined  	directory structure.
+  <LI>
+    All  	object references (UUID's) within the  original project will  	be replaced with new unique references.
+  <LI>
+    Any  	model dependencies or internal object references are  	refactored to reflect the dependencies within the cloned project.
+  <LI class="style5">
+    Any  	model references to models in projects external to the original  	project will <strong>NOT</strong> be replaced.
+  <LI><em>Only XMI and XSD files are cloned. All other file types in your project will <strong>NOT</strong> be processed nor copied into your newly cloned project. </em>
+  <LI>If one or more editors that require &quot;save&quot; are open, the user will be asked to save them before continuing with the cloning process. 
+</UL>
+
+<p class="style4"><span class="subtitle_b16"><a name="renameModel" id="renameModel"></a>How do I clone a project? </span></p>
+<p>To clone a model project:</p>
+<blockquote>
+  <p><strong>Step 1:</strong> Select an existing model project in the <strong><a href="ModelExplorer.htm">Model Explorer</a></strong>.</p>
+  <p><strong>Step 2: </strong>Right-click select the <strong>Clone Project</strong> action or select the <strong><a href="DesignerMainMenus.htm">Project</a> > Clone Project </strong>action located in the Designer&rsquo;s main menu bar. </p>
+  <p><img src="images/views/CloneModelProjectOnMenu.jpg" width="253" height="372" hspace="20" border="1"></p>
+  <p><img src="images/views/ED_MainMenus_Project.jpg" width="253" height="259" hspace="20" border="1"></p>
+  <p><strong>Step 3:</strong> On the <strong>Clone Project</strong> wizard page, provide a name for your new project.</p>
+  <p><img src="images/views/CloneModelProjectDialog.jpg" width="394" height="349" hspace="20"></p>
+  <p><strong>Step 4:</strong> (Optional) If you wish to create your cloned project in location other than your default workspace location, uncheck the �<strong>Use default</strong>� checkbox and specify (type in or browse to) a new directory location on your local file system.  </p>
+  <p><strong>Step 5:</strong> Click <strong>Finish</strong> to generate your new project. </p>
+</blockquote>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul><li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+  <li><a href="EditModels.htm">Edit Models</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>

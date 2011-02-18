@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xsd:schema targetNamespace="http://www.metamatrix.com/XMLSchema/DataSets/BookCatalog"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:BookTypesNS="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes"
+            xmlns:BookCatNS="http://www.metamatrix.com/XMLSchema/DataSets/BookCatalog">
+
+  <xsd:import namespace="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes" schemaLocation="BookDatatypes.xsd"/>
+
+  <!-- ============= -->
+  <!-- DOCUMENTATION -->
+  <!-- ============= -->
+
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Books Data Set Version 1.1.
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+  <!-- =================== -->
+  <!-- ELEMENT DEFINITIONS -->
+  <!-- =================== -->
+
+
+  <!-- The set of possible root elements. -->
+  <xsd:element name="bookCatalog" type="BookCatNS:BookCatalog"/>
+
+
+  <!-- ======================= -->
+  <!-- DOMAIN TYPE DEFINITIONS -->
+  <!-- ======================= -->
+
+
+  <xsd:complexType name="BookCatalog">
+    <xsd:sequence>
+      <xsd:element name="books"      type="BookCatNS:Books"      minOccurs="0" />
+      <xsd:element name="authors"    type="BookCatNS:Authors"    minOccurs="0" />
+      <xsd:element name="publishers" type="BookCatNS:Publishers" minOccurs="0" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Books">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="book" type="BookCatNS:Book"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Book">
+    <xsd:sequence>
+      <xsd:element name="title"       type="xsd:string"/> 
+      <xsd:element name="subtitle"    type="xsd:string" minOccurs="0"/>  
+      <xsd:element name="authors"     type="BookCatNS:BookAuthors"/>
+      <xsd:element name="publisher"   type="xsd:string"/>
+      <xsd:element name="publishDate" type="BookTypesNS:PublicationDate"/>
+      <xsd:element name="edition"     type="BookTypesNS:BookEdition" default="1"/>
+    </xsd:sequence>
+    <xsd:attribute name="isbn" type="BookTypesNS:ISBN" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="BookAuthors">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="author"  type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Authors">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="author" type="BookCatNS:Author"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Author">
+    <xsd:sequence>
+      <xsd:element name="lastName"      type="xsd:string"/>
+      <xsd:element name="firstName"     type="xsd:string"/>
+      <xsd:element name="middleInitial" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="booksWritten"  type="BookTypesNS:Quantity"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Publishers">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="publisher" type="BookCatNS:Publisher"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Publisher">
+    <xsd:sequence>
+      <xsd:element name="name"            type="xsd:string"/>
+      <xsd:element name="location"        type="xsd:string"/>
+      <xsd:element name="booksPublished"  type="BookTypesNS:Quantity"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+</xsd:schema>

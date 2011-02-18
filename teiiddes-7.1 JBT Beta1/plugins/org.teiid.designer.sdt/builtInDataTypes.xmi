@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:Xsd="http://www.eclipse.org/xsd/2002/XSD" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <Sdt:Domain element="[xsd:schema: null]" document="[#document: null]" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance">
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" element="[xsd:simpleType: null]" name="NMTOKEN" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="NMTOKEN" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#NMTOKEN" qName="Q1:NMTOKEN" variety="atomic" facets="/0/NMTOKEN;SimpleDatatype/XSDWhiteSpaceFacet /0/NMTOKEN;SimpleDatatype/XSDPatternFacet=1" baseTypeDefinition="mmuuid/3425cb80-d844-1e20-9027-be6d2c3b8b3a" uuid="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/4ca2ae00-3a95-1e20-921b-eeee28353879" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="\c+" facetName="pattern" effectiveValue="[\c+]" simpleTypeDefinition="mmuuid/4ca2ae00-3a95-1e20-921b-eeee28353879">
+        <value>\c+</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:4df43700-3b13-1e20-921b-eeee28353879" element="[xsd:simpleType: null]" name="normalizedString" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="normalizedString" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:4df43700-3b13-1e20-921b-eeee28353879" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#normalizedString" qName="Q1:normalizedString" variety="atomic" facets="/0/normalizedString;SimpleDatatype=1/XSDWhiteSpaceFacet" baseTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" uuid="mmuuid:4df43700-3b13-1e20-921b-eeee28353879" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="replace" facetName="whiteSpace" effectiveValue="replace" simpleTypeDefinition="mmuuid/4df43700-3b13-1e20-921b-eeee28353879" value="replace"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:3425cb80-d844-1e20-9027-be6d2c3b8b3a" element="[xsd:simpleType: null]" name="token" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="token" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3425cb80-d844-1e20-9027-be6d2c3b8b3a" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#token" qName="Q1:token" variety="atomic" facets="/0/token;SimpleDatatype=2/XSDWhiteSpaceFacet" baseTypeDefinition="mmuuid/4df43700-3b13-1e20-921b-eeee28353879" uuid="mmuuid:3425cb80-d844-1e20-9027-be6d2c3b8b3a" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/3425cb80-d844-1e20-9027-be6d2c3b8b3a" value="collapse"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:d4d980c0-e623-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="language" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="language" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d4d980c0-e623-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#language" qName="Q1:language" variety="atomic" facets="/0/language;SimpleDatatype=3/XSDWhiteSpaceFacet /0/language;SimpleDatatype=3/XSDPatternFacet=1" baseTypeDefinition="mmuuid/3425cb80-d844-1e20-9027-be6d2c3b8b3a" uuid="mmuuid:d4d980c0-e623-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/d4d980c0-e623-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*" facetName="pattern" effectiveValue="[([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*]" simpleTypeDefinition="mmuuid/d4d980c0-e623-1e20-8c26-a038c6ed7576">
+        <value>([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:e66c4600-e65b-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="Name" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="Name" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:e66c4600-e65b-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#Name" qName="Q1:Name" variety="atomic" facets="/0/Name;SimpleDatatype=4/XSDWhiteSpaceFacet /0/Name;SimpleDatatype=4/XSDPatternFacet=1" baseTypeDefinition="mmuuid/3425cb80-d844-1e20-9027-be6d2c3b8b3a" uuid="mmuuid:e66c4600-e65b-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/e66c4600-e65b-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="\i\c*" facetName="pattern" effectiveValue="[\i\c*]" simpleTypeDefinition="mmuuid/e66c4600-e65b-1e20-8c26-a038c6ed7576">
+        <value>\i\c*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:ac00e000-e676-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="NCName" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="NCName" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:ac00e000-e676-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#NCName" qName="Q1:NCName" variety="atomic" facets="/0/NCName;SimpleDatatype=5/XSDWhiteSpaceFacet /0/NCName;SimpleDatatype=5/XSDPatternFacet=1" baseTypeDefinition="mmuuid/e66c4600-e65b-1e20-8c26-a038c6ed7576" uuid="mmuuid:ac00e000-e676-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/ac00e000-e676-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="[\i-[:]][\c-[:]]*" facetName="pattern" effectiveValue="[[\i-[:]][\c-[:]]*]" simpleTypeDefinition="mmuuid/ac00e000-e676-1e20-8c26-a038c6ed7576">
+        <value>[\i-[:]][\c-[:]]*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:4b0f8500-e6a6-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="NMTOKENS" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="NMTOKENS" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:4b0f8500-e6a6-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#NMTOKENS" qName="Q1:NMTOKENS" variety="list" uuid="mmuuid:4b0f8500-e6a6-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/4b0f8500-e6a6-1e20-8c26-a038c6ed7576" fixed="true" value="collapse"/>
+      <facets xsi:type="Xsd:XSDWhiteSpaceFacet" href="#/0/NMTOKENS;SimpleDatatype=6/XSDWhiteSpaceFacet"/>
+      <facets xsi:type="Xsd:XSDMinLengthFacet" href="http://www.w3.org/2001/XMLSchema#//NMTOKENS;XSDSimpleTypeDefinition=32/XSDMinLengthFacet"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//NMTOKENS;XSDSimpleTypeDefinition=32"/>
+      <itemTypeDefinition href="http://www.w3.org/2001/XMLSchema#//NMTOKEN;XSDSimpleTypeDefinition=31"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:dd33ff40-e6df-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="IDREF" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="IDREF" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dd33ff40-e6df-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#IDREF" qName="Q1:IDREF" variety="atomic" facets="/0/IDREF;SimpleDatatype=7/XSDWhiteSpaceFacet /0/IDREF;SimpleDatatype=7/XSDPatternFacet=1" baseTypeDefinition="mmuuid/ac00e000-e676-1e20-8c26-a038c6ed7576" uuid="mmuuid:dd33ff40-e6df-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/dd33ff40-e6df-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="[\i-[:]][\c-[:]]*" facetName="pattern" effectiveValue="[[\i-[:]][\c-[:]]*]" simpleTypeDefinition="mmuuid/dd33ff40-e6df-1e20-8c26-a038c6ed7576">
+        <value>[\i-[:]][\c-[:]]*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:88b13dc0-e702-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="ID" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="ID" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:88b13dc0-e702-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#ID" qName="Q1:ID" variety="atomic" facets="/0/ID;SimpleDatatype=8/XSDWhiteSpaceFacet /0/ID;SimpleDatatype=8/XSDPatternFacet=1" baseTypeDefinition="mmuuid/ac00e000-e676-1e20-8c26-a038c6ed7576" uuid="mmuuid:88b13dc0-e702-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/88b13dc0-e702-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="[\i-[:]][\c-[:]]*" facetName="pattern" effectiveValue="[[\i-[:]][\c-[:]]*]" simpleTypeDefinition="mmuuid/88b13dc0-e702-1e20-8c26-a038c6ed7576">
+        <value>[\i-[:]][\c-[:]]*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:9fece300-e71a-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="ENTITY" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="ENTITY" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:9fece300-e71a-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#ENTITY" qName="Q1:ENTITY" variety="atomic" facets="/0/ENTITY;SimpleDatatype=9/XSDWhiteSpaceFacet /0/ENTITY;SimpleDatatype=9/XSDPatternFacet=1" baseTypeDefinition="mmuuid/ac00e000-e676-1e20-8c26-a038c6ed7576" uuid="mmuuid:9fece300-e71a-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/9fece300-e71a-1e20-8c26-a038c6ed7576" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDPatternFacet" element="[xsd:pattern: null]" lexicalValue="[\i-[:]][\c-[:]]*" facetName="pattern" effectiveValue="[[\i-[:]][\c-[:]]*]" simpleTypeDefinition="mmuuid/9fece300-e71a-1e20-8c26-a038c6ed7576">
+        <value>[\i-[:]][\c-[:]]*</value>
+      </facetContents>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:3c99f780-e72d-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="IDREFS" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="IDREFS" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3c99f780-e72d-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#IDREFS" qName="Q1:IDREFS" variety="list" uuid="mmuuid:3c99f780-e72d-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/3c99f780-e72d-1e20-8c26-a038c6ed7576" fixed="true" value="collapse"/>
+      <facets xsi:type="Xsd:XSDWhiteSpaceFacet" href="#/0/IDREFS;SimpleDatatype=10/XSDWhiteSpaceFacet"/>
+      <facets xsi:type="Xsd:XSDMinLengthFacet" href="http://www.w3.org/2001/XMLSchema#//IDREFS;XSDSimpleTypeDefinition=29/XSDMinLengthFacet"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//IDREFS;XSDSimpleTypeDefinition=29"/>
+      <itemTypeDefinition href="http://www.w3.org/2001/XMLSchema#//IDREF;XSDSimpleTypeDefinition=36"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:20360100-e742-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="ENTITIES" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="ENTITIES" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:20360100-e742-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#ENTITIES" qName="Q1:ENTITIES" variety="list" uuid="mmuuid:20360100-e742-1e20-8c26-a038c6ed7576" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/20360100-e742-1e20-8c26-a038c6ed7576" fixed="true" value="collapse"/>
+      <facets xsi:type="Xsd:XSDWhiteSpaceFacet" href="#/0/ENTITIES;SimpleDatatype=11/XSDWhiteSpaceFacet"/>
+      <facets xsi:type="Xsd:XSDMinLengthFacet" href="http://www.w3.org/2001/XMLSchema#//ENTITIES;XSDSimpleTypeDefinition=30/XSDMinLengthFacet"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//ENTITIES;XSDSimpleTypeDefinition=30"/>
+      <itemTypeDefinition href="http://www.w3.org/2001/XMLSchema#//ENTITY;XSDSimpleTypeDefinition=37"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="integer" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="integer" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#integer" qName="Q1:integer" variety="atomic" facets="/0/integer;SimpleDatatype=12/XSDWhiteSpaceFacet /0/integer;SimpleDatatype=12/XSDFractionDigitsFacet" baseTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" uuid="mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/45da3500-e78f-1e20-8c26-a038c6ed7576" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/45da3500-e78f-1e20-8c26-a038c6ed7576" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" element="[xsd:simpleType: null]" name="nonPositiveInteger" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="nonPositiveInteger" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#nonPositiveInteger" qName="Q1:nonPositiveInteger" variety="atomic" facets="/0/nonPositiveInteger;SimpleDatatype=13/XSDWhiteSpaceFacet /0/nonPositiveInteger;SimpleDatatype=13/XSDFractionDigitsFacet /0/nonPositiveInteger;SimpleDatatype=13/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/45da3500-e78f-1e20-8c26-a038c6ed7576" uuid="mmuuid:cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="0" facetName="maxInclusive" effectiveValue="0" simpleTypeDefinition="mmuuid/cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" value="0" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:0e081200-b8a4-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="nonNegativeInteger" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="nonNegativeInteger" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:0e081200-b8a4-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#nonNegativeInteger" qName="Q1:nonNegativeInteger" variety="atomic" facets="/0/nonNegativeInteger;SimpleDatatype=14/XSDWhiteSpaceFacet /0/nonNegativeInteger;SimpleDatatype=14/XSDFractionDigitsFacet /0/nonNegativeInteger;SimpleDatatype=14/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/45da3500-e78f-1e20-8c26-a038c6ed7576" uuid="mmuuid:0e081200-b8a4-1e21-b812-969c8fc8b016" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/0e081200-b8a4-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="0" facetName="maxInclusive" effectiveValue="0" simpleTypeDefinition="mmuuid/0e081200-b8a4-1e21-b812-969c8fc8b016" value="0" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/0e081200-b8a4-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:86d29280-b8d3-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="negativeInteger" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="negativeInteger" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:86d29280-b8d3-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#negativeInteger" qName="Q1:negativeInteger"  variety="atomic" facets="/0/negativeInteger;SimpleDatatype=15/XSDWhiteSpaceFacet /0/negativeInteger;SimpleDatatype=15/XSDFractionDigitsFacet /0/negativeInteger;SimpleDatatype=15/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/cbdd6e40-b9d2-1e21-8c26-a038c6ed7576" uuid="mmuuid:86d29280-b8d3-1e21-b812-969c8fc8b016" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/86d29280-b8d3-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="-1" facetName="maxInclusive" effectiveValue="-1" simpleTypeDefinition="mmuuid/86d29280-b8d3-1e21-b812-969c8fc8b016" value="-1" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/86d29280-b8d3-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="long" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="long" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#long" qName="Q1:long" variety="atomic" facets="/0/long;SimpleDatatype=16/XSDWhiteSpaceFacet /0/long;SimpleDatatype=16/XSDFractionDigitsFacet /0/long;SimpleDatatype=16/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/45da3500-e78f-1e20-8c26-a038c6ed7576" uuid="mmuuid:8cdee840-b900-1e21-b812-969c8fc8b016" runtimeType="long" runtimeTypeName="long">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/8cdee840-b900-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="9223372036854775807" facetName="maxInclusive" effectiveValue="9223372036854775807" simpleTypeDefinition="mmuuid/8cdee840-b900-1e21-b812-969c8fc8b016" value="9223372036854775807" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/8cdee840-b900-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="int" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="int" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#int" qName="Q1:int" variety="atomic" facets="/0/int;SimpleDatatype=17/XSDWhiteSpaceFacet /0/int;SimpleDatatype=17/XSDFractionDigitsFacet /0/int;SimpleDatatype=17/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/8cdee840-b900-1e21-b812-969c8fc8b016" uuid="mmuuid:33add3c0-b98d-1e21-b812-969c8fc8b016" runtimeType="integer" runtimeTypeName="integer">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/33add3c0-b98d-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="2147483647" facetName="maxInclusive" effectiveValue="2147483647" simpleTypeDefinition="mmuuid/33add3c0-b98d-1e21-b812-969c8fc8b016" value="2147483647" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/33add3c0-b98d-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="short" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="short" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#short" qName="Q1:short"  variety="atomic" facets="/0/short;SimpleDatatype=18/XSDWhiteSpaceFacet /0/short;SimpleDatatype=18/XSDFractionDigitsFacet /0/short;SimpleDatatype=18/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/33add3c0-b98d-1e21-b812-969c8fc8b016" uuid="mmuuid:5bbcf140-b9ae-1e21-b812-969c8fc8b016" runtimeType="short" runtimeTypeName="short">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/5bbcf140-b9ae-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="32767" facetName="maxInclusive" effectiveValue="32767" simpleTypeDefinition="mmuuid/5bbcf140-b9ae-1e21-b812-969c8fc8b016" value="32767" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/5bbcf140-b9ae-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="byte" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="byte" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#byte" qName="Q1:byte" variety="atomic" facets="/0/byte;SimpleDatatype=19/XSDWhiteSpaceFacet /0/byte;SimpleDatatype=19/XSDFractionDigitsFacet /0/byte;SimpleDatatype=19/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/5bbcf140-b9ae-1e21-b812-969c8fc8b016" uuid="mmuuid:26dc1cc0-b9c8-1e21-b812-969c8fc8b016" runtimeType="byte" runtimeTypeName="byte">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/26dc1cc0-b9c8-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="127" facetName="maxInclusive" effectiveValue="127" simpleTypeDefinition="mmuuid/26dc1cc0-b9c8-1e21-b812-969c8fc8b016" value="127" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/26dc1cc0-b9c8-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:1cbbd380-b9ea-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="positiveInteger" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="positiveInteger" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1cbbd380-b9ea-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#positiveInteger" qName="Q1:positiveInteger"  variety="atomic" facets="/0/positiveInteger;SimpleDatatype=20/XSDWhiteSpaceFacet /0/positiveInteger;SimpleDatatype=20/XSDFractionDigitsFacet /0/positiveInteger;SimpleDatatype=20/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/0e081200-b8a4-1e21-b812-969c8fc8b016" uuid="mmuuid:1cbbd380-b9ea-1e21-b812-969c8fc8b016" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/1cbbd380-b9ea-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="1" facetName="maxInclusive" effectiveValue="1" simpleTypeDefinition="mmuuid/1cbbd380-b9ea-1e21-b812-969c8fc8b016" value="1" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/1cbbd380-b9ea-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:54b98780-ba14-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="unsignedLong" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="unsignedLong" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:54b98780-ba14-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#unsignedLong" qName="Q1:unsignedLong" variety="atomic" facets="/0/unsignedLong;SimpleDatatype=21/XSDWhiteSpaceFacet /0/unsignedLong;SimpleDatatype=21/XSDFractionDigitsFacet /0/unsignedLong;SimpleDatatype=21/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/0e081200-b8a4-1e21-b812-969c8fc8b016" uuid="mmuuid:54b98780-ba14-1e21-b812-969c8fc8b016" runtimeType="biginteger" runtimeTypeName="biginteger">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/54b98780-ba14-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="18446744073709551615" facetName="maxInclusive" effectiveValue="18446744073709551615" simpleTypeDefinition="mmuuid/54b98780-ba14-1e21-b812-969c8fc8b016" value="18446744073709551615" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/54b98780-ba14-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:badcbd80-ba63-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="unsignedInt" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="unsignedInt" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:badcbd80-ba63-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#unsignedInt" qName="Q1:unsignedInt"  variety="atomic" facets="/0/unsignedInt;SimpleDatatype=22/XSDWhiteSpaceFacet /0/unsignedInt;SimpleDatatype=22/XSDFractionDigitsFacet /0/unsignedInt;SimpleDatatype=22/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/54b98780-ba14-1e21-b812-969c8fc8b016" uuid="mmuuid:badcbd80-ba63-1e21-b812-969c8fc8b016" runtimeType="long" runtimeTypeName="long">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/badcbd80-ba63-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="4294967295" facetName="maxInclusive" effectiveValue="4294967295" simpleTypeDefinition="mmuuid/badcbd80-ba63-1e21-b812-969c8fc8b016" value="4294967295" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/badcbd80-ba63-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:327093c0-ba88-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="unsignedShort" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="unsignedShort" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:327093c0-ba88-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#unsignedShort" qName="Q1:unsignedShort"  variety="atomic" facets="/0/unsignedShort;SimpleDatatype=23/XSDWhiteSpaceFacet /0/unsignedShort;SimpleDatatype=23/XSDFractionDigitsFacet /0/unsignedShort;SimpleDatatype=23/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/badcbd80-ba63-1e21-b812-969c8fc8b016" uuid="mmuuid:327093c0-ba88-1e21-b812-969c8fc8b016" runtimeType="integer" runtimeTypeName="integer">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/327093c0-ba88-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="65535" facetName="maxInclusive" effectiveValue="65535" simpleTypeDefinition="mmuuid/327093c0-ba88-1e21-b812-969c8fc8b016" value="65535" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/327093c0-ba88-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:cff745c0-baa2-1e21-b812-969c8fc8b016" element="[xsd:simpleType: null]" name="unsignedByte" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="unsignedByte" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:cff745c0-baa2-1e21-b812-969c8fc8b016" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#unsignedByte" qName="Q1:unsignedByte" variety="atomic" facets="/0/unsignedByte;SimpleDatatype=24/XSDWhiteSpaceFacet /0/unsignedByte;SimpleDatatype=24/XSDFractionDigitsFacet /0/unsignedByte;SimpleDatatype=24/XSDMaxInclusiveFacet" baseTypeDefinition="mmuuid/327093c0-ba88-1e21-b812-969c8fc8b016" uuid="mmuuid:cff745c0-baa2-1e21-b812-969c8fc8b016" runtimeType="short" runtimeTypeName="short">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/cff745c0-baa2-1e21-b812-969c8fc8b016" fixed="true" value="collapse"/>
+      <facetContents xsi:type="Xsd:XSDMaxInclusiveFacet" element="[xsd:maxInclusive: null]" lexicalValue="255" facetName="maxInclusive" effectiveValue="255" simpleTypeDefinition="mmuuid/cff745c0-baa2-1e21-b812-969c8fc8b016" value="255" inclusive="true"/>
+      <facetContents xsi:type="Xsd:XSDFractionDigitsFacet" element="[xsd:fractionDigits: null]" lexicalValue="0" facetName="fractionDigits" effectiveValue="0" simpleTypeDefinition="mmuuid/cff745c0-baa2-1e21-b812-969c8fc8b016" fixed="true"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="string" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="string" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#string" qName="Q1:string" variety="atomic" facets="/0/string;SimpleDatatype=25/XSDWhiteSpaceFacet" uuid="mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="preserve" facetName="whiteSpace" effectiveValue="preserve" simpleTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//string;XSDSimpleTypeDefinition=7"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="boolean" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="boolean" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#boolean" qName="Q1:boolean" variety="atomic" facets="/0/boolean;SimpleDatatype=26/XSDWhiteSpaceFacet" uuid="mmuuid:dc476100-c483-1e24-9b01-c8207cd53eb7" runtimeType="boolean" runtimeTypeName="boolean">
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/dc476100-c483-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//boolean;XSDSimpleTypeDefinition=8"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//boolean;XSDSimpleTypeDefinition=8"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:569dfa00-c456-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="decimal" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="decimal" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:569dfa00-c456-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#decimal" qName="Q1:decimal" variety="atomic" facets="/0/decimal;SimpleDatatype=27/XSDWhiteSpaceFacet" uuid="mmuuid:569dfa00-c456-1e24-9b01-c8207cd53eb7" runtimeType="bigdecimal" runtimeTypeName="bigdecimal">
+      <validFacets>totalDigits</validFacets>
+      <validFacets>fractionDigits</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//decimal;XSDSimpleTypeDefinition=11"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="float" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="float" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#float" qName="Q1:float" variety="atomic" facets="/0/float;SimpleDatatype=28/XSDWhiteSpaceFacet" uuid="mmuuid:d86b0d00-c48a-1e24-9b01-c8207cd53eb7" runtimeType="float" runtimeTypeName="float">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/d86b0d00-c48a-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//float;XSDSimpleTypeDefinition=9"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//float;XSDSimpleTypeDefinition=9"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="double" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="double" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#double" qName="Q1:double" variety="atomic" facets="/0/double;SimpleDatatype=29/XSDWhiteSpaceFacet" uuid="mmuuid:1f18b140-c4a3-1e24-9b01-c8207cd53eb7" runtimeType="double" runtimeTypeName="double">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/1f18b140-c4a3-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//double;XSDSimpleTypeDefinition=10"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//double;XSDSimpleTypeDefinition=10"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="time" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="time" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#time" qName="Q1:time" variety="atomic" facets="/0/time;SimpleDatatype=30/XSDWhiteSpaceFacet" uuid="mmuuid:3b892180-c4a7-1e24-9b01-c8207cd53eb7" runtimeType="time" runtimeTypeName="time">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/3b892180-c4a7-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//time;XSDSimpleTypeDefinition=14"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//time;XSDSimpleTypeDefinition=14"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7" element="[xsd:simpleType: null]" name="date" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="date" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#date" qName="Q1:date" variety="atomic" facets="/0/date;SimpleDatatype=31/XSDWhiteSpaceFacet" uuid="mmuuid:65dcde00-c4ab-1e24-9b01-c8207cd53eb7" runtimeType="date" runtimeTypeName="date">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/65dcde00-c4ab-1e24-9b01-c8207cd53eb7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//date;XSDSimpleTypeDefinition=15"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//date;XSDSimpleTypeDefinition=15"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d" element="[xsd:simpleType: null]" name="char" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="char" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#char" qName="Q1:char" variety="atomic" baseTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" primitiveTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" uuid="mmuuid:62472700-a064-1e26-9b08-d6079ebe1f0d" runtimeType="char" runtimeTypeName="char">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:559646c0-4941-1ece-b22b-f49159d22ad3" element="[xsd:simpleType: null]" name="clob" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="clob" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:559646c0-4941-1ece-b22b-f49159d22ad3" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#clob" qName="Q1:clob" variety="atomic"  baseTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" primitiveTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" uuid="mmuuid:559646c0-4941-1ece-b22b-f49159d22ad3" runtimeType="clob" runtimeTypeName="clob">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79" element="[xsd:simpleType: null]" name="object" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="object" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#object" qName="Q1:object" variety="atomic" baseTypeDefinition="mmuuid/b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" primitiveTypeDefinition="mmuuid/b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" uuid="mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79" runtimeType="object" runtimeTypeName="object">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:5a793100-1836-1ed0-ba0f-f2334f5fbf95" element="[xsd:simpleType: null]" name="blob" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="blob" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5a793100-1836-1ed0-ba0f-f2334f5fbf95" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#blob" qName="Q1:blob" variety="atomic" baseTypeDefinition="mmuuid/b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" primitiveTypeDefinition="mmuuid/b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" uuid="mmuuid:5a793100-1836-1ed0-ba0f-f2334f5fbf95" runtimeType="blob" runtimeTypeName="blob">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:43f5274e-55e1-1f87-ba1c-eea49143eb32" element="[xsd:simpleType: null]" name="XMLLiteral" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="XMLLiteral" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:43f5274e-55e1-1f87-ba1c-eea49143eb32" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#XMLLiteral" qName="Q1:XMLLiteral" variety="atomic" baseTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" primitiveTypeDefinition="mmuuid/bf6c34c0-c442-1e24-9b01-c8207cd53eb7" uuid="mmuuid:43f5274e-55e1-1f87-ba1c-eea49143eb32" runtimeType="string" runtimeTypeName="string">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d" element="[xsd:simpleType: null]" name="biginteger" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="biginteger" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger" qName="Q1:biginteger"  variety="atomic" baseTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" primitiveTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" uuid="mmuuid:822b9a40-a066-1e26-9b08-d6079ebe1f0d" runtimeType="biginteger" runtimeTypeName="biginteger">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d" element="[xsd:simpleType: null]" name="bigdecimal" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="bigdecimal" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#bigdecimal" qName="Q1:bigdecimal" variety="atomic" baseTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" primitiveTypeDefinition="mmuuid/569dfa00-c456-1e24-9b01-c8207cd53eb7" uuid="mmuuid:f2249740-a078-1e26-9b08-d6079ebe1f0d" runtimeType="bigdecimal" runtimeTypeName="bigdecimal">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d" element="[xsd:simpleType: null]" name="timestamp" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="timestamp" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp" qName="Q1:timestamp" variety="atomic" baseTypeDefinition="mmuuid/5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" primitiveTypeDefinition="mmuuid/5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" uuid="mmuuid:6d9809c0-a07e-1e26-9b08-d6079ebe1f0d" runtimeType="timestamp" runtimeTypeName="timestamp">
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:28d98540-b3e7-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="duration" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="duration" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:28d98540-b3e7-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#duration" qName="Q1:duration" variety="atomic" facets="/0/duration;SimpleDatatype=37/XSDWhiteSpaceFacet" uuid="mmuuid:28d98540-b3e7-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/28d98540-b3e7-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//duration;XSDSimpleTypeDefinition=12"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//duration;XSDSimpleTypeDefinition=12"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="dateTime" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="dateTime" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#dateTime" qName="Q1:dateTime" variety="atomic" facets="/0/dateTime;SimpleDatatype=38/XSDWhiteSpaceFacet" uuid="mmuuid:5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//dateTime;XSDSimpleTypeDefinition=13"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//dateTime;XSDSimpleTypeDefinition=13"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:17d08040-b3ed-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="gYearMonth" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="gYearMonth" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:17d08040-b3ed-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#gYearMonth" qName="Q1:gYearMonth" variety="atomic" facets="/0/gYearMonth;SimpleDatatype=39/XSDWhiteSpaceFacet" uuid="mmuuid:17d08040-b3ed-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/17d08040-b3ed-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gYearMonth;XSDSimpleTypeDefinition=16"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gYearMonth;XSDSimpleTypeDefinition=16"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:b02c7600-b3f2-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="gYear" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="gYear" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:b02c7600-b3f2-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#gYear" qName="Q1:gYear" variety="atomic" facets="/0/gYear;SimpleDatatype=40/XSDWhiteSpaceFacet" uuid="mmuuid:b02c7600-b3f2-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/b02c7600-b3f2-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gYear;XSDSimpleTypeDefinition=17"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gYear;XSDSimpleTypeDefinition=17"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:6e604140-b3f5-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="gMonthDay" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="gMonthDay" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6e604140-b3f5-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#gMonthDay" qName="Q1:gMonthDay" variety="atomic" facets="/0/gMonthDay;SimpleDatatype=41/XSDWhiteSpaceFacet" uuid="mmuuid:6e604140-b3f5-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/6e604140-b3f5-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gMonthDay;XSDSimpleTypeDefinition=18"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gMonthDay;XSDSimpleTypeDefinition=18"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="gDay" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="gDay" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#gDay" qName="Q1:gDay" variety="atomic" facets="/0/gDay;SimpleDatatype=42/XSDWhiteSpaceFacet" uuid="mmuuid:860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gDay;XSDSimpleTypeDefinition=19"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gDay;XSDSimpleTypeDefinition=19"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:187f5580-b3fb-1e2a-9a03-beb8638ffd21" element="[xsd:simpleType: null]" name="gMonth" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="gMonth" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:187f5580-b3fb-1e2a-9a03-beb8638ffd21" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#gMonth" qName="Q1:gMonth" variety="atomic" facets="/0/gMonth;SimpleDatatype=43/XSDWhiteSpaceFacet" uuid="mmuuid:187f5580-b3fb-1e2a-9a03-beb8638ffd21" runtimeTypeName="string">
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <validFacets>maxInclusive</validFacets>
+      <validFacets>maxExclusive</validFacets>
+      <validFacets>minInclusive</validFacets>
+      <validFacets>minExclusive</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/187f5580-b3fb-1e2a-9a03-beb8638ffd21" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gMonth;XSDSimpleTypeDefinition=20"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//gMonth;XSDSimpleTypeDefinition=20"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:6247ec80-e8a4-1e2a-b433-fb67ea35c07e" element="[xsd:simpleType: null]" name="anyURI" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="anyURI" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:6247ec80-e8a4-1e2a-b433-fb67ea35c07e" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#anyURI" qName="Q1:anyURI" variety="atomic" facets="/0/anyURI;SimpleDatatype=44/XSDWhiteSpaceFacet" uuid="mmuuid:6247ec80-e8a4-1e2a-b433-fb67ea35c07e" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/6247ec80-e8a4-1e2a-b433-fb67ea35c07e" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//anyURI;XSDSimpleTypeDefinition=23"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//anyURI;XSDSimpleTypeDefinition=23"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:eeb5d780-e8c3-1e2a-b433-fb67ea35c07e" element="[xsd:simpleType: null]" name="QName" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="QName" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:eeb5d780-e8c3-1e2a-b433-fb67ea35c07e" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#QName" qName="Q1:QName" variety="atomic" facets="/0/QName;SimpleDatatype=45/XSDWhiteSpaceFacet" uuid="mmuuid:eeb5d780-e8c3-1e2a-b433-fb67ea35c07e" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/eeb5d780-e8c3-1e2a-b433-fb67ea35c07e" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//QName;XSDSimpleTypeDefinition=24"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//QName;XSDSimpleTypeDefinition=24"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:3dcaf900-e8dc-1e2a-b433-fb67ea35c07e" element="[xsd:simpleType: null]" name="NOTATION" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="NOTATION" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:3dcaf900-e8dc-1e2a-b433-fb67ea35c07e" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#NOTATION" qName="Q1:NOTATION" variety="atomic" facets="/0/NOTATION;SimpleDatatype=46/XSDWhiteSpaceFacet" uuid="mmuuid:3dcaf900-e8dc-1e2a-b433-fb67ea35c07e" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/3dcaf900-e8dc-1e2a-b433-fb67ea35c07e" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//NOTATION;XSDSimpleTypeDefinition=25"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//NOTATION;XSDSimpleTypeDefinition=25"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:d9998500-ebba-1e2a-9319-8eaa9b2276c7" element="[xsd:simpleType: null]" name="hexBinary" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="hexBinary" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:d9998500-ebba-1e2a-9319-8eaa9b2276c7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#hexBinary" qName="Q1:hexBinary" variety="atomic" facets="/0/hexBinary;SimpleDatatype=47/XSDWhiteSpaceFacet" uuid="mmuuid:d9998500-ebba-1e2a-9319-8eaa9b2276c7" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/d9998500-ebba-1e2a-9319-8eaa9b2276c7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//hexBinary;XSDSimpleTypeDefinition=21"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//hexBinary;XSDSimpleTypeDefinition=21"/>
+    </contents>
+    <contents xsi:type="Sdt:SimpleDatatype" xmi:uuid="mmuuid:b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" element="[xsd:simpleType: null]" name="base64Binary" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" aliasName="base64Binary" uRI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" aliasURI="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#base64Binary" qName="Q1:base64Binary" variety="atomic" facets="/0/base64Binary;SimpleDatatype=48/XSDWhiteSpaceFacet" uuid="mmuuid:b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" runtimeTypeName="string">
+      <validFacets>length</validFacets>
+      <validFacets>minLength</validFacets>
+      <validFacets>maxLength</validFacets>
+      <validFacets>pattern</validFacets>
+      <validFacets>enumeration</validFacets>
+      <validFacets>whiteSpace</validFacets>
+      <facetContents xsi:type="Xsd:XSDWhiteSpaceFacet" element="[xsd:whiteSpace: null]" lexicalValue="collapse" facetName="whiteSpace" effectiveValue="collapse" simpleTypeDefinition="mmuuid/b4c99380-ebc6-1e2a-9319-8eaa9b2276c7" fixed="true" value="collapse"/>
+      <baseTypeDefinition href="http://www.w3.org/2001/XMLSchema#//base64Binary;XSDSimpleTypeDefinition=22"/>
+      <primitiveTypeDefinition href="http://www.w3.org/2001/XMLSchema#//base64Binary;XSDSimpleTypeDefinition=22"/>
+    </contents>
+    <attributeDeclarations href="platform:/plugin/org.eclipse.xsd_1.1.1/cache/www.w3.org/2001/XMLSchema-instance.xsd#//nil;XSDAttributeDeclaration=1"/>
+    <attributeDeclarations href="platform:/plugin/org.eclipse.xsd_1.1.1/cache/www.w3.org/2001/XMLSchema-instance.xsd#//noNamespaceSchemaLocation;XSDAttributeDeclaration=3"/>
+    <attributeDeclarations href="platform:/plugin/org.eclipse.xsd_1.1.1/cache/www.w3.org/2001/XMLSchema-instance.xsd#//schemaLocation;XSDAttributeDeclaration=2"/>
+    <attributeDeclarations href="platform:/plugin/org.eclipse.xsd_1.1.1/cache/www.w3.org/2001/XMLSchema-instance.xsd#//type;XSDAttributeDeclaration"/>
+  </Sdt:Domain>
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:6b862080-3019-1e20-921b-eeee28353879" description="builtInDataTypes" primaryMetamodelUri="http://www.metamatrix.com/metamodels/SimpleDatatypes" modelType="TYPE" visible="false"/>
+</xmi:XMI>

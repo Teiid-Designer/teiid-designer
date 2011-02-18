@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:40b46fc0-ff6c-1045-9227-f224bf590486" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="5.0">
+    <modelImports xmi:uuid="mmuuid:e2aa0f40-ff73-1045-9227-f224bf590486" name="BQT_Ora10" modelLocation="BQT_Ora10.xmi" uuid="mmuuid:c05592c0-ff37-1045-9227-f224bf590486" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+    <modelImports xmi:uuid="mmuuid:28855c45-ff74-1045-9227-f224bf590486" name="SimpleDatatypes-instance" modelLocation="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:29798040-ff74-1045-9227-f224bf590486" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:137c8140-ff77-1045-9227-f224bf590486" name="BQT_Ora8" modelLocation="BQT_Ora8.xmi" uuid="mmuuid:f1fd6e40-ff1b-1045-9227-f224bf590486" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+  </mmcore:ModelAnnotation>
+  <mmcore:AnnotationContainer xmi:uuid="mmuuid:6f418d00-ff6c-1045-9227-f224bf590486"/>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:6f418d01-ff6c-1045-9227-f224bf590486">
+    <diagram xmi:uuid="mmuuid:938e2740-ff6c-1045-9227-f224bf590486" type="packageDiagramType" target="mmuuid/40b46fc0-ff6c-1045-9227-f224bf590486">
+      <diagramEntity xmi:uuid="mmuuid:aa073740-ff6d-1045-9227-f224bf590486" modelObject="mmuuid/cd4feb80-ff6c-1045-9227-f224bf590486" xPosition="20" yPosition="20"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:92c849c0-ff6d-1045-9227-f224bf590486" type="transformationDiagramType" target="mmuuid/cd4feb80-ff6c-1045-9227-f224bf590486">
+      <diagramEntity xmi:uuid="mmuuid:b8090800-ff6d-1045-9227-f224bf590486" name="MedA_VBL" modelObject="mmuuid/cd4feb80-ff6c-1045-9227-f224bf590486" xPosition="30" yPosition="50"/>
+      <diagramEntity xmi:uuid="mmuuid:b8090801-ff6d-1045-9227-f224bf590486" name="T" modelObject="mmuuid/92c849c1-ff6d-1045-9227-f224bf590486" xPosition="242" yPosition="50"/>
+      <diagramEntity xmi:uuid="mmuuid:4eba3e80-ff74-1045-9227-f224bf590486" xPosition="292" yPosition="50">
+        <modelObject href="BQT_Ora10.xmi#mmuuid/f1cede00-ff38-1045-9227-f224bf590486"/>
+      </diagramEntity>
+      <diagramEntity xmi:uuid="mmuuid:bc0c5c40-ff77-1045-9227-f224bf590486" xPosition="502" yPosition="50">
+        <modelObject href="BQT_Ora8.xmi#mmuuid/2db73c80-ff1d-1045-9227-f224bf590486"/>
+      </diagramEntity>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <Transformation:TransformationContainer xmi:uuid="mmuuid:6f418d02-ff6c-1045-9227-f224bf590486">
+    <transformationMappings xsi:type="Transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:92c849c1-ff6d-1045-9227-f224bf590486" outputs="mmuuid/cd4feb80-ff6c-1045-9227-f224bf590486" target="mmuuid/cd4feb80-ff6c-1045-9227-f224bf590486">
+      <helper xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:93ad2b80-ff6d-1045-9227-f224bf590486" selectSql="SELECT mmuuid:f3b72600-ff38-1045-9227-f224bf590486, mmuuid:f49c07c0-ff38-1045-9227-f224bf590486, mmuuid:f49c07c1-ff38-1045-9227-f224bf590486, mmuuid:f49c07c2-ff38-1045-9227-f224bf590486, mmuuid:f49c07c3-ff38-1045-9227-f224bf590486, mmuuid:f49c07c4-ff38-1045-9227-f224bf590486, mmuuid:f49c07c5-ff38-1045-9227-f224bf590486, mmuuid:f49c07c6-ff38-1045-9227-f224bf590486, mmuuid:f49c07c7-ff38-1045-9227-f224bf590486, mmuuid:f49c07c8-ff38-1045-9227-f224bf590486, mmuuid:f49c07c9-ff38-1045-9227-f224bf590486, mmuuid:f49c07ca-ff38-1045-9227-f224bf590486, mmuuid:f49c07cb-ff38-1045-9227-f224bf590486, mmuuid:f49c07cc-ff38-1045-9227-f224bf590486, mmuuid:f49c07cd-ff38-1045-9227-f224bf590486, mmuuid:f5902bc0-ff38-1045-9227-f224bf590486, mmuuid:f5902bc1-ff38-1045-9227-f224bf590486, mmuuid:3445b400-ff1d-1045-9227-f224bf590486 AS INTKEY_1, mmuuid:3445b401-ff1d-1045-9227-f224bf590486 AS STRINGKEY_1, mmuuid:352a95c0-ff1d-1045-9227-f224bf590486 AS INTNUM_1, mmuuid:352a95c1-ff1d-1045-9227-f224bf590486 AS STRINGNUM_1, mmuuid:352a95c2-ff1d-1045-9227-f224bf590486 AS FLOATNUM_1, mmuuid:352a95c3-ff1d-1045-9227-f224bf590486 AS LONGNUM_1, mmuuid:352a95c4-ff1d-1045-9227-f224bf590486 AS DOUBLENUM_1, mmuuid:352a95c5-ff1d-1045-9227-f224bf590486 AS BYTENUM_1, mmuuid:352a95c6-ff1d-1045-9227-f224bf590486 AS DATEVALUE_1, mmuuid:352a95c7-ff1d-1045-9227-f224bf590486 AS TIMEVALUE_1, mmuuid:352a95c8-ff1d-1045-9227-f224bf590486 AS TIMESTAMPVALUE_1, mmuuid:352a95c9-ff1d-1045-9227-f224bf590486 AS BOOLEANVALUE_1, mmuuid:361eb9c0-ff1d-1045-9227-f224bf590486 AS CHARVALUE_1, mmuuid:361eb9c1-ff1d-1045-9227-f224bf590486 AS SHORTVALUE_1, mmuuid:361eb9c2-ff1d-1045-9227-f224bf590486 AS BIGINTEGERVALUE_1, mmuuid:361eb9c3-ff1d-1045-9227-f224bf590486 AS BIGDECIMALVALUE_1, mmuuid:361eb9c4-ff1d-1045-9227-f224bf590486 AS OBJECTVALUE_1 FROM mmuuid:f1cede00-ff38-1045-9227-f224bf590486, mmuuid:2db73c80-ff1d-1045-9227-f224bf590486 WHERE (mmuuid:f3b72600-ff38-1045-9227-f224bf590486 = mmuuid:3445b400-ff1d-1045-9227-f224bf590486) AND (mmuuid:f49c07c0-ff38-1045-9227-f224bf590486 = mmuuid:3445b401-ff1d-1045-9227-f224bf590486)">
+        <nested xsi:type="Transformation:SqlTransformation" xmi:uuid="mmuuid:93ad2b81-ff6d-1045-9227-f224bf590486" selectSql="SELECT BQT_Ora10.BQT2.MEDIUMA.INTKEY, BQT_Ora10.BQT2.MEDIUMA.STRINGKEY, BQT_Ora10.BQT2.MEDIUMA.INTNUM, BQT_Ora10.BQT2.MEDIUMA.STRINGNUM, BQT_Ora10.BQT2.MEDIUMA.FLOATNUM, BQT_Ora10.BQT2.MEDIUMA.LONGNUM, BQT_Ora10.BQT2.MEDIUMA.DOUBLENUM, BQT_Ora10.BQT2.MEDIUMA.BYTENUM, BQT_Ora10.BQT2.MEDIUMA.DATEVALUE, BQT_Ora10.BQT2.MEDIUMA.TIMEVALUE, BQT_Ora10.BQT2.MEDIUMA.TIMESTAMPVALUE, BQT_Ora10.BQT2.MEDIUMA.BOOLEANVALUE, BQT_Ora10.BQT2.MEDIUMA.CHARVALUE, BQT_Ora10.BQT2.MEDIUMA.SHORTVALUE, BQT_Ora10.BQT2.MEDIUMA.BIGINTEGERVALUE, BQT_Ora10.BQT2.MEDIUMA.BIGDECIMALVALUE, BQT_Ora10.BQT2.MEDIUMA.OBJECTVALUE, BQT_Ora8.BQT2.MEDIUMA.INTKEY AS INTKEY_1, BQT_Ora8.BQT2.MEDIUMA.STRINGKEY AS STRINGKEY_1, BQT_Ora8.BQT2.MEDIUMA.INTNUM AS INTNUM_1, BQT_Ora8.BQT2.MEDIUMA.STRINGNUM AS STRINGNUM_1, BQT_Ora8.BQT2.MEDIUMA.FLOATNUM AS FLOATNUM_1, BQT_Ora8.BQT2.MEDIUMA.LONGNUM AS LONGNUM_1, BQT_Ora8.BQT2.MEDIUMA.DOUBLENUM AS DOUBLENUM_1, BQT_Ora8.BQT2.MEDIUMA.BYTENUM AS BYTENUM_1, BQT_Ora8.BQT2.MEDIUMA.DATEVALUE AS DATEVALUE_1, BQT_Ora8.BQT2.MEDIUMA.TIMEVALUE AS TIMEVALUE_1, BQT_Ora8.BQT2.MEDIUMA.TIMESTAMPVALUE AS TIMESTAMPVALUE_1, BQT_Ora8.BQT2.MEDIUMA.BOOLEANVALUE AS BOOLEANVALUE_1, BQT_Ora8.BQT2.MEDIUMA.CHARVALUE AS CHARVALUE_1, BQT_Ora8.BQT2.MEDIUMA.SHORTVALUE AS SHORTVALUE_1, BQT_Ora8.BQT2.MEDIUMA.BIGINTEGERVALUE AS BIGINTEGERVALUE_1, BQT_Ora8.BQT2.MEDIUMA.BIGDECIMALVALUE AS BIGDECIMALVALUE_1, BQT_Ora8.BQT2.MEDIUMA.OBJECTVALUE AS OBJECTVALUE_1 FROM BQT_Ora10.BQT2.MEDIUMA, BQT_Ora8.BQT2.MEDIUMA WHERE (BQT_Ora10.BQT2.MEDIUMA.INTKEY = BQT_Ora8.BQT2.MEDIUMA.INTKEY) AND (BQT_Ora10.BQT2.MEDIUMA.STRINGKEY = BQT_Ora8.BQT2.MEDIUMA.STRINGKEY)"/>
+        <aliases xmi:uuid="mmuuid:e2aa0f41-ff73-1045-9227-f224bf590486" alias="MEDIUMA">
+          <aliasedObject href="BQT_Ora10.xmi#mmuuid/f1cede00-ff38-1045-9227-f224bf590486"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:137c8141-ff77-1045-9227-f224bf590486" alias="MEDIUMA">
+          <aliasedObject href="BQT_Ora8.xmi#mmuuid/2db73c80-ff1d-1045-9227-f224bf590486"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc0-ff74-1045-9227-f224bf590486" outputs="mmuuid/28855c40-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f3b72600-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc1-ff74-1045-9227-f224bf590486" outputs="mmuuid/28855c46-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c0-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc2-ff74-1045-9227-f224bf590486" outputs="mmuuid/29798041-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c1-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc3-ff74-1045-9227-f224bf590486" outputs="mmuuid/29798046-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c2-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc4-ff74-1045-9227-f224bf590486" outputs="mmuuid/2979804b-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c3-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc5-ff74-1045-9227-f224bf590486" outputs="mmuuid/29798050-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c4-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc6-ff74-1045-9227-f224bf590486" outputs="mmuuid/2a5e6200-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c5-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc7-ff74-1045-9227-f224bf590486" outputs="mmuuid/2a5e6205-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c6-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc8-ff74-1045-9227-f224bf590486" outputs="mmuuid/2a5e620a-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c7-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafc9-ff74-1045-9227-f224bf590486" outputs="mmuuid/2a5e620f-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c8-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafca-ff74-1045-9227-f224bf590486" outputs="mmuuid/2b528600-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07c9-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafcb-ff74-1045-9227-f224bf590486" outputs="mmuuid/2b528605-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07ca-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafcc-ff74-1045-9227-f224bf590486" outputs="mmuuid/2b52860a-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07cb-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafcd-ff74-1045-9227-f224bf590486" outputs="mmuuid/2b52860f-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07cc-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafce-ff74-1045-9227-f224bf590486" outputs="mmuuid/2c3767c0-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f49c07cd-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafcf-ff74-1045-9227-f224bf590486" outputs="mmuuid/2c3767c5-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f5902bc0-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:2e1fafd0-ff74-1045-9227-f224bf590486" outputs="mmuuid/2c3767ca-ff74-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora10.xmi#mmuuid/f5902bc1-ff38-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1500-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc180-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/3445b400-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1501-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc185-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/3445b401-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1502-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc18a-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c0-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1503-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc18f-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c1-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1504-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc194-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c2-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1505-ff77-1045-9227-f224bf590486" outputs="mmuuid/726fc199-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c3-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1506-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e580-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c4-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1507-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e585-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c5-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1508-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e58a-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c6-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1509-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e58f-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c7-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150a-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e594-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c8-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150b-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e599-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/352a95c9-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150c-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e59e-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/361eb9c0-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150d-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e5a3-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/361eb9c1-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150e-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e5a8-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/361eb9c2-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a150f-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e5ad-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/361eb9c3-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <nested xsi:type="Transformation:TransformationMapping" xmi:uuid="mmuuid:780a1510-ff77-1045-9227-f224bf590486" outputs="mmuuid/7363e5b2-ff77-1045-9227-f224bf590486">
+        <inputs href="BQT_Ora8.xmi#mmuuid/361eb9c4-ff1d-1045-9227-f224bf590486"/>
+      </nested>
+      <inputs href="BQT_Ora10.xmi#mmuuid/f1cede00-ff38-1045-9227-f224bf590486"/>
+      <inputs href="BQT_Ora8.xmi#mmuuid/2db73c80-ff1d-1045-9227-f224bf590486"/>
+    </transformationMappings>
+  </Transformation:TransformationContainer>
+  <Relational:BaseTable xmi:uuid="mmuuid:cd4feb80-ff6c-1045-9227-f224bf590486" name="MedA_VBL" supportsUpdate="false">
+    <columns xmi:uuid="mmuuid:28855c40-ff74-1045-9227-f224bf590486" name="INTKEY" fixedLength="true" precision="22" nullable="NO_NULLS" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:28855c46-ff74-1045-9227-f224bf590486" name="STRINGKEY" length="10" nullable="NO_NULLS">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:29798041-ff74-1045-9227-f224bf590486" name="INTNUM" fixedLength="true" precision="22" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:29798046-ff74-1045-9227-f224bf590486" name="STRINGNUM" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2979804b-ff74-1045-9227-f224bf590486" name="FLOATNUM" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:29798050-ff74-1045-9227-f224bf590486" name="LONGNUM" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2a5e6200-ff74-1045-9227-f224bf590486" name="DOUBLENUM" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2a5e6205-ff74-1045-9227-f224bf590486" name="BYTENUM" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2a5e620a-ff74-1045-9227-f224bf590486" name="DATEVALUE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2a5e620f-ff74-1045-9227-f224bf590486" name="TIMEVALUE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b528600-ff74-1045-9227-f224bf590486" name="TIMESTAMPVALUE" fixedLength="true" precision="19" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b528605-ff74-1045-9227-f224bf590486" name="BOOLEANVALUE" fixedLength="true" precision="1" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#short"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b52860a-ff74-1045-9227-f224bf590486" name="CHARVALUE" length="1" fixedLength="true">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2b52860f-ff74-1045-9227-f224bf590486" name="SHORTVALUE" fixedLength="true" precision="8" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2c3767c0-ff74-1045-9227-f224bf590486" name="BIGINTEGERVALUE" fixedLength="true" precision="28" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2c3767c5-ff74-1045-9227-f224bf590486" name="BIGDECIMALVALUE" fixedLength="true" precision="15" caseSensitive="false" searchability="ALL_EXCEPT_LIKE">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:2c3767ca-ff74-1045-9227-f224bf590486" name="OBJECTVALUE" length="2048">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc180-ff77-1045-9227-f224bf590486" name="INTKEY_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc185-ff77-1045-9227-f224bf590486" name="STRINGKEY_1" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc18a-ff77-1045-9227-f224bf590486" name="INTNUM_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc18f-ff77-1045-9227-f224bf590486" name="STRINGNUM_1" length="10">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc194-ff77-1045-9227-f224bf590486" name="FLOATNUM_1">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:726fc199-ff77-1045-9227-f224bf590486" name="LONGNUM_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e580-ff77-1045-9227-f224bf590486" name="DOUBLENUM_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e585-ff77-1045-9227-f224bf590486" name="BYTENUM_1">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e58a-ff77-1045-9227-f224bf590486" name="DATEVALUE_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e58f-ff77-1045-9227-f224bf590486" name="TIMEVALUE_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e594-ff77-1045-9227-f224bf590486" name="TIMESTAMPVALUE_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#timestamp"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e599-ff77-1045-9227-f224bf590486" name="BOOLEANVALUE_1">
+      <type href="http://www.w3.org/2001/XMLSchema#short"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e59e-ff77-1045-9227-f224bf590486" name="CHARVALUE_1" length="1">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e5a3-ff77-1045-9227-f224bf590486" name="SHORTVALUE_1">
+      <type href="http://www.w3.org/2001/XMLSchema#int"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e5a8-ff77-1045-9227-f224bf590486" name="BIGINTEGERVALUE_1">
+      <type href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#biginteger"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e5ad-ff77-1045-9227-f224bf590486" name="BIGDECIMALVALUE_1">
+      <type href="http://www.w3.org/2001/XMLSchema#double"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:7363e5b2-ff77-1045-9227-f224bf590486" name="OBJECTVALUE_1" length="2048">
+      <type href="http://www.w3.org/2001/XMLSchema#string"/>
+    </columns>
+  </Relational:BaseTable>
+</xmi:XMI>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension
+         id="xsdSemanticsEditor"
+         name="%semanticEditor.name"
+         point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            tabName="%semanticEditor.tabname"
+            order="3"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSemanticsEditorPage">
+      </class>
+   </extension>
+
+   <extension
+         id="xsdSimpleDatatypesEditor"
+         name="%simpleDatatypesEditor.name"
+         point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            tabName="%simpleDatatypesEditor.tabname"
+            order="1"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdSimpleDatatypesEditorPage">
+      </class>
+   </extension>
+
+   <extension
+         id="xsdSourceEditor"
+         name="%sourceEditor.name"
+         point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            tabName="%sourceEditor.tabname"
+            order="4"
+            name="com.metamatrix.modeler.internal.xsd.ui.editor.XsdTextEditorPage">
+      </class>
+   </extension>
+   <extension
+         id="XsdSchemaUiNewModelObjectHelper"
+         name="%xsdSchemaUiNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.xsd.ui.XsdSchemaUiNewModelObjectHelper">
+      </class>
+   </extension>  
+   <extension
+         id="datatypeUiTextImporter"
+         name="%datatypeUiTextImporter"
+         point="org.teiid.designer.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.internal.xsd.ui.wizards.ImportDatatypesMainPage">
+      </class>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%xsdFileSystemImportWizard.name"
+            icon="icons/full/cview16/import_xsd_file.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.xsd.ui.wizards.XsdFileSystemImportWizard"
+            id="xsdFileSystemImportWizard">
+         <description>
+            %xsdFileSystemImportWizard.description
+         </description>
+      </wizard>
+   </extension>
+   <extension
+		id="createVirtualModelFromSchemaAction"
+		name="%createVirtualModelFromSchemaAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.internal.xsd.ui.actions.CreateVirtualModelFromSchemaAction"
+         label="%createVirtualModelFromSchemaAction.label">
+      </resourceAction>
+   </extension> 
+</plugin>

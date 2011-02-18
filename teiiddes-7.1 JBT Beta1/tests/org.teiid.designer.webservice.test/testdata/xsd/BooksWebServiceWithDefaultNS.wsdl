@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ASCII"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://www.acme.com/wsdl/books/requests" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:authpubns="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers" xmlns:request="http://www.metamatrix.com/books/request" name="BooksAuthorsAndPublishers" targetNamespace="http://www.acme.com/wsdl/books/requests">
+  <wsdl:message name="AuthorInfo_getAuthors_getAuthorsInput">
+    <wsdl:documentation>Input message for operation AuthorInfo/getAuthors.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getAuthors_getAuthorsInput" element="request:getAuthorsRequest" />
+  </wsdl:message>
+  <wsdl:message name="AuthorInfo_getAuthors_getAuthorsOutput">
+    <wsdl:documentation>Output message for operation AuthorInfo/getAuthors.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getAuthors_getAuthorsOutput" element="AuthPubNS:authors" />
+  </wsdl:message>
+  <wsdl:message name="AuthorInfo_getPublishers_getPublishersInput">
+    <wsdl:documentation>Input message for operation AuthorInfo/getPublishers.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getPublishers_getPublishersInput" element="request:getPublishersRequest" />
+  </wsdl:message>
+  <wsdl:message name="AuthorInfo_getPublishers_getPublishersOutput">
+    <wsdl:documentation>Output message for operation AuthorInfo/getPublishers.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getPublishers_getPublishersOutput" element="AuthPubNS:publishers" />
+  </wsdl:message>
+  <wsdl:message name="AuthorInfo_getBooksByPublisher_input">
+    <wsdl:documentation>Input message for operation AuthorInfo/getBooksByPublisher.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getBooksByPublisher_input" element="request:getBooksByPublisherRequest" />
+  </wsdl:message>
+  <wsdl:message name="AuthorInfo_getBooksByPublisher_output">
+    <wsdl:documentation>Output message for operation AuthorInfo/getBooksByPublisher.</wsdl:documentation>
+    <wsdl:part name="AuthorInfo_getBooksByPublisher_output" element="AuthPubNS:publisherBooks" />
+  </wsdl:message>
+  <wsdl:portType name="AuthorInfo">
+    <wsdl:operation name="getAuthors">
+      <wsdl:input name="getAuthorsInput" message="AuthorInfo_getAuthors_getAuthorsInput" />
+      <wsdl:output name="getAuthorsOutput" message="AuthorInfo_getAuthors_getAuthorsOutput" />
+    </wsdl:operation>
+    <wsdl:operation name="getPublishers">
+      <wsdl:input name="getPublishersInput" message="AuthorInfo_getPublishers_getPublishersInput" />
+      <wsdl:output name="getPublishersOutput" message="AuthorInfo_getPublishers_getPublishersOutput" />
+    </wsdl:operation>
+    <wsdl:operation name="getBooksByPublisher">
+      <wsdl:input name="input" message="AuthorInfo_getBooksByPublisher_input" />
+      <wsdl:output name="output" message="AuthorInfo_getBooksByPublisher_output" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AuthorInfo" type="AuthorInfo">
+    <wsdl:operation name="getAuthors">
+      <wsdl:input>
+        <soap:body parts="AuthorInfo_getAuthors_getAuthorsInput" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body parts="AuthorInfo_getAuthors_getAuthorsOutput" use="literal" />
+      </wsdl:output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getAuthors" />
+    </wsdl:operation>
+    <wsdl:operation name="getPublishers">
+      <wsdl:input>
+        <soap:body parts="AuthorInfo_getPublishers_getPublishersInput" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body parts="AuthorInfo_getPublishers_getPublishersOutput" use="literal" />
+      </wsdl:output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getPublishers" />
+    </wsdl:operation>
+    <wsdl:operation name="getBooksByPublisher">
+      <wsdl:input>
+        <soap:body parts="AuthorInfo_getBooksByPublisher_input" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body parts="AuthorInfo_getBooksByPublisher_output" use="literal" />
+      </wsdl:output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getBooksByPublisher" />
+    </wsdl:operation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+  </wsdl:binding>
+  <wsdl:service name="BooksAuthorsAndPublishers">
+    <wsdl:port name="AuthorInfo" binding="AuthorInfo">
+      <soap:address location="####METAMATRIX_URL_TO_VDB####" />
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:import location="####METAMATRIX_URL_TO_VDB####/AuthorsAndPublishers.xsd" namespace="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers" />
+  <wsdl:import location="####METAMATRIX_URL_TO_VDB####/BookRequests.xsd" namespace="http://www.metamatrix.com/books/request" />
+</wsdl:definitions>

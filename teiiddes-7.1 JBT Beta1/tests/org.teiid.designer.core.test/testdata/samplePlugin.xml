@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin
+   id="com.metamatrix.modeler.core"
+   name="%pluginName"
+   version="1.0.0"
+   provider-name="%providerName">
+
+   <runtime>
+      <library name="workspace.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="com.metamatrix.core"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.emf.ecore.edit"/>
+      <import plugin="org.apache.xerces"/>
+      <import plugin="org.eclipse.emf.codegen.ecore"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="javax.transaction"/>
+      <import plugin="org.eclipse.emf.edit"/>
+   </requires>
+
+
+   <extension-point id="metamodel" name="Metamodel"/>
+   <extension-point id="metamodelRegistry" name="MetamodelRegistry"/>
+   <extension-point id="umlDiagramAspect" name="UmlDiagramAspect"/>
+   <extension-point id="itemProviderAspect" name="ItemProviderAspect"/>
+   <extension-point id="dependencyAspect" name="DependencyAspect"/>
+   <extension-point id="validationAspect" name="ValidationAspect"/>
+   <extension-point id="featureConstraintAspect" name="FeatureConstraintAspect"/>
+
+   <extension
+         id="metamodelRegistry"
+         point="com.metamatrix.modeler.core.metamodelRegistry">
+      <class name="com.metamatrix.modeler.internal.core.metamodel.MetamodelRegistryImpl"/>
+   </extension>
+   
+   <extension
+         id="relational"
+         name="Relational"
+         point="com.metamatrix.modeler.core.metamodel">
+      <namespacePrefix>Relational</namespacePrefix>
+      <uri>http://www.metamatrix.com/metamodels/Relational</uri>
+      <internalUri>mtkplugin:///com.metamatrix.metamodels.Relational</internalUri>
+      <resource>metamodels/3.1/relational.ecore</resource>
+      <rootEntityClass name="com.metamatrix.metamodels.relational.impl.SchemaImpl"/>
+      <rootEntityClass name="com.metamatrix.metamodels.relational.impl.TableImpl"/>
+      <rootEntityClass name="com.metamatrix.metamodels.relational.impl.ViewImpl"/>
+      <properties createAsPhysical="true" createAsVirtual="true" participatoryOnly="false" />
+      <factoryClass name="com.metamatrix.metamodels.relational.impl.RelationalFactoryImpl"/>
+      <packageClass name="com.metamatrix.metamodels.relational.impl.RelationalPackageImpl"> </packageClass>
+      <adapterClass name="com.metamatrix.metamodels.relational.provider.RelationalItemProviderAdapterFactory"> </adapterClass>
+   </extension>
+   
+   <extension
+         id="relationalUmlAspect"
+         point="com.metamatrix.modeler.core.umlDiagramAspect">
+      <metamodelExtensionID>relational</metamodelExtensionID>
+      <factoryClass name="com.metamatrix.metamodels.relational.aspects.uml.RelationalUmlAspectFactoryImpl"/>
+   </extension>
+   
+   <extension
+         id="libraryUmlAspect"
+         point="com.metamatrix.modeler.core.umlDiagramAspect">
+      <metamodelExtensionID>library</metamodelExtensionID>
+      <factoryClass name="com.metamatrix.metamodels.library.aspects.uml.LibraryUmlAspectFactoryImpl"/>
+   </extension>
+   
+   
+
+</plugin>

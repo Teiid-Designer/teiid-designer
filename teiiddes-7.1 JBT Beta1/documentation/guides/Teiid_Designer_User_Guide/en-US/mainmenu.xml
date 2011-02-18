@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### MAIN MENU ######################################## -->
+
+<chapter id="main-menu-chapter">
+	<title>Teiid Designer Main Menu</title>
+	<para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+
+	<para>There are 8 categories of actions on Teiid Designer's main menu bar. </para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				These categories include:
+				<itemizedlist>
+					<listitem>
+						<para><link linkend="file-menu-section"><emphasis role="bold">File </emphasis></link> - Resource management actions.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="edit-menu-section"><emphasis role="bold">Edit </emphasis></link> - Standard edit actions including undo/redo.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="refactor-menu-section"><emphasis role="bold">Refactor </emphasis></link> - Resource actions (i.e. Rename, Move, etc...).</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="search-menu-section"><emphasis role="bold">Search </emphasis></link> - Find data within your workspace.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="project-menu-section"><emphasis role="bold">Project </emphasis></link> - Model level actions.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="metadata-menu-section"><emphasis role="bold">Metadata </emphasis></link> - Custom metadata-related actions.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="window-menu-section"><emphasis role="bold">Window </emphasis></link> - Change perspectives or add/remove views to your perspective.</para>
+					</listitem>
+					<listitem>
+						<para><link linkend="help-menu-section"><emphasis role="bold">Help </emphasis></link> - Access available Teiid Designer help documents, 
+							Teiid Designer SQL Support Guide and Eclipse Overview information.</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</listitem>
+	</itemizedlist>
+	<figure>
+		<title>Application Main Menu</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/screencaps/DesignerMainMenuBar.jpg"/>
+			</imageobject>
+		</mediaobject>
+	</figure>
+	
+	<!-- ####### FILE MENU ######################################## -->
+
+	<sect1 id="file-menu-section">
+		<title>File Menu</title>
+		<para>The <emphasis role="bold">File</emphasis> menu provides actions to manage your workspace resources.</para>
+		<figure>
+			<title>File Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_File.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>The <emphasis role="bold">New > </emphasis> sub-menu provides specific actions to create various generic
+			workspace resources as well as Teiid Designer models and VDBs.</para>
+		<figure>
+			<title>File Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_File_New.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">File</emphasis> menu contains the following actions:
+					<itemizedlist>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/newproject_wiz.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">New > Model Project</emphasis> - Create user a new 
+								model project.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/newfolder.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">New > Folder</emphasis> - Create new folder 
+								within an existing project or folder.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/newmodel_wiz.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">New > Model</emphasis> - Create a new model of
+								a specified model type and class using 
+								the <link linkend="newmodels-chapter"><emphasis role="bold">New Model Wizard</emphasis></link>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/newvdb_wiz.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">New > Virtual Database Definition</emphasis> - Create a new VDB, or
+								Virtual Database Definition.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/addprj_wiz.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Add Existing Project... </emphasis> - Add an existing 
+								Teiid Designer project into your workspace.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/addprj_wiz.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Add Existing Model Project Set...</emphasis> - Import
+								an existing <emphasis role="bold">Model Project Set</emphasis> from your file system. A 
+								<emphasis role="bold">Model Project Set</emphasis>an be exported via the
+								<emphasis role="bold">Export</emphasis> action.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Open File</emphasis> - Enables you to open a file 
+								for editing - including files that do not reside in the Workspace.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Close (Ctrl+W)</emphasis> - Closes the active editor. You are 
+								prompted to save changes before the file closes.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Close All (Shift+Ctrl+W)</emphasis> - Closes all open editors. You are 
+								prompted to save changes before the files close.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/save_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Save (Ctrl+S)</emphasis> - Saves the contents of 
+									the active editor.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/saveas_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Save As</emphasis> - Enables you to save the 
+									contents of the active editor under another file name or location. 
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/saveall_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Save All (Shift+Ctrl+S)</emphasis> - Saves the 
+									contents of all open editors.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Revert</emphasis> - Replaces the contents of the 
+									active editor with the previously saved contents. Currently not implemented for Teiid Designer models
+									or VDBs.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Move…</emphasis> - Launches a Refactor > Move resource dialog..
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Rename… (F2)</emphasis> - Launches a Refactor > Rename resource dialog 
+								if resource selected, else in-line rename is preformed.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Refresh</emphasis> - Refreshes the resource with the 
+								contents in the file system.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Convert Line Delimiters To</emphasis> - Alters the 
+									line delimiters for the selected files. Changes are immediate and persist until you change 
+									the delimiter again - you do not need to save the file.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/print_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Print (Ctrl+P)</emphasis> - Prints the contents 
+									of the active editor. In the Teiid Designer, this action prints the diagram in the selected editor. 
+									Allows control over orientation (portrait or landscape), scaling, 
+									margins and page order. User can also specify a subset of the pages to 
+									print (i.e., “2 through 8”).
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Switch Workspace</emphasis> - Opens the 
+									<emphasis role="bold">Workspace Launcher</emphasis>, from which you can switch to a 
+									different workspace. This restarts the <emphasis role="bold">Workbench</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Restart</emphasis> - Exits and restarts the <emphasis role="bold">Workbench</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Import</emphasis> - Launches the 
+									<emphasis role="bold">Import Wizard</emphasis> which provides several ways to 
+									construct or import models..
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/export.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Export</emphasis> - Launches the 
+									<emphasis role="bold">Export Wizard</emphasis> which provides options for exporting model data.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Properties (Alt+Enter)</emphasis> - Opens the 
+									<emphasis role="bold">Properties</emphasis> dialog for the currently selected resource.
+									These will include path to the resource on the file system, date of last modification and its
+									writable or executable state.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Most Recent Files List</emphasis> - Contains a list of the most 
+								recently accessed files in the <emphasis role="bold">Workbench</emphasis>. You can open 
+								any of these files from the <emphasis role="bold">File</emphasis> menu by simply selecting the file name.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Exit</emphasis> - Closes and exits the <emphasis role="bold">Workbench</emphasis>.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		
+	</sect1>
+	
+	<!-- ####### EDIT MENU ######################################## -->
+
+	<sect1 id="edit-menu-section">
+		<title>Edit Menu</title>
+		<para>The <emphasis role="bold">Edit</emphasis> menu provides actions to manage the content, structure and 
+			properties of your model and project resources. </para>
+		
+		<figure>
+			<title>Edit Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Edit.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">Edit</emphasis> menu contains the following actions:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">New > Child</emphasis> - This menu is created dynamically
+							 to support the creation of whatever types of child objects can be created under the selected object.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">New > Sibling</emphasis> - This menu is created dynamically
+								 to support the creation of whatever types of sibling objects can be created 
+								 under the same parent as the selected object
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">New > Association</emphasis> - This menu is created
+								 dynamically to support the creation of whatever types of associations can be created 
+								 with the selected object.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Modeling ></emphasis> - This menu is created dynamically. 
+							Various modeling operations are presented based on selected model object type. 
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/undo_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Undo</emphasis> - Reverses the effect of the 
+								most recent command.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/redo_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Redo</emphasis> - Reapplies the most recently
+								 undone command.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/cut_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) 
+								and copies it to the clipboard.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/copy_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected 
+								object(s) to the clipboard.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/paste_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the 
+								clipboard to the selected context.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Paste Special...</emphasis> - Provides additional paste 
+								capabilities for complex clipboard objects. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Clone</emphasis> - Duplicates the selected object in the same 
+								location with the same name. User is able to rename the new object right in the tree. 
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/delete_edit.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Rename</emphasis> - Allows a user to rename an object in the tree. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Find/Replace</emphasis> - Launches dialog that can be used to search 
+								in the current text view, such as a <emphasis role="bold">Transformation Editor</emphasis>. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Open</emphasis> - Opens the selected object in the appropriate editor. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Edit</emphasis> - Opens the selected object in the appropriate 
+								specialized editor, such as the Choice Editor or Recursion Editor.. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Add Bookmark...</emphasis> - This command adds a bookmark in the 
+								active file on the line where the cursor is currently displayed. 
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Add Task...</emphasis> - This command adds a task in the active 
+								file on the line where the cursor is currently displayed. 
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		
+	</sect1>
+	
+	<!-- ####### REFACTOR MENU ######################################## -->
+
+	<sect1 id="refactor-menu-section">
+		<title>Refactor Menu</title>
+		<para>The <emphasis role="bold">Refactor</emphasis> menu provides Teiid Designer specific actions for file-level changes
+			to the models.</para>
+		
+		<figure>
+			<title>Refactor Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Refactor.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">Refactor</emphasis> menu contains the following actions: 
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Undo</emphasis> - Undo the last refactor command.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Redo</emphasis> - Redo the last undone refactor command.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Move</emphasis> - Move a model from one container (folder or project) 
+								to another.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Rename</emphasis> - Rename a model.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		
+	</sect1>
+	
+	<!-- ####### SEARCH MENU ######################################## -->
+
+	<sect1 id="search-menu-section">
+		<title>Search Menu</title>
+		<para>The <emphasis role="bold">Search</emphasis> menu presents several specific search options.</para>
+		
+		<figure>
+			<title>Search Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Search.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">Search</emphasis> menu contains the following actions: 
+					<itemizedlist>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/metadata_search.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Search...</emphasis> - Launches the 
+								standard Search dialog, which can be used to find resource containing specific
+								text or expressions and filter based on file name patterns. For standard Eclipse 
+								installations, the default search tile will be File Search.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/metadata_search.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">File...</emphasis> - Launches the 
+								standard Search dialog, which can be used to find resource containing specific
+								text or expressions and filter based on file name patterns. The File Search 
+								tab will be selected in the dialog.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/opentype.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
+								Find Model Object dialog, which can be used to find an object in the 
+								workspace by specifying all or part of its name.  Selecting the object 
+								will open it in the appropriate editor.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/relationshipSearchPage.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
+								Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
+								by specifying a relationship type, participant locations, and/or names containing sprcified
+								text.  Search results appear in 
+								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								and double-clicking a result will open that model in the appropriate editor.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/search_transformation.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
+								Transformation Search dialog.  User can search models in 
+								the workspace for matching SQL text.  Search results appear in the 
+								dialog and user can select and view SQL as well as open desired transformations for editing.
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/metadata_search.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Metadata...</emphasis> - Launches the 
+								Search dialog.  User can search for models in the workspace by 
+								specifying an Object Type, and/or a Data Type, and/or a property value.  
+								Search results appear in 
+								the <link linkend="search-results-view"><emphasis role="bold">Search Results</emphasis></link> view, 
+								and double-clicking a result will open that model in the appropriate editor.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<!-- ####### PROJECT MENU ######################################## -->
+
+	<sect1 id="project-menu-section">
+		<title>Project Menu</title>
+		<para>The <emphasis role="bold">Project Menu</emphasis> menu ...</para>
+		
+		<figure>
+			<title>Project Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Project.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">Project</emphasis> menu contains the following actions:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Open Project</emphasis> - Launches the <emphasis role="bold">Open Project</emphasis> dialog.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Close Project</emphasis> - Closes the currently selected project(s).
+							</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/build_exec.gif"/>
+									</imageobject>
+								</inlinemediaobject> <emphasis role="bold">Build All</emphasis> - Validates the contents of the entire workspace. 
+								Any errors or warnings will appear in the <emphasis role="bold">Problems View</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Project</emphasis> - Validates the contents of the selected 
+								project(s).  Any errors or warnings will appear in the 
+								<emphasis role="bold">Problems View</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Working Set</emphasis> - Validates the contents of the 
+								selected working set. Any errors or warnings will appear in the 
+								<emphasis role="bold">Problems View</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Clean..</emphasis> - Launches the Clean dialog.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Automatically</emphasis> - Sets the <emphasis role="bold">Build Automatically</emphasis> flag 
+								on or off.  When on, a check-mark appears to the left of this menu item.  When this is 
+								turned on, validation of changes is done automatically each time a <emphasis role="bold">Save</emphasis> is done.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Validate Model Transformations</emphasis> - Revalidates all 
+								transformations for the selected view model.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Clone Project</emphasis> - Launches the 
+								<emphasis role="bold">Clone Project</emphasis> dialog.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Project Imports</emphasis> - Reconciles all model import 
+								dependencies for models contained within the selected project.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build All Imports</emphasis> - Reconciles all model import 
+								dependencies for models contained within the workspace.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Properties</emphasis> - Displays the operating system’s file 
+								properties dialog for the selected file.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<!-- ####### METADATA MENU ######################################## -->
+
+	<sect1 id="metadata-menu-section">
+		<title>Metadata Menu</title>
+		<para>The <emphasis role="bold">Metadata</emphasis> menu provides Teiid Designer-specific actions.</para>
+		
+		<figure>
+			<title>Metadata Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Metadata.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<itemizedlist>
+			<listitem>
+				<para>
+					The <emphasis role="bold">Metadata</emphasis> menu contains the following actions:
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Rebuild VDB</emphasis> - Performs a complete re-validation of the 
+								contents of the selected VDB.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Import...</emphasis> - Launches <emphasis role="bold">Import Wizard</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Update Model from Source</emphasis> - If the selected model is a 
+								relational source model that was originally created via JDBC Import, then the model will be
+								updated based on changes in the database schema.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Export...</emphasis> - Launches <emphasis role="bold">Export Wizard</emphasis>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Open in Relationship Navigator</emphasis> - Opens the 
+								<emphasis role="bold">Relationship Navigator</emphasis> view and displays the direct 
+								relationships to the selected object.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Show System Catalog</emphasis> - Opens the 
+								<link linkend="system-catalog-view"><emphasis role="bold">System Catalog View</emphasis></link>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Show Datatype Hierarchy</emphasis> - Opens the 
+								<link linkend="system-catalog-view"><emphasis role="bold">Datatype Hierarchy View</emphasis></link>.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Re-resolve References</emphasis> - Analyzes references within models to other
+								model components.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Convert to Enterprise Datatypes</emphasis> - Adds an additional 
+								property to simple datatypes within your selected schema model to label them as enterprise
+								datatypes.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Show Model Statistics</emphasis> - Opens the 
+								<emphasis role="bold">Model Statistics</emphasis> dialog for the selected model.
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Build Model Imports</emphasis> - Reconciles all model import 
+								dependencies for the selected model.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</sect1>
+	
+	<!-- ####### WINDOW MENU ######################################## -->
+
+	<sect1 id="window-menu-section">
+		<title>Window Menu</title>
+		<para>The <emphasis role="bold">Window</emphasis> menu shown below contains no Teiid Designer-specific actions. See
+			Eclipse Workbench documentation for details.</para>
+		
+		<figure>
+			<title>Window Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Window.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+	
+	<!-- ####### HELP MENU ######################################## -->
+
+	<sect1 id="help-menu-section">
+		<title>Help Menu</title>
+		<para>The <emphasis role="bold">Help Menu</emphasis> menu menu shown below contains no Teiid Designer-specific actions. See
+			Eclipse Workbench documentation for details.</para>
+		
+		<figure>
+			<title>Help Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/ED_MainMenus_Help.jpg"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</sect1>
+
+</chapter>

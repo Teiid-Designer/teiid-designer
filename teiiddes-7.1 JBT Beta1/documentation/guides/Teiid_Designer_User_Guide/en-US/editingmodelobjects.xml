@@ -1,0 +1,1565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="editing-model-objects-chapter">
+  <title>Creating and Editing Model Objects</title>
+    <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>
+  
+	<para>This section summarizes Teiid Designer features for creating and editing
+		existing model objects contained in your models.</para>
+		
+	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
+	
+	<sect1 id="create-model-objects-section">
+		<title>Creating New Model Objects</title>
+		<para>As discussed in the introduction, <link linkend="metadata-models"><emphasis role="bold">Metadata Models</emphasis></link> provide
+			a framework to model various types of metadata.
+			Each metamodel type has a set of parent-child relationships that establish constraints on what can be created and where.
+			You cannot, for example, create a column attribute in a stored procedure, nor can you create a mapping 
+			class column in a Web service operation's output message.  </para>
+		<para>The Teiid Designer provides a common set of actions to create new 
+			children of these models as well as children of children.</para>
+			
+		<itemizedlist>
+			<listitem>
+				<para>You can create new model objects directly in the <xref linkend="model-explorer-view" /> view, 
+					<link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link> or 
+					<link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link> using the following actions:</para>
+				<itemizedlist>
+					<listitem>
+						<para><emphasis role="bold">New Child Action</emphasis></para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">New Sibling Action</emphasis></para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">New Association Action</emphasis></para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		
+		<sect2 id="create-new-child-section">
+			<title>New Child Action</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new child model objects in the <xref linkend="model-explorer-view" />:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the parent object to which you 
+									want to add a child. For example, you can add a package to a package or an attribute to a class.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on a container object. 
+									From the pop-up menu, select <emphasis role="bold">New Child</emphasis>. You can now select the 
+									child object you would like to add.</para>
+								<figure>
+									<title>New Child Action In Model Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewChildActionInExplorer.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
+									the <xref linkend="model-explorer-view" /> and is highlighted for renaming.</para>
+								<figure>
+									<title>New Model Object In Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInExplorer.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new child model objects in 
+						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the parent object to which you 
+									want to add a child. For example, you can add a package to a package or an attribute to a class.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on a container object. 
+									From the pop-up menu, select <emphasis role="bold">New Child</emphasis>. You can now select the 
+									child object you would like to add.</para>
+								<figure>
+									<title>New Child Action In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/AddChildInDiagramEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
+									the diagram and is highlighted for renaming.</para>
+								<figure>
+									<title>New Model Object In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInDiagramEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new child model objects in 
+						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the row for the parent object 
+									to which you want to add a child. For example to add a column, 
+									click the <emphasis role="bold">Base Table</emphasis> tab and select base table row.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on a table row.
+									From the pop-up menu, select <emphasis role="bold">New Child</emphasis>. You can now select the 
+									child object you would like to add.</para>
+								<figure>
+									<title>New Child Action In Table Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/AddChildInTableEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The selected tab in the <emphasis role="bold">Table Editor</emphasis>
+								changes to the tab for the child object type, the new model object row is displayed and the 
+								row's name table cell is highlighted for renaming.</para>
+								<figure>
+									<title>New Model Object In Table Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInTableEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<sect2 id="create-new-sibling-section">
+			<title>New Sibling Action</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new sibling model objects in the <xref linkend="model-explorer-view" />:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the object to which you want to 
+									add a sibling. For example, you can add a column sibling to a column. </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on that object. 
+									From the pop-up menu, select <emphasis role="bold">New Sibling</emphasis>. You can now select the 
+									sibling object you would like to add.</para>
+								<figure>
+									<title>New Sibling Action In Model Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewSiblingActionInExplorer.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
+									the <xref linkend="model-explorer-view" /> and is highlighted for renaming.</para>
+								<figure>
+									<title>New Model Sibling In Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInExplorer.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new sibling model objects in 
+						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the object to which you want to 
+									add a sibling. For example, you can add a column sibling to a column.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on that object. 
+									From the pop-up menu, select <emphasis role="bold">New Sibling</emphasis>. You can now select the 
+									sibling object you would like to add.</para>
+								<figure>
+									<title>New Sibling Action In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewSiblingInDiagramEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
+									the diagram and is highlighted for renaming.</para>
+								<figure>
+									<title>New Sibling Object In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInDiagramEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new sibling model objects in 
+						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select the row for the object to which you 
+									want to add a sibling. For example, you can add a column sibling to a column.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click on a row.
+									From the pop-up menu, select <emphasis role="bold">New Sibling</emphasis>. You can now select the 
+									sibling object you would like to add.</para>
+								<figure>
+									<title>New Sibling Action In Table Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/AddSiblingInTableEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The selected tab in the <emphasis role="bold">Table Editor</emphasis>
+								changes to the tab for the child object type, the new model object row is displayed and the 
+								row's name table cell is highlighted for renaming.</para>
+								<figure>
+									<title>New Sibling Object In Table Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/RenameInTableEditor.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<sect2 id="create-new-association-section">
+			<title>New Association Action</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new associations between model objects in the <xref linkend="model-explorer-view" />:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
+									For example, select columns in different base tables.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click. From the pop-up menu, select 
+								<emphasis role="bold">New Association > Foreign Key Relationship.</emphasis>.</para>
+								<figure>
+									<title>New Association Action In Model Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKAssociationInExplorer.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new relationship link is displayed in the diagram.</para>
+								<figure>
+									<title>New Association In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new associations between model objects in 
+						the <link linkend="diagram-editor-section"><emphasis role="bold">Diagram Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
+									For example, select columns in different base tables.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click. From the pop-up menu, select 
+								<emphasis role="bold">New Association > Foreign Key Relationship.</emphasis>.</para>
+								<figure>
+									<title>New Association Action In Model Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKAssociationInDiagram.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new relationship link is displayed in the diagram.
+									The Column, Foreign Key, Primary Key reference properties are properly set 
+									on the selected columns, new primary key and new foreign key.</para>
+								<figure>
+									<title>New Association In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+						OR
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a column in table.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Drag the column to another table and drag 
+									over a column and drop onto this column. The target column should highlight in Yellow.</para>
+								<figure>
+									<title>New Association Via Drag-and-Drop In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKAssociationViaDND.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - The new relationship link is displayed in the diagram.
+									The Column, Foreign Key, Primary Key reference properties are properly set 
+									on the selected columns, new primary key and new foreign key.</para>
+								<figure>
+									<title>New Association In Diagram</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKLinkedInDiagram.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create new associations between model objects in 
+						the <link linkend="table-editor-section"><emphasis role="bold">Table Editor</emphasis></link>:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
+									For example, select columns in different base tables.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click. From the pop-up menu, select 
+								<emphasis role="bold">New Association > Foreign Key Relationship.</emphasis>.</para>
+								<figure>
+									<title>New Association Action In Model Explorer</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/NewFKAssociationInTable.jpg" />
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - New Foreign Key and Primary Key objects 
+									will be added to the contents of their respective tabs in the Table Editor. 
+									The Column, Foreign Key, Primary Key reference properties are properly set 
+									on the selected columns, new primary key and new foreign key.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+				
+			
+		</sect2>
+	</sect1>
+
+	
+	<!-- ####### MODEL OBJECT EDITORS ######################################### -->
+	
+	<sect1 id="model-object-editors-section">
+		<title>Model Object Editors</title>
+		<para>Teiid Designer provides specialized object editors to handle
+			complex model objects and their unique properties. These objects
+			include:</para>
+		<itemizedlist>
+			<listitem><para><emphasis role="bold"><link linkend="transformation-editor-section">Transformations</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="input-set-editor-section">Mapping Class Input Sets</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="choice-editor-section">XML schema choice elements</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="recursion-editor-section">Recursive Mapping Classes</link></emphasis></para></listitem>
+			<listitem><para><emphasis role="bold"><link linkend="operation-editor-section">Web Service Operations</link></emphasis></para></listitem>
+		</itemizedlist>
+		<para>This section describes these editors in detail.</para>
+		
+		<para> In addition, the primary actions for editing model objects are:
+			<itemizedlist>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/cut_edit.gif" />
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) and copies it to the clipboard.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/copy_edit.gif" />
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected object(s) to the clipboard.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/paste_edit.gif" />
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the clipboard to the selected context.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Clone</emphasis> - Duplicates the selected object in the same location with the same name; user is able to rename the new object right in the tree.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/delete_edit.gif" />
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Rename</emphasis> - Allows a user to rename an object.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>		
+		<para> These actions are presented in Teiid Designer's main <emphasis role="bold">Edit</emphasis> menu and also
+			in the right-click context menus for model objects selected in the
+			<emphasis role="bold"><link linkend="model-explorer-view">Model Explorer</link></emphasis>, 
+			<emphasis role="bold"><link linkend="diagram-editor-section">Diagram Editor</link></emphasis> and 
+			<emphasis role="bold"><link linkend="table-editor-section">Table Editor</link></emphasis>.</para>
+		
+		<!-- ####### TRANSFORMATION EDITOR ######################################### -->
+		
+		<sect2 id="transformation-editor-section">
+			<title>Transformation Editor</title>
+			<para>The <emphasis role="bold">Teiid Designer's Transformation Editor</emphasis> enables you to create the
+				query transformations that describe how to derive your virtual
+				metadata information from physical metadata sources or other virtual
+				metadata and how to update the sources.</para>
+			<para>The <emphasis role="bold">Transformation Editor</emphasis> provides a robust set of tools you
+				can use to create these SQL queries. You can use these tools, or you
+				can simply type a SQL query into the Transformation Editor.</para>
+				
+			<para>To edit a transformation you can:</para>
+			<itemizedlist>
+				<listitem><para>Double-click Edit</para>
+					<itemizedlist>
+						<listitem><para>A relational view table or procedure in the Model Explorer or Diagram Editor</para></listitem>
+						<listitem><para>A transformation node in a transformation diagram or mapping transformation diagram</para></listitem>
+						<listitem><para>A mapping class in a mapping diagram or mapping transformation diagram</para></listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem><para>Right-click Edit action on selected object in the Model Explorer, Diagram Editor or Table Editor</para>
+					<itemizedlist>
+						<listitem><para>A relational view table or procedure</para></listitem>
+						<listitem><para>A transformation node in a transformation diagram or mapping transformation diagram</para></listitem>
+						<listitem><para>A mapping class in a mapping diagram or mapping transformation diagram</para></listitem>
+					</itemizedlist>
+				</listitem>
+	
+			</itemizedlist>
+			<para> If a Model Editor is not currently open for the selected object's
+				model, a Model Editor will be opened.</para>
+			<para> After the corresponding transformation diagram is opened in the
+				Diagram Editor, the Transformation Editor is displayed in the lower
+				section of the Diagram Editor.</para>
+				
+			<figure id="transformation-editor-image">
+				<title>Editing String Property</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/TransformationEditor.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para> If this virtual class supports updates, the tabs on the bottom of
+				the <emphasis role="bold">Transformation Editor</emphasis> allow you to enter SQL for each type of query
+				this virtual class supports. If this virtual class does not support
+				updates, only the <emphasis role="bold">SELECT</emphasis> tab is available.</para>
+			<para> You can enter separate SQL queries on each available tab to accommodate
+				that type of query.</para>
+			<para> Within the <emphasis role="bold">Transformation Editor</emphasis>, you can:</para>
+			<itemizedlist>
+				<listitem>
+					<para>Disable specific update transformation types on this
+						virtual class.</para>
+				</listitem>
+				<listitem>
+					<para>Build or edit a criteria clause to use in your
+						transformation.</para>
+				</listitem>
+				<listitem>
+					<para>Build or edit an expression to use in your transformation.
+					</para>
+				</listitem>
+				<listitem>
+					<para>Find and replace a string within your transformation.
+					</para>
+				</listitem>
+				<listitem>
+					<para>Validate the transformation to ensure its content
+						contains no errors.</para>
+				</listitem>
+				<listitem>
+					<para>Reconcile target attributes to ensure the symbols in
+						your transformation match the attributes in your virtual metadata
+						class.</para>
+				</listitem>
+			</itemizedlist>
+			<para> You can also set preferences that impact the display of your
+				<emphasis role="bold">Transformation Editor</emphasis>. For more information, see <property>Transformation
+				Editor Preferences</property>.</para>
+			<itemizedlist>
+					<listitem>
+					<para>
+						The <emphasis role="bold">Transformation Editor</emphasis> toolbar actions are summarized below.
+						<itemizedlist>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewVirtualData.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Prevew Virtual Data</emphasis> - executes a simple 
+									preview query for the target table or procedure of the transformation being edited.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/search_transformation.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Search Transformations</emphasis> - provides a simple 
+									way select and edit another transformation based SQL text search criteria.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/tb_edit_transformation.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Edit Transformation</emphasis> - provides a simple way
+									 to change which transformation to edit without searching in a diagram or the Model Explorer. 
+									 Simply click the action and select from a list of views, tables, procedures or operations from 
+									 the currently edited model.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/CursorAt.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Cursor Position (line, column)</emphasis> - shows the 
+									current line and column position of the insertion cursor. For example, Cursor Position(1,4) 
+									indicates that the cursor is presently located at column 4 of line 1.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/SupportsUpdates.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Supports Update</emphasis> - checkbox allows you to 
+									enable or disable updates for the current transformation target. If 'Supports Update' is checked, 
+									the editor shows four tabs at the bottom for the Select, Update, Insert and Delete transformations. 
+									If 'Supports Update' is unchecked, all updates are disabled and only the Select transformation is
+									 displayed.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/tb_reconcile_sql.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Reconcile</emphasis> - allows you to resolve any 
+									discrepancies between the transformation symbols and the target attributes. Pressing this button 
+									will display the "Reconcile Virtual Target Attributes" dialog box in which you can resolve 
+									discrepancies.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/validate.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Save/Validate</emphasis> - saves edits to the current 
+									transformation and validates the transformation SQL. Any Warning or Error messages will be 
+									displayed at the bottom of the editor in the messages area. If the SQL validates without error, 
+									the message area is not displayed.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/launch_criteria_builder.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Criteria Builder</emphasis> - allows you to build a 
+									criteria clause in your transformation. The button will enable if the cursor position is within 
+									a query that allows a criteria. Pressing the button will launch the Criteria Builder dialog. If 
+									the Criteria Builder is launched inside an existing criteria, that criteria will be displayed for 
+									edit, otherwise the Criteria Builder will be initially empty. 
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/launch_expression_builder.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Expression Builder</emphasis> - allows you to build an 
+									expression within your transformation. The button will enable if the cursor position is at a 
+									location that allows an expression. Pressing the button will launch the Expression Builder dialog.
+									 If the Expression Builder is launched inside an existing expression, that expression will be 
+									 displayed for edit, otherwise the Expression Builder will be initially empty.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/expand.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Expand Select *</emphasis> - allows you to expand a 
+									"SELECT *" clause into a SELECT clause which contains all of the SELECT symbols. The button will 
+									enable only if the cursor is within a query that contains a SELECT * clause that can be expanded.
+		
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/inc_font.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Increase Font Size</emphasis> - increases the font size
+									 of all editor text by 1.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/dec_font.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Decrease Font Size</emphasis> - decreases the font size
+									 of all editor text by 1.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/show_message_off.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Show/Hide Messages</emphasis> - toggles the display of
+									 the message area at the bottom of the transformation editor.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/short_names.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Optimize SQL</emphasis> - when toggled 'ON', will use 
+									the short names of all SQL symbols that can be optimized. Some symbol names may remain fully 
+									qualified in the event of a duplicate name or if the optimizer is unable to optimize it. When the
+									 action is toggled 'OFF', all symbol names will be fully-qualified.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/import_from_file.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Import SQL Text</emphasis> - allows you to import a sql
+									 statement from a text file on your file system. Pressing this button will display an import dialog 
+									 in which you can navigate to the file.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/export_to_file.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Export SQL Text</emphasis> - allows you to export the 
+									currently displayed sql statement into a text file on your file system. 
+									Pressing this button will display an export dialog in which you can choose the location for export.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Close "X"</emphasis> - closes the transformation editor.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<!-- ####### CRITERIA BUILDER EDITOR ######################################### -->
+			
+			<sect3 id="using-criteria-builder-section">
+				<title>Using the Criteria Builder</title>
+				<para>The Transformation Editor’s <emphasis role="bold">Criteria Builder</emphasis> offers you a
+					quick, graphical means to build criteria clauses in your
+					transformations based on meta objects in your diagram. If you launch the <emphasis role="bold">Criteria Builder</emphasis> with your
+					cursor within an existing criteria in your transformation SQL, the builder will open in Edit mode. If your cursor
+					is not in an existing criteria location, the builder will open in create mode
+					and allow you to create it from scratch.</para>
+				<para> This procedure provides an example of building a criteria clause
+					using the <emphasis role="bold">Criteria Builder</emphasis>. When building your own criteria, you can
+					mix and match the values and constants with whatever logic you need to
+					build powerful and complex criteria.</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							<emphasis role="bold">To use the Criteria Builder:</emphasis>
+							<itemizedlist>
+								<listitem>
+									<para><emphasis role="bold">Step 1 </emphasis> - In the Transformation Editor, click the <emphasis role="bold">Launch Criteria Builder</emphasis> button.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 2 </emphasis> - The <emphasis role="bold">Criteria Builder</emphasis> displays.</para>
+									<figure>
+										<title>Editing String Property</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/CriteriaBuilder.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+									<para> The two tabs at the top, <emphasis role="bold">Tree View</emphasis> and <emphasis role="bold">SQL View</emphasis>, show
+										the current contents of the criteria you have built.</para>
+									<para> The <emphasis role="bold">Criteria Editor</emphasis> at the bottom allows you to build a criteria
+										clause. To build a criteria clause, you must add information to the
+										left side of the predicate, select a comparison operator, and add a
+										value to the right side.</para>
+								</listitem>
+								<listitem>
+									<para>
+										<emphasis role="bold">Step 3 </emphasis>
+										- The radio buttons on either side of the <emphasis role="bold">Predicate Editor</emphasis> let you
+										choose what type of content to place in that side of your predicate.
+										Click the radio button of the type of content you want to place in
+										your criteria. You can click:
+									</para>
+									<itemizedlist>
+										<listitem>
+											<para>
+												<emphasis role="bold">Attribute</emphasis>
+												to add an attribute to the predicate. If you click the
+												<emphasis role="bold">Attribute</emphasis>
+												radio button, the Predicate Editor looks like this:
+											</para>
+											<figure>
+												<title>Attribute Panel</title>
+												<mediaobject>
+													<imageobject>
+														<imagedata fileref="images/screencaps/CriteriaBuilderAttributePanel.jpg" />
+													</imageobject>
+												</mediaobject>
+											</figure>
+										<para>From the tree, select the attribute you want to add to the
+											expression. You can select an attribute from any of the source classes
+											in the transformation.</para>
+										</listitem>
+										<listitem>
+											<para>
+												<emphasis role="bold">Constant</emphasis>
+												to add a hard-wired constant value to the predicate. If you click this
+												radio button, the <emphasis role="bold">Predicate Editor</emphasis> looks like this:
+											</para>
+											<figure>
+												<title>Constants Panel</title>
+												<mediaobject>
+													<imageobject>
+														<imagedata fileref="images/screencaps/CriteriaBuilderConstantPanel.jpg" />
+													</imageobject>
+												</mediaobject>
+											</figure>
+											<para>Select the datatype for this constant from the Type drop-down list and enter the value in the Value edit box.</para>
+										</listitem>
+										<listitem>
+											<para><emphasis role="bold">Function</emphasis> to add a function. 
+												If you click the Function radio button, the Predicate Editor looks like this:</para>
+											<figure>
+												<title>Functions</title>
+												<mediaobject>
+													<imageobject>
+														<imagedata fileref="images/screencaps/CriteriaBuilderFunctionPanel.jpg" />
+													</imageobject>
+												</mediaobject>
+											</figure>
+											<para>Click the Edit button to use the Expression Builder to construct a 
+												function to use in the predicate of your SQL Criterion. For more information 
+												about the Expression Builder, see “Using the Expression Builder.”</para>
+										</listitem>
+									</itemizedlist>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 4 </emphasis> - Set a value left side of the predicate and, 
+										when necessary, the right side of the predicate. If the right side of the predicate does
+										 not require a value of some sort, the Criteria Builder will not let you enter one.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 5 </emphasis> - Click Apply.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 6 </emphasis> - When you have created both a Left Expression 
+										and a Right Expression in the Predicate Editor, click Apply to add the criterion to the 
+										tree view at the top of the dialog box.</para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<para>
+					The criteria clause displays in the Criteria tree.</para>
+				<para>
+					You can create complex criteria by joining other criteria with this one. To join criteria with this one, 
+					select the criteria in the Criteria tree and click:
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>Delete to remove the selected criterion.</para>
+					</listitem>
+					<listitem>
+						<para>AND to create a new criterion that must also be true.</para>
+					</listitem>
+					<listitem>
+						<para>OR to create a new criterion that can be true instead of the selected criterion.</para>
+					</listitem>
+					<listitem>
+						<para>NOT to establish negative criterion.</para>
+					</listitem>
+				</itemizedlist>
+				<para>
+					If you join a criterion to the one you just completed, you build the expression the same way, 
+					using the Expression Editors panel and the Predicate Editor panel. You can create complex, 
+					nested criteria by judicious use of the AND and OR buttons.
+				</para>
+				<para>
+					Once you have created the complete criteria you want, click OK to add it to your transformation.
+				</para>
+			</sect3>
+			
+			<!-- ####### EXPRESSION BUILDER ######################################### -->
+			
+			<sect3 id="using-expression-builder-section">
+				<title>Using the Expression Builder</title>
+				<para> The <emphasis role="bold">Transformation Editor’s Expression Builder</emphasis> offers you a
+					quick, graphical means to build expressions in your transformations.
+					This <emphasis role="bold">Expression Builder</emphasis> lets you create:</para>
+				<itemizedlist>
+					<listitem>
+						<para>Attributes by selecting an attribute.</para>
+					</listitem>
+					<listitem>
+						<para>Constants by selecting the datatype and value.</para>
+					</listitem>
+					<listitem>
+						<para>Functions from both the standard Teiid Designer SQL
+							functions and your enterprise’s custom user-defined functions. If
+							you select a function before you launch the Expression Builder, you
+							can use the Expression Builder to edit the selected function;
+							otherwise, you can create a new function from scratch.</para>
+					</listitem>
+				</itemizedlist>
+				<itemizedlist>
+					<listitem>
+						<para>
+							To use the <emphasis role="bold">Expression Builder:</emphasis>
+							<itemizedlist>
+								<listitem>
+									<para><emphasis role="bold">Step 1 </emphasis> - In the <emphasis role="bold">Transformation Editor</emphasis>, 
+										click the location where you want to insert the function.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 2 </emphasis> - Click the <emphasis role="bold">Expression Builder</emphasis> button. 
+										The SQL Expression Builder displays.</para>
+									<figure>
+										<title>Expression Builder</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/ExpressionBuilder_1.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+									<para>The two tabs at the top, Tree View and SQL View, show the current contents of the 
+										expression you have built. To build an expression, you must specify the type of expression 
+										you want to build and populate it. In most cases, you will use the Expression Builder to 
+										construct a complex expression.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 3 </emphasis> -Click the Function radio button to add a function.</para>
+									<note>
+										<para>You can simply add constants and attributes as expressions by themselves using the 
+											<emphasis role="bold">Attribute</emphasis> or <emphasis role="bold">Constant</emphasis> radio buttons; 
+											however, the <emphasis role="bold">Expression Editor</emphasis> is most useful for functions.</para>
+									</note>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 4 </emphasis> - The Expression Editor displays the Function editor.</para>
+									<figure>
+										<title>Function Panel Selected</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/ExpressionBuilder_2.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+									<para>From the Category drop-down list, choose the type of function you want to add. 
+										By default, the Teiid Designer System offers the following categories:</para>
+									<itemizedlist>
+										<listitem>
+											<para><emphasis role="bold">Conversion</emphasis> for functions that convert one datatype into another.</para>
+										</listitem>
+										<listitem>
+											<para><emphasis role="bold">Datetime</emphasis> for functions that handle date or time information.</para>
+										</listitem>
+										<listitem>
+											<para><emphasis role="bold">Miscellaneous</emphasis> for other functions.</para>
+										</listitem>
+										<listitem>
+											<para><emphasis role="bold">Numeric</emphasis> for mathematic and other numeric functions.</para>
+										</listitem>
+										<listitem>
+											<para><emphasis role="bold">String</emphasis> for string manipulation functions.</para>
+										</listitem>
+									</itemizedlist>
+									<note>
+										<para>Any additional categories represent those containing user-defined functions your site has created.</para>
+									</note>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 5 </emphasis> - From the <emphasis role="bold">Function</emphasis> drop-down 
+										list, select the function you want. The table beneath the drop-down lists displays the 
+										number of arguments required for this function.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 6 </emphasis> - Click <emphasis role="bold">Apply</emphasis>.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 7 </emphasis> - Your function displays in the tree at the top. 
+										Sub nodes display for each argument you need to set for this function.</para>
+									<figure>
+										<title>New Blank Function Created</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/ExpressionBuilder_3.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+									<para>You need to set an attribute or constant value for each sub node in the tree to specify
+										 the arguments this function needs. You can also nest another function in the tree using 
+										 the <emphasis role="bold">Function</emphasis> editor.</para>
+									<figure>
+										<title>Nested Function Example</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/ExpressionBuilder_4.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 8 </emphasis> - Click each sub node in the tree and use the 
+										editors at the bottom of the dialog box to apply an attribute, constant, or function value to it.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 9 </emphasis> - When you have added values to all nodes, as 
+										shown below, click <emphasis role="bold">OK</emphasis>. to add this expression to your query or 
+										<emphasis role="bold">Cancel</emphasis> to close the dialog box
+										without inserting the expression.</para>
+									<para>
+										If the <emphasis role="bold">OK</emphasis> button does not enable, you have not added a 
+										value to all nodes in the tree.
+									</para>
+									<figure>
+										<title>Completed Expression</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/ExpressionBuilder_5.jpg" />
+											</imageobject>
+										</mediaobject>
+									</figure>
+								</listitem>
+							</itemizedlist>
+							You can also nest functions within your expressions by selecting an argument and selecting 
+							a function for that argument. The nested function displays in the tree beneath your root 
+							function and its arguments display as well. Using the Expression Builder and nested functions,
+							you can create complex logic within your query transformations.
+						</para>
+					</listitem>
+				</itemizedlist>
+
+			</sect3>
+		</sect2>
+		
+		<!-- ####### INPUT SET EDITOR ######################################### -->
+		
+		<sect2 id="input-set-editor-section">
+			<title>Input Set Editor (XML)</title>
+			<para> The <emphasis role="bold">Input Set</emphasis> represents a special class that contains
+				attributes from a parent mapping class. When you create mapping
+				classes for an <emphasis role="bold">XML Document</emphasis> model, the Teiid Designer automatically adds an
+				<emphasis role="bold">Input Set</emphasis> to all XML transformation diagrams for mapping classes
+				beneath the highest node in the Document meta object.</para>
+			<para> The <emphasis role="bold">Input Set</emphasis> proves especially useful for information
+				integration using the <emphasis role="bold">Teiid Designer Server</emphasis>. 
+				Through the <emphasis role="bold">Input Set</emphasis>, you
+				can access a row of data generated by any XML transformation in a
+				mapping class higher in the XML document’s hierarchy. You can use
+				<emphasis role="bold">Input Set</emphasis> attributes, which are individual columns from the rows of
+				data, within the criteria of an XML transformation query of the child
+				mapping class.</para>
+			<para> You cannot use the <emphasis role="bold">Input Set</emphasis> attributes within the SELECT
+				portion of the XML transformation query.</para>
+			<para> To use an <emphasis role="bold">Input Set</emphasis>, you must use the 
+				<emphasis role="bold">Input Set Editor</emphasis> to bind
+				attributes from parent classes.</para>
+			<para> Once you have created an <emphasis role="bold">Input Set</emphasis>, you can use the attributes
+				within it as source material for the XML transformation diagram’s
+				query.</para>
+			<para> The <emphasis role="bold">Input Set</emphasis> only serves to enable data flow between nested
+				mapping classes. If you use the <emphasis role="bold">Teiid Designer Server</emphasis> for data access,
+				your applications cannot directly query an <emphasis role="bold">Input Set</emphasis>. 
+				<emphasis role="bold">Input Sets</emphasis> only display in the XML transformation diagram 
+				to which they belong. <emphasis role="bold">Input Sets</emphasis> do
+				not display on the <xref linkend="model-explorer-view" /> view and you cannot use them as you
+				would a normal class, such as for source classes in other transformations.</para>	
+			<para>To open the <emphasis role="bold">Input Set Editor</emphasis>, either double-click the input set in the <emphasis role="bold">Mapping 
+				Transformation Diagram</emphasis> or click the edit button on the <emphasis role="bold">Input Set</emphasis> in 
+				the diagram. (see below)</para>
+			<figure>
+				<title>Edit Input Set Button</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/InputSetEditButton.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<figure>
+				<title>Input Set Editor Panel</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/InputSetEditor.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para> The <emphasis role="bold">Input Parameters</emphasis> table contains a list of mapping attributes
+				within the input set and the mapping attributes bound to input set
+				mapping attributes. The tree on the right displays the parent mapping
+				classes and the attributes available from each.</para>
+			<para> Using the <emphasis role="bold">Input Set Editor</emphasis>, you can:</para>
+				<itemizedlist>
+					<listitem>
+				 		<para><emphasis role="bold">Add</emphasis> a mapping attribute from a parent mapping class to the 
+				 			<emphasis role="bold">Input Set</emphasis>. In the tree on the right, 
+				 			select the symbol for which you want to create an attribute and click <emphasis role="bold">New</emphasis>. 
+				 			The item displays in the <emphasis role="bold">Input Parameters</emphasis> and 
+				 			<emphasis role="bold">Mapping Class Bindings</emphasis> table.
+						</para>
+					</listitem>
+					<listitem>
+				 		<para><emphasis role="bold">Delete</emphasis> a mapping attribute from the <emphasis role="bold">Input Set</emphasis>. 
+				 			Click the row in the <emphasis role="bold">Input Parameters</emphasis> and <emphasis role="bold">Mapping Class Bindings</emphasis> table that 
+				 			you want to delete and click <emphasis role="bold">Delete</emphasis>. The Teiid Designer removes this 
+				 			row from the table and this mapping attribute from your <emphasis role="bold">Input Set</emphasis>.
+						</para>
+					</listitem>
+					<listitem>
+				 		<para><emphasis role="bold">Bind</emphasis> and <emphasis role="bold">Unbind Input Parameters</emphasis>.
+						</para>
+					</listitem>
+				</itemizedlist>
+			<para> Once you have created the mapping attributes within the <emphasis role="bold">Input
+				Set</emphasis> that you need, you can use the <emphasis role="bold">Input Set Parameters</emphasis> within a
+				mapping class transformation to produce mapping attributes you can map
+				to your XML document.</para>
+			
+			<figure>
+				<title>Input Set Editor Panel</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/InputSetEditor.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</sect2>
+		
+		<!-- ####### CHOICE EDITOR ######################################### -->
+		
+		<sect2 id="choice-editor-section">
+			<title>Choice Editor (XML)</title>
+			<para>Within an XML Document model, a choice compositor defines
+				all possible document data structures (sometimes called fragments)
+				that can appear at that location in an XML instance document. When the
+				Teiid Designer Server populates an XML instance document at runtime based
+				upon your virtual XML document, it will choose the first fragment that
+				matches the criteria you specify within the <emphasis role="bold">Choice Editor</emphasis>.</para>
+				
+			<para>To view the choice editor, right-click on the choice node in the mapping diagram's XML Document tree 
+			view and select <emphasis role="bold">Edit</emphasis> from the right-click pop up menu.
+				<figure>
+					<title>Opening The Choice Editor</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/XmlChoiceElementInTree.jpg" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<figure>
+				<title>The Choice Editor</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/ChoiceEditor.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The table on this panel displays fragment options for the choice, each represented by the top node of the document fragment.</para>
+
+			<para>The Summary tab, shown below, displays a SQL-like version of the current choice criteria.</para>
+			<figure>
+				<title>Choice Criteria Summary</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/ChoiceEditorSummaryTab.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<sect3>
+				<title>Using the Choice Editor</title>
+				<para>You should address each choice option by performing one of the following:</para>
+				<itemizedlist>
+					<listitem>
+				 		<para><emphasis role="bold">Specify a criteria</emphasis> statement for the 
+				 			Teiid Designer Server to apply in order to determine which elements or 
+				 			elements to insert into the result document.</para>
+				 	</listitem>
+				 	<listitem>
+				 		<para><emphasis role="bold">Exclude or include</emphasis> the option’s fragment from the document.</para>
+				 	</listitem>
+				 	<listitem>
+				 		<para>Set the elements’ criteria <emphasis role="bold">test order</emphasis>.</para>
+				 	</listitem>
+				 	<listitem>
+				 		<para><emphasis role="bold">Set a default action</emphasis> that occurs if none of 
+				 			the criteria you set is met.</para>
+				 	</listitem>
+				 </itemizedlist>
+			</sect3>
+			<sect3>
+				<title>Excluding Fragments</title>
+				<para> The XML Schema upon which you based the XML Document model
+					determines the nature of the options available to the choice. A schema
+					you share with other, external sources (such as business partners)
+					might include information that you do not want to include within XML
+					files.</para>
+				<para> For example, Sample Financial Services shares an XML schema with
+					its partners Example Mutual Insurance, Illustrative Brokerage, and
+					FinancialPartners.com. The partners created the schema broadly, to
+					cover all possibilities for information they might need to
+					interchange. As such, the customer information XML document might
+					include a choice compositor based on a list of all products all
+					companies offer.</para>
+				<para> However, Sample Financial does not offer a credit card; so it
+					could exclude those elements from the XML documents its Teiid Designer
+					Server creates since it will never have credit card information for an
+					XML document.</para>
+				<para>
+					The table on the
+					<emphasis role="bold">Choice Editor</emphasis>
+					contains the
+					<emphasis role="bold">Include</emphasis>
+					column. By default, all elements specified by the schema are included.
+					You can click to remove the checkmark beside any element you do not
+					want to include within your XML documents generated by this virtual
+					XML document metadata model. By removing the checkmark, you are not
+					removing the element from the XML Document model; you are merely
+					telling the Teiid Designer Server that it will never use this element as
+					part of the choice.
+				</para>
+				<para> You cannot edit criteria for excluded elements. However, if you
+					exclude an option for which you have established a criteria, Teiid Designer
+					will retain the criteria if you want to include the option in the
+					future.</para>
+			</sect3>
+			<sect3>
+				<title>Editing Choice Criteria</title>
+				<para></para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							To edit the criteria for a choice element:
+							<itemizedlist>
+								<listitem>
+									<para><emphasis role="bold">Step 1 </emphasis> - In the table on 
+										the <emphasis role="bold">Choice Editor</emphasis> panel, select the element you want to edit..</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 2 </emphasis> - Click <emphasis role="bold">Edit Criteria</emphasis>
+										button to launch the <emphasis role="bold">Criteria Builder</emphasis> dialog.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 3 </emphasis> - Use the <emphasis role="bold">Criteria Builder</emphasis> to 
+										create the conditions for which the Teiid Designer Server will test to 
+										determine whether to choose this option in the XML instance document.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 4 </emphasis> - Click OK. The criteria you set displays both
+										in the table and in the summary tab.</para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<para>You must set a criterion for each option in your document unless you have selected to exclude that option 
+					or specify that option will be the default option.</para>
+
+			</sect3>
+			<sect3>
+				<title>Setting Choice Element Order</title>
+				<para> To edit the criteria for a choice element:</para>
+				<para> The Teiid Designer Server evaluates the choice criteria in the order
+					in which they appear, and when one choice criteria is met, the
+					Teiid Designer Server populates the XML instance document with that
+					option. The Teiid Designer Server might not test all criteria for all
+					options, so their order matters a great deal.</para>
+				<para> Therefore, the order in which your options appear within the
+					choice criteria often determines what information appears ultimately
+					in your XML instance documents. You can reorder the option list within
+					the choice to set the order in which the Teiid Designer Server tests the
+					criteria.</para>
+				<para> To set this order, select an element in the table and use the <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/MoveUp.gif"/>
+						</imageobject>
+					</inlinemediaobject> or <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/MoveDown.gif"/>
+						</imageobject>
+					</inlinemediaobject> button to move it into a new position in the table. The new order
+					displays both in the table and in the Choice Criteria box and reorders
+					the XML document as well.</para>
+			</sect3>
+			<sect3>
+				<title>Setting a Default Choice Action </title>
+				<para>The default action represents the course the Teiid Designer Server should take if none of the criteria you set evaluates to true.</para>
+			
+				<para>
+					You can set this default using the combo box available in the <emphasis role="bold">Choice Editor's</emphasis> toolbar to:
+				</para>
+		
+				<itemizedlist>
+					<listitem>
+						<para>Any of the options within the table except those you have excluded from the document.</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">THROW</emphasis> to throw a Teiid Designer Server exception.</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">RECORD</emphasis> to record the Teiid Designer Server exception.</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">DISCARD</emphasis> to place no element within the XML instance document.</para>
+					</listitem>
+				</itemizedlist>
+    			<para>Note: You must set a default action for your choice criteria.</para>
+			</sect3>
+		</sect2>
+		
+		<!-- ####### RECURSION EDITOR ######################################### -->
+		
+		<sect2 id="recursion-editor-section">
+			<title>Recursion Editor (XML)</title>
+			<para> Some <emphasis role="bold">XML schemas</emphasis> define data structures that contain
+				self-referencing elements or datatypes. When generating XML documents,
+				such data structures can produce an endless repetition of nested tags.
+				This self-nesting pattern is known as <emphasis role="bold">recursion</emphasis>.</para>
+			<para>
+				When generating virtual documents from <emphasis role="bold">XML Schema</emphasis>, the Teiid Designer
+				detects recursive data structures in the XML Schema model and halts
+				the recursive nesting pattern after two cycles. These two cycles serve
+				different purposes when mapping the document:</para>
+			<itemizedlist>
+				<listitem>
+					<para>The <emphasis role="bold">first cycle</emphasis> can be thought of as an “<emphasis role="bold">entry condition</emphasis>”
+						for the <emphasis role="bold">recursion</emphasis>. The mapping class located at this node defines a
+						normal mapping transformation like that of any other in the
+						document model.</para>
+				</listitem>
+				<listitem>
+					<para>The <emphasis role="bold">second cycle</emphasis> defines a mapping transformation that will
+						be performed repeatedly until conditions are met that will halt the
+						document instance being generated by the Teiid Designer Server. This
+						fragment of the document model is called the <emphasis role="bold">recursive fragment</emphasis>.
+						The mapping transformation for this fragment is no different from
+						the first, except that you can access the first cycle's mapping
+						class attributes, plus you have the opportunity to specify the
+						conditions that will halt the recursion.</para>
+				</listitem>
+			</itemizedlist>
+			<para> You can recognize a mapping class located at the second,
+				recursive document fragment by the looping arrow button in the
+				top-left-hand corner of the diagram object as shown below.</para>
+			<para>When you model a virtual document based on an <emphasis role="bold">XML Schema</emphasis>
+				model containing recursion, you can choose whether to treat the nested
+				fragments as recursive. You should only use recursion when the data
+				access pattern from your data source(s) is also recursive; in other
+				words, when the same query transformation should be executed over and
+				over to generate and map the nested document's data content.</para>
+			<para> By default, the Teiid Designer does not mark the recursive fragments
+				in document models to execute recursively in the Teiid Designer Server. To
+				take advantage of this behavior, you must open the <emphasis role="bold">Recursion Editor</emphasis> in
+				the recursive mapping class <link linkend="mapping-transformation-diagram-section">mapping transformation diagram</link>, mark the
+				transformation query as recursive, and specify the recursion limit
+				properties.</para>
+			<sect3>
+				<title>The Editor</title>
+				<para>The Recursion Editor lets you enable and limit recursion. The Recursion Editor button only displays on 
+				mapping classes, which have recursive patterns. For example, if you have an element named Employee which 
+				contains a element named Supervisor which itself contains an Employee element nested within it, you might need to
+				 limit the number of times the elements are nested within the document.</para>
+			<para> You can set the following conditions to limit the recursion:</para>
+				<itemizedlist>
+					<listitem>
+						<para>A fixed number of results to the query.</para>
+					</listitem>
+					<listitem>
+						<para>A SQL-based criteria limit condition.</para>
+					</listitem>
+					<listitem>
+						<para>A combination of both.</para>
+					</listitem>
+				</itemizedlist>
+				<para> To open the Recursion Editor, click on the Recursion Editor
+					button <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/recursion.gif"/>
+						</imageobject>
+					</inlinemediaobject> on the displayed mapping class.</para>
+				<figure>
+					<title>Open Recursion Editor Button</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/RecursiveMappingClass.jpg" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<figure>
+					<title>Recursion Editor</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/RecursionEditor.jpg" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<itemizedlist>
+					<listitem>
+						<para>
+							To edit recursion properties:
+							<itemizedlist>
+								<listitem>
+									<para><emphasis role="bold">Step 1 </emphasis> - Click the <emphasis role="bold">Enable Recursion</emphasis> check box if you 
+									want the Teiid Designer Server to perform the query you specify to generate the nested tags 
+									within the <emphasis role="bold">XML document</emphasis>.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 2 </emphasis> - Click the arrows beside the <emphasis role="bold">Count Limi</emphasis>t 
+									box to limit the number of times to recursively perform the query. If you do not set 
+									a <emphasis role="bold">Limit Condition</emphasis> in the text area, the recursion finishes when the query reaches this limit. 
+									You can only set this limit to a maximum supported by your Teiid Designer Server. For more 
+									information about this limit, contact your system administrator</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 3 </emphasis> - Click the <emphasis role="bold">Action When Count Limit Exceeded</emphasis> 
+									drop down menu to instruct the Teiid Designer Server what to do if it encounters more results 
+									for the query than the count limit before it reaches the limit condition.</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 4 </emphasis> - Click the <emphasis role="bold">Edit</emphasis> button to launch the 
+									SQL <emphasis role="bold"><link linkend="using-criteria-builder-section">Criteria Builder</link></emphasis> to build a limiting condition for this recursion. </para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<note>
+					<para>The Teiid Designer Server will evaluate this condition each time
+						it recursively performs this query. If this criteria clause evaluates
+						false, the Teiid Designer Server performs the query recursively again
+						unless it has reached the <emphasis role="bold">Count Limit</emphasis>. If the criteria evaluates
+						true, the Teiid Designer Server performs the mapping for the current
+						level and ends its recursive loop.</para>
+					<para> When you have created the criteria, it displays in the <emphasis role="bold">Limit
+						Condition</emphasis> box.</para>
+				</note>
+				<para>When the Teiid Designer Server dynamically populates your XML documents at runtime, it will use the recursion
+					 specifications you entered here.</para>
+			</sect3>
+		</sect2>
+		
+		<!-- ####### OPERATIONS EDITOR ######################################### -->
+		<sect2 id="operation-editor-section">
+			<title>Operation Editor</title>
+			<para>Editing of <emphasis role="bold">Web Service</emphasis> Operation
+				transformations is simplified via the <emphasis role="bold">Operation Editor</emphasis>. When editing
+				a Web Service model, an additional editor tab labeled "<emphasis role="bold">Operation
+				Editor</emphasis>" is available. This editor, shown below is comprised of:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Operations</emphasis> section showing a tree view of Interfaces
+						and Operations contained within the Web Service model.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Input Variables</emphasis> section providing editing of desired
+						Input Variable declarations.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Procedure</emphasis> section providing SQL editing of the
+						procedure (See Mapping Web Service Operations).</para>
+				</listitem>
+			</itemizedlist>
+			<figure>
+				<title>Operation Editor</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/OperationEditor.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The <emphasis role="bold">Operations</emphasis> section contains all interfaces and operations
+				currently defined in the model.</para>
+			<para>Selecting an operation will display the variables related to the
+				input parameter's content in the <emphasis role="bold">Input Variables</emphasis> section and the body
+				of its procedure (minus the CREATE VIRTUAL PROCEDURE BEGIN - END
+				keywords and the input variable declarations and assignments) in the
+				<emphasis role="bold">Procedure section</emphasis>.</para>
+			<para>When pasting in SQL, do not include the <emphasis role="bold">CREATE VIRTUAL PROCEDURE
+				BEGIN - END</emphasis> keywords. Input variables will be automatically generated
+				when the "Content via Element" property is set on an operation's input
+				parameter. Input variables may be created, edited, or deleted using
+				the Edit link in the <emphasis role="bold">Input Variables</emphasis> section, and may only represent
+				XPath values to single attributes and elements within the input
+				contents; other variable declarations and assignments must be typed
+				directly into the <emphasis role="bold">Procedure</emphasis> section. Clicking the Edit link will
+				display the following dialog:</para>
+			<figure>
+				<title>Edit Input Variables Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/InputVariablesDialog.jpg" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				<emphasis role="bold">Input Variables</emphasis> can be deleted via right-click menu <emphasis role="bold">Delete</emphasis> 
+				action (see figure below) for selected variables or using <emphasis role="bold">Cntl-X, Delete</emphasis> 
+				keys. You can also rename an Input Variable using the right-click menu <emphasis role="bold">Rename</emphasis> 
+				action or the <emphasis role="bold">F2</emphasis> key. ( Note: Input variables names have to be named starting with the "IN_" characters. 
+				Renaming a variable will always insure its name is prepended with "IN_").
+			</para>
+			<figure>
+				<title>Input Variable Context Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/InputVariablesActionMenu.jpg"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</sect2>
+	</sect1>
+</chapter>

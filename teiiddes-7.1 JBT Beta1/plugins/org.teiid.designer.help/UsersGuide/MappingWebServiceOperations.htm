@@ -1,0 +1,53 @@
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<link rel="stylesheet" href="designer_help.css" type="text/css" />
+<style type="text/css">
+<!--
+.style1 {
+	font-family: "Courier New", Courier, monospace;
+	color: #666666;
+}
+.style2 {color: #666666}
+.style3 {
+	color: #3300FF;
+	font-weight: bold;
+}
+-->
+</style>
+<body>
+<p><a href="DesignerTOC.htm"><img src="images/Designer_WebHeader.png" alt="MMHeader" border="0" /></a></p>
+<hr>
+<p class="maintitle_b24">Mapping Your Web Service Operations</p>
+
+<p>The wizard that creates a Web service from relational sources understands the business logic used and is able to build the entire SQL transformation. Mapping a Web service operation to an XML document, however, involves some knowledge&mdash;and work&mdash;on the part of the user to complete the transformation. In particular, the SQL transformations for Web service operations generated via the <strong><a href="ImportWsdl.htm">Create Web Service Model from WSDL</a></strong> scenario are incomplete. The generated SQL template does contains a placeholder which you can modify to represent actual data.</p>
+<p>Below is an example of a generated SQL transformation template:</p>
+<table width="827" height="69" border="1">
+  <tr>
+    <td><p class="style2"><span class="style1">SELECT * FROM CheckOrderSvcResponses.Service1Soap_CheckOrder_OCout</span></p>
+    <p><span class="style1">WHERE (CheckOrderSvcResponses.Service1Soap_CheckOrder_OCout.<span class="style3">REPLACE_WITH_ELEMENT_OR_ATTRIBUTE</span> = VARIABLES.ORDERDATE)</span></p></td>
+  </tr>
+</table>
+<p>To complete the transformation, replace the "<strong>REPLACE_WITH_ELEMENT_OR_ATTRIBUTE</strong>" string with full XML Document path name to desired element or attribute (see below)</p>
+<table width="827" height="69" border="1">
+  <tr>
+    <td><p class="style2"><span class="style1">SELECT * FROM CheckOrderSvcResponses.Service1Soap_CheckOrder_OCout</span></p>
+    <p><span class="style1">WHERE (CheckOrderSvcResponses.Service1Soap_CheckOrder_OCout.<span class="style3">OC_Output.CONTAINER.ORDER_DATE</span> = VARIABLES.ORDERDATE)</span></p></td>
+  </tr>
+</table>
+
+<p class="subtitle_b16">Related Topics</p>
+<ul>
+  <li><a href="EditingWebServices.htm" class="medium">Editing Web Services</a> </li>
+  <li><a href="CreateWebServiceModels.htm" class="medium">Creating Web Service Models</a> </li>
+  <li><a href="CreateWebServiceFromXML.htm" class="medium">Creating Web Service from XML Schema</a> </li>
+  <li><a href="DesignerGettingStarted.htm" class="medium">Getting Started with Designer</a> </li>
+</ul>
+<hr>
+<p class="copyright">See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.</p>
+</body>
+
