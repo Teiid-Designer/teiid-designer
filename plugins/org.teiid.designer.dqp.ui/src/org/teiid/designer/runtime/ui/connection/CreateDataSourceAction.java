@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -20,6 +21,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -123,10 +125,10 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                 TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
                 Properties props = info.getProperties();
                 IConnectionInfoProvider provider = info.getConnectionInfoProvider();
-
+                boolean cancelledPassword = false;
                 if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
-
-                    int result = new AbstractPasswordDialog(iww.getShell()) {
+                	
+                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
                         @SuppressWarnings( "synthetic-access" )
                         @Override
                         protected boolean isPasswordValid( final String password ) {
@@ -136,13 +138,17 @@ public class CreateDataSourceAction extends SortableSelectionAction implements D
                     }.open();
                     if (result == Window.OK) {
                         props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
+                    } else {
+                    	cancelledPassword = true;
                     }
                 }
 
-                executionAdmin.getOrCreateDataSource(info.getDisplayName(),
-                                                     info.getJndiName(),
-                                                     provider.getDataSourceType(),
-                                                     props);
+                if( !cancelledPassword) {
+	                executionAdmin.getOrCreateDataSource(info.getDisplayName(),
+	                                                     info.getJndiName(),
+	                                                     provider.getDataSourceType(),
+	                                                     props);
+                }
 
             }
             // createDataSource(modelFile);

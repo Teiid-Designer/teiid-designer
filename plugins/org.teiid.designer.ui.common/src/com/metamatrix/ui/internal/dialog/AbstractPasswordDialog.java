@@ -31,6 +31,8 @@ public abstract class AbstractPasswordDialog extends Dialog implements InternalU
     private static final String TITLE = getString("title"); //$NON-NLS-1$
     
     private static final int COLUMN_COUNT = 2;
+    
+    private String passwordLabel = PASSWORD_LABEL;
 
     //============================================================================================================================
     // Static Utility Methods
@@ -61,6 +63,19 @@ public abstract class AbstractPasswordDialog extends Dialog implements InternalU
         super(shell, TITLE);
     }
     
+    /**<p>
+     * </p>
+     * @param parent
+     * @param title
+     * @since 4.0
+     */
+    public AbstractPasswordDialog(final Shell shell, String overrideTitle, String passwordLabel) {
+        super(shell, overrideTitle);
+        if( passwordLabel != null ) {
+        	this.passwordLabel = passwordLabel;
+        }
+    }
+    
     //============================================================================================================================
     // Overridden Methods
 
@@ -73,7 +88,7 @@ public abstract class AbstractPasswordDialog extends Dialog implements InternalU
     protected Control createDialogArea(final Composite parent) {
         final Composite dlgPanel = (Composite)super.createDialogArea(parent);
         ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
-        WidgetFactory.createLabel(dlgPanel, PASSWORD_LABEL);
+        WidgetFactory.createLabel(dlgPanel, passwordLabel);
         this.pwdFld = WidgetFactory.createPasswordField(dlgPanel);
         return dlgPanel;
     }
