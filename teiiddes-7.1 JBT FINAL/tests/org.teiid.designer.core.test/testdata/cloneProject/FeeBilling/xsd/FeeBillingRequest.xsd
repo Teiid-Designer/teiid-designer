@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<schema elementFormDefault="qualified" targetNamespace="http://in.dc.us.americas.ing.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://in.dc.us.americas.ing.com">
+
+	<complexType name="AgreementServiceFee">
+				<sequence>
+					<element minOccurs="1" name="serviceFeeType" type="dc:ServiceFeeType"/>
+					<element minOccurs="1" name="serviceFeeEligibilityDate" type="date"/>
+					<element minOccurs="0" name="serviceFeeEligibilityFrequency" type="dc:ServiceFeeEligibilityFrequencyType"/>
+					<element minOccurs="0" name="minimumServiceUsageFeeDays" type="int"/>
+					<element minOccurs="0" name="serviceInitiationEntityType" type="dc:ServiceInitiationEntityType"/>				
+					<element minOccurs="0" name="serviceFeeLastInstallmentCheck" type="dc:ServiceFeeLastInstallmentCheck"/>			
+				</sequence>
+	</complexType>
+
+	<simpleType name="ServiceFeeType">
+		<restriction base="string">
+			<!-- ING Loan Administration Fee -->
+			<enumeration value="IAD"/>
+			<!-- Advisory Services Fee -->
+			<enumeration value="ADV"/>
+			<!-- Self Directed Brokerage Account Fee -->
+			<enumeration value="SDB"/>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="ServiceFeeEligibilityFrequencyType">
+		<restriction base="string">
+			<enumeration value="Annual"/>
+			<enumeration value="Semi-Annual"/>
+			<enumeration value="Quaterly"/>
+		</restriction>
+	</simpleType>
+
+
+
+	<element name="ServiceFeeRequest" type="dc:ServiceFeeRequestType"/>
+
+	<complexType name="Plan">
+				<sequence>
+					<element minOccurs="1" name="planNumber" type="string"/>
+				</sequence>
+	</complexType>
+	
+	
+	<complexType name="ServiceFeeRequestType">
+				<sequence>
+					<element minOccurs="1" name="serviceFee" type="dc:AgreementServiceFee"/>
+						<sequence>
+					<element minOccurs="0" name="plan" type="dc:Plan"/>
+						</sequence>
+				</sequence>
+	</complexType>
+	
+<simpleType name="ServiceInitiationEntityType">
+		<restriction base="string">
+			<!-- ING Service Initiation Type -->
+			<enumeration value="ING"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="ServiceFeeLastInstallmentCheck">
+		<restriction base="string">
+			<!-- ING Loan Administration Fee -->
+			<enumeration value="true"/>
+			<!-- Advisory Services Fee -->
+			<enumeration value="false"/>
+		</restriction>
+	</simpleType>
+</schema>

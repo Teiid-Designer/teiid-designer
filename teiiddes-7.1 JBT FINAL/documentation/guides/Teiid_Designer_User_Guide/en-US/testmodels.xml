@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="test-models-chapter">
+  <title>Testing Your Models</title>
+  
+  	<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+  	
+	<para>As described briefly in Chapter 1, you can test your models in Teiid Designer by using the 
+		Preview Data action <inlinemediaobject>
+			<imageobject>
+				<imagedata fileref="images/icons/preview-data.png"/>
+			</imageobject>
+		</inlinemediaobject> or test your models via your deployable VDB. These two options will be described in detail in this chapter
+		as well as managing your required connection profiles. 
+	</para>
+	
+	<!-- ####### MANAGE CONNECITON PROFILES ######################################### -->
+	
+	<section id="manage-connection-profiles-section">
+		<title>Manage Connection Profiles</title>
+		<para>Teiid Designer utilizes the Eclipse Datatools' Connection Profile framework for connection management. Connection Profiles
+			provide a mechanism to connect to JDBC and non-JDBC sources to access metadata for constructing metadata source models.
+			Teiid Designer also provides a custom Teiid connection profile template designed as a JDBC source to a deployed VDB.
+		</para>
+		<para>By selecting various Teiid Designer Import options, any applicable Connection Profiles you have defined in your Database
+			Development perspective will be available to use as your import source. From these import wizards you can also create 
+			new connection profiles or edit existing connection profiles without leaving the wizard. 
+		</para>
+		<para>The <xref linkend="teiid-view" /> provides access to running Teiid instances and shows data source
+			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
+			and applicable connection profiles.
+		</para>
+	</section>
+
+	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
+	
+	<section id="test-preview-data-section">
+		<title>Previewing Data For a Model</title>
+		<para>Designing and working with data is often much easier when you can see the information 
+			you're working with.  The Designer's Preview Data feature makes this possible and allows 
+			you to instantly preview the information described by any object, whether it's a physical 
+			table or a virtual view.  In other words, you can test the views with actual data by 
+			simply selecting the table, view, procedure or XML document. Previewing information is a 
+			fast and easy way to sample the data.  Of course, to run more complicated queries like 
+			what your application likely uses, simply execute the VDB Via DTP and type in any query 
+			or SQL statement.</para>
+		<para> After creating your models, you can test them by using the
+				<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+						<imageobject>
+							<imagedata fileref="images/icons/preview-data.png"/>
+						</imageobject>
+					</inlinemediaobject>. By selecting a desired table object and
+				executing the action, the results of a simple query will be displayed
+				in the <xref linkend="preview-results-section" /> view. This 
+				action is accessible throughout the
+				Teiid Designer in various view toolbars and context menus.</para>
+		<para> There are two requirements for previewing your data: the
+			selected object must be one of several previewable model object types and
+			all source models within the model dependency tree must reference a connection profile. 
+			Model objects that can be previewed include:  relational tables and views (including
+			tables involving access patterns), relational procedures, Web service operations and
+			XML document staging tables.</para>
+		<para> Note that any virtual table, view or procedure is previewable as
+			long as all "physical" source models reference sufficient connection info.
+			(See <!--<xref linkend="teiid-view" />-->
+			   <xref linkend="teiid-view" /> view)</para>
+		
+		<para>After selecting the Preview Data action, Designer will insure that all source models are 
+			associated with connection profiles and that all required passwords are set.</para>
+			
+		<para>If the model selected for preview is a source model and there is insufficient 
+			connection info for that model, the following dialog will be displayed and the action terminated.</para>	
+		<figure>
+			<title>Preview Not Available</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/preview-not-available-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>If any of the source models in the corresponding project require a password 
+			that can't be retrieved from an existing connection profile, the user will be 
+			queried for each missing password</para>
+		<figure>
+			<title>Missing Password</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/preview-missing-password-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<bridgehead>Testing Your Transformations</bridgehead>
+		<para>When editing transformation SQL in the Transformation Editor, a special <emphasis role="bold">SQL Results</emphasis> data action is provided in the
+			editor tool-bar <inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/preview-virtual-data.png"/>
+					</imageobject>
+				</inlinemediaobject>.</para>
+		<para>You can change your transformation SQL, re-validate and preview your the data for your modified SQL.</para>
+		
+		<para>The following sections provide steps for previewing your data. Note that all steps assume that all
+			source models referenced by your models, either directly or through dependencies, are bound to connector
+			bindings.</para>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW ######################################### -->
+		
+		<section>
+			<title>Preview Relational Table or View</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational table, relational view or staging table:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational table or view in 
+									the <xref linkend="model-explorer-view" /> or diagram. The table or view can be in a view model as well as a 
+									source model. Staging tables are not visible in the <xref linkend="model-explorer-view" />, so you need to 
+									open the mapping diagram and select it there.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/preview-data.png"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Your query results will be displayed in
+									the <xref linkend="preview-results-section" />
+									view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL TABLE OR VIEW WITH ACCESS PATTERNS ######################################### -->
+		
+		<section>
+			<title>Preview Relational Table With Access Pattern</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational table or view with access pattern:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational table or view in 
+									the <xref linkend="model-explorer-view" /> or diagram that contains an access pattern. The table or view can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/preview-data.png"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - A column input dialog is presented. Select
+									each access pattern and enter a value for each required column. Note that if data entered does
+									not match the column datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Access Pattern Column Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/parameter-input-dialog-access-pattern.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <xref linkend="preview-results-section" />
+									view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### PREVIEW DATA - RELATIONAL PROCEDURE ######################################### -->
+		
+		<section>
+			<title>Preview Relational Procedure</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a relational procedure:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a relational procedure in 
+									the <xref linkend="model-explorer-view" /> or diagram. The procedure can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/preview-data.png"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - An input parameter input dialog is presented. Enter
+									a valid value for each parameter. Note that if data entered does
+									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Procedure Parameter Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/parameter-input-dialog-procedure.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <xref linkend="preview-results-section" />
+									view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### PREVIEW DATA - WEB SERVICE OPERATION ######################################### -->
+		
+		<section>
+			<title>Preview Web Service Operation</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To preview a Web service operation:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select a Web service operation in 
+									the <xref linkend="model-explorer-view" /> or diagram. The operation can be
+									in a view model as well as a source model.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
+									<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/preview-data.png"/>
+										</imageobject>
+									</inlinemediaobject>. You can also select the same action in the tool-bar of either
+									the <xref linkend="model-explorer-view" /> or diagram.  </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - An input parameter input dialog is presented. Enter
+									a valid value for each parameter. Note that if data entered does
+									not match the parameter datatype (String, integer, etc...), an error message will be displayed 
+									in the dialog header. When all required values are entered, click the
+									<emphasis role="bold">OK</emphasis> button to execute the query.</para>
+								<figure>
+									<title>Procedure Parameter Input Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/parameter-input-dialog-ws-operation.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - Your query results will be displayed in
+									the <xref linkend="preview-results-section" />
+									view. The view will automatically open or get focus if not visible
+									in your perspective.</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<section id="preview-results-section">
+			<title>Sample SQL Results for Preview Data</title>
+			<para>Preview Data results are displayed in the Eclipse Datatools SQL Results view as shown below.
+				Note there are a number of display preference and filter options for this view via toolbar buttons and the dropdown menu.			
+			</para>
+				<figure>
+					<title>SQL Results View</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/sql-results-view-sample.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+		</section>
+
+	</section>
+	
+	<!-- ####### TEST MODELS IN VDB ######################################### -->
+	
+	<section id="test-vdb-section">
+		<title>Testing With Your VDB</title>
+		<para>In Teiid Designer you can execute a VDB to test/query actual data.</para>
+		<para>The requirements for VDB execution are:</para>
+		<itemizedlist>
+			<listitem>
+				<para>A deployed VDB backed by valid deployed Data Sources</para>
+			</listitem>
+			<listitem>
+				<para>An instance of a Teiid Connection Profile configured for the deployed VDB</para>
+			</listitem>
+		</itemizedlist>
+		
+		<para>Teiid Designer simplifies this process via Deploy VDB and Execute VDB actions. 
+			Deploy VDB does just that, deploy a selected VDB to a running Teiid instance. 
+			Execute VDB performs the VDB deployment, creates a Teiid Connection Profile, 
+			opens the Database Development perspective and creates a connection to your VDB.</para>
+		<para></para>
+
+		<!-- ####### CREATE DATA SOURCE ######################################### -->
+		<section id="creating-data-sources">
+			<title>Creating Data Sources</title>
+			<para>The mechanism by which VDBs are able to query actual data sources is the Data Source. These are deployed
+				 configurations backed by database or source connection jars. Each source model referenced within a VDB requiries
+				 a JNDI name representing a deployed Data Source.</para>
+			<para>When creating VDBs you do not need to have deployed data sources on your Teiid server, but if you wish to 
+				test your VDB, the data sources need to be present.</para>
+			<para>Teiid Designer provides a <emphasis>Create Data Source</emphasis> action so you can create compatible data 
+				sources for your source model. If you wish to create a data source for a specific model you can select 
+				that source model in your workspace and select the <emphasis>Modeling > Create Data Source</emphasis> action. 
+				This will extract the connection profile data from your source model and create a corresponding data source 
+				on your default Teiid server.</para>
+			<para>You can also create data sources from the Teiid view. Select a Teiid server instance in the Teiid view 
+				and right-click select the <emphasis>Create Data Source</emphasis> action. This will launch the 
+				Create Data Source Dialog shown below.</para>
+				<figure>
+					<title>Create Data Source Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/create-data-source-dialog.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			<para>You can either select and existing Connection Profile from the drop-down list (Use Connection Profile
+				Info option) or check the Use Model Info option and select an existing source model containing connection info.</para>
+			<para>After creating your new data source it should now be shown in the <emphasis>Data Sources</emphasis> folder of the corresponding 
+				Teiid server.</para>
+		</section>
+		
+		<!-- ####### EXECUTE VDB IN MODEL EXPLORER ######################################### -->
+		<section id="execute-vdb-in-model-explorer">
+			<title>Execute VDB from Model Explorer</title>
+			<para></para>
+			<itemizedlist>
+				<listitem>
+					<para>If you have a Teiid instance defined and connected in your Teiid view you can:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Right-click a VDB in your Model Explorer 
+									select <emphasis>Modeling > Execute VDB</emphasis> action.
+									This action will insure your selected VDB is deployed to Teiid, create a Teiid Connection 
+									Profile specific for that VDB, open the Database Development perspective and 
+									create a connection to your VDB.</para>
+								<figure>
+									<title>Execute VDB Action</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/execute-vdb-action-model-explorer.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Select your new Teiid connection profile 
+									and right-click select <emphasis>Open SQL Scrapbook</emphasis>, enter your designer 
+									SQL (i.e. SELECT * FROM TableXXXX), select all text and right-click select 
+									<emphasis>Execute Selected Text</emphasis></para>
+								<figure>
+									<title>SQL Scrapbook Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/sql-scrapbook-editor.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Results of query should be displayed 
+									in the SQL Results view on the <emphasis>Result1</emphasis> tab.</para>
+								<figure>
+									<title>SQL Results View</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/execute-vdb-sql-results.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>					
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### Deploy VDB from Model Explorer ######################################### -->
+		<section id="deploy-vdb-from-model-explorer">
+			<title>Deploy VDB from Model Explorer</title>
+			<para>You can also deploy your VDB first by selecting it in the Model Explorer 
+				and dragging/dropping it onto a connected Teiid instance in the Teiid view, 
+				or right-click select <emphasis>Modeling > Deploy</emphasis> action.
+			</para>
+			<para>Once deployed, you can select the VDB in the Teiid View and 
+				right-click select the <emphasis>Execute VDB</emphasis> action there. This will 
+				create a Teiid Connection Profile specific for that VDB, open the 
+				Database Development perspective and create a connection to your VDB. 
+				Continue with Step's 2 and 3 above.</para>
+			<para>Note that if you do not have a Teiid instance defined or your default 
+					Teiid instance is disconnected, the following dialog will be displayed 
+					if the <emphasis>Modeling > Deploy</emphasis> action is launched.
+			</para>
+			<figure>
+				<title>No Teiid Instance Defined</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/no-teiid-instance-for-deploy-vdb-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### Executing a Deployed VDB ######################################### -->
+		<section id="executing-a-deployed-vdb">
+			<title>Executing a Deployed VDB</title>
+			<para>To execute a VDB, that's been deployed manually, follow the steps below:</para>
+			<itemizedlist>
+				<listitem>
+					<para>To execute a VDB, that's been deployed manually, follow the steps below:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Open the <emphasis>Database Development</emphasis> perspective.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Select the <emphasis>Database Connections</emphasis> 
+									folder and choose the <emphasis>New</emphasis> action to display 
+									the <emphasis>New Connection Profile</emphasis> dialog.</para>
+								<figure>
+									<title>New Connection Profile Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/new-connection-profile-dialog.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Enter unique name for your profile, select an 
+									existing connection profile type and hit <emphasis>Next</emphasis>.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - In the <emphasis>Teiid Profile Wizard</emphasis> page, 
+									select the <emphasis>New Driver Definition</emphasis> button to locate and select the 
+									Teiid client jar on your file system. Configure your URL using your VDB Name, Host, Port, 
+									Username (default = "admin") and Password (default = "teiid").</para>
+								<figure>
+									<title>Teiid Connection Profile Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/new-teiid-connection-profile-dialog.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 5 </emphasis> - Select <emphasis>Next</emphasis> to view a 
+									summary of your new Teiid Connection Profile.</para>
+								<figure>
+									<title>Teiid Connection Profile Summary</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/teiid-connection-profile-summary.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 6 </emphasis> - Select <emphasis>Finish</emphasis>.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 7 </emphasis> - Select your new Teiid connection profile 
+									and right-click select <emphasis>Open SQL Scrapboo</emphasis>k, enter your designer 
+									SQL (i.e. SELECT * FROM TableXXXX), select all text and right-click 
+									select <emphasis>Execute Selected Text</emphasis>.</para>
+								<figure>
+									<title>SQL Scrapbook Editor</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/sql-scrapbook-editor.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 8 </emphasis> - Results of query should be displayed 
+									in the SQL Results view on the <emphasis>Result1</emphasis> tab.</para>
+								<figure>
+									<title>SQL Results View</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/execute-vdb-sql-results.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>					
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+	
+</chapter>

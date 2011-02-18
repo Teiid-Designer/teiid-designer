@@ -1,0 +1,8 @@
+TABLE, Table_1, NULL, NULL, NULL, "Table_1 Description"
+COLUMN, Column_1, Table_1, string, 255, "Column_1 Description"
+COLUMN, Column_2, Table_1, string, 255, "Column_2 Description"
+COLUMN, Column_3, Table_1, string, 255, "Column_3 Description"
+COLUMN, Column_4, Table_1, string, 200, "Column_4 Description"
+TABLE, Table_2, NULL, NULL, NULL, "Table_2 Description"
+COLUMN, Column_5, Table_2, string, 255, "Column_5 Description"
+COLUMN, Column_6, Table_2, string, 255, "Column_6 Description"

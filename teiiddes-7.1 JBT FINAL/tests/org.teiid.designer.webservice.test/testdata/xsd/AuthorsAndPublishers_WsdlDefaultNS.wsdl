@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.acme.com/wsdl/books/requests" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:authpubns="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers" xmlns:request="http://www.metamatrix.com/books/request" name="BooksAuthorsAndPublishers" targetNamespace="http://www.acme.com/wsdl/books/requests">
+  <message name="AuthorInfo_getAuthors_getAuthorsInput">
+    <documentation>Input message for operation AuthorInfo/getAuthors.</documentation>
+    <part name="AuthorInfo_getAuthors_getAuthorsInput" element="request:getAuthorsRequest" />
+  </message>
+  <message name="AuthorInfo_getAuthors_getAuthorsOutput">
+    <documentation>Output message for operation AuthorInfo/getAuthors.</documentation>
+    <part name="AuthorInfo_getAuthors_getAuthorsOutput" element="AuthPubNS:authors" />
+  </message>
+  <message name="AuthorInfo_getPublishers_getPublishersInput">
+    <documentation>Input message for operation AuthorInfo/getPublishers.</documentation>
+    <part name="AuthorInfo_getPublishers_getPublishersInput" element="request:getPublishersRequest" />
+  </message>
+  <message name="AuthorInfo_getPublishers_getPublishersOutput">
+    <documentation>Output message for operation AuthorInfo/getPublishers.</documentation>
+    <part name="AuthorInfo_getPublishers_getPublishersOutput" element="AuthPubNS:publishers" />
+  </message>
+  <message name="AuthorInfo_getBooksByPublisher_input">
+    <documentation>Input message for operation AuthorInfo/getBooksByPublisher.</documentation>
+    <part name="AuthorInfo_getBooksByPublisher_input" element="request:getBooksByPublisherRequest" />
+  </message>
+  <message name="AuthorInfo_getBooksByPublisher_output">
+    <documentation>Output message for operation AuthorInfo/getBooksByPublisher.</documentation>
+    <part name="AuthorInfo_getBooksByPublisher_output" element="AuthPubNS:publisherBooks" />
+  </message>
+  <portType name="AuthorInfo">
+    <operation name="getAuthors">
+      <input name="getAuthorsInput" message="tns:AuthorInfo_getAuthors_getAuthorsInput" />
+      <output name="getAuthorsOutput" message="tns:AuthorInfo_getAuthors_getAuthorsOutput" />
+    </operation>
+    <operation name="getPublishers">
+      <input name="getPublishersInput" message="tns:AuthorInfo_getPublishers_getPublishersInput" />
+      <output name="getPublishersOutput" message="tns:AuthorInfo_getPublishers_getPublishersOutput" />
+    </operation>
+    <operation name="getBooksByPublisher">
+      <input name="input" message="tns:AuthorInfo_getBooksByPublisher_input" />
+      <output name="output" message="tns:AuthorInfo_getBooksByPublisher_output" />
+    </operation>
+  </portType>
+  <binding name="AuthorInfo" type="tns:AuthorInfo">
+    <operation name="getAuthors">
+      <input>
+        <soap:body parts="tns:AuthorInfo_getAuthors_getAuthorsInput" use="literal" />
+      </input>
+      <output>
+        <soap:body parts="tns:AuthorInfo_getAuthors_getAuthorsOutput" use="literal" />
+      </output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getAuthors" />
+    </operation>
+    <operation name="getPublishers">
+      <input>
+        <soap:body parts="tns:AuthorInfo_getPublishers_getPublishersInput" use="literal" />
+      </input>
+      <output>
+        <soap:body parts="tns:AuthorInfo_getPublishers_getPublishersOutput" use="literal" />
+      </output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getPublishers" />
+    </operation>
+    <operation name="getBooksByPublisher">
+      <input>
+        <soap:body parts="tns:AuthorInfo_getBooksByPublisher_input" use="literal" />
+      </input>
+      <output>
+        <soap:body parts="tns:AuthorInfo_getBooksByPublisher_output" use="literal" />
+      </output>
+      <soap:operation style="document" soapAction="BooksWebService.AuthorInfo.getBooksByPublisher" />
+    </operation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+  </binding>
+  <service name="BooksAuthorsAndPublishers">
+    <port name="AuthorInfo" binding="tns:AuthorInfo">
+      <soap:address location="####METAMATRIX_URL_TO_VDB####" />
+    </port>
+  </service>
+  <import location="####METAMATRIX_URL_TO_VDB####/AuthorsAndPublishers.xsd" namespace="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers" />
+  <import location="####METAMATRIX_URL_TO_VDB####/BookRequests.xsd" namespace="http://www.metamatrix.com/books/request" />
+</definitions>
+

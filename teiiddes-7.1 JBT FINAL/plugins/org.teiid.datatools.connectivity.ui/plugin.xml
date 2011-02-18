@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.datatools.connectivity.ui.ConnectionProfileWizard"
+         description="Create a Teiid connection profile."
+         icon="icons/new_db_element.gif"
+         id="org.teiid.datatools.connectivity.ui.ConnectionProfileWizard"
+         name="Teiid"
+         profile="org.teiid.datatools.connectivity.connectionProfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.datatools.connectivity.ui.TeiidPropertyPage"
+            id="org.teiid.datatools.connectivity.ui.profileProperties"
+            name="%driverProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.datatools.connectivity.connectionProfile"/>
+		 <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>               
+      </page>
+   </extension>
+   
+   <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
+      <driverUIContributor
+            class="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor"
+            driverTemplateID="org.teiid.datatools.connectivity.driver.serverDriverTemplate"
+            id="org.teiid.datatools.connectivity.ui.TeiidServerUIContributor">
+      </driverUIContributor>
+   </extension>
+   
+   <extension point="org.eclipse.datatools.connectivity.ui.driverPropertyEditor">
+      <propertyEditor
+            customPropertyDescriptor="org.eclipse.datatools.connectivity.ui.PasswordTextPropertyDescriptor"
+            driverPropertyID="org.eclipse.datatools.connectivity.db.password"
+            driverTemplateID="org.teiid.datatools.connectivity.driver.serverDriverTemplate"
+            id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
+      </propertyEditor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.sqltools.plan.planService">
+      <planService
+            databaseVendorDefinitionId="Teiid_7.1"
+            serviceClass="org.teiid.datatools.connectivity.ui.plan.TeiidPlanService">
+      </planService>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.sqltools.editor.core.ui.dbUIConfigurations">
+      <dbUIConfiguration
+            configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
+            default="false"
+            product="Teiid"
+            version="7.1">
+      </dbUIConfiguration>
+   </extension>
+   <extension
+         point="org.eclipse.datatools.sqltools.editor.core.dbConfigurations">
+      <dbConfiguration
+            configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBConfiguration"
+            default="false"
+            product="Teiid"
+            supportsDebugging="false"
+            version="7.1">
+      </dbConfiguration>
+   </extension> 
+   <extension
+         point="org.eclipse.datatools.sqltools.result.ui.resultSetViewer"
+         id="org.teiid.datatools.data.extensions.externalResultSetViewer ">
+         <externalViewer
+         vendor="Teiid"
+         id="Teiid Result Set Viewer"
+         default_viewer_name="Teiid Result Set Viewer"
+         class="org.teiid.datatools.results.view.TeiidResultViewerProvider"/>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator">
+         <includes>
+            <contentExtension
+                  pattern="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            id="org.teiid.datatools.connectivity.dse.provider.TeiidContentProvider"
+            labelProvider="org.teiid.datatools.connectivity.dse.provider.TeiidLableProvider"
+            name="%teiidModelContent.name"
+            priority="highest">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.teiid.datatools.connectivity.sql.TeiidCatalogSchema">
+               </instanceof>
+            </or>
+         </enablement>
+      </navigatorContent>
+      </extension>
+         <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.ui.labelService">
+      <contributor
+            iconLocation="/icons/view.gif"
+            type="org.teiid.datatools.models.teiidsqlmodel.Document">
+      </contributor>
+   </extension>
+   </plugin>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:org.eclipse.uml2="http:///org/eclipse/uml2.ecore">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:6db49340-f95a-1efc-bb0b-f0298cda019a" primaryMetamodelUri="http:///org/eclipse/uml2.ecore" modelType="PHYSICAL"/>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:e710f781-f95d-1efc-bb0b-f0298cda019a">
+    <diagram xmi:uuid="mmuuid:e710f780-f95d-1efc-bb0b-f0298cda019a" type="packageDiagramType" target="mmuuid/6db49340-f95a-1efc-bb0b-f0298cda019a"/>
+    <diagram xmi:uuid="mmuuid:e9fd2580-f95e-1efc-bb0b-f0298cda019a" type="packageDiagramType" target="mmuuid/3553c1c1-f95e-1efc-bb0b-f0298cda019a">
+      <diagramEntity xmi:uuid="mmuuid:e1e529c0-4a9d-1efd-8f18-cc1436d80910" modelObject="mmuuid/a934d6cf-f962-1efc-bb0b-f0298cda019a" xPosition="498" yPosition="23" height="102" width="136"/>
+      <diagramEntity xmi:uuid="mmuuid:eee39440-4a9d-1efd-8f18-cc1436d80910" name="Library" modelObject="mmuuid/54ba5b16-f977-1efc-bb0b-f0298cda019a" xPosition="300" yPosition="17" height="45" width="77"/>
+      <diagramEntity xmi:uuid="mmuuid:efd7b840-4a9d-1efd-8f18-cc1436d80910" modelObject="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a" xPosition="264" yPosition="92" height="102" width="174"/>
+      <diagramEntity xmi:uuid="mmuuid:f2a4e200-4a9d-1efd-8f18-cc1436d80910" modelObject="mmuuid/607fd28d-f986-1efc-bb0b-f0298cda019a" xPosition="53" yPosition="271" height="87" width="174"/>
+      <diagramEntity xmi:uuid="mmuuid:f2a4e201-4a9d-1efd-8f18-cc1436d80910" modelObject="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a" xPosition="526" yPosition="241" height="117" width="190"/>
+      <diagramEntity xmi:uuid="mmuuid:f3990600-4a9d-1efd-8f18-cc1436d80910" name="AbstractLibrary" modelObject="mmuuid/415b26c1-fa8a-1efc-aa2a-c27773d4d763" xPosition="33" yPosition="20" height="45" width="117"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <org.eclipse.uml2:Package xmi:uuid="mmuuid:3553c1c1-f95e-1efc-bb0b-f0298cda019a" name="MyPackage">
+    <ownedMember xsi:type="org.eclipse.uml2:Enumeration" xmi:uuid="mmuuid:a934d6cf-f962-1efc-bb0b-f0298cda019a" name="DocumentCategory">
+      <ownedLiteral xmi:uuid="mmuuid:c586c281-f966-1efc-bb0b-f0298cda019a" name="Fiction"/>
+      <ownedLiteral xmi:uuid="mmuuid:f841fc43-f96a-1efc-bb0b-f0298cda019a" name="NonFiction"/>
+      <ownedLiteral xmi:uuid="mmuuid:7bbfdf4f-f96d-1efc-bb0b-f0298cda019a" name="Research"/>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:PrimitiveType" xmi:uuid="mmuuid:4ae22905-f972-1efc-bb0b-f0298cda019a" name="String"/>
+    <ownedMember xsi:type="org.eclipse.uml2:PrimitiveType" xmi:uuid="mmuuid:9953b992-f974-1efc-bb0b-f0298cda019a" name="int"/>
+    <ownedMember xsi:type="org.eclipse.uml2:Interface" xmi:uuid="mmuuid:54ba5b16-f977-1efc-bb0b-f0298cda019a" name="Library" supplierDependency="mmuuid/0ee903c0-376a-1efd-933e-9fd76bbe61d5"/>
+    <ownedMember xsi:type="org.eclipse.uml2:Class" xmi:uuid="mmuuid:35908108-f97c-1efc-bb0b-f0298cda019a" name="LibraryImpl" superClass="mmuuid/415b26c1-fa8a-1efc-aa2a-c27773d4d763">
+      <generalization xmi:uuid="mmuuid:4ed9d6c0-4eea-1efd-9720-d71601a1ac8b" general="mmuuid/415b26c1-fa8a-1efc-aa2a-c27773d4d763"/>
+      <ownedAttribute xmi:uuid="mmuuid:b58b1ed0-f980-1efc-bb0b-f0298cda019a" name="name" type="mmuuid/4ae22905-f972-1efc-bb0b-f0298cda019a" class_="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a"/>
+      <ownedAttribute xmi:uuid="mmuuid:2e1cca4d-f9d7-1efc-8a10-9c5fc6fefb50" name="documents" type="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a" aggregation="composite" class_="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a" association="mmuuid/ac0b1e43-f9d0-1efc-8a10-9c5fc6fefb50">
+        <upperValue xsi:type="org.eclipse.uml2:LiteralUnlimitedNatural" xmi:uuid="mmuuid:5e9baacb-f9ea-1efc-8a10-9c5fc6fefb50" name="upperBound" value="-1"/>
+        <lowerValue xsi:type="org.eclipse.uml2:LiteralInteger" xmi:uuid="mmuuid:f6d41e86-f9e5-1efc-8a10-9c5fc6fefb50" name="lowerBound"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:uuid="mmuuid:ab147647-faa1-1efc-aa2a-c27773d4d763" name="authors" type="mmuuid/607fd28d-f986-1efc-bb0b-f0298cda019a" aggregation="composite" class_="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a" association="mmuuid/03f0d252-fa9d-1efc-aa2a-c27773d4d763">
+        <upperValue xsi:type="org.eclipse.uml2:LiteralUnlimitedNatural" xmi:uuid="mmuuid:d76ffec6-faa7-1efc-aa2a-c27773d4d763" name="upperBound" value="-1"/>
+        <lowerValue xsi:type="org.eclipse.uml2:LiteralInteger" xmi:uuid="mmuuid:bdfafec4-faa4-1efc-aa2a-c27773d4d763" name="lowerBound"/>
+      </ownedAttribute>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:Class" xmi:uuid="mmuuid:607fd28d-f986-1efc-bb0b-f0298cda019a" name="AuthorImpl">
+      <ownedAttribute xmi:uuid="mmuuid:21f0cac1-f9b2-1efc-8a10-9c5fc6fefb50" name="name" type="mmuuid/4ae22905-f972-1efc-bb0b-f0298cda019a" class_="mmuuid/607fd28d-f986-1efc-bb0b-f0298cda019a"/>
+      <ownedAttribute xmi:uuid="mmuuid:04872701-4afb-1efd-8f18-cc1436d80910" name="documents" type="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a" class_="mmuuid/607fd28d-f986-1efc-bb0b-f0298cda019a" association="mmuuid/b828a6c4-4af2-1efd-8f18-cc1436d80910">
+        <upperValue xsi:type="org.eclipse.uml2:LiteralUnlimitedNatural" xmi:uuid="mmuuid:b3bdb745-4b0d-1efd-8f18-cc1436d80910" name="upperBound" value="-1"/>
+        <lowerValue xsi:type="org.eclipse.uml2:LiteralInteger" xmi:uuid="mmuuid:d1b564c6-4b06-1efd-8f18-cc1436d80910" name="NewLiteralInteger"/>
+      </ownedAttribute>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:Class" xmi:uuid="mmuuid:dca96081-f989-1efc-bb0b-f0298cda019a" name="DocumentImpl">
+      <ownedAttribute xmi:uuid="mmuuid:398cc506-f9b5-1efc-8a10-9c5fc6fefb50" name="name" type="mmuuid/4ae22905-f972-1efc-bb0b-f0298cda019a" class_="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a"/>
+      <ownedAttribute xmi:uuid="mmuuid:f97f0f91-f9bf-1efc-8a10-9c5fc6fefb50" name="pages" type="mmuuid/9953b992-f974-1efc-bb0b-f0298cda019a" class_="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a"/>
+      <ownedAttribute xmi:uuid="mmuuid:db591b91-f9c5-1efc-8a10-9c5fc6fefb50" name="category" type="mmuuid/a934d6cf-f962-1efc-bb0b-f0298cda019a" class_="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a"/>
+      <ownedAttribute xmi:uuid="mmuuid:414212c3-4b16-1efd-8f18-cc1436d80910" name="author" type="mmuuid/607fd28d-f986-1efc-bb0b-f0298cda019a" class_="mmuuid/dca96081-f989-1efc-bb0b-f0298cda019a" association="mmuuid/b828a6c4-4af2-1efd-8f18-cc1436d80910"/>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:Association" xmi:uuid="mmuuid:ac0b1e43-f9d0-1efc-8a10-9c5fc6fefb50" name="LibraryDocument" memberEnd="mmuuid/2e1cca4d-f9d7-1efc-8a10-9c5fc6fefb50 mmuuid/ca9f4c91-fa0e-1efc-8a10-9c5fc6fefb50">
+      <ownedEnd xmi:uuid="mmuuid:ca9f4c91-fa0e-1efc-8a10-9c5fc6fefb50" name="owner" type="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a" association="mmuuid/ac0b1e43-f9d0-1efc-8a10-9c5fc6fefb50"/>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:Association" xmi:uuid="mmuuid:03f0d252-fa9d-1efc-aa2a-c27773d4d763" name="LibraryAuthors" memberEnd="mmuuid/ab147647-faa1-1efc-aa2a-c27773d4d763 mmuuid/815a85c0-fabe-1efc-a913-cb0b625da67c">
+      <ownedEnd xmi:uuid="mmuuid:815a85c0-fabe-1efc-a913-cb0b625da67c" name="owner" type="mmuuid/35908108-f97c-1efc-bb0b-f0298cda019a" association="mmuuid/03f0d252-fa9d-1efc-aa2a-c27773d4d763"/>
+    </ownedMember>
+    <ownedMember xsi:type="org.eclipse.uml2:Class" xmi:uuid="mmuuid:415b26c1-fa8a-1efc-aa2a-c27773d4d763" name="AbstractLibrary" clientDependency="mmuuid/0ee903c0-376a-1efd-933e-9fd76bbe61d5" isAbstract="true"/>
+    <ownedMember xsi:type="org.eclipse.uml2:Realization" xmi:uuid="mmuuid:0ee903c0-376a-1efd-933e-9fd76bbe61d5" name="libraryRealization" client="mmuuid/415b26c1-fa8a-1efc-aa2a-c27773d4d763" supplier="mmuuid/54ba5b16-f977-1efc-bb0b-f0298cda019a"/>
+    <ownedMember xsi:type="org.eclipse.uml2:Association" xmi:uuid="mmuuid:b828a6c4-4af2-1efd-8f18-cc1436d80910" name="AuthorDocument" memberEnd="mmuuid/04872701-4afb-1efd-8f18-cc1436d80910 mmuuid/414212c3-4b16-1efd-8f18-cc1436d80910"/>
+  </org.eclipse.uml2:Package>
+</xmi:XMI>
