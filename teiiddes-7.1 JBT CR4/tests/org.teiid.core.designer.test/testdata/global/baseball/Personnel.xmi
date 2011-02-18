@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:Relational="http://www.metamatrix.com/metamodels/Relational" xmlns:Sdt="http://www.metamatrix.com/metamodels/SimpleDatatypes" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:e646cc80-123f-1ed5-b524-850acefc261a" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational" modelType="PHYSICAL">
+    <modelImports xmi:uuid="mmuuid:b9474140-e90e-1ee5-8519-a90373e42d99" name="SimpleDatatypes-instance" path="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" uuid="mmuuid:6b862080-3019-1e20-921b-eeee28353879" modelType="TYPE" primaryMetamodelUri="http://www.metamatrix.com/metamodels/SimpleDatatypes"/>
+  </mmcore:ModelAnnotation>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:fab89041-123f-1ed5-b524-850acefc261a">
+    <diagram xmi:uuid="mmuuid:fab89040-123f-1ed5-b524-850acefc261a" type="packageDiagramType" target="mmuuid/e646cc80-123f-1ed5-b524-850acefc261a">
+      <diagramEntity xmi:uuid="mmuuid:31541c00-1245-1ed5-b524-850acefc261a" name="People" xPosition="487" yPosition="28" height="549" width="146" modelObject="mmuuid/f1c93e01-1242-1ed5-b524-850acefc261a"/>
+      <diagramEntity xmi:uuid="mmuuid:4df2c05d-4c75-1ed5-a800-c0f5f31a5c50" name="Batting" xPosition="15" yPosition="27" height="429" width="157" modelObject="mmuuid/6521ebc1-4c74-1ed5-a800-c0f5f31a5c50"/>
+    </diagram>
+  </Diagram:DiagramContainer>
+  <Relational:BaseTable xmi:uuid="mmuuid:f1c93e01-1242-1ed5-b524-850acefc261a" name="People">
+    <columns xmi:uuid="mmuuid:799441c0-124a-1ed5-b524-850acefc261a" name="playerID" nameInSource="0" uniqueKeys="mmuuid/610ae603-4cfa-1ed5-a800-c0f5f31a5c50">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:3d475a40-1254-1ed5-b524-850acefc261a" name="managerID" nameInSource="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:dca9da80-1255-1ed5-b524-850acefc261a" name="fameID" nameInSource="2">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0abee4c0-125a-1ed5-b524-850acefc261a" name="birthYear" nameInSource="3">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:65880680-125e-1ed5-b524-850acefc261a" name="birthMonth" nameInSource="4">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:f15da4c0-125f-1ed5-b524-850acefc261a" name="birthDay" nameInSource="5">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:eb6a4280-1264-1ed5-b524-850acefc261a" name="birthCountry" nameInSource="6">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:cefdd040-1268-1ed5-b524-850acefc261a" name="birthState" nameInSource="7">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6b9326c0-126a-1ed5-b524-850acefc261a" name="birthCity" nameInSource="8">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:584184c0-1285-1ed5-b524-850acefc261a" name="deathYear" nameInSource="9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a404efc0-1288-1ed5-b524-850acefc261a" name="deathMonth" nameInSource="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:1298fc00-128f-1ed5-b524-850acefc261a" name="deathDay" nameInSource="11">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:22b1db00-1291-1ed5-b524-850acefc261a" name="deathCountry" nameInSource="12">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:3cfbfac0-1293-1ed5-b524-850acefc261a" name="deathState" nameInSource="13">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:cd77c880-1294-1ed5-b524-850acefc261a" name="deathCity" nameInSource="14">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:ee7f2600-1298-1ed5-b524-850acefc261a" name="nameFirst" nameInSource="15">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9aef5300-129a-1ed5-b524-850acefc261a" name="nameLast" nameInSource="16">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:1501d2c0-129c-1ed5-b524-850acefc261a" name="nameNote" nameInSource="17">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a59ca4c0-129e-1ed5-b524-850acefc261a" name="nameGiven" nameInSource="18">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:263d9c00-12a0-1ed5-b524-850acefc261a" name="nameNick" nameInSource="19">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:1ffc6f40-12a2-1ed5-b524-850acefc261a" name="weight" nameInSource="20">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:640e7880-12a3-1ed5-b524-850acefc261a" name="height" nameInSource="21">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:24f06940-12a5-1ed5-b524-850acefc261a" name="bats" nameInSource="22">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:45a9fc40-12a6-1ed5-b524-850acefc261a" name="throws" nameInSource="23">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:f5cc34c0-12a7-1ed5-b524-850acefc261a" name="debut" nameInSource="24">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:ff569c40-12a9-1ed5-b524-850acefc261a" name="college" nameInSource="25">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:635c5b00-12ad-1ed5-b524-850acefc261a" name="lahman40ID" nameInSource="26">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:3e4a6300-12af-1ed5-b524-850acefc261a" name="lahman45ID" nameInSource="27">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0c5904c0-12b2-1ed5-b524-850acefc261a" name="retroID" nameInSource="28">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:f90a2b40-12b3-1ed5-b524-850acefc261a" name="holtzID" nameInSource="29">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:fc061b40-12b5-1ed5-b524-850acefc261a" name="bbrefID" nameInSource="30">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <primaryKey xmi:uuid="mmuuid:610ae603-4cfa-1ed5-a800-c0f5f31a5c50" name="PK_People" columns="mmuuid/799441c0-124a-1ed5-b524-850acefc261a" foreignKeys="mmuuid/6a15f442-4d10-1ed5-a800-c0f5f31a5c50"/>
+  </Relational:BaseTable>
+  <Relational:BaseTable xmi:uuid="mmuuid:6521ebc1-4c74-1ed5-a800-c0f5f31a5c50" name="Batting">
+    <columns xmi:uuid="mmuuid:c2251e00-4c83-1ed5-a800-c0f5f31a5c50" name="playerID" nameInSource="0" uniqueKeys="mmuuid/cb659183-4d04-1ed5-a800-c0f5f31a5c50" foreignKeys="mmuuid/6a15f442-4d10-1ed5-a800-c0f5f31a5c50">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:49a25740-4c88-1ed5-a800-c0f5f31a5c50" name="yearID" nameInSource="1">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:cb377280-4c89-1ed5-a800-c0f5f31a5c50" name="stintID" nameInSource="2">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:975dcc40-4c8c-1ed5-a800-c0f5f31a5c50" name="teamID" nameInSource="3">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:05660580-4c8e-1ed5-a800-c0f5f31a5c50" name="leagueID" nameInSource="4">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:bf6c34c0-c442-1e24-9b01-c8207cd53eb7"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:ead29900-4c91-1ed5-a800-c0f5f31a5c50" name="gamesPlayed" nameInSource="5">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b069fb80-4c93-1ed5-a800-c0f5f31a5c50" name="atBats" nameInSource="6">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:84f7d280-4c96-1ed5-a800-c0f5f31a5c50" name="runs" nameInSource="7">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:caf223c0-4c97-1ed5-a800-c0f5f31a5c50" name="hits" nameInSource="8">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:a3224440-4c99-1ed5-a800-c0f5f31a5c50" name="doubles" nameInSource="9">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b99b5440-4c9a-1ed5-a800-c0f5f31a5c50" name="triples" nameInSource="10">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:6cc8bf00-4c9e-1ed5-a800-c0f5f31a5c50" name="HR" nameInSource="11">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:b86d25c0-4ca0-1ed5-a800-c0f5f31a5c50" name="RBI" nameInSource="12">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:0aa00400-4ca3-1ed5-a800-c0f5f31a5c50" name="stolenBases" nameInSource="13">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:546b6500-4ca5-1ed5-a800-c0f5f31a5c50" name="caughtStealing" nameInSource="14">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:24530c80-4ca8-1ed5-a800-c0f5f31a5c50" name="BB" nameInSource="15">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:9ad28500-4caa-1ed5-a800-c0f5f31a5c50" name="strikes" nameInSource="16">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:d4f15600-4cad-1ed5-a800-c0f5f31a5c50" name="IBB" nameInSource="17">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:bb520d80-4cb1-1ed5-a800-c0f5f31a5c50" name="hitByPitch" nameInSource="18">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:dffbb480-4cb4-1ed5-a800-c0f5f31a5c50" name="sacHits" nameInSource="19">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:584470c0-4cb6-1ed5-a800-c0f5f31a5c50" name="sacFlies" nameInSource="20">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <columns xmi:uuid="mmuuid:d71c2440-4cb8-1ed5-a800-c0f5f31a5c50" name="GIDP" nameInSource="21">
+      <type xsi:type="Sdt:SimpleDatatype" href="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance#mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576"/>
+    </columns>
+    <foreignKeys xmi:uuid="mmuuid:6a15f442-4d10-1ed5-a800-c0f5f31a5c50" name="FK_Batting_People" columns="mmuuid/c2251e00-4c83-1ed5-a800-c0f5f31a5c50" uniqueKey="mmuuid/610ae603-4cfa-1ed5-a800-c0f5f31a5c50"/>
+    <primaryKey xmi:uuid="mmuuid:cb659183-4d04-1ed5-a800-c0f5f31a5c50" name="PK_Batting" columns="mmuuid/c2251e00-4c83-1ed5-a800-c0f5f31a5c50"/>
+  </Relational:BaseTable>
+</xmi:XMI>

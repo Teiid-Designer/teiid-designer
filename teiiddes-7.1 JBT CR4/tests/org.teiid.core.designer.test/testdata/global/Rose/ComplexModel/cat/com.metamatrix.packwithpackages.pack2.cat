@@ -1,0 +1,54 @@
+
+(object Petal
+    version    	46
+    _written   	"Rose 7.7.0204.3001"
+    charSet    	0)
+
+(object Class_Category "pack2"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    quid       	"4059F2FB00D4"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "Pack2Class1"
+	    quid       	"4059F31E0099"))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"4059F31B03D5"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::packwithpackages::pack2::Pack2Class1" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(947, 456)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(787, 405)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	320
+			justify    	0
+			label      	"Pack2Class1")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4059F31E0099"
+		    width      	338
+		    height     	126
+		    annotation 	8
+		    autoResize 	TRUE)))))

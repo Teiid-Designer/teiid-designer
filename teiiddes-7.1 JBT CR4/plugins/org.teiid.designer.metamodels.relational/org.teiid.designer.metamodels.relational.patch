@@ -1,0 +1,150 @@
+Index: src/com/metamatrix/metamodels/relational/impl/TableImpl.java
+===================================================================
+--- src/com/metamatrix/metamodels/relational/impl/TableImpl.java	(revision 804)
++++ src/com/metamatrix/metamodels/relational/impl/TableImpl.java	(working copy)
+@@ -14,6 +14,7 @@
+ import org.eclipse.emf.common.notify.NotificationChain;
+ import org.eclipse.emf.common.util.EList;
+ import org.eclipse.emf.ecore.EClass;
++import org.eclipse.emf.ecore.EObject;
+ import org.eclipse.emf.ecore.EStructuralFeature;
+ import org.eclipse.emf.ecore.InternalEObject;
+ import org.eclipse.emf.ecore.impl.ENotificationImpl;
+@@ -21,6 +22,7 @@
+ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+ import org.eclipse.emf.ecore.util.EcoreUtil;
+ import org.eclipse.emf.ecore.util.InternalEList;
++
+ import com.metamatrix.metamodels.relational.AccessPattern;
+ import com.metamatrix.metamodels.relational.Catalog;
+ import com.metamatrix.metamodels.relational.Column;
+@@ -149,6 +151,16 @@
+      * @ordered
+      */
+     protected EList logicalRelationships = null;
++    
++    /**
++     * The cached value of the '{@link #getMaterializedTable() <em>Materailized Table</em>}' reference.
++     * <!-- begin-user-doc -->
++     * <!-- end-user-doc -->
++     * @see #getMaterializedTable()
++     * @generated
++     * @ordered
++     */
++    protected EObject materalizedTable = null;
+ 
+     /**
+      * <!-- begin-user-doc -->
+@@ -370,6 +382,44 @@
+         }
+         return logicalRelationships;
+     }
++    
++    /**
++     * <!-- begin-user-doc -->
++     * <!-- end-user-doc -->
++     * @generated
++     */
++    public EObject getMaterializedTable() {
++        if (materalizedTable != null && materalizedTable.eIsProxy()) {
++            EObject oldMateralizedTable = materalizedTable;
++            materalizedTable = eResolveProxy((InternalEObject)materalizedTable);
++            if (materalizedTable != oldMateralizedTable) {
++                if (eNotificationRequired())
++                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RelationalPackage.TABLE__MATERIALIZED_TABLE, oldMateralizedTable, materalizedTable));
++            }
++        }
++        return materalizedTable;
++    }
++
++    /**
++     * <!-- begin-user-doc -->
++     * <!-- end-user-doc -->
++     * @generated
++     */
++    public EObject basicGetMaterializedTable() {
++        return materalizedTable;
++    }
++
++    /**
++     * <!-- begin-user-doc -->
++     * <!-- end-user-doc -->
++     * @generated
++     */
++    public void setMaterializedTable(EObject newMateralizedTable) {
++        EObject oldMateralizedTable = materalizedTable;
++        materalizedTable = newMateralizedTable;
++        if (eNotificationRequired())
++            eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__MATERIALIZED_TABLE, oldMateralizedTable, materalizedTable));
++    }
+ 
+     /**
+      * <!-- begin-user-doc -->
+@@ -479,6 +529,9 @@
+                 return getCatalog();
+             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
+                 return getLogicalRelationships();
++            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
++                if (resolve) return getMaterializedTable();
++                return basicGetMaterializedTable();
+         }
+         return eDynamicGet(eFeature, resolve);
+     }
+@@ -527,6 +580,9 @@
+                 getLogicalRelationships().clear();
+                 getLogicalRelationships().addAll((Collection)newValue);
+                 return;
++            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
++                setMaterializedTable((EObject)newValue);
++                return;
+         }
+         eDynamicSet(eFeature, newValue);
+     }
+@@ -572,6 +628,9 @@
+             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
+                 getLogicalRelationships().clear();
+                 return;
++            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
++            	setMaterializedTable((EObject)null);
++                return;
+         }
+         eDynamicUnset(eFeature);
+     }
+@@ -606,6 +665,8 @@
+                 return getCatalog() != null;
+             case RelationalPackage.TABLE__LOGICAL_RELATIONSHIPS:
+                 return logicalRelationships != null && !logicalRelationships.isEmpty();
++            case RelationalPackage.TABLE__MATERIALIZED_TABLE:
++                return materalizedTable != null;
+         }
+         return eDynamicIsSet(eFeature);
+     }
+Index: src/com/metamatrix/metamodels/relational/RelationalPackage.java
+===================================================================
+--- src/com/metamatrix/metamodels/relational/RelationalPackage.java	(revision 804)
++++ src/com/metamatrix/metamodels/relational/RelationalPackage.java	(working copy)
+@@ -251,6 +251,15 @@
+      * @ordered
+      */
+     int TABLE__LOGICAL_RELATIONSHIPS = COLUMN_SET_FEATURE_COUNT + 7;
++    
++    /**
++     * The feature id for the '<em><b>Materialized Table</b></em>' reference.
++     * <!-- begin-user-doc -->
++     * <!-- end-user-doc -->
++     * @generated
++     * @ordered
++     */
++    int TABLE__MATERIALIZED_TABLE = COLUMN_SET_FEATURE_COUNT + 8;
+ 
+     /**
+      * The number of structural features of the the '<em>Table</em>' class.
+@@ -259,7 +268,7 @@
+      * @generated
+      * @ordered
+      */
+-    int TABLE_FEATURE_COUNT = COLUMN_SET_FEATURE_COUNT + 8;
++    int TABLE_FEATURE_COUNT = COLUMN_SET_FEATURE_COUNT + 9;
+ 
+     /**
+      * The meta object id for the '{@link com.metamatrix.metamodels.relational.impl.ColumnImpl <em>Column</em>}' class.

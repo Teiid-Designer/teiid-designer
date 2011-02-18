@@ -1,0 +1,5 @@
+!*** required to run tests
+plugin@org.jboss.tools.common=SVN,,http://anonsvn.jboss.org/repos,,jbosstools/trunk/common/plugins/org.jboss.tools.common
+plugin@org.jboss.tools.common.test=SVN,,http://anonsvn.jboss.org/repos,,jbosstools/trunk/common/tests/org.jboss.tools.common.test
+
+plugin@org.jboss.tools.tests=SVN,,http://anonsvn.jboss.org/repos,,jbosstools/trunk/tests/tests/org.jboss.tools.tests

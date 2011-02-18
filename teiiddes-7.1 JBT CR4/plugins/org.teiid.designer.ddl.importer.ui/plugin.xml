@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.ddl.importer.ui.DdlImporterWizard"
+            icon="icons/importWizard16x16.gif"
+            id="org.teiid.designer.ddl.importer.ui.ddlImportWizard"
+            name="%wizardName">
+         <description>
+            %wizardDescription
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
