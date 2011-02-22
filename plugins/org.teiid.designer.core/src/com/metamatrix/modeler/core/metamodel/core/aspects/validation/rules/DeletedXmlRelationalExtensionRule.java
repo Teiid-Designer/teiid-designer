@@ -29,9 +29,9 @@ public class DeletedXmlRelationalExtensionRule implements ResourceValidationRule
 				Object obj = objIter.next();
 				if(obj instanceof XPackage) {
 					XPackage pkg = (XPackage)obj;
-					if(pkg.getName().equalsIgnoreCase("XMLSOAPExtension") ||
-							pkg.getName().equalsIgnoreCase("XMLHTTPExtension") ||
-							pkg.getName().equalsIgnoreCase("XMLFileExtension")) {
+					if(pkg.getName().equalsIgnoreCase("XMLSOAPExtension") || //$NON-NLS-1$
+							pkg.getName().equalsIgnoreCase("XMLHTTPExtension") || //$NON-NLS-1$
+							pkg.getName().equalsIgnoreCase("XMLFileExtension")) { //$NON-NLS-1$
 						final ValidationResult result = new ValidationResultImpl(resource, context);
 						final ValidationProblem problem = new ValidationProblemImpl(0,
 								IStatus.ERROR, ModelerCore.Util.getString("DeletedXmlRelationalExtensionRule.invalidextension")); //$NON-NLS-1$);

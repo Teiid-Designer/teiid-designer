@@ -31,13 +31,13 @@ public class DeletedXmlRelationalImportRule implements ResourceValidationRule {
 					for (final Iterator impIter = imports.iterator(); impIter
 							.hasNext();) {
 						final ModelImport imp = (ModelImport) impIter.next();
-						if (imp.getName().equalsIgnoreCase("XMLFileConnectorExtensions")
+						if (imp.getName().equalsIgnoreCase("XMLFileConnectorExtensions") //$NON-NLS-1$
 								|| imp.getName().equalsIgnoreCase(
-										"XMLHttpConnectorExtensions")
-								|| imp.getName().equalsIgnoreCase("XMLSOAPConnectorExtensions")) {
+										"XMLHttpConnectorExtensions") //$NON-NLS-1$
+								|| imp.getName().equalsIgnoreCase("XMLSOAPConnectorExtensions")) { //$NON-NLS-1$
 							final ValidationResult result = new ValidationResultImpl(resource, context);
 							final ValidationProblem problem = new ValidationProblemImpl(0,
-									IStatus.ERROR, ModelerCore.Util.getString("DeletedXmlRelationalRule.invalidmodel", new String[]{imp.getName()})); //$NON-NLS-1$);
+									IStatus.ERROR, ModelerCore.Util.getString("DeletedXmlRelationalRule.invalidmodel", new Object[]{imp.getName()})); //$NON-NLS-1$);
 							result.addProblem(problem);
 							context.addResult(result);
 						}
