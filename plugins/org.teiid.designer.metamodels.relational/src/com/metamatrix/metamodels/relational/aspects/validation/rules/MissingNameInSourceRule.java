@@ -20,7 +20,6 @@ import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 public class MissingNameInSourceRule implements ObjectValidationRule {
 
 	private static final String nameInSourceFeatureName = RelationalPlugin.Util.getString("_UI_RelationalEntity_nameInSource_feature"); //$NON-NLS-1$
-    private static final String RULE_NAME = MissingNameInSourceRule.class.getName();
 
     /*
      * @see com.metamatrix.modeler.core.validation.ObjectValidationRule#validate(org.eclipse.emf.ecore.EObject, com.metamatrix.modeler.core.validation.ValidationContext)
@@ -107,14 +106,6 @@ public class MissingNameInSourceRule implements ObjectValidationRule {
 		} catch(Exception e) {
 			RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
 		}
-
-		// type of object this rule is being run on.
-		String objType = eObject.eClass().getName();        
-		// this rule is being run once per object type per parent
-		if(context.hasRunRule(eObject, RULE_NAME+objType)) {
-			return false;
-		}
-		context.recordRuleRun(eObject, RULE_NAME+objType);			
 
 		return true;    
 	}
