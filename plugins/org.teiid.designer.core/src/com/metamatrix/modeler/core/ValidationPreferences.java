@@ -24,6 +24,11 @@ public interface ValidationPreferences {
      * Preference name for indexes with columns from more than one table.
      */
     String CORE_STRING_FUNCTIONS_ONE_BASED = "corePreferences.stringFunctionsAreOneBased"; //$NON-NLS-1$
+    
+    /**
+     * Preference name for table missing same nameInSource rule.
+     */
+    String RELATIONAL_TABLE_MISSING_NAME_IN_SOURCE = "relationalPreferences.missingNameInSource"; //$NON-NLS-1$
 
     /**
      * Preference name for siblings having same nameInSource rule.

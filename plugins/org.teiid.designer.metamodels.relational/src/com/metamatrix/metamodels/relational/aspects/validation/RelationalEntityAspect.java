@@ -16,6 +16,7 @@ import com.metamatrix.metamodels.relational.aspects.validation.rules.ForeignKeyC
 import com.metamatrix.metamodels.relational.aspects.validation.rules.IndexReferenceOneTableRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.MissingColumnLengthRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.MissingColumnPrecisionRule;
+import com.metamatrix.metamodels.relational.aspects.validation.rules.MissingNameInSourceRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.ProcedureParametersRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import com.metamatrix.metamodels.relational.aspects.validation.rules.SiblingNameInSourceRule;
@@ -50,6 +51,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
 	public static final ValidationRule PROC_PARAM_RULE = new ProcedureParametersRule();
     public static final ValidationRule INDEX_REF_MULTIPLE_TABLES = new IndexReferenceOneTableRule();
     public static final ValidationRule EMPTY_COLUMN_NATIVE_TYPE_RULE = new ColumnNativeTypeRule();
+    public static final ValidationRule TABLE_MISSING_NAME_IN_SOURCE_RULE = new MissingNameInSourceRule();
 
     protected RelationalEntityAspect(final MetamodelEntity entity) {
         super(entity);

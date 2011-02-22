@@ -149,6 +149,13 @@
             category="Relational">
       </preference>
       <preference
+            toolTip="Missing nameInSource value ?"
+            name="missingNameInSource"
+            label="%missingNameInSource"
+            default="warning"
+            category="Relational">
+      </preference>
+      <preference
             toolTip="Sibling nameInSource values the same ?"
             name="siblingNameInSource"
             label="%siblingNameInSource"

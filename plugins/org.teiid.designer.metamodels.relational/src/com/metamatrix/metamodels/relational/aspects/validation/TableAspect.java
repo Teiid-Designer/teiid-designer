@@ -36,6 +36,7 @@ public abstract class TableAspect extends RelationalEntityAspect {
 		addRule(TABLE_UPDATABILITY_RULE);
         addRule(TABLE_UNIQUE_KEYS_RULE);
         addRule(TABLE_MATERIALIZED_RULE);
+        addRule(TABLE_MISSING_NAME_IN_SOURCE_RULE);
 		return super.getValidationRules();		
 	}
 
