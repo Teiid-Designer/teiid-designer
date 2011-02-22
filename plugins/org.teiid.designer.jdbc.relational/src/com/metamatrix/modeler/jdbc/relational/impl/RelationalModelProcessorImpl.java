@@ -1279,7 +1279,29 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         }
 
         if (defaultValue != null) {
-            column.setDefaultValue(defaultValue);
+            if(type == Types.BIT) {
+                if (columnSize <= 1) {
+                    // Set boolean true or false, depending on incoming bit value for MySQL case
+                    if(defaultValue.length() == 1) {
+                        int charIntVal = defaultValue.charAt(0);
+                        // Set boolean FALse for incoming 0, TRUE for 1
+                        if(charIntVal==0) {
+                            column.setDefaultValue(Boolean.FALSE.toString());
+                        } else if(charIntVal==1) {
+                            column.setDefaultValue(Boolean.TRUE.toString());
+                        }
+                    } else {
+                        String trimedDefault = defaultValue.trim();
+                        if (defaultValue.startsWith("(") && defaultValue.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
+                            trimedDefault = defaultValue.substring(1, defaultValue.length() - 1);
+                        }
+                        column.setDefaultValue(trimedDefault);
+                    }
+                }
+            } else if (type != Types.BINARY) {
+                //TODO: writing a binary string creates an invalid .xmi
+                column.setDefaultValue(defaultValue);
+            }
         }
         column.setSelectable(true);
         column.setUpdateable(true);
@@ -1325,7 +1347,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
      * @param problems the list if {@link IStatus} into which problems and warnings are to be placed; never null
      * @return the datatype, or null if no such type could be found
      */
-    protected EObject findType( final int jdbcType,
+    protected EObject findType( int jdbcType,
                                 final String typeName,
                                 final int length,
                                 final int precision,
@@ -1334,6 +1356,12 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // If the type is NUMERIC and precision is non-zero, then look at the length of the column ...
         // (assume zero length means the length isn't known)
         EObject result = null;
+        
+        if (jdbcType == Types.BIT && precision > 1) {
+            //BINARY is the closest type,
+            //for mysql a long may also be a valid representation
+            jdbcType = Types.BINARY;
+        }
 
         // First look up by type code ...
         result = findType(jdbcType, problems);
