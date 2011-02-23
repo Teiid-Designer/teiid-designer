@@ -395,7 +395,7 @@ public final class VdbModelEntry extends VdbEntry {
         clean();
         try {
             final Resource model = findModel();
-            if (getVdb().isPreview() && ModelUtil.isPhysical(model)) {
+            if (ModelUtil.isPhysical(model)) {
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
                 final String translator = new ConnectionInfoHelper().getTranslatorName(mr);
                 this.translator.set(translator == null ? EMPTY_STR : translator);
