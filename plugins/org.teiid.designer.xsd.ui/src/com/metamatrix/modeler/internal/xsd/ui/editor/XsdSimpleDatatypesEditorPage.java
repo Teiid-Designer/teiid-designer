@@ -664,7 +664,8 @@ public class XsdSimpleDatatypesEditorPage extends EditorPart implements ModelEdi
                     // if a rename, update the local list:
                     Set changedFeatures = com.metamatrix.modeler.core.notification.util.SourcedNotificationUtilities.getAffectedFeatureIDs(sn,
                                                                                                                                            XSDSimpleTypeDefinition.class);
-                    if (changedFeatures.contains(new Integer(XSDPackage.XSD_SIMPLE_TYPE_DEFINITION__NAME))) {
+                    if (changedFeatures.contains(new Integer(XSDPackage.XSD_SIMPLE_TYPE_DEFINITION__NAME)) ||
+                    		changedFeatures.contains(new Integer(XSDPackage.XSD_SIMPLE_TYPE_DEFINITION__SIMPLE_TYPE)) ) {
                         // was a rename; update the list:
                         safeRefreshLocal();
                     } // endif
