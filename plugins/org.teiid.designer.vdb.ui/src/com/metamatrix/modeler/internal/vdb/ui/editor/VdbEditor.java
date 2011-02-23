@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.vdb.ui.editor;
 
+import static com.metamatrix.modeler.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
 import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
 import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
@@ -41,7 +42,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -56,6 +60,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -78,13 +83,14 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
+import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.ui.NewDataRoleWizard;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -109,8 +115,8 @@ import com.metamatrix.ui.internal.widget.DefaultContentProvider;
 import com.metamatrix.ui.table.CheckBoxColumnProvider;
 import com.metamatrix.ui.table.DefaultTableProvider;
 import com.metamatrix.ui.table.TableAndButtonsGroup;
-import com.metamatrix.ui.table.TextColumnProvider;
 import com.metamatrix.ui.table.TableAndButtonsGroup.RemoveButtonProvider;
+import com.metamatrix.ui.table.TextColumnProvider;
 import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
@@ -290,11 +296,45 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             @Override
             public void setValue( final VdbEntry element,
                                   final Boolean value ) {
-                if (ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_MESSAGE))  {
-                	element.synchronize(new NullProgressMonitor());
-                	
-                	dataRoleResolver.modelSynchronized(element);
-                	VdbEditor.this.doSave(new NullProgressMonitor());
+                IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
+                // set value to true if preferene not found
+                boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
+                                                                                                       : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
+                boolean synchronize = !showWarningDialog;
+
+                if (showWarningDialog) {
+                    MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent()
+                                                                                                        .getActiveShell(),
+                                                                                                 CONFIRM_DIALOG_TITLE,
+                                                                                                 CONFIRM_SYNCHRONIZE_MESSAGE,
+                                                                                                 VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
+                                                                                                 false,
+                                                                                                 null,
+                                                                                                 null);
+                    if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+                        synchronize = true;
+
+                        // save preference
+                        if (dialog.getToggleState()) {
+                            try {
+                                prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
+                                VdbUiPlugin.singleton.getPreferences().flush();
+                            } catch (BackingStoreException e) {
+                                VdbUiConstants.Util.log(e);
+                            }
+                        }
+                    }
+                }
+
+                if (synchronize) {
+                    BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                        @Override
+                        public void run() {
+                            element.synchronize(new NullProgressMonitor());
+                            dataRoleResolver.modelSynchronized(element);
+                            VdbEditor.this.doSave(new NullProgressMonitor());
+                        }
+                    });
                 }
             }
         };
@@ -523,8 +563,20 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 			VdbEditor.CONFIRM_DIALOG_TITLE, INFORM_DATA_ROLES_ON_ADD_MESSAGE);
                 }
                 
+                // indicates if this is the first time models are being added
+                boolean firstTime = (modelsGroup.getTable().getViewer().getTable().getItemCount() == 0);
+                
+                // add the models
                 for (final Object model : models)
                     vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                
+                // refresh table from model
+                modelsGroup.getTable().getViewer().refresh();
+
+                // pack columns if first time a model is added
+                if (firstTime) { 
+                    WidgetUtil.pack(modelsGroup.getTable().getViewer());
+                }
             }
         });
         final RemoveButtonProvider removeButtonProvider = modelsGroup.new RemoveButtonProvider() {
@@ -885,13 +937,48 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                if (!ConfirmationDialog.confirm(CONFIRM_SYNCHRONIZE_ALL_MESSAGE)) return;
-                vdb.synchronize(new NullProgressMonitor());
-                modelsGroup.getTable().getViewer().refresh();
-                otherFilesGroup.getTable().getViewer().refresh();
+                IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
+                boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
+                                                                                                       : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
+                boolean synchronize = !showWarningDialog;
                 
-                dataRoleResolver.allSynchronized();
-                VdbEditor.this.doSave(new NullProgressMonitor());
+                if (showWarningDialog) {
+                    MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent()
+                                                                                                        .getActiveShell(),
+                                                                                                 CONFIRM_DIALOG_TITLE,
+                                                                                                 CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
+                                                                                                 VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
+                                                                                                 false,
+                                                                                                 null,
+                                                                                                 null);
+                    if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+                        synchronize = true;
+
+                        // save if user wants decision remembered
+                        if (dialog.getToggleState()) {
+                            try {
+                                prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
+                                VdbUiPlugin.singleton.getPreferences().flush();
+                            } catch (BackingStoreException e) {
+                                VdbUiConstants.Util.log(e);
+                            }
+                        }
+                    }
+                }
+                
+                if (synchronize) {
+                    BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                        @Override
+                        public void run() {
+                            vdb.synchronize(new NullProgressMonitor());
+                            modelsGroup.getTable().getViewer().refresh();
+                            otherFilesGroup.getTable().getViewer().refresh();
+                            
+                            dataRoleResolver.allSynchronized();
+                            VdbEditor.this.doSave(new NullProgressMonitor());
+                        }
+                    });
+                }
             }
         });
         synchronizeAllButton.setEnabled(!vdb.isSynchronized());
