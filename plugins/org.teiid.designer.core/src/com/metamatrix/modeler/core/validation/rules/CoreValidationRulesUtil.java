@@ -76,10 +76,10 @@ public class CoreValidationRulesUtil {
      * @param invalidCharacterSeverity the severity to use if there are invalid characters; must be
      * one of the {@link IStatus} severity codes.
      */
-    public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] invalidChars, final int invalidCharacterSeverity) {
+    public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] validChars, final int invalidCharacterSeverity) {
         CoreArgCheck.isNotNull(stringToValidate);                
         CoreArgCheck.isNotNull(result);
-        final StringNameValidator validator = new StringNameValidator(invalidChars);
+        final StringNameValidator validator = new StringNameValidator(validChars);
         validateStringNameChars(result, stringToValidate, validator, invalidCharacterSeverity);
     }
     
@@ -113,8 +113,8 @@ public class CoreValidationRulesUtil {
      * @param any invalid characters to check for
      * @param ValidationResult to add problems for
      */
-    public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] invalidChars) {
-        validateStringNameChars(result,stringToValidate,invalidChars,IStatus.ERROR);
+    public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] validChars) {
+        validateStringNameChars(result,stringToValidate,validChars,IStatus.ERROR);
     }
 
 	/**

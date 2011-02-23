@@ -43,17 +43,6 @@ public class RelationalStringNameRule extends StringNameRule {
     /**
      * Construct an instance of RelationalStringNameRule.
      * 
-     * @param invalidChars
-     * @param featureID
-     */
-    public RelationalStringNameRule( char[] invalidChars, // NO_UCD
-                                     int featureID ) { // NO_UCD
-        super(invalidChars, featureID);
-    }
-
-    /**
-     * Construct an instance of RelationalStringNameRule.
-     * 
      * @param featureID
      */
     public RelationalStringNameRule( int featureID ) {
@@ -145,7 +134,7 @@ public class RelationalStringNameRule extends StringNameRule {
 
         if (validateCharacters()) {
 
-        	RelationalStringNameValidator validator = new RelationalStringNameValidator(getInvalidChars(), eObject instanceof Table, restrictChars);
+        	RelationalStringNameValidator validator = new RelationalStringNameValidator(eObject instanceof Table, restrictChars);
         	
             CoreValidationRulesUtil.validateStringNameChars(result, name, validator, status);
         }

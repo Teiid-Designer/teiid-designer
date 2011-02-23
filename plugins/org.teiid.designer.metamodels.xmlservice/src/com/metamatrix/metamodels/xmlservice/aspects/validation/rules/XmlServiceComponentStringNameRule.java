@@ -22,15 +22,6 @@ public class XmlServiceComponentStringNameRule extends StringNameRule {
 
     /**
      * Construct an instance of RelationshipStringNameRule.
-     * @param invalidChars
-     * @param featureID
-     */
-    public XmlServiceComponentStringNameRule(char[] invalidChars, int featureID) {
-        super(invalidChars, featureID);
-    }
-
-    /**
-     * Construct an instance of RelationshipStringNameRule.
      * @param featureID
      */
     public XmlServiceComponentStringNameRule(int featureID) {

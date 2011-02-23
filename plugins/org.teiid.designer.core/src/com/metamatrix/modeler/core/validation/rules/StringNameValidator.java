@@ -7,9 +7,8 @@
  */
 package com.metamatrix.modeler.core.validation.rules;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,9 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
@@ -30,6 +31,7 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 public class StringNameValidator {
 
     public static final char UNDERSCORE_CHARACTER = '_';
+    public static final char[] DEFAULT_VALID_NON_LETTER_OR_DIGIT_CHARS = {UNDERSCORE_CHARACTER};
     public static final char DEFAULT_REPLACEMENT_CHARACTER = UNDERSCORE_CHARACTER;
     public static final int MAXIMUM_LENGTH = Integer.MAX_VALUE;
     public static final int DEFAULT_MAXIMUM_LENGTH = 255;
@@ -41,7 +43,7 @@ public class StringNameValidator {
     private final int minimumLength;
     private final boolean caseSensitive;
     private final char replacementCharacter;
-    private final char[] invalidCharacters;
+    private final char[] validNonLetterOrDigitChars;
 
     /**
      * Construct an instance of StringNameValidator.
@@ -50,16 +52,21 @@ public class StringNameValidator {
                                 final int maxLength,
                                 final boolean caseSensitive,
                                 final char replacementCharacter,
-                                final char[] invalidCharacters ) {
+                                final char[] validNonLetterOrDigitChars ) {
         super();
         this.minimumLength = minLength < 0 ? DEFAULT_MINIMUM_LENGTH : minLength;
         this.maximumLength = maxLength < 0 ? MAXIMUM_LENGTH : maxLength;
         this.caseSensitive = caseSensitive;
         this.replacementCharacter = replacementCharacter;
-        this.invalidCharacters = invalidCharacters;
         if (this.minimumLength > this.maximumLength) {
             final String msg = ModelerCore.Util.getString("StringNameValidator.The_minimum_length_may_not_exceed_the_maximum_length"); //$NON-NLS-1$
             throw new IllegalArgumentException(msg);
+        }
+        if (validNonLetterOrDigitChars == null) {
+        	this.validNonLetterOrDigitChars = DEFAULT_VALID_NON_LETTER_OR_DIGIT_CHARS;
+        } else {
+	        this.validNonLetterOrDigitChars = validNonLetterOrDigitChars;
+	        Arrays.sort(this.validNonLetterOrDigitChars);
         }
     }
 
@@ -73,18 +80,18 @@ public class StringNameValidator {
     /**
      * Construct an instance of StringNameValidator.
      */
-    public StringNameValidator( final char[] invalidCharacters ) {
+    public StringNameValidator( final char[] validNonLetterOrDigitChars ) {
         this(DEFAULT_MINIMUM_LENGTH, DEFAULT_MAXIMUM_LENGTH, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON,
-             DEFAULT_REPLACEMENT_CHARACTER, invalidCharacters);
+             DEFAULT_REPLACEMENT_CHARACTER, validNonLetterOrDigitChars);
     }
 
     /**
      * Construct an instance of StringNameValidator.
      */
     public StringNameValidator( final int maxLength,
-                                final char[] invalidCharacters ) {
+                                final char[] validNonLetterOrDigitChars ) {
         this(DEFAULT_MINIMUM_LENGTH, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER,
-             invalidCharacters);
+        		validNonLetterOrDigitChars);
     }
 
     /**
@@ -92,8 +99,8 @@ public class StringNameValidator {
      */
     public StringNameValidator( final int minLength,
                                 final int maxLength,
-                                final char[] invalidCharacters ) {
-        this(minLength, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER, invalidCharacters);
+                                final char[] validNonLetterOrDigitChars ) {
+        this(minLength, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER, validNonLetterOrDigitChars);
     }
 
     /**
@@ -167,13 +174,6 @@ public class StringNameValidator {
     }
 
     /**
-     * @return
-     */
-    public char[] getInvalidCharacters() {
-        return invalidCharacters;
-    }
-
-    /**
      * Check whether the name length is between {@link #getMinimumLength()} and {@link #getMaximumLength()} (inclusive).
      * 
      * @param name the name to check; may not be null
@@ -209,45 +209,52 @@ public class StringNameValidator {
         CoreArgCheck.isNotNull(name);
 
         // Go through the string and ensure that each character is valid ...
-        CharacterIterator charIter = new StringCharacterIterator(name);
-        char c = charIter.first();
-        int index = 1;
-
-        // The first character must be an alphabetic character ...
-        if (c != CharacterIterator.DONE) {
-            if (!Character.isLetter(c)) {
-                final Object[] params = new Object[] {new Character(c)};
-                final String msg = ModelerCore.Util.getString("StringNameValidator.The_first_character_of_the_name_({0})_must_be_an_alphabetic_character", params); //$NON-NLS-1$
-                return msg;
-            }
-            if (!isValidCharacter(c)) {
-                final Object[] params = new Object[] {new Character(c)};
-                final String msg = ModelerCore.Util.getString("StringNameValidator.The_first_character_of_the_name_({0})_is_not_a_valid_character", params); //$NON-NLS-1$
-                return msg;
-            }
-            c = charIter.next();
-            ++index;
+        
+        int length = name.length();
+        
+        if (length == 0) {
+        	return null;
         }
+        
+        char c = name.charAt(0);
 
-        // The remaining characters must be either alphabetic, digit or underscore character ...
-        while (c != CharacterIterator.DONE) {
-            if (!(Character.isUnicodeIdentifierPart(c) || Character.isLetterOrDigit(c) || isValidNonLetterOrDigit(c))) {
-                final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
-                final String msg = ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
-                return msg;
+        String msg = isValidInitialChar(c);
+        
+        if (msg != null) {
+        	return msg;
+        }
+        
+        for (int index = 1; index < length; index++) {
+        	c = name.charAt(index);
+            msg = isValidChar(c, index);
+            if (msg != null) {
+            	return msg;
             }
-            if (!isValidCharacter(c)) {
-                final Object[] params = new Object[] {new Character(c), new Integer(index)};
-                final String msg = ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_a_valid_character", params); //$NON-NLS-1$
-                return msg;
-            }
-            c = charIter.next();
-            ++index;
         }
 
         // Valid, so return no error message
         return null;
     }
+
+	protected String isValidChar(char c, int index) {
+		if ( isValidInitialChar(c) != null ) {
+			if (!Character.isDigit(c) && !isValidNonLetterOrDigit(c) ) {
+			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
+			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
+			} 
+		} 
+		return null;
+	}
+    
+    protected String isValidInitialChar(char c) {
+    	if (!Character.isLetter(c)) {
+            final Object[] params = new Object[] {new Character(c)};
+            final String msg = ModelerCore.Util.getString("StringNameValidator.The_first_character_of_the_name_({0})_must_be_an_alphabetic_character", params); //$NON-NLS-1$
+            return msg;
+        }
+        return null;
+    }
+    
     
     /**
      * Allows additional non-letter or non-digit characters to be valid. Subclasses should override this method to add
@@ -256,60 +263,11 @@ public class StringNameValidator {
      * @return true if valid character
      */
     public boolean isValidNonLetterOrDigit(char c) {
-    	return c == UNDERSCORE_CHARACTER;
+    	return Arrays.binarySearch(validNonLetterOrDigitChars, c) >= 0;
     }
     
     public String getValidNonLetterOrDigitMessageSuffix() {
     	return ModelerCore.Util.getString("StringNameValidator.or_other_valid_characters"); //$NON-NLS-1$
-    }
-
-    /**
-     * Check whether any characters in the supplied name are in the invalid char list. This method checks ONLY the invalid
-     * character list.
-     * 
-     * @param name the name to be checked; may not be null
-     * @return a message stating what is wrong with the name, or null if the name is considered valid
-     */
-    public String checkInvalidCharacters( final String name ) {
-        CoreArgCheck.isNotNull(name);
-
-        // Go through the string and ensure that each character is valid ...
-        CharacterIterator charIter = new StringCharacterIterator(name);
-        char c = charIter.first();
-        int index = 1;
-
-        // The characters must not be in the invalid char list
-        while (c != CharacterIterator.DONE) {
-            if (!isValidCharacter(c)) {
-                final Object[] params = new Object[] {new Character(c), new Integer(index)};
-                final String msg = ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_a_valid_character", params); //$NON-NLS-1$
-                return msg;
-            }
-            c = charIter.next();
-            ++index;
-        }
-
-        // Valid, so return no error message
-        return null;
-    }
-
-    /**
-     * Helper method
-     * 
-     * @param c
-     * @param setOfCharacters
-     * @return
-     */
-    protected boolean isValidCharacter( final char c ) {
-        if (this.getInvalidCharacters() == null) {
-            return true;
-        }
-        for (int i = 0; i < this.getInvalidCharacters().length; i++) {
-            if (this.getInvalidCharacters()[i] == c) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -579,61 +537,84 @@ public class StringNameValidator {
     public String createValidName( final String name,
                                    final boolean performValidityCheck ) {
         CoreArgCheck.isNotNull(name);
-        if (performValidityCheck) {
-            // Check whether the name is valid ...
-            if (isValidName(name)) {
-                // It is valid ...
-                return null;
-            }
-        }
 
         // Otherwise, the name is presumed to be invalid ...
-        StringBuffer newName = new StringBuffer(name);
+        StringBuffer newName = new StringBuffer(name.length());
         boolean changed = false;
-        int length = newName.length();
-        final int maxLength = getMaximumLength();
+        int initLength = name.length();
+        final int maxLength = Math.min(initLength, getMaximumLength());
 
-        // Check for invalid characters ...
-        int index = 0;
-        while (index < length) {
-            char c = newName.charAt(index);
-            // Remove all whitespace or any non-alphanumeric that is the first character
-            if (index == 0) {
-                if (!Character.isLetter(c) || !isValidCharacter(c)) {
-                    newName.deleteCharAt(index);
-                    --length;
-                    changed = true;
-                } else {
-                    ++index;
-                }
-            } else {
-                // Check the max length and truncate if needed ...
-                if (maxLength > 0 && length > maxLength) {
-                    length = maxLength;
-                    newName = new StringBuffer(newName.substring(0, maxLength));
-                    changed = true;
-                }
-
-                // Change all other illegal characters to an underscore
-                if (!(Character.isLetterOrDigit(c) || c == UNDERSCORE_CHARACTER) || !isValidCharacter(c)) {
-                    // Character is invalid, so replace it ...
-                    newName.setCharAt(index, this.getReplacementCharacter());
-                    ++index;
-                    changed = true;
-                } else {
-                    // Character is valid, so just continue ...
-                    ++index;
-                }
-            }
+        int actualLength = 0;
+        if (initLength > 0) {
+	        // Go through the string and ensure that each character is valid ...
+	        boolean foundInitialChar = false;
+	        int index = 0;
+	        for( char nextChar : name.toCharArray()) {
+	        	index++;
+	        	if( !foundInitialChar ) {
+		        	String msg = isValidInitialChar(nextChar);
+		            
+		    	    if (msg == null) {
+		    	    	foundInitialChar = true;
+		    	    	changed = true;
+		    	    	actualLength++;
+		        		newName.append(nextChar);
+		        	} else {
+		        		changed = true;
+		        	}
+	        	} else {
+	        		if( actualLength < maxLength ) {
+	                    String msg = isValidChar(nextChar, index);
+	                    if (msg != null) {
+	               	    	changed = true;
+	               	    	actualLength++;
+	                    	newName.append(this.getReplacementCharacter());
+	                    } else {
+	                    	actualLength++;
+	                    	newName.append(nextChar);
+	                    }
+	        		} else {
+	        			break;
+	        		}
+	        	}
+	        }
         }
+        
+        
+//        if (length > 0) {
+//        	char c = name.charAt(0);
+//
+//	        String msg = isValidInitialChar(c);
+//        
+//    	    if (msg != null) {
+//    	    	changed = true;
+//        		newName.setCharAt(0, this.getReplacementCharacter());
+//        	}
+//    	    for (int index = 1; index < maxLength; index++) {
+//            	c = name.charAt(index);
+//                msg = isValidChar(c, index);
+//                if (msg != null) {
+//           	    	changed = true;
+//                	newName.setCharAt(index, this.getReplacementCharacter());
+//                }
+//            }
+//        }
+
+        while (newName.length() < getMinimumLength()) {
+            changed = true;
+        	newName.append(this.getReplacementCharacter());
+        }
+        
+        if (newName.length() > maxLength) {
+        	changed = true;
+        	newName.delete(maxLength, newName.length());
+        }
+        
         if (changed) {
-            // Ensure new name not empty
-            if (newName.length() == 0) {
-                newName.append('x');
-            }
-            // Return the new name ...
-            return newName.toString();
+        	return newName.toString();
         }
+
+        // Valid, so return no error message
         return null;
     }
 

@@ -35,9 +35,7 @@ import com.metamatrix.modeler.core.validation.rules.StringLengthRule;
  */
 public abstract class RelationalEntityAspect extends AbstractValidationAspect {
 	
-	private static char[] INVALID_CHARS = {'\'', '\"', '(', ')', '{', '}', '[', ']', '\\', '/', '|', '^', '?'};
-
-	public static final RelationalStringNameRule NAME_RULE = new RelationalStringNameRule(INVALID_CHARS, RelationalPackage.RELATIONAL_ENTITY__NAME);
+	public static final RelationalStringNameRule NAME_RULE = new RelationalStringNameRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
 	public static final ValidationRule LENGTH_RULE = new StringLengthRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
 	public static final ValidationRule TABLE_UPDATABILITY_RULE = new TableChildrenUpdatabilityRule();
 	public static final ValidationRule MISSING_COLUMN_LENGTH_RULE = new MissingColumnLengthRule();

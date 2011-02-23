@@ -24,17 +24,6 @@ public class RelationshipStringNameRule extends StringNameRule {
     /**
      * Construct an instance of RelationshipStringNameRule.
      * 
-     * @param invalidChars
-     * @param featureID
-     */
-    public RelationshipStringNameRule( char[] invalidChars, // NO_UCD
-                                       int featureID ) { // NO_UCD
-        super(invalidChars, featureID);
-    }
-
-    /**
-     * Construct an instance of RelationshipStringNameRule.
-     * 
      * @param featureID
      */
     public RelationshipStringNameRule( int featureID ) {

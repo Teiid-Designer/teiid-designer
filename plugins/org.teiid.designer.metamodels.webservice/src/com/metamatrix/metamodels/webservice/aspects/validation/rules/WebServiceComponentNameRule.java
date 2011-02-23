@@ -50,16 +50,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelFileUtil;
 public class WebServiceComponentNameRule extends StringNameRule {
 
     /**
-     * @param invalidChars
-     * @param featureID
-     * @since 4.2
-     */
-    public WebServiceComponentNameRule( final char[] invalidChars, // NO_UCD
-                                        final int featureID ) {
-        super(invalidChars, featureID);
-    }
-
-    /**
      * @param featureID
      * @since 4.2
      */

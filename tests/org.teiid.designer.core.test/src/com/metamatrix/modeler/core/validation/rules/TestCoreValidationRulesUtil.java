@@ -126,8 +126,7 @@ public class TestCoreValidationRulesUtil extends TestCase {
 
     public void testValidateStringName4() {
         ValidationResult result = helpCreateValidationResult();
-        char[] invalidChars = {'s'};
-        CoreValidationRulesUtil.validateStringNameChars(result, "sdfksdbfkj", invalidChars); //$NON-NLS-1$
+        CoreValidationRulesUtil.validateStringNameChars(result, "sdfks$bfkj", null); //$NON-NLS-1$
         assertTrue(result.hasProblems());
     }
     
@@ -141,15 +140,13 @@ public class TestCoreValidationRulesUtil extends TestCase {
         assertEquals("s__dfksdbfkj", validString); //$NON-NLS-1$
     }
 
-    public void testGetValidString3() {
-        char[] invalidChars = {'s'};        
-        String validString = CoreValidationRulesUtil.getValidString("s@#dfksdbfkj", invalidChars, 50); //$NON-NLS-1$
+    public void testGetValidString3() {    
+        String validString = CoreValidationRulesUtil.getValidString("4@#dfk#dbfkj", null, 50); //$NON-NLS-1$
         assertEquals("dfk_dbfkj", validString); //$NON-NLS-1$
     }
 
-    public void testGetValidString4() {
-        char[] invalidChars = {'s'};        
-        String validString = CoreValidationRulesUtil.getValidString("s@#dfksdbfkj", invalidChars, 5); //$NON-NLS-1$
+    public void testGetValidString4() {    
+        String validString = CoreValidationRulesUtil.getValidString("4@#dfk#dbfkj", null, 5); //$NON-NLS-1$
         assertEquals("dfk_d", validString); //$NON-NLS-1$
     }
 

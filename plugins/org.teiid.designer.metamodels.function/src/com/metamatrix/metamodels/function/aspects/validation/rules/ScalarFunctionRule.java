@@ -98,8 +98,8 @@ public class ScalarFunctionRule implements ObjectValidationRule {
     private void validateName(ScalarFunction sFunction, ValidationResult result) {
         // Get the name ...
         final String name = sFunction.getName();
-        final char[] invalidChars = null;
-        CoreValidationRulesUtil.validateStringNameChars(result, name, invalidChars);
+        final char[] validChars = null;
+        CoreValidationRulesUtil.validateStringNameChars(result, name, validChars);
     }
 
     private final void validateReturnParameter(ReturnParameter rParam, ValidationResult result) {

@@ -425,7 +425,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
                 break;
 
             case (STATUS_BAD_FILENAME):
-                updateStatus(Util.getString("NewModelWizard.illegalFileName") + '\n' + fileNameMessage); //$NON-NLS-1$
+                updateStatus(Util.getString("NewModelWizard.illegalFileName") + ' ' + fileNameMessage); //$NON-NLS-1$
                 break;
 
             case (STATUS_FILE_EXISTS):

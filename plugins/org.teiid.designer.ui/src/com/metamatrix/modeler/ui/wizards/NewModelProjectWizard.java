@@ -68,7 +68,7 @@ implements UiConstants {
         	String projName = ((WizardNewProjectCreationPage)mainPage).getProjectName();
             final ValidationResultImpl result = new ValidationResultImpl(projName);
             // Prevent usage of this list of chars in project names
-            checkInvalidChars(result, projName, UiConstants.NamingAttributes.INVALID_PROJECT_CHARS);
+            checkInvalidChars(result, projName, UiConstants.NamingAttributes.VALID_PROJECT_CHARS);
             if (result.hasProblems()) {
             	String eMsg = Util.getString("NewModelProjectWizard.namingError.msg") + '\n' + //$NON-NLS-1$
             	              result.getProblems()[0].getMessage();
@@ -137,11 +137,11 @@ implements UiConstants {
 
     }
 
-    private void checkInvalidChars(final ValidationResult result,final String stringToValidate, final char[] invalidChars) {
+    private void checkInvalidChars(final ValidationResult result,final String stringToValidate, final char[] validChars) {
         CoreArgCheck.isNotNull(stringToValidate);                
         CoreArgCheck.isNotNull(result);
-        final StringNameValidator validator = new StringNameValidator(invalidChars);
-        final String reasonInvalid = validator.checkInvalidCharacters(stringToValidate);
+        final StringNameValidator validator = new StringNameValidator(validChars);
+        final String reasonInvalid = validator.checkValidName(stringToValidate);
         if ( reasonInvalid != null ) {
             // create validation problem and addit to the resuly
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reasonInvalid);

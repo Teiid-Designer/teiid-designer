@@ -121,7 +121,7 @@ public class TestStringNameValidator extends TestCase {
     // =========================================================================
 
     protected void helpCheckValidator(final StringNameValidator v, int min, int max, boolean caseSensitive,
-                                      char replacementChar, char[] illegalChars) {
+                                      char replacementChar) {
         if ( min < 0 ) {
             min = StringNameValidator.DEFAULT_MINIMUM_LENGTH;
         }
@@ -132,7 +132,6 @@ public class TestStringNameValidator extends TestCase {
 		assertEquals(max, v.getMaximumLength());
 		assertEquals(caseSensitive, v.isCaseSensitive());
         assertEquals(replacementChar,v.getReplacementCharacter());
-        assertEquals(illegalChars, v.getInvalidCharacters());
     }
 
     // =========================================================================
@@ -151,9 +150,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 10;
         final boolean caseSensitive = true;
         final char replacementChar = REPLACEMENT_CHAR;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -164,9 +162,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 10;
         final boolean caseSensitive = true;
         final char replacementChar = REPLACEMENT_CHAR;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -177,9 +174,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = -10;
         final boolean caseSensitive = true;
         final char replacementChar = REPLACEMENT_CHAR;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -190,9 +186,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 10;
         final boolean caseSensitive = false;
         final char replacementChar = REPLACEMENT_CHAR;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -203,9 +198,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 10;
         final boolean caseSensitive = false;
         final char replacementChar = 'C';
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -216,9 +210,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = StringNameValidator.DEFAULT_MAXIMUM_LENGTH;
         final boolean caseSensitive = !StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = null;
-        final StringNameValidator v = new StringNameValidator(caseSensitive);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -229,9 +222,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = StringNameValidator.DEFAULT_MAXIMUM_LENGTH;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -242,9 +234,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(max,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(max);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -255,9 +246,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = ILLEGAL_CHARS;
-        final StringNameValidator v = new StringNameValidator(min,max,illegalChars);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        final StringNameValidator v = new StringNameValidator(min,max);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -268,9 +258,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = !StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = 'C';
-        final char[] illegalChars = null;
         final StringNameValidator v = new StringNameValidator(min,max,caseSensitive,replacementChar);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -281,9 +270,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = !StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = null;
         final StringNameValidator v = new StringNameValidator(min,max,caseSensitive);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -294,9 +282,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = null;
         final StringNameValidator v = new StringNameValidator(min,max);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -307,9 +294,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = 50;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = null;
         final StringNameValidator v = new StringNameValidator(max);
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     /*
@@ -320,9 +306,8 @@ public class TestStringNameValidator extends TestCase {
         final int max = StringNameValidator.DEFAULT_MAXIMUM_LENGTH;
         final boolean caseSensitive = StringNameValidator.DEFAULT_CASE_SENSITIVE_NAME_COMPARISON;
         final char replacementChar = StringNameValidator.DEFAULT_REPLACEMENT_CHARACTER;
-        final char[] illegalChars = null;
         final StringNameValidator v = new StringNameValidator();
-        helpCheckValidator(v,min,max,caseSensitive,replacementChar,illegalChars);
+        helpCheckValidator(v,min,max,caseSensitive,replacementChar);
     }
 
     public void testCheckNameLengthWithTooShort() {
@@ -379,19 +364,6 @@ public class TestStringNameValidator extends TestCase {
         assertNull(reason);
     }
 
-    public void testIsValidCharacter() {
-        for (int i = 0; i < ILLEGAL_CHARS.length; ++i) {
-            char c = ILLEGAL_CHARS[i];
-            assertEquals(false, this.invalidCharValidator.isValidCharacter(c));
-			assertEquals(true, this.defaultValidator.isValidCharacter(c));
-        }
-        for (int i = 0; i < VALID_CHARS.length; ++i) {
-            char c = VALID_CHARS[i];
-            assertEquals(true, this.invalidCharValidator.isValidCharacter(c));
-			assertEquals(true, this.defaultValidator.isValidCharacter(c));
-        }
-    }
-
     public void testIsValidName1() {
         assertEquals(true, this.defaultValidator.isValidName(NAME_WITH_VALID_CHARACTERS));
 		assertEquals(false, this.invalidCharValidator.isValidName(NAME_WITH_VALID_CHARACTERS));
@@ -427,7 +399,7 @@ public class TestStringNameValidator extends TestCase {
      */
     public void testCreateValidNameStringWithValidName() {
         final String newName = this.defaultValidator.createValidName(NAME_WITH_VALID_CHARACTERS);
-        assertNull(newName);
+        assertEquals(NAME_WITH_VALID_CHARACTERS, newName);
     }
     public void testCreateValidNameStringWithInvalidName() {
         final String newName = this.defaultValidator.createValidName(NAME_WITH_INVALID_CHARACTERS);
@@ -445,50 +417,25 @@ public class TestStringNameValidator extends TestCase {
      * Expected behavior is that the message string is not null - there is an error
      */
     public void testCheckStringInvalidCharOnly() {
-    	char[] INVALID_PROJECT_CHARS = {'[',']','{','}','%','#','&','$','+',',',';','=','@','!','~','^'};
-        StringNameValidator invalidCharOnlyValidator = new StringNameValidator(INVALID_PROJECT_CHARS);
+        StringNameValidator invalidCharOnlyValidator = new StringNameValidator();
 
         // Test string
-        String msg = invalidCharOnlyValidator.checkInvalidCharacters("Test&1"); //$NON-NLS-1$
+        String msg = invalidCharOnlyValidator.checkValidName("Test&1"); //$NON-NLS-1$
         assertNotNull(msg);
 
         // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("Test = Me"); //$NON-NLS-1$
+        msg = invalidCharOnlyValidator.checkValidName("Test = Me"); //$NON-NLS-1$
         assertNotNull(msg);
 
         // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("& Another #"); //$NON-NLS-1$
+        msg = invalidCharOnlyValidator.checkValidName("& Another #"); //$NON-NLS-1$
         assertNotNull(msg);
 
         // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("1 + 2 = 3"); //$NON-NLS-1$
+        msg = invalidCharOnlyValidator.checkValidName("1 + 2 = 3"); //$NON-NLS-1$
         assertNotNull(msg);
     }
 
-    /*
-     * Test method that checks against invalid char string only.  This method supplies some valid Strings.
-     * Expected behavior is that the message string is null - there is no error
-     */
-    public void testCheckStringInvalidCharOnly2() {
-    	char[] INVALID_PROJECT_CHARS = {'[',']','{','}','%','#','&','$','+',',',';','=','@','!','~','^'};
-        StringNameValidator invalidCharOnlyValidator = new StringNameValidator(INVALID_PROJECT_CHARS);
-
-        // Test string
-        String msg = invalidCharOnlyValidator.checkInvalidCharacters("Test Me"); //$NON-NLS-1$
-        assertNull(msg);
-
-        // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("Test_Me"); //$NON-NLS-1$
-        assertNull(msg);
-
-        // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("Another - Test"); //$NON-NLS-1$
-        assertNull(msg);
-
-        // Test string
-        msg = invalidCharOnlyValidator.checkInvalidCharacters("_Still_1checking1"); //$NON-NLS-1$
-        assertNull(msg);
-    }
 
     /*
      * Test for String createValidName(String, boolean)

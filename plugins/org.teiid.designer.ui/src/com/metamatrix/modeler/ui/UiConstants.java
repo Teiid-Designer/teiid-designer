@@ -348,6 +348,6 @@ public interface UiConstants {
 
     interface NamingAttributes {
         // List of invalid characters for project naming
-        char[] INVALID_PROJECT_CHARS = {'[', ']', '{', '}', '%', '#', '&', '$', '+', ',', ';', '=', '@', '!', '~', '^'};
+        char[] VALID_PROJECT_CHARS = {'-', '_'};
     }
 }

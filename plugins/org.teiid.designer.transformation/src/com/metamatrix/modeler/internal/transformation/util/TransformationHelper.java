@@ -1098,7 +1098,10 @@ public class TransformationHelper implements SqlConstants {
         	StringBuffer sb = new StringBuffer(rawString.length());
         	sb.append('"');
         	for( char nextChar : rawString.toCharArray() ) {
-        		if( nextChar != '.') {
+        		if (nextChar == '"') {
+        			sb.append(nextChar);
+        			sb.append(nextChar);
+        		} else if( nextChar != '.') {
         			sb.append(nextChar);
         		} else {
         			sb.append('"').append('.').append('"');

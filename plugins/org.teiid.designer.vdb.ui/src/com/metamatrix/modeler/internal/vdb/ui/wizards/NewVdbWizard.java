@@ -96,8 +96,7 @@ public final class NewVdbWizard extends AbstractWizard
     private static final String NOT_MODEL_PROJECT_MSG = getString("notModelProjectMessage"); //$NON-NLS-1$
     private static final String SELECT_FOLDER_MESSAGE = getString("selectFolderMessage"); //$NON-NLS-1$
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                                     StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
-                                                                                     new char[] {'\''});
+                                                                                     StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 
     private static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);

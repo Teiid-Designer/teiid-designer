@@ -575,9 +575,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     private String checkValidName( String name ) {
         if (dataSourceNameValidator == null) {
             dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@',
-                                                                  '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}',
-                                                                  '=', '|', '!', '<', '>', '?', '\''});
+                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
         }
         return dataSourceNameValidator.checkValidName(name);
     }
@@ -585,9 +583,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     private boolean isValidName( String name ) {
         if (dataSourceNameValidator == null) {
             dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH, new char[] {';', '@',
-                                                                  '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}',
-                                                                  '=', '|', '!', '<', '>', '?', '\''});
+                                                              StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
         }
         return dataSourceNameValidator.isValidName(name);
     }
@@ -661,14 +657,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     
     class DataSourceNameValidator extends StringNameValidator {
 
-		public DataSourceNameValidator(int minLength, int maxLength,char[] invalidCharacters) {
-			super(minLength, maxLength,invalidCharacters);
-		}
-
-		@Override
-		public boolean isValidNonLetterOrDigit(char c) {
-	        if( c == UNDERSCORE_CHARACTER || c == '-' || c == '.') return true;
-	        return false;
+		public DataSourceNameValidator(int minLength, int maxLength) {
+			super(minLength, maxLength, new char[] {UNDERSCORE_CHARACTER, '-', '.'});
 		}
 
 		@Override

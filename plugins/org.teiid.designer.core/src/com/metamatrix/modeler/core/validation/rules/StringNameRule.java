@@ -25,7 +25,7 @@ import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
 public class StringNameRule implements StructuralFeatureValidationRule {
 
     // maximum allowed length for the entity
-    private char[] invalidChars;
+    private char[] validChars;
 
     // id of the feature being validated
     private final int featureID;
@@ -36,10 +36,10 @@ public class StringNameRule implements StructuralFeatureValidationRule {
      * @param maxStringLength Maximum length allowed for the entity
      * @param featureID ID of the feature to validate
      */
-    public StringNameRule( char[] invalidChars,
+    public StringNameRule( char[] validChars,
                            int featureID ) {
-        CoreArgCheck.isNotNull(invalidChars);
-        this.invalidChars = invalidChars;
+        CoreArgCheck.isNotNull(validChars);
+        this.validChars = validChars;
         this.featureID = featureID;
     }
 
@@ -75,7 +75,7 @@ public class StringNameRule implements StructuralFeatureValidationRule {
         final String name = (String)value;
         ValidationResult result = new ValidationResultImpl(eObject);
         if (validateCharacters()) {
-            CoreValidationRulesUtil.validateStringNameChars(result, name, this.invalidChars, getInvalidCharactersSeverityCode());
+            CoreValidationRulesUtil.validateStringNameChars(result, name, this.validChars, getInvalidCharactersSeverityCode());
         }
         // add the result to the context
         context.addResult(result);
@@ -111,10 +111,6 @@ public class StringNameRule implements StructuralFeatureValidationRule {
         return IStatus.ERROR;
     }
     
-    protected char[] getInvalidChars() {
-    	return this.invalidChars;
-    }
-
     /**
      * @return Returns the featureID.
      * @since 4.2
