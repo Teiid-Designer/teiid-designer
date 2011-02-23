@@ -10,7 +10,9 @@ package com.metamatrix.ui.internal.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -55,7 +57,22 @@ public class Dialog extends org.eclipse.jface.dialogs.Dialog {
         if ((widthPercentage >= 1) && (widthPercentage <= 100) && (heightPercentage >= 1) &&
         		(heightPercentage <= 100)) {
             Shell shell = getShell();
-            Rectangle bounds = shell.getDisplay().getClientArea();
+            Point point = shell.getDisplay().getCursorLocation();
+            Monitor currentMonitor = null;
+            
+            for (Monitor monitor : shell.getDisplay().getMonitors()) {
+                if (monitor.getClientArea().contains(point)) {
+                    currentMonitor = monitor;
+                    break;
+                }
+            }
+            
+            // shouldn't happen but just in case
+            if (currentMonitor == null) {
+                currentMonitor = shell.getDisplay().getPrimaryMonitor();
+            }
+
+            Rectangle bounds = currentMonitor.getClientArea();
 			int scaledWidth = (bounds.width * widthPercentage / 100);
 			int scaledHeight = (bounds.height * heightPercentage / 100);
             shell.setSize(scaledWidth, scaledHeight);
