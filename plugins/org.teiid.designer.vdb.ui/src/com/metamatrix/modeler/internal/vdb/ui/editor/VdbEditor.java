@@ -1122,6 +1122,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             || MODEL_JNDI_NAME.equals(property)) {
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
+            modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
         }
         boolean syncChanged = false;
         for(VdbEntry entry : vdb.getEntries() ) {
