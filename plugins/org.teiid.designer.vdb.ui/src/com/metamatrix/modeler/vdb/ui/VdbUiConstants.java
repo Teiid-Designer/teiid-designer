@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.vdb.ui;
 
 import java.util.ResourceBundle;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.UiConstants;
@@ -67,7 +68,6 @@ public interface VdbUiConstants {
     interface Extensions {
         String VDB_EDITOR_ID = "com.metamatrix.modeler.internal.vdb.ui.editor.vdbEditor"; //$NON-NLS-1$
         String PROBLEMS_TAB_ID = Util.getString("VdbEditorProblemPage.title"); //$NON-NLS-1$
-        String WEB_SERVICES_TAB_ID = Util.getString("VdbEditorWsdlPage.title"); //$NON-NLS-1$
     }
 
     /**

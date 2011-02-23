@@ -10,11 +10,8 @@ package com.metamatrix.modeler.dqp.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -26,6 +23,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
@@ -82,9 +80,6 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     // Resource bundle.
     private ResourceBundle resourceBundle;
 
-    // The Vdb Editor Util instance for this plugin
-    private IVdbEditorUtil vdbEditorUtil;
-
     /**
      * The constructor.
      */
@@ -134,44 +129,6 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
      */
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-    public IVdbEditorUtil getVdbEditorUtil() {
-        if (vdbEditorUtil == null) {
-
-            // look for any extensions to VdbEditorUtil
-
-            IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(PLUGIN_ID,
-                                                                                               ExtensionPoints.VdbEditorUtil.ID);
-
-            // get the all extensions to the MappingClassStrategies extension point
-            IExtension[] extensions = extensionPoint.getExtensions();
-
-            // if there is an extension, use it
-            if (extensions.length > 0) {
-                IConfigurationElement[] elements = extensions[0].getConfigurationElements();
-                Object extension = null;
-                for (IConfigurationElement element : elements) {
-                    try {
-
-                        extension = element.createExecutableExtension(ExtensionPoints.VdbEditorUtil.CLASSNAME);
-
-                        if (extension instanceof IVdbEditorUtil) {
-                            this.vdbEditorUtil = (IVdbEditorUtil)extension;
-                        }
-                    } catch (Exception theException) {
-                        UTIL.log(theException);
-                    }
-                }
-            }
-
-            // if no extension was found, implement the default
-            if (vdbEditorUtil == null) {
-                vdbEditorUtil = new DefaultVdbEditorUtil();
-            }
-
-        }
-        return vdbEditorUtil;
     }
 
     /**

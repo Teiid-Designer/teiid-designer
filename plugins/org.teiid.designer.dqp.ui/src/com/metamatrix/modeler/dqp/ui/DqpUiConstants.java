@@ -53,16 +53,6 @@ public interface DqpUiConstants {
      * import types
      */
 
-    interface ExtensionPoints {
-
-        interface VdbEditorUtil {
-            String ID = "vdbEditorUtil"; //$NON-NLS-1$;
-            String INSTANCE_ELEMENT = "instance"; //$NON-NLS-1$;
-            String CLASSNAME = "classname"; //$NON-NLS-1$;
-        }
-
-    }
-
     interface Extensions {
         String XML_DOC_SQL_RESULTS_VIEW = /*EXT_PREFIX + DOT + */"xmlDocumentSqlResultsView"; //$NON-NLS-1$
 
