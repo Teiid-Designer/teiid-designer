@@ -355,7 +355,7 @@ public abstract class ModelObjectUtilities {
         if (TransformationHelper.isSqlTable(eObject) || TransformationHelper.isXmlDocument(eObject)) {
             StringBuffer executeSQL = new StringBuffer();
             executeSQL.append("select * from "); //$NON-NLS-1$
-            executeSQL.append(TransformationHelper.getSqlEObjectFullName(eObject));
+            executeSQL.append(TransformationHelper.getDoubleQuotedSqlEObjectFullName(eObject));
 
             if (accessPatternColumns != null && !accessPatternColumns.isEmpty()) {
                 executeSQL.append(" where "); //$NON-NLS-1$
@@ -364,7 +364,7 @@ public abstract class ModelObjectUtilities {
                     EObject column = (EObject)accessPatternColumns.get(i);
 
                     // add SQL for column
-                    executeSQL.append(TransformationHelper.getSqlEObjectFullName(column));
+                    executeSQL.append(TransformationHelper.getDoubleQuotedSqlEObjectFullName(column));
                     executeSQL.append((params[i] == null) ? " IS NULL" : " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
 
                     if ((i + 1) < size) {
@@ -375,7 +375,7 @@ public abstract class ModelObjectUtilities {
             return executeSQL.toString();
         } else if (TransformationHelper.isSqlProcedure(eObject)) {
             StringBuilder sb = new StringBuilder();
-            sb.append("select * from ( exec ").append(TransformationHelper.getSqlEObjectFullName(eObject)).append("("); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("select * from ( exec ").append(TransformationHelper.getDoubleQuotedSqlEObjectFullName(eObject)).append("("); //$NON-NLS-1$ //$NON-NLS-2$
             if (params != null && params.length > 0) {
                 for (int i = 0; i < params.length - 1; i++) {
                     sb.append("?,"); //$NON-NLS-1$

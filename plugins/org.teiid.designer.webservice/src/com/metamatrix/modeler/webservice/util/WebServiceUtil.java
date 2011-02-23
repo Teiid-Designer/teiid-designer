@@ -181,9 +181,24 @@ public class WebServiceUtil {
     public static String getSql(Operation operation,
                                 List<String> paramValues) {
         StringBuffer sql = new StringBuffer("EXEC "); //$NON-NLS-1$
-        String fullName = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(operation).toString();
-        fullName = fullName.replace('/', '.');
-        sql.append(fullName);
+        String rawFullName = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(operation).toString();
+        rawFullName = rawFullName.replace('/', '.');
+        
+        // Wrap segments in double-quotes
+        
+        StringBuffer sb = new StringBuffer(rawFullName.length());
+    	sb.append('"');
+    	for( char nextChar : rawFullName.toCharArray() ) {
+    		if( nextChar != '.') {
+    			sb.append(nextChar);
+    		} else {
+    			sb.append('"').append('.').append('"');
+    		}
+    	}
+    	sb.append('"');
+        String dquotedName = sb.toString();
+        
+        sql.append(dquotedName);
         if (!paramValues.isEmpty()) {
         	sql.append("('"); //$NON-NLS-1$
         	sql.append(generateRequestDocument(operation, paramValues));

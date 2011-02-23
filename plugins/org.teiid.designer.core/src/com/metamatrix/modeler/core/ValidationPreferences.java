@@ -26,7 +26,12 @@ public interface ValidationPreferences {
     String CORE_STRING_FUNCTIONS_ONE_BASED = "corePreferences.stringFunctionsAreOneBased"; //$NON-NLS-1$
     
     /**
-     * Preference name for table missing same nameInSource rule.
+     * Preference name for Name character restriction (RelationalStringNameRule) rule.
+     */
+    String RELATIONAL_NAME_CHARACTER_RESTRICTION = "relationalPreferences.nameCharacterRestriction"; //$NON-NLS-1$
+    
+    /**
+     * Preference name for table missing nameInSource rule.
      */
     String RELATIONAL_TABLE_MISSING_NAME_IN_SOURCE = "relationalPreferences.missingNameInSource"; //$NON-NLS-1$
 

@@ -1069,7 +1069,7 @@ public class TransformationHelper implements SqlConstants {
     }
 
     /**
-     * Get the name the supplied object sql eobject.
+     * Get the name the supplied object SQL EObject.
      * 
      * @param object the supplied Object
      * @return the name
@@ -1082,9 +1082,36 @@ public class TransformationHelper implements SqlConstants {
         }
         return returnString;
     }
+    
+    /**
+     * Returns a string representing the full path name of an EObject but with each segment double-quoted.
+     * This is required for SQL where name contains special character.
+     * 
+     * @param eObject
+     * @return the double-quoted string name
+     */
+    public static String getDoubleQuotedSqlEObjectFullName(EObject eObject) {
+        String returnString = "NULL"; //$NON-NLS-1$
+        SqlAspect aspect = AspectManager.getSqlAspect(eObject);
+        if (aspect != null) {
+        	String rawString = aspect.getFullName(eObject);
+        	StringBuffer sb = new StringBuffer(rawString.length());
+        	sb.append('"');
+        	for( char nextChar : rawString.toCharArray() ) {
+        		if( nextChar != '.') {
+        			sb.append(nextChar);
+        		} else {
+        			sb.append('"').append('.').append('"');
+        		}
+        	}
+        	sb.append('"');
+            returnString = sb.toString();
+        }
+        return returnString;
+    }
 
     /**
-     * Get the name the supplied object sql eobject.
+     * Get the name the supplied object SQL EObject.
      * 
      * @param object the supplied Object
      * @return the name

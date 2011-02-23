@@ -110,6 +110,10 @@ public class StringNameRule implements StructuralFeatureValidationRule {
     protected int getInvalidCharactersSeverityCode() {
         return IStatus.ERROR;
     }
+    
+    protected char[] getInvalidChars() {
+    	return this.invalidChars;
+    }
 
     /**
      * @return Returns the featureID.

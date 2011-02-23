@@ -176,6 +176,13 @@
             default="error"
             category="Relational">
       </preference>
+      <preference
+            toolTip="Restrict names to valid unquoted sql identifiers ?"
+            name="nameCharacterRestriction"
+            label="%nameCharacterRestriction"
+            default="ignore"
+            category="Relational">
+      </preference>
    </extension>
 
 </plugin>

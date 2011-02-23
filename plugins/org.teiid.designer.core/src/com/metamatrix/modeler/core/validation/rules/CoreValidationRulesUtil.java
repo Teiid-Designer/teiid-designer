@@ -43,7 +43,7 @@ public class CoreValidationRulesUtil {
         final StringNameValidator validator = new StringNameValidator(maxLength);
         final String reasonInvalid = validator.checkNameLength(stringToValidate);
         if ( reasonInvalid != null ) {
-            // create validation problem and addit to the resuly
+            // create validation problem and add it to the result
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reasonInvalid);
             result.addProblem(problem);
         }
@@ -62,7 +62,7 @@ public class CoreValidationRulesUtil {
         final StringNameValidator validator = new StringNameValidator();
         final String reasonInvalid = validator.checkNameLength(stringToValidate);
         if ( reasonInvalid != null ) {
-            // create validation problem and addit to the resuly
+            // create validation problem and add it to the result
             ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reasonInvalid);
             result.addProblem(problem);
         }
@@ -70,9 +70,9 @@ public class CoreValidationRulesUtil {
 
     /**
      * Validate the given string against a maximum length and create any problems.
-     * @param stringToValidate
-     * @param any invalid charachters to check for
      * @param ValidationResult to add problems for
+     * @param stringToValidate
+     * @param any invalid characters to check for
      * @param invalidCharacterSeverity the severity to use if there are invalid characters; must be
      * one of the {@link IStatus} severity codes.
      */
@@ -80,9 +80,24 @@ public class CoreValidationRulesUtil {
         CoreArgCheck.isNotNull(stringToValidate);                
         CoreArgCheck.isNotNull(result);
         final StringNameValidator validator = new StringNameValidator(invalidChars);
+        validateStringNameChars(result, stringToValidate, validator, invalidCharacterSeverity);
+    }
+    
+    /**
+     * Validate the given string against a maximum length and create any problems.
+     * @param ValidationResult to add problems for
+     * @param stringToValidate
+     * @param a string validator
+     * @param invalidCharacterSeverity the severity to use if there are invalid characters; must be
+     * one of the {@link IStatus} severity codes.
+     */
+    public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, StringNameValidator validator, final int invalidCharacterSeverity) {
+        CoreArgCheck.isNotNull(stringToValidate);                
+        CoreArgCheck.isNotNull(result);
+
         final String reasonInvalid = validator.checkNameCharacters(stringToValidate);
         if ( reasonInvalid != null ) {
-            // create validation problem and addit to the resuly
+            // create validation problem and add it to the result
             int severity = invalidCharacterSeverity;
             if ( severity != IStatus.ERROR && severity != IStatus.INFO && severity != IStatus.OK && severity != IStatus.WARNING ) {
                 severity = IStatus.ERROR;
@@ -95,7 +110,7 @@ public class CoreValidationRulesUtil {
     /**
      * Validate the given string against a maximum length and create any problems.
      * @param stringToValidate
-     * @param any invalid charachters to check for
+     * @param any invalid characters to check for
      * @param ValidationResult to add problems for
      */
     public static void validateStringNameChars(final ValidationResult result, final String stringToValidate, final char[] invalidChars) {
@@ -105,7 +120,7 @@ public class CoreValidationRulesUtil {
 	/**
 	 * Validate the given string against a maximum length and create any problems.
 	 * @param stringToValidate
-	 * @param any invalid charachters to check for
+	 * @param any invalid characters to check for
 	 * @param ValidationResult to add problems for
 	 */
 	public static void validateStringName(final ValidationResult result, final int maxLength, final String stringToValidate, final char[] invalidChars) {
@@ -114,7 +129,7 @@ public class CoreValidationRulesUtil {
 		final StringNameValidator validator = new StringNameValidator(maxLength, invalidChars);
 		final String reasonInvalid = validator.checkValidName(stringToValidate);
 		if ( reasonInvalid != null ) {
-			// create validation problem and addit to the resuly
+			// create validation problem and add it to the result
 			ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reasonInvalid);
 			result.addProblem(problem);
 		}
@@ -184,11 +199,11 @@ public class CoreValidationRulesUtil {
 
     /**
      * Get the valid name for the given string, all invalid chars are replaced with an '_'
-     * charachter, if there is an invalid charachter at the begining it is removed from the string. If the
+     * character, if there is an invalid character at the beginning it is removed from the string. If the
      * name is not unique among its siblings integers are added to the end of the name until it is unique.
      * @param name The name that should be unique within its container
-     * @param any invalid charachters to check for, in addition to the default invalid chars
-     * @param maximum legth of the valid string
+     * @param any invalid character to check for, in addition to the default invalid chars
+     * @param maximum length of the valid string
      * @return a valid string for this invalid string.
      */
     public static String getValidString(final String name, final char[] invalidChars, final int maxLength) {
