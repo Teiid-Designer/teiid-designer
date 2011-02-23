@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -37,6 +38,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.GlobalBuildAction;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ValidationDescriptor;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -218,7 +220,8 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
 	/**
 	 * Method required by {@link IWorkbenchPreferencePage}
 	 */
-	public void init(IWorkbench workbench) {
+	@Override
+    public void init(IWorkbench workbench) {
 	}
 	
 	/**
@@ -247,7 +250,10 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
 				}
 			}
 		}
-		if (changeMade) {
+		if (changeMade) {		    
+		    //Save the changes before showing dialog so that the new validation settings will be used during build
+		    ModelerCore.getValidationPreferences().setOptions(changedValuesMap);
+
             // defect 19167 - Stolen from OptionsConfigurationBlock.  Prompt the user to rebuild:
             MessageDialog dialog = new MessageDialog(
                                                      getShell(),
@@ -257,6 +263,7 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
                 try {
                     final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
                     IRunnableWithProgress op = new IRunnableWithProgress() {
+                        @Override
                         public void run( IProgressMonitor monitor ) {
                             try {
                                 // defect 19634 - code below copied from CleanDialog:
@@ -281,10 +288,7 @@ public class ValidationPreferencePage extends PreferencePage implements IWorkben
                 return false; // cancel pressed
             }
 
-            //Save the changes
-			ModelerCore.getValidationPreferences().setOptions(changedValuesMap);
-			//Now retrieve the saved changes and set the GUI from them.  This will ensure that the
-			//changes were saved correctly.
+            // Now retrieve the saved changes and set the GUI from them. This will ensure that the changes were saved correctly.
 			setValues();
 		}
 		return true;
