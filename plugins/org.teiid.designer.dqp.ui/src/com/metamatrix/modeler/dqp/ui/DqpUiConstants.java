@@ -9,8 +9,6 @@ package com.metamatrix.modeler.dqp.ui;
 
 import java.util.ResourceBundle;
 
-import org.teiid.designer.datatools.ui.DatatoolsUiConstants.PC;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 

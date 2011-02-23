@@ -22,6 +22,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramPageSetupAction;
 import com.metamatrix.modeler.diagram.ui.actions.RefreshAction;
@@ -36,7 +37,6 @@ import com.metamatrix.modeler.diagram.ui.notation.uml.part.UmlClassifierEditPart
 import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
-import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.GlobalActionsMap;

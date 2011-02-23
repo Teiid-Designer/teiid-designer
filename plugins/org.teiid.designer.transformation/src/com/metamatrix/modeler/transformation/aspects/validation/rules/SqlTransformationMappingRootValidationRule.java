@@ -385,8 +385,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                                       final SqlTransformationMappingRoot transRoot,
                                       final ValidationResult validationResult ) {
         ValidationProblem typeProblem = null;
-        // super command type
-        int superType = command.getType();
+
         // flag sets to true, if desired type of cmd is found for
         // the super command
         boolean foundDesiredSubCmd = false;
@@ -705,8 +704,8 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         TransformationValidationResult transformResult = validator.validateTransformation();
         // get target group/procedure
         EObject target = transRoot.getTarget();
-        String targetPath = TransformationHelper.getSqlEObjectPath(target);
-        // validate furthur only if transformation is valid
+
+        // validate further only if transformation is valid
         if (!transformResult.isValid()) {
             Collection statuses = null;
             // if has a invalid select collect status

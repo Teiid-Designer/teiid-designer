@@ -75,11 +75,11 @@ public class UpdateValidator {
 	}
 	
 	public static class UpdateMapping {
-		private GroupSymbol group;
-		private GroupSymbol correlatedName;
-		private Map<ElementSymbol, ElementSymbol> updatableViewSymbols = new HashMap<ElementSymbol, ElementSymbol>();
-		private boolean insertAllowed = false;
-		private boolean updateAllowed = false;
+		GroupSymbol group;
+		GroupSymbol correlatedName;
+		Map<ElementSymbol, ElementSymbol> updatableViewSymbols = new HashMap<ElementSymbol, ElementSymbol>();
+		boolean insertAllowed = false;
+		boolean updateAllowed = false;
 		
 		public Map<ElementSymbol, ElementSymbol> getUpdatableViewSymbols() {
 			return updatableViewSymbols;
@@ -103,18 +103,18 @@ public class UpdateValidator {
 	}
 	
 	public static class UpdateInfo {
-		private Map<String, UpdateMapping> updatableGroups = new HashMap<String, UpdateMapping>();
-		private boolean isSimple = true;
-		private UpdateMapping deleteTarget;
-		private UpdateType updateType;
-		private boolean updateValidationError;
-		private UpdateType deleteType;
-		private boolean deleteValidationError;
-		private UpdateType insertType;
-		private boolean insertValidationError;
-		private Query view;
-		private Map<ElementSymbol, List<Set<Constant>>> partitionInfo;
-		private List<UpdateInfo> unionBranches = new LinkedList<UpdateInfo>();
+		Map<String, UpdateMapping> updatableGroups = new HashMap<String, UpdateMapping>();
+		boolean isSimple = true;
+		UpdateMapping deleteTarget;
+		UpdateType updateType;
+		boolean updateValidationError;
+		UpdateType deleteType;
+		boolean deleteValidationError;
+		UpdateType insertType;
+		boolean insertValidationError;
+		Query view;
+		Map<ElementSymbol, List<Set<Constant>>> partitionInfo;
+		List<UpdateInfo> unionBranches = new LinkedList<UpdateInfo>();
 		
 		public Map<ElementSymbol, List<Set<Constant>>> getPartitionInfo() {
 			return partitionInfo;
@@ -353,7 +353,8 @@ public class UpdateValidator {
     	}
     }
 	
-    private void internalValidate(Command command, List<ElementSymbol> viewSymbols) throws QueryMetadataException, TeiidComponentException {
+    @SuppressWarnings("static-access")
+	private void internalValidate(Command command, List<ElementSymbol> viewSymbols) throws QueryMetadataException, TeiidComponentException {
     	if (!(command instanceof Query)) {
     		handleValidationError(QueryPlugin.Util.getString("ERR.015.012.0001"), true, true, true); //$NON-NLS-1$
     		return;
