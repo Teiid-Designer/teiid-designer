@@ -38,6 +38,8 @@ public class VdbDataRole {
     
     private final boolean anyAuthenticated;
     
+    private final boolean allowCreateTempTables;
+    
     final AtomicReference<String> description = new AtomicReference<String>();
     private List<Permission> permissions = new ArrayList<Permission>();
     
@@ -52,6 +54,7 @@ public class VdbDataRole {
     	 this.vdb = vdb;
     	 name = dataRole.getName();
     	 anyAuthenticated = dataRole.isAnyAuthenticated();
+    	 allowCreateTempTables = dataRole.allowCreateTempTables();
     	 permissions = new ArrayList(dataRole.getPermissions());
     	 mappedRoleNames = new ArrayList(dataRole.getRoleNames());
          this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
@@ -63,6 +66,7 @@ public class VdbDataRole {
     	 this.vdb = vdb;
     	 this.name = element.getName();
     	 this.anyAuthenticated = element.isAnyAuthenticated();
+    	 this.allowCreateTempTables = element.allowCreateTempTables();
     	 
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 
@@ -72,6 +76,13 @@ public class VdbDataRole {
     	 
     	 mappedRoleNames = new ArrayList(element.getMappedRoleNames());
 	}
+    
+    /**
+     * @return the any-authenticated value
+     */
+    public boolean allowCreateTempTables() {
+    	return this.allowCreateTempTables;
+    }
     
     /**
      * @return description

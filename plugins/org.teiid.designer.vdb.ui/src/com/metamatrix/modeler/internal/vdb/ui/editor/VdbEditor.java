@@ -855,7 +855,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 DataRole dataPolicy = 
                 	new DataRole(vdbDataRole.getName(),
                 			vdbDataRole.getDescription(), 
-                			vdbDataRole.isAnyAuthenticated(),
+                			vdbDataRole.isAnyAuthenticated(), vdbDataRole.allowCreateTempTables(),
                 			vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
@@ -900,6 +900,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     		selectedDataRole.getName() + COPY_SUFFIX, 
                     		selectedDataRole.getDescription(),
                     		selectedDataRole.isAnyAuthenticated(),
+                    		selectedDataRole.allowCreateTempTables(),
                             selectedDataRole.getMappedRoleNames(), 
                             selectedDataRole.getPermissions());
                     vdb.addDataPolicy(newDR, new NullProgressMonitor());

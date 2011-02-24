@@ -28,6 +28,9 @@ public class DataRoleElement implements Serializable {
     @XmlAttribute( name = "any-authenticated", required = false )
     private boolean anyAuthenticated;
     
+    @XmlAttribute( name = "allow-create-temporary-tables", required = false )
+    private boolean allowCreateTempTables;
+    
     @XmlElement( name = "description" )
     private String description;
 	
@@ -47,11 +50,19 @@ public class DataRoleElement implements Serializable {
     	super();
     	name = dataRole.getName();
     	anyAuthenticated = dataRole.isAnyAuthenticated();
+    	allowCreateTempTables = dataRole.allowCreateTempTables();
     	description = dataRole.getDescription();
     	for( Permission perm : dataRole.getPermissions() ) {
     		getPermissions().add(new PermissionElement(perm));
     	}
     	mappedRoleNames = new ArrayList(dataRole.getMappedRoleNames());
+    }
+    
+    /**
+     * @return anyAuthenticated
+     */
+    public boolean allowCreateTempTables() {
+        return allowCreateTempTables;
     }
     
     /**
