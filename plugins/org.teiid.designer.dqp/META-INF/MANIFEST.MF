@@ -7,9 +7,6 @@ Bundle-Activator: com.metamatrix.modeler.dqp.DqpPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.dqp,
- com.metamatrix.modeler.dqp.config,
- com.metamatrix.modeler.dqp.internal.config,
- com.metamatrix.modeler.dqp.internal.workspace,
  org.teiid.designer.runtime,
  org.teiid.designer.runtime.connection,
  org.teiid.designer.runtime.preview,

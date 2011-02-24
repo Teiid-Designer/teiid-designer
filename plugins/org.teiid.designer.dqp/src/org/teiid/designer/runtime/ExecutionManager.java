@@ -10,10 +10,11 @@ package org.teiid.designer.runtime;
 import java.io.File;
 import java.sql.Connection;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 
 /**
  *
@@ -57,7 +58,7 @@ public final class ExecutionManager {
         if (this.adminConnection == null) {
             final ClassLoader current = Thread.currentThread().getContextClassLoader();
             try {
-                final File propertiesDir = DqpPath.getRuntimePath().toFile();
+                final File propertiesDir = DqpPlugin.getInstance().getRuntimePath().toFile();
                 final String url = buildConnectionURL(propertiesDir.getAbsolutePath(), "admin", "1", new Properties()); //$NON-NLS-1$ //$NON-NLS-2$ 
                 DqpPlugin.Util.log(IStatus.INFO, "starting workspace execution with url = \"" + url); //$NON-NLS-1$ 
                 // EmbeddedDriver driver = new EmbeddedDriver();

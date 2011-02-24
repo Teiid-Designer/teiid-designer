@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.dqp.workspace;
+package org.teiid.designer.runtime.connection;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -23,8 +23,8 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.TeiidTranslator;
+import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
-import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 
 /**
  * 

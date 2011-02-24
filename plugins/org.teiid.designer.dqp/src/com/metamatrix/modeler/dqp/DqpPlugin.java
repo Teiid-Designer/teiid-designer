@@ -7,8 +7,11 @@
  */
 package com.metamatrix.modeler.dqp;
 
+import java.io.IOException;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -20,10 +23,10 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.ServerManager;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.PluginUtilImpl;
-import com.metamatrix.modeler.dqp.internal.config.DqpPath;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -46,6 +49,8 @@ public class DqpPlugin extends Plugin {
     private static final String I18N_NAME = PACKAGE_ID + ".i18n"; //$NON-NLS-1$
 
     public static final String SOURCE_BINDINGS_FILE_NAME = "SourceBindings.xml"; //$NON-NLS-1$
+    
+    private static IPath runtimePath;
 
     /**
      * Provides access to the plugin's log and to it's resources.
@@ -80,6 +85,19 @@ public class DqpPlugin extends Plugin {
      */
     public IEclipsePreferences getPreferences() {
         return new InstanceScope().getNode(PLUGIN_ID);
+    }
+    
+    /**
+     * @return the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path
+     * @throws IOException if an error occurs obtaining the path
+     * @since 6.0.0
+     */
+    public IPath getRuntimePath() {
+        if (runtimePath == null) {
+            runtimePath = DqpPlugin.getInstance().getStateLocation();
+        }
+
+        return (IPath)runtimePath.clone();
     }
 
     /**
@@ -119,7 +137,7 @@ public class DqpPlugin extends Plugin {
     }
 
     private void initializeServerRegistry() throws CoreException {
-        this.serverMgr = new ServerManager(DqpPath.getRuntimePath().toFile().getAbsolutePath());
+        this.serverMgr = new ServerManager(DqpPlugin.getInstance().getRuntimePath().toFile().getAbsolutePath());
 
         // restore registry
         final IStatus status = this.serverMgr.restoreState();

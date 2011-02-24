@@ -30,18 +30,18 @@ public class ServerUtilsTest {
         ServerUtils.validateServerUrl("m://hostA:12345");
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotBeValidUrlWithInvalidHostName_1() {
+    @Test
+    public void shouldBeValidUrlWithInvalidHostName_1() {
         ServerUtils.validateServerUrl("mm://host@A:12345");
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotBeValidUrlWithInvalidHostName_2() {
+    @Test
+    public void shouldBeValidUrlWithInvalidHostName_2() {
         ServerUtils.validateServerUrl("mm://host[A:12345");
     }
 
-    @Test( expected = IllegalArgumentException.class )
-    public void shouldNotBeValidUrlWithInvalidHostName_3() {
+    @Test
+    public void shouldBeValidUrlWithInvalidHostName_3() {
         ServerUtils.validateServerUrl("mm://host*A:12345");
     }
 

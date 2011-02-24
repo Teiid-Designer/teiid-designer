@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.dqp.internal.workspace;
+package org.teiid.designer.runtime.connection;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 

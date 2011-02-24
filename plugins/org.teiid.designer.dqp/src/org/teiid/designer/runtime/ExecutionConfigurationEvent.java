@@ -10,9 +10,9 @@ package org.teiid.designer.runtime;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 
 /**
  * The <code>ExecutionConfigurationEvent</code> class is the event that is broadcast from the {@link ServerManager server manager}

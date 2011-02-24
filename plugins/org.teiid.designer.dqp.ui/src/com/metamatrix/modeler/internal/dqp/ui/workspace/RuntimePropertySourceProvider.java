@@ -18,9 +18,10 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TranslatorTemplate;
+import org.teiid.designer.runtime.connection.SourceConnectionBinding;
+
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.dqp.internal.workspace.SourceConnectionBinding;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.properties.ModelPropertySource;

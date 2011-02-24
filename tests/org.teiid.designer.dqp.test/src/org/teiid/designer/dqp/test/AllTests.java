@@ -10,7 +10,7 @@ import org.teiid.designer.runtime.ServerUtilsTest;
 import org.teiid.designer.runtime.TeiidTranslatorTest;
 import org.teiid.designer.runtime.connection.ConnectionInfoHelperTest;
 import org.teiid.designer.runtime.connection.ConnectionProfileFactoryTest;
-import com.metamatrix.modeler.dqp.workspace.SourceBindingTest;
+import org.teiid.designer.runtime.connection.SourceBindingTest;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {ConnectionProfileFactoryTest.class, ConnectionInfoHelperTest.class, TeiidTranslatorTest.class,
