@@ -19,6 +19,7 @@ public class DataRole {
 	
 	private String name;
 	private boolean anyAuthenticated;
+	private boolean allowCreateTempTables;
 	private String description;
 	private Set<String> roleNames;
 	private Map<String, Permission> permissionsMap;
@@ -27,14 +28,16 @@ public class DataRole {
 		super();
 		this.name = name;
 		this.anyAuthenticated = false;
+		this.allowCreateTempTables = false;
 		this.roleNames = new HashSet<String>();
 		this.permissionsMap = new HashMap<String, Permission>();
 	}
 
-	public DataRole(String name, String description, boolean anyAuthenticated, Collection<String> roleNames, Collection<Permission> permissions) {
+	public DataRole(String name, String description, boolean anyAuthenticated, boolean allowCreateTempTables, Collection<String> roleNames, Collection<Permission> permissions) {
 		super();
 		this.name = name;
 		this.anyAuthenticated = anyAuthenticated;
+		this.allowCreateTempTables = allowCreateTempTables;
 		this.description = description;
 		this.roleNames = new HashSet<String>(roleNames);
 		this.permissionsMap = new HashMap<String, Permission>();
@@ -46,6 +49,7 @@ public class DataRole {
 		super();
 		this.name = dataRole.getName();
 		this.anyAuthenticated = dataRole.isAnyAuthenticated();
+		this.allowCreateTempTables = dataRole.allowCreateTempTables();
 		this.description = dataRole.getDescription();
 		this.roleNames = new HashSet<String>(dataRole.getRoleNames());
 		this.permissionsMap = new HashMap<String, Permission>();
@@ -53,6 +57,14 @@ public class DataRole {
 		setPermissions(dataRole.getPermissions());
 	}
 
+	public boolean allowCreateTempTables() {
+		return this.allowCreateTempTables;
+	}
+	
+	public void setAllowCreateTempTables(boolean value) {
+		this.allowCreateTempTables = value;
+	}
+	
 	public String getName() {
 		return name;
 	}
