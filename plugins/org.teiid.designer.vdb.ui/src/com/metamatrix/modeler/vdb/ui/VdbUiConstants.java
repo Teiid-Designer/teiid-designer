@@ -43,26 +43,6 @@ public interface VdbUiConstants {
     PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
 
     /**
-     * Extension points defined by the VDB UI Plugin.
-     * 
-     * @since 4.3
-     */
-    interface ExtensionPoints {
-
-        /**
-         * Constants for the VDB Editor Page extension point.
-         */
-        interface VdbEditorPage {
-            String ID = "vdbEditorPage"; //$NON-NLS-1$
-            String CLASS_ELEMENT = "class"; //$NON-NLS-1$
-            String CLASS_NAME = "name"; //$NON-NLS-1$
-            String DISPLAY_NAME = "displayName"; //$NON-NLS-1$
-            String ORDER = "order"; //$NON-NLS-1$
-        }
-
-    }
-
-    /**
      * 
      */
     interface Extensions {
