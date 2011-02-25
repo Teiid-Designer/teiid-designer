@@ -12,8 +12,7 @@ Export-Package: com.metamatrix.query.internal.ui.builder.model,
  com.metamatrix.query.internal.ui.sqleditor.sql,
  com.metamatrix.query.internal.ui.tree,
  com.metamatrix.query.ui,
- com.metamatrix.query.ui.actions,
- com.metamatrix.query.ui.preferences
+ com.metamatrix.query.ui.actions
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,

@@ -8,10 +8,5 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-
-     <extension
-         point="org.teiid.designer.ui.common.editorPreferences">
-         <editorPreferenceComponent
-         	class="com.metamatrix.query.ui.preferences.QueryEditorPreferencesComponent"/>
-   </extension>   
+  
 </plugin>

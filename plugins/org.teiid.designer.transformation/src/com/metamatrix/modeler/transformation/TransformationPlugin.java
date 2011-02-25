@@ -10,8 +10,13 @@ package com.metamatrix.modeler.transformation;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.framework.BundleContext;
+
 import com.metamatrix.core.util.PluginUtilImpl;
 
 /**
@@ -85,11 +90,31 @@ public class TransformationPlugin extends Plugin {
     public void start( final BundleContext context ) throws Exception {
         super.start(context);
         Util.initializePlatformLogger(this);
+        
+     // initialize preferences
+        initializeDefaultPreferences();
     }
 
     protected File getFile( final URL url ) {
         final String path = url.getPath();
         final File result = new File(path);
         return result;
+    }
+    
+    /**
+     * Obtains the current plubin preferences values. <strong>This method should be used instead of
+     * {@link Plugin#getPluginPreferences()}.</strong>
+     * 
+     * @return the preferences (never <code>null</code>)
+     */
+    public IEclipsePreferences getPreferences() {
+        return new InstanceScope().getNode(PLUGIN_ID);
+    }
+    
+    private void initializeDefaultPreferences() {
+        IEclipsePreferences prefs = new DefaultScope().getNode(TransformationPlugin.getDefault().getBundle().getSymbolicName());
+
+        // initialize the Teiid cleanup enabled preference
+        prefs.putBoolean(PreferenceConstants.AUTO_EXPAND_SELECT, PreferenceConstants.AUTO_EXPAND_SELECT_DEFAULT);
     }
 }

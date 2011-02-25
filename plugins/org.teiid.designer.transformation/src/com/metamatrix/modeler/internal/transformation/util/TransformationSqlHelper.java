@@ -85,6 +85,7 @@ import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.internal.core.metadata.runtime.ColumnRecordImpl;
 import com.metamatrix.modeler.internal.core.metadata.runtime.TableRecordImpl;
+import com.metamatrix.modeler.transformation.PreferenceConstants;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.aspects.sql.InputParameterSqlAspect;
 import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
@@ -454,6 +455,11 @@ public class TransformationSqlHelper implements SqlConstants {
         boolean isValid = SqlMappingRootCache.isSelectValid(transMappingRoot);
         Command command = SqlMappingRootCache.getSelectCommand(transMappingRoot);
 
+        boolean doAutoExpandSelect = TransformationPlugin.getDefault().getPreferences().getBoolean(PreferenceConstants.AUTO_EXPAND_SELECT, PreferenceConstants.AUTO_EXPAND_SELECT_DEFAULT);
+        if( !doAutoExpandSelect && addElemsToSelect ) {
+        	doAutoExpandSelect = addElemsToSelect;
+        }
+        
         // --------------------------------------------------------
         // If query is resolvable, work with the LanguageObjects
         // --------------------------------------------------------
@@ -463,7 +469,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Add new Groups to the Query From Clause
             Query newQuery = createQueryAddSqlAliasGroups(query,
                                                           sqlAliasGroups,
-                                                          addElemsToSelect,
+                                                          doAutoExpandSelect,
                                                           QueryValidator.SELECT_TRNS,
                                                           validator);
 
@@ -481,7 +487,7 @@ public class TransformationSqlHelper implements SqlConstants {
             if (!TransformationHelper.isSqlProcedure(targetGrp)) {
                 // Create empty SELECT * FROM query
                 Query qry = createDefaultQuery(null);
-                qry = createQueryAddSqlAliasGroups(qry, sqlAliasGroups, addElemsToSelect, QueryValidator.SELECT_TRNS, validator);
+                qry = createQueryAddSqlAliasGroups(qry, sqlAliasGroups, doAutoExpandSelect, QueryValidator.SELECT_TRNS, validator);
                 // Set the new mappingRoot SQL
                 TransformationHelper.setSelectSqlString(transMappingRoot, qry.toString(), false, txnSource);
                 // Target is a procedure
@@ -506,7 +512,7 @@ public class TransformationSqlHelper implements SqlConstants {
                         // Add the sqlAliases
                         qry = createQueryAddSqlAliasGroups(qry,
                                                            sqlAliasGroups,
-                                                           addElemsToSelect,
+                                                           doAutoExpandSelect,
                                                            QueryValidator.SELECT_TRNS,
                                                            validator);
 
@@ -520,7 +526,7 @@ public class TransformationSqlHelper implements SqlConstants {
                     Query qry = createDefaultQuery(null);
                     qry = createQueryAddSqlAliasGroups(qry,
                                                        sqlAliasGroups,
-                                                       addElemsToSelect,
+                                                       doAutoExpandSelect,
                                                        QueryValidator.SELECT_TRNS,
                                                        validator);
 
@@ -1310,6 +1316,17 @@ public class TransformationSqlHelper implements SqlConstants {
                 // Reset the Select Symbols
                 Select newSelect = new Select(newSymbols);
                 modifiedQuery.setSelect(newSelect);
+            } else {
+            	List currentSelectSymbols = resolvedQuery.getSelect().getSymbols();
+                if (currentSelectSymbols.size() == 1) {
+                    SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
+                    if (singleSelectSymbol instanceof AllSymbol) {
+                    	List<ElementSymbol> elementSymbols = ((AllSymbol)singleSelectSymbol).getElementSymbols();
+                    	// Reset the Select Symbols
+                        Select newSelect = new Select(elementSymbols);
+                        modifiedQuery.setSelect(newSelect);
+                    }
+                }
             }
         }
         return modifiedQuery;

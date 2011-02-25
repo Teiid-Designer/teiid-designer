@@ -2053,7 +2053,7 @@ public class SqlEditorPanel extends SashForm
             // Get the Command DisplayNode that its within
             DisplayNode commandNode = getQueryDisplayComponent().getCommandDisplayNodeAtIndex(caretPosn);
 
-            if (!commandNode.equals(wholeCommandNode)) {
+            if (commandNode != null && !commandNode.equals(wholeCommandNode)) {
                 // get start and end lines for entire text
                 int wholeStartLine = 0;
                 int wholeEndLine = styledText.getLineAtOffset(textLength);

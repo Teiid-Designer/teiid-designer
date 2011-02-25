@@ -277,5 +277,10 @@
          label="%createMaterializedViewsAction.label">
       </specialAction>
    </extension>
+   <extension
+         point="org.teiid.designer.ui.common.editorPreferences">
+         <editorPreferenceComponent
+         	class="com.metamatrix.modeler.transformation.ui.preferences.TransformationEditorPreferencesComponent"/>
+   </extension>  
 
 </plugin>
