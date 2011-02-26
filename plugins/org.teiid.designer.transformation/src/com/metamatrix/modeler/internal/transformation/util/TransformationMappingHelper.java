@@ -924,7 +924,7 @@ public class TransformationMappingHelper implements SqlConstants {
                                                      Object source ) {
         // Modify query select if necessary
         if (command != null && command instanceof Query && TransformationSqlHelper.hasProjectedSymbolNameConflict(command)) {
-            Query newQuery = TransformationSqlHelper.createQueryFixNameConflicts((Query)command);
+            Query newQuery = TransformationSqlHelper.createQueryFixNameConflicts((Query)command, false);
             // Set the SQL Statement
             if (newQuery != null) {
                 TransformationHelper.setSelectSqlString(transMappingRoot, newQuery.toString(), isSignificant, source);

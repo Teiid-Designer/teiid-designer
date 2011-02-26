@@ -153,7 +153,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
         startClausesOnNewLineButton.setSelection(selected);
         selected = getPreferenceStore().getBoolean(UiConstants.Prefs.INDENT_CLAUSE_CONTENT);
         indentClausesButton.setSelection(selected);
-        selected = getPreferenceStore().getBoolean(UiConstants.Prefs.AUTO_EXPAND_SELECT);
+        selected = TransformationPlugin.getDefault().getPreferences().getBoolean(
+        		PreferenceConstants.AUTO_EXPAND_SELECT, PreferenceConstants.AUTO_EXPAND_SELECT_DEFAULT);
         autoExpandSelectButton.setSelection(selected);
         defaultStringLength.setText(String.valueOf(ModelerCore.getTransformationPreferences().getDefaultStringLength()));
         boolean treeLayout = getPreferenceStore().getBoolean(UiConstants.Prefs.TREE_DIAGRAM_LAYOUT);

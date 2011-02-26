@@ -770,7 +770,7 @@ public class TransformationSqlHelper implements SqlConstants {
             if (isValid) {
                 Select select = resultQuery.getSelect();
                 if (isSelectStar(select)) {
-                    result = createQueryFixNameConflicts(resultQuery);
+                    result = createQueryFixNameConflicts(resultQuery, addGroupElemsToSelect);
                 } else {
                     if (addGroupElemsToSelect) {
                         result = createQueryAddSqlAliasGroupElemsToSelect(resultQuery, sqlAliasGroups);
@@ -1300,7 +1300,7 @@ public class TransformationSqlHelper implements SqlConstants {
      * @param queryCommand the query Command object
      * @return the modified Query language object
      */
-    public static Query createQueryFixNameConflicts( Query resolvedQuery ) {
+    public static Query createQueryFixNameConflicts( Query resolvedQuery , boolean addGroupElemsToSelect) {
         Query modifiedQuery = null;
         if (resolvedQuery != null) {
             // Modified Query Result
@@ -1316,7 +1316,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 // Reset the Select Symbols
                 Select newSelect = new Select(newSymbols);
                 modifiedQuery.setSelect(newSelect);
-            } else {
+            } else if( addGroupElemsToSelect ) {
             	List currentSelectSymbols = resolvedQuery.getSelect().getSymbols();
                 if (currentSelectSymbols.size() == 1) {
                     SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
