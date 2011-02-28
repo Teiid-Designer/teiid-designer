@@ -27,7 +27,6 @@ import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.query.function.FunctionLibrary;
-
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -241,7 +240,10 @@ public class ModelerMetadata extends TransformationMetadata {
                         final String debugMsg = TransformationPlugin.Util.getString("ModelerMetadata.Found_{0}_records_for_the_entity_{1}_1", params); //$NON-NLS-1$
                         ModelerCore.Util.log(IStatus.INFO, debugMsg);
                     }
-                    if (records.isEmpty() && uuid != null) {
+                    if (!records.isEmpty()) {
+                        return records;
+                    }
+                    if (uuid != null) {
                         ResourceSet[] resourceSets = this.getContainer().getExternalResourceSets();
                         for (int i = 0; i < resourceSets.length; i++) {
                             ResourceSet currentResourceSet = resourceSets[i];
@@ -256,8 +258,6 @@ public class ModelerMetadata extends TransformationMetadata {
                                 }
                             }
                         }
-                    } else {
-                        return records;
                     }
                 }
             }

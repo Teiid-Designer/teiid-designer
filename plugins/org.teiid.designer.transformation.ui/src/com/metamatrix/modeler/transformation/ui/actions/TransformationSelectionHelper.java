@@ -164,11 +164,6 @@ public class TransformationSelectionHelper {
                 eObjType = TYPE_SQL_TRANSFORMATION_ROOT;
             else
                 eObjType = TYPE_SQL_TRANSFORMATION_ROOT_EXTRA;
-        } else if( TransformationHelper.isXQueryTransformationMappingRoot(eObj) ) {
-                if( eObj == transformationRoot )
-                    eObjType = TYPE_XQUERY_TRANSFORMATION_ROOT;
-                else
-                    eObjType = TYPE_SQL_TRANSFORMATION_ROOT_EXTRA;
         } else if( (TransformationHelper.isSqlTable(eObj) || 
                     TransformationHelper.isSqlProcedure(eObj) ||
                     TransformationHelper.isSqlProcedureResultSet(eObj)) && transformationRoot != null) {

@@ -16,29 +16,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.core.TeiidComponentException;
 import org.teiid.core.types.DataTypeManager;
-import com.metamatrix.metamodels.transformation.MappingClass;
-import com.metamatrix.metamodels.transformation.SqlAlias;
-import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.StagingTable;
-import com.metamatrix.metamodels.xml.XmlDocument;
-import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
-import com.metamatrix.modeler.core.query.QueryValidationResult;
-import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.modeler.core.types.DatatypeManager;
-import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.transformation.TransformationPlugin;
-import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
-import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.metadata.QueryMetadataInterface;
@@ -52,6 +32,28 @@ import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
+import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.transformation.MappingClass;
+import com.metamatrix.metamodels.transformation.SqlAlias;
+import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
+import com.metamatrix.metamodels.transformation.StagingTable;
+import com.metamatrix.metamodels.xml.XmlDocument;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnSetAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
+import com.metamatrix.modeler.core.query.QueryValidationResult;
+import com.metamatrix.modeler.core.query.QueryValidator;
+import com.metamatrix.modeler.core.types.DatatypeManager;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.transformation.TransformationPlugin;
+import com.metamatrix.modeler.transformation.metadata.TransformationMetadataFactory;
+import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 
 /**
  * TransformationMappingHelper This class is responsible for handling mapping changes and source / target changes, in response to
@@ -193,7 +195,7 @@ public class TransformationMappingHelper implements SqlConstants {
                 List sqlNames = TransformationSqlHelper.getProjectedSymbolNames(command);
 
                 // check number of projected symbols for select - if zero, mark as failed
-                if (sqlNames.size() == 0 && type == QueryValidator.SELECT_TRNS) {
+                if (sqlNames.size() == 0 && !(targetGroup instanceof Procedure) && type == QueryValidator.SELECT_TRNS) {
                     sizesMatch = false;
                     // check number of Virtual Group Elems vs. number of projected symbols.
                 } else if (sqlNames.size() == attributes.size()) {
@@ -725,6 +727,15 @@ public class TransformationMappingHelper implements SqlConstants {
 
                         // Add the New Elements to the Target Group
                         if (extraSymbolNames.size() != 0) {
+                            //create a resultset if none exists
+                            if (TransformationHelper.isSqlProcedure(targetGroup)) {
+                                SqlProcedureAspect procAspect = (SqlProcedureAspect)AspectManager.getSqlAspect(targetGroup);
+                                EObject rs = (EObject)procAspect.getResult(targetGroup);
+                                if (rs == null) {
+                                    targetGroup = TransformationHelper.createProcResultSet(targetGroup);
+                                } 
+                            }
+
                             // Get the Map of ProjectedSymbol Name to the corresponding EObject (if exists)
                             Map eObjectMap = TransformationSqlHelper.getProjectedSymbolAndProcInputEObjects(validCommand);
 

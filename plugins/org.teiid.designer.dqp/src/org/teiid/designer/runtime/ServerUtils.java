@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.runtime;
 
+import java.net.MalformedURLException;
 import org.teiid.net.TeiidURL;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 
@@ -35,8 +35,8 @@ public class ServerUtils {
         return this;
     }
 
-    public static void validateServerUrl( String url ) throws IllegalArgumentException {
-        new TeiidURL(url);            
+    public static void validateServerUrl( String url ) throws MalformedURLException {
+        new TeiidURL(url);
     }
     
     /**

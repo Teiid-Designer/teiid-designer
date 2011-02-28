@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -64,7 +63,6 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.SqlAlias;
@@ -566,41 +564,11 @@ public class TransformationSqlHelper implements SqlConstants {
      * @return the CreateUpdateProcedureCommand
      */
     public static CreateUpdateProcedureCommand createVirtualProcCommmandForCommand( Command command ) {
-        // Create the Command statment
-
         Block block = new Block();
 
-        if (command.getType() == Command.TYPE_STORED_PROCEDURE) {
-            if (command.getProjectedSymbols().size() > 0) {
+        CommandStatement cmdStmt = new CommandStatement(command);
 
-                SubqueryFromClause subquery = new SubqueryFromClause("PROC", command); //$NON-NLS-1$
-
-                From from = new From();
-                from.addClause(subquery);
-
-                Select select = new Select();
-                select.addSymbol(new AllSymbol());
-
-                Query query = new Query(select, from, null, null, null);
-
-                block.addStatement(new CommandStatement(query));
-            } else {
-                CommandStatement cmdStmt = new CommandStatement(command);
-
-                block.addStatement(cmdStmt);
-
-                Select select = new Select();
-                select.addSymbol(new AliasSymbol("RESULT", new ExpressionSymbol("RESULT", new Constant(Boolean.TRUE)))); //$NON-NLS-1$ //$NON-NLS-2$
-
-                Query query = new Query(select, null, null, null, null);
-
-                block.addStatement(new CommandStatement(query));
-            }
-        } else {
-            CommandStatement cmdStmt = new CommandStatement(command);
-
-            block.addStatement(cmdStmt);
-        }
+        block.addStatement(cmdStmt);
 
         // Create the CreateUpdateProcedureCommand
         CreateUpdateProcedureCommand cCommand = new CreateUpdateProcedureCommand(block);
@@ -2205,7 +2173,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Create StoredProc and set ID/name
             storedProc = new StoredProcedure();
             storedProc.setProcedureName(procFullName);
-
+            storedProc.setDisplayNamedParameters(true);
             // Get the Parameter attributes from the group
             List procParams = procedureAspect.getParameters(eObj);
 
@@ -2478,14 +2446,10 @@ public class TransformationSqlHelper implements SqlConstants {
                                                         GroupSymbol parentGroupSymbol ) {
         SingleElementSymbol seSymbol = null;
 
-        boolean isUUIDGroup = false;
-
         // Get name for the supplied group
         String tableName = parentGroupSymbol.getName();
         if (tableName == null) {
             tableName = SqlConstants.BLANK;
-        } else if (UuidUtil.isStringifiedUUID(tableName)) {
-            isUUIDGroup = true;
         }
 
         // If the supplied EObject is SqlAlias, get Alias name and aliased Object
@@ -2501,25 +2465,15 @@ public class TransformationSqlHelper implements SqlConstants {
         if (TransformationHelper.isSqlInputParameter(elemEObj)) {
             InputParameterSqlAspect aspect = (InputParameterSqlAspect)AspectManager.getSqlAspect(elemEObj);
 
-            String fullName = null;
-            if (isUUIDGroup) {
-                fullName = TransformationHelper.getSqlEObjectUUID(elemEObj);
-            } else {
-                fullName = tableName + "." + aspect.getName(elemEObj); //$NON-NLS-1$          
-            }
+            String fullName = tableName + "." + aspect.getName(elemEObj); //$NON-NLS-1$          
 
             ElementSymbol element = new ElementSymbol(fullName);
             element.setGroupSymbol(parentGroupSymbol);
-            if (aspect != null) {
-                final String rtType = aspect.getRuntimeType(elemEObj);
-                if (rtType != null) {
-                    final Class clazz = DataTypeManager.getDataTypeClass(rtType);
-                    element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), clazz));
-                    element.setType(clazz);
-                } else {
-                    element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), DataTypeManager.DefaultDataClasses.NULL));
-                    element.setType(DataTypeManager.DefaultDataClasses.NULL);
-                }
+            final String rtType = aspect.getRuntimeType(elemEObj);
+            if (rtType != null) {
+                final Class clazz = DataTypeManager.getDataTypeClass(rtType);
+                element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), clazz));
+                element.setType(clazz);
             } else {
                 element.setMetadataID(new TempMetadataID(fullName.toUpperCase(), DataTypeManager.DefaultDataClasses.NULL));
                 element.setType(DataTypeManager.DefaultDataClasses.NULL);
@@ -2534,12 +2488,7 @@ public class TransformationSqlHelper implements SqlConstants {
             // Get MetadataID for uuid
             Object elemID = getElementID(colUUID, elemEObj);
             if (columnAliasName != null) {
-                ElementSymbol elemSymbol = null;
-                if (isUUIDGroup) {
-                    elemSymbol = new ElementSymbol(colUUID);
-                } else {
-                    elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
-                }
+                ElementSymbol elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
                 elemSymbol.setGroupSymbol(parentGroupSymbol);
                 // Set the MetadataID if it was found
                 if (elemID != null) {
@@ -2554,12 +2503,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 }
                 seSymbol = new AliasSymbol(columnAliasName, elemSymbol);
             } else {
-                ElementSymbol elemSymbol = null;
-                if (isUUIDGroup) {
-                    elemSymbol = new ElementSymbol(colUUID);
-                } else {
-                    elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
-                }
+                ElementSymbol elemSymbol = new ElementSymbol(tableName + "." + colShortName); //$NON-NLS-1$
                 elemSymbol.setGroupSymbol(parentGroupSymbol);
                 // Set the MetadataID if it was found
                 if (elemID != null) {
@@ -2576,12 +2520,7 @@ public class TransformationSqlHelper implements SqlConstants {
             }
         } else if (TransformationHelper.isSqlProcedureParameter(elemEObj)) {
             SqlProcedureParameterAspect aspect = (SqlProcedureParameterAspect)AspectManager.getSqlAspect(elemEObj);
-            String paramName = null;
-            if (isUUIDGroup) {
-                paramName = TransformationHelper.getSqlEObjectUUID(elemEObj);
-            } else {
-                paramName = TransformationHelper.getSqlEObjectFullName(elemEObj);
-            }
+            String paramName = TransformationHelper.getSqlEObjectFullName(elemEObj);
 
             ElementSymbol element = new ElementSymbol(paramName);
             element.setGroupSymbol(parentGroupSymbol);

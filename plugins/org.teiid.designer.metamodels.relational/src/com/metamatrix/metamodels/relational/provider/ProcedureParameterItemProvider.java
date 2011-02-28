@@ -8,7 +8,6 @@
 package com.metamatrix.metamodels.relational.provider;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -83,17 +82,7 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
                                                                        // Start customized code
                                                                        getString("_UI_ProcedureParameter_direction_feature_category"), //$NON-NLS-1$
                                                                        // End customized code
-                                                                       null) {
-            @Override
-            public Collection getChoiceOfValues( Object object ) {
-                if (isVirtual(object)) {
-                    Collection choiceValues = new HashSet();
-                    choiceValues.add(DirectionKind.IN_LITERAL);
-                    return choiceValues;
-                }
-                return super.getChoiceOfValues(object);
-            }
-        };
+                                                                       null);
 
         itemPropertyDescriptors.add(descriptor);
     }

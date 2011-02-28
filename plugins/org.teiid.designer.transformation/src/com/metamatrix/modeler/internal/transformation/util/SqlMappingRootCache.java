@@ -13,16 +13,13 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -678,47 +675,6 @@ public class SqlMappingRootCache implements SqlConstants {
             }
         }
         return command;
-    }
-
-    /**
-     * Get the External MetadataMap for the supplied TransformationMappingRoot.  
-     * @param transMappingRoot the transformation MappingRoot
-     * @return the external Metadata Map
-     */
-    public static Map getExternalMetadataMap(final Object transMappingRoot,final int cmdType) {
-        Map map = null;
-
-        if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
-            // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
-            
-            if(status!=null) {
-                map = status.getExternalMetadataMap();
-            }
-        }
-        return map;
-    }
-
-    /**
-     * Get the External MetadataMap for CreateUpdateProcedure for the supplied TransformationMappingRoot.  
-     * @param transMappingRoot the transformation MappingRoot
-     * @return the external Metadata Map
-     */
-    public static Map getExternalMapForCreateUpdateProc(final Object transMappingRoot,final int cmdType) {
-        Map map = null;
-
-        if(transMappingRoot!=null && TransformationHelper.isSqlTransformationMappingRoot(transMappingRoot)) {
-            // Get status (goes to cache first)
-            SqlTransformationResult status = getStatus((EObject)transMappingRoot,cmdType,false);
-            
-            if(status!=null) {
-            	Command command = status.getCommand();
-            	if(command!=null && command.getType() == Command.TYPE_UPDATE_PROCEDURE) {
-					map = status.getExternalMetadataMap();
-            	}
-            }
-        }
-        return map;
     }
 
     public static String getSqlString(final Object transMappingRoot,final int cmdType) {

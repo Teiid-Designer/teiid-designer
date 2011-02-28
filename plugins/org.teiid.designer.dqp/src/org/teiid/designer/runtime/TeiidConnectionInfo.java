@@ -9,11 +9,10 @@ package org.teiid.designer.runtime;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
+import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.util.HashCodeUtil;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -328,7 +327,7 @@ public abstract class TeiidConnectionInfo {
         // validate URL (protocol, host, port)
         try {
             ServerUtils.validateServerUrl(getUrl());
-        } catch (IllegalArgumentException e) {
+        } catch (MalformedURLException e) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Util.getString("invalidServerUrl", getType(), e.getMessage()), e); //$NON-NLS-1$
         }
 

@@ -11,15 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
-
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.InputBinding;
@@ -41,7 +40,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTransformationInfo;
 import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.modeler.internal.transformation.util.InputSetPramReplacementVisitor;
 import com.metamatrix.modeler.internal.transformation.util.SqlConverter;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 
@@ -626,35 +624,17 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
 
                 // if the target is a Mapping class get the command for the sql transform,
                 // replace the InputSet bindings with references all collect all the bindings
+                List bindingNames = null;
                 if (target instanceof MappingClass) {
                     final Command command = parseSQL(selectSql);
-                    if (command == null) {
-                        return null;
-                    }
-                    final List inputSetParamNames = new ArrayList();
                     final InputSet inputSet = ((MappingClass)target).getInputSet();
                     if (inputSet != null) {
-                        for (final Iterator iter = inputSet.getInputParameters().iterator(); iter.hasNext();) {
-                            final InputParameter inputParam = (InputParameter)iter.next();
-                            inputSetParamNames.add(inputParam.getName());
-                        }
-                    }
-                    // proceed to find bindings, clone the command as we are changing it
-                    InputSetPramReplacementVisitor visitor = new InputSetPramReplacementVisitor();
-                    if (!inputSetParamNames.isEmpty()) {
-                        visitor.setInputSetParamNames(inputSetParamNames);
-                    }
-                    DeepPreOrderNavigator.doVisit(command, visitor);
-
-                    // collect the parameters after replacing with references in the command
-                    List parameterNames = visitor.getParameters();
-                    if (!parameterNames.isEmpty()) {
-                        List bindingNames = new ArrayList(parameterNames.size());
+                        bindingNames = new ArrayList(inputSet.getInputParameters().size());
                         try {
                             // iterate over all the parameterNames in the SQL
-                            for (Iterator paramIter = parameterNames.iterator(); paramIter.hasNext();) {
+                            for (Iterator paramIter = inputSet.getInputParameters().iterator(); paramIter.hasNext();) {
                                 // the param name
-                                String paramName = (String)paramIter.next();
+                                InputParameter param = (InputParameter)paramIter.next();
                                 // find the mapping class column name that each param is bounded to
                                 // and collect these bindings
                                 MappingClass mappingClass = (MappingClass)target;
@@ -675,12 +655,11 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                                         }
                                         // compare the param names from sql and inputParam name
                                         String inputName = inputParam.getName();
-                                        if (inputName != null && inputName.equalsIgnoreCase(paramName)) {
+                                        if (inputName != null && inputName.equalsIgnoreCase(param.getName())) {
                                             MappingClassColumn mappingColumn = binding.getMappingClassColumn();
                                             SqlAspect sqlAspect = AspectManager.getSqlAspect(mappingColumn);
                                             String mappingColumnName = sqlAspect.getFullName(mappingColumn);
-                                            // can be duplicates Defect 17719
-                                            bindingNames.add(mappingColumnName);
+                                            bindingNames.add(new AliasSymbol(inputName, new ElementSymbol(mappingColumnName)).toString());
                                         }
                                     }
                                 }
@@ -688,18 +667,17 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
                         } catch (Throwable e) {
                             TransformationPlugin.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
                         }
-
-                        // sql from the modified command
-                        final String tranformedSql = command.toString();
-                        if (!CoreStringUtil.isEmpty(tranformedSql)) {
-                            return new SqlTransformationInfo(tranformedSql, bindingNames);
-                        }
                     }
+                    String tranformedSql = null;
+                    if (command != null) {
+                        // sql from the modified command
+                        tranformedSql = command.toString();
+                    }
+
+                    return new SqlTransformationInfo(tranformedSql, bindingNames);
                 }
 
-                if (!CoreStringUtil.isEmpty(selectSql)) {
-                    return new SqlTransformationInfo(selectSql);
-                }
+                return new SqlTransformationInfo(selectSql);
             }
 
             // -------------------------------------------------------------------------

@@ -230,15 +230,6 @@
          label="%revalidateModelTransformationsAction.label">
       </resourceAction>
    </extension>
-<!-- XQuery Transformation Editor -->
-   <extension
-         id="XQueryTransformationObjectEditorPage"
-         name="XQuery Object Editor"
-         point="org.teiid.designer.ui.modelObjectEditorPage">
-      <class
-            name="com.metamatrix.modeler.transformation.ui.editors.XQueryObjectEditorPage">
-      </class>
-   </extension>
        <extension
 		id="ImportTransformationSqlFromTextAction"
 		name="%importTransformationSqlFromTextAction.name"

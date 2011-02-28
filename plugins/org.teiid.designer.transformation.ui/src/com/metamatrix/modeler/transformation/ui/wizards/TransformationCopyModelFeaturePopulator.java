@@ -21,11 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
-import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 import com.metamatrix.modeler.core.util.NewModelObjectHelperManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -267,10 +262,6 @@ public class TransformationCopyModelFeaturePopulator
                         Boolean skipDescendants = new Boolean(doTransformation);
                         descendantsToSkip.add(skipDescendants);
                         
-                        if (originalIsProcedure) {
-                            removeOutParameters(curCopy);
-                        }
-                        
                         if (doTransformation) {
                             try {
                                 NewModelObjectHelperManager.helpCreate(curCopy, extraProperties);
@@ -314,39 +305,6 @@ public class TransformationCopyModelFeaturePopulator
             }
         }
 //        System.out.println("finished making transformations at "+new Date()+"; took "+(System.currentTimeMillis()-starttime));
-    }
-    
-    private void removeOutParameters(EObject curCopy) {
-        SqlProcedureAspect procedureAspect = (SqlProcedureAspect)AspectManager.getSqlAspect(curCopy);
-                                                               
-        // Get the Parameter attributes from the group
-        List procParams = procedureAspect.getParameters(curCopy);
-        
-        for(int i=0;i<procParams.size();i++) {
-            EObject paramObject = (EObject) procParams.get(i);
-            SqlAspect sqlAspect = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(paramObject);
-            if(sqlAspect instanceof SqlProcedureParameterAspect) {
-                SqlProcedureParameterAspect paramAspect = (SqlProcedureParameterAspect) sqlAspect;
-                int direction = paramAspect.getType(paramObject);
-                switch(direction) {
-                    case MetadataConstants.PARAMETER_TYPES.INOUT_PARM:
-                        paramAspect.setDirection(paramObject, MetadataConstants.PARAMETER_TYPES.IN_PARM);
-                        break;
-                    case MetadataConstants.PARAMETER_TYPES.OUT_PARM:
-                        try {
-                            modelEditor.delete(paramObject);
-                        } catch (ModelerCoreException err) {
-                        }
-                        break;
-                    case MetadataConstants.PARAMETER_TYPES.RETURN_VALUE:
-                        try {
-                            modelEditor.delete(paramObject);
-                        } catch (ModelerCoreException err) {
-                        }
-                        break;
-                }
-            }
-        }
     }
     
     private boolean getNextDescendantNodeOfSiblings(int startingIndex,

@@ -46,7 +46,6 @@ import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
-import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.ProcedureResult;
@@ -538,9 +537,11 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
 
         // target of the mapping root is a procedure
         Procedure procTrgt = (Procedure)target;
+        // command type
+        int cmdType = command.getType();
         // get the resultSet on the procedure
         ProcedureResult procResult = procTrgt.getResult();
-        if (procResult == null) {
+        if (procResult == null && cmdType != Command.TYPE_UPDATE_PROCEDURE) {
             // create validation problem and additional to the results
             ValidationProblem typeProblem = new ValidationProblemImpl(
                                                                       0,
@@ -568,16 +569,6 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         boolean paramUsed = parameters.isEmpty();
         for (final Iterator paramIter = parameters.iterator(); paramIter.hasNext();) {
             ProcedureParameter param = (ProcedureParameter)paramIter.next();
-            DirectionKind direction = param.getDirection();
-            if (direction.getValue() != DirectionKind.IN) {
-                // create validation problem and additional to the results
-                ValidationProblem typeProblem = new ValidationProblemImpl(
-                                                                          0,
-                                                                          IStatus.ERROR,
-                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.A_virtual_stored_procedure_can_only_define_IN_parameters._2")); //$NON-NLS-1$
-                validationResult.addProblem(typeProblem);
-                return;
-            }
 
             // check if any of the parameters are used in the SQL transform defining the
             // procedure
@@ -606,8 +597,6 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             validationResult.addProblem(typeProblem);
         }
 
-        // command type
-        int cmdType = command.getType();
         // if the command cannot be an UpdateProcedure, it can be a VirtualProcedure
         if (cmdType == Command.TYPE_UPDATE_PROCEDURE && ((CreateUpdateProcedureCommand)command).isUpdateProcedure()) {
             // create validation problem and additional to the results

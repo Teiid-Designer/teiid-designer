@@ -216,8 +216,7 @@ public class TransformationDiagramType extends AbstractDiagramType {
             }
         } else if (TransformationHelper.isTransformationObject(input)) {
             // Check the SQL Aspect and make sure it's not a Mapping Class
-            if (TransformationHelper.isSqlTransformationMappingRoot(input)
-                || TransformationHelper.isXQueryTransformationMappingRoot(input)) {
+            if (TransformationHelper.isSqlTransformationMappingRoot(input)) {
                 EObject virtualGroup = TransformationHelper.getTransformationLinkTarget((EObject)input);
                 SqlAspect sqlAspect = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(virtualGroup);
                 if (sqlAspect instanceof MappingClassSqlAspect) {

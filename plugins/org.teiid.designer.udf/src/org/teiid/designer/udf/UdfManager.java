@@ -8,18 +8,11 @@
 package org.teiid.designer.udf;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -31,17 +24,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.teiid.designer.udf.UdfModelEvent.Type;
-import org.teiid.metadata.FunctionMethod;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.function.FunctionTree;
 import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 import org.teiid.query.function.metadata.FunctionMetadataReader;
-
+import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.ModelType;
 import com.metamatrix.modeler.core.ModelEditor;
@@ -57,22 +48,30 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 public final class UdfManager implements IResourceChangeListener {
-
+    
     public static final UdfManager INSTANCE = new UdfManager();
     
     public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
 
+    private static class UdfInfo {
+        String modelName;
+        UDFSource source;
+        
+        public UdfInfo(String modelname) {
+            this.modelName = modelname;
+        }
+    }
+    
     private FunctionLibrary functionLibrary;
-
-    private ListenerList changeListeners;
+   
     /**
      * A collection of function models.
      * 
      * @since 6.0.0
      */
-    private Map<URL, UDFSource> functionModels;
+    private Map<URL, UdfInfo> functionModels = new HashMap<URL, UdfInfo>();
 
-    private boolean initialized;
+    private volatile boolean initialized;
 
     /**
      * Don't allow public construction.
@@ -80,37 +79,6 @@ public final class UdfManager implements IResourceChangeListener {
      * @since 6.0.0
      */
     private UdfManager() {
-        this.changeListeners = new ListenerList(ListenerList.IDENTITY);
-        this.functionModels = new HashMap<URL, UDFSource>();
-    }
-
-    public Set<URL> getUDFs() {
-        return this.functionModels.keySet();
-    }
-
-    /**
-     * @param listener the listener being registered to receive an event whenever a UDF model is changed
-     * @since 6.0.0
-     */
-    public void addChangeListener( UdfModelListener listener ) {
-        this.changeListeners.add(listener);
-
-        // notify new listener of the registered UDF models
-        for (URL url : this.functionModels.keySet()) {
-            listener.processEvent(new UdfModelEvent(url, Type.NEW));
-        }
-    }
-
-    private UDFSource findUdfSource( File functionModel ) {
-        URL url;
-        try {
-            url = functionModel.toURI().toURL();
-            return this.functionModels.get(url);
-        } catch (MalformedURLException e) {
-            UdfPlugin.UTIL.log(e);
-        }
-
-        return null;
     }
 
     /**
@@ -122,28 +90,13 @@ public final class UdfManager implements IResourceChangeListener {
     private EmfResource getFunctionModelResource( File udfModel ) throws CoreException {
         String path = udfModel.getAbsolutePath();
         URI uri = URI.createFileURI(path);
-        return (EmfResource)ModelerCore.getModelContainer().getResource(uri, false);
+        Resource r = ModelerCore.getModelContainer().getResource(uri, false);
+        if (r instanceof EmfResource) {
+            return (EmfResource)r;
+        }
+        return null;
     }
     
-    private void loadWorkspaceFunctionModels() {
-    	Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
-		try {
-			for( IResource next : allResources ) {
-				if( ModelUtil.isModelFile(next, true)) {
-					ModelResource mr = ModelUtil.getModelResource((IFile)next, true);
-
-					if( mr.getModelType().getValue() == ModelType.FUNCTION) {
-				        IPath path = mr.getUnderlyingResource().getLocation();
-				        registerFunctionModel(new File(path.toOSString()));
-					} 
-			    }
-			}
-		} catch (Exception err) {
-			UdfPlugin.UTIL.log(err);
-		}
-		
-    }
-
     /**
      * Ensures the UDF model is located in the workspace and the FunctionLibraryManager has been initialized using the default UDF
      * model. <strong>This must be called before any other method can be used.</strong>
@@ -151,12 +104,29 @@ public final class UdfManager implements IResourceChangeListener {
      * @throws Exception if there was a problem with the UDF model or library manager
      * @since 6.0.0
      */
-    public void initialize() throws Exception {
+    public synchronized void initialize() throws Exception {
+        if (initialized) {
+            return;
+        }
 
         // register to receive resource events so that we can notify listeners when a function model changes
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
         
-        loadWorkspaceFunctionModels();
+        Collection<IResource> allResources = WorkspaceResourceFinderUtil.getAllWorkspaceResources();
+        try {
+            for( IResource next : allResources ) {
+                if(! ModelUtil.isModelFile(next, true)) {
+                    continue;
+                }
+                ModelResource mr = ModelUtil.getModelResource((IFile)next, true);
+
+                if( mr.getModelType().getValue() == ModelType.FUNCTION) {
+                    registerFunctionModel(mr.getPath(), false);
+                } 
+            }
+        } catch (Exception err) {
+            UdfPlugin.UTIL.log(err);
+        }
         
         initialized = true;
     }
@@ -197,69 +167,22 @@ public final class UdfManager implements IResourceChangeListener {
         return true;
     }
 
-    private void notifyListeners( File udfModel,
-                                  Type type ) throws Exception {
-        // don't notify if model is added or changed and is not valid
-        if (type != Type.DELETED && !isFunctionModelValid(udfModel)) {
-            return;
-        }
-
-        UdfModelEvent event = new UdfModelEvent(udfModel.toURI().toURL(), type);
-
+    private synchronized boolean makeModification( File udfModel, String modelName,
+                                  boolean deleted ) throws Exception {
         // let query engine know of the change so that functions can be available for modeling
-        udfModelChanged(event);
-
-        if (this.changeListeners.size() != 0) {
-            Object[] listeners = this.changeListeners.getListeners();
-
-            for (Object listener : listeners) {
-                try {
-                    ((UdfModelListener)listener).processEvent(event);
-                } catch (Exception e) {
-                    String msg = UdfPlugin.UTIL.getString(I18nUtil.getPropertyPrefix(UdfManager.class) + "exceptionInHander", listener.getClass()); //$NON-NLS-1$
-                    UdfPlugin.UTIL.log(IStatus.ERROR, e, msg);
-                    this.changeListeners.remove(listener);
-                }
-            }
-        }
-    }
-
-    private void udfModelChanged( UdfModelEvent event ) {
-        URL url = event.getUrl();
-        UDFSource udfSource = this.functionModels.get(url);
-        boolean remove = (udfSource != null);
-        boolean add = !event.isDeleted();
-
-        if (remove) {
-            this.functionModels.remove(url);
-        }
-
-        if (add) {
-            try {
-                this.functionModels.put(url, null);
-            } catch (Exception e) {
-                UdfPlugin.UTIL.log(e);
-            }
+        URL url = udfModel.toURI().toURL();
+        boolean result = false;
+        if (deleted) {
+            result = this.functionModels.remove(url) != null;
+        } else {
+            result = true;
+            this.functionModels.put(url, new UdfInfo(modelName));
         }
         
-        functionLibrary = null;
-    }
-
-    /**
-     * Informs the Query Engine's Function Library that the specified function model should be loaded. This method should be only
-     * once for a model. When the model is changed and saved the changes are broadcast via {@link IResourceChangeEvent}s.
-     * 
-     * @param udfModel the model being registered
-     * @throws Exception if there is a problem loading the file
-     */
-    public void registerFunctionModel( File udfModel ) throws Exception {
-        Type type = Type.CHANGED;
-
-        if (findUdfSource(udfModel) == null) {
-            type = Type.NEW;
+        if (result) {
+            functionLibrary = null;
         }
-
-        notifyListeners(udfModel, type);
+        return result;
     }
 
     /**
@@ -270,80 +193,61 @@ public final class UdfManager implements IResourceChangeListener {
      * @throws Exception if there is a problem loading the file
      * @see #addFunctionModel(File)
      */
-    public void registerFunctionModel( ModelResource udfModel ) throws Exception {
-        IPath path = udfModel.getUnderlyingResource().getLocation();
-        registerFunctionModel(new File(path.toOSString()));
+    public void registerFunctionModel( IPath udfModel, boolean delete ) throws Exception {
+        File f = new File(udfModel.toOSString());
+        
+        if (!delete && !isFunctionModelValid(f)) {
+            return;
+        }
+        
+        makeModification(f, FileUtils.getFilenameWithoutExtension(udfModel.lastSegment()), delete);
     }
 
     @Override
     public void resourceChanged( IResourceChangeEvent event ) {
-        if (!initialized) {
+        if (!initialized || !ResourceChangeUtilities.isPostChange(event)) {
             return;
         }
 
-        if (ResourceChangeUtilities.isPostChange(event)) {
-            if (ResourceChangeUtilities.isChanged(event.getDelta())) {
-                ModelEditor modelEditor = ModelerCore.getModelEditor();
-                IResourceDelta[] children = event.getDelta().getAffectedChildren();
+        ModelEditor modelEditor = ModelerCore.getModelEditor();
+        IResourceDelta[] children = event.getDelta().getAffectedChildren();
 
-                for (int i = 0; i < children.length; i++) {
-                    IResource resource = children[i].getResource();
+        for (int i = 0; i < children.length; i++) {
+            IResource resource = children[i].getResource();
 
-                    // Check to see if UDF model
+            // Check to see if UDF model
+            
+            // make sure we are in the UDF project
+            if (resource == null || !(resource instanceof IProject) || !(resource.getParent() instanceof IWorkspaceRoot)) {
+                continue;
+            }
+            IResourceDelta[] udfFiles = children[i].getAffectedChildren();
+
+            for (int j = 0; j < udfFiles.length; j++) {
+                resource = udfFiles[j].getResource();
+
+                if (!(resource instanceof IFile)) {
+                    continue;
+                }
+
+                try {
+                    // make sure we're looking at a UDF model
+                    ModelResource modelResource = modelEditor.findModelResource((IFile)resource);
+                    IPath path = ((IFile)resource).getRawLocation();
                     
-                    // make sure we are in the UDF project
-                    if ((resource != null) && (resource instanceof IProject) && (resource.getParent() instanceof IWorkspaceRoot)) {
-                        IResourceDelta[] udfFiles = children[i].getAffectedChildren();
-
-                        for (int j = 0; j < udfFiles.length; j++) {
-                            resource = udfFiles[j].getResource();
-
-                            try {
-                                // make sure we're looking at a UDF model
-                                if ((resource != null) && (resource instanceof IFile)) {
-                                    ModelResource modelResource = modelEditor.findModelResource((IFile)resource);
-
-                                    // model resource will be null for non-model files (like .project)
-                                    if ((modelResource != null) && (modelResource.getModelType().getValue() == ModelType.FUNCTION)) {
-                                        // only update if the UDF model was saved
-                                        // DQP throws an exception if you send it a model that has errors.
-                                        if ((udfFiles[j].getFlags() & IResourceDelta.CONTENT) != 0) {
-                                            registerFunctionModel(modelResource); // inform listeners
-                                        }
-                                    }
-                                }
-                            } catch (Exception e) {
-                                UdfPlugin.UTIL.log(e);
-                            }
+                    // model resource will be null for non-model files (like .project)
+                    if (modelResource == null) {
+                        if (ResourceChangeUtilities.isRemoved(udfFiles[j])) {
+                            registerFunctionModel(path, true);
                         }
+                    } else if (modelResource.getModelType().getValue() == ModelType.FUNCTION && (ResourceChangeUtilities.isContentChanged(udfFiles[j]) || ResourceChangeUtilities.isAdded(udfFiles[j]))) {
+                        registerFunctionModel(path, false);
                     }
+                } catch (Exception e) {
+                    UdfPlugin.UTIL.log(e);
                 }
             }
         }
-    }
-
-    /**
-     * @param listener the listener being removed from receiving an event whenever a UDF model is changed
-     * @since 6.0.0
-     */
-    public void removeChangeListener( UdfModelListener listener ) {
-        this.changeListeners.remove(listener);
-    }
-
-    /**
-     * @param udfModel the model being removed from the Function Library
-     * @throws Exception if there is a problem loading the file as a function model
-     * @since 6.0.0
-     */
-    public boolean removeFunctionModel( File udfModel ) throws Exception {
-        UDFSource udfSource = findUdfSource(udfModel);
-
-        if (udfSource != null) {
-            notifyListeners(udfModel, Type.DELETED);
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -356,25 +260,23 @@ public final class UdfManager implements IResourceChangeListener {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
-    public FunctionLibrary getFunctionLibrary() {
+    public synchronized FunctionLibrary getFunctionLibrary() {
         if (functionLibrary == null) {
-            Set<URL> urls = UdfManager.INSTANCE.getUDFs();
-            Collection<FunctionMethod> methods = new ArrayList<FunctionMethod>();
-            if (!urls.isEmpty()) {
-                for (URL url : urls) {
-                    try {
-                    	Collection functionMethods = FunctionMetadataReader.loadFunctionMethods(url.openStream());
-                        methods.addAll(functionMethods);
-                    } catch (IOException e) {
-                        //
-                    } catch (JAXBException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                }
+            FunctionTree[] trees = new FunctionTree[functionModels.size()];
+            int i = 0;
+            for (Map.Entry<URL, UdfInfo> entry : functionModels.entrySet()) {
+                try {
+                    UdfInfo value = entry.getValue();
+                    if (value.source == null) {
+                        Collection functionMethods = FunctionMetadataReader.loadFunctionMethods(entry.getKey().openStream());
+                        value.source = new UDFSource(functionMethods);
+                    }
+                    trees[i++] = new FunctionTree(value.modelName, value.source);
+                } catch (Exception e) {
+                    UdfPlugin.UTIL.log(e);
+				}
             }
-            functionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(),
-                                                  new FunctionTree(new UDFSource(methods)));
+            functionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), trees);
         }
         return functionLibrary;
     }

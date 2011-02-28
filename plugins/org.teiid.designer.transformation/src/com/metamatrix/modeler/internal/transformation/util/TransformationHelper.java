@@ -11,12 +11,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -32,7 +29,6 @@ import org.eclipse.emf.mapping.MappingRoot;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
@@ -42,18 +38,13 @@ import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
-import com.metamatrix.metamodels.relational.DirectionKind;
-import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.Table;
-import com.metamatrix.metamodels.transformation.InputParameter;
-import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -63,14 +54,12 @@ import com.metamatrix.metamodels.transformation.TransformationContainer;
 import com.metamatrix.metamodels.transformation.TransformationFactory;
 import com.metamatrix.metamodels.transformation.TransformationMapping;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
-import com.metamatrix.metamodels.transformation.XQueryTransformation;
 import com.metamatrix.metamodels.transformation.XQueryTransformationMappingRoot;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataConstants;
-import com.metamatrix.modeler.core.metadata.runtime.ProcedureRecord;
 import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
@@ -82,7 +71,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlResultSetAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.query.QueryValidator;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -112,8 +100,6 @@ public class TransformationHelper implements SqlConstants {
     private static final String REMOVE_SRC_ALIAS_TXN_DESCRIPTION = TransformationPlugin.Util.getString("TransformationHelper.removeSrcAliasTxnDescription"); //$NON-NLS-1$
 
     private static final String NULL_OR_INVALID_TARGET = "TransformationHelper.getTransformationMappingRoot:null or invalid target."; //$NON-NLS-1$
-
-    private static final String XML_SERVICE_URI = "XmlService"; //$NON-NLS-1$
 
     /**
      * Get the MappingHelper from a SqlTransformationMappingRoot. If one doesn't exist, it is created.
@@ -418,35 +404,6 @@ public class TransformationHelper implements SqlConstants {
     public static String getSqlString( Object transMappingRoot,
                                        int cmdType ) {
         return SqlMappingRootCache.getSqlString(transMappingRoot, cmdType);
-    }
-
-    /**
-     * Get the UUID SQL for the specified type. Does not go to cache - goes directly to mappingRoot.
-     * 
-     * @param transMappingRoot the transformation mappingRoot
-     * @param cmdType the commandType to get the current UUID SQL String
-     * @return the UUID SQL String
-     */
-    public static String getUUIDSqlString( Object transMappingRoot,
-                                           int cmdType ) {
-        String uuidString = null;
-        switch (cmdType) {
-            case QueryValidator.SELECT_TRNS:
-                uuidString = getSelectSqlUUIDString(transMappingRoot);
-                break;
-            case QueryValidator.INSERT_TRNS:
-                uuidString = getInsertSqlUUIDString(transMappingRoot);
-                break;
-            case QueryValidator.UPDATE_TRNS:
-                uuidString = getUpdateSqlUUIDString(transMappingRoot);
-                break;
-            case QueryValidator.DELETE_TRNS:
-                uuidString = getDeleteSqlUUIDString(transMappingRoot);
-                break;
-            default:
-                break;
-        }
-        return uuidString;
     }
 
     /**
@@ -1855,16 +1812,6 @@ public class TransformationHelper implements SqlConstants {
     }
 
     /**
-     * Determine if the supplied object is a XQueryTransformation
-     * 
-     * @param obj the object to test
-     * @return 'true' if object is a SqlTransformation, 'false' if not
-     */
-    public static boolean isXQueryTransformation( Object obj ) {
-        return (obj instanceof XQueryTransformation);
-    }
-
-    /**
      * Determine if the supplied object is a SqlTable
      * 
      * @param obj the object to test
@@ -1918,29 +1865,6 @@ public class TransformationHelper implements SqlConstants {
             isProcedure = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isProcedure((EObject)obj);
         }
         return isProcedure;
-    }
-
-    /**
-     * Determine if the supplied object is a XQueryProcedure
-     * 
-     * @param obj the object to test
-     * @return 'true' if object is a SqlProcedure, 'false' if not
-     * @since 5.0.1
-     */
-    public static boolean isXQueryProcedure( Object obj ) {
-        boolean result = false;
-        if (obj != null && obj instanceof EObject) {
-            boolean isProcedure = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isProcedure((EObject)obj);
-            if (isProcedure) {
-                // SWJ: this is a hack, but there's no time to build a whole XQuery Aspect framework
-                final String mmUri = ((EObject)obj).eClass().getEPackage().getNsURI();
-                if (mmUri != null && mmUri.endsWith(XML_SERVICE_URI)) {
-                    result = true;
-                }
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -2618,7 +2542,6 @@ public class TransformationHelper implements SqlConstants {
             // Should only be one....
             Object nextObj = allTransforms.iterator().next();
             if (isSqlTransformationMappingRoot(nextObj)) transformEObject = (EObject)nextObj;
-            else if (isXQueryTransformationMappingRoot(nextObj)) transformEObject = (EObject)nextObj;
         } else if (!isReadOnly(targetVirtualGroupEObject)) {
             // start txn if not already in txn
             boolean requiredStart = ModelerCore.startTxn(makeSignificant,
@@ -2627,14 +2550,8 @@ public class TransformationHelper implements SqlConstants {
             boolean succeeded = false;
             // Create transformation Object
             try {
-                // Create XQuery T-Root if the model is an XML Service View model
-                if (isXQueryProcedure(targetVirtualGroupEObject)) {
-                    transformEObject = ModelResourceContainerFactory.createNewXQueryTransformationMappingRoot(targetVirtualGroupEObject,
-                                                                                                              targetVirtualGroupEObject.eResource());
-                } else {
-                    transformEObject = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(targetVirtualGroupEObject,
+                transformEObject = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(targetVirtualGroupEObject,
                                                                                                            targetVirtualGroupEObject.eResource());
-                }
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
@@ -2752,29 +2669,6 @@ public class TransformationHelper implements SqlConstants {
         return false;
     }
 
-    public synchronized static boolean hasXQueryTransformationMappingRoot( EObject targetVirtualGroupEObject ) {
-        // Throw exception if supplied target is null or invalid
-        if (!TransformationHelper.isValidTransformationTarget(targetVirtualGroupEObject)) {
-            throw new IllegalArgumentException(NULL_OR_INVALID_TARGET);
-        }
-
-        List allTransforms = null;
-
-        ModelContents modelContents = ModelerCore.getModelEditor().getModelContents(targetVirtualGroupEObject);
-        if (modelContents != null) {
-            allTransforms = modelContents.getTransformations(targetVirtualGroupEObject);
-        }
-        if (!allTransforms.isEmpty()) {
-            // Should only be one....
-            Object nextObj = allTransforms.iterator().next();
-            if (isXQueryTransformationMappingRoot(nextObj)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * Indicates if the given <code>EObject</code> is contained within a read-only resource.
      * 
@@ -2794,117 +2688,6 @@ public class TransformationHelper implements SqlConstants {
             }
         }
         return result;
-    }
-
-    /**
-     * Get the ExternalMetadataMap for the supplied transformation MappingRoot.
-     * 
-     * @param transMappingRoot the transformation MappingRoot
-     * @return the external map to use when resolving
-     */
-    public static Map getExternalMetadataMap( Object transMappingRoot, // NO_UCD
-                                              int cmdType ) {
-        return SqlMappingRootCache.getExternalMetadataMap(transMappingRoot, cmdType);
-    }
-
-    /**
-     * Method to return the Map of External Metadata for a createUpdateProcedure.
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getExternalMapForCreateUpdateProcedure( EObject transMappingRoot, // NO_UCD
-                                                              int cmdType ) {
-        return SqlMappingRootCache.getExternalMapForCreateUpdateProc(transMappingRoot, cmdType);
-    }
-
-    /**
-     * Get the ExternalMetadataMap for the supplied target group.
-     * 
-     * @param targetGroup the target group of the transformation
-     * @return the external map to use when resolving
-     */
-    public static Map getExternalMetadataMap( final Command command,
-                                              final SqlTransformationMappingRoot mappingRoot,
-                                              final QueryMetadataInterface metadata, int transformType )
-        throws TeiidComponentException, QueryMetadataException {
-        if (mappingRoot != null) {
-            final Object targetGroup = mappingRoot.getTarget();
-            // If the transformation has mappingClass target, use InputSet as External Metadata
-            if (targetGroup instanceof MappingClass) {
-                Map externalMetadata = new HashMap();
-                EObject inputSet = ((MappingClass)targetGroup).getInputSet();
-                if (inputSet != null) {
-                    externalMetadata.putAll(getExternalMetadataMapForInputSet((InputSet)inputSet));
-                }
-
-                externalMetadata.putAll(getExternalMetadataMapForMappingClass((MappingClass)targetGroup, metadata));
-
-                return externalMetadata;
-            } else if (targetGroup instanceof Table) {
-                // Generate External Map for CreateUpdateProcedureCommand
-                if (command != null && command.getType() == Command.TYPE_UPDATE_PROCEDURE) {
-                    return getExternalMetadataMapForUpdateProcedure((Table)targetGroup, metadata);
-                } else if (command != null && command.getType() == Command.TYPE_TRIGGER_ACTION) {
-                    return getExternalMetadataMapForTriggerAction((Table)targetGroup, metadata, transformType);
-                }
-
-                // If the transformation has source procedures, Generate External Map from Target Group AccessPatterns
-                Map externalMetadata = new HashMap();
-                externalMetadata.putAll(getExternalMetadataMapForTable((Table)targetGroup, metadata));
-                return externalMetadata;
-            } else if (targetGroup instanceof Procedure) {
-                // Stored procedure
-                return getStoredProcedureExternalMetadataMap((Procedure)targetGroup, metadata);
-            } else if (targetGroup instanceof Operation) {
-                // Web service operation
-                return getOperationExternalMetadataMap((Operation)targetGroup, metadata);
-            }
-        }
-
-        return Collections.EMPTY_MAP;
-    }
-
-    /**
-     * Return the external metadata for a mapping class to procedure mapping
-     * 
-     * @param mc - The MappingClass
-     * @param proc - GroupSymbol for the Procedure
-     * @param metadata - QMI to use for metadata retrieval
-     * @return the map of metadata
-     * @throws MetaMatrixComponentException
-     * @throws QueryMetadataException
-     * @since 4.3
-     */
-    public static Map getExternalMetadataMapForMappingClass( final MappingClass mc,
-                                                             final QueryMetadataInterface metadata ) {
-        // Create external Metadata Map
-        HashMap externalMetadata = new HashMap();
-
-        return externalMetadata;
-    }
-
-    /**
-     * Return the List of ResultSet Parameters from the supplied StoredProcedure
-     * 
-     * @param proc the StoredProcedure
-     * @return the List of ResultSet Parameters
-     */
-    public static List getProcedureResultSetParameters( final StoredProcedure proc ) { // NO_UCD
-        List resultParams = Collections.EMPTY_LIST;
-        if (proc != null && proc.getProcedureID() instanceof ProcedureRecord) {
-            ProcedureRecord record = (ProcedureRecord)proc.getProcedureID();
-            Object resultSetID = record.getResultSetID();
-            final String uriString = record.getResourcePath() + DatatypeConstants.URI_REFERENCE_DELIMITER + resultSetID;
-            EObject resultSetEObj = getEObjectByURI(uriString);
-            if (TransformationHelper.isSqlProcedureResultSet(resultSetEObj)) {
-                MetamodelAspect aspect = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(resultSetEObj);
-                if (aspect != null && aspect instanceof SqlColumnSetAspect) {
-                    resultParams = ((SqlColumnSetAspect)aspect).getColumns(resultSetEObj);
-                }
-            }
-        }
-        return resultParams;
     }
 
     /**
@@ -2929,46 +2712,6 @@ public class TransformationHelper implements SqlConstants {
         return null;
     }
 
-    /**
-     * Method to return the Map of External Metadata for a procedure.
-     * 
-     * @param targetGroup the virtual group for this procedure
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getExternalMetadataMapForTable( final Table targetGroup,
-                                                      final QueryMetadataInterface metadata )
-        throws TeiidComponentException, QueryMetadataException {
-        return Collections.EMPTY_MAP;
-    }
-
-    /**
-     * Method to return the Map of External Metadata for a procedure.
-     * 
-     * @param targetGroup the virtual group for this procedure
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getExternalMetadataMapForUpdateProcedure( final Table targetGroup,
-                                                                final QueryMetadataInterface metadata )
-        throws TeiidComponentException, QueryMetadataException {
-        GroupSymbol gSymbol = getTargetGroupSymbol(targetGroup, metadata);
-        if (gSymbol != null) {
-            return ExternalMetadataUtil.getProcedureExternalMetadata(gSymbol, metadata);
-        }
-        // If no external metadata map was defined, set to empty map
-        return Collections.EMPTY_MAP;
-    }
-    
-    public static Map getExternalMetadataMapForTriggerAction( final Table targetGroup,
-                                                                final QueryMetadataInterface metadata, int commandType )
-        throws TeiidComponentException, QueryMetadataException {
-        GroupSymbol gSymbol = getTargetGroupSymbol(targetGroup, metadata);
-        if (gSymbol != null) {
-            return ExternalMetadataUtil.getTriggerActionExternalMetadata(gSymbol, metadata, commandType);
-        }
-        // If no external metadata map was defined, set to empty map
-        return Collections.EMPTY_MAP;
-    }
-    
     public static GroupSymbol getTargetGroupSymbol(final Table targetGroup,
                               final QueryMetadataInterface metadata) throws QueryMetadataException, TeiidComponentException {
         if (targetGroup == null) {
@@ -2983,156 +2726,6 @@ public class TransformationHelper implements SqlConstants {
             return gSymbol;
         }
         return null;
-    }
-
-    /**
-     * Method to return the Map of External Metadata for an InputSet.
-     * 
-     * @param inputSet the InputSet
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getExternalMetadataMapForInputSet( final InputSet inputSet ) {
-        Map externalMetadata = new HashMap();
-
-        // GroupSymbol (name form) for InputSet
-        GroupSymbol inputSetSymbol = new GroupSymbol(ProcedureReservedWords.INPUT);
-
-        List inputParams = inputSet.getInputParameters();
-
-        // Create ElementSymbols for each InputParameter
-        List elements = new ArrayList();
-        Iterator inputParamIter1 = inputParams.iterator();
-        while (inputParamIter1.hasNext()) {
-            InputParameter inputParam = (InputParameter)inputParamIter1.next();
-            // Create ElementSymbol from the InputParameter
-            SingleElementSymbol element = TransformationSqlHelper.createElemSymbol(inputParam, inputSetSymbol);
-            if (element != null) {
-                elements.add(element);
-            }
-        }
-
-        // populate the map
-        if (elements.size() > 0) {
-            externalMetadata.put(inputSetSymbol, elements);
-        }
-
-        // GroupSymbol (uuid form) for InputSet
-        String uuid = ModelerCore.getObjectIdString(inputSet);
-        GroupSymbol inputSetUuidSymbol = new GroupSymbol(uuid);
-
-        // collect element symbols
-        List elementSymbols = new ArrayList(elements.size());
-        Iterator inputParamIter2 = inputParams.iterator();
-        while (inputParamIter2.hasNext()) {
-            InputParameter inputParam = (InputParameter)inputParamIter2.next();
-            // Create ElementSymbol from the InputParameter
-            SingleElementSymbol element = TransformationSqlHelper.createElemSymbol(inputParam, inputSetUuidSymbol);
-            if (element != null) {
-                elementSymbols.add(element);
-            }
-        }
-
-        // populate the map
-        if (elementSymbols.size() > 0) {
-            externalMetadata.put(inputSetUuidSymbol, elementSymbols);
-        }
-
-        return externalMetadata;
-    }
-
-    /**
-     * Method to return the Map of External Metadata for a source Procedure.
-     * 
-     * @param procedure the Procedure
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getExternalMetadataMapForProcedure( final Procedure procedure ) { // NO_UCD
-        Map externalMetadata = new HashMap();
-
-        // GroupSymbol (name form) for InputSet
-        GroupSymbol procedureSymbol = new GroupSymbol(procedure.getName());
-
-        List params = procedure.getParameters();
-
-        // Create ElementSymbols for each InputParameter
-        List elements = new ArrayList();
-        for (Iterator iter = params.iterator(); iter.hasNext();) {
-            ProcedureParameter param = (ProcedureParameter)iter.next();
-            if (param.getDirection() == DirectionKind.IN_LITERAL || param.getDirection() == DirectionKind.INOUT_LITERAL) {
-                // Create ElementSymbol from the ProcedureParameter
-                SingleElementSymbol element = TransformationSqlHelper.createElemSymbol(param, procedureSymbol);
-                if (element != null) {
-                    elements.add(element);
-                }
-            }
-        }
-
-        // populate the map
-        if (elements.size() > 0) {
-            externalMetadata.put(procedureSymbol, elements);
-        }
-
-        // GroupSymbol (uuid form) for the Procedure
-        String uuid = ModelerCore.getObjectIdString(procedure);
-        GroupSymbol procedureUuidSymbol = new GroupSymbol(uuid);
-
-        // collect element symbols
-        List elementSymbols = new ArrayList(elements.size());
-        for (Iterator iter = params.iterator(); iter.hasNext();) {
-            ProcedureParameter param = (ProcedureParameter)iter.next();
-            if (param.getDirection() == DirectionKind.IN_LITERAL) {
-                // Create ElementSymbol from the ProcedureParameter
-                SingleElementSymbol element = TransformationSqlHelper.createElemSymbol(param, procedureUuidSymbol);
-                if (element != null) {
-                    elementSymbols.add(element);
-                }
-            }
-        }
-
-        // populate the map
-        if (elementSymbols.size() > 0) {
-            externalMetadata.put(procedureUuidSymbol, elementSymbols);
-        }
-
-        return externalMetadata;
-    }
-
-    /**
-     * Method to return the Map of External Metadata for the supplied stored procedure. If the query has no external metadata, an
-     * empty map is returned.
-     * 
-     * @param targetProcedure the virtual procedure for this transform
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getStoredProcedureExternalMetadataMap( final Procedure targetProcedure,
-                                                             final QueryMetadataInterface metadata )
-        throws TeiidComponentException, QueryMetadataException {
-        if (targetProcedure != null) {
-            String targetProcFullName = TransformationHelper.getSqlEObjectFullName(targetProcedure);
-            GroupSymbol gSymbol = new GroupSymbol(targetProcFullName);
-            return ExternalMetadataUtil.getStoredProcedureExternalMetadata(gSymbol, metadata);
-        }
-        // If no external metadata map was defined, set to empty map
-        return Collections.EMPTY_MAP;
-    }
-
-    /**
-     * Method to return the Map of External Metadata for the supplied stored procedure. If the query has no external metadata, an
-     * empty map is returned.
-     * 
-     * @param targetOperation the virtual web service operation for this transform
-     * @return the map of external metadata to use when resolving the query.
-     */
-    public static Map getOperationExternalMetadataMap( final Operation targetOperation,
-                                                       final QueryMetadataInterface metadata )
-        throws TeiidComponentException, QueryMetadataException {
-        if (targetOperation != null) {
-            String targetProcFullName = TransformationHelper.getSqlEObjectFullName(targetOperation);
-            GroupSymbol gSymbol = new GroupSymbol(targetProcFullName);
-            return ExternalMetadataUtil.getStoredProcedureExternalMetadata(gSymbol, metadata);
-        }
-        // If no external metadata map was defined, set to empty map
-        return Collections.EMPTY_MAP;
     }
 
     public static boolean isTransformationMappingRoot( Object object ) {
@@ -3156,22 +2749,12 @@ public class TransformationHelper implements SqlConstants {
         return (object != null && object instanceof SqlTransformationMappingRoot);
     }
 
-    /* 
-     * Method to determine whether the Notification source is the SqlTransformationMappingRoot
-     * @param object the object to test
-     * @return 'true' if the source is the SqlTransformationMappingRoot, 'false' if not.
-     */
-    public static boolean isXQueryTransformationMappingRoot( Object object ) {
-        return (object instanceof XQueryTransformationMappingRoot);
-    }
-
     public static boolean isTransformationObject( Object object ) {
         boolean result = false;
 
         if (object instanceof EObject) {
             if (isTransformationMapping(object) || isTransformationMappingRoot(object) || isSqlTransformation(object)
-                || isSqlTransformationMappingRoot(object) || isXQueryTransformation(object)
-                || isXQueryTransformationMappingRoot(object)) result = true;
+                || isSqlTransformationMappingRoot(object)) result = true;
         }
 
         return result;
@@ -3227,9 +2810,7 @@ public class TransformationHelper implements SqlConstants {
         EObject target = null;
         if (isSqlTransformationMappingRoot(mappingRoot)) {
             target = ((SqlTransformationMappingRoot)mappingRoot).getTarget();
-        } else if (isXQueryTransformationMappingRoot(mappingRoot)) {
-            target = ((XQueryTransformationMappingRoot)mappingRoot).getTarget();
-        }
+        } 
         return target;
     }
 
@@ -3246,10 +2827,11 @@ public class TransformationHelper implements SqlConstants {
             EObject rootTarget = ((SqlTransformationMappingRoot)mappingRoot).getTarget();
             if (isSqlProcedure(rootTarget)) {
                 SqlProcedureAspect procAspect = (SqlProcedureAspect)AspectManager.getSqlAspect(rootTarget);
-                result = (EObject)procAspect.getResult(rootTarget);
-                // If procedure doesn't have resultSet yet, create one
-                if (result == null) {
-                    result = createProcResultSet(rootTarget);
+                EObject rs = (EObject)procAspect.getResult(rootTarget);
+                if (rs != null) {
+                    result = rs;
+                } else {
+                    result = rootTarget;
                 }
             } else {
                 result = rootTarget;

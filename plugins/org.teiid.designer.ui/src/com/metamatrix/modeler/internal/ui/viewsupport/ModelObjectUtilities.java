@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -49,7 +48,6 @@ import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
@@ -328,7 +326,7 @@ public abstract class ModelObjectUtilities {
     public static boolean isExecutable( EObject eObject ) {
         // JUST RETURN FALSE if target object is Mapping Class Input Set or XQuery Procedure
         if ((TransformationHelper.isMappingClass(eObject) && !TransformationHelper.isStagingTable(eObject))
-            || TransformationHelper.isSqlInputSet(eObject) || TransformationHelper.isXQueryProcedure(eObject)) {
+            || TransformationHelper.isSqlInputSet(eObject)) {
             return false;
         }
 

@@ -48,11 +48,6 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
                     return true;
                 }
             }
-            if (TransformationHelper.isPhysical(newEObject)) {
-                if (TransformationHelper.isXQueryProcedure(newEObject)) {
-                    return true;
-                }
-            }
         }
         return false;
     }
@@ -90,47 +85,16 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                    } // endif
 	                    return true;
                 	}
-                } else if (TransformationHelper.isXQueryProcedure(newTarget)) {
-                	// Add T-Root
-                	if( !TransformationHelper.hasXQueryTransformationMappingRoot(newTarget) ) {
-	                    EObject newRoot = ModelResourceContainerFactory.createNewXQueryTransformationMappingRoot(newTarget,
-	                                                                                                             false,
-	                                                                                                             this);
-	                    // Add Sql Mapping Helper under it.
-	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-	                    // Create Result Set
-	                    EObject procResultSet = TransformationHelper.createProcResultSet(newTarget);
-	                    // Create a column in the result set
-	                    if (procResultSet != null) {
-	                        TransformationHelper.createProcResultSetColumn(procResultSet);
-	                    }
-	
-	                    return true;
-                	}
                 } else if (TransformationHelper.isSqlProcedure(newTarget)) {
                 	// Add T-Root
                 	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
 	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
 	                    // Add Sql Mapping Helper under it.
 	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-	                    // Create Result Set
-	                    TransformationHelper.createProcResultSet(newTarget);
 	                    return true;
                 	}
                 }
-            }
-            
-            if (TransformationHelper.isPhysical(newTarget)) {
-                if (TransformationHelper.isXQueryProcedure(newTarget)) {
-                    // Create Result Set
-                    EObject procResultSet = TransformationHelper.createProcResultSet(newTarget);
-                    // Create a column in the result set
-                    if (procResultSet != null) {
-                        TransformationHelper.createProcResultSetColumn(procResultSet);
-                    }
-                    return true;
-                }
-            }
+            }            
         }
         return false;
     }

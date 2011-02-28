@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -24,7 +23,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.WordEntry;
@@ -403,7 +401,7 @@ public class RuntimeAdapter extends RecordFactory {
                     continue;
                 }
                 SqlTransformationInfo transInfo = aspect.getTransformationInfo(eObject, context, types[i]);
-                if (transInfo != null) {
+                if (transInfo != null && !CoreStringUtil.isEmpty(transInfo.getSqlTransform())) {
                     String sqlTransform = transInfo.getSqlTransform();
                     List bindingNames = transInfo.getBindings();
                     List schemaPaths = transInfo.getSchemaPaths();

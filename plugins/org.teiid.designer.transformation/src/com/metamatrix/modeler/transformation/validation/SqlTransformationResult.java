@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
@@ -34,7 +32,6 @@ public class SqlTransformationResult implements QueryValidationResult {
     private String sqlString = null;
     private Command command = null;
     private Collection sourceGroups = Collections.EMPTY_LIST;
-    private Map externalMetadataMap = null;
     private Collection<IStatus> statuses = null;
     private Collection<IStatus> updateStatuses = null;
 
@@ -70,22 +67,6 @@ public class SqlTransformationResult implements QueryValidationResult {
         if (status != null) {
             this.statuses.add(status);      
         }
-    }
-
-    /**
-     * Construct an instance of SqlTransformationResult.
-     */
-    public SqlTransformationResult(boolean parsable,boolean resolvable,boolean validatable,
-                                   IStatus targetValidStatus, String sqlString,
-                                   Command command,Set sourceGroups,Map externalMap) {
-        this.isParsable = parsable;
-        this.isResolvable = resolvable;
-        this.isValidatable = validatable;
-        this.targetValidStatus = targetValidStatus;
-        this.sqlString = sqlString;
-        this.command = command;
-        setSourceGroups(sourceGroups);
-        this.externalMetadataMap = externalMap;
     }
 
     /**
@@ -128,14 +109,6 @@ public class SqlTransformationResult implements QueryValidationResult {
         if(sourceGroups !=null) {
             this.sourceGroups = sourceGroups;
         }
-    }
-
-    /**
-     * set the externalMetadataMap
-     * @param map the Map 
-     */
-    public void setExternalMetadataMap(Map map) {
-        this.externalMetadataMap = map;
     }
 
     /**
@@ -237,14 +210,6 @@ public class SqlTransformationResult implements QueryValidationResult {
             }
         }
         return isValid;
-    }
-
-    /**
-     * set the externalMetadataMap
-     * @return the Map 
-     */
-    public Map getExternalMetadataMap() {
-        return this.externalMetadataMap;
     }
 
     /**

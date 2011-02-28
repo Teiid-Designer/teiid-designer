@@ -13,8 +13,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -31,17 +29,18 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
 import org.teiid.query.validator.UpdateValidator;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorFailure;
 import org.teiid.query.validator.ValidatorReport;
 import org.teiid.query.validator.UpdateValidator.UpdateType;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.Table;
+import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.webservice.Operation;
@@ -408,20 +407,66 @@ public class TransformationValidator implements QueryValidator {
             resolverResult.setTargetValidStatus(status);
             return resolverResult;
         }
+        
 
-        Map externalMetadata = Collections.EMPTY_MAP;
-        try {
-            // look up external metadata
-            externalMetadata = TransformationHelper.getExternalMetadataMap(command, mappingRoot, getQueryMetadata(), transformType);
-        } catch (QueryMetadataException e) {
-            IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
-            return new SqlTransformationResult(command, errorStatus);
-        } catch (TeiidComponentException e) {
-            IStatus errorStatus = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
-            return new SqlTransformationResult(command, errorStatus);
-        }
         // resolve the command
-        return resolveCommand(command, externalMetadata);
+        CoreArgCheck.isNotNull(command);
+        String commandSQL = command.toString();
+        // ------------------------------------------------------------
+        // Resolve the Command
+        // ------------------------------------------------------------
+        try {
+            // Attempt to resolve the command
+            final QueryMetadataInterface metadata = getQueryMetadata();
+            
+            String targetFullName = TransformationHelper.getSqlEObjectFullName(this.targetGroup);
+            GroupSymbol gSymbol = new GroupSymbol(targetFullName);
+            
+            QueryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
+            // If unsuccessful, an exception is thrown
+
+            if (command instanceof CreateUpdateProcedureCommand
+                    && ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
+                    && !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
+                List<ElementSymbol> projectedSymbols = getProjectedSymbols();
+                ((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
+            }
+        } catch (TeiidComponentException e) {
+            // create status
+            status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
+        } catch (QueryResolverException e) {
+            // create status
+            status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
+        }
+
+        if (status != null && status.getSeverity() == IStatus.ERROR) {
+            return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
+        }
+
+        SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
+        // set resolvable
+        if (status == null) {
+            resolverResult.setResolvable(true);
+        }
+
+        return resolverResult;
+    }
+
+    private int getTeiidCommandType(int cmdtype) {
+        switch (cmdtype) {
+            case QueryValidator.SELECT_TRNS:
+                if (this.targetGroup instanceof Table || this.targetGroup instanceof MappingClass) {
+                    return Command.TYPE_QUERY;
+                }
+                return Command.TYPE_STORED_PROCEDURE;
+            case QueryValidator.INSERT_TRNS:
+                return Command.TYPE_INSERT;
+            case QueryValidator.UPDATE_TRNS:
+                return Command.TYPE_UPDATE;
+            case QueryValidator.DELETE_TRNS:
+                return Command.TYPE_DELETE;
+        }
+        return Command.TYPE_UNKNOWN;
     }
 
     /**
@@ -686,51 +731,6 @@ public class TransformationValidator implements QueryValidator {
         return Collections.emptyList();
     }
 
-    protected SqlTransformationResult resolveCommand( final Command command,
-                                                      final Map externalMetadata ) {
-        IStatus status = null;
-
-        CoreArgCheck.isNotNull(command);
-        String commandSQL = command.toString();
-        // ------------------------------------------------------------
-        // Resolve the Command
-        // ------------------------------------------------------------
-        try {
-            // Attempt to resolve the command
-            final QueryMetadataInterface metadata = getQueryMetadata();
-            QueryResolver.buildExternalGroups(externalMetadata, command);
-            QueryResolver.resolveCommand(command, metadata, true);
-            // If unsuccessful, an exception is thrown
-
-            if (command instanceof CreateUpdateProcedureCommand
-            		&& ((CreateUpdateProcedureCommand)command).getResultsCommand() instanceof DynamicCommand
-            		&& !((DynamicCommand)((CreateUpdateProcedureCommand)command).getResultsCommand()).isAsClauseSet()) {
-            	List<ElementSymbol> projectedSymbols = getProjectedSymbols();
-            	((CreateUpdateProcedureCommand)command).setProjectedSymbols(projectedSymbols);
-            }
-        } catch (TeiidComponentException e) {
-            // create status
-            status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
-        } catch (QueryResolverException e) {
-            // create status
-            status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
-        }
-
-        if (status != null && status.getSeverity() == IStatus.ERROR) {
-            return new SqlTransformationResult(parseSQL(commandSQL).getCommand(), status);
-        }
-
-        SqlTransformationResult resolverResult = new SqlTransformationResult(command, status);
-        // set the external metadata on the resolverResult
-        resolverResult.setExternalMetadataMap(externalMetadata);
-        // set resolvable
-        if (status == null) {
-            resolverResult.setResolvable(true);
-        }
-
-        return resolverResult;
-    }
-
     /**
      * Get the output columns for the target of the given transformation mapping root.
      * 
@@ -750,6 +750,8 @@ public class TransformationValidator implements QueryValidator {
             if (resultSet != null) {
                 SqlColumnSetAspect resultAspect = (SqlColumnSetAspect)AspectManager.getSqlAspect(resultSet);
                 outputColumns = resultAspect.getColumns(resultSet);
+            } else {
+                outputColumns = Collections.EMPTY_LIST;
             }
         }
         return outputColumns;

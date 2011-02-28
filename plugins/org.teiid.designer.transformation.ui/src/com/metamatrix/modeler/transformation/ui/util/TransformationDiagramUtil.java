@@ -145,8 +145,7 @@ public class TransformationDiagramUtil {
         EObject mappingClassEObject = null;
         if (TransformationHelper.isSqlTransformation(transformationObject)) {
 
-        } else if (TransformationHelper.isSqlTransformationMappingRoot(transformationObject)
-                   || TransformationHelper.isXQueryTransformationMappingRoot(transformationObject)) {
+        } else if (TransformationHelper.isSqlTransformationMappingRoot(transformationObject)) {
             mappingClassEObject = TransformationHelper.getTransformationLinkTarget(transformationObject);
         } else if (TransformationHelper.isTransformationMapping(transformationObject)) {
             EObject tRoot = transformationObject.eContainer();
