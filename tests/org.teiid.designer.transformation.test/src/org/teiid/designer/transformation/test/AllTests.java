@@ -3,7 +3,6 @@ package org.teiid.designer.transformation.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.metamatrix.modeler.internal.transformation.util.TestInputSetPramReplacementVisitor;
 import com.metamatrix.modeler.transformation.aspects.validation.rules.TestMappingClassTransformationValidationHelper;
 import com.metamatrix.modeler.transformation.metadata.TestPerformanceIndexFilePerRecordType;
 import com.metamatrix.modeler.transformation.metadata.TestPerformanceMultipleRecordTypesInOneIndexFile;
@@ -14,8 +13,7 @@ import com.metamatrix.modeler.transformation.metadata.TestTransformationMetadata
 
 
 @RunWith( Suite.class )
-@Suite.SuiteClasses( {TestInputSetPramReplacementVisitor.class,
-					  TestMappingClassTransformationValidationHelper.class,
+@Suite.SuiteClasses( {TestMappingClassTransformationValidationHelper.class,
 					  TestPerformanceIndexFilePerRecordType.class,
 					  TestPerformanceMultipleRecordTypesInOneIndexFile.class,
 					  TestPerformancePrefixAndPatternLookUp.class,
