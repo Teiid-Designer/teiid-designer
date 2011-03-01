@@ -16,24 +16,20 @@ import static com.metamatrix.modeler.vdb.ui.preferences.VdbPreferenceConstants.S
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
+import com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent;
+import com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener;
 
 /**
- * The <code>VdbPreferencePage</code> is the UI for managing general VDB-related preferences.
+ * The <code>VdbPreferencePage</code> is the UI for managing general VDB Editor-related preferences.
  */
-public final class VdbPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public final class VdbPreferencePage implements IEditorPreferencesComponent {
 
     /**
      * The editor used to enable and disable if a warning dialog should be displayed before synchronizing VDB entries.
@@ -42,11 +38,21 @@ public final class VdbPreferencePage extends PreferencePage implements IWorkbenc
 
     /**
      * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#addValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
      */
     @Override
-    protected Control createContents( Composite parent ) {
+    public void addValidationListener( IEditorPreferencesValidationListener listener ) {
+        // nothing to do
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#createEditorPreferencesComponent(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public Composite createEditorPreferencesComponent( Composite parent ) {
         Composite panel = new Composite(parent, SWT.NONE);
         panel.setLayout(new GridLayout(2, false));
         panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -64,100 +70,70 @@ public final class VdbPreferencePage extends PreferencePage implements IWorkbenc
         return panel;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return Util.getString(I18nUtil.getPropertyPrefix(VdbPreferencePage.class) + "description"); //$NON-NLS-1$
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#getImage()
-     */
-    @Override
-    public Image getImage() {
-        return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.IMPORT_VDB_ICON);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#getMessage()
-     */
-    @Override
-    public String getMessage() {
-        return Util.getString(I18nUtil.getPropertyPrefix(VdbPreferencePage.class) + "message"); //$NON-NLS-1$
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.preference.PreferencePage#getPreferenceStore()
-     */
-    @Override
-    public IPreferenceStore getPreferenceStore() {
+    private IPreferenceStore getPreferenceStore() {
         return VdbUiPlugin.singleton.getPreferenceStore();
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.jface.dialogs.DialogPage#getTitle()
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#getName()
      */
     @Override
-    public String getTitle() {
-        return Util.getString(I18nUtil.getPropertyPrefix(VdbPreferencePage.class) + "title"); //$NON-NLS-1$
+    public String getName() {
+        return Util.getString(I18nUtil.getPropertyPrefix(VdbPreferencePage.class) + "name"); //$NON-NLS-1$
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#getTooltip()
      */
     @Override
-    public void init( IWorkbench workbench ) {
+    public String getTooltip() {
+        return Util.getString(I18nUtil.getPropertyPrefix(VdbPreferencePage.class) + "toolTip"); //$NON-NLS-1$
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#performDefaults()
+     */
+    @Override
+    public void performDefaults() {
+        this.synchronizeWithoutWarningEditor.loadDefault();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#performOk()
+     */
+    @Override
+    public boolean performOk() {
+        this.synchronizeWithoutWarningEditor.store();
+        VdbUiPlugin.singleton.savePreferences();
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#removeValidationListener(com.metamatrix.ui.internal.preferences.IEditorPreferencesValidationListener)
+     */
+    @Override
+    public void removeValidationListener( IEditorPreferencesValidationListener listener ) {
         // nothing to do
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+     *
+     * @see com.metamatrix.ui.internal.preferences.IEditorPreferencesComponent#validate()
      */
     @Override
-    protected void performDefaults() {
-        this.synchronizeWithoutWarningEditor.loadDefault();
-        super.performDefaults();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.preference.PreferencePage#performOk()
-     */
-    @Override
-    public boolean performOk() {
-        this.synchronizeWithoutWarningEditor.store();
-        return super.performOk();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible( boolean visible ) {
-        super.setVisible(visible);
-
-        if (visible) {
-            this.synchronizeWithoutWarningEditor.setFocus();
-        }
+    public void validate() {
+        // nothing to do
     }
 
 }

@@ -729,6 +729,7 @@
                 <entry node="org.teiid.designer.query.ui"/>
                 <entry node="org.teiid.designer.ui"/>
                 <entry node="org.teiid.designer.ui.common"/>
+                <entry node="org.teiid.designer.vdb.ui"/>
             </mapping>
             <description>%preferenceTransfer.description</description>
         </transfer>

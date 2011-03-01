@@ -57,15 +57,10 @@
    </extension> 
 -->
 
-<!-- Main Preference Page -->
+<!-- VDB Editor Preference Page -->
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            name="%preferencePage.name"
-            category="modelerPreferencePage"
-            class="com.metamatrix.modeler.vdb.ui.preferences.VdbPreferencePage"
-            id="vdbGeneralPreferencePage">
-      </page>
-   </extension>
+        point="org.teiid.designer.ui.common.editorPreferences">
+        <editorPreferenceComponent class="com.metamatrix.modeler.vdb.ui.preferences.VdbPreferencePage" />
+   </extension>   
 
 </plugin>
