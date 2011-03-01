@@ -7,18 +7,28 @@
  */
 package com.metamatrix.ui.internal.widget;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * 
  */
 public interface ButtonProvider {
+    
+    /**
+     * @return the image descriptor or <code>null</code>
+     */
+    ImageDescriptor getImageDescriptor();
 
     /**
      * @return the {@link Button button's} text
      */
     String getText();
+    
+    /**
+     * @return the {@link Button button's} tooltip (<code>null</code> or empty of no tooltip)
+     */
+    String getToolTip();
 
     /**
      * @param selection
