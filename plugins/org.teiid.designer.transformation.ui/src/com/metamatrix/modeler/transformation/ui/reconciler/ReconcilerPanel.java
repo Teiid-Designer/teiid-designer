@@ -28,6 +28,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
@@ -36,12 +42,6 @@ import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.builder.ExpressionBuilder;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlDisplayPanel;
 import com.metamatrix.query.internal.ui.builder.util.ElementViewerFactory;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.ExpressionSymbol;
-import org.teiid.query.sql.symbol.SingleElementSymbol;
 import com.metamatrix.ui.graphics.GlobalUiFontManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
@@ -603,7 +603,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
             // Need to crate an Expression Symbol (constant = NULL) name = "expr"
             List symbolsList = new ArrayList(selectedBindings.size());
             for (int i = 0; i < selectedBindings.size(); i++) {
-                Constant nullConstant = new Constant(null, String.class);
+                Constant nullConstant = new Constant(null);
                 ExpressionSymbol nullExpression = new ExpressionSymbol(EXPRESSION, nullConstant);
                 symbolsList.add(nullExpression);
             }

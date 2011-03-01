@@ -302,16 +302,13 @@ public class TransformationMappingHelper implements SqlConstants {
      * @param attribute the EObject attribute
      * @return 'true' if the types match, 'false' if not
      */
-    private static boolean typesMatch( SingleElementSymbol seSymbol,
+    public static boolean typesMatch( SingleElementSymbol seSymbol,
                                        EObject attribute ) {
         boolean typesMatch = false;
         if (seSymbol != null && attribute != null) {
             Class symType = seSymbol.getType();
-            if (symType != null && symType != DataTypeManager.DefaultDataClasses.NULL) {
-                // If explicit match, set flag to true
-                if (RuntimeTypeConverter.isExplicitMatch(seSymbol, attribute)) {
-                    typesMatch = true;
-                }
+            if (symType != null && (symType == DataTypeManager.DefaultDataClasses.NULL || RuntimeTypeConverter.isExplicitMatch(seSymbol, attribute))) {
+                typesMatch = true;
             }
         }
         return typesMatch;
@@ -1196,11 +1193,6 @@ public class TransformationMappingHelper implements SqlConstants {
             }
         }
         return result;
-    }
-
-    public static boolean hasTypeConflict( Object attribute,
-                                           Object symbol ) {
-        return !RuntimeTypeConverter.isExplicitMatch(attribute, symbol);
     }
 
     /**
