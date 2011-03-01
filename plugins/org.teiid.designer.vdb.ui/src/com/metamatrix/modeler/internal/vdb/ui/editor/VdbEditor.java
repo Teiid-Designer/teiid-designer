@@ -1092,7 +1092,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
              */
             @Override
             public ImageDescriptor getImageDescriptor() {
-                return VdbUiPlugin.singleton.getImageDescriptor(Images.REMOVE_ROLE);
+                return VdbUiPlugin.singleton.getImageDescriptor(Images.REMOVE_FILE);
             }
 
             /**
