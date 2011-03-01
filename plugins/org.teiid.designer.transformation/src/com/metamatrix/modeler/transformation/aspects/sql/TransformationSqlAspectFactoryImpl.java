@@ -34,8 +34,6 @@ public class TransformationSqlAspectFactoryImpl implements MetamodelAspectFactor
                 return new InputParameterSqlAspect(entity);
 			case TransformationPackage.INPUT_SET: 
 				return new InputSetSqlAspect(entity);
-            case TransformationPackage.XQUERY_TRANSFORMATION_MAPPING_ROOT: 
-                return new XQueryTransformationMappingRootSqlAspect(entity);
             default:
                 return null;
         }
