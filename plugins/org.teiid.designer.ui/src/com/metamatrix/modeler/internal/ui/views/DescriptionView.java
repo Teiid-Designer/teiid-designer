@@ -594,6 +594,8 @@ public class DescriptionView extends ModelerView
             readOnly = this.currentModel.isReadOnly();//ModelUtilities.isReadOnly(this.currentModel);
         } else if (this.currentObject != null) {
         	// TODO: - support selection of a VDB
+        } else {
+        	readOnly = true;
         }
 
         this.editDescriptionAction.setEnabled(!readOnly);
