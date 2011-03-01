@@ -77,7 +77,7 @@ public interface UiConstants {
         String DATATYPE_HIERARCHY_VIEW = "views.datatypeHierarchyView"; //$NON-NLS-1$
         String DESCRIPTION_VIEW = "views.descriptionView"; //$NON-NLS-1$
         String METAMODELS_VIEW = "views.metamodelsView"; //$NON-NLS-1$
-        String ERROR_LOG_VIEW = "views.logView"; //$NON-NLS-1$
+        String ERROR_LOG_VIEW = "org.eclipse.pde.runtime.LogView"; //"views.logView"; //$NON-NLS-1$
         String TAGS_VIEW = "views.tagsView"; //$NON-NLS-1$
         String FAVORITES_VIEW_ID = "views.favoritesView"; //$NON-NLS-1$
         //        String PROBLEM_VIEW_ID         = PC.VIEWS + "problemView"; //$NON-NLS-1$

@@ -788,14 +788,6 @@
             class="com.metamatrix.modeler.internal.ui.views.MetamodelsView"
             id="views.metamodelsView">
       </view>
-<!-- Error Log view -->
-      <view
-            name="%errorLog.name"
-            icon="icons/full/cview16/error_log.gif"
-            category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.ui.internal.logview.LogView"
-            id="views.logView">
-      </view>
 <!-- Tags view -->
       <view
             name="%tagsView.name"
