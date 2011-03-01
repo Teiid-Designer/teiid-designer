@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.aspects.sql;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.teiid.query.sql.ProcedureReservedWords;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.SearchabilityType;
 import com.metamatrix.metamodels.transformation.InputParameter;
@@ -22,14 +23,13 @@ import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
  * InputParameterSqlAspect
  */
 public class InputParameterSqlAspect extends AbstractTransformationSqlAspect implements SqlColumnAspect {
     
-    private static final String INPUT_SET_FULL_NAME = ProcedureReservedWords.INPUT;
+    private static final String INPUT_SET_FULL_NAME = ProcedureReservedWords.INPUTS;
 
     /**
      * Construct an instance of InputParameterSqlAspect.

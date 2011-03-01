@@ -7,17 +7,24 @@
  */
 package com.metamatrix.modeler.transformation.aspects.validation.rules;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.MappingClassColumn;
 import com.metamatrix.metamodels.transformation.MappingClassSet;
@@ -32,14 +39,6 @@ import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.validation.ValidationProblemImpl;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
-import org.teiid.query.sql.ProcedureReservedWords;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 
 /**
  * This validation rule applys aaditional validation checks for sql transformations whose targets are mapping classes. Checks
@@ -128,12 +127,11 @@ public class MappingClassTransformationValidationHelper {
             boolean foundInParam = false;
             Criteria criteriaClause = query.getCriteria();
             if (criteriaClause != null) {
-                Collection elementSymbols = ElementCollectorVisitor.getElements(criteriaClause, true);
-                for (final Iterator iter = elementSymbols.iterator(); iter.hasNext();) {
-                    ElementSymbol symbol = (ElementSymbol)iter.next();
-                    if (CoreStringUtil.startsWithIgnoreCase(symbol.getName(), ProcedureReservedWords.INPUT)) {
-                        foundInParam = true;
-                    }
+                Set<GroupSymbol> groups = GroupsUsedByElementsVisitor.getGroups(criteriaClause);
+                if (groups.contains(new GroupSymbol(ProcedureReservedWords.INPUT))
+                || groups.contains(new GroupSymbol(ProcedureReservedWords.INPUTS))) {
+                    foundInParam = true;
+                       
                 }
             }
             if (!foundInParam) {

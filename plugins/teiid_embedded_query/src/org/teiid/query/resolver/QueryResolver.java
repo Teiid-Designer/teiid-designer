@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.api.exception.query.QueryParserException;
 import org.teiid.api.exception.query.QueryResolverException;
@@ -149,7 +148,7 @@ public class QueryResolver {
 	    case Command.TYPE_QUERY:
 	        QueryNode queryNode = metadata.getVirtualPlan(metadata.getGroupID(container.getCanonicalName()));
             
-	        return resolveWithBindingMetadata(currentCommand, metadata, queryNode);
+	        return resolveWithBindingMetadata(currentCommand, metadata, queryNode, false);
     	case Command.TYPE_INSERT:
     	case Command.TYPE_UPDATE:
     	case Command.TYPE_DELETE:
@@ -167,7 +166,7 @@ public class QueryResolver {
 	 * be marked as external references.
 	 */
 	public static TempMetadataStore resolveWithBindingMetadata(Command currentCommand,
-			QueryMetadataInterface metadata, QueryNode queryNode)
+			QueryMetadataInterface metadata, QueryNode queryNode, boolean replaceBindings)
 			throws TeiidComponentException, QueryResolverException {
 		Map<ElementSymbol, ElementSymbol> symbolMap = null;
 		if (queryNode.getBindings() != null && queryNode.getBindings().size() > 0) {
@@ -218,7 +217,7 @@ public class QueryResolver {
 		    }
 		}
 		TempMetadataStore result = resolveCommand(currentCommand, metadata, false);
-		if (symbolMap != null && !symbolMap.isEmpty()) {
+		if (replaceBindings && symbolMap != null && !symbolMap.isEmpty()) {
 			ExpressionMappingVisitor emv = new ExpressionMappingVisitor(symbolMap);
 			emv.setClone(true);
 			DeepPostOrderNavigator.doVisit(currentCommand, emv);
@@ -441,7 +440,7 @@ public class QueryResolver {
                 bindings = qnode.getBindings();
             }
             if (bindings != null && !bindings.isEmpty()) {
-            	QueryResolver.resolveCommand(result, virtualGroup, Command.TYPE_QUERY, qmi);
+            	QueryResolver.resolveWithBindingMetadata(result, qmi, qnode, true);
             } else {
             	QueryResolver.resolveCommand(result, qmi, false);
             }
