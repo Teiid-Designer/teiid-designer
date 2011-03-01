@@ -8,64 +8,77 @@
 package com.metamatrix.modeler.internal.ui.views;
 
 import java.util.Collection;
-import java.util.EventObject;
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.ui.views.properties.PropertySheet;
-import com.metamatrix.core.event.EventObjectListener;
-import com.metamatrix.core.event.EventSourceException;
+import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.util.XSDResourceImpl;
+
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
+import com.metamatrix.metamodels.core.ModelAnnotation;
+import com.metamatrix.metamodels.xsd.XsdUtil;
+import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
+import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import com.metamatrix.modeler.ui.event.ModelResourceEvent;
-import com.metamatrix.modeler.ui.undo.IUndoManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
-import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.UiUtil;
-import com.metamatrix.ui.product.IProductCharacteristics;
 import com.metamatrix.ui.text.StyledTextEditor;
 
-public class DescriptionView extends ModelerView
-    implements ISelectionListener, FocusListener, INotifyChangedListener, EventObjectListener, KeyListener, IPartListener,
-    IUndoManager, ITextEditorExtension2 {
+/**
+ * DescriptionView displays a read-only text viewer of textual content of a selected model or model object.
+ * 
+ * Editing (or clearing) the text is done via Edit and Clear actions located on the toolbar or via a context menu.
+ * 
+ *
+ */
 
+public class DescriptionView extends ModelerView
+    implements ISelectionListener, INotifyChangedListener, IMenuListener,
+    ITextEditorExtension2 {
+
+	private static final String DESCRIPTION_TXN_LABEL = UiConstants.Util.getString("DescriptionView.setDescriptionTransactionLabel"); //$NON-NLS-1$
+	
     /**
      * The object whose description is being shown. Will either be an {@link EObject}, {@link ModelResource}, or <code>null</code>
      * .
@@ -73,60 +86,37 @@ public class DescriptionView extends ModelerView
     private Object currentObject;
 
     private ModelResource currentModel;
-
-    /**
-     * Provides text widget with cut, copy, paste, select all, undo, and redo context menu and accelerator key support
-     * 
-     * @since 5.5.3
-     */
-    private StyledTextEditor textEditor;
+    
+    private StyledTextEditor textViewerPanel;
+    
+    // ---------- Description View actions --------------------
+    private Action editDescriptionAction;
+    private Action clearDescriptionAction;
 
     private void addListeners() {
         IWorkbenchWindow window = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-        window.getPartService().addPartListener(this);
         window.getSelectionService().addSelectionListener(this);
         ModelUtilities.addNotifyChangedListener(this);
-
-        try {
-            UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class, this);
-        } catch (EventSourceException e) {
-            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
+        this.textViewerPanel.addMenuListener(this);
     }
 
-    private void asyncClear( final boolean enabled ) {
-        Display.getDefault().asyncExec(new Runnable() {
-
-            public void run() {
-                clear(enabled);
-            }
-        });
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canRedo()
-     * @since 5.5
-     */
-    public boolean canRedo() {
-        return this.textEditor.getUndoManager().redoable();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#canUndo()
-     * @since 5.5
-     */
-    public boolean canUndo() {
-        return this.textEditor.getUndoManager().undoable();
-    }
-
-    void clear( boolean enabled ) {
-        if (!this.textEditor.isDisposed()) {
+    void clear( ) {
+        if (!this.textViewerPanel.isDisposed()) {
             setText(CoreStringUtil.Constants.EMPTY_STRING);
-            this.textEditor.setEditable(enabled);
-            this.textEditor.resetUndoRedoHistory();
-            this.textEditor.getTextWidget().traverse(SWT.TRAVERSE_PAGE_PREVIOUS);
-            setBackgroundColor(enabled);
         }
+    }
+    
+    private void clearDescription() {
+    	boolean cancelled = openEditorIfNeeded();
+    	
+    	if( !cancelled ) {
+    		saveChangedObjectDescription(CoreStringUtil.Constants.EMPTY_STRING);
+    	}
+    }
+    
+    private void contributeToActionBars() {
+        IActionBars bars = getViewSite().getActionBars();
+        fillLocalToolBar(bars.getToolBarManager());
     }
 
     /**
@@ -135,57 +125,91 @@ public class DescriptionView extends ModelerView
     @Override
     public void createPartControl( Composite parent ) {
         super.createPartControl(parent);
-        createTextEditor(parent);
+        
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        parent.setLayoutData(gd);
+        parent.setLayout(new GridLayout(2, false));
+        
+
+        // Create a Text Viewer
+        
+        this.textViewerPanel = new StyledTextEditor(parent, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+        this.textViewerPanel.setAllowCut(false);
+        this.textViewerPanel.setAllowPaste(false);
+        this.textViewerPanel.setAllowUndoRedo(false);
+        this.textViewerPanel.setAllowFind(true);
+        
+        GridData tvGD = new GridData(GridData.FILL_BOTH);
+        tvGD.horizontalSpan = 2;
+        this.textViewerPanel.setLayoutData(tvGD);
+        this.textViewerPanel.setEditable(false);
+        Color newColor = UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+        this.textViewerPanel.getTextWidget().setBackground(newColor);
+
+        contributeToActionBars();
+        
         addListeners();
     }
-
-    /**
-     * @param parent the parent of the text widget
-     * @since 5.5.3
-     */
-    private void createTextEditor( Composite parent ) {
-        this.textEditor = new StyledTextEditor(parent, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-        this.textEditor.getTextWidget().addFocusListener(this);
-        this.textEditor.getTextWidget().addKeyListener(this);
-    }
-
+    
     /**
      * @see com.metamatrix.modeler.internal.ui.views.ModelerView#dispose()
      * @since 5.5
      */
     @Override
     public void dispose() {
+    	this.textViewerPanel.addMenuListener(this);
+    	
         IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
         workbenchWindow.getSelectionService().removeSelectionListener(this);
-        // defect 17949 - remove as part listener when disposed.
-        workbenchWindow.getPartService().removePartListener(this);
+
         ModelUtilities.removeNotifyChangedListener(this);
 
-        try {
-            UiPlugin.getDefault().getEventBroker().removeListener(ModelResourceEvent.class, this);
-        } catch (EventSourceException e) {
-            UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
-
-        this.textEditor.dispose();
+        this.textViewerPanel.dispose();
 
         super.dispose();
     }
-
-    /**
-     * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-     * @since 5.5
-     */
-    public void focusGained( FocusEvent e ) {
-        // refresh();
+    
+    private void editDescription() {
+    	boolean cancelled = openEditorIfNeeded();
+    	
+    	if( !cancelled ) {
+	    	Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+	    	EditDescriptionDialog dialog = new EditDescriptionDialog(shell, getCurrentObjectName(), textViewerPanel.getText());
+//	        try {
+//          UiPlugin.getDefault().getEventBroker().addListener(ModelResourceEvent.class, this);
+//      } catch (EventSourceException e) {
+//          UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+//      }
+	        if (dialog.open() == Window.OK) {
+	        	String newDescription = dialog.getChangedDescription();
+	        	saveChangedObjectDescription(newDescription);
+	        	refresh();
+	        }
+    	}
     }
-
-    /**
-     * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
-     * @since 5.5
-     */
-    public void focusLost( FocusEvent e ) {
-        saveChangedObjectDescription();
+    
+    private void fillLocalToolBar( IToolBarManager manager ) {
+    	this.editDescriptionAction = new Action(null) {
+            @Override
+            public void run() {
+                editDescription();
+            }
+        };
+        this.editDescriptionAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.EDIT_DOCUMENT_ICON));
+        this.editDescriptionAction.setToolTipText(UiConstants.Util.getString("DescriptionView.edit.tooltip")); //$NON-NLS-1$
+        this.editDescriptionAction.setText(UiConstants.Util.getString("DescriptionView.edit.label")); //$NON-NLS-1$
+        manager.add(editDescriptionAction);
+        
+        clearDescriptionAction = new Action(null) {
+            @Override
+            public void run() {
+            	clearDescription();
+            }
+        };
+        this.clearDescriptionAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.CLEAR_DOCUMENT_ICON));
+        this.clearDescriptionAction.setToolTipText(UiConstants.Util.getString("DescriptionView.clear.tooltip")); //$NON-NLS-1$
+        this.clearDescriptionAction.setText(UiConstants.Util.getString("DescriptionView.clear.label")); //$NON-NLS-1$
+        manager.add(clearDescriptionAction);
     }
 
     /**
@@ -194,8 +218,8 @@ public class DescriptionView extends ModelerView
      */
     @Override
     public Object getAdapter( Class key ) {
-        if (key.equals(IFindReplaceTarget.class) && this.textEditor.getTextWidget().isFocusControl()) {
-            return this.textEditor.getTextViewer().getFindReplaceTarget();
+    	if (key.equals(IFindReplaceTarget.class)) {
+            return this.textViewerPanel.getTextViewer().getFindReplaceTarget();
         }
 
         return super.getAdapter(key);
@@ -211,45 +235,25 @@ public class DescriptionView extends ModelerView
         } else if (this.currentObject instanceof ModelResource) {
             return ModelUtilities.getModelDescription(this.currentModel);
         } else {
-            // jh Defect 22197 - support selection of a VDB
-            if (getProductCharacteristics().getObjectInfo(IProductCharacteristics.DESCRIPTION, this.currentObject) != null) {
-                return (String)getProductCharacteristics().getObjectInfo(IProductCharacteristics.DESCRIPTION, this.currentObject);
-            }
+        	// TODO: Check for VDB SELECTION
+        }
+
+        return null;
+    }
+    
+    String getCurrentObjectName() {
+        if (this.currentObject instanceof EObject) {
+            return ModelerCore.getModelEditor().getName((EObject)this.currentObject);
+        } else if (this.currentObject instanceof ModelResource) {
+            return ((ModelResource)this.currentModel).getItemName();
+        } else {
+            // TODO: Check for VDB SELECTION
         }
 
         return null;
     }
 
-    private IProductCharacteristics getProductCharacteristics() {
-        return ProductCustomizerMgr.getInstance().getProductCharacteristics();
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getRedoLabel()
-     * @since 5.5.3
-     */
-    public String getRedoLabel() {
-        return UiConstants.Util.getString(I18nUtil.getPropertyPrefix(DescriptionView.class) + "redoLabel"); //$NON-NLS-1$
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#getUndoLabel()
-     * @since 5.5.3
-     */
-    public String getUndoLabel() {
-        return UiConstants.Util.getString(I18nUtil.getPropertyPrefix(DescriptionView.class) + "undoLabel"); //$NON-NLS-1$
-    }
-
-    /**
-     * @see com.metamatrix.modeler.internal.ui.views.ModelerView#getUndoManager()
-     * @since 5.5.3
-     */
-    @Override
-    protected IUndoManager getUndoManager() {
-        return this;
-    }
-
-    /**
+    /**Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
      * @param obj1 the first object being compared
      * @param obj2 the second object being compared
      * @return <code>true</code> if the objects are equal and both not <code>null</code>
@@ -284,28 +288,13 @@ public class DescriptionView extends ModelerView
 
         return false;
     }
-
-    /**
-     * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-     * @since 5.5
-     */
-    public void keyPressed( KeyEvent e ) {
-        if ((e.character != 0) && (e.character != SWT.ESC)) {
-            // a 'real' key has been pressed; do something:
-            if (!this.textEditor.isEditable() && (this.currentObject != null)) {
-                // not editible, see if it should be:
-                openEditorIfNeeded();
-            } // endif
-        } // endif
-    }
-
-    /**
-     * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-     * @since 5.5
-     */
-    public void keyReleased( KeyEvent e ) {
-        // do nothing
-    }
+    
+	@Override
+	public void menuAboutToShow(IMenuManager manager) {
+		manager.add(new Separator());
+		manager.add(editDescriptionAction);
+		manager.add(clearDescriptionAction);
+	}
 
     /**
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
@@ -326,7 +315,7 @@ public class DescriptionView extends ModelerView
 
                 if (eObj == null) {
                     Resource resource = NotificationUtilities.getResource(nextNotification);
-
+                    
                     if ((resource != null) && (this.currentModel != null)) {
                         try {
                             if (this.currentModel.getEmfResource().equals(resource)) {
@@ -372,6 +361,8 @@ public class DescriptionView extends ModelerView
                             }
                         }
                     }
+                } else if( eObj instanceof ModelAnnotation && ((SourcedNotification)notification).getSource() == this ) {
+                	descriptionChanged =  true;
                 }
 
                 if (descriptionChanged) {
@@ -399,10 +390,14 @@ public class DescriptionView extends ModelerView
      * 
      * @since 5.5.3
      */
-    private void openEditorIfNeeded() {
+    private boolean openEditorIfNeeded() {
+    	boolean openEditorCancelled = false;
         // we only need to worry about the readonly status if the file is not currently open,
         // and its underlying IResource is not read only
-        if (!isEditorOpen() && !this.currentModel.getResource().getResourceAttributes().isReadOnly()) {
+        
+    	if( this.currentModel == null ) {
+    		
+    	} else if (!isEditorOpen() && !this.currentModel.getResource().getResourceAttributes().isReadOnly()) {
             final IFile modelFile = (IFile)this.currentModel.getResource();
             Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
 
@@ -420,86 +415,12 @@ public class DescriptionView extends ModelerView
                         setFocus();
                     }
                 });
+            } else {
+            	openEditorCancelled = true;
             }
         }
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-     * @since 5.5
-     */
-    public void partActivated( IWorkbenchPart part ) {
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-     * @since 5.5
-     */
-    public void partBroughtToTop( IWorkbenchPart part ) {
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-     * @since 5.5
-     */
-    public void partClosed( IWorkbenchPart part ) {
-        if ((part instanceof ModelEditor) && !this.textEditor.isDisposed()) {
-            saveChangedObjectDescription();
-
-            // if the current object's editor just closed null clear state
-            if (!isEditorOpen()) {
-                this.currentObject = null;
-                this.currentModel = null;
-            }
-
-            // every time a ModelEditor closes, refresh state:
-            UiUtil.runInSwtThread(new Runnable() {
-
-                public void run() {
-                    refresh();
-                }
-            }, true);
-        }
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-     * @since 5.5
-     */
-    public void partDeactivated( IWorkbenchPart part ) {
-    }
-
-    /**
-     * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-     * @since 5.5
-     */
-    public void partOpened( IWorkbenchPart part ) {
-    }
-
-    /**
-     * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
-     * @since 4.2
-     */
-    public void processEvent( EventObject obj ) {
-        ModelResourceEvent event = (ModelResourceEvent)obj;
-
-        if (event.getType() == ModelResourceEvent.RELOADED) {
-            asyncClear(false);
-        }
-    }
-
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#redo(org.eclipse.core.runtime.IProgressMonitor)
-     * @since 5.5.3
-     */
-    public void redo( IProgressMonitor monitor ) {
-        this.textEditor.getUndoManager().redo();
-
-        // since the redo action on the edit menu was run we need to save changes here since this view lost focus
-        saveChangedObjectDescription();
-
-        // work done
-        monitor.done();
+        
+        return openEditorCancelled;
     }
 
     /**
@@ -508,24 +429,12 @@ public class DescriptionView extends ModelerView
      * @since 5.5.3
      */
     void refresh() {
-        Runnable work = null;
-
-        if (this.currentObject == null) {
-            work = new Runnable() {
-
-                public void run() {
-                    clear(false);
-                }
-            };
-        } else {
-            work = new Runnable() {
-
-                public void run() {
-                    setText(getCurrentObjectDescription());
-                    updateReadOnlyState();
-                }
-            };
-        }
+        Runnable work = new Runnable() {
+            public void run() {
+                setText(getCurrentObjectDescription());
+                updateReadOnlyState();
+            }
+        };
 
         UiUtil.runInSwtThread(work, true);
     }
@@ -535,30 +444,29 @@ public class DescriptionView extends ModelerView
      * 
      * @since 5.5
      */
-    private void saveChangedObjectDescription() {
+    private void saveChangedObjectDescription(String changedDescription) {
         // nothing to save if no current object
         if (this.currentObject == null) {
             return;
         }
 
-        String currentDescription = this.textEditor.getText();
+        String currentDescription = changedDescription; //this.textEditor.getText();
         String savedDescription = null;
 
         if (this.currentObject instanceof EObject) {
             savedDescription = ModelObjectUtilities.getDescription((EObject)this.currentObject);
 
             if (!haveSameState(currentDescription, savedDescription)) {
-                ModelObjectUtilities.setDescription((EObject)this.currentObject, currentDescription, this);
+                setDescription((EObject)this.currentObject, currentDescription, this);
             }
         } else if (this.currentObject instanceof ModelResource) {
             savedDescription = ModelUtilities.getModelDescription((ModelResource)this.currentObject);
 
             if (!haveSameState(currentDescription, savedDescription)) {
-                ModelUtilities.setModelDescription((ModelResource)this.currentObject, currentDescription);
+                setDescription((ModelResource)this.currentObject, currentDescription, this);
             }
         } else if (this.currentObject != null) {
-            // jh Defect 22197 - support selection of a VDB
-            getProductCharacteristics().setObjectInfo(IProductCharacteristics.DESCRIPTION, this.currentObject, currentDescription);
+            // TODO: - support selection of a VDB
         }
     }
 
@@ -571,55 +479,12 @@ public class DescriptionView extends ModelerView
                                   ISelection selection ) {
         if ((part != this) && !(part instanceof PropertySheet)) {
             setCurrentObject(SelectionUtilities.getSelectedObject(selection));
+            updateReadOnlyState();
         }
     }
 
-    private void setBackgroundColor( boolean readOnly ) {
-        if (!this.textEditor.isDisposed()) {
-            // default takes care of having no selection
-            int colorCode = SWT.COLOR_WIDGET_BACKGROUND;
-
-            if (currentModel != null) {
-                // change color to match enabled or disabled color.
-                // we need to be more precise than ReadOnly here, since something
-                // could technically be read-only but not open in an editor
-                if (!ModelUtilities.isReadOnly(currentModel)) {
-                    // writable, always show enabled:
-                    colorCode = SWT.COLOR_WHITE;
-                } else if (!currentModel.isReadOnly()) {
-                    // writeable, but must not be open in editor; show enabled:
-                    colorCode = SWT.COLOR_WHITE;
-                } else {
-                    // currentMR must be read-only
-                    colorCode = SWT.COLOR_WIDGET_BACKGROUND;
-                } // endif
-            } else if (currentObject != null) {
-                Boolean bIsReadOnly = (Boolean)getProductCharacteristics().getObjectInfo(IProductCharacteristics.IS_READONLY,
-                                                                                         currentObject);
-
-                if (bIsReadOnly != null) {
-                    // since we default to readOnly, only need to mod color if NOT readOnly
-                    if (!bIsReadOnly.booleanValue()) {
-                        colorCode = SWT.COLOR_WHITE;
-                    }
-                }
-            }
-
-            // apply the color if needed
-            Color newColor = UiUtil.getSystemColor(colorCode);
-
-            if (!this.textEditor.getTextWidget().getBackground().equals(newColor)) {
-                this.textEditor.getTextWidget().setBackground(newColor);
-            }
-        } // endif
-
-    }
-
     private void setCurrentObject( Object object ) {
-        // before setting new current object save current
-        saveChangedObjectDescription();
 
-        Object savedObject = this.currentObject;
         this.currentObject = null;
         this.currentModel = null;
 
@@ -635,79 +500,104 @@ public class DescriptionView extends ModelerView
                 this.currentModel = ModelUtil.getModelResource((IFile)object, false);
                 this.currentObject = this.currentModel;
             } else {
-                // jh Defect 22197 - support selection of a VDB
-                if (getProductCharacteristics().getObjectInfo(IProductCharacteristics.DESCRIPTION, object) != null) {
-                    this.currentObject = object;
-                }
+                // TODO: - support selection of a VDB
             }
         } catch (Exception e) {
             UiConstants.Util.log(IStatus.ERROR, e, e.getClass().getName());
         }
 
         refresh();
-
-        // reset history only if a different object is selected so that the text set during the refresh can't be undone
-        if (!haveSameState(savedObject, this.currentObject)) {
-            this.textEditor.resetUndoRedoHistory();
-        }
     }
-
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-     * @since 5.5
+    
+    /*
+     *  Set up a transaction to set description on a model object
      */
-    @Override
-    public void setFocus() {
-        if (!this.textEditor.isDisposed()) {
-            this.textEditor.setFocus();
+    private void setDescription( EObject eObject, String description, Object eventSource ) {
+        if (!ModelObjectUtilities.isReadOnly(eObject)) {
+            boolean requiredStart = ModelerCore.startTxn(true, true, DESCRIPTION_TXN_LABEL, eventSource);
+            boolean succeeded = false;
+            try {
+                if (eObject.eResource() instanceof XSDResourceImpl) {
+                    if (eObject instanceof XSDConcreteComponent) {
+                        XsdUtil.addUserInfoAttribute((XSDConcreteComponent)eObject, description);
+                    }
+                } else {
+                    ModelerCore.getModelEditor().setDescription(eObject, description);
+                }
+                succeeded = true;
+            } catch (ModelerCoreException ex) {
+                String message = UiConstants.Util.getString("DescriptionView.errorSetDescription", eObject.toString()); //$NON-NLS-1$
+                UiConstants.Util.log(IStatus.ERROR, ex, message);
+            } finally {
+                if (requiredStart) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
+                }
+            }
         }
     }
+    
+    /*
+     *  Set up a transaction to set description on a ModelResource
+     */
+	private void setDescription(ModelResource modelResource, String description,
+			Object eventSource) {
+		if (!ModelUtilities.isReadOnly(modelResource)) {
+			boolean requiredStart = ModelerCore.startTxn(true, true, DESCRIPTION_TXN_LABEL, eventSource);
+			boolean succeeded = false;
+			try {
+
+                ModelAnnotation annotation = modelResource.getModelAnnotation();
+                if (annotation != null) {
+                    annotation.setDescription(description);
+                } else {
+                	String message = 
+                		UiConstants.Util.getString("DescriptionView.nullModelAnnotation", modelResource.getPath().toString()); //$NON-NLS-1$)
+                    UiConstants.Util.log(IStatus.ERROR, message);
+                }
+                succeeded = true;
+            } catch (ModelWorkspaceException ex) {
+                String message = UiConstants.Util.getString("DescriptionView.errorSetDescriptionModel", modelResource.toString()); //$NON-NLS-1$
+                UiConstants.Util.log(IStatus.ERROR, ex, message);
+            } finally {
+				if (requiredStart) {
+					if (succeeded) {
+						ModelerCore.commitTxn();
+					} else {
+						ModelerCore.rollbackTxn();
+					}
+				}
+			}
+		}
+	}
 
     void setText( String newDescription ) {
-        if (!this.textEditor.isDisposed()) {
+        if (!this.textViewerPanel.isDisposed()) {
             String newText = (newDescription == null ? CoreStringUtil.Constants.EMPTY_STRING : newDescription);
 
             // change the text if necessary
-            if (!newText.equals(this.textEditor.getText())) {
-                this.textEditor.setText(newText);
+            if (!newText.equals(this.textViewerPanel.getText())) {
+                this.textViewerPanel.setText(newText);
             }
         }
     }
 
-    /**
-     * @see com.metamatrix.modeler.ui.undo.IUndoManager#undo(org.eclipse.core.runtime.IProgressMonitor)
-     * @since 5.5.3
-     */
-    public void undo( IProgressMonitor monitor ) {
-        this.textEditor.getUndoManager().undo();
-
-        // since the undo action on the edit menu was run we need to save changes here since this view lost focus
-        saveChangedObjectDescription();
-
-        // work done
-        monitor.done();
-    }
 
     void updateReadOnlyState() {
-        if (!this.textEditor.isDisposed()) {
-            boolean readOnly = true;
 
-            if (this.currentModel != null) {
-                readOnly = ModelUtilities.isReadOnly(this.currentModel);
-            } else if (this.currentObject != null) {
-                // do prod characteristices check
-                Boolean bIsReadOnly = (Boolean)getProductCharacteristics().getObjectInfo(IProductCharacteristics.IS_READONLY,
-                                                                                         this.currentObject);
+        boolean readOnly = false;
 
-                if (bIsReadOnly != null) {
-                    // since we default to readOnly, only need to mod color if NOT readOnly
-                    readOnly = bIsReadOnly.booleanValue();
-                }
-            }
-
-            this.textEditor.setEditable(!readOnly);
-            setBackgroundColor(readOnly);
+        if (this.currentModel != null) {
+            readOnly = this.currentModel.isReadOnly();//ModelUtilities.isReadOnly(this.currentModel);
+        } else if (this.currentObject != null) {
+        	// TODO: - support selection of a VDB
         }
+
+        this.editDescriptionAction.setEnabled(!readOnly);
+        this.clearDescriptionAction.setEnabled(!readOnly);
     }
 
     /**
@@ -715,7 +605,7 @@ public class DescriptionView extends ModelerView
      * @since 5.5.3
      */
     public boolean isEditorInputModifiable() {
-        return this.textEditor.isEditable();
+        return false; //this.textEditor.isEditable();
     }
 
     /**
@@ -725,4 +615,11 @@ public class DescriptionView extends ModelerView
     public boolean validateEditorInputState() {
         return false;
     }
+
+	@Override
+	public void setFocus() {
+		// DO NOTHING
+	}
+
+
 }
