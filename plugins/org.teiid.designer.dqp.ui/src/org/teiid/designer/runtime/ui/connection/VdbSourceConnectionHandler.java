@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.runtime.ui.connection;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -14,8 +16,8 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
@@ -32,8 +34,6 @@ import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.dqp.DqpPlugin;
-import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
-import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 
 /**
  * Implements the SourceHandler interface which provides the VDB Editor the ability to access DQP-related connection
@@ -52,7 +52,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 	private static boolean initialized = false;
 
     static String getString( final String stringId ) {
-        return DqpUiConstants.UTIL.getString(PREFIX + stringId);
+        return UTIL.getString(PREFIX + stringId);
     }
 
 	@Override
@@ -64,15 +64,16 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         
         VdbSourceConnection vdbSourceConnection = null;
         
-        ExecutionAdmin defaultAdmin = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin();
+        ExecutionAdmin defaultAdmin = getDefaultServer().getAdmin();
         
         String uuid = ModelerCore.workspaceUuid().toString();
         
         try {
 			vdbSourceConnection = mapper.getVdbSourceConnection(defaultAdmin, uuid);
 		} catch (ModelWorkspaceException e) {
-			DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
-					DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_source_connection_info_for_{0}_model", sourceModelname)); //$NON-NLS-1$
+            UTIL.log(IStatus.ERROR,
+                     e,
+                     UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_source_connection_info_for_{0}_model", sourceModelname)); //$NON-NLS-1$
 		}
         
 		// TODO: vdbSourceConnection may be NULL, so query the user for translator name & jndi name
@@ -85,7 +86,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 		if( !initialized ) {
 			initialize();
 		}
-		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+		Server defServer = getDefaultServer();
 		if( defServer == null || !defServer.isConnected() ) {
 			return null;
 		}
@@ -141,20 +142,21 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         		SelectJndiDataSourceDialog dialog = new SelectJndiDataSourceDialog(Display.getCurrent().getActiveShell());
         		
         		TeiidDataSource initialSelection = null;
-        		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+        		Server defServer = getDefaultServer();
         		if( defServer != null && defServer.isConnected() ) {
         			try {
 						initialSelection = defServer.getAdmin().getDataSource(jndiName);
 					} catch (Exception e) {
-						DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
-								DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_data_source_for_name", jndiName)); //$NON-NLS-1$
+                        UTIL.log(IStatus.ERROR,
+                                 e,
+                                 UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_data_source_for_name", jndiName)); //$NON-NLS-1$
 					}
 					dialog.setInitialSelection(initialSelection);
         		}
         		
         		dialog.open();
         		
-        		if( dialog.getReturnCode() == Dialog.OK) {
+        		if( dialog.getReturnCode() == Window.OK) {
         			Object result = dialog.getFirstResult();
         			if( result != null && result instanceof TeiidDataSource) {
         				vdbModelEntry.setJndiName(((TeiidDataSource)result).getName());
@@ -188,20 +190,21 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         		SelectTranslatorDialog dialog = new SelectTranslatorDialog(Display.getCurrent().getActiveShell());
         		
         		TeiidTranslator initialSelection = null;
-        		Server defServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+        		Server defServer = getDefaultServer();
         		if( defServer != null && defServer.isConnected() ) {
         			try {
 						initialSelection = defServer.getAdmin().getTranslator(transName);
 					} catch (Exception e) {
-						DqpUiPlugin.UTIL.log(IStatus.ERROR, e, 
-								DqpUiConstants.UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_translator_for_name", transName)); //$NON-NLS-1$
+                        UTIL.log(IStatus.ERROR,
+                                 e,
+                                 UTIL.getString("VdbSourceConnectionHandler.Error_could_not_find_translator_for_name", transName)); //$NON-NLS-1$
 					}
 					dialog.setInitialSelection(initialSelection);
         		}
 
         		dialog.open();
         		
-        		if( dialog.getReturnCode() == Dialog.OK) {
+        		if( dialog.getReturnCode() == Window.OK) {
         			Object result = dialog.getFirstResult();
         			if( result != null && result instanceof TeiidTranslator) {
         				vdbModelEntry.setTranslator(((TeiidTranslator)result).getName());
@@ -211,5 +214,75 @@ public class VdbSourceConnectionHandler implements SourceHandler {
         }
 	}
     
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.vdb.connections.SourceHandler#getDataSourceNames()
+     */
+    @Override
+    public String[] getDataSourceNames() {
+        Server defaultServer = getDefaultServer();
+
+        if ((defaultServer != null) && defaultServer.isConnected()) {
+            Collection<TeiidDataSource> dataSources = null;
+
+            try {
+                dataSources = defaultServer.getAdmin().getDataSources();
+            } catch (Exception e) {
+                UTIL.log(IStatus.ERROR,
+                         e,
+                         UTIL.getString("VdbSourceConnectionHandler.errorObtainingDataSources", defaultServer.getHost())); //$NON-NLS-1$
+            }
+
+            if (dataSources != null) {
+                Collection<String> dataSourceNames = new ArrayList<String>();
+
+                for (TeiidDataSource dataSource : dataSources) {
+                    dataSourceNames.add(dataSource.getName());
+                }
+
+                return dataSourceNames.toArray(new String[dataSourceNames.size()]);
+            }
+        }
+
+        return null;
+    }
     
+    Server getDefaultServer() {
+        return DqpPlugin.getInstance().getServerManager().getDefaultServer();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.vdb.connections.SourceHandler#getTranslatorNames()
+     */
+    @Override
+    public String[] getTranslatorNames() {
+        Server defaultServer = getDefaultServer();
+
+        if ((defaultServer != null) && defaultServer.isConnected()) {
+            Collection<TeiidTranslator> translators = null;
+
+            try {
+                translators = defaultServer.getAdmin().getTranslators();
+            } catch (Exception e) {
+                UTIL.log(IStatus.ERROR,
+                         e,
+                         UTIL.getString("VdbSourceConnectionHandler.errorObtainingTranslators", defaultServer.getHost())); //$NON-NLS-1$
+            }
+
+            if (translators != null) {
+                Collection<String> translatorNames = new ArrayList<String>();
+
+                for (TeiidTranslator translator : translators) {
+                    translatorNames.add(translator.getName());
+                }
+
+                return translatorNames.toArray(new String[translatorNames.size()]);
+            }
+        }
+
+        return null;
+    }
 }

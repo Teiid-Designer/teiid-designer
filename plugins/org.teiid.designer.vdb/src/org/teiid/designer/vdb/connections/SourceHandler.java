@@ -27,7 +27,7 @@ public interface SourceHandler {
      * @return the vdb source connection object
      * @throws Exception 
      */
-    public VdbSourceConnection ensureVdbSourceConnection(String sourceModelName, Properties connectionProperties) throws Exception;
+    VdbSourceConnection ensureVdbSourceConnection(String sourceModelName, Properties connectionProperties) throws Exception;
     
     /**
      * Method provides a means for the VDB Editor to get actions associated or applicable to a given object. The original
@@ -36,5 +36,16 @@ public interface SourceHandler {
      * @param iSelection
      * @return the list of applicable actions
      */
-    public Object[] getApplicableActions(Object iSelection);
+    Object[] getApplicableActions(Object iSelection);
+    
+    /**
+     * @return the data source names (can be <code>null</code>)
+     */
+    String[] getDataSourceNames();
+    
+    /**
+     * @return the translator names (can be <code>null</code>)
+     */
+    String[] getTranslatorNames();
+
 }

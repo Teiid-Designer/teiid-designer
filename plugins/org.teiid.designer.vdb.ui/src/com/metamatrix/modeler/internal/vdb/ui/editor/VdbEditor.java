@@ -48,6 +48,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -1828,6 +1830,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     }
             }
         });
+        
+        // set a custom cell editor on translator column
+        EditingSupport editor = new TranslatorEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
+        modelsGroup.getTable().getColumn(5).setEditingSupport(editor);
+        
+        // set a custom cell editor on JNDI column
+        editor = new JndiEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
+        modelsGroup.getTable().getColumn(6).setEditingSupport(editor);
 
         modelsGroup.setInput(vdb);
     }
@@ -2051,6 +2061,98 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
     }
     
+    class TranslatorEditingSupport extends VdbEditingSupport {
+
+        /**
+         * @param viewer
+         * @param vdb
+         */
+        public TranslatorEditingSupport( ColumnViewer viewer,
+                                         IResource vdb ) {
+            super(viewer, vdb);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#getElementValue(java.lang.Object)
+         */
+        @Override
+        protected String getElementValue( Object element ) {
+            return ((VdbModelEntry)element).getTranslator();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#refreshItems()
+         */
+        @Override
+        protected String[] refreshItems() {
+            return SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorNames();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#setElementValue(java.lang.Object, java.lang.String)
+         */
+        @Override
+        protected void setElementValue( Object element,
+                                        String newValue ) {
+            if (newValue == null) {
+                newValue = ""; //$NON-NLS-1$
+            }
+
+            ((VdbModelEntry)element).setTranslator(newValue);
+        }
+    }
     
+    class JndiEditingSupport extends VdbEditingSupport {
+
+        /**
+         * @param viewer
+         * @param vdb
+         */
+        public JndiEditingSupport( ColumnViewer viewer,
+                                   IResource vdb ) {
+            super(viewer, vdb);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#getElementValue(java.lang.Object)
+         */
+        @Override
+        protected String getElementValue( Object element ) {
+            return ((VdbModelEntry)element).getJndiName();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#refreshItems()
+         */
+        @Override
+        protected String[] refreshItems() {
+            return SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#setElementValue(java.lang.Object, java.lang.String)
+         */
+        @Override
+        protected void setElementValue( Object element,
+                                        String newValue ) {
+            if (newValue == null) {
+                newValue = ""; //$NON-NLS-1$
+            }
+
+            ((VdbModelEntry)element).setJndiName(newValue);
+        }
+    }
 
 }
