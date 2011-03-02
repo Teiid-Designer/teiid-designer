@@ -37,7 +37,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 		SWTBotShell shell = bot.shell("New");
 		shell.bot().tree(0).expandNode("Teiid Designer").select("Teiid Model Project");
 		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().textWithLabel("Project name:").typeText(Properties.PROJECT_NAME);
+		shell.bot().textWithLabel("Project name:").setText(Properties.PROJECT_NAME);
 		
 		open.finish(shell.bot());
 		
@@ -70,6 +70,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), db_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Open SQL Scrapbook");	
 		
+		bot.editorByTitle("SQL Scrapbook 0").bot().comboBoxWithLabel("Database:").setSelection(Properties.VDB_NAME);
 	}
 	
 	private static void connectDB(final String profile_name){
@@ -122,7 +123,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 	 */
 	public static void addTeiidDriver(final String projectName) {
 		try {
-			addDriver(Properties.TEIID_DRIVER,projectName);
+			addDriver(Properties.TEIID_DRIVER, projectName);
 			addDriver(Properties.TEIID_HIBDIALECT_DRIVER, projectName);
 		}catch (FileNotFoundException e) {
 			fail(e.getMessage());
@@ -241,7 +242,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 		entity.setJdbcString("jdbc:teiid:MyFirstVDB@mm://localhost:31000");
 		entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
 		entity.setDriverDefId("Teiid Server DB");
-		entity.setUser("teiid");
+		entity.setUser("admin");
 		entity.setPassword("teiid");
 
 		prepareDatabase(entity, Properties.TEIID_CONNPROFILE_NAME);

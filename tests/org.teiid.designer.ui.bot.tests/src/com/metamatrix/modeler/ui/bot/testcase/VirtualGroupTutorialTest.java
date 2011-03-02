@@ -12,6 +12,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
 import org.jboss.tools.ui.bot.ext.config.Annotations.SWTBotTestRequires;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Server;
+import org.jboss.tools.ui.bot.ext.config.Annotations.ServerState;
 import org.jboss.tools.ui.bot.ext.config.Annotations.ServerType;
 import org.jboss.tools.ui.bot.ext.helper.ContextMenuHelper;
 import org.jboss.tools.ui.bot.ext.helper.StyledTextHelper;
@@ -26,7 +27,7 @@ import org.teiid.designer.ui.bot.ext.teiid.SWTTeiidBot;
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
 import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
 
-@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1"), perspective="Teiid Designer")
+@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1", state=ServerState.Running), perspective="Teiid Designer")
 public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 
 	private static final String CONNERR_MSG = "Unable to connect using the specified server properties." +
@@ -132,7 +133,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		wiz.bot().button(IDELabel.Button.NEXT).click();
 		
-		wiz.bot().textWithLabel("Model Name:").typeText(Properties.PARTSVIRTUAL_MODEL_NAME);
+		wiz.bot().textWithLabel("Model Name:").setText(Properties.PARTSVIRTUAL_MODEL_NAME);
 		wiz.bot().comboBoxWithLabel("Model Type:").setSelection("View Model");
 		
 		open.finish(wiz.bot());
@@ -193,8 +194,8 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 
 		SWTTeiidBot teiidBot = new SWTTeiidBot();
 		SWTBotTeiidCanvas canvas = teiidBot.getTeiidCanvas(0);
-		
 		canvas.tFigure().doubleClick();
+
 		
 		final SWTBot editorBot = bot.editorByTitle(Properties.PARTSVIRTUAL_MODEL_NAME).bot();
 		
@@ -233,6 +234,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		assertTrue("SQL Statements do not match!", 
 				editorBot.styledText(0).getText().equals(Properties.TEIID_SQL));
+		
 	}
 	
 	
@@ -249,7 +251,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabelInGroup("Password:", "Teiid Admin Connection Info").setText("admin");
 		
 		shell.bot().textWithLabelInGroup("Port number:", "Teiid JDBC Connection Info").setText(Properties.TEIID_JDBC_PORT);
-		shell.bot().textWithLabelInGroup("User name:", "Teiid JDBC Connection Info",1).setText("teiid");
+		shell.bot().textWithLabelInGroup("User name:", "Teiid JDBC Connection Info",1).setText("admin");
 		shell.bot().textWithLabelInGroup("Password:", "Teiid JDBC Connection Info",2).setText("teiid");
 		
 		shell.bot().button("Test").click();
@@ -285,11 +287,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.ORACLE_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
 		
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Create Teiid Data Source");
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Create Data Source");
 		
 		shell = bot.shell("Create Data Source");
 		shell.activate();
-		shell.bot().textWithLabel("Name").setText(Properties.ORACLE_TEIID_SOURCE);
+		shell.bot().textWithLabel("Data Source Name:").setText(Properties.ORACLE_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
 		shell = bot.shell("Password");
@@ -322,11 +324,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.SQLSERVER_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
 		
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Create Teiid Data Source");
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Create Data Source");
 		
 		shell = bot.shell("Create Data Source");
 		shell.activate();
-		shell.bot().textWithLabel("Name").setText(Properties.SQLSERVER_TEIID_SOURCE);
+		shell.bot().textWithLabel("Data Source Name:").setText(Properties.SQLSERVER_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
 		shell = bot.shell("Password");
@@ -409,20 +411,22 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		SWTBot viewBot = bot.viewByTitle("Model Explorer").bot();
 		//create procedure
 		SWTBotTreeItem node =  SWTEclipseExt.selectTreeLocation(viewBot, 
-																	   Properties.PROJECT_NAME, 
-																	   Properties.PARTSVIRTUAL_MODEL_NAME,
-																	   "OnHand");
+															    Properties.PROJECT_NAME, 
+																Properties.PARTSVIRTUAL_MODEL_NAME,
+																"OnHand");
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "New Sibling", "Procedure");
-		
+
 		viewBot.text("NewProcedure").setText("getOnHandByQuantity");
 		viewBot.tree().setFocus();
 		
+		bot.sleep(TIME_1S);
+		
 		//create procedure parameter
 		node =  SWTEclipseExt.selectTreeLocation(viewBot, 
-                                                        Properties.PROJECT_NAME, 
-				                                        Properties.PARTSVIRTUAL_MODEL_NAME,
-				                                        "getOnHandByQuantity");
+                                                 Properties.PROJECT_NAME, 
+				                                 Properties.PARTSVIRTUAL_MODEL_NAME,
+				                                 "getOnHandByQuantity");
         ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), node);
         ContextMenuHelper.clickContextMenu(viewBot.tree(), "New Child", "Procedure Parameter");
 
@@ -655,11 +659,11 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		SWTBotTreeItem node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "Data Sources", Properties.ORACLE_TEIID_SOURCE);
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Teiid Data Source");
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Data Source");
 		
 		node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "Data Sources", Properties.SQLSERVER_TEIID_SOURCE);
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);
-		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Teiid Data Source");
+		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Delete Data Source");
 		
 		node = SWTEclipseExt.selectTreeLocation(viewBot, Properties.TEIID_URL, "VDBs", Properties.VDB_NAME);
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(),node);

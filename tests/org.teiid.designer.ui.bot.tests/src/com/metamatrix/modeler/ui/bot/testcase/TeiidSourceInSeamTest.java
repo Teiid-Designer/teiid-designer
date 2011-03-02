@@ -39,7 +39,7 @@ public class TeiidSourceInSeamTest extends TeiidDesignerTest {
 		SWTBotShell shell = bot.shell("New");
 		shell.bot().tree(0).expandNode("General").select("Project");
 		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().textWithLabel("Project name:").typeText(TEMP_PROJECT);
+		shell.bot().textWithLabel("Project name:").setText(TEMP_PROJECT);
 		open.finish(shell.bot());
 		
 		setupConnection();
@@ -65,7 +65,7 @@ public class TeiidSourceInSeamTest extends TeiidDesignerTest {
 		entity.setJdbcString("jdbc:teiid:ModeShape@mm://localhost:31000");
 		entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
 		entity.setDriverDefId("Teiid Server DB");
-		entity.setUser("teiid");
+		entity.setUser("admin");
 		entity.setPassword("teiid");
 
 		prepareDatabase(entity, Properties.SEAM_CONNPROFILE_NAME);
@@ -81,7 +81,7 @@ public class TeiidSourceInSeamTest extends TeiidDesignerTest {
 		SWTBotShell shell = bot.shell("New");
 		shell.bot().tree(0).expandNode("Seam").select("Seam Web Project");
 		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().textWithLabel("Project name:").typeText(Properties.SEAM_PROJECT_NAME);
+		shell.bot().textWithLabel("Project name:").setText(Properties.SEAM_PROJECT_NAME);
 		shell.bot().button(IDELabel.Button.NEXT).click();
 		shell.bot().button(IDELabel.Button.NEXT).click();
 		shell.bot().button(IDELabel.Button.NEXT).click();
@@ -98,7 +98,7 @@ public class TeiidSourceInSeamTest extends TeiidDesignerTest {
 	}
 	
 	@Test
-	public void dbConnectTest(){
+	public void connectDBTest(){
 		
 		openPerspective("Hibernate");
 		

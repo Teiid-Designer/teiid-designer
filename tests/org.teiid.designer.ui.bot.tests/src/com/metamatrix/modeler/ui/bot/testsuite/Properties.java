@@ -37,18 +37,17 @@ public class Properties {
 	
 	public static final String TEIID_SQL = "SELECT\n\t\t"           +
 	
-	                      "PartsSupplier_Oracle.SUPPLIER"           +
-	                                          ".SUPPLIER_ID, "      +
-	                                           "SUPPLIER_NAME, "    +
-	                                           "SUPPLIER_STATUS, "  +
-	                                           "SUPPLIER_CITY, "    + 
-	                                           "SUPPLIER_STATE, "   +
+	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_ID, "      +
+	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_NAME, "    +
+	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_STATUS, "  +
+	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_CITY, "    + 
+	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_STATE, "   +
 	                   "PartsSupplier_SQLServer.SUPPLIER_PARTS."    + 
 	                                           "SUPPLIER_ID AS "    + 
 	                                           "SUPPLIER_ID_1, "    +
-	                                           "PART_ID, "          +
-	                                           "QUANTITY, "         +
-	                                           "SHIPPER_ID\n\t"     +
+	    "PartsSupplier_SQLServer.SUPPLIER_PARTS.PART_ID, "          +
+	    "PartsSupplier_SQLServer.SUPPLIER_PARTS.QUANTITY, "         +
+	    "PartsSupplier_SQLServer.SUPPLIER_PARTS.SHIPPER_ID\n\t"     +
 	                                 
 	                                           "FROM\n\t\t"         +
 	                                                                

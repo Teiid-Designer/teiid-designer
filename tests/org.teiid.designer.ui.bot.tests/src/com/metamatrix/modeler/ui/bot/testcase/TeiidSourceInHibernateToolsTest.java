@@ -69,14 +69,14 @@ public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTest{
 		entity.setJdbcString("jdbc:teiid:ModeShape@mm://localhost:31000");
 		entity.setDriverTemplateDescId(DatabaseHelper.getDriverTemplate(DatabaseHelper.DBType.teiid));
 		entity.setDriverDefId("Teiid Server DB");
-		entity.setUser("teiid");
+		entity.setUser("admin");
 		entity.setPassword("teiid");
 
 		prepareDatabase(entity, Properties.HIB_CONNPROFILE_NAME);
 	}
 	
 	@Test
-	public void createConsoleConfigurationTest(){
+	public void connectDBTest(){
 		
 		bot.menu(IDELabel.Menu.FILE).menu(IDELabel.Menu.NEW).menu(IDELabel.Menu.OTHER).click();
 		
@@ -103,23 +103,14 @@ public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTest{
 		SWTBot viewBot = bot.viewByTitle("Hibernate Configurations").bot();
 		SWTBotTreeItem item = viewBot.tree(0).getTreeItem(Properties.HIB_PROJECT_NAME);
 		assertTrue(item.isVisible());
-	}
-	
-	@Test
-	public void dbConnectTest(){
-		openPerspective("Hibernate");
 		
-		bot.viewByTitle("Hibernate Configurations").show();
-		bot.viewByTitle("Hibernate Configurations").setFocus();
-		
-		SWTBot viewBot = bot.viewByTitle("Hibernate Configurations").bot();		
-		viewBot.tree().setFocus();
-		
-		SWTBotTreeItem item = TreeHelper.expandNode(viewBot, 
-				                                    Properties.HIB_PROJECT_NAME, 
-				                                    "Database", 
-				                                    "ModeShape.ModeShape");
+		item = TreeHelper.expandNode(viewBot, 
+                Properties.HIB_PROJECT_NAME, 
+                "Database", 
+                "ModeShape.ModeShape");
 		item.select();
 		assertTrue("Could not find node with text:" + item.getText(),item.isVisible());
 	}
+	
+
 }
