@@ -433,56 +433,21 @@ public class GenerateXsdHelper {
 
             }
 
-            if (isProc && proc != null) {
-                newSql.append("(EXEC ");//$NON-NLS-1$
+            newSql.append(TransformationHelper.getSqlEObjectFullName(source));
 
-                final EObject parent = proc.eContainer();
-                if (parent != null) {
-                    newSql.append(TransformationHelper.getSqlEObjectFullName(parent));
-                    newSql.append(".");//$NON-NLS-1$
-                } else {
-                    final String modelName = ModelerCore.getModelEditor().getModelName(proc);
-                    newSql.append(modelName);
-                    newSql.append(".");//$NON-NLS-1$                   
-                }
-
-                newSql.append(proc.getName());
-                newSql.append("(");//$NON-NLS-1$
-
-                // Add col to MC for each input param
-                final Iterator inIT = mappingsForProcParams.iterator();
-                final Iterator parmsIT = getInParams(proc).iterator();
-                while (inIT.hasNext() && parmsIT.hasNext()) {
-                    final MappingClassColumn nxtCol = (MappingClassColumn)inIT.next();
-                    final RelationalEntity nxtOuput = (RelationalEntity)parmsIT.next();
-                    newSql.append(nxtOuput.getName());
-                    newSql.append("=");//$NON-NLS-1$
-                    newSql.append(nxtCol.getName());
-                    if (inIT.hasNext()) {
-                        newSql.append(",");//$NON-NLS-1$
+            // Handle the input sets for the non-flat scenario
+            if (!ops.isFlat()) {
+                final MappingClassSet mcs = mc.getMappingClassSet();
+                final EObject target = mcs == null ? null : mcs.getTarget();
+                if (target instanceof XmlDocument) {
+                    final XmlDocument doc = (XmlDocument)target;
+                    final TreeMappingAdapter tma = new TreeMappingAdapter(doc);
+                    final List parents = tma.getParentMappingClasses(mc, doc, false);
+                    if (parents.size() > 0) {
+                        final Collection cols = getInputColumns(parents, source);
+                        addInputColsAndCriteria(cols, mc, newSql, source);
                     }
-                }
 
-                // Proc executions must be aliased
-                newSql.append(") ) AS ");//$NON-NLS-1$
-                newSql.append(proc.getName());
-            } else {
-                newSql.append(TransformationHelper.getSqlEObjectFullName(source));
-
-                // Handle the input sets for the non-flat scenario
-                if (!ops.isFlat()) {
-                    final MappingClassSet mcs = mc.getMappingClassSet();
-                    final EObject target = mcs == null ? null : mcs.getTarget();
-                    if (target instanceof XmlDocument) {
-                        final XmlDocument doc = (XmlDocument)target;
-                        final TreeMappingAdapter tma = new TreeMappingAdapter(doc);
-                        final List parents = tma.getParentMappingClasses(mc, doc, false);
-                        if (parents.size() > 0) {
-                            final Collection cols = getInputColumns(parents, source);
-                            addInputColsAndCriteria(cols, mc, newSql, source);
-                        }
-
-                    }
                 }
             }
 
