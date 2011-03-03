@@ -65,13 +65,10 @@ import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.ExistsCriteria;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.util.ElementSymbolOptimizer;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventObjectListener;
@@ -99,7 +96,6 @@ import com.metamatrix.query.internal.ui.sqleditor.component.DeleteDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeConstants;
 import com.metamatrix.query.internal.ui.sqleditor.component.DisplayNodeUtils;
-import com.metamatrix.query.internal.ui.sqleditor.component.FromDisplayNode;
 import com.metamatrix.query.internal.ui.sqleditor.component.GroupSymbolFinder;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayComponent;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayNode;
@@ -404,13 +400,7 @@ public class SqlEditorPanel extends SashForm
 
             // Have to check for hasPendingChanges because their may have been changes in the "Hidden" display nodes.
             if (!setSqlText) {
-                if (panelSqlText == null) {
-                    if (proposedSqlText != null) {
-                        setSqlText = true;
-                    }
-                } else if (!panelSqlText.equalsIgnoreCase(proposedSqlText)) {
-                    setSqlText = true;
-                }
+                setSqlText = TransformationHelper.stringsDifferent(panelSqlText, proposedSqlText);
             }
 
             // System.out.println("         ---------------   SQL Changed = " + setSqlText + "   SQL = " + proposedSqlText);
@@ -588,22 +578,12 @@ public class SqlEditorPanel extends SashForm
             event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.PARSABLE);
             // Sql changed, resolvable but not validatable
         } else if (!isValidatable) {
-            // Command for this event should be deoptimized
-            Command theCommand = (Command)getCommand().clone();
-            if (isOptimizerOn()) {
-                ElementSymbolOptimizer.fullyQualifyElements(theCommand);
-            }
             // fire the event
-            event = new SqlEditorEvent(eventSource, theCommand, SqlEditorEvent.RESOLVABLE);
+            event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.RESOLVABLE);
             // Sql changed, validatable
         } else {
-            // Command for this event should be deoptimized
-            Command theCommand = (Command)getCommand().clone();
-            if (isOptimizerOn()) {
-                ElementSymbolOptimizer.fullyQualifyElements(theCommand);
-            }
             // fire the event
-            event = new SqlEditorEvent(eventSource, theCommand, SqlEditorEvent.VALIDATABLE);
+            event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.VALIDATABLE);
         }
         notifyEventListeners(event);
     }
@@ -891,20 +871,6 @@ public class SqlEditorPanel extends SashForm
     }
 
     /**
-     * Enable the SQL optimization.
-     * 
-     * @param status the desired optimizer status, 'true' = enabled, 'false' = disabled
-     */
-    public void setOptimizerEnabled( boolean status ) {
-        boolean isEnabled = isOptimizerEnabled();
-        if (status != isEnabled) {
-            queryDisplayComponent.setOptimizerEnabled(status);
-            // Fire Editor State to rest of Editor
-            fireEditorInternalEvent(SqlEditorInternalEvent.OPTIMIZER_STATE_CHANGED);
-        }
-    }
-
-    /**
      * Turn the SQL optimization on or off.
      * 
      * @param state the optimizer state, 'true' = on, 'false' = off
@@ -917,29 +883,16 @@ public class SqlEditorPanel extends SashForm
             prefStore.setValue(com.metamatrix.query.ui.UiConstants.Prefs.SQL_OPTIMIZATION_ON, status);
         }
 
-        boolean isEnabled = isOptimizerEnabled();
-
         boolean isOn = isOptimizerOn();
-        if (isEnabled) {
-            // If desired state is opposite of current state, set on queryDisplayComponent
-            if (status != isOn) {
-                queryDisplayComponent.setOptimizerOn(status);
-                if (!hasPendingChanges()) {
-                    refreshWithDisplayComponent();
-                }
-                // Fire Editor State to rest of Editor
-                fireEditorInternalEvent(SqlEditorInternalEvent.OPTIMIZER_STATE_CHANGED);
+        // If desired state is opposite of current state, set on queryDisplayComponent
+        if (status != isOn) {
+            queryDisplayComponent.setOptimizerOn(status);
+            if (!hasPendingChanges()) {
+                refreshWithDisplayComponent();
             }
+            // Fire Editor State to rest of Editor
+            fireEditorInternalEvent(SqlEditorInternalEvent.OPTIMIZER_STATE_CHANGED);
         }
-    }
-
-    /**
-     * Determine if the SQL optimizer is enabled.
-     * 
-     * @return the optimizer enabled status - 'true' is enabled, 'false' is disabled.
-     */
-    public boolean isOptimizerEnabled() {
-        return queryDisplayComponent.isOptimizerEnabled();
     }
 
     /**
@@ -1333,186 +1286,6 @@ public class SqlEditorPanel extends SashForm
     }
 
     /**
-     * Method to insert a group symbol string at the specified index, as the result of a drop. This method will check whether the
-     * query isParsable, and warn the user if it is not before dropping.
-     * 
-     * @param groupName the new group name to insert
-     * @param index the index location to insert the group
-     */
-    public void insertDroppedGroup( String groupName,
-                                    int index,
-                                    Object source ) {
-        // -----------------------------------------------------------------
-        // Current SQL is Parsable, can be more rigid about where to drop
-        // -----------------------------------------------------------------
-        if (queryDisplayComponent.isParsable() && !hasPendingChanges()) {
-            List groupList = new ArrayList(1);
-            groupList.add(groupName);
-            insertGroups(groupList, index, source);
-            // -----------------------------------------------------------------
-            // Current SQL not Parsable, just do the drop
-            // TODO: Add User Warning
-            // -----------------------------------------------------------------
-        } else {
-            // int ans = JOptionPane.showConfirmDialog(this, propMgr.getText("stp.dropGroupWarningMsg"),
-            // propMgr.getText("stp.dropWarningDialogTitle"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-            // if(ans == JOptionPane.YES_OPTION) {
-            StringBuffer sb = new StringBuffer(getText());
-            sb.insert(index, SPACE + groupName + SPACE);
-            setText(sb.toString(), source);
-            // fireEditorEvent();
-            // }
-        }
-    }
-
-    /**
-     * Method to insert a group symbol string at the specified index. If the clause that the index is in will not accept a group,
-     * nothing is done.
-     * 
-     * @param groupName the new group name to insert
-     * @param index the index location to insert the group
-     */
-    public void insertGroup( String groupName,
-                             int index,
-                             Object source ) {
-        List groupList = new ArrayList(1);
-        groupList.add(groupName);
-        insertGroups(groupList, index, source);
-    }
-
-    /**
-     * Method to insert a list of group symbols at the specified index. If the clause that the index is in will not accept a
-     * group, nothing is done.
-     * 
-     * @param groupNames the list of new group names to insert
-     * @param index the index location to insert the group
-     */
-    public void insertGroups( List groupNames,
-                              int index,
-                              Object source ) {
-        eventSource = source;
-        // Dont allow insert within Expression - must use ExpressionBuilder
-        boolean okToInsert = isInsertOK(index);
-        if (!okToInsert) {
-            return;
-        }
-
-        queryDisplayComponent.insertGroups(groupNames, index);
-
-        // Refresh the EditorPanel, using the queryDisplayComponent
-        refreshWithDisplayComponent();
-
-        // Fire Editor Event based on parsable state of query
-        // fireEditorEvent();
-    }
-
-    /**
-     * Method to insert a list of group symbols at the end of the FROM clause.
-     * 
-     * @param groupNames the list of new group names to insert
-     */
-    public void insertGroupsAtEndOfFrom( List groupNames,
-                                         Object source ) {
-        FromDisplayNode fromNode = queryDisplayComponent.getFromDisplayNode();
-        if (fromNode != null) {
-            int fromEndIndex = fromNode.getEndIndex();
-            insertGroups(groupNames, fromEndIndex - 1, source);
-        } else if (isDefaultQuery()) {
-            String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM)
-                              + SQLConstants.Reserved.FROM.length();
-            insertGroups(groupNames, insertIndex, source);
-        } else if (getText().trim().length() == 0) {
-            StringBuffer sb = new StringBuffer("SELECT * FROM"); //$NON-NLS-1$
-            Iterator iter = groupNames.iterator();
-            while (iter.hasNext()) {
-                String grpName = (String)iter.next();
-                sb.append(SPACE + grpName);
-                if (iter.hasNext()) {
-                    sb.append(COMMA);
-                }
-            }
-            setText(sb.toString(), source);
-        }
-    }
-
-    /**
-     * Method to insert a group symbol string at the end of the FROM clause (if there is a FROM clause).
-     * 
-     * @param groupName the new group name to insert
-     */
-    public void insertGroupAtEndOfFrom( String groupName,
-                                        Object source ) {
-        FromDisplayNode fromNode = queryDisplayComponent.getFromDisplayNode();
-        if (fromNode != null) {
-            int fromEndIndex = fromNode.getEndIndex();
-            insertGroup(groupName, fromEndIndex - 1, source);
-        } else if (isDefaultQuery()) {
-            String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.FROM)
-                              + SQLConstants.Reserved.FROM.length();
-            insertGroup(groupName, insertIndex, source);
-        } else if (getText().trim().length() == 0) {
-            setText("SELECT * FROM " + groupName, source); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * Method to insert an element symbol string at the specified index, as the result of a drop. This method will check whether
-     * the query isParsable, and warn the user if it is not before dropping.
-     * 
-     * @param elementName the new element name to insert
-     * @param parentName the name of the elements parent
-     * @param index the index location to insert the element
-     */
-    public void insertDroppedElement( String elementName,
-                                      String parentName,
-                                      int index,
-                                      Object source ) {
-        // -----------------------------------------------------------------
-        // Current SQL is Parsable, can be more rigid about where to drop
-        // -----------------------------------------------------------------
-        if (queryDisplayComponent.isParsable() && !hasPendingChanges()) {
-            List elementList = new ArrayList(1);
-            List parentList = new ArrayList(1);
-            elementList.add(elementName);
-            parentList.add(parentName);
-            insertElements(elementList, parentList, index, source);
-            // -----------------------------------------------------------------
-            // Current SQL not Parsable, just do the drop
-            // TODO: Add User Warning
-            // -----------------------------------------------------------------
-        } else {
-            // int ans = JOptionPane.showConfirmDialog(this, propMgr.getText("stp.dropElementWarningMsg"),
-            // propMgr.getText("stp.dropWarningDialogTitle"),JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-            // if(ans == JOptionPane.YES_OPTION) {
-            StringBuffer sb = new StringBuffer(getText());
-            sb.insert(index, SPACE + elementName + SPACE);
-            setText(sb.toString(), source);
-            // }
-        }
-    }
-
-    /**
-     * Method to insert an element symbol string at the specified index. If the clause that the index is in will not accept an
-     * element, nothing is done.
-     * 
-     * @param elementName the new element name to insert
-     * @param parentName the name of the elements parent
-     * @param index the index location to insert the element
-     */
-    public void insertElement( String elementName,
-                               String parentName,
-                               int index,
-                               Object source ) {
-        List elementList = new ArrayList(1);
-        List parentList = new ArrayList(1);
-        elementList.add(elementName);
-        parentList.add(parentName);
-        insertElements(elementList, parentList, index, source);
-    }
-
-    /**
      * Method to insert a list of element symbols at the specified index. If the clause that the index is in will not accept an
      * element, nothing is done.
      * 
@@ -1585,32 +1358,6 @@ public class SqlEditorPanel extends SashForm
                     sb.append(COMMA);
                 }
             }
-            setText(sb.toString(), source);
-        }
-    }
-
-    /**
-     * Method to insert an element symbol string at the end of the SELECT clause.
-     * 
-     * @param elementName the new element name to insert
-     * @param parentName the name of the elements parent
-     * @param index the index location to insert the element
-     */
-    public void insertElementAtEndOfSelect( String elementName,
-                                            String parentName,
-                                            Object source ) {
-        SelectDisplayNode selectNode = queryDisplayComponent.getSelectDisplayNode();
-        if (selectNode != null) {
-            int selectEndIndex = selectNode.getEndIndex();
-            insertElement(elementName, parentName, selectEndIndex - 1, source);
-        } else if (isDefaultQuery()) {
-            String currentQuery = getText();
-            int insertIndex = currentQuery.toUpperCase().indexOf(SQLConstants.Reserved.SELECT)
-                              + SQLConstants.Reserved.SELECT.length();
-            insertElement(elementName, parentName, insertIndex, source);
-        } else if (getText().trim().length() == 0) {
-            StringBuffer sb = new StringBuffer(SQLConstants.Reserved.SELECT);
-            sb.append(elementName + SPACE + SQLConstants.Reserved.FROM + SPACE + parentName);
             setText(sb.toString(), source);
         }
     }
@@ -1729,6 +1476,10 @@ public class SqlEditorPanel extends SashForm
         }
         return result;
     }
+    
+    public DisplayNode getCurrentCommandDisplayNode() {
+        return queryDisplayComponent.getCommandDisplayNodeAtIndex(getCorrectedCaretOffset());
+    }
 
     /**
      * Gets the index of the current Union segment. If the cursor is not currently within a segment, or the QueryDisplayComponent
@@ -1739,95 +1490,28 @@ public class SqlEditorPanel extends SashForm
     public int getCurrentUnionCommandSegmentIndex() {
         int index = -1;
         if (isCommandUnion()) {
+            DisplayNode currentCommandDN = getCurrentCommandDisplayNode();
             // Get the Union Command that the cursor is within
-            DisplayNode currentCommandDN = queryDisplayComponent.getCommandDisplayNodeAtIndex(getCorrectedCaretOffset());
-            if (currentCommandDN != null && currentCommandDN instanceof QueryDisplayNode) {
-                QueryCommand query = (QueryCommand)currentCommandDN.getLanguageObject();
-                SetQuery sQuery = (SetQuery)queryDisplayComponent.getCommand();
-                List queries = sQuery.getQueryCommands();
-                Iterator iter = queries.iterator();
-                int indx = 0;
-                while (iter.hasNext()) {
-                    QueryCommand qc = (QueryCommand)iter.next();
-                    if (qc != null && qc.equals(query)) {
-                        return indx;
-                    }
-                    indx++;
-                }
+            if (currentCommandDN instanceof QueryDisplayNode) {
+                SetQueryDisplayNode sqdn = (SetQueryDisplayNode)queryDisplayComponent.getDisplayNode();
+                return sqdn.getQueryDisplayNodes().indexOf(currentCommandDN);
             }
-
         }
         return index;
     }
 
     public boolean isSubQuerySelected() {
         // Get the Select Command that the cursor is within
-        DisplayNode currentCommandDN = queryDisplayComponent.getCommandDisplayNodeAtIndex(getCorrectedCaretOffset());
-        if (currentCommandDN != null && currentCommandDN instanceof QueryDisplayNode) {
-            QueryCommand query = (QueryCommand)currentCommandDN.getLanguageObject();
-
-            List queries = null;
-            Iterator iter = null;
-            if (queryDisplayComponent.getCommand() instanceof SetQuery) {
-                SetQuery sQuery = (SetQuery)queryDisplayComponent.getCommand();
-                queries = sQuery.getQueryCommands();
-                iter = queries.iterator();
-
-                while (iter.hasNext()) {
-                    QueryCommand qc = (QueryCommand)iter.next();
-                    if (qc != null && qc.equals(query)) {
-                        return false;
-                    } else if (isSubQuery(qc, query)) {
-                        return true;
-                    }
+        DisplayNode currentCommandDN = getCurrentCommandDisplayNode();
+        if (currentCommandDN instanceof QueryDisplayNode) {
+            DisplayNode parent = currentCommandDN.getParent();
+            while (parent != null) {
+                if (parent.getLanguageObject() instanceof SubqueryContainer) {
+                    return true;
                 }
-            } else if (queryDisplayComponent.getCommand() instanceof Query) {
-                Query thisQuery = (Query)queryDisplayComponent.getCommand();
-                queries = thisQuery.getSubCommands();
-                iter = queries.iterator();
-                while (iter.hasNext()) {
-                    Command nextComm = (Command)iter.next();
-                    if (nextComm != null && nextComm.equals(query)) {
-                        return true;
-                    }
-                    if (isSubQuery(nextComm, query)) return true;
-                }
+                parent = parent.getParent();
             }
-        }
-
-        return false;
-    }
-
-    public boolean isSubQuery( Command displayCommand,
-                               QueryCommand targetCommand ) {
-        List queries = new ArrayList();
-        if (displayCommand instanceof SetQuery) {
-            SetQuery sQuery = (SetQuery)displayCommand;
-            queries = sQuery.getQueryCommands();
-        } else if (displayCommand instanceof Query) {
-            Query thisQuery = (Query)displayCommand;
-
-            List sCommands = thisQuery.getSubCommands();
-            if (sCommands != null && !sCommands.isEmpty()) queries.addAll(sCommands);
-
-            Criteria criteria = thisQuery.getCriteria();
-            if (criteria instanceof ExistsCriteria) {
-                Command command = ((ExistsCriteria)criteria).getCommand();
-                if (command != null) {
-                    queries.add(command);
-                }
-            }
-        }
-
-        Iterator iter = queries.iterator();
-
-        while (iter.hasNext()) {
-            QueryCommand qc = (QueryCommand)iter.next();
-            if (qc != null && qc.equals(targetCommand)) {
-                return true;
-            } else if (isSubQuery(qc, targetCommand)) {
-                return true;
-            }
+            return false;
         }
 
         return false;
@@ -2469,11 +2153,7 @@ public class SqlEditorPanel extends SashForm
         }
 
         boolean hasSqlChanged( String newSql ) {
-            boolean hasChanged = false;
-            if (!newSql.equalsIgnoreCase(savedSql.trim())) {
-                hasChanged = true;
-            }
-            return hasChanged;
+            return TransformationHelper.stringsDifferent(newSql, savedSql);
         }
     }
 

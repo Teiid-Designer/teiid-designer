@@ -20,6 +20,7 @@ import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQueryUtil;
 import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.UnaryFromClause;
@@ -62,7 +63,7 @@ public class QueryTreeContentProvider implements ITreeContentProvider {
      */
     public Object[] getChildren(Object obj) {
         if ( obj instanceof SetQuery) {
-            return ((SetQuery) obj).getQueryCommands().toArray();
+            return SetQueryUtil.getQueryList((SetQuery)obj).toArray();
         } else if ( obj instanceof Query ) {
             if ( ((Query) obj).getCriteria() == null ) {
                 return new Object[] { ((Query) obj).getFrom() };

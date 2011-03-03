@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -35,7 +34,6 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.Select;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -45,7 +43,6 @@ import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationPackage;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
@@ -1002,13 +999,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
                  * jh 19135: This is the code we need to execute on an AddSource operation!
                  *           (Copied from another 'handle' method in this listener class.)
                  */
-
-                // If allowsUpdate true, refresh Update strings if necessary
-                Object target = TransformationHelper.getTransformationTarget(mappingRoot);
-                if (TransformationHelper.isTableThatSupportsUpdate((EObject)target)) {
-                    TransformationHelper.refreshUpdateStrings(mappingRoot, true, txnSource);
-                }
-
             }
         }
     }
@@ -1370,14 +1360,6 @@ public class TransformationNotificationListener implements INotifyChangedListene
             }
 
             SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
-            // If allowsUpdate true, refresh Update strings if necessary
-            Object target = TransformationHelper.getTransformationTarget(mappingRoot);
-            if (TransformationHelper.isVirtualSqlTable(target)) {
-                SqlTableAspect tableAspect = (SqlTableAspect)com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect((EObject)target);
-                if (tableAspect != null && tableAspect.supportsUpdate((EObject)target)) {
-                    TransformationHelper.refreshUpdateStrings(mappingRoot, true, txnSource);
-                }
-            }
         }
     }
 

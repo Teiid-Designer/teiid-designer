@@ -33,6 +33,7 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQueryUtil;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -304,16 +305,6 @@ public class TransformationHelper implements SqlConstants {
                     setSelectSqlString(transMappingRoot, query.toString(), true, txnSource);
                 }
 
-                // If target and source allowsUpdate is true, create the default insert/update/delete sql
-                Object target = TransformationHelper.getTransformationTarget(transMappingRoot);
-                if (TransformationHelper.isVirtualSqlTable(target) && TransformationHelper.isSqlTable(sourceGroup)) {
-                    SqlTableAspect tableAspect = (SqlTableAspect)com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect((EObject)target);
-                    if (tableAspect != null && tableAspect.supportsUpdate((EObject)target)
-                        && tableAspect.supportsUpdate(sourceGroup)) {
-                        TransformationHelper.refreshUpdateStrings(transMappingRoot, true, txnSource);
-                    }
-                }
-
                 // reconcile mappings
                 TransformationMappingHelper.reconcileMappingsOnSqlChange(transMappingRoot, txnSource);
             }
@@ -479,8 +470,6 @@ public class TransformationHelper implements SqlConstants {
                             if (SqlMappingRootCache.isSqlDifferent(transMappingRoot, cmdType, sqlString)) {
                                 // invalidate cached status
                                 SqlMappingRootCache.invalidateSelectStatus(transMappingRoot, true, txnSource);
-                                // refresh Update, Insert, Delete if necessary
-                                refreshUpdateStrings(transMappingRoot, isSignificant, txnSource);
                                 changed = true;
                             }
                         }
@@ -542,51 +531,6 @@ public class TransformationHelper implements SqlConstants {
         }
 
         return changed;
-    }
-
-    /**
-     * refresh all of the update strings (UPDATE, INSERT, DELETE) based on the current SELECT.
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @param eObj the EObject to alias
-     * @param aliasName the alias name
-     */
-    public static void refreshUpdateStrings( Object transMappingRoot,
-                                             boolean isSignificant,
-                                             Object txnSource ) {
-        // If this mappingRoot allows insert, and default is being used, reset it
-        if (isInsertAllowed(transMappingRoot) && isInsertSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = null;
-
-            String currentInsertUserStr = getInsertSqlUserString(transMappingRoot);
-
-            if ((generatedProc == null && currentInsertUserStr != null)
-                || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentInsertUserStr))) {
-                setInsertSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-        }
-        // If this mappingRoot allows update, and default is being used, reset it
-        if (isUpdateAllowed(transMappingRoot) && isUpdateSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = null;
-
-            String currentUpdateUserStr = getUpdateSqlUserString(transMappingRoot);
-
-            if ((generatedProc == null && currentUpdateUserStr != null)
-                || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentUpdateUserStr))) {
-                setUpdateSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-        }
-        // If this mappingRoot allows delete, and default is being used, reset it
-        if (isDeleteAllowed(transMappingRoot) && isDeleteSqlDefault((EObject)transMappingRoot)) {
-            String generatedProc = null;
-
-            String currentDeleteUserStr = getDeleteSqlUserString(transMappingRoot);
-
-            if ((generatedProc == null && currentDeleteUserStr != null)
-                || (generatedProc != null && !generatedProc.equalsIgnoreCase(currentDeleteUserStr))) {
-                setDeleteSqlUserString(transMappingRoot, generatedProc, isSignificant, txnSource);
-            }
-        }
     }
 
     /**
@@ -3498,7 +3442,7 @@ public class TransformationHelper implements SqlConstants {
             }
             // Get all of the component queries of the UNION and get the corresponding source attributes
             if (index != -1) {
-                List queries = unionQry.getQueryCommands();
+                List queries = SetQueryUtil.getQueryList(unionQry);
                 Iterator qIter = queries.iterator();
                 while (qIter.hasNext()) {
                     QueryCommand query = (QueryCommand)qIter.next();
@@ -3993,7 +3937,7 @@ public class TransformationHelper implements SqlConstants {
      * @param oldSql the old SQL String
      * @return 'true' if strings differ, 'false' if same
      */
-    private static boolean stringsDifferent( String newSql,
+    public static boolean stringsDifferent( String newSql,
                                              String oldSql ) {
         boolean isDifferent = true;
         if (newSql == null) {
@@ -4009,7 +3953,7 @@ public class TransformationHelper implements SqlConstants {
 //            CoreStringUtil.replaceAll(oldSb, CR, BLANK);
 //            CoreStringUtil.replaceAll(oldSb, TAB, BLANK);
 //            String oldSbString = CoreStringUtil.collapseWhitespace(oldSb.toString());
-            if (newSql.equals(oldSql) ) { //newSbString != null && newSbString.equals(oldSbString)) {
+            if (newSql.trim().equals(oldSql.trim()) ) { //newSbString != null && newSbString.equals(oldSbString)) {
                 isDifferent = false;
             }
         }

@@ -40,6 +40,7 @@ import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQueryUtil;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.UnaryFromClause;
@@ -420,11 +421,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 if (queryCommand instanceof Query) {
                     Query query = (Query)queryCommand;
                     Query newQuery = createQueryAddGroupsToFrom(query, sourceGroups);
-                    if (nSegmentIndex == 0) {
-                        newSetQuery.setLeftQuery(newQuery);
-                    } else {
-                        newSetQuery.setRightQuery(newQuery);
-                    }
+                    SetQueryUtil.setQueryAtIndex(newSetQuery, nSegmentIndex, newQuery);
                     // Set the new MetaObject property
                     TransformationHelper.setSelectSqlString(transMappingRoot, newSetQuery.toString(), false, txnSource);
                 }

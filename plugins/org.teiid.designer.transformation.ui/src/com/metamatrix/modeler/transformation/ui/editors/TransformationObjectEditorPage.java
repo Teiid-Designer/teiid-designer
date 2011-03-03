@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -62,7 +61,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SetQuery;
-
+import org.teiid.query.sql.lang.SetQueryUtil;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.InputSet;
@@ -958,11 +957,6 @@ public class TransformationObjectEditorPage
             // Create TransformationValidator and set validator on all editors
             resetValidators();
 
-            if (shouldEnableOptimizer(currentMappingRoot)) {
-                editor.setOptimizerEnabled(true);
-            } else {
-                editor.setOptimizerEnabled(false);
-            }
             boolean isSelectCached = SqlMappingRootCache.containsStatus(currentMappingRoot, QueryValidator.SELECT_TRNS);
             SqlTransformationResult selectStatus = SqlMappingRootCache.getSqlTransformationStatus(currentMappingRoot,
                                                                                                   QueryValidator.SELECT_TRNS,
@@ -2379,7 +2373,7 @@ public class TransformationObjectEditorPage
      * @param unionQuery the SetQuery
      */
     private void updateEditorSetQueryStates( SetQuery unionQuery ) {
-        List queries = unionQuery.getQueryCommands();
+        List queries = SetQueryUtil.getQueryList(unionQuery);
         int nQueries = queries.size();
         List reconciledList = new ArrayList(nQueries);
         for (int i = 0; i < nQueries; i++) {
@@ -2824,32 +2818,13 @@ public class TransformationObjectEditorPage
         }
     }
 
-    private boolean shouldEnableOptimizer( SqlTransformationMappingRoot mappingRoot ) {
-        boolean shouldEnable = true;
-        // If target is a Virtual Procedure, we need to disable the optimizer button on the SQL panel
-        if (mappingRoot != null) {
-            EObject target = mappingRoot.getTarget();
-            if (TransformationHelper.isSqlVirtualProcedure(target)) {
-                shouldEnable = false;
-            } else {
-                shouldEnable = true;
-            }
-        }
-        return shouldEnable;
-    }
-
     /**
      * This method will notify the registered listeners of a SqlEditorEvent
      */
     private void notifyEventListeners( EventObject event ) {
         // If target is a Virtual Procedure, we need to disable the optimizer button on the SQL panel
-        EObject target = currentMappingRoot.getTarget();
         if (toggleOptimizerAction != null) {
-            if (TransformationHelper.isSqlVirtualProcedure(target)) {
-                toggleOptimizerAction.setAllowOptimization(false);
-            } else {
-                toggleOptimizerAction.setAllowOptimization(true);
-            }
+            toggleOptimizerAction.setAllowOptimization(true);
         }
         if (eventListeners != null) {
             Iterator iterator = eventListeners.iterator();

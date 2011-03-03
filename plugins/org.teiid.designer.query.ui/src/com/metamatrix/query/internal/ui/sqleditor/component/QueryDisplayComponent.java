@@ -18,10 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
 import org.teiid.language.SQLConstants;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.From;
@@ -29,16 +27,14 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.proc.TriggerAction;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.SelectSymbol;
 import org.teiid.query.sql.symbol.Symbol;
-import org.teiid.query.sql.util.ElementSymbolOptimizer;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.query.QueryValidationResult;
 import com.metamatrix.modeler.core.query.QueryValidator;
+import com.metamatrix.modeler.core.query.QueryValidator.ElementSymbolOptimization;
 import com.metamatrix.query.ui.UiConstants;
 
 /**
@@ -99,12 +95,11 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
 	/** Command LanguageObject corresponding to the current DisplayNode, if any */
     private Command command = null;
     
-	/** Optimizer Enabled status */
-	private boolean optimizerEnabled = true;
 	/** Optimizer On status */
+    //TODO: allow for default optimization
 	private boolean optimizerOn = false;
 	/** Optimized status */
-	private boolean isOptimized = false;
+	private ElementSymbolOptimization optimized = ElementSymbolOptimization.UNMODIFIED;
     
     private PropertyChangeSupport propChgSupport = new PropertyChangeSupport(this);
     
@@ -164,9 +159,6 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @param sqlString the SQL text string
      */
     public void setText(String sqlString, boolean doResolveAndValidate, QueryValidationResult theResult, IProgressMonitor monitor) {
-        // reset isOptimized flag
-        this.isOptimized = false;
-        
         // -------------------------------------------------------------------------------------------------------------------
         // DEFECT 23230
         // Added String check here to prevent unnecessary validation if SQL doesn't change.
@@ -174,32 +166,18 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         boolean setSqlText = false;
         
         if( isEmptySql(sqlText) || // sqlText == null || sqlText.length() == 0 || 
-            !sqlText.equalsIgnoreCase(sqlString) ) {
+            !sqlText.equals(sqlString) ) {
             setSqlText = true;
         }
         if( setSqlText ) {
             sqlText = sqlString;
             // this does full validation and resets internal variables
             validateSql(sqlString, doResolveAndValidate, theResult, monitor);
-            
-            // determine if optimization is required
-            if(this.isResolvable) {
-                if(isOptimizerEnabled()) {
-                    if(isOptimizerOn()) {
-                        optimize();
-                    } else {
-                        deoptimize();
-                    }
-                } else {
-                    String startingSQL = getCommand().toString();
-                    ElementSymbolOptimizer.fullyQualifyElements(getCommand());
-                    // revalidate if sql has changed
-                    if(startingSQL!=null && !startingSQL.equalsIgnoreCase(getCommand().toString())) {
-                        validateSql(getCommand().toString(), doResolveAndValidate, theResult, monitor);
-                    }
-                }
-            }
         }
+    }
+    
+    public boolean isDeoptimized() {
+        return this.optimized == ElementSymbolOptimization.DEOPTIMIZED;
     }
     
     public void reset() {
@@ -265,7 +243,15 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             this.validationResult = theResult;
         } else {
         	try {
+        	    ElementSymbolOptimization status = ElementSymbolOptimization.UNMODIFIED;
+    	        if (this.optimizerOn) {
+    	            status = ElementSymbolOptimization.OPTIMIZED;
+    	        } else {
+    	            status = ElementSymbolOptimization.DEOPTIMIZED;
+    	        }
+        	    queryValidator.setElementSymbolOptimization(status);
         		this.validationResult = queryValidator.validateSql(sqlString, this.queryType , false);
+        		this.optimized = status;
         	} catch (Exception ex) {
                 sqlDisplayNode = DisplayNodeFactory.createUnknownQueryDisplayNode(null,sqlString);
                 
@@ -299,7 +285,9 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         	statusList.addAll(moreStatus);
         }
         setCommand(validationResult.getCommand());
-        
+        if (!doResolveAndValidate && runOptimizeDeoptimize()) {
+            return;
+        }
         if(!this.isParsable) {
             setCommand(null);
             sqlDisplayNode = DisplayNodeFactory.createUnknownQueryDisplayNode(null,sqlString);
@@ -323,6 +311,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         	}
         } else {
             sqlDisplayNode = DisplayNodeFactory.createDisplayNode(null,getCommand());
+            this.sqlText = sqlDisplayNode.toDisplayString();
             if(!this.isResolvable) {
                 StringBuffer buff = new StringBuffer(QUERY_PARSABLE_NOT_RESOLVABLE_MSG);
                 if(statusList!=null && !statusList.isEmpty()) {
@@ -354,44 +343,47 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     }
 
 	/**
-	 *  Method to enable or disable the Optimizer.
-	 * @param status 'true' to enable the optimizer, 'false' to disable it.
-	 */
-	public void setOptimizerEnabled(boolean status) {
-		this.optimizerEnabled = status;
-	}
-	
-	/**
 	 *  Method to toggle the Optimizer on or off.
 	 * @param status 'true' to enable the optimizer, 'false' to disable it.
 	 */
 	public void setOptimizerOn(boolean status) {
 		this.optimizerOn = status;
-		if(optimizerEnabled) {
-			if(optimizerOn) {
-				optimize();
-			} else{
-				deoptimize();
-			}
-		}
-	}
-    
-	/**
-	* Determine if the current SQL is optimized.
-	* @return the SQL status - 'true' if optimized, 'false' if not.
-	*/
-	public boolean isOptimized() {
-		return this.isOptimized;
+        runOptimizeDeoptimize();
 	}
 
-	/**
-	 *  Check the Optimizer enabled status.
-	 * @return 'true' if the optimizer is enabled, 'false' if not.
-	 */
-	public boolean isOptimizerEnabled() {
-		return this.optimizerEnabled;
-	}
-	
+    /**
+     * @return true if a new sql text was set
+     */
+    private boolean runOptimizeDeoptimize() {
+        if( !canOptimize()) {
+            return false;
+        }
+        if (this.isOptimizerOn()) {
+            if (this.optimized != ElementSymbolOptimization.OPTIMIZED) {
+                validateSql(getCommand().toString(), true, null);
+                return true;
+            }
+        } else if (this.optimized != ElementSymbolOptimization.DEOPTIMIZED) {
+            // ---------------------
+            // DEFECT 23230
+            // Cache the original command string so we can do the "is changed" check
+            // ---------------------
+            String optimizedSql = getCommand().toString();
+            
+            ResolverUtil.fullyQualifyElements(getCommand());
+            this.optimized = ElementSymbolOptimization.DEOPTIMIZED;
+            // --------------------------------------------------------------------------------------------------------------
+            // DEFECT 23230
+            // deoptimization may NOT change the SQL string, so we don't want to do a second validation if the SQL did NOT change
+            // --------------------------------------------------------------------------------------------------------------
+            if( optimizedSql != null && !optimizedSql.equalsIgnoreCase(getCommand().toString())) {
+                validateSql(getCommand().toString(), true, null);
+                return true;
+            }
+        }
+        return false;
+    }
+    
 	/**
 	 *  Check the Optimizer On/Off status.
 	 * @return 'true' if the optimizer is on, 'false' if not.
@@ -405,17 +397,8 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     * @return 'true' if the optimizer can be used, 'false' is not.
     */
     public boolean canOptimize() {
-    	boolean result = true;
     	// If no Optimizer set or not resolvable, cannot optimize.
-    	if(!isResolvable()) {
-    		result = false;
-    	// If resolvable, check further.  Should not optimze CreateUpdateProcedureCommands
-    	} else if (getCommand() instanceof CreateUpdateProcedureCommand) {
-    		result = false;
-    	} else if (getCommand() instanceof TriggerAction) {
-            result = false;
-        }
-    	return result;
+    	return isResolvable();
     }
 
     /**
@@ -466,8 +449,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @return 'true' if default query, 'false' if not.
      */
     public boolean isDefaultQuery() {
-        String str = this.toString();
-        return isDefaultSql(str);
+        return isDefaultSql(this.toDisplayString());
     }
     
     /**
@@ -492,29 +474,11 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @return 'true' if empty query, 'false' if not.
      */
     public boolean isEmptyQuery() {
-        String str = this.toString();
-        return isEmptySql(str);
+        return isEmptySql(sqlText);
     }
     
-    /**
-     *  Check whether the provided Sql String is the Empty Query.
-     * @return 'true' if empty sql, 'false' if not.
-     */
     private boolean isEmptySql(String sqlString) {
-    	boolean result = false;
-    	if(sqlString==null) {
-    		result=true;
-    	} else {
-	        StringBuffer sb = new StringBuffer(sqlString);
-	        CoreStringUtil.replaceAll(sb,CR,BLANK);
-	        CoreStringUtil.replaceAll(sb,TAB,BLANK);
-	        CoreStringUtil.replaceAll(sb,DBLSPACE,SPACE);
-	        String newString = sb.toString();
-	        if(newString!=null && newString.trim().length()==0) {
-	            result = true;
-	        }
-    	}
-        return result;
+    	return sqlString == null || sqlString.trim().length() == 0;
     }
 
     /**
@@ -916,7 +880,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     public boolean isSupportedAtIndex(int itemType, int index) {
         // Handle Default Query case
         if(isDefaultQuery()) {
-            String currentQuery = this.toString().toUpperCase();
+            String currentQuery = this.toDisplayString().toUpperCase();
             int endIndexOfSelect = currentQuery.indexOf(SELECT_STR)+SELECT_STR.length();
             int startIndexOfFrom = currentQuery.indexOf(FROM_STR);
             int endIndexOfFrom = currentQuery.indexOf(FROM_STR)+FROM_STR.length();
@@ -970,49 +934,12 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
         if(clauseNode instanceof FromDisplayNode) {
             if( !containsGroup((FromDisplayNode)clauseNode, groupName) ) {
                 int nodeIndex = getDisplayNodeInsertIndex(index);
-                boolean canOptimize = canOptimize();
-                if( canOptimize ) deoptimize();
                 insertSymbolNameAtNodeIndex(groupName,nodeIndex);
-                if( canOptimize ) optimize();
         		// check to make sure it's still resolvable
             }
         } else {
             int nodeIndex = getDisplayNodeInsertIndex(index);
-            boolean canOptimize = canOptimize();
-            if( canOptimize ) deoptimize();
             insertSymbolNameAtNodeIndex(groupName,nodeIndex);
-            if( canOptimize ) optimize();
-        }
-	}
-
-    /**
-    * Method to insert a list of group symbols at the specified index.  If the clause
-    * that the index is in will not accept a group, nothing is done.
-    * @param groupNames the list of group names to insert
-    * @param index the index location to insert the list
-    */
-    public void insertGroups(List groupNames,int index) {
-        // Handle Default Query
-        if(isDefaultQuery()) {
-            StringBuffer sb = new StringBuffer();
-            int nNames = groupNames.size();
-            for(int i=0; i<nNames; i++) {
-                if(i==0) {
-                    sb.append((String)groupNames.get(i));
-                } else {
-                    sb.append(COMMA+SPACE+(String)groupNames.get(i));
-                }
-            }
-            setText(DEFAULT_QUERY+sb.toString());
-            return;
-        }
-        // Iterate backwards will insert them in the right order
-        int nGroups = groupNames.size();
-        if(nGroups==0) {
-            return;
-        }
-        for(int i=nGroups-1; i>=0; i--) {
-            insertGroup( (String)groupNames.get(i), index );
         }
 	}
 
@@ -1068,10 +995,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             nodeIndex = getDisplayNodeInsertIndex(index);
         }
         
-        boolean canOptimize = canOptimize();
-        if( canOptimize && isOptimized()) deoptimize();
         insertSymbolNameAtNodeIndex(elementName,nodeIndex);
-        if( canOptimize && isOptimizerOn()) optimize();
 	}
 
     /**
@@ -1134,8 +1058,8 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @return the SQL string for this QueryDisplayComponent.
      */
     public String toDisplayString( ) {
-        if (this.sqlDisplayNode != null) {
-            return this.sqlDisplayNode.toDisplayString();
+        if (this.sqlText != null) {
+            return sqlText;
         }
         return BLANK;
     }
@@ -1146,87 +1070,9 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      */
     @Override
     public String toString( ) {
-    	if (this.sqlDisplayNode != null) {
-    		return this.sqlDisplayNode.toString();
-    	}
-  		return BLANK;
+  		return toDisplayString();
     }
 	
-    /**
-    * Method to optimize this QueryDisplayComponent.  If the optimizer is not set or is
-    * disabled, no action is taken.
-    */
-    public void optimize() {
-        if( canOptimize() ) {
-            if(!isOptimized) {
-                // ---------------------
-                // DEFECT 23230
-                // Cache the original command string so we can do the "is changed" check
-                // ---------------------
-                String unoptimizedSql = getCommand().toString();
-                
-                QueryMetadataInterface resolver = getQueryResolver();
-                try {
-                    ElementSymbolOptimizer.optimizeElements(getCommand(),resolver);
-                } catch (QueryMetadataException e) {
-                    e.printStackTrace();
-                } catch (TeiidComponentException e) {
-                    e.printStackTrace();
-                }
-                isOptimized=true;
-                // --------------------------------------------------------------------------------------------------------------
-                // DEFECT 23230
-                // Optimization may NOT change the SQL string, so we don't want to do a second validation if the SQL did NOT change
-                // --------------------------------------------------------------------------------------------------------------
-                if( unoptimizedSql != null && !unoptimizedSql.equalsIgnoreCase(getCommand().toString())) {
-                    validateSql(getCommand().toString(), true, null);
-                }
-            }
-        } else {
-        	isOptimized=false;
-        }
-    }
-
-    /**
-    * Method to deoptimize this QueryDisplayComponent.  If the optimizer is not set or is
-    * disabled, no action is taken.
-    */
-    public void deoptimize() {
-        if( canOptimize() ) {
-            if(isOptimized) {
-                // ---------------------
-                // DEFECT 23230
-                // Cache the original command string so we can do the "is changed" check
-                // ---------------------
-                String optimizedSql = getCommand().toString();
-                
-                ElementSymbolOptimizer.fullyQualifyElements(getCommand());
-                isOptimized = false;
-                // --------------------------------------------------------------------------------------------------------------
-                // DEFECT 23230
-                // deoptimization may NOT change the SQL string, so we don't want to do a second validation if the SQL did NOT change
-                // --------------------------------------------------------------------------------------------------------------
-                if( optimizedSql != null && !optimizedSql.equalsIgnoreCase(getCommand().toString())) {
-                    validateSql(getCommand().toString(), true, null);
-                }
-            }
-        } else {
-        	isOptimized=false;
-        }
-    }
-
-    /**
-    * Get the query resolver
-    * @return the QueryMetadataInterface implementation
-    */
-    private QueryMetadataInterface getQueryResolver() {
-        QueryMetadataInterface resolver = null;
-        if(queryValidator!=null) {
-            resolver = queryValidator.getQueryMetadata();
-        }
-        return resolver;
-    }
-    
     /**
     * Get the DisplayNode index for inserting the next node, given a cursor index.
     * If the cursor index is between two DisplayNodes, the index of the second is used.
@@ -1285,7 +1131,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @param str the string to replace the index range with 
      */
     private void replace(int startIndex, int endIndex, String str) {
-        StringBuffer sb = new StringBuffer(this.toString());
+        StringBuffer sb = new StringBuffer(this.toDisplayString());
         sb.replace(startIndex, endIndex, str);
         setText(sb.toString());
         return;
@@ -1339,14 +1185,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
     private boolean containsGroup(FromDisplayNode fromClause, String groupName) {
         if(fromClause!=null) {
             From from = (From)fromClause.getLanguageObject();
-            List groups = from.getGroups();
-            Iterator iter = groups.iterator();
-            while(iter.hasNext()) {
-                GroupSymbol symbol = (GroupSymbol)iter.next();
-                if(symbol.getName().equals(groupName)) {
-                    return true;
-                }
-            }
+            return from.getGroups().contains(new GroupSymbol(groupName));
         }
         return false;
     }
@@ -1491,7 +1330,7 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
      * @param index the index location to insert the string
 	 */
     private void insertString(String str, int index) {
-        StringBuffer currentSQL = new StringBuffer(this.toString());
+        StringBuffer currentSQL = new StringBuffer(this.toDisplayString());
         currentSQL.insert(index,str);
 
         setText(currentSQL.toString());

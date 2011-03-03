@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -34,8 +36,7 @@ import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel
 import com.metamatrix.modeler.transformation.ui.reconciler.ReconcilerDialog;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.SetQuery;
+import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayNode;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
 
@@ -159,8 +160,8 @@ public class ReconcileTransformationAction extends TransformationAction implemen
                                 shouldEnable = false;
                             }
                         } else {
-                            List queries = ((SetQuery)command).getQueryCommands();
-                            command = (Command)queries.get(uIndex);
+                            QueryDisplayNode qdn = (QueryDisplayNode)sePanel.getCurrentCommandDisplayNode();
+                            command = (Query)qdn.getLanguageObject();
                             // If command is not resolved, attempt to resolve it.
                             if (!command.isResolved()) {
                                 QueryValidator validator = new TransformationValidator(

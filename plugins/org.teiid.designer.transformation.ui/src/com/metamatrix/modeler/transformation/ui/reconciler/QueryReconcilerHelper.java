@@ -13,6 +13,10 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQueryUtil;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlColumnAspect;
@@ -25,9 +29,6 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationMapping
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.QueryCommand;
-import org.teiid.query.sql.lang.SetQuery;
 
 /**
  * Reconciler Helper that the Reconciler Panel works with
@@ -76,7 +77,7 @@ public class QueryReconcilerHelper  {
             Command originalCommand = SqlMappingRootCache.getSelectCommand(mappingRoot);
             
             if(originalCommand instanceof SetQuery && unionQuerySegment!=-1) {
-                List queries = ((SetQuery)originalCommand).getQueryCommands();
+                List queries = SetQueryUtil.getQueryList((SetQuery)originalCommand);
                 originalCommand = (Command)queries.get(unionQuerySegment);
                 // If command is not resolved, attempt to resolve it.
                 if(!originalCommand.isResolved()) {
@@ -277,14 +278,7 @@ public class QueryReconcilerHelper  {
             Command command = SqlMappingRootCache.getSelectCommand(this.transMappingRoot);
             if(command!=null && command instanceof SetQuery) {
                 SetQuery unionQuery = (SetQuery)command.clone();
-                switch (uIndex) {
-                    case 0:
-                        unionQuery.setLeftQuery(newSegmentCommand);
-                        break;
-                    case 1:
-                        unionQuery.setRightQuery(newSegmentCommand);
-                        break;
-                }
+                SetQueryUtil.setQueryAtIndex(unionQuery, uIndex, newSegmentCommand);
                 String newUnionSql = unionQuery.toString();
                 TransformationHelper.setSelectSqlString(this.transMappingRoot,newUnionSql,true,txnSource);
             }

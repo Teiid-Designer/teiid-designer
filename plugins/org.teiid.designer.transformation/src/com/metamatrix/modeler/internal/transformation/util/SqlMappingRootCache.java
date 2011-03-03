@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -453,35 +452,7 @@ public class SqlMappingRootCache implements SqlConstants {
                 // check whether the status is a uuid status or user status when doing comparison
                 String cachedSql = status.getSqlString();
                 // If uuid status, use uuidSql for the comparison
-                isDifferent = stringsDifferent(userSql,cachedSql);
-            }
-        }
-        return isDifferent;
-    }
-
-    /**
-     * determine if the supplied sql Strings are different
-     * @param newSql the new SQL String
-     * @param oldSql the old SQL String
-     * @return 'true' if strings differ, 'false' if same
-     */
-    private static boolean stringsDifferent(String newSql, String oldSql) {
-        boolean isDifferent = true;
-        if(newSql==null) {
-            if(oldSql==null) {
-                isDifferent = false;
-            }
-        } else if(oldSql!=null) {
-            StringBuffer newSb = new StringBuffer(newSql.trim());
-            StringBuffer oldSb = new StringBuffer(oldSql.trim());
-            CoreStringUtil.replaceAll(newSb,CR,BLANK);
-            CoreStringUtil.replaceAll(newSb,TAB,BLANK);
-            CoreStringUtil.replaceAll(newSb,DBL_SPACE,SPACE);
-            CoreStringUtil.replaceAll(oldSb,CR,BLANK);
-            CoreStringUtil.replaceAll(oldSb,TAB,BLANK);
-            CoreStringUtil.replaceAll(oldSb,DBL_SPACE,SPACE);
-            if(newSb.toString().equals(oldSb.toString())) {
-                isDifferent=false;
+                isDifferent = TransformationHelper.stringsDifferent(userSql,cachedSql);
             }
         }
         return isDifferent;

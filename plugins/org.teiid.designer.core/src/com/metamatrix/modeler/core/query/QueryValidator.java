@@ -15,6 +15,12 @@ import org.teiid.query.metadata.QueryMetadataInterface;
  * QueryValidator, a helper utility that validate the sql and returns a result.
  */
 public interface QueryValidator {
+    
+    public enum ElementSymbolOptimization {
+        OPTIMIZED,
+        DEOPTIMIZED,
+        UNMODIFIED
+    }
 
     //================================================================================================//
     // Constants
@@ -54,4 +60,6 @@ public interface QueryValidator {
     boolean isValidRoot();
     
     EObject getTransformationRoot();
+    
+    void setElementSymbolOptimization(ElementSymbolOptimization status);
 }

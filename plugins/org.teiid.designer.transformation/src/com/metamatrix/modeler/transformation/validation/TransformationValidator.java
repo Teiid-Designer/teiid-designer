@@ -25,6 +25,8 @@ import org.teiid.core.types.DataTypeManager;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
+import org.teiid.query.resolver.util.ResolverUtil;
+import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
@@ -90,6 +92,8 @@ public class TransformationValidator implements QueryValidator {
     private final ValidationContext validationContext;
     // private String indexFilePath = IndexUtil.INDEX_PATH;
     private static final String XML_URI = "http://www.metamatrix.com/metamodels/XmlDocument"; //$NON-NLS-1$
+    
+    private ElementSymbolOptimization elementSymbolOptimization = ElementSymbolOptimization.UNMODIFIED;
 
     // ==================================================================================
     // C O N S T R U C T O R S
@@ -333,9 +337,6 @@ public class TransformationValidator implements QueryValidator {
         
         commandValidationResult = parseSQL(sql);
         
-
-        
-        
         if (commandValidationResult.isParsable() && transformType != UNKNOWN_TRNS) {
             Command command = commandValidationResult.getCommand();
 
@@ -343,6 +344,9 @@ public class TransformationValidator implements QueryValidator {
             commandValidationResult = resolveCommand(command, transformType);
             // aTODO commandValidationResult = resolveCommand(command, transformType, this.targetGroup);
             if (commandValidationResult.isResolvable()) {
+                if (this.elementSymbolOptimization == ElementSymbolOptimization.DEOPTIMIZED) {
+                    ResolverUtil.fullyQualifyElements(command);
+                }
                 // validate command
                 commandValidationResult = validateCommand(command, transformType);
                 commandValidationResult.setResolvable(true);
@@ -421,7 +425,9 @@ public class TransformationValidator implements QueryValidator {
             
             String targetFullName = TransformationHelper.getSqlEObjectFullName(this.targetGroup);
             GroupSymbol gSymbol = new GroupSymbol(targetFullName);
-            
+            if (this.elementSymbolOptimization == ElementSymbolOptimization.OPTIMIZED) {
+                ResolverVisitor.setFindShortName(true);
+            }
             QueryResolver.resolveCommand(command, gSymbol, getTeiidCommandType(transformType), metadata);
             // If unsuccessful, an exception is thrown
 
@@ -437,6 +443,8 @@ public class TransformationValidator implements QueryValidator {
         } catch (QueryResolverException e) {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
+        } finally {
+            ResolverVisitor.setFindShortName(false);
         }
 
         if (status != null && status.getSeverity() == IStatus.ERROR) {
@@ -538,7 +546,7 @@ public class TransformationValidator implements QueryValidator {
 	        	
 	        	try {
 	        		elemSymbols = getProjectedSymbols();
-	        		if( !elemSymbols.isEmpty() ) {
+	        		if( !elemSymbols.isEmpty() && elemSymbols.size() == command.getProjectedSymbols().size() ) {
 	        			updateValidator.validate(command, elemSymbols);
 	        		}
 	        	} catch (TeiidComponentException e) {
@@ -857,6 +865,11 @@ public class TransformationValidator implements QueryValidator {
 	public EObject getTransformationRoot() {
 		// TODO Auto-generated method stub
 		return this.mappingRoot;
+	}
+	
+	@Override
+	public void setElementSymbolOptimization( ElementSymbolOptimization status ) {
+	    this.elementSymbolOptimization = status;
 	}
     
 }
