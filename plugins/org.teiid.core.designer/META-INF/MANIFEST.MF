@@ -8,7 +8,6 @@ Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.core,
  com.metamatrix.core.aspects,
- com.metamatrix.core.classloader,
  com.metamatrix.core.event,
  com.metamatrix.core.modeler,
  com.metamatrix.core.modeler.util,

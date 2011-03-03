@@ -22,9 +22,6 @@ import java.net.URLConnection;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
-import com.metamatrix.common.protocol.classpath.ClasspathURLConnection;
-import com.metamatrix.common.protocol.mmfile.MMFileURLConnection;
-import com.metamatrix.common.protocol.mmrofile.MMROFileURLConnection;
 import com.metamatrix.core.io.FileUrl;
 
 /**
@@ -36,22 +33,6 @@ import com.metamatrix.core.io.FileUrl;
  * @since 4.4
  */
 public class URLHelper {
-    private static final String SEPARATOR = ":"; //$NON-NLS-1$
-
-    static {
-        // Very important that this property is set, so that loading of
-        // custom extension module URLHandlers will work
-
-        final String propKey = "java.protocol.handler.pkgs"; //$NON-NLS-1$
-        final String directory = "com.metamatrix.common.protocol"; //$NON-NLS-1$
-
-        String value = System.getProperty(propKey);
-        if (value == null || value.trim().length() == 0) System.setProperty(propKey, directory);
-        else if (value.indexOf(directory) < 0) {
-            value = value + "|" + directory; //$NON-NLS-1$
-            System.setProperty(propKey, value);
-        }
-    }
 
     /**
      * Construct the URL based on the String
@@ -67,19 +48,9 @@ public class URLHelper {
 
         url = convertBackSlashes(url);
 
-        if (url.startsWith(ClasspathURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((ClasspathURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(ClasspathURLConnection.PROTOCOL,
-                           "", -1, filename, new com.metamatrix.common.protocol.classpath.Handler()); //$NON-NLS-1$
-        } else if (url.startsWith(MMFileURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((MMFileURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(MMFileURLConnection.PROTOCOL, "", -1, filename, new com.metamatrix.common.protocol.mmfile.Handler()); //$NON-NLS-1$            
-        } else if (url.startsWith(MMROFileURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((MMROFileURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(MMROFileURLConnection.PROTOCOL, "", -1, filename, new com.metamatrix.common.protocol.mmrofile.Handler()); //$NON-NLS-1$            
-        } else if (isFile(url)) {
-            final String filename = extractFileName(url);
-            return new URL(MMFileURLConnection.PROTOCOL, "", -1, filename, new com.metamatrix.common.protocol.mmfile.Handler()); //$NON-NLS-1$                        
+        final String filename = extractFileName(url);
+        if (filename != null) {
+            return new File(url).toURI().toURL();
         }
         return new URL(url);
     }
@@ -91,46 +62,6 @@ public class URLHelper {
             // since it came as url it should not have any issues with this
         }
         return null;
-    }
-
-    public static URL buildURL( final URL context,
-                                String url ) throws MalformedURLException {
-
-        if (url == null) throw new MalformedURLException();
-
-        if (context == null) return buildURL(url);
-
-        url = convertBackSlashes(url);
-
-        if (url.startsWith(ClasspathURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((ClasspathURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(ClasspathURLConnection.PROTOCOL,
-                           "", -1, filename, new com.metamatrix.common.protocol.classpath.Handler()); //$NON-NLS-1$
-        } else if (url.startsWith(MMFileURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((MMFileURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(MMFileURLConnection.PROTOCOL, "", -1, filename, new com.metamatrix.common.protocol.mmfile.Handler()); //$NON-NLS-1$            
-        } else if (url.startsWith(MMROFileURLConnection.PROTOCOL + SEPARATOR)) {
-            final String filename = url.substring((MMROFileURLConnection.PROTOCOL + SEPARATOR).length());
-            return new URL(MMROFileURLConnection.PROTOCOL, "", -1, filename, new com.metamatrix.common.protocol.mmrofile.Handler()); //$NON-NLS-1$            
-        } else if (isFile(url)) {
-            final String filename = extractFileName(url);
-            final String contextURL = context.toString();
-
-            if (contextURL.startsWith(ClasspathURLConnection.PROTOCOL + SEPARATOR)) return new URL(
-                                                                                                   context,
-                                                                                                   filename,
-                                                                                                   new com.metamatrix.common.protocol.classpath.Handler());
-            else if (contextURL.startsWith(MMFileURLConnection.PROTOCOL + SEPARATOR)) return new URL(
-                                                                                                     context,
-                                                                                                     filename,
-                                                                                                     new com.metamatrix.common.protocol.mmfile.Handler());
-            else if (contextURL.startsWith(MMROFileURLConnection.PROTOCOL + SEPARATOR)) return new URL(
-                                                                                                       URLHelper.buildURL(context.getPath()),
-                                                                                                       filename,
-                                                                                                       new com.metamatrix.common.protocol.mmfile.Handler());
-        }
-        return new URL(context, url);
-
     }
 
     static String convertBackSlashes( final String str ) {
@@ -254,10 +185,6 @@ public class URLHelper {
         // lib/foo.txt
         return file;
         return null;
-    }
-
-    static boolean isFile( final String file ) {
-        return extractFileName(file) != null;
     }
 
     /**
