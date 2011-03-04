@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +25,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -79,6 +82,7 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
@@ -227,12 +231,12 @@ public final class PreviewManager extends JobChangeAdapter
 
         return false;
     }
-    
-    private static boolean isProjectPreviewVdb(IFile pvdbFile) {
+
+    private static boolean isProjectPreviewVdb( IFile pvdbFile ) {
         if (PreviewManager.isPreviewVdb(pvdbFile)) {
             return pvdbFile.getFullPath().removeFileExtension().toString().endsWith("tion"); //$NON-NLS-1$
         }
-        
+
         return false;
     }
 
@@ -616,7 +620,7 @@ public final class PreviewManager extends JobChangeAdapter
         String dataSourceType = connInfoProvider.getDataSourceType();
 
         if (!props.isEmpty()) {
-            // 
+            //
             IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
             // The data source property key represents what's needed as a property for the Teiid Data Source
             // This is provided by the getDataSourcePasswordPropertyKey() method.
@@ -654,7 +658,7 @@ public final class PreviewManager extends JobChangeAdapter
                     }
                 }
 
-                if (! requiresPassword || (requiresPassword&& pwd != null) ) {
+                if (!requiresPassword || (requiresPassword && pwd != null)) {
                     TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
                     tds.setPreview(true);
                     return tds;
@@ -999,7 +1003,7 @@ public final class PreviewManager extends JobChangeAdapter
         try {
             ModelChangedJob job = new ModelChangedJob(model, this.context, getPreviewServer());
             job.addChildJobChangeListener(this);
-            job.schedule();
+            job.schedule(500); // delay to let auto build start
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.ModelChangedJobError, model.getFullPath()));
         }
@@ -1070,7 +1074,7 @@ public final class PreviewManager extends JobChangeAdapter
             ModelProjectOpenedJob job = new ModelProjectOpenedJob(project, this.context);
             job.addChildJobChangeListener(this);
             job.addJobChangeListener(this);
-            job.schedule();
+            job.schedule(500); // delay to let build start
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.ModelProjectOpenedJobError, project.getName()));
         }
@@ -1289,7 +1293,7 @@ public final class PreviewManager extends JobChangeAdapter
 
                     // deploy PVDB
                     monitor.subTask(NLS.bind(Messages.PreviewSetupDeployTask, name));
-                    
+
                     try {
                         admin.deployVdb(projectPvdbFile);
                         setNeedsToBeDeployedStatus(projectPvdbFile, false);
@@ -1301,7 +1305,7 @@ public final class PreviewManager extends JobChangeAdapter
                                                                                    modelName), e);
                             throw new CoreException(status);
                         }
-                        
+
                         // make sure this PVDB does not get merged since it didn't get deployed
                         pvdbsToMerge.remove(projectPvdbFile);
                     }

@@ -9,6 +9,7 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
@@ -34,10 +35,20 @@ public final class ModelChangedJob extends CompositePreviewJob {
     public ModelChangedJob( IFile changedModel,
                             PreviewContext context,
                             Server previewServer ) throws Exception {
-        super(Messages.bind(Messages.ModelChangedJob, changedModel), context, previewServer, true); // run jobs in sequence
+        super(NLS.bind(Messages.ModelChangedJob, changedModel), context, previewServer, true); // run jobs in sequence
         assert PreviewManager.isPreviewable(changedModel) : "model is not previewable" + changedModel.getFullPath(); //$NON-NLS-1$
         this.changedModel = changedModel;
         process(previewServer);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
+     */
+    @Override
+    public boolean belongsTo( Object family ) {
+        return (WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY == family);
     }
 
     /**

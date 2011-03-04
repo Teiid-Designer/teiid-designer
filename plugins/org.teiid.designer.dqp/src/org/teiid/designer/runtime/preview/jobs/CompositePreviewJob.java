@@ -12,6 +12,7 @@ import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -172,6 +173,9 @@ public class CompositePreviewJob extends Job implements PreviewVdbJob {
         monitor.beginTask(getName(), getJobs().size());
 
         try {
+            // make sure all build jobs are finished before running
+            getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+
             for (PreviewVdbJob previewJob : this.jobs) {
                 assert (previewJob instanceof Job);
                 Job job = (Job)previewJob;
