@@ -47,6 +47,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 	protected static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 	private static final String SECURITY_OPTIONS_GROUP = getString("securityOptionsGroup"); //$NON-NLS-1$
 	private static final String BASIC_OPTIONS_GROUP = getString("basicOptionsGroup"); //$NON-NLS-1$
+	private static final String WS_SECURITY_OPTIONS_GROUP = getString("wsSecurityOptionsGroup"); //$NON-NLS-1$
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////
 	// FIELDS
@@ -338,17 +339,18 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 				}
 			});
 			
-			final Group securityFieldsGroup = WidgetFactory.createGroup(
+			//HTTPBasic Options
+			final Group httpBasicFieldsGroup = WidgetFactory.createGroup(
 					securityOptionsGroup, BASIC_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
 					3, 3);
 			
 			// security realm Label
 			this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+			WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_REALM);
 			
 			// security realm
-			this.txfSecurityRealm = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityRealm = WidgetFactory.createTextField(httpBasicFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityRealmTooltip"); //$NON-NLS-1$;
 			this.txfSecurityRealm.setToolTipText(text);
@@ -356,23 +358,28 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 			
 			// security role Label
 			this.SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+			WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_ROLE);
 			
 			// security role
-			this.txfSecurityRole = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityRole = WidgetFactory.createTextField(httpBasicFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityRoleTooltip"); //$NON-NLS-1$;
 			this.txfSecurityRole.setToolTipText(text);
 			this.txfSecurityRole.setEnabled(false);
 			
+			//WS-Security Options
+			final Group wsSecurityFieldsGroup = WidgetFactory.createGroup(
+					securityOptionsGroup, WS_SECURITY_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
+					3, 3);
+			
 			// security username Label
 			this.SECURITY_USERNAME = getString("securityUsernameLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+			WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_USERNAME);
 			
 			// security username
-			this.txfSecurityUsername = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityUsername = WidgetFactory.createTextField(wsSecurityFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityUsernameTooltip"); //$NON-NLS-1$;
 			this.txfSecurityUsername.setToolTipText(text);
@@ -380,16 +387,15 @@ public abstract class WarDeploymentInfoPanel extends Composite implements
 			
 			// security password Label
 			this.SECURITY_PASSWORD = getString("securityPasswordLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(securityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
+			WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					1, SECURITY_PASSWORD);
 			
 			// security password
-			this.txfSecurityPassword = WidgetFactory.createTextField(securityFieldsGroup,
+			this.txfSecurityPassword = WidgetFactory.createTextField(wsSecurityFieldsGroup,
 					GridData.FILL_HORIZONTAL, 2);
 			text = getString("securityPasswordTooltip"); //$NON-NLS-1$;
 			this.txfSecurityPassword.setToolTipText(text);
 			this.txfSecurityPassword.setEnabled(false);
-			
 		}
 		
 		// namespace Label
