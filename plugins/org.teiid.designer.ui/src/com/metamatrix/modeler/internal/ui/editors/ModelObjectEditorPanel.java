@@ -340,7 +340,9 @@ public class ModelObjectEditorPanel implements IAdaptable, FocusListener, IPrope
                 if (closePanel) {
                     setVisible(false);
                 }
-                activeEditor.removePropertyListener(this);
+                if( activeEditor != null ) {
+                	activeEditor.removePropertyListener(this);
+                }
                 activeEditor = null;
             }
         } else {
