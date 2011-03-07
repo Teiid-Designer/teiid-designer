@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -221,6 +222,8 @@ public abstract class XSDElementProcedureBaseAction extends
 								// return false
 							}
                         }
+                    } else if( theElement instanceof IFolder ) {
+                    	result = true;
                     }
                 }
             }
