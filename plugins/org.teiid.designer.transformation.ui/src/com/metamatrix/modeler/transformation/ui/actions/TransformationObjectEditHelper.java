@@ -37,8 +37,7 @@ public class TransformationObjectEditHelper extends ModelObjectEditHelper {
     public boolean canDelete(Object obj) {
 		// if the obj is a ResultSet then we say NO
 		if( obj instanceof EObject ) {
-			if( TransformationHelper.isSqlProcedureResultSet(obj) ||
-				TransformationHelper.isTransformationObject(obj))
+			if( TransformationHelper.isTransformationObject(obj))
 				return false;
 		}
         
@@ -82,8 +81,7 @@ public class TransformationObjectEditHelper extends ModelObjectEditHelper {
 	@Override
     public boolean canCut(Object obj) {
 		if( obj instanceof EObject ) {
-			if( TransformationHelper.isSqlProcedureResultSet(obj) ||
-				TransformationHelper.isTransformationObject(obj))
+			if( TransformationHelper.isTransformationObject(obj))
 				return false;
 		}
 		
