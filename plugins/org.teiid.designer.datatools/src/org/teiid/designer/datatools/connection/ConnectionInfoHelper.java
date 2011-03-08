@@ -210,7 +210,9 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
 
     @Override
     public String getTranslatorName( ModelResource modelResource ) {
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+        if( modelResource == null ) {
+        	return StringUtil.Constants.EMPTY_STRING;
+        }
 
         Properties props = null;
 
