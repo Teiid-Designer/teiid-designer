@@ -63,7 +63,7 @@
    <newWizard
          class="org.teiid.designer.datatools.profiles.ws.ConnectionProfileWizard"
          description="Create an non-SOAP Web Service connection profile."
-         icon="icons/wsdswiz.ico"
+         icon="icons/full/obj16/web-service-cp.png"
          id="org.teiid.designer.datatools.profiles.ws.ConnectionProfileWizard"
          name="Web Services Data Source (non-SOAP)"
          profile="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"/>
@@ -73,7 +73,7 @@
          point="org.eclipse.ui.propertyPages">
       <page
             class="org.teiid.designer.datatools.profiles.ws.PropertyPage"
-            icon="icons/wsdswiz.ico"
+            icon="icons/full/obj16/web-service-cp.png"
             id="org.teiid.designer.datatools.profiles.ws.profileProperties"
             name="%connectionProperties.name">
          <filter
@@ -102,7 +102,7 @@
          point="org.eclipse.ui.propertyPages">
       <page
             class="org.teiid.designer.datatools.profiles.modeshape.ModeShapePropertyPage"
-            icon="icons/modeshape_icon_16px.png"
+            icon="icons/full/obj16/modeshape_icon_16px.png"
             id="org.teiid.designer.datatools.profiles.modeshape.profileProperties"
             name="%connectionProperties.name">
          <filter
