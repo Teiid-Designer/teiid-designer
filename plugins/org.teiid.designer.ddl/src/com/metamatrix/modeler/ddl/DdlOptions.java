@@ -15,12 +15,14 @@ import com.metamatrix.core.xslt.Style;
  */
 public interface DdlOptions {
 
-    public static boolean DEFAULT_GENERATE_SCHEMA       = false;
-    public static boolean DEFAULT_GENERATE_DROPS        = false;
-    public static boolean DEFAULT_GENERATE_COMMENTS     = true;
-    public static boolean DEFAULT_USE_NAME_IN_SOURCE    = true;
-    public static boolean DEFAULT_USE_NATIVE_TYPE       = false;
-    public static boolean DEFAULT_ENFORCE_UNIQUE_NAMES  = true;
+    public static boolean DEFAULT_GENERATE_SCHEMA             = false;
+    public static boolean DEFAULT_GENERATE_DROPS              = false;
+    public static boolean DEFAULT_GENERATE_TABLE_COMMENTS     = true;
+    public static boolean DEFAULT_GENERATE_COLUMN_COMMENTS    = true;
+    public static boolean DEFAULT_GENERATE_INFO_COMMENTS      = true;
+    public static boolean DEFAULT_USE_NAME_IN_SOURCE          = true;
+    public static boolean DEFAULT_USE_NATIVE_TYPE             = false;
+    public static boolean DEFAULT_ENFORCE_UNIQUE_NAMES        = true;
 
     /**
      * Get the style of DDL that is to be written out.
@@ -49,22 +51,10 @@ public interface DdlOptions {
     public void setGenerateSchema(boolean generateSchemas);
     
     /**
-     * Return whether comments are to be put into the DDL
-     * @return true if comments are to be generated in the DDL, or false otherwise
-     */
-    public boolean isGenerateComments();
-
-    /**
      * Return whether drop statements are to be put into the DDL
      * @return true if drop statements are to be generated in the DDL, or false otherwise
      */
     public boolean isGenerateDropStatements();
-
-    /**
-     * Set whether comments are to be put into the DDL
-     * @param generateDrops true if comments are to be generated in the DDL, or false otherwise
-     */
-    public void setGenerateComments(boolean generateComments);
 
     /**
      * Set whether drop statements are to be put into the DDL
@@ -72,6 +62,42 @@ public interface DdlOptions {
      */
     public void setGenerateDropStatements(boolean generateDrops);
 
+    /**
+     * Return whether informational comments are to be put into the DDL
+     * @return true if informational comments are to be generated in the DDL, or false otherwise
+     */
+    public boolean isGenerateInfoComments();
+
+    /**
+     * Return whether informational comments are to be put into the DDL
+     * @return true if informational comments are to be generated in the DDL, or false otherwise
+     */
+    public void setGenerateInfoComments(boolean generateInfoComments);
+    
+    /**
+     * Return whether table comments from the table description are to be put into the DDL
+     * @return true if table comments from the table description are to be generated in the DDL, or false otherwise
+     */
+    public boolean isGenerateTableComments();
+
+    /**
+     * Return whether table comments from the table description are to be put into the DDL
+     * @return true if table comments from the table description are to be generated in the DDL, or false otherwise
+     */
+    public void setGenerateTableComments(boolean generateTableComments);
+    
+    /**
+     * Return whether column comments from the column description are to be put into the DDL
+     * @return true if column comments from the column description are to be generated in the DDL, or false otherwise
+     */
+    public boolean isGenerateColumnComments();
+
+    /**
+     * Return whether column comments from the column description are to be put into the DDL
+     * @return true if column comments from the column description are to be generated in the DDL, or false otherwise
+     */
+    public void setGenerateColumnComments(boolean generateColumnComments);
+    
     /**
      * Determine whether names in source should be used in the DDL, or whether only names should be used.
      * This option does not apply when there are no names in source.

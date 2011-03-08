@@ -31,6 +31,7 @@
   ************************************************************************ -->
 <xsl:template match="/ddl">
 <pre>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>-- Build Script
 --     RDBMS           : Oracle 8.1.6
 --     Generated With  : </xsl:text><xsl:value-of select="@exportTool"/><xsl:text> </xsl:text><xsl:value-of select="@exportToolVersion"/>
@@ -38,26 +39,28 @@
 --     Generated On    : </xsl:text><xsl:value-of select="@exportDate"/><xsl:text> </xsl:text><xsl:value-of select="@exportTime"/>
 <xsl:text>
 --     Generation Options
---         Generate Comments             : </xsl:text><xsl:value-of select="@generateComments"/>
-<xsl:text>
 --         Generate Drop Statements      : </xsl:text><xsl:value-of select="@generateDrops"/>
 <xsl:text>
+--         Convert Table Descriptions to COMMENT ON Statements  : </xsl:text><xsl:value-of select="@generateTableComments"/>
+<xsl:text>
+--         Convert Column Descriptions to COMMENT ON Statements : </xsl:text><xsl:value-of select="@generateColumnComments"/>
+<xsl:text>
 --
-
+</xsl:text>
+</xsl:if>
+<xsl:text>
 -- Uncomment the following line for use of the logging facility (see last line also)
 --spool </xsl:text><xsl:value-of select="@modelFilename"/><xsl:text>.log
 </xsl:text>
 
 <xsl:apply-templates select="./model"/>
-<!--
 <xsl:text>
-
 -- Uncomment the following line for use of the logging facility
 --spool off
-
+</xsl:text>
+<xsl:text>
 commit;
 </xsl:text>
--->
 </pre>
 </xsl:template>
 
@@ -67,6 +70,7 @@ commit;
   ************************************************************************ -->
 <xsl:template match="model">
 <pre>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 --  ----------------------------------------------------------------------------------------------------------------
 --  Generate From
@@ -85,7 +89,7 @@ commit;
 <xsl:text>
 --  ----------------------------------------------------------------------------------------------------------------
 </xsl:text>
-
+</xsl:if>
 <!-- Generate the DROP statements all up front -->
 <xsl:if test="/ddl/@generateDrops='true'">
 	<xsl:apply-templates select="./view" mode="generate-table-drops">
@@ -211,9 +215,13 @@ DROP SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> CASCADE</xsl:tex
 <xsl:template match="table" mode="generate-table-drops">
 <xsl:param name="terminationString"/>
 <xsl:if test="local-name(./..) != 'schema'">
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- Uncomment the following 'TRUNCATE' line to purge data before dropping
 -- (truncates cannot be rolled back and are therefore permanent)
+</xsl:text>
+</xsl:if>
+<xsl:text>
 --TRUNCATE TABLE </xsl:text><xsl:value-of select="@name"/>
 <xsl:value-of select="$terminationString"/>
 <xsl:text>
@@ -288,8 +296,12 @@ DROP VIEW </xsl:text><xsl:value-of select="@name"/>
   ************************************************************************ -->
 <xsl:template match="schema">
 <xsl:param name="terminationString"/>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- ** NOTE: Replace &quot;&lt;USERID>&quot; with the appropriate ID of the user **
+</xsl:text>
+</xsl:if>
+<xsl:text>
 CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 </xsl:text>
 <xsl:apply-templates select="./table"/>
@@ -299,9 +311,11 @@ CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 <xsl:apply-templates select="./foreignKey"/>
 <xsl:apply-templates select="./procedure"/>
 <xsl:apply-templates select="./view"/>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- ** Run the statements for this schema **
 </xsl:text>
+</xsl:if>
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
@@ -319,10 +333,12 @@ CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 -- </xsl:text><xsl:value-of select="@description"/>
 </xsl:if>
 </xsl:if>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:if test="string-length(@pathInModel) != 0">
 <xsl:text>
 -- (generated from </xsl:text><xsl:value-of select="@pathInModel"/><xsl:text>)
 </xsl:text>
+</xsl:if>
 </xsl:if>
 <xsl:text>
 CREATE TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text>
@@ -923,7 +939,7 @@ CREATE </xsl:text>
 	<xsl:param name="tableName"/>
 	<xsl:param name="description"/>
 	<xsl:param name="terminationString"/>
-	<xsl:if test="/ddl/@generateComments='true'">
+	<xsl:if test="/ddl/@generateTableComments='true'">
 		<xsl:if test="string-length($description) != 0">
 			<xsl:value-of select="$line-feed"/>
 			<xsl:text>Comment on Table </xsl:text>
@@ -947,7 +963,7 @@ CREATE </xsl:text>
 	<xsl:param name="columnName"/>
 	<xsl:param name="description"/>
 	<xsl:param name="terminationString"/>
-	<xsl:if test="/ddl/@generateComments='true'">
+	<xsl:if test="/ddl/@generateColumnComments='true'">
 		<xsl:if test="string-length($description) != 0">
 			<xsl:text>
 Comment on Column </xsl:text>

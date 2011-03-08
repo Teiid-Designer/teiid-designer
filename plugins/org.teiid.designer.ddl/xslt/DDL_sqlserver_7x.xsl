@@ -31,6 +31,7 @@
   ************************************************************************ -->
 <xsl:template match="/ddl">
 <pre>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>-- Build Script
 --     RDBMS           : Microsoft SQL Server 7.X/2000
 --     Generated With  : </xsl:text><xsl:value-of select="@exportTool"/><xsl:text> </xsl:text><xsl:value-of select="@exportToolVersion"/>
@@ -38,10 +39,15 @@
 --     Generated On    : </xsl:text><xsl:value-of select="@exportDate"/><xsl:text> </xsl:text><xsl:value-of select="@exportTime"/>
 <xsl:text>
 --     Generation Options
---         Generate Comments             : </xsl:text><xsl:value-of select="@generateComments"/>
-<xsl:text>
 --         Generate Drop Statements      : </xsl:text><xsl:value-of select="@generateDrops"/>
-
+<xsl:text>
+--         Convert Table Descriptions to COMMENT ON Statements  : </xsl:text><xsl:value-of select="@generateTableComments"/>
+<xsl:text>
+--         Convert Column Descriptions to COMMENT ON Statements : </xsl:text><xsl:value-of select="@generateColumnComments"/>
+<xsl:text>
+--
+</xsl:text>
+</xsl:if>
 <xsl:apply-templates select="./model"/>
 </pre>
 </xsl:template>
@@ -52,6 +58,7 @@
   ************************************************************************ -->
 <xsl:template match="model">
 <pre>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 --  ----------------------------------------------------------------------------------------------------------------
 --  Generate From
@@ -70,6 +77,7 @@
 <xsl:text>
 --  ----------------------------------------------------------------------------------------------------------------
 </xsl:text>
+</xsl:if>
 
 <!-- Generate the DROP statements all up front -->
 <xsl:if test="/ddl/@generateDrops='true'">
@@ -193,9 +201,11 @@
   ************************************************************************ -->
 <xsl:template match="schema" mode="generate-table-drops">
 <xsl:param name="terminationString"/>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 --  Drop the objects in the schema
 </xsl:text>
+</xsl:if>
 	<xsl:apply-templates select="./*" mode="generate-table-drops">
 		<xsl:with-param name="terminationString">
 			<xsl:text>GO</xsl:text>
@@ -340,8 +350,12 @@ ALTER TABLE </xsl:text><xsl:value-of select="@tableName"/><xsl:text> DROP CONSTR
   ************************************************************************ -->
 <xsl:template match="schema">
 <xsl:param name="terminationString"/>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- ** NOTE: Replace &quot;&lt;USERID>&quot; with the appropriate ID of the user **
+</xsl:text>
+</xsl:if>
+<xsl:text>
 CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 </xsl:text>
 <xsl:apply-templates select="./table">
@@ -379,9 +393,11 @@ CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 		<xsl:text>GO</xsl:text>
 	</xsl:with-param>
 </xsl:apply-templates>
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- ** Run the statements for this schema **
 </xsl:text>
+</xsl:if>
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
@@ -400,9 +416,11 @@ CREATE SCHEMA </xsl:text><xsl:value-of select="@name"/><xsl:text> &lt;USERID>
 </xsl:if>
 </xsl:if>
 <xsl:if test="string-length(@pathInModel) != 0">
+<xsl:if test="/ddl/@generateInfoComments='true'">
 <xsl:text>
 -- (generated from </xsl:text><xsl:value-of select="@pathInModel"/><xsl:text>)
 </xsl:text>
+</xsl:if>
 </xsl:if>
 <xsl:text>
 CREATE TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text>
@@ -1031,7 +1049,7 @@ CREATE </xsl:text>
 	<xsl:param name="columnName"/>
 	<xsl:param name="description"/>
 	<xsl:param name="terminationString"/>
-	<xsl:if test="/ddl/@generateComments='true'">
+	<xsl:if test="/ddl/@generateTableComments='true'">
 		<xsl:if test="string-length($description) != 0">
 			<xsl:text>
 DECLARE @table_owner varchar(255)
@@ -1068,7 +1086,7 @@ exec sp_addextendedproperty N'MS_Description', N'</xsl:text>
 	<xsl:param name="columnName"/>
 	<xsl:param name="description"/>
 	<xsl:param name="terminationString"/>
-	<xsl:if test="/ddl/@generateComments='true'">
+	<xsl:if test="/ddl/@generateColumnComments='true'">
 		<xsl:if test="string-length($description) != 0">
 			<xsl:text>
 DECLARE @table_owner varchar(255)

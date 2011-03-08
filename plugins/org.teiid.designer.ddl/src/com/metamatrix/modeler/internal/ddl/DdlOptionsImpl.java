@@ -18,7 +18,9 @@ public class DdlOptionsImpl implements DdlOptions {
     private Style style;
     private boolean generateSchema;
     private boolean generateDropStatements;
-    private boolean generateComments;
+	private boolean generateTableComments;
+    private boolean generateColumnComments;
+    private boolean generateInfoComments;
     private boolean nameInSourceUsed;
     private boolean nativeTypeUsed;
     private boolean enforceUniqueNames;
@@ -29,7 +31,9 @@ public class DdlOptionsImpl implements DdlOptions {
      */
     public DdlOptionsImpl() {
         super();
-        this.generateComments = DEFAULT_GENERATE_COMMENTS;
+        this.generateInfoComments = DEFAULT_GENERATE_INFO_COMMENTS;
+        this.generateTableComments = DEFAULT_GENERATE_TABLE_COMMENTS;
+        this.generateColumnComments = DEFAULT_GENERATE_COLUMN_COMMENTS;
         this.generateDropStatements = DEFAULT_GENERATE_DROPS;
         this.generateSchema = DEFAULT_GENERATE_SCHEMA;
         this.nameInSourceUsed = DEFAULT_USE_NAME_IN_SOURCE;
@@ -74,14 +78,43 @@ public class DdlOptionsImpl implements DdlOptions {
         this.generateSchema = generateSchema;
     }
 
-    /**
-     * Return whether comments are to be put into the DDL
-     * @return true if comments are to be generated in the DDL, or false otherwise
-     * @see DdlOptions#isGenerateComments()
-     */
-    public boolean isGenerateComments() {
-        return generateComments;
-    }
+    public boolean isGenerateTableComments() {
+		return generateTableComments;
+	}
+
+	public void setGenerateTableComments(boolean generateTableComments) {
+		this.generateTableComments = generateTableComments;
+	}
+
+	public boolean isGenerateColumnComments() {
+		return generateColumnComments;
+	}
+
+   /**
+    * Return whether comments are to be put into the DDL
+    * @return true if comments are to be generated in the DDL, or false otherwise
+    * @see DdlOptions#isGenerateComments()
+    */
+	public void setGenerateColumnComments(final boolean generateColumnComments) {
+		this.generateColumnComments = generateColumnComments;
+	}
+
+   /**
+    * Return whether informational comments are to be put into the DDL
+    * @return true if comments are to be generated in the DDL, or false otherwise
+    * @see DdlOptions#isGenerateInfoComments()
+    */
+	public boolean isGenerateInfoComments() {
+		return generateInfoComments;
+	}
+
+   /**
+    * Set whether informational comments are to be put into the DDL
+    * @see DdlOptions#setGenerateInfoComments()
+    */
+	public void setGenerateInfoComments(final boolean generateInfoComments) {
+		this.generateInfoComments = generateInfoComments;
+	}
 
     /**
      * Return whether drop statements are to be put into the DDL
@@ -90,15 +123,6 @@ public class DdlOptionsImpl implements DdlOptions {
      */
     public boolean isGenerateDropStatements() {
         return generateDropStatements;
-    }
-
-    /**
-     * Set whether comments are to be put into the DDL
-     * @param generateDrops true if comments are to be generated in the DDL, or false otherwise
-     * @see DdlOptions#setGenerateComments(boolean)
-     */
-    public void setGenerateComments(final boolean generateComments) {
-        this.generateComments = generateComments;
     }
 
     /**
@@ -157,5 +181,6 @@ public class DdlOptionsImpl implements DdlOptions {
     public void setUniqueNamesEnforced(boolean useUniqueNames) {
         this.enforceUniqueNames = useUniqueNames;        
     }
+
 
 }

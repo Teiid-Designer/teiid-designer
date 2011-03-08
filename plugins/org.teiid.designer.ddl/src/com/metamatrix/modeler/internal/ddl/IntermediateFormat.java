@@ -93,7 +93,10 @@ public class IntermediateFormat {
             public static class Attributes {
                 public static final String NAME = "name"; //$NON-NLS-1$
                 public static final String UUID = "uuid"; //$NON-NLS-1$
-                public static final String GENERATE_COMMENTS = "generateComments"; //$NON-NLS-1$
+                public static final String GENERATE_INFO_COMMENTS = "generateInfoComments"; //$NON-NLS-1$
+                public static final String GENERATE_TABLE_COMMENTS = "generateTableComments"; //$NON-NLS-1$
+                public static final String GENERATE_COLUMN_COMMENTS = "generateColumnComments"; //$NON-NLS-1$
+                
                 public static final String GENERATE_DROPS = "generateDrops"; //$NON-NLS-1$
                 public static final String EXPORT_TOOL = "exportTool"; //$NON-NLS-1$
                 public static final String EXPORT_VERSION = "exportToolVersion"; //$NON-NLS-1$
@@ -432,7 +435,9 @@ public class IntermediateFormat {
         final Date now = new Date(System.currentTimeMillis());
 
         // Set the model-level attributes ...
-        setAttribute(ddlElement, Xml.Model.Attributes.GENERATE_COMMENTS, options.isGenerateComments());
+        setAttribute(ddlElement, Xml.Model.Attributes.GENERATE_INFO_COMMENTS, options.isGenerateInfoComments());
+        setAttribute(ddlElement, Xml.Model.Attributes.GENERATE_TABLE_COMMENTS, options.isGenerateTableComments());
+        setAttribute(ddlElement, Xml.Model.Attributes.GENERATE_COLUMN_COMMENTS, options.isGenerateColumnComments());
         setAttribute(ddlElement, Xml.Model.Attributes.GENERATE_DROPS, options.isGenerateDropStatements());
         setAttribute(ddlElement, Xml.Model.Attributes.EXPORT_TOOL, exporterTool);
         setAttribute(ddlElement, Xml.Model.Attributes.EXPORT_VERSION, exporterVersion);
