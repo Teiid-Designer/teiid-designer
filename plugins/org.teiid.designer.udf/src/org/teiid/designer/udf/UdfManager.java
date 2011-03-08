@@ -237,7 +237,7 @@ public final class UdfManager implements IResourceChangeListener {
                     
                     // model resource will be null for non-model files (like .project)
                     if (modelResource == null) {
-                        if (ResourceChangeUtilities.isRemoved(udfFiles[j])) {
+                        if (path != null && ResourceChangeUtilities.isRemoved(udfFiles[j])) {
                             registerFunctionModel(path, true);
                         }
                     } else if (modelResource.getModelType().getValue() == ModelType.FUNCTION && (ResourceChangeUtilities.isContentChanged(udfFiles[j]) || ResourceChangeUtilities.isAdded(udfFiles[j]))) {
