@@ -215,6 +215,9 @@ public final class PreviewManager extends JobChangeAdapter
                     ModelResource modelResource = ModelUtil.getModelResource(file, true);
                     assert (modelResource != null); // already determined it is a model
                     MetamodelDescriptor descriptor = ModelerCore.getModelEditor().getPrimaryMetamodelDescriptor(modelResource);
+                    if( descriptor == null ) {
+                    	return false;
+                    }
                     metamodelUri = descriptor.getNamespaceURI();
                 } catch (ModelWorkspaceException e) {
                     Util.log(e);
