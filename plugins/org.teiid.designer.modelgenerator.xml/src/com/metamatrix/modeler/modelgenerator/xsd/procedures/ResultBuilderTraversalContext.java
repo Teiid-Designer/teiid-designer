@@ -1,13 +1,19 @@
 package com.metamatrix.modeler.modelgenerator.xsd.procedures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsd.XSDTypeDefinition;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.NullableType;
@@ -15,6 +21,7 @@ import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
@@ -66,8 +73,9 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 		// Add a colum to the result for the data.
 		Column resultCol = factory.createColumn();
 		result.getColumns().add(resultCol);
-		resultCol.setName(NameUtil.normalizeName(name));
-		resultCol.setNameInSource(name);
+		String uniqueName = getUniqueName(resultCol, NameUtil.normalizeName(name));
+		resultCol.setName(uniqueName);
+		resultCol.setNameInSource(uniqueName);
 		resultCol.setType(datatypeManager.getDatatypeForXsdType(type));
 		cachedColumns .add(resultCol);
 		
@@ -82,7 +90,8 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 			throws ModelWorkspaceException, ModelerCoreException {
 		procedure = factory.createProcedure();
 		builder.getSchema().getProcedures().add(procedure);
-		procedure.setName(EXTRACT + NameUtil.normalizeName(procedureNameBase));
+		String uniqueName = getUniqueName(procedure, EXTRACT + NameUtil.normalizeName(procedureNameBase));
+		procedure.setName(uniqueName);
 		procedure.setNameInSource(procedureNameBase);
 
 		ProcedureParameter param = factory.createProcedureParameter();
@@ -170,4 +179,44 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 		TransformationMappingHelper.reconcileMappingsOnSqlChange((EObject) root, this);
 		}
 	}
+	
+	
+    private String getUniqueName( final EObject eObject,
+                                          final String proposedName ) {
+        CoreArgCheck.isNotNull(eObject);
+        final EStructuralFeature nameFeature = ModelerCore.getModelEditor().getNameFeature(eObject);
+        if (nameFeature != null) {
+            return generateUniqueInternalName(eObject.eContainer() == null ? eObject.eResource().getContents() : eObject.eContainer().eContents(),
+                                       eObject,
+                                       nameFeature,
+                                       proposedName);
+        }
+        return proposedName;
+    }
+
+    private String generateUniqueInternalName( final EList siblings,
+                                             final EObject eObject,
+                                             final EStructuralFeature nameFeature,
+                                             final String name ) {
+        String newName = name;
+        if (siblings != null) {
+            final Set siblingNames = new HashSet();
+            for (Iterator it = siblings.iterator(); it.hasNext();) {
+                final EObject child = (EObject)it.next();
+                if (eObject.getClass().equals(child.getClass())) {
+                    siblingNames.add(child.eGet(nameFeature));
+                }
+            }
+            boolean foundUniqueName = false;
+            int index = 1;
+            while (!foundUniqueName) {
+                if (siblingNames.contains(newName)) {
+                    newName = name + String.valueOf(index++);
+                } else {
+                    foundUniqueName = true;
+                }
+            }
+        }
+        return newName;
+    }
 }
