@@ -102,5 +102,15 @@ public class Properties {
 	public static final String HIB_CONNPROFILE_NAME = "Teiid Hibernate";
 	public static final String HIB_PROJECT_NAME = "testhibernate";
 	
+	/* ~~~~~~~~~~~~~~~~~~~~~ ModelWizardTest Properties ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+	public static final String RELATIONAL_SOURCE_MODEL_NAME = "relational_source";
+	public static final String RELATIONAL_VIEW_MODEL_NAME = "relational_view";
+	public static final String XML_VIEW_MODEL_NAME = "xml_view";
+	public static final String XSD_DATATYPE_MODEL_NAME = "xsd_datatype";
+	public static final String WEBSERVICE_MODEL_NAME = "webservice_view";
+	public static final String MODELEXT_MODEL_NAME = "modelext";
+	public static final String FUNCTION_MODEL_NAME = "function_userdef";
+	
+	
 	
 }
