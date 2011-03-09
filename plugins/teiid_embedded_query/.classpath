@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="translator-jdbc-7.4.0.Alpha2.jar" sourcepath="teiid-7.4.0.Alpha2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-7.4.0.Alpha2-client.jar" sourcepath="teiid-7.4.0.Alpha2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-api-7.4.0.Alpha2.jar" sourcepath="teiid-7.4.0.Alpha2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="teiid-engine-7.4.0.Alpha2.jar" sourcepath="teiid-7.4.0.Alpha2-src.zip"/>
