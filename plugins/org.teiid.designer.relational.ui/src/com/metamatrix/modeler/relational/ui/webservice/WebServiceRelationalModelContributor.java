@@ -9,10 +9,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizardPage;
 
-import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.DirectionKind;
+import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
-import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -114,6 +114,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	ProcedureParameter param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("binding"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
     	}
@@ -121,6 +122,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("action"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
     	}
@@ -128,6 +130,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("request"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( xmlLiteralType != null) {
     		param.setType(xmlLiteralType);
     	}
@@ -135,6 +138,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("endpoint"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
     	}
@@ -143,6 +147,8 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
     	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( xmlLiteralType != null) {
     		param.setType(xmlLiteralType);
     	}
@@ -161,6 +167,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	ProcedureParameter param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("action"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
     	}
@@ -168,6 +175,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("request"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( objectType != null) {
     		param.setType(objectType);
     	}
@@ -175,6 +183,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("endpoint"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( objectType != null) {
     		param.setType(stringType);
     	}
@@ -183,6 +192,7 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
     	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.OUT_LITERAL);
     	if( blobType != null) {
     		param.setType(blobType);
     	}
@@ -190,6 +200,8 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("contentType"); //$NON-NLS-1$
+    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( stringType != null) {
     		param.setType(stringType);
     	}
