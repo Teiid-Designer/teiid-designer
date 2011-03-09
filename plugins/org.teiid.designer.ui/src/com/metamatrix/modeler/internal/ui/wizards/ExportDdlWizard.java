@@ -624,11 +624,13 @@ public final class ExportDdlWizard extends AbstractWizard
      */
     void fileModified() {
         String file = this.fileCombo.getText();
-        final char lastChr = file.charAt(file.length() - 1);
-        if (file.indexOf(FILE_EXTENSION_SEPARATOR) < 0 && lastChr != ':' && lastChr != '\\' && lastChr != '/') {
-            file += DDL_EXTENSION;
+        if( file != null && file.length() > 0 ) {
+	        final char lastChr = file.charAt(file.length() - 1);
+	        if (file.indexOf(FILE_EXTENSION_SEPARATOR) < 0 && lastChr != ':' && lastChr != '\\' && lastChr != '/') {
+	            file += DDL_EXTENSION;
+	        }
+	        this.file = new File(file);
         }
-        this.file = new File(file);
         validatePage();
     }
 
