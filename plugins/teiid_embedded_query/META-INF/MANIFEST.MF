@@ -7,9 +7,9 @@ Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
  System.vdb,
  jta-1.1.jar,
- teiid-7.4.0.Alpha1-client.jar,
- teiid-api-7.4.0.Alpha1.jar,
- teiid-engine-7.4.0.Alpha1.jar
+ teiid-7.4.0.Alpha2-client.jar,
+ teiid-api-7.4.0.Alpha2.jar,
+ teiid-engine-7.4.0.Alpha2.jar
 Export-Package: javax.transaction,
  javax.transaction.xa,
  org.teiid,
@@ -85,7 +85,6 @@ Export-Package: javax.transaction,
  org.teiid.query.xquery.saxon,
  org.teiid.resource.spi,
  org.teiid.security,
- org.teiid.translator,
  org.teiid.vdb.runtime
 Bundle-Localization: plugin
 Import-Package: javax.sql,
