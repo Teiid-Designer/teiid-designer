@@ -12,6 +12,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -24,6 +30,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.ui.PlatformUI;
+import org.xml.sax.SAXException;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.ui.UiConstants;
 
@@ -169,7 +177,37 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
                                         resource.getFullPath().makeRelative(),
                                         e.getMessage()}),
                                     e);
-            }
+            } catch (SAXException e) {
+            	addError(getString(ZIPPING_RESOURCE_PROBLEM, 
+                        new Object[] {
+                            resource.getFullPath().makeRelative(),
+                            e.getMessage()}),
+                        e);			
+            } catch (ParserConfigurationException e) {
+            	addError(getString(ZIPPING_RESOURCE_PROBLEM, 
+                        new Object[] {
+                            resource.getFullPath().makeRelative(),
+                            e.getMessage()}),
+                        e);	
+            } catch (TransformerConfigurationException e) {
+            	addError(getString(ZIPPING_RESOURCE_PROBLEM, 
+                        new Object[] {
+                            resource.getFullPath().makeRelative(),
+                            e.getMessage()}),
+                        e);	
+			} catch (TransformerException e) {
+				addError(getString(ZIPPING_RESOURCE_PROBLEM, 
+                        new Object[] {
+                            resource.getFullPath().makeRelative(),
+                            e.getMessage()}),
+                        e);	
+			} catch (TransformerFactoryConfigurationError e) {
+				addError(getString(ZIPPING_RESOURCE_PROBLEM, 
+                        new Object[] {
+                            resource.getFullPath().makeRelative(),
+                            e.getMessage()}),
+                        e);	
+			}
 
             monitor.worked(1);
             ModalContext.checkCanceled(monitor);
@@ -231,7 +269,8 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
         exporter =
             new ModelerZipExporter(
                 destinationFilename,
-                useCompression);
+                useCompression,
+                clearSourceConnectionInfo);
 
     }
     /**
