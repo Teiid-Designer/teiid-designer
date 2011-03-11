@@ -40,6 +40,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
@@ -91,9 +92,9 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
     private static final String NESTED_PROJECT_ERROR = getString("nestedProjectError"); //$NON-NLS-1$
     private static final String NO_FILE_MESSAGE = getString("noFileMessage"); //$NON-NLS-1$
     private static final String INVALID_FILE_MESSAGE = getString("invalidFileMessage"); //$NON-NLS-1$
-    private static final String NOT_LICENSED_MSG = getString("notLicensedMessage"); //$NON-NLS-1$
     private static final String FILE_IMPORT_TAG = ".zip";//$NON-NLS-1$
-
+    private static final String OPTIONS_GROUP_LABEL = getString("optionsGroup.label"); //$NON-NLS-1$
+    private static final String CLEAR_CONNECTION_INFO_LABEL = getString("clearConnectionInfo.label"); //$NON-NLS-1$
     private final static String STORE_ZIP_FILE_NAMES_ID = getString("storeZipFileNamesId");//$NON-NLS-1$
 
     private static boolean exportLicensed = false;
@@ -114,6 +115,7 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
     private WizardPage page1;
     private CheckboxTreeViewer viewer;
     private Combo zipFileCombo;
+    private Button clearConnectionInfoCheckBox;
 
     /**
      * @since 4.0
@@ -148,9 +150,12 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         // about to invoke the operation so save our state
         saveWidgetValues();
 
-        if (selectedProjects.size() > 0) return executeExportOperation(new ModelerProjectZipOperation(
-                                                                                                      selectedProjects,
-                                                                                                      targetZipFileName.getAbsolutePath()));
+        if (selectedProjects.size() > 0) 
+        	return executeExportOperation(
+        		new ModelerProjectZipOperation(
+        				selectedProjects,
+                        targetZipFileName.getAbsolutePath(),
+                        this.clearConnectionInfoCheckBox.getSelection()));
 
         return true;
     }
@@ -161,28 +166,14 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
      */
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
-        // make sure license authorizes using Export Modeler Project Set export
-        exportLicensed = true;
+        this.selection = selection;
+        this.selections = new ModelWorkspaceSelections();
+        this.page1 = new AbstractWizardPage(ExportModelerProjectSetWizard.class.getSimpleName(), PAGE_TITLE) {
 
-        if (exportLicensed) {
-            this.selection = selection;
-            this.selections = new ModelWorkspaceSelections();
-            this.page1 = new AbstractWizardPage(ExportModelerProjectSetWizard.class.getSimpleName(), PAGE_TITLE) {
-
-                public void createControl( final Composite parent ) {
-                    setControl(createPageControl(parent));
-                }
-            };
-        } else {
-            // Create empty page
-            this.page1 = new WizardPage(ExportModelerProjectSetWizard.class.getSimpleName(), PAGE_TITLE, null) {
-
-                public void createControl( final Composite parent ) {
-                    setControl(createEmptyPageControl(parent));
-                }
-            };
-            this.page1.setMessage(NOT_LICENSED_MSG, IMessageProvider.ERROR);
-        }
+            public void createControl( final Composite parent ) {
+                setControl(createPageControl(parent));
+            }
+        };
 
         addPage(page1);
     }
@@ -287,6 +278,12 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         });
 
         this.viewer.setInput(this);
+        
+        Group optionsGroup = WidgetFactory.createGroup(pg, OPTIONS_GROUP_LABEL, GridData.FILL_HORIZONTAL);
+        // Add contents to view form
+        
+        clearConnectionInfoCheckBox = new Button(optionsGroup,SWT.CHECK);
+        clearConnectionInfoCheckBox.setText(CLEAR_CONNECTION_INFO_LABEL);
 
         final IDialogSettings settings = getDialogSettings();
 

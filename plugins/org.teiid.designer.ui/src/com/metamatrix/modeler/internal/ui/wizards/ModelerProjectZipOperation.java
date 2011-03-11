@@ -49,6 +49,7 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
 
     private boolean useCompression = true;
     private boolean createLeadupStructure = true;
+    private boolean clearSourceConnectionInfo = false;
     
     private static String getString(final String id) {
         return UiConstants.Util.getString(I18N_PREFIX + id);
@@ -64,7 +65,7 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
      *  @param resources java.util.Vector
      *  @param filename java.lang.String
      */
-    public ModelerProjectZipOperation(List resources, String filename) {
+    public ModelerProjectZipOperation(List resources, String filename, boolean clearSourceConnectionInfo) {
         super();
 
         // Eliminate redundancies in list of resources being exported
@@ -75,37 +76,11 @@ public class ModelerProjectZipOperation implements IRunnableWithProgress {
                 elementsEnum.remove(); //Removes currentResource;
         }
 
-        resourcesToExport = resources;
-        destinationFilename = filename;
+        this.resourcesToExport = resources;
+        this.destinationFilename = filename;
+        this.clearSourceConnectionInfo = clearSourceConnectionInfo;
     }
-    /**
-     *  Create an instance of this class.  Use this constructor if you wish
-     *  to recursively export a single resource.
-     *
-     *  @param res org.eclipse.core.resources.IResource;
-     *  @param filename java.lang.String
-     */
-    public ModelerProjectZipOperation(IResource res, String filename) {
-        super();
-        resource = res;
-        destinationFilename = filename;
-    }
-    /**
-     *  Create an instance of this class.  Use this constructor if you wish to
-     *  export specific resources with a common parent resource (affects container
-     *  directory creation)
-     *
-     *  @param res org.eclipse.core.resources.IResource
-     *  @param resources java.util.Vector
-     *  @param filename java.lang.String
-     */
-    public ModelerProjectZipOperation(
-        IResource res,
-        List resources,
-        String filename) {
-        this(res, filename);
-        resourcesToExport = resources;
-    }
+
     /**
      * Add a new entry to the error table with the passed information
      */
