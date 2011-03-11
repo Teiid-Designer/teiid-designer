@@ -21,26 +21,4 @@
             id="editorPreferencePage">
       </page>   
    </extension>
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            name="%propertyPages.details.name"
-            class="com.metamatrix.ui.internal.logview.LogEntryPropertyPage"
-            id="StatusDetails">
-         <enabledWhen>
-            <adapt
-                  type="com.metamatrix.ui.internal.logview.LogEntry">
-            </adapt></enabledWhen>
-      </page>
-      <page
-            name="%propertyPages.session.name"
-            class="com.metamatrix.ui.internal.logview.LogSessionPropertyPage"
-            id="com.metamatrix.ui.StatusSession">
-         <enabledWhen>
-            <adapt
-                  type="com.metamatrix.ui.internal.logview.LogEntry">
-            </adapt></enabledWhen>
-      </page>
-   </extension>
-
 </plugin>
