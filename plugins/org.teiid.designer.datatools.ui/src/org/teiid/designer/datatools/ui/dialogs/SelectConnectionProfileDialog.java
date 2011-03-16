@@ -145,16 +145,16 @@ public class SelectConnectionProfileDialog extends ElementTreeSelectionDialog im
 	}
 	
 	private void updateOnSelection(Object selectedObject) {
-		IStatus status = new Status(IStatus.INFO, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.okSelectionMessage")); //$NON-NLS-1$
+		IStatus status = new Status(IStatus.INFO, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.okSelectionMessage")); //$NON-NLS-1$
 		if( selectedObject != null ) {
 			if( selectedObject instanceof ICategory ) {
-				status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.categorySelectionMessage")); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.categorySelectionMessage")); //$NON-NLS-1$
 				getOkButton().setEnabled(false);
 			} else {
 				getOkButton().setEnabled(true);
 			}
 		} else {
-			status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.invalidSelectionMessage")); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, DatatoolsUiPlugin.PLUGIN_ID, DatatoolsUiConstants.UTIL.getString("SelectConnectionProfileDialog.invalidSelectionMessage")); //$NON-NLS-1$
 			getOkButton().setEnabled(false);
 		}
 		
