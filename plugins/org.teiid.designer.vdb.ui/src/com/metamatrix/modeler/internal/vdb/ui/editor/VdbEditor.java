@@ -2113,9 +2113,13 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
          */
         @Override
         protected String[] refreshItems( Object element ) {
+            List<String> translators = new ArrayList<String>();
             // get the available translators from the server
-            List<String> fromServer = Arrays.asList(SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorTypes());
-            List<String> translators = new ArrayList<String>(fromServer);
+            String[] serverTypes = SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorTypes();
+            
+            if (serverTypes != null) {
+                translators.addAll(Arrays.asList(serverTypes));
+            }
 
             // add in the translator overrides from the VDB
             for (TranslatorOverride translator : getVdb().getTranslators()) {
