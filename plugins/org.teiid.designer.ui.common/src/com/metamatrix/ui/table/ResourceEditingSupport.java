@@ -5,36 +5,61 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.internal.vdb.ui.editor;
+package com.metamatrix.ui.table;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * The <code>VdbEditingSupport</code> class provides table cell editing that provides a combobox editor when there are know values
- * and a text editor when there are no known values.
+ * The <code>ResourceEditingSupport</code> class provides cell editing support for a resource. A combobox editor is used when there
+ * are know values. Otherwise a text editor is used.
  */
-abstract class VdbEditingSupport extends EditingSupport {
+public abstract class ResourceEditingSupport extends EditingSupport {
 
-    private CellEditor currentEditor;
-    private String[] items;
-    private IResource vdb;
+    /**
+     * The current {@link CellEditor}.
+     */
+    protected CellEditor currentEditor;
+
+    /**
+     * The editors allowed values (<code>null</code> or empty if a text cell editor should be used).
+     */
+    private String[] allowedValues;
+
+    /**
+     * An optional validator.
+     */
+    private ICellEditorValidator validator;
+
+    /**
+     * The resource whose attributes are used to determine if the cell editor value is editable.
+     */
+    private IResource resource;
 
     /**
      * @param viewer the table viewer (may not be <code>null</code>)
-     * @param vdb the VDB being edited (may not be <code>null</code>)
+     * @param resource the resource being edited (may not be <code>null</code>)
      */
-    public VdbEditingSupport( ColumnViewer viewer,
-                              IResource vdb ) {
+    public ResourceEditingSupport( ColumnViewer viewer,
+                                   IResource resource ) {
         super(viewer);
-        this.vdb = vdb;
+        this.resource = resource;
+    }
+
+    /**
+     * @param element the element being edited
+     * @return <code>true</code> if the ComboBox editor should be editable
+     */
+    protected boolean canAddNewValue( Object element ) {
+        return false;
     }
 
     /**
@@ -44,7 +69,7 @@ abstract class VdbEditingSupport extends EditingSupport {
      */
     @Override
     protected boolean canEdit( Object element ) {
-        return !this.vdb.getResourceAttributes().isReadOnly();
+        return !this.resource.getResourceAttributes().isReadOnly();
     }
 
     /**
@@ -54,20 +79,26 @@ abstract class VdbEditingSupport extends EditingSupport {
      */
     @Override
     protected CellEditor getCellEditor( Object element ) {
-        this.items = refreshItems();
+        this.allowedValues = refreshItems(element);
 
         // makes sure items is null if empty
-        if ((this.items != null) && (this.items.length == 0)) {
-            this.items = null;
+        if ((this.allowedValues != null) && (this.allowedValues.length == 0)) {
+            this.allowedValues = null;
         }
 
-        if (this.items == null) {
+        if (this.allowedValues == null) {
             // use text editor since there are no known values
             this.currentEditor = new TextCellEditor((Composite)getViewer().getControl());
+
+            // hook validator up
+            if (this.validator != null) {
+                this.currentEditor.setValidator(this.validator);
+            }
         } else {
             // use combobox editor since we do have known values
-            ComboBoxCellEditor comboEditor = new ComboBoxCellEditor((Composite)getViewer().getControl(), new String[0], SWT.NONE);
-            comboEditor.setItems(this.items);
+            int style = (canAddNewValue(element) ? SWT.NONE : SWT.READ_ONLY);
+            ComboBoxCellEditor comboEditor = new ComboBoxCellEditor((Composite)getViewer().getControl(), new String[0], style);
+            comboEditor.setItems(this.allowedValues);
             this.currentEditor = comboEditor;
         }
 
@@ -94,30 +125,31 @@ abstract class VdbEditingSupport extends EditingSupport {
         }
 
         // when using text editor just return the value
-        if (this.items == null) {
+        if (this.allowedValues == null) {
             return value;
         }
 
         // when using combobox editor return index of value
-        for (int i = 0; i < this.items.length; ++i) {
-            if (value.equals(this.items[i])) {
+        for (int i = 0; i < this.allowedValues.length; ++i) {
+            if (value.equals(this.allowedValues[i])) {
                 return i;
             }
         }
 
         // current value is not found on server insert it at index zero
-        String[] temp = new String[this.items.length + 1];
+        String[] temp = new String[this.allowedValues.length + 1];
         temp[0] = value;
-        System.arraycopy(this.items, 0, temp, 1, this.items.length);
-        this.items = temp;
-        ((ComboBoxCellEditor)this.currentEditor).setItems(this.items);
+        System.arraycopy(this.allowedValues, 0, temp, 1, this.allowedValues.length);
+        this.allowedValues = temp;
+        ((ComboBoxCellEditor)this.currentEditor).setItems(this.allowedValues);
         return 0;
     }
 
     /**
+     * @param element the element whose items are being requested (never <code>null</code>)
      * @return the list of known values (can be <code>null</code> or empty)
      */
-    protected abstract String[] refreshItems();
+    protected abstract String[] refreshItems( Object element );
 
     /**
      * @param element the element whose value needs to be set
@@ -145,7 +177,7 @@ abstract class VdbEditingSupport extends EditingSupport {
                 newValue = ((CCombo)((ComboBoxCellEditor)this.currentEditor).getControl()).getText();
             } else {
                 // user picked an existing value
-                newValue = this.items[index];
+                newValue = this.allowedValues[index];
             }
         } else {
             // using the text editor
@@ -153,6 +185,14 @@ abstract class VdbEditingSupport extends EditingSupport {
         }
 
         setElementValue(element, newValue);
+        getViewer().refresh(element);
+    }
+
+    /**
+     * @param validator the validator to use when editing a cell (can be <code>null</code> if no validation should be done)
+     */
+    public void setValidator( ICellEditorValidator validator ) {
+        this.validator = validator;
     }
 
 }

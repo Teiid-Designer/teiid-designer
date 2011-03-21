@@ -8,7 +8,9 @@
 package com.metamatrix.ui;
 
 import java.util.ResourceBundle;
+
 import org.eclipse.ui.PlatformUI;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 
@@ -80,9 +82,9 @@ public interface UiConstants {
 
         // images registered from org.eclipse.ui and used in org.eclipse.ui.views.tasklist.
         // images are registered in UiPlugin.startup()
-        String TASK_ERROR   = OBJ16 + "error_tsk.gif"; //$NON-NLS-1$
-        String TASK_WARNING = OBJ16 + "warn_tsk.gif"; //$NON-NLS-1$
-        String TASK_INFO    = OBJ16 + "info_tsk.gif"; //$NON-NLS-1$
+        String TASK_ERROR   = OBJ16 + "error_st_obj.gif"; //$NON-NLS-1$
+        String TASK_WARNING = OBJ16 + "warn_st_obj.gif"; //$NON-NLS-1$
+        String TASK_INFO    = OBJ16 + "info_st_obj.gif"; //$NON-NLS-1$
 
         String FIND_DISABLED = DLCL16 + "find_obj.gif"; //$NON-NLS-1$
         String FIND_ENABLED  = ELCL16 + "find_obj.gif"; //$NON-NLS-1$

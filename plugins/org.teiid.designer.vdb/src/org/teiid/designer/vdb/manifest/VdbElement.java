@@ -10,12 +10,15 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
@@ -49,6 +52,9 @@ public class VdbElement implements Serializable {
     @XmlElement( name = "model", required = true, type = ModelElement.class )
     private List<ModelElement> models;
 
+    @XmlElement( name = "translator", type = TranslatorElement.class )
+    private List<TranslatorElement> translators;
+
     @XmlElement( name = "data-role", type = DataRoleElement.class )
     private List<DataRoleElement> dataRoles;
     
@@ -73,6 +79,8 @@ public class VdbElement implements Serializable {
             getEntries().add(new EntryElement(entry));
         for (final VdbModelEntry modelEntry : vdb.getModelEntries())
             getModels().add(new ModelElement(modelEntry));
+        for (final TranslatorOverride translator : vdb.getTranslators())
+            getTranslators().add(new TranslatorElement(translator));
         for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
             getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
         getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
@@ -122,6 +130,14 @@ public class VdbElement implements Serializable {
     public List<PropertyElement> getProperties() {
         if (properties == null) properties = new ArrayList<PropertyElement>();
         return properties;
+    }
+
+    /**
+     * @return the translators
+     */
+    public List<TranslatorElement> getTranslators() {
+        if (translators == null) translators = new ArrayList<TranslatorElement>();
+        return translators;
     }
 
     /**

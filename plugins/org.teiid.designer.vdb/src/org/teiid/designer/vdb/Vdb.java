@@ -15,9 +15,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,6 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -32,7 +35,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -46,8 +51,10 @@ import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.Unreliable;
@@ -73,6 +80,13 @@ public final class Vdb {
     final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
     final CopyOnWriteArraySet<VdbDataRole> dataPolicyEntries = new CopyOnWriteArraySet<VdbDataRole>();
+    final Set<TranslatorOverride> translatorOverrides = new TreeSet<TranslatorOverride>(new Comparator<TranslatorOverride>() {
+        @Override
+        public int compare( TranslatorOverride translator1,
+                            TranslatorOverride translator2 ) {
+            return translator1.getName().compareTo(translator2.getName());
+        }
+    });
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
     final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
@@ -141,6 +155,12 @@ public final class Vdb {
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries)
                             entry.initializeImports();
+   
+                        // load translator overrides
+                        for (final TranslatorElement translatorElement : manifest.getTranslators()) {
+                            translatorOverrides.add(new TranslatorOverride(Vdb.this, translatorElement));
+                        }
+
                         for (final DataRoleElement element : manifest.getDataPolicies()) {
                             dataPolicyEntries.add(new VdbDataRole(Vdb.this, element));
                         }
@@ -226,6 +246,21 @@ public final class Vdb {
     }
 
     /**
+     * @param translatorOverride the translator override (may not be <code>null</code>)
+     * @param monitor the progress monitor (may be <code>null</code>)
+     * @return <code>true</code> if successfully added
+     */
+    public final boolean addTranslator( TranslatorOverride translatorOverride,
+                                        IProgressMonitor monitor ) {
+        if (this.translatorOverrides.add(translatorOverride)) {
+            setModified(this, Event.TRANSLATOR_OVERRIDE_ADDED, null, translatorOverride);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * 
      */
     public final void close() {
@@ -274,7 +309,7 @@ public final class Vdb {
     }
 
     JAXBContext getJaxbContext() throws JAXBException {
-        return JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
+        return JAXBContext.newInstance(new Class<?>[] { VdbElement.class });
     }
 
     Schema getManifestSchema() throws SAXException {
@@ -340,6 +375,13 @@ public final class Vdb {
     }
 
     /**
+     * @return the immutable set of overridden translators within this VDB (never <code>null</code>)
+     */
+    public final Set<TranslatorOverride> getTranslators() {
+        return Collections.unmodifiableSet(this.translatorOverrides);
+    }
+
+    /**
      * @return the VDB version
      */
     public int getVersion() {
@@ -394,6 +436,21 @@ public final class Vdb {
     public final void removeDataPolicy( final VdbDataRole policy ) {
         dataPolicyEntries.remove(policy);
         setModified(this, Event.DATA_POLICY_REMOVED, policy, null);
+    }
+
+    /**
+     * @param translatorOverride the translator override being removed (may not be <code>null</code>)
+     * @param monitor the progress monitor (may be <code>null</code>)
+     * @return <code>true</code> if successfully removed
+     */
+    public final boolean removeTranslator( TranslatorOverride translatorOverride,
+                                           IProgressMonitor monitor ) {
+        if (this.translatorOverrides.remove(translatorOverride)) {
+            setModified(this, Event.TRANSLATOR_OVERRIDE_REMOVED, translatorOverride, null);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -591,6 +648,30 @@ public final class Vdb {
          * {@link #save(IProgressMonitor) save}
          */
         public static final String SAVED = "saved"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
+         * is added.
+         * 
+         * @see
+         */
+        public static final String TRANSLATOR_OVERRIDE_ADDED = "translatorOverrideAdded"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
+         * override property is added, changed, or removed.
+         * 
+         * @see
+         */
+        public static final String TRANSLATOR_PROPERTY = "translatorOverrideProperty"; //$NON-NLS-1$
+
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
+         * is removed.
+         * 
+         * @see
+         */
+        public static final String TRANSLATOR_OVERRIDE_REMOVED = "translatorOverrideRemoved"; //$NON-NLS-1$
     }
 
     /**

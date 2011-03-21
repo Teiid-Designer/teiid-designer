@@ -72,6 +72,7 @@ public interface VdbUiConstants {
         String REMOVE_MODEL = CTOOL16 + "remove-model.png"; //$NON-NLS-1$
         String REMOVE_ROLE = CTOOL16 + "remove-role.png"; //$NON-NLS-1$
         String REMOVE_TRANSLATOR = CTOOL16 + "remove-translator.png"; //$NON-NLS-1$
+        String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
     }
 
     /**

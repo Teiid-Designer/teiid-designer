@@ -17,7 +17,10 @@ import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +91,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.ui.NewDataRoleWizard;
+import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
@@ -111,6 +115,7 @@ import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants;
 import com.metamatrix.modeler.vdb.ui.VdbUiConstants.Images;
 import com.metamatrix.modeler.vdb.ui.VdbUiPlugin;
+import com.metamatrix.modeler.vdb.ui.translators.TranslatorOverridesPanel;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -118,6 +123,7 @@ import com.metamatrix.ui.internal.widget.ButtonProvider;
 import com.metamatrix.ui.internal.widget.DefaultContentProvider;
 import com.metamatrix.ui.table.CheckBoxColumnProvider;
 import com.metamatrix.ui.table.DefaultTableProvider;
+import com.metamatrix.ui.table.ResourceEditingSupport;
 import com.metamatrix.ui.table.TableAndToolBar;
 import com.metamatrix.ui.table.TextColumnProvider;
 import com.metamatrix.ui.text.StyledTextEditor;
@@ -169,7 +175,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar dataRolesGroup;
     private Button synchronizeAllButton;
     private PropertyChangeListener vdbListener;
-    
+
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
     VdbDataRoleResolver dataRoleResolver;
@@ -907,6 +913,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             descriptionTab.setControl(pnlDescription);
             createDescriptionControl(pnlDescription);
+        }
+        
+        { // translator overrides tab
+            CTabItem translatorOverridesTab = new CTabItem(tabFolder, SWT.NONE);
+            translatorOverridesTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
+            translatorOverridesTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
+            Composite pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
+            translatorOverridesTab.setControl(pnlTranslatorOverrides);
         }
 
         tabFolder.setSelection(0);
@@ -2061,7 +2075,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
     }
     
-    class TranslatorEditingSupport extends VdbEditingSupport {
+    class TranslatorEditingSupport extends ResourceEditingSupport {
 
         /**
          * @param viewer
@@ -2071,31 +2085,51 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                          IResource vdb ) {
             super(viewer, vdb);
         }
+        
+        /**
+         * {@inheritDoc}
+         *
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
+         */
+        @Override
+        protected boolean canAddNewValue( Object element ) {
+            return true;
+        }
 
         /**
          * {@inheritDoc}
          * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#getElementValue(java.lang.Object)
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#getElementValue(java.lang.Object)
          */
         @Override
         protected String getElementValue( Object element ) {
             return ((VdbModelEntry)element).getTranslator();
         }
-
+        
         /**
          * {@inheritDoc}
-         * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#refreshItems()
+         *
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#refreshItems(java.lang.Object)
          */
         @Override
-        protected String[] refreshItems() {
-            return SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorNames();
+        protected String[] refreshItems( Object element ) {
+            // get the available translators from the server
+            List<String> fromServer = Arrays.asList(SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorTypes());
+            List<String> translators = new ArrayList<String>(fromServer);
+
+            // add in the translator overrides from the VDB
+            for (TranslatorOverride translator : getVdb().getTranslators()) {
+                translators.add(translator.getName());
+            }
+
+            Collections.sort(translators);
+            return translators.toArray(new String[translators.size()]);
         }
 
         /**
          * {@inheritDoc}
          * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#setElementValue(java.lang.Object, java.lang.String)
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#setElementValue(java.lang.Object, java.lang.String)
          */
         @Override
         protected void setElementValue( Object element,
@@ -2108,7 +2142,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
     }
     
-    class JndiEditingSupport extends VdbEditingSupport {
+    class JndiEditingSupport extends ResourceEditingSupport {
 
         /**
          * @param viewer
@@ -2118,11 +2152,21 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                    IResource vdb ) {
             super(viewer, vdb);
         }
+        
+        /**
+         * {@inheritDoc}
+         *
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
+         */
+        @Override
+        protected boolean canAddNewValue( Object element ) {
+            return true;
+        }
 
         /**
          * {@inheritDoc}
          * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#getElementValue(java.lang.Object)
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#getElementValue(java.lang.Object)
          */
         @Override
         protected String getElementValue( Object element ) {
@@ -2131,18 +2175,18 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#refreshItems()
+         *
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#refreshItems(java.lang.Object)
          */
         @Override
-        protected String[] refreshItems() {
+        protected String[] refreshItems( Object element ) {
             return SourceHandlerExtensionManager.getVdbConnectionFinder().getDataSourceNames();
         }
 
         /**
          * {@inheritDoc}
          * 
-         * @see com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditingSupport#setElementValue(java.lang.Object, java.lang.String)
+         * @see com.metamatrix.ui.table.ResourceEditingSupport#setElementValue(java.lang.Object, java.lang.String)
          */
         @Override
         protected void setElementValue( Object element,
