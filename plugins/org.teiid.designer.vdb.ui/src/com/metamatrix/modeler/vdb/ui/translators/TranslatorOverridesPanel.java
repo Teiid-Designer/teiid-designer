@@ -10,7 +10,6 @@ package com.metamatrix.modeler.vdb.ui.translators;
 import static com.metamatrix.modeler.vdb.ui.VdbUiConstants.Util;
 import static com.metamatrix.modeler.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static com.metamatrix.modeler.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
-import static com.metamatrix.ui.UiConstants.Images.TASK_ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +47,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.ISharedImages;
 import org.teiid.designer.core.properties.PropertyDefinition;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
@@ -782,7 +782,7 @@ public final class TranslatorOverridesPanel extends Composite {
                         image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
                     }
                 } else {
-                    image = UiPlugin.getDefault().getImage(TASK_ERROR);
+                    image = UiPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
                 }
             }
 
