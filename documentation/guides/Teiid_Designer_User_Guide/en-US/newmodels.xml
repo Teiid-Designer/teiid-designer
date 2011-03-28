@@ -1042,8 +1042,161 @@
 					<emphasis role="bold">Interface Name</emphasis> values (via "..." buttons) to 
 					use existing <emphasis role="bold">Web service</emphasis> model components. This will create a new 
 					operation in an existing model.</para>
-			</note>
+			</note><para/>
 		</section>
+		<section id="generate-jbossws-cxf-war-section">
+			<title>Generating a JBossWS-CXF War </title>
+			
+			<para>The Teiid Designer provides web service generation capabilities in the form of a
+				JBossWS-CXF war. Once you have added your <emphasis role="bold">Web Service
+					Models</emphasis> to your <emphasis role="bold"
+					>VDB</emphasis>, deployed to a running Teiid instance and created your VDB's data
+				source, you are ready to expose the web service using the generated
+				war.</para>
+			
+			
+			<itemizedlist>
+				<listitem>
+					<para> To generate a new JBossWS-CXF war using the VDB: <itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Right-click on the
+									VDB containing your web service model(s) and select the <emphasis
+										role="bold">Modeling > Generate JBossWS-CXF War</emphasis>
+									action.</para>
+								<para>
+									<mediaobject>
+										<imageobject>
+											<imagedata
+												fileref="images/screencaps/generate-war-menu-option.png"
+											/>
+										</imageobject>
+									</mediaobject>
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Fill in missing
+									properties in <emphasis role="bold">Web Service War Generation
+										Wizard</emphasis> shown below.</para>
+								<figure>
+									<title>Generate a JBossWS-CXF War Web Service Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata
+												fileref="images/screencaps/create-web-service-war.png"
+											/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+								<para>
+									<table frame="all">
+										<title>Field Descriptions</title>
+										<tgroup cols="2">
+											<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+											<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+											<thead>
+												<row>
+												<entry>Field Name</entry>
+												<entry>Description</entry>
+												</row>
+											</thead>
+											<tbody>
+												<row>
+												<entry>Name</entry>
+												<entry>The name of the generated war file.</entry>
+												</row>
+												<row>
+												<entry>Host</entry>
+												<entry>The server host name (or IP).</entry>
+												</row>
+												<row>
+												<entry>Port</entry>
+												<entry>The server port.</entry>
+												</row>
+												<row>
+												<entry>Connection JNDI Name</entry>
+												<entry>The JNDI connection name to the deployed
+												Teiid source VDB.</entry>
+												</row>
+												<row>
+												<entry>
+												<para>Security options </para>
+												</entry>
+												<entry>
+												<para>
+												<itemizedlist>
+												<listitem>
+												<para><emphasis role="bold">None</emphasis> - no
+												username/password required to connect to the VDB
+												through the generated web service.</para>
+												</listitem>
+												<listitem>
+												<para><emphasis role="bold">HTTP Basic</emphasis>
+												- the specified security realm and role will be
+												used. The default realm value is the realm that
+												comes out-of-the-box with Teiid (<emphasis
+												role="bold"><emphasis role="italic"
+												>teiid-security</emphasis></emphasis>). The role
+												needs to be defined in the appropriate security
+												mechanism. In the case of Teiid, use the
+												teiid-security-roles.properties file. When using
+												HTTPBasic, a local Teiid connection using the
+												PassthroughAuthentication property is required.
+												See the Teiid user's manual for details on
+												PassthroughAuthentication.</para>
+												</listitem>
+												<listitem>
+												<para><emphasis role="bold">WS-Security</emphasis>
+												- a password callback class will be generated for
+												you which will validate that the username/password
+												values you specified in the war generator dialog
+												are passed in. This is meant to be a testing
+												mechanism for your WS-Security enabled web service
+												and your own security mechanism should be
+												implemented in this class. All source code is
+												included in the generated war along with the
+												compiled class files.</para>
+												</listitem>
+												</itemizedlist>
+												</para>
+												</entry>
+												</row>
+												<row>
+												<entry>Target namespace</entry>
+												<entry>This is the target namespace that will be
+												used in the generated WSDL and subsequent
+												generated web service classes.</entry>
+												</row>
+												<row>
+												<entry>War File Save Location</entry>
+												<entry>The folder where the generated WAR file
+												should be saved.</entry>
+												</row>
+											</tbody>
+										</tgroup>
+									</table>
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis
+										role="bold">OK</emphasis> to generate the web service war.
+									When war generation is complete, a confirmation dialog should
+									appear. Click <emphasis role="bold">OK</emphasis>.</para>
+								<figure>
+									<title>Generation Completed Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata
+												fileref="images/screencaps/generate-war-wizard-confirmation-dialog.png"
+											/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>		
 	</section>
 	
 	<!-- ####### EXTENSION MODEL ######################################## -->
