@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.ISharedImages;
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
 import org.teiid.designer.vdb.TranslatorPropertyDefinition;

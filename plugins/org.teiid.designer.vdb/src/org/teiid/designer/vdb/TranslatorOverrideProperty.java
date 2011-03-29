@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.vdb;
 
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 
 import com.metamatrix.core.util.StringUtilities;
 

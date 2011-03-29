@@ -20,7 +20,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.TeiidDataSource;

@@ -9,7 +9,7 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -96,7 +96,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#getAllowedValues()
+     * @see org.teiid.core.properties.PropertyDefinition#getAllowedValues()
      */
     @Override
     public String[] getAllowedValues() {
@@ -110,7 +110,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#getDefaultValue()
+     * @see org.teiid.core.properties.PropertyDefinition#getDefaultValue()
      */
     @Override
     public String getDefaultValue() {
@@ -124,7 +124,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#getDescription()
+     * @see org.teiid.core.properties.PropertyDefinition#getDescription()
      */
     @Override
     public String getDescription() {
@@ -138,7 +138,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#getDisplayName()
+     * @see org.teiid.core.properties.PropertyDefinition#getDisplayName()
      */
     @Override
     public String getDisplayName() {
@@ -152,7 +152,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#getId()
+     * @see org.teiid.core.properties.PropertyDefinition#getId()
      */
     @Override
     public String getId() {
@@ -176,7 +176,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#isAdvanced()
+     * @see org.teiid.core.properties.PropertyDefinition#isAdvanced()
      */
     @Override
     public boolean isAdvanced() {
@@ -190,7 +190,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#isMasked()
+     * @see org.teiid.core.properties.PropertyDefinition#isMasked()
      */
     @Override
     public boolean isMasked() {
@@ -204,7 +204,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#isModifiable()
+     * @see org.teiid.core.properties.PropertyDefinition#isModifiable()
      */
     @Override
     public boolean isModifiable() {
@@ -218,7 +218,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#isRequired()
+     * @see org.teiid.core.properties.PropertyDefinition#isRequired()
      */
     @Override
     public boolean isRequired() {
@@ -240,7 +240,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.core.properties.PropertyDefinition#isValidValue(java.lang.String)
+     * @see org.teiid.core.properties.PropertyDefinition#isValidValue(java.lang.String)
      */
     @Override
     public String isValidValue( String newValue ) {

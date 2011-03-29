@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.core.properties;
+package org.teiid.core.properties;
 
 /**
  * The attributes of a property.

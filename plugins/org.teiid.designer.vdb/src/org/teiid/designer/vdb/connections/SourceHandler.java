@@ -9,7 +9,7 @@ package org.teiid.designer.vdb.connections;
 
 import java.util.Properties;
 
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 
 /**
  * Interface intended to provide a mechanism for the org.teiid.designer.dqp plugin to contribute connection management to the

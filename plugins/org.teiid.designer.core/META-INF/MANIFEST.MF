@@ -64,7 +64,6 @@ Export-Package: com.metamatrix.common.protocol,
  com.metamatrix.modeler.internal.core.validation,
  com.metamatrix.modeler.internal.core.workspace,
  com.metamatrix.modeler.internal.core.writer,
- org.teiid.designer.core.properties,
  org.teiid.designer.core.util,
  org.teiid.designer.core.xmi
 Require-Bundle: org.eclipse.core.runtime,

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.teiid.designer.core.properties.PropertyDefinition;
+import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
