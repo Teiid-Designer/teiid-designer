@@ -509,47 +509,47 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
             if (Boolean.class.getName().equals(this.className) || Boolean.TYPE.getName().equals(this.className)) {
                 if (!newValue.equalsIgnoreCase(Boolean.TRUE.toString()) && !newValue.equalsIgnoreCase(Boolean.FALSE.toString())) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Boolean.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Boolean.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Character.class.getName().equals(this.className) || Character.TYPE.getName().equals(this.className)) {
                 if (newValue.length() != 1) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Character.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Character.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Byte.class.getName().equals(this.className) || Byte.TYPE.getName().equals(this.className)) {
                 try {
                     Byte.parseByte(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Byte.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Byte.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Short.class.getName().equals(this.className) || Short.TYPE.getName().equals(this.className)) {
                 try {
                     Short.parseShort(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Short.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Short.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Integer.class.getName().equals(this.className) || Integer.TYPE.getName().equals(this.className)) {
                 try {
                     Integer.parseInt(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Integer.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Integer.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Long.class.getName().equals(this.className) || Long.TYPE.getName().equals(this.className)) {
                 try {
                     Long.parseLong(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Long.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Long.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Float.class.getName().equals(this.className) || Float.TYPE.getName().equals(this.className)) {
                 try {
                     Float.parseFloat(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Float.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Float.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (Double.class.getName().equals(this.className) || Double.TYPE.getName().equals(this.className)) {
                 try {
                     Double.parseDouble(newValue);
                 } catch (Exception e) {
-                    return Util.getString("invalidPropertyEditornewValue", newValue, Double.TYPE.getName()); //$NON-NLS-1$
+                    return Util.getString("invalidPropertyValueForType", newValue, Double.TYPE.getName()); //$NON-NLS-1$
                 }
             } else if (!String.class.getName().equals(this.className)) {
                 return Util.getString("unknownPropertyType", this.displayName, this.className); //$NON-NLS-1$
