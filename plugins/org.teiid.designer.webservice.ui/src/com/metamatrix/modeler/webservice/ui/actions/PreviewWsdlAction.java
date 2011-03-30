@@ -135,6 +135,7 @@ public class PreviewWsdlAction extends SortableSelectionAction {
                 	modelResource = ModelerCore.getModelWorkspace().findModelResource((IFile)next);
                 	if (modelResource != null) {
                     	isValid = ModelIdentifier.isWebServicesViewModel(modelResource);
+                    	wsResources.add(modelResource);
                     } else {
                         isValid = false;
                     }
