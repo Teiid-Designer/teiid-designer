@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * The <code>ResourceEditingSupport</code> class provides cell editing support for a resource. A combobox editor is used when there
- * are know values. Otherwise a text editor is used.
+ * are known values. Otherwise a text editor is used.
  */
 public abstract class ResourceEditingSupport extends EditingSupport {
 

@@ -8,60 +8,23 @@
 package com.metamatrix.modeler.vdb.ui.translators;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
 
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.ui.table.ResourceEditingSupport;
+import com.metamatrix.ui.table.PropertyEditingSupport;
 
-class TranslatorOverridePropertyEditingSupport extends ResourceEditingSupport {
+class TranslatorOverridePropertyEditingSupport extends PropertyEditingSupport {
 
     /**
      * @param viewer
      * @param vdb
      */
     public TranslatorOverridePropertyEditingSupport( ColumnViewer viewer,
-                                   IResource vdb ) {
+                                                     IResource vdb ) {
         super(viewer, vdb);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.ui.table.ResourceEditingSupport#canEdit(java.lang.Object)
-     */
-    @Override
-    protected boolean canEdit( Object element ) {
-        TranslatorOverrideProperty property = (TranslatorOverrideProperty)element;
-        return super.canEdit(element) && property.getDefinition().isModifiable();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.ui.table.ResourceEditingSupport#getCellEditor(java.lang.Object)
-     */
-    @Override
-    protected CellEditor getCellEditor( Object element ) {
-        TranslatorOverrideProperty property = (TranslatorOverrideProperty)element;
-
-        // no editor if not editable
-        if (!property.getDefinition().isModifiable()) {
-            return null;
-        }
-
-        if (property.getDefinition().isMasked()) {
-            this.currentEditor = new TextCellEditor((Composite)getViewer().getControl());
-            ((Text)currentEditor.getControl()).setEchoChar('*');
-            return this.currentEditor;
-        }
-
-        return super.getCellEditor(element);
     }
 
     /**
@@ -84,12 +47,12 @@ class TranslatorOverridePropertyEditingSupport extends ResourceEditingSupport {
     /**
      * {@inheritDoc}
      * 
-     * @see com.metamatrix.ui.table.ResourceEditingSupport#refreshItems(java.lang.Object)
+     * @see com.metamatrix.ui.table.PropertyEditingSupport#getPropertyDefinition(java.lang.Object)
      */
     @Override
-    protected String[] refreshItems( Object element ) {
+    protected PropertyDefinition getPropertyDefinition( Object element ) {
         TranslatorOverrideProperty property = (TranslatorOverrideProperty)element;
-        return property.getDefinition().getAllowedValues();
+        return property.getDefinition();
     }
 
     /**
@@ -140,4 +103,5 @@ class TranslatorOverridePropertyEditingSupport extends ResourceEditingSupport {
             getViewer().setSelection(new StructuredSelection(element));
         }
     }
+
 }
