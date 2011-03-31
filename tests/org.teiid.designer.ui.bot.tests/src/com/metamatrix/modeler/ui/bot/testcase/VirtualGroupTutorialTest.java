@@ -282,7 +282,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), oracle_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Select Connection Profile");
+		SWTBotShell shell = bot.shell("Set Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.ORACLE_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -294,7 +294,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.ORACLE_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Password");
+		shell = bot.shell("Data Source Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -319,7 +319,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), sql_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Select Connection Profile");
+		SWTBotShell shell = bot.shell("Set Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.SQLSERVER_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -331,7 +331,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.SQLSERVER_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Password");
+		shell = bot.shell("Data Source Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -367,7 +367,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		bot.editorByTitle(Properties.VDB_NAME + ".vdb").setFocus();
 		SWTBot editorBot = bot.editorByTitle(Properties.VDB_NAME + ".vdb").bot();
-		editorBot.button("Add...").click();
+		editorBot.toolbarButtonWithTooltip("Add model").click();
 		
 		shell = bot.shell("Add File(s) to VDB");
 		shell.activate();
@@ -376,7 +376,9 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		bot.editorByTitle(Properties.VDB_NAME + ".vdb").save();
 		
-		SWTBotTable table = editorBot.tableInGroup("Models");
+		
+		
+		SWTBotTable table = editorBot.table(0); //table with models
 		
 		assertTrue(table.cell(0, 0).equals(Properties.ORACLE_MODEL_NAME));
 		assertTrue(table.cell(1, 0).equals(Properties.SQLSERVER_MODEL_NAME));
