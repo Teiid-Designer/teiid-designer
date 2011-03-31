@@ -11,6 +11,7 @@ import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 
 import org.teiid.core.properties.PropertyDefinition;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 
@@ -58,21 +59,45 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
         return null;
     }
 
+    /**
+     * A non-empty, non-null value used for a custom property or <code>null</code> if a delegate is present.
+     */
+    private String defaultValue;
+
+    /**
+     * Used when a Teiid server property is found.
+     */
     private PropertyDefinition delegate;
+
+    /**
+     * A unique ID for a custom property or <code>null</code> if a delegate is present.
+     */
     private String id;
 
     /**
      * @param delegate a property definition from a Teiid server (may not be <code>null</code>)
+     * @throws IllegalArgumentException if <code>delegate</code> is <code>null</code>
      */
     public TranslatorPropertyDefinition( PropertyDefinition delegate ) {
+        CoreArgCheck.isNotNull(delegate);
         this.delegate = delegate;
     }
 
     /**
+     * Used to construct a custom property added by the user.
+     * 
      * @param id the unique identifier (may not be <code>null</code>)
+     * @param defaultValue the default value (may not be <code>null</code> or empty)
+     * @throws IllegalArgumentException if <code>id</code> is <code>null</code> or empty
+     * @throws IllegalArgumentException if <code>defaultValue</code> is <code>null</code> or empty
      */
-    public TranslatorPropertyDefinition( String id ) {
+    public TranslatorPropertyDefinition( String id,
+                                         String defaultValue ) {
+        CoreArgCheck.isNotEmpty(id);
+        CoreArgCheck.isNotEmpty(defaultValue);
+
         this.id = id;
+        this.defaultValue = defaultValue;
     }
 
     /**
@@ -118,7 +143,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
             return this.delegate.getDefaultValue();
         }
 
-        return null;
+        return this.defaultValue;
     }
 
     /**
@@ -253,11 +278,18 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
 
     /**
      * Marks this definition as being one not found on the current default Teiid server.
+     * 
+     * @param defaultValue the default value (may not be <code>null</code> or empty)
+     * @throws IllegalArgumentException if <code>defaultValue</code> is <code>null</code> or empty
      */
-    public void markAsUserDefined() {
+    public void markAsUserDefined( String defaultValue ) {
+        CoreArgCheck.isNotEmpty(defaultValue);
+
         if (this.delegate != null) {
             this.id = this.delegate.getId();
             this.delegate = null;
+            this.defaultValue = defaultValue;
         }
     }
+
 }

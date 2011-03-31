@@ -9,6 +9,8 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,7 @@ import com.metamatrix.core.util.StringUtilities;
 /**
  * A VDB translator override.
  */
-public class TranslatorOverride implements Comparable<TranslatorOverride> {
+public class TranslatorOverride implements Comparable<TranslatorOverride>, PropertyChangeListener {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(TranslatorOverride.class);
 
@@ -122,9 +124,10 @@ public class TranslatorOverride implements Comparable<TranslatorOverride> {
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
 
         for (PropertyElement property : element.getProperties()) {
-            TranslatorPropertyDefinition propDefn = new TranslatorPropertyDefinition(property.getName());
+            TranslatorPropertyDefinition propDefn = new TranslatorPropertyDefinition(property.getName(), property.getValue());
             TranslatorOverrideProperty prop = new TranslatorOverrideProperty(propDefn, property.getValue());
             this.properties.put(propDefn.getId(), prop);
+            prop.addListener(this);
         }
     }
 
@@ -144,7 +147,9 @@ public class TranslatorOverride implements Comparable<TranslatorOverride> {
     public void addProperty( TranslatorOverrideProperty newProperty,
                              boolean firePropertyEvent ) {
         assert (newProperty != null);
+
         Object obj = this.properties.put(newProperty.getDefinition().getId(), newProperty);
+        newProperty.addListener(this);
 
         if (firePropertyEvent) {
             this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, obj, newProperty);
@@ -242,7 +247,18 @@ public class TranslatorOverride implements Comparable<TranslatorOverride> {
      * @param property the property being marked as a user-defined or custom property (may not be <code>null</code>)
      */
     public void markAsUserDefined( TranslatorOverrideProperty property ) {
-        property.getDefinition().markAsUserDefined();
+        property.getDefinition().markAsUserDefined(property.getOverriddenValue());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    @Override
+    public void propertyChange( PropertyChangeEvent event ) {
+        TranslatorOverrideProperty property = (TranslatorOverrideProperty)event.getSource();
+        this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, event.getOldValue(), property);
     }
 
     /**
@@ -266,6 +282,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride> {
         assert (this.properties.containsKey(propName));
 
         TranslatorOverrideProperty prop = this.properties.remove(propName);
+        prop.removeListener(this);
 
         if (prop.getDefinition().isUserDefined()) {
             this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, prop, null);

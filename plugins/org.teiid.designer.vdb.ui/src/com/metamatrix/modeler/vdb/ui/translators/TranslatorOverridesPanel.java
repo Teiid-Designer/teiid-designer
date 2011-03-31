@@ -506,14 +506,16 @@ public final class TranslatorOverridesPanel extends Composite {
 
         if (dialog.open() == Window.OK) {
             // update model
-            TranslatorPropertyDefinition propDefn = dialog.getDefinition();
             TranslatorOverride translator = getSelectedTranslator();
-            translator.addProperty(new TranslatorOverrideProperty(propDefn, dialog.getValue()));
+            TranslatorOverrideProperty property = dialog.getProperty();
+            translator.addProperty(property);
 
             // update UI from model
             this.propertiesViewer.refresh();
 
-            // select the new property but need to find the corresponding OverridenProperty
+            // select the new property
+            TranslatorPropertyDefinition propDefn = property.getDefinition();
+
             for (TranslatorOverrideProperty prop : translator.getProperties()) {
                 if (prop.getDefinition().equals(propDefn)) {
                     this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
@@ -776,10 +778,16 @@ public final class TranslatorOverridesPanel extends Composite {
             String overridenValue = property.getOverriddenValue();
             Image image = null;
 
-            if (!this.nameColumn) {
+            if (this.nameColumn) {
+                if (property.isCustom()) {
+                    image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
+                }
+            } else {
                 if (property.getDefinition().isValidValue(overridenValue) == null) {
                     if (property.hasOverridenValue()) {
-                        image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
+                        if (!property.isCustom() || !property.getDefinition().getDefaultValue().equals(overridenValue)) {
+                            image = VdbUiPlugin.singleton.getImage(EDIT_TRANSLATOR);
+                        }
                     }
                 } else {
                     image = UiPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
@@ -828,7 +836,9 @@ public final class TranslatorOverridesPanel extends Composite {
             }
 
             if (property.hasOverridenValue()) {
-                return property.getDefinition().isValidValue(property.getOverriddenValue());
+                if (!property.isCustom() || !property.getDefinition().getDefaultValue().equals(property.getOverriddenValue())) {
+                    return property.getDefinition().isValidValue(property.getOverriddenValue());
+                }
             }
 
             // default value is being used

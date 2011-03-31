@@ -7,8 +7,13 @@
  */
 package org.teiid.designer.vdb;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import org.eclipse.core.runtime.ListenerList;
 import org.teiid.core.properties.PropertyDefinition;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
 
 /**
@@ -16,18 +21,29 @@ import com.metamatrix.core.util.StringUtilities;
  */
 public class TranslatorOverrideProperty {
 
-    private TranslatorPropertyDefinition propDefn;
+    private final ListenerList listeners;
     private String overriddenValue;
+    private TranslatorPropertyDefinition propDefn;
 
     /**
      * @param propDefn the property definition (may not be <code>null</code>)
      * @param overriddenValue the property value override (can be <code>null</code> or empty)
+     * @throws IllegalArgumentException if <code>propDefn</code> is <code>null</code>
      */
     public TranslatorOverrideProperty( TranslatorPropertyDefinition propDefn,
                                        String overriddenValue ) {
-        assert (propDefn != null);
+        CoreArgCheck.isNotNull(propDefn);
         this.propDefn = propDefn;
         this.overriddenValue = overriddenValue;
+        this.listeners = new ListenerList();
+    }
+
+    /**
+     * @param listener the listener being added (may not be <code>null</code>)
+     * @throws IllegalArgumentException if <code>listener</code> is <code>null</code>
+     */
+    public void addListener( PropertyChangeListener listener ) {
+        this.listeners.add(listener);
     }
 
     /**
@@ -63,7 +79,9 @@ public class TranslatorOverrideProperty {
      * @return the property value override (may be <code>null</code> or empty)
      */
     public String getOverriddenValue() {
-        return this.overriddenValue;
+        // don't allow a custom property to have an empty value
+        return ((isCustom() && StringUtilities.isEmpty(this.overriddenValue)) ? getDefinition().getDefaultValue()
+                                                                             : this.overriddenValue);
     }
 
     /**
@@ -80,6 +98,12 @@ public class TranslatorOverrideProperty {
      * @return <code>true</code> if the property value is not <code>null</code> and not empty
      */
     public boolean hasOverridenValue() {
+        // custom properties always have a value
+        if (isCustom()) {
+            assert (!StringUtilities.isEmpty(getOverriddenValue()));
+            return true;
+        }
+
         return !StringUtilities.isEmpty(getOverriddenValue());
     }
 
@@ -89,6 +113,14 @@ public class TranslatorOverrideProperty {
      */
     public boolean isCustom() {
         return this.propDefn.isUserDefined();
+    }
+
+    /**
+     * @param listener the listener being removed (may not be <code>null</code>)
+     * @throws IllegalArgumentException if <code>listener</code> is <code>null</code>
+     */
+    public void removeListener( PropertyChangeListener listener ) {
+        this.listeners.remove(listener);
     }
 
     /**
@@ -103,7 +135,17 @@ public class TranslatorOverrideProperty {
      * @param newValue the new property value override (can be <code>null</code> or empty)
      */
     public void setValue( String newValue ) {
-        this.overriddenValue = newValue;
+        if (!StringUtilities.equals(this.overriddenValue, newValue)) {
+            String oldValue = this.overriddenValue;
+            this.overriddenValue = newValue;
+
+            // notify listeners of change
+            PropertyChangeEvent event = new PropertyChangeEvent(this, this.propDefn.getId(), oldValue, newValue);
+
+            for (Object listener : this.listeners.getListeners()) {
+                ((PropertyChangeListener)listener).propertyChange(event);
+            }
+        }
     }
 
 }

@@ -26,8 +26,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.vdb.TranslatorOverrideProperty;
 import org.teiid.designer.vdb.TranslatorPropertyDefinition;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 
@@ -126,10 +128,13 @@ class AddPropertyDialog extends MessageDialog {
         return pnl;
     }
 
-    public TranslatorPropertyDefinition getDefinition() {
-        assert (getReturnCode() == Window.OK);
-
-        return new TranslatorPropertyDefinition(this.name);
+    /**
+     * @return the new property (never <code>null</code>)
+     * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
+     */
+    public TranslatorOverrideProperty getProperty() {
+        CoreArgCheck.isEqual(getReturnCode(), Window.OK);
+        return new TranslatorOverrideProperty(new TranslatorPropertyDefinition(this.name, this.value), null);
     }
 
     /**
@@ -140,10 +145,6 @@ class AddPropertyDialog extends MessageDialog {
     @Override
     protected int getShellStyle() {
         return super.getShellStyle() | SWT.RESIZE;
-    }
-
-    public String getValue() {
-        return this.value;
     }
 
     void handleNameChanged( String newName ) {
