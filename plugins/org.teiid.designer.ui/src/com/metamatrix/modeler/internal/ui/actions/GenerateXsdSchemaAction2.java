@@ -15,6 +15,8 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -29,9 +31,14 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 
+import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.relational.Schema;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.util.ModelVisitor;
+import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
@@ -232,6 +239,9 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
                         } catch (ModelWorkspaceException err) {
                             UiConstants.Util.log(err);
                             isValid = false;
+                        } catch (ModelerCoreException err) {
+                            UiConstants.Util.log(err);
+                            isValid = false;
                         }
                     } else {
                         isValid = false;
@@ -258,14 +268,22 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
     /*
      * A relational model may be Empty or have no tables or procedures. In this case the wizard can't create anything.
      */
-    private boolean hasTableOrProcedure(ModelResource mr) throws ModelWorkspaceException {
-    	for( Object eObj : mr.getEObjects() ) {
-    		if( eObj instanceof Table || eObj instanceof Procedure ) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+    private boolean hasTableOrProcedure(ModelResource mr) throws ModelWorkspaceException, ModelerCoreException {
+    	TableOrProcedureFinder visitor = new TableOrProcedureFinder();
+    	final int mode = ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS;   // show only those objects visible to user
+        final ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor,mode);
+        
+        processor.walk(mr, ModelVisitorProcessor.DEPTH_INFINITE);
+        
+        return visitor.hasTableOrProcedure();
+        
+//    	for( Object eObj : mr.getEObjects() ) {
+//    		if( eObj instanceof Table || eObj instanceof Procedure ) {
+//    			return true;
+//    		}
+//    	}
+//    	
+//    	return false;
     }
 
     /**
@@ -298,5 +316,42 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
      */
     public void setCanIgnoreSelection( boolean theCanIgnoreSelection ) {
         this.canIgnoreSelection = theCanIgnoreSelection;
+    }
+    
+    class TableOrProcedureFinder implements ModelVisitor {
+    	
+    	boolean hasTableOrProcedure = false;
+
+		@Override
+		public boolean visit(EObject object) throws ModelerCoreException {
+			// Tables are contained by Catalogs, Schemas and Resources
+	        if (object instanceof Table) {
+	        	hasTableOrProcedure = true;
+	            return false;
+	        }
+	        if (object instanceof Procedure) {
+	        	hasTableOrProcedure = true;
+	            return true;
+	        }
+	        if (object instanceof Catalog) {
+	            // catalogs will contain tables
+	            return true;
+	        }
+	        if (object instanceof Schema) {
+	            // schemas will contain tables
+	            return true;
+	        }
+	        return false;
+		}
+
+		@Override
+		public boolean visit(Resource resource) throws ModelerCoreException {
+			return true;
+		}
+		
+		public boolean hasTableOrProcedure() {
+			return hasTableOrProcedure;
+		}
+    	
     }
 }
