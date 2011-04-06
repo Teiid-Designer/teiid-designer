@@ -558,16 +558,18 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 	}
 	
 	public boolean isApplicable(IResource resource)  {
-		try {
-			ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)resource);
-			if( modelResource != null ) {
-				String value = null;
-					value = (String)resourceHelper.getPropertyValue(modelResource, EXTENSION_FULL_ID_KEY);
-	
-				return MODEL_EXTENSION_ID.equalsIgnoreCase(value);
+		if( resource instanceof IFile ) {
+			try {
+				ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)resource);
+				if( modelResource != null ) {
+					String value = null;
+						value = (String)resourceHelper.getPropertyValue(modelResource, EXTENSION_FULL_ID_KEY);
+		
+					return MODEL_EXTENSION_ID.equalsIgnoreCase(value);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
