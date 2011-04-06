@@ -642,6 +642,10 @@
          <description>
             %exportDdlWizard.description
          </description>
+         <selection
+               name="*.xmi"
+               class="org.eclipse.core.resources.IFile">
+         </selection>
       </wizard>
 <!-- Modeler Project Set Export Wizard -->
       <wizard
