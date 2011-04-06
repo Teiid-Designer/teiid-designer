@@ -37,6 +37,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.diagram.ui</module>
 		<module>org.teiid.designer.dqp</module>
 		<module>org.teiid.designer.dqp.ui</module>
+		<module>org.teiid.designer.extension</module>
+		<module>org.teiid.designer.extension.ui</module>
 		<module>org.teiid.designer.help</module>
 		<module>org.teiid.designer.jdbc</module>
 		<module>org.teiid.designer.jdbc.relational</module>
@@ -68,6 +70,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.modelgenerator.wsdl</module>
 		<module>org.teiid.designer.modelgenerator.wsdl.ui</module>
 		<module>org.teiid.designer.modelgenerator.xml</module>
+		<module>org.teiid.designer.modeshape</module>
 		<module>org.teiid.designer.query.ui</module>
 		<module>org.teiid.designer.relational.ui</module>
 		<module>org.teiid.designer.relationship</module>
