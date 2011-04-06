@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -210,6 +212,12 @@ public class ModelObjectLabelProvider extends LabelProvider
             }); // endanon
         } // endif
 
+        if( element instanceof EObject ) {
+        	if( ExtensionPropertiesManager.isApplicable((EObject)element)) {
+        		decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+        	}
+        }
+        
         // check if this node is excluded or is part of a subtree that is:
         if (XmlDocumentUtil.isExcluded(element, true)) {
             decoration.setForegroundColor(gray);

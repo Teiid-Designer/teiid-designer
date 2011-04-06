@@ -10,6 +10,7 @@ package com.metamatrix.modeler.internal.ui.explorer;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -32,6 +33,8 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -332,6 +335,14 @@ public class ModelExplorerLabelProvider extends LabelProvider
         } catch (CoreException ex) {
             Util.log(ex);
         } // endtry
+        
+        // Lastly, decorate with Extension if applicable
+        
+        if( element instanceof IResource && !(element instanceof IFolder) && !(element instanceof IProject) ) {
+        	if( ExtensionPropertiesManager.isApplicable((IResource)element)) {
+        		decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+        	}
+        }
 
     }
 

@@ -83,6 +83,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     // ImageDescriptors
     ImageDescriptor errorDecoratorImage;
     ImageDescriptor warningDecoratorImage;
+    ImageDescriptor extensionDecoratorImage;
 
     private final ModelEditorProjectListener projectListener = new ModelEditorProjectListener();
     private EObjectPropertiesOrderPreferences eObjectPropertiesOrderPreferences;
@@ -186,6 +187,10 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     public ImageDescriptor getWarningDecoratorImage() {
         return warningDecoratorImage;
     }
+    
+    public ImageDescriptor getExtensionDecoratorImage() {
+    	return extensionDecoratorImage;
+    }
 
     /**
      * @return
@@ -273,6 +278,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                 public void run() {
                     UiPlugin.this.errorDecoratorImage = getImageDescriptor(Images.ERROR_DECORATOR);
                     UiPlugin.this.warningDecoratorImage = getImageDescriptor(Images.WARNING_DECORATOR);
+                    UiPlugin.this.extensionDecoratorImage = getImageDescriptor(Images.EXTENSION_DECORATOR);
                 }
             }, true);
         } catch (final Throwable err) {

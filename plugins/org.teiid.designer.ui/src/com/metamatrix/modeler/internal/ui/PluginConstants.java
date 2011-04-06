@@ -49,6 +49,7 @@ public interface PluginConstants {
 
         String ERROR_DECORATOR = OVR16 + "error_co.gif"; //$NON-NLS-1$
         String WARNING_DECORATOR = OVR16 + "warning_co.gif"; //$NON-NLS-1$
+        String EXTENSION_DECORATOR = OVR16 + "extension_ovr.gif";  //$NON-NLS-1$
 
         String EXPORT_ICON = CTOOL16 + "export_wiz.gif"; //$NON-NLS-1$
         String IMPORT_ICON = CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
@@ -105,6 +106,7 @@ public interface PluginConstants {
         
         String EDIT_DOCUMENT_ICON = CVIEW16 + "edit-document.png";  //$NON-NLS-1$
         String CLEAR_DOCUMENT_ICON = CVIEW16 + "clear-document.png";  //$NON-NLS-1$
+        String EDIT_EXTENSION_PROPERTIES_ICON = CVIEW16 + "edit-extension-properties.png"; //$NON-NLS-1$
 
     }
 
