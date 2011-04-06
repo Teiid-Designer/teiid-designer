@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.emf.ecore,
+ org.teiid.designer.modeshape,
  org.teiid.designer.metamodels.core,
  org.teiid.designer.metamodels.relational,
  org.teiid.designer.core,
@@ -21,10 +22,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.designer.datatools,
  org.apache.commons.codec,
  org.apache.commons.discovery,
- org.apache.commons.httpclient,
- org.apache.axis,
  javax.xml.rpc,
- org.wsdl4j
+ org.wsdl4j,
+ org.teiid.designer.extension
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
  com.metamatrix.modeler.modelgenerator.salesforce.connection,
@@ -36,6 +36,9 @@ Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.fr
  com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test",
  org.teiid.designer.datatools.salesforce
 Bundle-ClassPath: .,
+ axis.jar,
  salesforce.jar,
+ commons-httpclient-3.0.1.jar,
  saaj.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.modeshape.graph.mimetype

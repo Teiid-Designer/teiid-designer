@@ -15,9 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -41,6 +43,7 @@ import com.metamatrix.modeler.modelgenerator.salesforce.model.Relationship;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;
 import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.ExtensionManager;
+import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.NameUtil;
 import com.sforce.soap.partner.QueryResult;
@@ -51,7 +54,9 @@ public class RelationalModelgenerator {
     private IProgressMonitor monitor;
 
     // The wrapper around the salesforce extension model
-    private ExtensionManager exManager;
+    //private ExtensionManager exManager;
+    
+    private SalesforceExtentionPropertiesHandler exHandler;
 
     // The relationships to create between salesforce objects
     private List relationships;
@@ -78,19 +83,22 @@ public class RelationalModelgenerator {
      * 
      * @param resource the file to contain the relational model.
      * @throws ModelBuildingException
+     * @throws ModelerCoreException 
      */
-    public void createRelationalModel( Resource resource ) throws ModelBuildingException {
+    public void createRelationalModel( Resource resource ) throws ModelBuildingException, ModelerCoreException {
         // Get the salesforce extension model and create it in the target directory
         // if it is not already there.
-        exManager = new ExtensionManager();
-        exManager.loadModelExtensions(wizardManager.getTargetModelLocation(), monitor);
+        //exManager = new ExtensionManager();
+        //exManager.loadModelExtensions(wizardManager.getTargetModelLocation(), monitor);
+        
+        exHandler = new SalesforceExtentionPropertiesHandler();
 
         // Create the model annotation, the top level object in our of our models and
         // set some of its attributes
         ModelAnnotation annotation = CoreFactory.eINSTANCE.createModelAnnotation();
         annotation.setModelType(ModelType.PHYSICAL_LITERAL);
         annotation.setPrimaryMetamodelUri(RelationalPackage.eINSTANCE.getNsURI());
-        annotation.setExtensionPackage(exManager.getSalesforcePackage());
+        //annotation.setExtensionPackage(exManager.getSalesforcePackage());
         resource.getContents().add(annotation);
 
         // Create a schema object in the relational model.
@@ -132,9 +140,10 @@ public class RelationalModelgenerator {
      * @param sfo metadata about a salesforce object to be modeled as a table
      * @param schema the relational schema that contains the tables
      * @throws ModelBuildingException
+     * @throws ModelerCoreException 
      */
     private void addTableToModel( SalesforceObject sfo,
-                                  Schema schema ) throws ModelBuildingException {
+                                  Schema schema ) throws ModelBuildingException, ModelerCoreException {
         BaseTable newTable = RelationalFactory.eINSTANCE.createBaseTable();
 
         this.relationships.addAll(sfo.getSelectedRelationships());
@@ -156,22 +165,22 @@ public class RelationalModelgenerator {
 
         // Extensions
         if (sfo.isQueryable()) {
-            exManager.setTableQueryable(newTable, Boolean.TRUE);
+            exHandler.setTableQueryable(newTable, Boolean.TRUE);
         }
         if (sfo.isDeleteable()) {
-            exManager.setTableDeletable(newTable, Boolean.TRUE);
+        	exHandler.setTableDeletable(newTable, Boolean.TRUE);
         }
         if (sfo.isCreateable()) {
-            exManager.setTableCreatable(newTable, Boolean.TRUE);
+        	exHandler.setTableCreatable(newTable, Boolean.TRUE);
         }
         if (sfo.isSearchable()) {
-            exManager.setTableSearchable(newTable, Boolean.TRUE);
+        	exHandler.setTableSearchable(newTable, Boolean.TRUE);
         }
         if (sfo.isReplicateable()) {
-            exManager.setTableReplicate(newTable, Boolean.TRUE);
+        	exHandler.setTableReplicate(newTable, Boolean.TRUE);
         }
         if (sfo.isRetrieveable()) {
-            exManager.setTableRetrieve(newTable, Boolean.TRUE);
+        	exHandler.setTableRetrieve(newTable, Boolean.TRUE);
         }
 
         addColumnsToTable(sfo, newTable);
@@ -204,9 +213,10 @@ public class RelationalModelgenerator {
      * @param sfo metadata about a salesforce object to be modeled as a table
      * @param newTable
      * @throws ModelBuildingException
+     * @throws ModelerCoreException 
      */
     private void addColumnsToTable( SalesforceObject sfo,
-                                    BaseTable newTable ) throws ModelBuildingException {
+                                    BaseTable newTable ) throws ModelBuildingException, ModelerCoreException {
         boolean hasUpdateableColumn = false;
         SalesforceField[] fields = sfo.getFields();
         for (int i = 0; i < fields.length; i++) {
@@ -231,13 +241,13 @@ public class RelationalModelgenerator {
             }
 
             if (field.isCustom()) {
-                exManager.setColumnCustom(column, Boolean.TRUE);
+            	exHandler.setColumnCustom(column, Boolean.TRUE);
             }
             if (field.isCalculated()) {
-                exManager.setColumnCalculated(column, Boolean.TRUE);
+            	exHandler.setColumnCalculated(column, Boolean.TRUE);
             }
             if (field.isDefaultedOnCreate()) {
-                exManager.setColumnDefaultedOnCreate(column, Boolean.TRUE);
+            	exHandler.setColumnDefaultedOnCreate(column, Boolean.TRUE);
             }
             setColumnType(field, column);
 
@@ -323,7 +333,7 @@ public class RelationalModelgenerator {
                 } else {
                     column.setNativeType(SalesforceField.PICKLIST_TYPE);
                 }
-                exManager.setAllowedColumnValues(column, field.getAllowedValues());
+                exHandler.setAllowedColumnValues(column, field.getAllowedValues());
             } else if (fieldType.equals(SalesforceField.MULTIPICKLIST_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
                 if (field.isRestrictedPicklist()) {
@@ -331,7 +341,7 @@ public class RelationalModelgenerator {
                 } else {
                     column.setNativeType(SalesforceField.MULTIPICKLIST_TYPE);
                 }
-                exManager.setAllowedColumnValues(column, field.getAllowedValues());
+                exHandler.setAllowedColumnValues(column, field.getAllowedValues());
             } else if (fieldType.equals(SalesforceField.COMBOBOX_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
                 column.setNativeType(SalesforceField.COMBOBOX_TYPE);

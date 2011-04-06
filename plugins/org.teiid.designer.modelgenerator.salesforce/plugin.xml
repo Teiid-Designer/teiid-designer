@@ -34,5 +34,12 @@
             name="%salesForceConnectionFactoryName"
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
    </extension>
-
+   <extension
+		id="org.teiid.designer.model.extension.salesforce"
+		name="%salesforceExtensionPropertiesHandler.name"
+        point="org.teiid.designer.extension.extensionPropertiesHandler">
+      <propertiesHandler
+         name="com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler">
+      </propertiesHandler>
+   </extension>
 </plugin>

@@ -1,0 +1,30 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
+ 
+//------------------------------------------------------------------------------
+// N A M E S P A C E S
+//------------------------------------------------------------------------------
+<salesforce="http://www.metamatrix.com/metamodels/Salesalesforceorce">
+<relational="http://www.metamatrix.com/metamodels/Relational">
+
+[salesforce:tableCapabilities] > relational:baseTable
+- salesforce:supportsCreate (boolean) = 'false'
+- salesforce:supportsDelete (boolean) = 'false'
+- salesforce:custom (boolean) = 'false'
+- salesforce:supportsIDLookup (boolean) = 'false'
+- salesforce:supportsMerge (boolean) = 'false'
+- salesforce:supportsQuery (boolean) = 'false'
+- salesforce:supportsReplicate (boolean) = 'false'
+- salesforce:supportsRetrieve (boolean) = 'false'
+- salesforce:supportsSearch (boolean) = 'false'
+
+[salesforce:columnCapabilities] > relational:column
+- salesforce:defaultedOnCreate (boolean) = 'false'
+- salesforce:calculated (boolean) = 'false'
+- salesforce:custom (boolean) = 'false'
+- salesforce:picklistValues (string) multiple
