@@ -81,10 +81,12 @@ import com.metamatrix.modeler.ddl.DdlPlugin;
 import com.metamatrix.modeler.ddl.DdlWriter;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.InternalUiConstants;
+import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.util.WizardUtil;
@@ -123,6 +125,7 @@ public final class ExportDdlWizard extends AbstractWizard
     private static final String FILE_BUTTON = BROWSE_BUTTON;
 
     private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
+    private static final String INVALID_SELECTION_INITIAL_MESSAGE = getString("initialMessageInvalidSelection"); //$NON-NLS-1$
     private static final String NO_SELECTIONS_MESSAGE = getString("noSelectionsMessage"); //$NON-NLS-1$
     private static final String NO_TYPE_MESSAGE = getString("noTypeMessage"); //$NON-NLS-1$
     private static final String NO_FILE_MESSAGE = getString("noFileMessage"); //$NON-NLS-1$
@@ -150,6 +153,9 @@ public final class ExportDdlWizard extends AbstractWizard
     private Button schemaCheckBox, infoCommentsCheckBox, tableCommentsCheckBox, columnCommentsCheckBox, dropStatementsCheckBox;
     private Button useNamesInSourceCheckBox, useNativeTypeCheckBox, enforceUniqueNamesCheckBox;
     private Combo typeCombo, fileCombo;
+    
+    //private String invalidSelectionMessage;
+    private boolean invalidSelection;
 
     /**
      * @since 4.0
@@ -220,14 +226,35 @@ public final class ExportDdlWizard extends AbstractWizard
      */
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
-        // make sure license authorizes using RDBMS export
-
+    	invalidSelection = false;
+    	//invalidSelectionMessage = null;
+    	// Check for selection to be a single Relational Model
+    	if( !SelectionUtilities.isSingleSelection(selection) ) {
+    		invalidSelection = true;
+    		//invalidSelectionMessage = "Cannot Export DDL.\n\nMultiple resources are selected.\n\nOnly single relational metamodels can be exported as DDL format.";
+    	} else if(!SelectionUtilities.isAllIResourceObjects(selection)) {
+    		//invalidSelectionMessage = "Cannot Export DDL.\n\nSelected object is not a valid resource.\n\nOnly single relational metamodels can be exported as DDL format.";
+    		invalidSelection = true;
+    	} else {
+    		Object obj = SelectionUtilities.getSelectedObject(selection);
+    		if( obj instanceof IResource ) {
+    			IResource iRes = (IResource)obj;
+    			
+    			if( !ModelIdentifier.isRelationalSourceModel(iRes) &&
+    				!ModelIdentifier.isRelationalViewModel(iRes) ) {
+    				//invalidSelectionMessage = "Cannot Export DDL.\n\nOnly single relational view or source metamodels can be exported as DDL format.";
+    				invalidSelection = true;
+    			}
+    		}
+    		
+    	}
+    	
         this.selection = selection;
-        this.writer = DdlPlugin.getInstance().createDdlWriter();
         this.selections = new ModelWorkspaceSelections();
+        this.writer = DdlPlugin.getInstance().createDdlWriter();
         this.pg = new AbstractWizardPage(ExportDdlWizard.class.getSimpleName(), PAGE_TITLE) {
             public void createControl( final Composite parent ) {
-                setControl(createPageControl(parent));
+            	setControl(createPageControl(parent));
             }
         };
 
@@ -497,7 +524,7 @@ public final class ExportDdlWizard extends AbstractWizard
             });
         }
         // Initialize widgets
-        if (this.selection != null) {
+        if (this.selection != null && !invalidSelection) {
             final ArrayList objs = new ArrayList(this.selection.size());
             final Iterator iter = this.selection.iterator();
             for (int ndx = 0; iter.hasNext(); ++ndx) {
@@ -517,8 +544,11 @@ public final class ExportDdlWizard extends AbstractWizard
                     toggleSelection(items[ndx]);
                 }
             }
+            this.pg.setMessage(INITIAL_MESSAGE);
+        } else {
+        	this.pg.setMessage(INVALID_SELECTION_INITIAL_MESSAGE); //"Select view or source relational model in workspace");
         }
-        this.pg.setMessage(INITIAL_MESSAGE);
+        
         return pg;
     }
 
