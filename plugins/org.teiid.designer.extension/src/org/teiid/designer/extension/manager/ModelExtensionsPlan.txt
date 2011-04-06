@@ -1,0 +1,644 @@
+This page summarizes details and concerns around re-designing the Model Extensions framework into a new Model Extensions
+Definition framework.
+
+
+REQUIREMENTS:
+
+1) Allow creating hard-coded MED contributions
+	- Contribution ID = org.teiid.designer.model.extension.salesforce
+	- Eclipse Extension Manager = "org.teiid.designer.core.ExtensionPropertiesManager
+	- Handler Class = org.teiid.designer.modelgenerator.salesforce.SalesforceExtentionPropertiesHandler (MAYBE NOT???)
+	- Extension Prefix ID = jboss-salesforce
+	- Is Enterprise Extension = True/False (False if user construct it specifically for one model or set of models)
+		* if FALSE then user can Edit/Change/Add/Remove nodes in the CND
+	- Model Extension Definition - Designer-modeling object that contains
+		1) CND String (or methods to construct/deconstruct it)
+		2) Optional file name and location (i.e. resources/salesforce_med.cnd)
+		3) All pertinent Cnd content values
+		
+			These are key/value pairs here that are stored as "Namespace" objects (i.e. PREFIX + URI)
+				- <salesforce='http://www.metamatrix.com/metamodels/Salesforce'>
+					salesforce = ExtensionPrefix
+					http:// (extension URI)
+				<relational='http://www.metamatrix.com/metamodels/Relational'>
+					relational = metamodel namespace prefix (shortcut)
+					http:// (metamodel URI that's being extended)
+				
+			The next line represents a propertied object node:  [sf:tableCapabilities] > relational:baseTable
+				- "sf" is the namespace prefix (shortcut)
+				- tableCapabilities is the unique name for the property set
+				- relational is the namespace prefix that it's extending
+				- baseTable is the typed metamodel name defined in the relational.cnd (see also transformation.cnd)
+					which actually reflects the exact EMF-defined XML elements in Designer's XMI files.
+			
+			Lastly, the property definition itself
+				- sf:supportsCreate (boolean) = 'false' 
+				- <prefix>:<property key> (<type>) = '<default value>'
+					- Note that allowable types are defined in javax.jcr.PropertyType class
+						"STRING"
+						"BINARY"
+						"LONG"
+						"DOUBLE"
+						"DATE"
+						"BOOLEAN"
+						"NAME"
+						"PATH"
+						"REFERENCE"
+						"WEAKREFERENCE"
+						"URI"
+						"DECIMAL"
+					- From a Designer standpoint, we'd exposed STRING, LONG, DOUBLE, DATE, BOOLEAN, DECIMAL in a
+						drop-down list when creating/editing extended properties.
+		
+	If hard-coded then the variables/IDs above are defined in a plugin.xml file and the ExtensionPropertiesManager loads
+and instantiates helper classes.
+
+	- The MED or ModelExtensionDefinition contains logic to represent the parsed CND data structure
+		- ModelExtensionDefinition contains:
+			- Namespace extentionNamespace EXAMPLE:  sf='http://www.metamatrix.com/metamodels/Salesforce'
+			- Namepsace metamodelNamespace EXAMPLE:  relational='http://www.metamatrix.com/metamodels/Relational'
+			- CndTypeDefinition[] EXAMPLE: for "[sf:tableCapabilities] > relational:baseTable"
+				- [sf:tableCapabilities] is a NodeTypeName
+				- > relational:baseTable is a string list of SuperTypeName
+					- These should use a CndTypeName object containing a "namespace prefix" and a name 
+				- Each CTD has a extensionNamespacePrefix (maps to extensionNamespace.getPrefix())
+				- Each CTD has an extended metamodelNamespacePefix AND a name for the extended metamodel class
+				- Each CTD contains one or more CndPropertyDefintions 
+				- Each CndPropertyDefinition has
+				
+					boolean advanced;
+					String[] allowedValues;
+				    String defaultValue;
+				    String description;
+				    String displayName;
+				    String id;
+				    boolean masked;
+				    boolean modifiable;
+				    boolean required;
+			
+2) Allow Creating MED's on the fly for a given model OR without a model and store in CND file.
+	- Use SAME variables/IDs as above and are created by user and stored in a CND string in the model
+		* Example:  Contribution ID = "my custom relational table color properties"
+		* Example:  Extension Prefix ID = "my-rel-color-properties"
+		* Is Enterprise Extension = FALSE (by default)
+		
+	- The Handler Class would be constructed using a base-class that is driven by a CND string
+		* Maybe the hard-coded contributions have no Handler Class and are CND file driven at load time.
+	
+3) In creating a NEW CND, users will be given a dialog containing:
+	- Display Name = "Salesforce"
+		- This name would have to be unique within each Model
+		- 
+	- ID = "salesforce"
+	- Namespace = "http://www.metamatrix.com/metamodels/Salesforce"
+	- Metamodel Selection Combo Box (Similar to New Model Wizard)
+		- Right now we expose the following and we probably want to shorten the list:
+			- Ecore
+			- UML
+			- XSD
+			- Compare
+			- Extension
+			- MetaMatrixFunction
+			- Relational
+			- Relationship
+			- WebService
+			- XMLDocument
+			- XmlService (Probably a DEFECT!!!)
+			
+		- Suggest expose Relational, WebService and XMLDocument ONLY!!!!
+		
+		- We would store the metamodel type in CND same as in XMI file:  
+			* primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"
+	- User selects an Object TYPE like:
+		- "http://www.metamatrix.com/metamodels/Relational#//BaseTable" or
+		- "http://www.metamatrix.com/metamodels/Relational#//Column"
+	- User is able to add/remove/edit Properties with common fields like:
+		* Name
+		* Display Name
+		* Description
+		* Type (String, Boolean, List<String>, etc...)
+	- MODESHAPE has some limits on property names for CND notation
+		* "Defaulted on Create" would look like: - sf:Defaulted on Create (boolean) false
+			*** This probably wouldn't parse correctly
+		* Need a way to  
+		
+	- Note that it would beneficial to NOT ALLOW RENAMING properties due to the difficulty in refactoring the tag
+		entries. Having a Display Name will allow them to be changed. If a property needs to be renamed, then it is a
+		NEW property and old name property is DELETED.
+
+4) After creating a CND file and storing it in my workspace I may want:
+	- Apply Model Extension to RelationalModel.xmi file
+		- Initial behavior should only add the Extension Model entry to the ModelAnnotation's Annotation.
+		- Since all properties are "Default" no objects will get tags until user starts changing them.
+		
+5) User Wants to REMOVE Model Extension from a model
+	- There may be more than one so...
+		- Remove Model Extension Action
+		- Remove Model Extension Dialog
+			- List of current Model Extensions (Multi-selection)
+			- Remove MED from primary Annotation
+			- Remove all Annotation Tags that reference removed MEDs
+			- Remove all empty Annotations
+
+6) User Edits Model with existing CND (Non-Enterprise Extension)
+	- CND Editor is used
+	- When done, the editor should remove any "Stale" extension tags.
+	
+	
+7) QUESTIONS:
+	a) Can users apply a CND from one model to the next?
+	b) Will they have to export a CND, make it "Enterprise Extension" and then apply to new model?
+	c) Possibility of 2 models with SAME MED identifier, but different MED content/structure in workspace
+	d) How does Designer handle Editing an Enterprise MED. Do we do validation to say there are conflicts?
+		- If CND is in each file, then the file itself is OK
+		- But if we want to re-apply/change/update the MED we need to treat this like an EDIT operation (See 6 above)
+	e) User applies multiple MEDs to same model. How do we insure that all property IDs are unique?
+		- Do we NOT allow same namespaced MEDs to be applied to same model?
+		- Property key examples 'key="extension_a:Total Length" value="200"
+		- Property key examples 'key="extension_b:Total Length" value="200"
+		- ^^^ This would be an OK scenario since namespaces are different.
+	f) 
+	
+========================== EXAMPLE ANNOTATIONS FOR CND INCLUSING? ======================================================
+    <annotations xmi:uuid="mmuuid:a8555cbf-1f9c-4d34-aeee-416b66d71485" annotatedObject="mmuuid/358577ca-e762-41f9-831d-3e8e41922b22">
+      <tags xmi:uuid="mmuuid:53c67203-1772-49b0-96a8-f7e0f8ccef90" key="connectionProfile:connectionProfileProviderId" value="org.teiid.designer.datatools.salesforce.connectionProfile"/>
+      <tags xmi:uuid="mmuuid:f0b28b40-3ec4-4e6e-9843-1590ffcbef4c" key="connectionProfile:connectionProfileName" value="BarrySF"/>
+      <tags xmi:uuid="mmuuid:fd57f037-29df-4455-96ae-0f21464bf1f8" key="connectionProfile:connectionProfileDescription" value=""/>
+      <tags xmi:uuid="mmuuid:329d234b-6eb4-4f84-a1c1-57f18e7a8fe7" key="connectionProfile:connectionProfileInstanceID" value="c6c64190-4f29-11e0-ac6a-f09557d93679"/>
+      <tags xmi:uuid="mmuuid:b622ab8e-cbeb-4464-ab70-98c0c487e952" key="connectionProfile:connectionProfileCategory" value="org.teiid.designer.import.category"/>
+      <tags xmi:uuid="mmuuid:055b28e3-aea6-4163-8382-285c9d6bde84" key="connection:username" value="teiiddemo@redhat.com"/>
+      <tags xmi:uuid="mmuuid:493e48a5-8e1c-4a51-ad05-3aa98140ea27" key="translator:name" value="salesforce"/>
+      <tags xmi:uuid="mmuuid:cec86a32-1a14-46b9-b80b-b523084c7889" key="ext-id:salesforce" value="org.teiid.designer.model.extension.salesforce"/>
+      <tags xmi:uuid="mmuuid:5f969630-5e07-4a49-aa4d-5226f959c862" key="ext-namespace:salesforce" value="http://org.teiid.designer/metamodels/Salesforce"/>
+      <tags xmi:uuid="mmuuid:277a4040-7d4c-427f-b043-e7886238b3b2" key="ext-cnd:salesforce" value="
+			<salesforce='http://org.teiid.designer/metamodels/Salesforce'>
+			<relational='http://www.metamatrix.com/metamodels/Relational'>
+			[salesforce:tableCapabilities] > relational:baseTable
+			- salesforce:supportsCreate (boolean) = 'false'
+			- salesforce:supportsDelete (boolean) = 'false'
+			- salesforce:custom (boolean) = 'false'
+			- salesforce:supportsIDLookup (boolean) = 'false'
+			- salesforce:supportsMerge (boolean) = 'false'
+			- salesforce:supportsQuery (boolean) = 'false'
+			- salesforce:supportsReplicate (boolean) = 'false'
+			- salesforce:supportsRetrieve (boolean) = 'false'
+			- salesforce:supportsSearch (boolean) = 'false'
+			[salesforce:columnCapabilities] > relational:column
+			- salesforce:defaultedOnCreate (boolean) = 'false'
+			- salesforce:calculated (boolean) = 'false'
+			- salesforce:custom (boolean) = 'false'
+			- salesforce:picklistValues (string) multiple"/>
+    </annotations>
+========================== EXAMPLE ANNOTATION EXTENSION PROPERTIES FOR AN EXTENDED TABLE ======================================================
+    <annotations xmi:uuid="mmuuid:500eb2bc-02a7-4ba1-a0b3-34dc3c29bb12" annotatedObject="mmuuid/bbaf013e-3ce2-43f4-91ff-964b9cc950b7">
+      <tags xmi:uuid="mmuuid:63612188-e916-4a64-99d9-5a33d076d9fa" key="ext-salesforce:Supports Query" value="true"/>
+      <tags xmi:uuid="mmuuid:9def6865-6b9c-42fd-9ef9-50c06a2c87b0" key="ext-salesforce:Supports Delete" value="true"/>
+      <tags xmi:uuid="mmuuid:1d7faabd-420d-491b-beaa-33cd7e6b4bf4" key="ext-salesforce:Supports Create" value="true"/>
+      <tags xmi:uuid="mmuuid:62a5eb34-1729-4b5c-8f26-6fdf3b7465d4" key="ext-salesforce:Supports Search" value="true"/>
+      <tags xmi:uuid="mmuuid:bae61d04-322f-47a4-98a9-166f06ba45ae" key="ext-salesforce:Supports Replicate" value="true"/>
+      <tags xmi:uuid="mmuuid:80fd106a-8b45-48c6-b75a-68992dfd0b94" key="ext-salesforce:Supports Retrieve" value="true"/>
+    </annotations>
+=================================== IRC HAUCH - LAFOND - 3/17/2011 =====================================================
+(09:49:35 AM) blafond: Hey Randall
+(09:49:51 AM) blafond: I'm trying to re-learn what CND's are all about.
+(09:49:53 AM) rhauch: hey, barry
+(09:50:15 AM) blafond: Kinda back in meta-meta-meta-meta land again.
+(09:51:25 AM) blafond: Do yo know enough about the SalesForce use-case to give me a kick start here?
+(09:51:55 AM) rhauch: I know nothing about the Saleforce connector
+(09:52:02 AM) rhauch: what does the metamodel extension look like?
+(09:52:23 AM) rhauch: Or, if you have a list of the properties for tables and columns, we could start there
+(09:52:49 AM) rhauch: you could give me the URL to the metamodel extension in SVN, if that's easier
+(09:52:58 AM) blafond: Not in there
+(09:53:03 AM) blafond: It's created each time user imports
+(09:53:16 AM) rhauch: ok
+(09:53:21 AM) blafond: More generic question though...
+(09:53:24 AM) rhauch: sure
+(09:54:23 AM) blafond: Users will want to create new extensions, so some of the initial data will be 1) Extended metamodel 2) Extended meta class (i.e. Base Table)
+(09:54:44 AM) blafond: Then we get to actual properties
+(09:55:34 AM) blafond: The current extended properties include Changable, default value, derived, lower/upper bound, unsettable, ordered and name
+(09:55:44 AM) blafond: Don't think we need all those....
+(09:56:27 AM) blafond: So should there be a CND above the SF CND that defines "Teiid Extension" abstract mixin or something like that?
+(09:57:18 AM) rhauch: what would that "Teiid Extension" do? What would be in the abstract mixin?
+(09:58:00 AM) blafond: teiid:extension
+(09:58:16 AM) blafond:  - teiid:extendedClass (string)
+(09:58:41 AM) blafond:  - teiid:type (string)
+(09:58:57 AM) blafond:  - teiid:required (boolean)
+(09:59:00 AM) blafond: things like that
+(09:59:30 AM) rhauch: well, I think there are two reasons you'd want to define a metamodel extension
+(09:59:44 AM) rhauch: 1) because you want to add metadata to your model that teiid will consume; or
+(10:00:12 AM) rhauch: 2) because you want to capture additional information in the model (design-time metadata) that will not be used at runtime
+(10:00:26 AM) blafond: right
+(10:00:51 AM) rhauch: So only the runtime-related metadata extensions would need that teiid info, but ...
+(10:01:28 AM) rhauch: whether to have a base mixin type for teiid runtime stuff is dependent on a couple of things.
+(10:02:22 AM) rhauch: The primary reason is that it changes what the corresponding tables look like in the repository relational views (for querying)
+(10:02:52 AM) rhauch: So imagine that I have two mixin types, A and B. A has property "a" and B has property "b".
+(10:03:09 AM) blafond: k
+(10:03:24 AM) rhauch: If there is no inheritance, than the table representation of A will just have a column for "a", and the table representation of B will just have a column for "b"
+(10:04:03 AM) rhauch: If there IS inheritance (B extends A), then the table representation of A will still just have a column for "a", but the table representation of B will have columns for "a" and "b".
+(10:04:12 AM) blafond: ya
+(10:04:24 AM) rhauch: The "isA" relationship is really key here.
+(10:05:28 AM) rhauch: But remember that the table for "relational:column" (the mixin that is in ModeShape to represent relational model column objects)
+(10:05:49 AM) rhauch: will not contain any of the columns from any extension.
+(10:06:18 AM) rhauch: So let's say A and B are extensions on columns
+(10:06:55 AM) rhauch: regardless of whether A extends B, the columns for A and B will never show up in "SELECT * FROM [relational:column]" queries
+(10:07:15 AM) rhauch: because "relational:column" does not know anything about the mixins A and B. make sense?
+(10:07:23 AM) blafond: I think so
+(10:07:39 AM) rhauch: In order to see the columns from A and B, you have to join
+(10:08:08 AM) blafond: Well I don't know that anyone's even tried to extend an Extension Model. Do we even want to allow that?
+(10:08:33 AM) rhauch: SELECT * FROM [relational:column] AS col JOIN [my:A] as type_a ON ISSAMENODE(col,type_a)
+(10:09:26 AM) rhauch: that result set will have all the columns from "relational:column" and "my:A"
+(10:10:26 AM) blafond: When you say "columns" you really mean all the properties (including extended props) for an instanceof a relational:column?
+(10:11:00 AM) rhauch: And if A extends B, then there would be a column for "a" and "b. Otherwise, you'd have to do a 3-way join between relational:column, A and B.
+(10:11:22 AM) blafond: right
+(10:11:29 AM) rhauch: yes, I mean properties. But when I say columns, I really am talking about a result set from a query, so there really are columns there.
+(10:12:06 AM) rhauch: a column in the relational view of a node type corresponds to exactly one property on the node type (or mixin)
+(10:12:12 AM) blafond: I get that. We're just mixing terms and going in and out of layers of DBs and stuff... But I'm following so far.
+(10:12:19 AM) blafond: :)
+(10:12:31 AM) rhauch: So, let's wrap up the inheritance question ...
+(10:12:39 AM) blafond: sure
+(10:13:58 AM) rhauch: Personally, I think its cleaner if to not use inheritance (and just mix in the mixins that you want for each node) and accept that you may be doing multi-way joins IFF the mixins are unrelated or independent concepts.
+(10:15:53 AM) rhauch: For example, consider the Salesforce extended properties on relational columns (in Designer)  will necessary be 
+(10:16:04 AM) rhauch: oops, scratch that "will necessary be"
+(10:16:32 AM) blafond: I'm scratching....
+(10:16:50 AM) rhauch: they really are just adding metadata to columns, and all of those columns already have the Teiid runtime information.
+(10:17:14 AM) blafond: right
+(10:17:37 AM) rhauch: e.g., "derived" can be added to a column, and used by the connector. There's no other Teiid-related information that's necessary.
+(10:18:31 AM) rhauch: I guess another way to say it is that the extended object (the relational column) already something that is visible to Teiid at runtime, so these are merely decorating the columns with additional metadata.
+(10:18:57 AM) blafond: ya.
+(10:19:20 AM) blafond: SF defines a bunch of "Supports XXXX" boolean values to tables and columns
+(10:19:25 AM) rhauch: Also, relational tables are also visible to Teiid, so the table-related extensions would be the same.
+(10:19:25 AM) blafond: That's most of it
+(10:20:25 AM) rhauch: right. so I'd expend a "sf:columnSupports" mixin (or some other name) with "sf:supportFoo" and "sf:supportsBar", and it does not need to extend anything
+(10:20:37 AM) rhauch: s/expend/expect/
+(10:21:04 AM) rhauch: what about the table extensions?
+(10:21:39 AM) blafond: Supports Create, Supports Delete, etc...
+(10:22:31 AM) rhauch: ok, so the same for "sf:tableSupports" ... or maybe "sf:tableActions" or something like that
+(10:22:35 AM) blafond: How will ModeShape know that sf:columnSupports mixin know to apply additional properties to the "Column" object ?
+(10:22:53 AM) blafond: Don't we need to have the "extended class" somewhere in the CND?
+(10:23:14 AM) rhauch: well, the way JCR does this is that each node has a "jcr:mixinTypes" property, which is set (on each node) to the mixins that are to be added
+(10:23:47 AM) rhauch: you could put a "jcr:mixinTypes" tag on the annotation of every object that is extended
+(10:25:04 AM) rhauch: or change the metamodel and add it or a feature like that on all metaclasses. I'd guess that'd be easier in terms of coding, but probably harder to actually do (because it'd be changing the metamodels)
+(10:25:25 AM) blafond: ya. don't want to change metamodel
+(10:25:41 AM) blafond: BTW... I just emailed you the SF extension model
+(10:25:49 AM) rhauch: k
+(10:26:55 AM) rhauch: there may be a way to specifying the mixin types for each metaclass in the model annotation, or maybe even in the mixin definition; that'd save from having to write it in the annotation for every object.
+(10:26:57 AM) blafond: I was assuming that we'd need entries in the CND that would reference the "relational:column" or "relational:table" mixins 
+(10:27:52 AM) rhauch: sure, it just depends on whether you want this framework to be like metamodels (they apply to all instances of the affected metaclass) ...
+(10:28:23 AM) rhauch: or whether you want it to be more dynamic (like JCR) in that each object can mix in the things it wants/needs.
+(10:28:34 AM) blafond: not sure
+(10:28:49 AM) rhauch: (i.e., the second option is what distinguishes "mixins" from "classes/interfaces")
+(10:29:29 AM) blafond: In 7.5/8.0 Designer users will create new "extension CND"s. Basically pick a metaclass to extend, add/remove/edit properties
+(10:29:52 AM) blafond: So how do we capture that "metaclass" through the CND and onto the property Modeshape relational mixin?
+(10:30:00 AM) rhauch: right. I think it'd be easier for the user if Designer could make sure that the mixins applied to all instances of the extended metaclasses in the model
+(10:30:29 AM) rhauch: but how it saves the information in the XMI file is not necessarily tied to that.
+(10:31:04 AM) rhauch: From the user's perspective, it should probably work like extensions do now ... "Basically pick a metaclass to extend, add/remove/edit properties"
+(10:32:12 AM) rhauch: One way of storing the mixins in the model annotation would be to have a tag named for each metaclass, and whose value would be the set of mixin types
+(10:32:59 AM) rhauch: e.g., name="relational:baseTable" value="sf:tableCapabilities"
+(10:33:44 AM) rhauch: or, if that name causes problems or needs to be prefixed, maybe   name="extensions:relational:baseTable" value="sf:tableCapabilities"
+(10:33:45 AM) rhauch: ??
+(10:34:13 AM) blafond: that sounds good
+(10:35:32 AM) rhauch: so that brings up an interesting question
+(10:35:36 AM) blafond: Then the sf:tableCapabilities would be a set of tags (or single tag)  that contained the property constructs?
+(10:35:39 AM) blafond: ?
+(10:35:58 AM) rhauch: when you're defining a metamodel extension, and you define several mixins (my terminology) ...
+(10:36:09 AM) blafond: sure
+(10:36:35 AM) rhauch: do you need to specify what metaclasses it applies to? or should the user pick which metaclasses it applies to when the extension is applied to a model.
+(10:36:46 AM) rhauch: (I'll get to your question in a minute)
+(10:37:40 AM) rhauch: for example, let's say somebody defines a "sf:derivable" mixin with one property "sf:derived" (of type boolean)
+(10:38:08 AM) blafond: how about sf:supportsFoo
+(10:38:13 AM) rhauch: in some models, a user might want to apply that to BaseTable and Column and Procedure.
+(10:38:32 AM) blafond: maybe
+(10:38:41 AM) blafond: But we don't do that now
+(10:38:51 AM) rhauch: If you have to define the metaclasses at the time your creating the extension, then you'd have to create "sf:tableDerivable" and "sf:columnDerivable" etc.
+(10:38:58 AM) rhauch: right, it is different.
+(10:39:04 AM) blafond: Seems like another layer of complexity.
+(10:39:20 AM) blafond: It's creating a "behavior" or feature that can cross metaclasses
+(10:39:27 AM) rhauch: actually, it'd probably be easier to reuse extensions
+(10:39:50 AM) rhauch: right. the extensions are independent of metaclass, but are bound to metaclasses when applied
+(10:39:54 AM) blafond: Not sure users will grasp this from a "relational modeling" point of view
+(10:40:02 AM) rhauch: maybe
+(10:40:09 AM) blafond: maybe not
+(10:40:30 AM) ***rhauch meant that maybe you are right in that they might not grasp it
+(10:40:41 AM) rhauch: ok, so back to your question
+(10:40:45 AM) ***blafond I don't really know either
+(10:41:13 AM) rhauch: blafond: said "Then the sf:tableCapabilities would be a set of tags (or single tag)  that contained the property constructs?"
+(10:41:21 AM) blafond: right
+(10:41:39 AM) rhauch: yes, "sf:tableCapabilities" would be a node type definition (a mixin) in a CND file
+(10:42:07 AM) rhauch: and would contain property definitions for each "attribute" that should be exposed as a property on the extended object
+(10:43:34 AM) rhauch: so, a "sf:supportsCreate" property definition, a "sf:supportsDelete" property definition, etc.
+(10:44:42 AM) blafond: k. That's clear
+(10:45:44 AM) ***rhauch is looking at the CND format to see if we can add extra attributes on property definitions
+(10:46:39 AM) blafond: So in "future" user creates a "foobar" CND and they'll look like "foobar:xmlDocCapabilities" and "foobar:allowsColors"
+(10:47:41 AM) rhauch: yes, tho the name of the CND has nothing to do with the namespace prefix
+(10:48:46 AM) blafond: so the namespace + metaclass capabilities will hold the key to how it's referenced/inherited/queried in JCR? 
+(10:48:54 AM) blafond: ... eventually?
+(10:49:16 AM) rhauch: not sure I understand that question
+(10:49:27 AM) blafond: nm
+(10:50:00 AM) blafond: Do you have enough from the SF ext. model and our discussion to propose a CND structure I should be coding to?
+(10:50:06 AM) blafond: At least a strarting point?
+(10:50:42 AM) blafond: that would be a "starting" point... arghhhh
+(10:51:16 AM) rhauch: if the extensions feature use JCR node types to define the metamodel extensions, and those node types are encoded in the model file and annotations are written correctly using names that correspond to the property definitions (and we know what mixins apply to each metaclass), then yes this will completely dictate how these models will be sequenced and made queryable in JCR.
+(10:51:44 AM) rhauch: yeah, I can thro together a CND file
+(10:52:04 AM) rhauch: still not sure what to do about the "description" and "metaclass" information yet
+(10:52:48 AM) blafond: well if you can't figure it out.... :)
+(10:54:49 AM) rhauch: btw, one option for name is to just turn the camelcase name into english
+(10:54:58 AM) rhauch: e.g., "supportsCreate" would be "Supports Create"
+(10:55:08 AM) rhauch: ModeShape's Inflector class does this
+(10:56:07 AM) blafond: actually the SF "key" values that are indexed are "Supports Create", etc. Guess that's what's the connector/translator is looking for 
+(10:58:07 AM) rhauch: btw, our Inflector is smart enough to turn "supportsIDLookup" into "Supports ID Lookup". Granted, that's not terribly smart.
+(10:58:31 AM) blafond: Example Index row:  X mmuuid:9eff939b-40ae-4112-8186-cda64f30d0c5 Supports Create true 1  /ZalesFarce/SForce_A.xmi Asset ¡09 
+(10:59:29 AM) rhauch: yup
+(10:59:37 AM) blafond: then I guess we have some flexibility here.
+(11:00:05 AM) rhauch: but I'll be that the index name (and what the translator) looks for was the name of the EFeature, which was chosen to look nice in the UI.
+(11:00:25 AM) rhauch: should have said "I'll bet"
+(11:00:48 AM) blafond: right. "Supports Create" or "Supports ID Lookup" is what the translator is expecting
+(11:03:48 AM) blafond: think it's time for lunch here.
+(11:04:03 AM) blafond: I'll check in when I get back
+(11:06:04 AM) blafond: I think for 7.4 SF work I've got to 1) Hard-code a CND into model 2) create Edit Extended Properties (action & dialog) feature and 3) Decorate the extended objects in so users know that they are Extended so they know they can edit them.
+(11:06:22 AM) blafond: I can work on 2 and 3 without 1 right now.
+(11:06:24 AM) blafond: Thx again
+(11:06:38 AM) rhauch: np
+(01:56:22 PM) blafond: hey
+(01:56:42 PM) blafond: conversing with Hawkman about these extended properties.
+(01:57:42 PM) blafond: He's got a point that the "Translator" is the starting point for all this. If you don't have a translator, there's nothing to consume the extended props.
+(01:58:12 PM) blafond: Dan's working on Translator property overrides in the VDB Editor as we speak.
+(02:44:30 PM) rhauch: okay. but I'm not getting your point.
+(02:45:04 PM) blafond: hawkins: said: as to where and whether they are defined depends a lot on your notion of "disconnected modeling".  If extension metadata is really targeted at the translators, without a translator associated with a model, then you have no guide as to what the properties should be
+(02:46:12 PM) blafond: Would be nice during "Import Salesforce" that we could get a "CND-like" object instead of hard-coding it in Designer
+(02:46:20 PM) rhauch: that might be true for Salesforce (or any other importer), but that's not true for general extensions
+(02:46:25 PM) blafond: right
+(02:46:33 PM) blafond: we need to handle both
+(02:46:35 PM) rhauch: oh, i see what you're saying. that's fine.
+(02:46:55 PM) rhauch: it would be good if the translator could spit out the extensions
+(02:47:04 PM) blafond: exactly
+(02:47:06 PM) rhauch: but isn't that a 'nice-to-have' for 7.4?
+(02:47:14 PM) blafond: right. It won't happen for 7.4
+(02:48:04 PM) blafond: AND Modeshape is the OTHER consumer of the extension metadata, so it's format can be driven by it.
+(02:48:15 PM) blafond: Designer doesn't care, just that we can interpret it.
+(02:48:34 PM) blafond: and it fits into our extension scheme/model
+(02:48:42 PM) rhauch: you care about ^^ tho
+(02:48:55 PM) blafond: right
+(02:49:26 PM) blafond: Adapting a CND structure/format is as good as any and compatible with Modeshape
+(02:50:12 PM) blafond: If Teiid Translator framework can expand to expose this same CND structure, then we've can extract/use it directly in designer for the SF use-case
+(02:51:13 PM) blafond: Other folks migrating their Custom Extension models will have to migrate/upgrade their Translators to provide same CND structure OR they can migrate their extension models by hand (CND) 
+(02:51:20 PM) blafond: All post 7.4 of course
+(02:51:54 PM) blafond: All this is the big picture but I needed to understand it all to insure we're going in right direction
+(02:52:40 PM) rhauch: k
+(02:53:13 PM) blafond: So I'll be running with your CND for awhile, probably a coupla days
+========================================================================================================================
+(09:59:08 AM) blafond1: my new extension plugin
+(09:59:33 AM) blafond1: well, RuntimeAdapter is the one class that needs the Model Extensions
+(09:59:39 AM) blafond1: It's in designer.core
+(10:00:15 AM) blafond1: But that plugin is a dependency for Everything, and probably needs to be a dependency for my new plugins, so it creates circular dep.
+(10:00:33 AM) blafond1: The PluginUtil/logging is the prime suspect
+(10:00:58 AM) danflo: yuck
+(10:01:03 AM) blafond1: Don't know that we have a way around this
+(10:01:43 AM) danflo: are you using a lot of classes out of designer.core?
+(10:02:52 AM) blafond1: checking
+(10:03:32 AM) blafond1: PluginUtil is in "core.designer"
+(10:04:56 AM) danflo: that's not a problem then
+(10:07:55 AM) blafond1: I have a "StringUtilities" and the "PropertyDefinition" as 2
+(10:08:26 AM) danflo: both of those could probably be refactored into core.designer maybe
+(10:10:21 AM) blafond1: I could code around StringUtilities for now
+(10:11:18 AM) blafond1: You were the one to add PropertyDefinition, right? Basically all in the VDB/Translator stuff right now.
+(10:11:43 AM) blafond1: If you could refactor that for me...? :)
+(10:11:53 AM) danflo: I did. But could've easily put it in core.designer.
+(10:20:11 AM) blafond1: Say... working on I18n'ing my PropertyDefinition instance...
+(10:20:45 AM) blafond1: Did you I18n your "isValidValue()" error strings? i.e. "invalidPropertyEditornewValue" etc...
+(10:20:57 AM) danflo: yes
+(10:21:02 AM) blafond1: which plugin?
+(10:21:18 AM) danflo: vdb I think
+(10:21:56 AM) blafond1: the Util you use is "dqp"'s
+(10:22:06 AM) blafond1: VdbSourceConnectionHandler is in dqp.ui
+(10:22:15 AM) danflo: I think I share the messages
+(10:22:20 AM) danflo: since they are the same
+(10:22:41 AM) blafond1: I can't find them
+(10:22:53 AM) danflo: hold on
+(10:22:53 AM) blafond1: .. in any I18n.properties file
+(10:27:31 AM) danflo: the key is wrong in the java file
+(10:27:46 AM) danflo: should be: invalidPropertyValue
+(10:30:07 AM) danflo: I will fix VdbSourceConnectionHandler
+(10:30:14 AM) blafond1: k. thx
+(10:49:48 AM) danflo: fixed VdbSourceConnectionHandler by adding a more appropriate i18n entry.
+(10:50:00 AM) blafond1: cool
+(10:58:02 AM) blafond1: Think I've got my refactoring problems down to just the PropertyDefinition class problem
+(11:00:19 AM) danflo: I've refactored locally
+(11:32:50 AM) blafond1: Since these are new plugins, I'm gonna use the new NLS i18n framework. ??
+(11:33:17 AM) danflo: fine with me. I like it better anyways.
+(11:33:24 AM) blafond1: metoo
+(11:37:05 AM) danflo: get core.designer, designer.core, dqp.ui, vdb, and vdb.ui. Those plugins were changed due to refactoring PropertyDefinition.
+(11:45:17 AM) blafond1: cool. Thx!
+(12:01:01 PM) blafond1: Got it. No errors. woo woo!
+(12:01:25 PM) danflo: gr8.
+(12:43:59 PM) blafond1: It looks like our "logging" and i18n framework through "PluginUtil" are linked?
+(12:44:30 PM) blafond1: So can't get rid of i18n.properties file if needing Util.log() method
+(12:44:42 PM) danflo: oh yeah
+(12:44:52 PM) danflo: no wait
+(12:44:55 PM) blafond1: :)
+(12:48:50 PM) danflo: looks like I've done exactly what you said (used both). But it also looks like the NLS class has a "log" method. But it just writes to System.err.
+(12:49:13 PM) blafond1: right. our log method is "plugin ID-aware"
+(12:50:04 PM) danflo: that is just so Eclipse can log where the error message came from
+(12:50:12 PM) blafond1: right
+(12:50:48 PM) danflo: So why do you need the i18n.properties file?
+(12:51:26 PM) blafond1: if I DONT have one, then th Bundling loading fails
+(12:51:59 PM) blafond1: PluginUtil UTIL = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
+(12:52:01 PM) danflo: Doesn't make sense. The PluginUtil doesn't have any requirement for it.
+(12:52:29 PM) blafond1: for DQP it's org.teiid.designer.dqp.ui.i18n
+(12:52:45 PM) danflo: Just do your own Impl. Throw "UnsupportedOperation" for those methods that involve property keys.
+(12:52:45 PM) blafond1: so I can change the "i18n" to use "messages"?
+(12:53:34 PM) danflo: so don't extend PluginUtilImpl and you should be fine.
+(12:53:54 PM) danflo: if not then the framework is not using the interface.
+(12:55:53 PM) blafond1: so BundleUtil is the class that PluginUtilImpl extends
+(12:56:09 PM) blafond1: I don't want that either since it doesn't log?
+(12:58:42 PM) blafond1: So couldn't we make another non-i18n PluginUtilImpl?  maybe LoggingUtil?
+(12:59:11 PM) danflo: looks like all you need to do is pass through all logging actions in PluginUtil to plugin.getLog().
+(12:59:23 PM) danflo: see initializePlatformLogger
+(12:59:28 PM) blafond1: right. I see that.
+(01:16:36 PM) blafond1: Created a LoggingUtil class in same package as PluginUtilImpl
+(01:16:53 PM) blafond1: removed my i18n.properties files
+(01:17:17 PM) blafond1: Fully refactored and operational with "Edit Salesforce Extension Properties" action and dialog
+(01:17:40 PM) danflo: so all good now?
+(01:17:47 PM) blafond1: ya, I think?
+(01:17:53 PM) danflo: great!
+(01:18:17 PM) danflo: just make sure the eclipse logging still works:-)
+(01:18:22 PM) blafond1: Still have to flush out more of my generic CND handler. Goal is to keep the "extensions" plugin pretty ..... generic
+(01:18:37 PM) blafond1: sure
+(01:30:52 PM) blafond1: hard-coded a LoggingUtil.log() message and it worked fine
+(01:31:58 PM) danflo: nice
+(01:34:08 PM) blafond1: Checked it in in same package as PluginUtilImpl if you want to clean up your plugin(s) that still have empty i18n.properties files
+(01:34:24 PM) blafond1: gonna run an errand. back in 45 min
+(01:35:01 PM) danflo: k
+(02:10:52 PM) blafond1: bk
+(02:10:55 PM) blafond1: :)
+(02:11:21 PM) danflo: welcome back
+(02:15:28 PM) blafond1: So how do I marry the concepts of a hard-coded Model Extension contribution and a custom Model Extension that a user creates?
+(02:16:34 PM) danflo: one sec…writing a ModeShape issue
+(02:19:26 PM) danflo: back
+(02:20:12 PM) danflo: should work the same other than deleting, editing, etc.
+(02:21:17 PM) danflo: you could always use different implementations of a common interface. one is readonly, one editable
+(02:26:01 PM) blafond1: Once an XMI model has a CND and "tags" in it, the model will have appropriate "Model Extension Definition" type/ID's in it.
+(02:27:14 PM) blafond1: The extension manager (which loads and keeps  track of the contributions) will only be accessed via the specific Editing framework OR the RuntimeAdapter that needs to Index the tags (or NOT)
+(02:30:12 PM) danflo: each tag will have an ID right? We talked about ID prefixes. Maybe IDs with a registered (i.e., extension) reserved prefix are different than user-defined ones? Or something like that.
+(02:30:34 PM) blafond1: ya
+(02:31:40 PM) blafond1: The CND Node Type Properties have a property name which consists a "prefix" + : + "name" (i.e. sf:supportsUpdate)
+(02:33:11 PM) blafond1: The "tags" for SF use "model-extension-salesforce:Supports Update"
+(02:34:09 PM) blafond1: I've gotta keep a mapping to go from "sf:supportsUpdate"  >> "model-extension-salesforce:Supports Update" and back again.
+(02:35:52 PM) blafond1: for SF contribution, I do this in the Implementation (Handler) class
+(06:47:10 AM) blafond: Back to work
+(06:48:21 AM) danflo: it's tough for sure…going to have another ModeShape day. Have to test fixes by Randall to a couple defects I filed.
+(06:48:36 AM) blafond: k
+(06:49:01 AM) blafond: Still trying to figure out 2 things. one, the contribution stuff we talked about yesterday
+(06:49:58 AM) blafond: TWO: how and should we allow users to create property names that are as inconsistent as Salesforce?
+(06:50:28 AM) blafond: 1) "Supports Delete" 2) "Default on Create" 3) "Supports ID Lookup"
+(06:50:58 AM) danflo: will there only be one contribution (extension)?
+(06:51:12 AM) blafond: Modeshape (aka Randall) wants to camel-case these into "supportsDelete, defaultOnCreate and supportsIdLookup"
+(06:51:25 AM) blafond: one interface
+(06:51:44 AM) blafond: One extension (I think)
+(06:52:09 AM) danflo: just SF right?
+(06:52:24 AM) blafond: yes
+(06:52:28 AM) blafond: ... for now
+(06:52:56 AM) danflo: so that seems pretty straightforward (extension point and 1 extension)
+(06:56:04 AM) blafond: So a user shows up with a model that has Model Extension Definition in it (CND structure). The RuntimeAdapter, when it tries to index this file will have look in THIS model's Model Annotation for the appropriate Model Extension ID/Key, then decode the CND and construct the in-memory PropertyDefinitions?
+(06:56:52 AM) blafond: Or at that point, the tag's key will be "model-extension-salesforce:XXXXX XXXXX" or "model-extension-foobar:YyYyYyYyY"
+(06:57:42 AM) blafond: maybe I don't care at this point about the structure and default values....
+(06:58:53 AM) blafond: So maybe I DONT load the CND
+(06:58:54 AM) danflo: not sure I know enough to comment on that last statement
+(06:59:32 AM) blafond: Tagged property values have been assumed to be Model Extension Properties
+(07:00:05 AM) blafond: In fact, the new "connection" tags from day one were indexed and available in the VDB metadata
+(07:00:31 AM) danflo: can a single model have multiple ID prefixes?
+(07:01:03 AM) blafond: I plan to prefix all model extension property keys with "model-extension-"
+(07:01:30 AM) blafond: so model can have multiple ID suffixes
+(07:01:44 AM) blafond: bad/good idea?
+(07:02:09 AM) danflo: probably a good idea…just wondering how the editor will work to support that
+(07:03:05 AM) blafond: <tags key="org.teiid.designer.model.extension:salesforce" value="org.teiid.designer.model.extension.salesforce"/>
+(07:03:28 AM) blafond: this is the ID in the annotation. It also comes with a "cnd" key/value for decoding
+(07:04:40 AM) blafond: Note the "salesforce" and "org.teiid.designer.model.extension.salesforce"
+(07:05:00 AM) blafond: these will be defined by the user and have to be unique within the model
+(07:05:45 AM) danflo: right
+(07:05:47 AM) blafond: "foobar" and "org.espace.relational.model.extension.foobar"
+(07:05:51 AM) blafond: that would work
+(07:06:37 AM) blafond: So the actual property tag's key will be "model-extension-salesforce:XXXXX XXXXX" or "model-extension-foobar:YyYyYyYyY"
+(07:07:06 AM) danflo: and XXXX and YyYy are the property name?
+(07:07:14 AM) blafond: yes
+(07:07:41 AM) danflo: so a user could have foo:name and bar:name in the same model
+(07:07:50 AM) blafond: If someone programmatically added tags and used "my-special-tag" we'd ignore it during indexing time
+(07:07:56 AM) blafond: YES
+(07:08:16 AM) blafond: foo:name and bar:name are the full "keys" and are unique
+(07:08:19 AM) danflo: and they can create them at design time
+(07:09:17 AM) blafond: Yes.    model-extension-foo:name & model-extension-bar:name (but user would only see foo and bar & names
+(07:09:26 AM) danflo: right
+(07:09:32 AM) blafond: So the UI would require user to set up a namespace/ID
+(07:09:41 AM) blafond: salesforce, or foo or bar
+(07:09:48 AM) danflo: gotcha
+(07:10:40 AM) blafond: Modeshape sorta requires a namespace. For SF it's "sf='http://www.metamatrix.com/metamodels/Salesforce'"
+(07:10:51 AM) blafond: Maybe we treat it the same way
+(07:11:05 AM) blafond: "sf" == SHORT NAME
+(07:11:17 AM) blafond: NAMESPACE = http://www.metamatrix.com/metamodels/Salesforce
+(07:11:25 AM) danflo: right
+(07:11:49 AM) blafond: <tags key="org.teiid.designer.model.extension:salesforce" value="http://www.metamatrix.com/metamodels/Salesforce"/>
+(07:12:01 AM) blafond: it would now look like that for the contribution
+(07:12:57 AM) danflo: but don't require extension implementer to put in "org.teiid.designer.model.extension" ...
+(07:12:59 AM) blafond: I guess I should use either "sf" for MS and Designer or "salesforce" for both
+(07:13:07 AM) blafond: right
+(07:13:20 AM) blafond: SHORT NAME & NAMESPACE
+(07:13:35 AM) blafond: both entries in the wizard
+(07:13:40 AM) danflo: if you envision other types just have a "type" as part of the extension point. only value would be "model" right now.
+(07:13:58 AM) blafond: ?
+(07:14:34 AM) danflo: just trying to figure out why you have "model.extension" rather than just "extension"
+(07:15:06 AM) blafond: I think only because "extension" is so overloaded in Eclipse
+(07:15:18 AM) blafond: extension would work just as well
+(07:15:35 AM) blafond: or "ext:Supports Delete"
+(07:15:51 AM) blafond: good questions
+(07:16:17 AM) blafond: that's 12 less characters for every entry
+(07:16:49 AM) danflo: just thought you were allowing other "types" of extensions. Not sure it makes sense. Say a data role extension, a connection profile extension, etc. Then you could have  "type" as part of your extension point and "model", "dataRole", and "connectionProfile" be values.
+(07:17:08 AM) danflo: right. seemed like prefix was way too long.
+(07:17:25 AM) blafond: thinking ^^
+(07:17:46 AM) blafond: these are "property" extensions
+(07:17:49 AM) blafond: on EObjects
+(07:17:58 AM) blafond: Data Role is NOT an eObject
+(07:18:09 AM) blafond: connection profile is NOT an eObject
+(07:18:30 AM) blafond: so I guess we probably won't have types
+(07:20:11 AM) blafond: I like minimizing the key "ext:Supports Delete" THX!
+(07:20:25 AM) danflo: cool
+(07:20:33 AM) blafond: AND  the SHORT NAME & NAMESPACE terminilogy
+(07:30:46 AM) blafond: NEW MED Wizard would have:
+(07:30:54 AM) blafond: Display Name = Salesforce
+(07:31:03 AM) blafond: ID = salesforce
+(07:31:21 AM) blafond: Namespace = http://www.metamatrix.com/metamodels/Salesforce
+(07:31:48 AM) blafond: Metamodel Selector: Relational, WebService & XML Doc models only
+(07:32:01 AM) danflo: looks good
+(07:32:31 AM) blafond: Users will never be able to "EDIT" those values though, right?
+(07:32:31 AM) User is not logged in
+(07:37:11 AM) danflo: right
+(07:38:16 AM) blafond: cool
+(07:38:45 AM) blafond: BTW... I'll be gone from 9:15 through ~1:30, so I'll leave you alone then :)
+(07:38:53 AM) danflo: editing should be determined by the eclipse extension (if one was used)
+(07:39:34 AM) danflo: hope all goes well
+(07:39:42 AM) blafond: thx
+(07:40:04 AM) blafond: Right. Editing A MED (CND) is an "Enterprise" type thing
+(07:40:17 AM) blafond: Which is separate than Editing the actual Property Values
+(07:40:30 AM) danflo: yeah
+(07:41:14 AM) blafond: There will be "refactoring" required if we allow "renaming" property keys or "deleting" properties. Need to clean up "tags" in models that implement these MEDs
+(07:41:25 AM) blafond: So do we need a workspace MED registry?
+(07:41:39 AM) blafond: And when/how do we load it?
+(07:41:57 AM) blafond: User may open workspace and have 3 of 10 models that contain different MED's
+(07:42:09 AM) blafond: None are SF
+(07:43:24 AM) danflo: I was just thinking if a user created a property name and mistyped something they would want to change it. but could always delete then add.
+(07:44:43 AM) blafond: ya
+(07:45:08 AM) blafond: So each of the 3 models have different CND in them
+(07:45:44 AM) blafond: So user select ExtModel_A and says "Edit MED"
+(07:46:01 AM) blafond: We load the MED and user can edit "property definitions"
+(07:46:02 AM) blafond: right?
+(07:46:29 AM) danflo: yes ...
+(07:47:36 AM) danflo: so are you going to allow different property types other than string?
+(07:47:54 AM) danflo: are you going to have allowed values?
+(07:47:58 AM) blafond: yes. String, Boolean, Integer, double, etc....
+(07:48:40 AM) blafond: Basically any of the Modeshape types minus Ref, Path, URI etc.
+(07:48:52 AM) blafond: If we are in THIS model, then rename/deletes are simple
+(07:49:08 AM) danflo: so this prop def editor should be generic/reusable right? (so Barry is putting this in core.designer)
+(07:49:33 AM) ***blafond that's not a UI plugin
+(07:49:56 AM) danflo: is there a core.designer.ui?
+(07:50:01 AM) blafond: ui.common
+(07:50:12 AM) blafond: but yes. reusable
+(07:50:14 AM) danflo: maybe that is where it should go
+(07:50:45 AM) blafond: Your "Translator" editor seems pretty generic. I was copying your code anyway...
+(07:51:21 AM) blafond: So I think we probably should still assume users will want to REUSE MED's
+(07:51:34 AM) blafond: And APPLY MED's
+(07:52:31 AM) danflo: yeah just thinking that. should probably make a PropertyEditingSupport out of the VDB one and put in ui.common. Wouldn't take much.
+(07:52:47 AM) blafond: cool
+(07:53:13 AM) blafond: The "Edit Extension Properties" dialog could be a simple "tabbed" panel with each "MED" type a different tab so user can keep each extension type separate
+(07:53:51 AM) blafond: Not too hard to drive the tabs from what's available in the MED's stored in the model
+(07:53:57 AM) danflo: or a list on left instead of tabs
+(07:54:06 AM) blafond: that would work too
+(07:54:34 AM) blafond: .... like the Translator Overrides....
+(07:54:41 AM) blafond: cool
+(07:55:53 AM) danflo: yeah. Do you want me to create that PropertyEditorSupport class in ui.common?
+(07:56:19 AM) blafond: Sure. Then I could use it in my exenstion.ui
+(07:56:32 AM) danflo: I would have to then change my TranslatorOverridePropertyEditingSupport to extend that. And you would use it too.
+(07:57:05 AM) danflo: right
+(07:57:15 AM) blafond: So how do we keep track of MED's embedded in the models AND how do we marry that with MED's that are stored "Outside" of models (Yet to be designed) 
+(07:58:15 AM) danflo: would those "outside" of models be the contributions?
+(07:58:41 AM) blafond: yes and no
+(07:59:12 AM) blafond: User creates a MED for some new DB that's not quite Relational
+(07:59:24 AM) blafond: which is what MED's help you with. Extended Properties
+(08:00:26 AM) danflo: but won't that be stored in a model?
+(08:02:14 AM) blafond: Yes
+(08:02:25 AM) blafond: BUT do we want to allow users to re-use MED's
+(08:02:36 AM) blafond: I want a second and third model now that uses Foobar MED
+(08:02:42 AM) blafond: I like those properties
+(08:02:57 AM) blafond: How do we allow for that?
+(08:03:13 AM) blafond: Export the MED into an "ExtensionModel.cnd"?
+(08:03:43 AM) blafond: we're back to an separate model, but that model is like a Connection Profile.
+(08:04:39 AM) blafond: AND we're back to reconciling an external MED with what's stored in a model
+(08:05:04 AM) blafond: kinda like keeping Models in workspace and a VDB in sync
+(08:05:05 AM) danflo: yuck
+(08:05:07 AM) blafond: ya
+(08:05:20 AM) danflo: didn't know you were going there
+(08:06:34 AM) blafond: Seems pretty naive to think users will be creating MED's specifically for one model and to stop there. I expect re-use as a requirement 
+(08:06:50 AM) blafond: would be NICE if they didn't need it.
+(08:08:55 AM) danflo: agree
+(08:09:48 AM) danflo: seems like we're doing a lot right now (i.e., not a major release) to recreate the extension model
+(08:11:03 AM) blafond: Right, but don't need to implement a LOT, just enough to insure that the SF contribution is designed and implemented so it'll fit into our MED framework in a later release
+(08:11:37 AM) blafond: that's why I'm asking about these details, terminology, etc.
+(08:11:44 AM) blafond: I think we're close
+(08:12:18 AM) blafond: Don't care about exporting "SF" MED and re-applying it. It only exists through SF Importer.
