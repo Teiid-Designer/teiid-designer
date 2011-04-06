@@ -23,6 +23,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
+import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.WordEntry;
@@ -1336,25 +1338,47 @@ public class RuntimeAdapter extends RecordFactory {
                     continue;
                 }
                 Object key = mapEntry.getKey();
-                Object value = mapEntry.getValue();
-
-                if (key == null || value == null) {
-                    continue;
+                if( !ExtensionPropertiesManager.isExtendedKey(key) && !ExtensionPropertiesManager.isNonIndexedKey(key) ) {
+	                Object value = mapEntry.getValue();
+	
+	                if (key == null || value == null) {
+	                    continue;
+	                }
+	
+	                String propName = key.toString();
+	                String propValue = value.toString();
+	
+	                if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
+	                    continue;
+	                }
+	
+	                if (!propertyNames.contains(propName)) {
+	                    // add property word
+	                    addPropertyWord(objectID, name, propName, propValue, false, modelPath, wordEntries);
+	
+	                }
                 }
-
-                String propName = key.toString();
-                String propValue = value.toString();
-
+            }
+        }
+        
+        // Now we look for properties defined through the  ExtensionPropertiesManager
+        
+        Properties props = ExtensionPropertiesManager.getExtendedProperties(eObject);
+        
+        for( Object keyObj : props.keySet() ) {
+			if( keyObj instanceof String ) {
+				String propName = (String)keyObj;
+				String propValue = (String)props.get(propName);
                 if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
                     continue;
                 }
-
                 if (!propertyNames.contains(propName)) {
                     // add property word
-                    addPropertyWord(objectID, name, propName, propValue, false, modelPath, wordEntries);
-
+                    addPropertyWord(objectID, name, propName, propValue, true, modelPath, wordEntries);
+                    
+                    propertyNames.add(propName);
                 }
-            }
+			}
         }
     }
 

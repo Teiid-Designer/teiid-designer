@@ -56,15 +56,18 @@ public class ResourceAnnotationHelper {
 	 */
 	public Annotation getResourceAnnotation(final ModelResource modelResource, final boolean forceCreate) throws ModelWorkspaceException {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+		Annotation annotation = null;
 		
-		Annotation annotation = modelResource.getAnnotations().getAnnotation(modelResource.getModelAnnotation());
-		if( annotation == null && forceCreate ) {
-			annotation = ModelResourceContainerFactory.createNewAnnotation(modelResource.getModelAnnotation(), modelResource.getEmfResource());
-	        
-			ModelContents contents = ModelerCore.getModelEditor().getModelContents(modelResource);
-			AnnotationContainer ac = contents.getAnnotationContainer(false);
-	        if( ac != null )
-	            annotation.setAnnotationContainer(ac);
+		if( modelResource.getAnnotations() != null && modelResource.getModelAnnotation() != null ) {
+			annotation = modelResource.getAnnotations().getAnnotation(modelResource.getModelAnnotation());
+			if( annotation == null && forceCreate ) {
+				annotation = ModelResourceContainerFactory.createNewAnnotation(modelResource.getModelAnnotation(), modelResource.getEmfResource());
+		        
+				ModelContents contents = ModelerCore.getModelEditor().getModelContents(modelResource);
+				AnnotationContainer ac = contents.getAnnotationContainer(false);
+		        if( ac != null )
+		            annotation.setAnnotationContainer(ac);
+			}
 		}
 		return annotation;
 	}
