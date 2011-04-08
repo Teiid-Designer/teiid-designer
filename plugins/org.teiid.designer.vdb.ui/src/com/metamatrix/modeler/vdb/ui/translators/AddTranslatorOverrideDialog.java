@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -199,7 +200,13 @@ public class AddTranslatorOverrideDialog extends MessageDialog {
         }
 
         this.messageLabel.setText(msg);
-        this.messageLabel.pack();
+        GridDataFactory
+		.fillDefaults()
+		.align(SWT.FILL, SWT.BEGINNING)
+		.grab(true, false)
+		.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
+				SWT.DEFAULT).applyTo(messageLabel);
+//        this.messageLabel.pack();
     }
 
     private String validateName() {
