@@ -37,7 +37,7 @@ import com.metamatrix.modeler.ui.editors.ModelEditorManager;
  */
 public class EditTransformationHelper {
     private static final String DIALOG_TITLE        = UiConstants.Util.getString("EditTransformationHelper.dialogTitle"); //$NON-NLS-1$
-    private static final String DIALOG_MESSAGE      = UiConstants.Util.getString("EditTransformationHelper.dialogMessage"); //$NON-NLS-1$
+    //private static final String DIALOG_MESSAGE      = UiConstants.Util.getString("EditTransformationHelper.dialogMessage"); //$NON-NLS-1$
     private static final String STAGING_TABLE_STR   = "<Staging Table>"; //$NON-NLS-1$
     private static final String MAPPING_CLASS_STR   = "<Mapping Class>"; //$NON-NLS-1$
     private static final String TABLE_STR           = "<Table>"; //$NON-NLS-1$
@@ -101,14 +101,14 @@ public class EditTransformationHelper {
 
         try {
             Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-
+            String message = UiConstants.Util.getString("EditTransformationHelper.dialogMessage", modelResource.getItemName()); //$NON-NLS-1$
             SelectFromEObjectListDialog dialog = 
                 new SelectFromEObjectListDialog(
                          shell, 
                          getAllTransformationTargets(modelResource), 
                          false, 
                          DIALOG_TITLE, 
-                         DIALOG_MESSAGE,
+                         message,
                          new MyLabelProvider());
 
             dialog.open();

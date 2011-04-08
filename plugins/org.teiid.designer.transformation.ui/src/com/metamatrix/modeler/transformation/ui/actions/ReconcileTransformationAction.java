@@ -9,12 +9,16 @@ package com.metamatrix.modeler.transformation.ui.actions;
 
 import java.util.EventObject;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
@@ -65,6 +69,7 @@ public class ReconcileTransformationAction extends TransformationAction implemen
         if (toePage != null) {
             this.tObjEditorPage = toePage;
             this.tObjEditorPage.addEventListener(this);
+            setEnabled(shouldEnable(toePage.getCurrentMappingRoot()));
         }
     }
 
@@ -87,6 +92,15 @@ public class ReconcileTransformationAction extends TransformationAction implemen
         }
 
         setEnabled(enable);
+    }
+    
+    @Override
+    public void selectionChanged(IWorkbenchPart thePart,
+                                 ISelection theSelection) {
+        super.selectionChanged(thePart, theSelection);
+        if( this.tObjEditorPage != null ) {
+        	setEnabled(shouldEnable(this.tObjEditorPage.getCurrentMappingRoot()));
+        }
     }
 
     /**
