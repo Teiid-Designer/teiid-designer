@@ -5,18 +5,18 @@ Bundle-SymbolicName: org.teiid.designer.modeshape;singleton:=true
 Bundle-Version: 7.4.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
- google-collections-1.0-rc3.jar,
- joda-time-1.6.jar,
- slf4j-api-1.5.11.jar,
- slf4j-simple-1.5.11.jar,
- jcr-2.0.jar,
- modeshape-cnd-2.5.0.Beta1.jar,
- modeshape-common-2.5.0.Beta1.jar,
- modeshape-graph-2.5.0.Beta1.jar,
- modeshape-jcr-2.5.0.Beta1.jar,
- modeshape-jcr-api-2.5.0.Beta1.jar,
- modeshape-repository-2.5.0.Beta1.jar,
- modeshape-sequencer-ddl-2.5.0.Beta1.jar
+ external/lib/google-collections-1.0-rc3.jar,
+ external/lib/jcr-2.0.jar,
+ external/lib/joda-time-1.6.jar,
+ external/lib/slf4j-api-1.5.11.jar,
+ external/lib/slf4j-simple-1.5.11.jar,
+ modeshape/lib/modeshape-cnd-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-common-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-graph-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-jcr-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-jcr-api-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-repository-2.5.0.Beta1.jar,
+ modeshape/lib/modeshape-sequencer-ddl-2.5.0.Beta1.jar
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: javax.jcr,
@@ -94,5 +94,3 @@ Export-Package: javax.jcr,
  org.modeshape.sequencer.ddl.dialect.sqlserver,
  org.modeshape.sequencer.ddl.dialect.sybase,
  org.modeshape.sequencer.ddl.node
-Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
- net.jcip.annotations;bundle-version="1.0.0"

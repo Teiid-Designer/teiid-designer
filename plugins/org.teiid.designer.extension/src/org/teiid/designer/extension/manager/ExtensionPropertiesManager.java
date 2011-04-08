@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.extension.manager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -100,6 +99,14 @@ public class ExtensionPropertiesManager {
 		handlers = extList.values();
 	}
 	
+	private static Collection<IExtensionPropertiesHandler> getHandlers() {
+		if( !handlersLoaded ) {
+			loadExtensions();
+		}
+		
+		return handlers;
+	}
+	
 	/**
 	 * Method returns a list of extended model {@link Properties} for a given {@link EObject} target model object.
 	 * 
@@ -109,13 +116,10 @@ public class ExtensionPropertiesManager {
 	public static Properties getExtendedProperties(final EObject target) {
 		// Walk through the handlers and gather up all extension properties
 		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
 		Properties props = new Properties();
 
 		try {
-			for( IExtensionPropertiesHandler handler : handlers) {
+			for( IExtensionPropertiesHandler handler : getHandlers()) {
 				Properties tempProps = handler.getExtendedProperties(target);
 				if( tempProps != null && !tempProps.isEmpty() ) {
 					props.putAll(tempProps);
@@ -135,43 +139,11 @@ public class ExtensionPropertiesManager {
 	 * @param target the {@link EObject} target of the annotation containing the extended model properties.
 	 * @return true if properties exists for the target {@link EObject}
 	 */
-	public static boolean hasExtendedProperties(final EObject target) {
-		// Walk through the handlers and gather up all extension properties
-		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-
-		try {
-			for( IExtensionPropertiesHandler handler : handlers) {
-				boolean hasProps = handler.hasExtendedProperties(target);
-				if( hasProps ) {
-					return true;
-				}
-			}
-		} catch (ModelerCoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Method determines if a target {@link EObject} has extended model {@link Properties}.
-	 * 
-	 * @param target the {@link EObject} target of the annotation containing the extended model properties.
-	 * @return true if properties exists for the target {@link EObject}
-	 */
 	public static ExtendedModelObject getExtendedModelObject(final EObject target) {
 		// Walk through the handlers and gather up all extension properties
 		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-
 		try {
-			for( IExtensionPropertiesHandler handler : handlers) {
+			for( IExtensionPropertiesHandler handler : getHandlers()) {
 				ExtendedModelObject extendedMO = handler.getExtendedModelObject(target);
 				if( extendedMO != null ) {
 					return extendedMO;
@@ -194,18 +166,13 @@ public class ExtensionPropertiesManager {
 	public static boolean isApplicable(final EObject target) {
 		// Walk through the handlers and gather up all extension properties
 		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		boolean result = false;
-		for( IExtensionPropertiesHandler handler : handlers) {
+		for( IExtensionPropertiesHandler handler : getHandlers()) {
 			if( handler.isApplicable(target) ) {
-				result = true;
+				return true;
 			}
 		}
 
-		
-		return result;
+		return false;
 	}
 	
 	/**
@@ -217,36 +184,26 @@ public class ExtensionPropertiesManager {
 	public static boolean isApplicable(final IResource resource) {
 		// Walk through the handlers and gather up all extension properties
 		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		boolean result = false;
-		
-		for( IExtensionPropertiesHandler handler : handlers) {
+		for( IExtensionPropertiesHandler handler : getHandlers()) {
 			if( handler.isApplicable(resource)) {
-				result = true;
+				return true;
 			}
 		}
 
-		
-		return result;
+		return false;
 	}
 	
 	/**
 	 * Provide means to determine if a tag's key is a new Model Extension property. Used by {@link RuntimeAdapter}.
 	 * 
 	 * @param rawKey
-	 * @returno
+	 * @return true if extended model key
 	 */
 	public static boolean isExtendedKey(final Object rawKey) {
 		CoreArgCheck.isNotNull(rawKey, "rawKey"); //$NON-NLS-1$
-		
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		
+
 		if( rawKey instanceof String ) {
-			for( IExtensionPropertiesHandler handler : handlers) {
+			for( IExtensionPropertiesHandler handler : getHandlers()) {
 				if( handler.isExtendedKey((String)rawKey) ) {
 					return true;
 				}
@@ -271,7 +228,7 @@ public class ExtensionPropertiesManager {
 		String theKey = (String)rawKey;
 		if( theKey.startsWith("connection") || theKey.startsWith("translator") ||  //$NON-NLS-1$ //$NON-NLS-2$
 			theKey.startsWith(IExtensionPropertiesHandler.EXTENSION_ID_PREFIX) ||
-			theKey.startsWith(IExtensionPropertiesHandler.EXTENSION_NAMEPSACE_PREFIX) ||
+			theKey.startsWith(IExtensionPropertiesHandler.EXTENSION_NAMESPACE_PREFIX) ||
 			theKey.startsWith(IExtensionPropertiesHandler.EXTENSION_CND_PREFIX ) ) {
 			return true;
 		}
@@ -289,13 +246,9 @@ public class ExtensionPropertiesManager {
 	 * @return
 	 */
 	public static Properties getMissingDefaultProperties(EObject target, Properties currentProps) {
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
-		
 		Properties resultProps = new Properties();
 		
-		for( IExtensionPropertiesHandler handler : handlers) {
+		for( IExtensionPropertiesHandler handler : getHandlers()) {
 			resultProps.putAll(handler.getMissingDefaultProperties(target, currentProps));
 		}
 		
@@ -306,23 +259,35 @@ public class ExtensionPropertiesManager {
 		return IExtensionPropertiesHandler.PROPERTY_KEY_NAMESPACE_PREFIX + id + ':';
 	}
 	
+	/**
+	 * The display name for the {@link IExtensionPropertiesHandler} to be used in actions such as {@link EditExtensionPropertiesAction}
+	 * 
+	 * @param target the {@link EObject} target used to find the matching/applicable handler
+	 * @return the display name
+	 */
 	public static String getDisplayName(EObject target) {
-		if( !handlersLoaded ) {
-			loadExtensions();
-		}
 		
-		Collection<String> displayNames = new ArrayList<String>();
-		
-		for( IExtensionPropertiesHandler handler : handlers) {
+		for( IExtensionPropertiesHandler handler : getHandlers()) {
 			if( handler.isApplicable(target) ) {
-				displayNames.add(handler.getDisplayName());
+				return handler.getDisplayName();
 			}
 		}
 		
-		if( displayNames.size() == 1 ) {
-			return displayNames.iterator().next();
-		}
-		
 		return  null;
+	}
+	
+	/**
+	 * Returns an {@link IExtensionPropertiesHandler} with the given string Id
+	 * 
+	 * @param Id the unique extension properties handler Id
+	 * @return the {@link IExtensionPropertiesHandler}
+	 */
+	public static IExtensionPropertiesHandler getHandler(String Id) {
+		for( IExtensionPropertiesHandler handler : getHandlers()) {
+			if( handler.getID().equals(Id) ) {
+				return handler;
+			}
+		}
+		return null;
 	}
 }

@@ -10,18 +10,15 @@ package org.teiid.designer.extension.ui.actions.dialogs;
 
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
 
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.ui.table.ResourceEditingSupport;
+import com.metamatrix.ui.table.PropertyEditingSupport;
 
-class ExtensionPropertyEditingSupport extends ResourceEditingSupport {
+class ExtensionPropertyEditingSupport extends PropertyEditingSupport {
 	
 	boolean changed = false;
 
@@ -32,40 +29,6 @@ class ExtensionPropertyEditingSupport extends ResourceEditingSupport {
     public ExtensionPropertyEditingSupport( ColumnViewer viewer,
                                    IResource model) {
         super(viewer, model);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.modeler.vdb.ui.ResourceEditingSupport#canEdit(java.lang.Object)
-     */
-    @Override
-    protected boolean canEdit( Object element ) {
-    	ModelObjectExtendedProperty property = (ModelObjectExtendedProperty)element;
-        return super.canEdit(element) && property.getDefinition().isModifiable();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see com.metamatrix.modeler.vdb.ui.ResourceEditingSupport#getCellEditor(java.lang.Object)
-     */
-    @Override
-    protected CellEditor getCellEditor( Object element ) {
-    	ModelObjectExtendedProperty property = (ModelObjectExtendedProperty)element;
-
-        // no editor if not editable
-        if (!property.getDefinition().isModifiable()) {
-            return null;
-        }
-
-        if (property.getDefinition().isMasked()) {
-            this.currentEditor = new TextCellEditor((Composite)getViewer().getControl());
-            ((Text)currentEditor.getControl()).setEchoChar('*');
-            return this.currentEditor;
-        }
-
-        return super.getCellEditor(element);
     }
 
     /**
@@ -82,6 +45,17 @@ class ExtensionPropertyEditingSupport extends ResourceEditingSupport {
         }
 
         return property.getValue();
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @see com.metamatrix.ui.table.PropertyEditingSupport#getPropertyDefinition(java.lang.Object)
+     */
+    @Override
+    protected PropertyDefinition getPropertyDefinition( Object element ) {
+    	ModelObjectExtendedProperty property = (ModelObjectExtendedProperty)element;
+        return property.getDefinition();
     }
 
     /**

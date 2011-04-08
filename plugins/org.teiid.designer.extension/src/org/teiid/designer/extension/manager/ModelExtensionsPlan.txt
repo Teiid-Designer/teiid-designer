@@ -642,3 +642,203 @@ and instantiates helper classes.
 (08:11:37 AM) blafond: that's why I'm asking about these details, terminology, etc.
 (08:11:44 AM) blafond: I think we're close
 (08:12:18 AM) blafond: Don't care about exporting "SF" MED and re-applying it. It only exists through SF Importer.
+
+================================= COMMENTS FROM DAN 4/7/2011 ===========================================================
+1)  ExtensionPropertiesCndHandler - does nothing and is not referenced
+	BARRY: This class is targeted to be used when user create/stores/edits a custom Model Extension. Haven't flushed out anything yet.
+
+2) ModelExtensionPlan.txt - shouldn't be in the src directory. better suited to be attached to jira or on wiki. do we have a place for design notes?
+	BARRY: Yes I agree. Wanted to keep it around so I can capture thoughts, etc. Will move before end of release.
+
+3) org.jdom and teiid_embedded_query are unused dependencies in designer.extension plugin
+	BARRY:  REMOVED DEPENDENCIES
+
+4) designer.ddl.importer should have a dependency on designer.modeshape and not have modeshape jars.
+	BARRY: REMOVED MODESHAPE JARS from ddl.importer plugin
+
+5) WOW! That's a lot of ModeShape jars!
+
+6) Need a SLF4J logger implementation
+
+7) org.apache.log4j and net.jcip.annotations are unused dependencies of designer.modeshape
+	BARRY: REmoved dependencies
+
+8) designer.modeshape plugin don't think you need "." in classpath
+
+9) designer.modeshape build.properties should not have "source.." and "output.." entries
+	BARRY: removed
+
+10) is the designer.modeshape COPYRIGHT.txt file only pertain to ModeShape? The file doesn't cover years 2010-2011.
+
+11) designer.modeshape is an unused dependency of designer.legacy
+	BARRY: removed
+
+12) wondering if the logic in the SalesforceExtensionPropertiesHandler that reads CND should be moved into designer.extension. Will future plugins that need this have to repeat the same logic? Moving this logic may allow salesforce not to have a dependency on designer.modeshape.
+	BARRY: Currently there is some interpretation going on with the Modeshape/JCR Node Type Def's and Property Def's that can't
+	       be separated from Salesforce.
+	       Think we need to look at generic case and move anything we can from parseCnd() into extension framework.
+	
+13) wondering if moving all the modeshape source jars should be moved into a directory to unclutter root of designer.modeshape
+	BARRY: Done
+
+14) all but one of the classes in designer.extension.manager don't seem to belong in that package. wondering if that package is really needed. maybe a designer.extension.properties package would be a better fit for most of these classes. and the manager could just go in designer.extension.
+
+15) missing lots of javadocs for public methods. At very minimum, IExtensionPropertiesHandler needs to have complete javadocs
+
+16) ExtensionPropertiesManager.loadExtensions() - doesn't look like "extList" is needed
+
+17) ExtensionPropertiesManager.loadExtensions() - rewrite so that if one extension throws exception others can still be loaded
+
+18) ExtensionPropertiesManager.loadExtensions() - seems like "MODEL_EXTENSION_IDS" and "handlers" could be combined into a Map
+
+19) ExtensionPropertiesManager - TODOs should be implemented
+
+20) ExtensionPropertiesManager.hasExtendedProperties(EObject) is not referenced. Recommend deleting.
+
+21) IExtensionPropertiesHandler.hasExtendedProperties(EObject) is only referenced by line above. Recommend deleting from interface and implementation class.
+
+22) ExtensionPropertiesManager should implement IExtensionPropertiesHandler as it just delegates the interface methods to the handlers.
+
+23) ExtensionPropertiesManager has copy/paste javadoc problems. Some copy/paste comment problems in body of method also.
+
+24) add a method to ExtensionPropertiesManager (getHandlers()) that would load the extensions if necessary and return the handlers. That would clean up a lot of duplicated code.
+	BARRY: DONE
+	
+25) ExtensionPropertiesManager.isApplicable(EObject) and isApplicable(IResource) should "break" or "return" after setting "result" to "true."
+	BARRY: DONE
+
+26)ExtensionPropertiesManager.isExtendedKey(Object) - do you need to walk through the handlers to ask this question or can you just look at the prefixes you're keeping track of in this class? Does IExtensionPropertiesHandler really need this method? Are you just asking the handler "Is this key one of yours?"?
+
+27) IExtensionPropertiesHandler.EXTENSION_NAMEPSACE_PREFIX misspelled
+	BARRY: Fixed
+
+28) ExtensionPropertiesManager - seems like an extended model namespace should have its own type and not be a just a String. Looks like you require the createExtendedModelNamespace(String) to be called but really IExtensionPropertiesHandlers don't need to call it since it only returns a String. If they try to create one without using this method what would happen?
+
+29) ExtensionPropertiesManager.getDisplayName(EObject) - code seems a bit weird. Why keep adding if you only care if there is only one. Once you find second one can't you just return null? Doesn't seem like you need "displayNames" to be a collections.
+	BARRY: Sure. Fixed
+	
+30) ExtendedModelObject fields should be marked "final" as they are required by the constructor and can't be modified.
+	BARRY: DONE
+
+31) PrefixName.setName(String) and setPrefix(String) should be deleted as they are not referenced and those fields are passed in at construction.
+	BARRY: DONE
+
+32) PrefixedName fields should be marked "final" as they are required by the constructor and can't be modified.
+	BARRY: DONE
+
+33) ExtensionUiPlugin.getResourceString(String) is not referenced and I thought there wasn't a bundle anyways???
+	BARRY: DONE - cleaned up/removed
+
+34) ExtensionUiPlugin.showErrorDialog(Shell, Exception) and ExtensionUiPlugin.getString(String) should be deleted. They are not referenced and implemented incorrectly since there is no bundle. Also, getOrCreateImage, getAnImage, stop can be deleted.
+	BARRY: DONE
+	
+35) ExtensionUiPlugin.testInsallPath should be deleted.
+	BARRY: DONE
+	
+36) EditExtensionPropertiesAction line 87: targetEObject can't be null here as NPE would've happened prior to this
+	BARRY: DONE
+	
+37) EditExtensionPropertiesAction.run() line 69 should need to check selection. Could run be called if there wasn't a selection?
+	BARRY: Good point. Fixed
+	
+38) EditExtensionPropertiesAction.editInTransaction(EObject) - why are you saving editor? why not just let user save editor?
+	BARRY: Good question. The method actually looks to see if model is dirty or not to start with. If NOT dirty, we want to auto-save
+	the editor to return to non-dirty state. We're doing this elsewhere in Designer. Need to re-evaluate. TODO:
+	
+39) EditExtensionPropertiesAction line 139 - don't need "else"
+	BARRY: FIXED
+	
+40) EditExtensionPropertiesAction.selectionHasExtendedProperties(ISelection) - you don't need to do the checks for "isAllEObjects" and "isSingleSelection." They are done by "getSelectedEObject." You just have to check for null after call that method.
+	BARRY: FIXED
+	
+41) EditExtensionPropertiesAction.getExtendedPropertiesName(ISelection) - again, no need to do the checks before calling "getSelectedEObject."
+	BARRY: FIXED
+	
+42) EditExtensionPropertiesDialog - no need for WIDTH and HEIGHT to be constants. Just inline the one place they are referenced.
+	BARRY: FIXED
+	
+43) EditExtensionPropertiesDialog - shouldn't need all the hard coded layout numbers. Size the viewer's table by the number of items you want visible. I have examples of this.
+	TODO: SEE DAN FOR EXAMPLE
+	
+44) ExtensionPropertyEditingSupport should extend PropertyEditingSupport. See TranslatorOverridePropertyEditingSupport for an example.
+========================================================================================================================
+UI
+
+45) tooltip does not add any information. just says what the property name and current value is. but I can already see that information without using the tooltip. I think translator tooltips will say if value is the default value. If it is a changed value I don't think I put a tooltip.
+
+46) be nice if the tooltip on the property name showed the description
+
+47) Properties Dialog - in the diagram I selected a column and displayed the properties dialog. I then selected a property called "Picklist Values" whose value was empty. The value had no image. Added a value and an image showed up in the value column. Deleted the value and the image did not disappear. All this while the dialog was visible. Redisplaying the dialog still had the image in the "Picklist Values" value column even though no value was there (which is how I started).
+
+48) Properties Dialog - found a column whose "Picklist Values" value was not empty but it had a comma separated list of values that was editable. This should be a ComboBox editor. (Case.Priority)
+	BARRY: FIXED THIS
+49) should "Picklist Values" value be editable? Are there properties that should not be editable?
+
+50) Properties dialog - Selected column (Account.BillingCountry) and change the "Calculated" property to "true." Selected a different property and displayed the extension properties dialog. Did not do anything and closed the dialog. Reselected the first column (Account.BillingCountry) and displayed extensions dialog but the "Calculated" property showed "false" as if I did not edit it.
+
+========================================================================================================================
+Salesforce
+
+51) SalesforceExtentionPropertiesHandler - get rid of the CND at top of file. Just reference the CND file. Don't want to have to maintain this.
+
+    * Was assuming this was temporary "comment" but needed an example of what the CND would be stored like in a model file
+
+52) SalesforceExtentionPropertiesHandler.DISPLAY_NAME - should this be localized?
+
+    * yes
+
+53) SalesforceExtentionPropertiesHandler - why is the CND hardcoded as a constant? What is the purpose of the file then?
+
+    * Maybe doesn't need to be a constant if we go the "CND file reference in plugin.xml contribution" route.
+
+54) SalesforceExtentionPropertiesHandler - seems like you wouldn't need any of the constants. It could all be data-driven by reading in the CND file. Thinking this out â€¦ maybe the extension point could list the CND files the handler is handling. Then the framework (extension manager) could read in all the CNDs.
+
+    * CND format can't handle the actual property key names for the SF use-case. So this class needed some extra "mapping" to get from the CND to the actual "Key" names:
+    * Example:  Supports ID Lookup == supportsIDLookup
+    * When we implement "custom MED's" we can enforce a naming convention. Maybe allow "Supports ID Lookup" but we convert to "supportsIdLookup".  Was just going to be too hard to create conversion logic to handle SF.
+
+55) RelationalModelgenerator - news up a SalesforceExtentionPropertiesHandler each time "createRelationalModel" is called. Creating the handler creates a 3 Maps of properties that I think are constants so really only need a static version of each Map.
+
+    * Probably add a method to ExtensionPropertiesManager to get a handler with the Salesforce ID?
+    BARRY: DONE
+
+56) RelationalModelgenerator - seems like this should have to go get the handler from the extension manager instead of constructing a new one each time. First time it is asked for the framework could load the CNDs and create the property definitions, etc.
+
+    * (See 55 above)
+
+57) RelationalModelgenerator - why does "addTableToModel" only set extension properties if they are "true?" Shouldn't you also set to "false?" If you have to set them all it would be better to get the annotation tags from the helper and then set them all at once. This class actually has the Annotation.
+
+    * Since the "default" values are NOT persisted in the XMI model, we don't set the "false" values.
+    * ALL values ARE indexed at build time via RuntimeAdapter
+    * Current "one addProperty()" at a time was to minimize the changes to RelationalModelgenerator. I think now we understand enough to cache up a set of properties and perform a single addProperties(EObject target, Properties props) call.
+	BARRY: Now caching up a property list and calling handler.save(target, props) method.
+	BARRY: Was able to remove a number of methods from handler
+	
+58) RelationalModelgenerator - same comments as previous for "addColumnsToTable"
+
+    * (see 57 above)
+
+59) RelationalModelgenerator - general comment: I would check to see if monitor is canceled before any other check. Seems like that is a quick short circuit.
+
+    * Good catch
+
+60) RelationalModelgenerator.setColumnType line 320 - won't there always be a dtMgr? You don't do null check in other methods.
+
+    * I'd say yes, if NOT then there is a bigger problem afoot.
+    BARRY: Removed NULL check
+
+61) RelationalModelgenerator - seems like this should be using the PropertyDefinition ID to set properties. The handler could update tags when saved.
+
+    * Nice. Looks like I can use my ModelObjectExtendedProperty's in RelationalModelgenerator, then call handler.save(EObject target, Collection<MOEP> props)
+    BARRY: DONE : SEE 57 & 58 Above
+
+62) ExtensionManager - has the same constants defined as in the handler
+
+    * Looks like we can get rid of this class by transferring couple of constants to the Handler or plugin constants file
+    BARRY:  DELETED along with Messages.java & messages.properties
+
+63) ExtensionManager - in fact, only references to this class are to the constants. Delete. But sure seems like there is a lot going on here. Like creating the SF.xmi model.
+
+    * (See 62 above)
+
+========================================================================================================================

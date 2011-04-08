@@ -185,15 +185,15 @@ public class SalesforceImportWizardManager {
                 ResourceAnnotationHelper resourceHelper = new ResourceAnnotationHelper();
                 resourceHelper.setProperty(
                 		modelResource, 
-                		SalesforceExtentionPropertiesHandler.EXTENSION_FULL_ID_KEY, 
-                		SalesforceExtentionPropertiesHandler.MODEL_EXTENSION_ID);
+                		SalesforceConstants.EXTENSION_FULL_ID_KEY, 
+                		SalesforceConstants.MODEL_EXTENSION_ID);
                 resourceHelper.setProperty(
                 		modelResource, 
-                		SalesforceExtentionPropertiesHandler.EXTENSION_FULL_NAMESPACE_KEY, 
-                		SalesforceExtentionPropertiesHandler.NAMESPACE);
+                		SalesforceConstants.EXTENSION_FULL_NAMESPACE_KEY, 
+                		SalesforceConstants.NAMESPACE);
                 resourceHelper.setProperty(
                 		modelResource, 
-                		SalesforceExtentionPropertiesHandler.EXTENSION_FULL_CND_KEY, 
+                		SalesforceConstants.EXTENSION_FULL_CND_KEY, 
                 		SalesforceExtentionPropertiesHandler.SF_CND_STRING);
                 try {
                     monitor.subTask(Messages.getString("SalesforceImportWizardManager.saving.model")); //$NON-NLS-1$

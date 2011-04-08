@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.extension.manager.ExtendedModelObject;
 import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.dialogs.EditExtensionPropertiesDialog;
 
@@ -35,6 +36,13 @@ import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
+/**
+ * Action designed to allow editing of the new Model Extension properties based on the {@link IExtensionPropertiesHandler} framework
+ * 
+ * The action is intended to be available whenever the selected object contains a model extension type AND the particular object
+ * allows extended properties. (See isApplicable() method)
+ * 
+ */
 public class EditExtensionPropertiesAction  extends SortableSelectionAction  {
 
     /**
@@ -65,13 +73,8 @@ public class EditExtensionPropertiesAction  extends SortableSelectionAction  {
      */
     @Override
     public void run() {
-        EObject targetEObject = null;
-        if (!getSelection().isEmpty()) {
-        	targetEObject = SelectionUtilities.getSelectedEObject(getSelection());
-        	editInTransaction(targetEObject);
-        }
-        
-
+        EObject targetEObject = SelectionUtilities.getSelectedEObject(getSelection());
+        editInTransaction(targetEObject);
     }
     
     private void editInTransaction(EObject targetEObject) {
@@ -84,19 +87,17 @@ public class EditExtensionPropertiesAction  extends SortableSelectionAction  {
             if (editor != null) {
                 boolean isDirty = editor.isDirty();
 
-                if( targetEObject != null) {
-                	ExtendedModelObject extendedMO = ExtensionPropertiesManager.getExtendedModelObject(targetEObject);
-                	
-                	if( extendedMO != null ) {
-        	        	EditExtensionPropertiesDialog dialog = new EditExtensionPropertiesDialog(getShell(), extendedMO);
-        	        	
-        	        	if( dialog.open() == Window.OK )  {
-        	        		if( dialog.isChanged() ) {
-        							extendedMO.saveChanges();
-        	        		}
-        	        	}
-                	}
-                }
+            	ExtendedModelObject extendedMO = ExtensionPropertiesManager.getExtendedModelObject(targetEObject);
+            	
+            	if( extendedMO != null ) {
+    	        	EditExtensionPropertiesDialog dialog = new EditExtensionPropertiesDialog(getShell(), extendedMO);
+    	        	
+    	        	if( dialog.open() == Window.OK )  {
+    	        		if( dialog.isChanged() ) {
+    							extendedMO.saveChanges();
+    	        		}
+    	        	}
+            	}
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());
@@ -136,32 +137,27 @@ public class EditExtensionPropertiesAction  extends SortableSelectionAction  {
     			this.setText(NLS.bind(Messages.EditExtensionPropertiesAction_title, null));
     		}
     		return true;
-    	} else {
-    		
-    		return false;
     	}
+    	
+    	return false;
     }
 
     private boolean selectionHasExtendedProperties( ISelection theSelection ) {
-    	if( !SelectionUtilities.isAllEObjects(theSelection) ) {
-    		return false;
-    	}
-        if( !SelectionUtilities.isSingleSelection(theSelection)) {
-        	return false;
+        EObject targetEObject = SelectionUtilities.getSelectedEObject(theSelection);
+        if(  targetEObject != null ) {
+        	return ExtensionPropertiesManager.isApplicable(targetEObject);
         }
         
-        EObject targetEObject = SelectionUtilities.getSelectedEObject(theSelection);
-        return ExtensionPropertiesManager.isApplicable(targetEObject); //  hasExtendedProperties(targetEObject);
+        return false;
     }
     
     private String getExtendedPropertiesName(ISelection theSelection) {
-    	if( !SelectionUtilities.isSingleSelection(theSelection) &&
-        		!SelectionUtilities.isAllEObjects(theSelection) ) {
-        	return null;
+        EObject targetEObject = SelectionUtilities.getSelectedEObject(theSelection);
+        if(  targetEObject != null ) {
+        	return ExtensionPropertiesManager.getDisplayName(targetEObject);
         }
         
-        EObject targetEObject = SelectionUtilities.getSelectedEObject(theSelection);
-        return ExtensionPropertiesManager.getDisplayName(targetEObject);
+        return null;
     }
 
     protected Shell getShell() {

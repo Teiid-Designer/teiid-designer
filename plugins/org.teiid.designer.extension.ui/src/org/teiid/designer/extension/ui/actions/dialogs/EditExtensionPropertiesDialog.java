@@ -42,9 +42,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.widget.Dialog;
 
 public class EditExtensionPropertiesDialog  extends Dialog {
-	private static final int WIDTH = 700;
-    private static final int HEIGHT = 400;
-    
+
     private ExtendedModelObject extendedModelObject;
     private ExtensionPropertyEditingSupport editingSupport;
     private String objectName;
@@ -75,8 +73,8 @@ public class EditExtensionPropertiesDialog  extends Dialog {
         gridLayout.numColumns = 1;
 
         GridData gd = new GridData(GridData.FILL_BOTH);
-        gd.widthHint = WIDTH;
-        gd.heightHint = HEIGHT;
+        gd.widthHint = 700;
+        gd.heightHint = 400;
         mainPanel.setLayoutData(gd);
 
         Group messageGroup = WidgetFactory.createGroup(mainPanel, NLS.bind(Messages.EditExtensionPropertiesDialog_messageGroupLabel, this.objectName) , GridData.FILL_BOTH, 1, 1);
@@ -292,7 +290,7 @@ public class EditExtensionPropertiesDialog  extends Dialog {
             	if( tempValue.length() > 25 ) {
             		tempValue = tempValue.substring(0, 25) + "..."; //$NON-NLS-1$
             	}
-            	return NLS.bind(Messages.EditExtensionPropertiesDialog_defaultTooltip, property.getDefinition().getDisplayName(), tempValue);
+            	return NLS.bind(Messages.EditExtensionPropertiesDialog_valueTooltip, property.getDefinition().getDisplayName(), tempValue);
             }
 
             // default value is being used

@@ -32,7 +32,6 @@ import org.teiid.designer.extension.cnd.CndPropertyDefinition;
 import org.teiid.designer.extension.cnd.CndTypeDefinition;
 import org.teiid.designer.extension.manager.ExtendedModelConstants;
 import org.teiid.designer.extension.manager.ExtendedModelObject;
-import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
 import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
 import org.teiid.designer.extension.manager.ModelExtensionDefinition;
 import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
@@ -45,6 +44,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
+import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants;
 
 /**
  * 	This class assumes that a model has an Annotation on it's ModelAnnotation that contains the following key/value tag
@@ -71,58 +71,7 @@ import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
  *               - salesforce:picklistValues (string) multiple&#xa;"/>
  *
  */
-public class SalesforceExtentionPropertiesHandler implements IExtensionPropertiesHandler {
-
-	public static final String MODEL_EXTENSION_ID = "org.teiid.designer.model.extension.salesforce"; //$NON-NLS-1$
-	public static final String NAMESPACE = "http://org.teiid.designer/metamodels/Salesforce"; //$NON-NLS-1$
-	public static final String ID = "salesforce"; //$NON-NLS-1$
-	public static final String DISPLAY_NAME = "Salesforce"; //$NON-NLS-1$
-	
-	// Need to construct unique ID : org.teiid.designer.model.extension:salesforce
-	public static final String EXTENSION_FULL_ID_KEY = EXTENSION_ID_PREFIX + ID;
-	public static final String EXTENSION_FULL_CND_KEY = EXTENSION_CND_PREFIX + ID;
-	public static final String EXTENSION_FULL_NAMESPACE_KEY = EXTENSION_NAMEPSACE_PREFIX + ID;
-	private static char CR = '\n';
-	private static final String TABLE_NODE_TYPE_NAME = "salesforce:tableCapabilities"; //$NON-NLS-1$
-	private static final String COLUMN_NODE_TYPE_NAME = "salesforce:columnCapabilities"; //$NON-NLS-1$
-
-	static final String EXT_PROP_NAMESPACE_PREFIX = ExtensionPropertiesManager.createExtendedModelNamespace(ID);
-
-	static final String TABLE_SUPPORTS_CREATE = "Supports Create"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_DELETE = "Supports Delete"; //$NON-NLS-1$
-	static final String TABLE_CUSTOM = "Custom"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_LOOKUP = "Supports ID Lookup"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_MERGE = "Supports Merge"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_QUERY = "Supports Query"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_REPLICATE = "Supports Replicate"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_RETRIEVE = "Supports Retrieve"; //$NON-NLS-1$
-	static final String TABLE_SUPPORTS_SEARCH = "Supports Search"; //$NON-NLS-1$
-	
-	static final String COLUMN_DEFAULTED = "Defaulted on Create"; //$NON-NLS-1$
-	static final String COLUMN_CALCULATED = "Calculated"; //$NON-NLS-1$
-	static final String COLUMN_PICKLIST_VALUES = "Picklist Values"; //$NON-NLS-1$
-	
-	static final String SF_SUPPORTS_CREATE = ID + ":supportsCreate"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_DELETE = ID + ":supportsDelete"; //$NON-NLS-1$
-	static final String SF_CUSTOM = ID + ":custom"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_LOOKUP = ID + ":supportsIDLookup"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_MERGE = ID + ":supportsMerge"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_QUERY = ID + ":supportsQuery"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_REPLICATE = ID + ":supportsReplicate"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_RETRIEVE = ID + ":supportsRetrieve"; //$NON-NLS-1$
-	static final String SF_SUPPORTS_SEARCH = ID + ":supportsSearch"; //$NON-NLS-1$
-	static final String SF_DEFAULTED = ID + ":defaultedOnCreate"; //$NON-NLS-1$
-	static final String SF_CALCULATED = ID + ":calculated"; //$NON-NLS-1$
-	static final String SF_PICKLIST_VALUES = ID + ":picklistValues"; //$NON-NLS-1$
-	
-	static final String FALSE_STR = Boolean.FALSE.toString();
-	static final String[] ALLOWED_BOOLEAN_VALUES = new String[] { Boolean.TRUE.toString(), Boolean.FALSE.toString() };
-	static final String BOOLEAN_TYPE_STR = "(boolean)"; //$NON-NLS-1$
-	static final String STRING_TYPE_STR = "(string)"; //$NON-NLS-1$
-	static final String FALSE_DEFAULT_STR = "'false'"; //$NON-NLS-1$
-	static final char SP = ' ';
-	static final char EQ = '=';
-	static final char DASH = '-';
+public class SalesforceExtentionPropertiesHandler implements IExtensionPropertiesHandler, SalesforceConstants {
 	
 	private static final ModelObjectAnnotationHelper helper = new ModelObjectAnnotationHelper();
 	private static final ResourceAnnotationHelper resourceHelper = new ResourceAnnotationHelper();
@@ -146,48 +95,21 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 			"<relational='http://www.metamatrix.com/metamodels/Relational'>" + CR + CR + //$NON-NLS-1$
 			
 			"[salesforce:tableCapabilities] > relational:baseTable" + CR + //$NON-NLS-1$
-			DASH + SP + SF_SUPPORTS_CREATE + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_DELETE + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_CUSTOM + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_LOOKUP + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_MERGE + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_QUERY + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_REPLICATE + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_RETRIEVE + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_SUPPORTS_SEARCH + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR + CR +
+			DASH + SP + CND.SUPPORTS_CREATE + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_DELETE + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.CUSTOM + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_LOOKUP + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_MERGE + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_QUERY + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_REPLICATE + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_RETRIEVE + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.SUPPORTS_SEARCH + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR + CR +
 			
 			"[salesforce:columnCapabilities] > relational:column" + CR + //$NON-NLS-1$
-			DASH + SP + SF_DEFAULTED + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_CALCULATED + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_CUSTOM + SP + BOOLEAN_TYPE_STR + SP + EQ + FALSE_DEFAULT_STR + CR +
-			DASH + SP + SF_PICKLIST_VALUES + SP + STRING_TYPE_STR + SP + "multiple" + CR; //$NON-NLS-1$
-	
-//	/**
-//	 * The following String defines a constant to store the mapping between the CND table property name and the actual
-//	 * Name segment of the property stored in the tag. Since CND properties have no inherent Description or Display
-//	 * Name, we needed a way to persist and find the Display Name
-//	 */
-//	public static final String SF_TABLE_PROPERTIES_MAP = 
-//		SF_SUPPORTS_CREATE + DELIM + TABLE_SUPPORTS_CREATE + DELIM +
-//		SF_SUPPORTS_DELETE + DELIM + TABLE_SUPPORTS_DELETE + DELIM +
-//		SF_CUSTOM + DELIM + TABLE_CUSTOM + DELIM +
-//		SF_SUPPORTS_LOOKUP + DELIM + TABLE_SUPPORTS_LOOKUP + DELIM +
-//		SF_SUPPORTS_MERGE + DELIM + TABLE_SUPPORTS_MERGE + DELIM +
-//		SF_SUPPORTS_QUERY + DELIM + TABLE_SUPPORTS_QUERY + DELIM +
-//		SF_SUPPORTS_REPLICATE + DELIM + TABLE_SUPPORTS_REPLICATE + DELIM +
-//		SF_SUPPORTS_RETRIEVE + DELIM + TABLE_SUPPORTS_RETRIEVE + DELIM +
-//		SF_SUPPORTS_SEARCH + DELIM + TABLE_SUPPORTS_SEARCH;
-//
-//	/**
-//	 * The following String defines a constant to store the mapping between the CND column property name and the actual
-//	 * Name segment of the property stored in the tag. Since CND properties have no inherent Description or Display
-//	 * Name, we needed a way to persist and find the Display Name
-//	 */
-//	public static final String SF_COLUMN_PROPERTIES_MAP = 
-//		SF_DEFAULTED + DELIM + COLUMN_DEFAULTED + DELIM +
-//		SF_CALCULATED + DELIM + COLUMN_CALCULATED + DELIM +
-//		SF_DEFAULTED + DELIM + TABLE_CUSTOM + DELIM +
-//		SF_PICKLIST_VALUES + DELIM + COLUMN_PICKLIST_VALUES;
+			DASH + SP + CND.DEFAULTED + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.CALCULATED + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.CUSTOM + SP + CND.BOOLEAN_TYPE_STR + SP + EQ + CND.FALSE_DEFAULT_STR + CR +
+			DASH + SP + CND.PICKLIST_VALUES + SP + CND.STRING_TYPE_STR + SP + "multiple" + CR; //$NON-NLS-1$
 	
 	public SalesforceExtentionPropertiesHandler() {
 		super();
@@ -196,35 +118,35 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 
 	private void initialize() {
 		propertyNameMap = new HashMap<String, String>();
-		propertyNameMap.put(SF_CUSTOM, TABLE_CUSTOM);
-		propertyNameMap.put(SF_SUPPORTS_CREATE, TABLE_SUPPORTS_CREATE);
-		propertyNameMap.put(SF_SUPPORTS_DELETE, TABLE_SUPPORTS_DELETE);
-		propertyNameMap.put(SF_SUPPORTS_LOOKUP, TABLE_SUPPORTS_LOOKUP);
-		propertyNameMap.put(SF_SUPPORTS_MERGE, TABLE_SUPPORTS_MERGE);
-		propertyNameMap.put(SF_SUPPORTS_QUERY, TABLE_SUPPORTS_QUERY);
-		propertyNameMap.put(SF_SUPPORTS_REPLICATE, TABLE_SUPPORTS_REPLICATE);
-		propertyNameMap.put(SF_SUPPORTS_RETRIEVE, TABLE_SUPPORTS_RETRIEVE);
-		propertyNameMap.put(SF_SUPPORTS_SEARCH, TABLE_SUPPORTS_SEARCH);
-		propertyNameMap.put(SF_DEFAULTED, COLUMN_DEFAULTED);
-		propertyNameMap.put(SF_CALCULATED, COLUMN_CALCULATED);
-		propertyNameMap.put(SF_PICKLIST_VALUES, COLUMN_PICKLIST_VALUES);
+		propertyNameMap.put(CND.CUSTOM, SF_Table.CUSTOM);
+		propertyNameMap.put(CND.SUPPORTS_CREATE, SF_Table.SUPPORTS_CREATE);
+		propertyNameMap.put(CND.SUPPORTS_DELETE, SF_Table.SUPPORTS_DELETE);
+		propertyNameMap.put(CND.SUPPORTS_LOOKUP, SF_Table.SUPPORTS_LOOKUP);
+		propertyNameMap.put(CND.SUPPORTS_MERGE, SF_Table.SUPPORTS_MERGE);
+		propertyNameMap.put(CND.SUPPORTS_QUERY, SF_Table.SUPPORTS_QUERY);
+		propertyNameMap.put(CND.SUPPORTS_REPLICATE, SF_Table.SUPPORTS_REPLICATE);
+		propertyNameMap.put(CND.SUPPORTS_RETRIEVE, SF_Table.SUPPORTS_RETRIEVE);
+		propertyNameMap.put(CND.SUPPORTS_SEARCH, SF_Table.SUPPORTS_SEARCH);
+		propertyNameMap.put(CND.DEFAULTED, SF_Column.DEFAULTED);
+		propertyNameMap.put(CND.CALCULATED, SF_Column.CALCULATED);
+		propertyNameMap.put(CND.PICKLIST_VALUES, SF_Column.PICKLIST_VALUES);
 		
 		
 		defaultTableProperties = new Properties();
-		defaultTableProperties.put(TABLE_CUSTOM, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_CREATE, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_DELETE, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_LOOKUP, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_MERGE, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_QUERY, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_REPLICATE, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_RETRIEVE, FALSE_STR);
-		defaultTableProperties.put(TABLE_SUPPORTS_SEARCH, FALSE_STR);
+		defaultTableProperties.put(SF_Table.CUSTOM, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_CREATE, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_DELETE, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_LOOKUP, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_MERGE, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_QUERY, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_REPLICATE, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_RETRIEVE, FALSE_STR);
+		defaultTableProperties.put(SF_Table.SUPPORTS_SEARCH, FALSE_STR);
 		
 		defaultColumnProperties = new Properties();
-		defaultColumnProperties.put(COLUMN_CALCULATED, FALSE_STR);
-		defaultColumnProperties.put(TABLE_CUSTOM, FALSE_STR);
-		defaultColumnProperties.put(COLUMN_DEFAULTED, FALSE_STR);
+		defaultColumnProperties.put(SF_Column.CALCULATED, FALSE_STR);
+		defaultColumnProperties.put(SF_Table.CUSTOM, FALSE_STR);
+		defaultColumnProperties.put(SF_Column.DEFAULTED, FALSE_STR);
 	}
 
 
@@ -331,43 +253,24 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		this.cndWasParsed = true;
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getID()
+     */
 	public String getID() {
 		return ID;
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getDisplayName()
+     */
 	public String getDisplayName() {
 		return DISPLAY_NAME;
 	}
 
-
-	
-	public void setTableQueryable(BaseTable table, Boolean bool) throws ModelerCoreException {
-		// need to end up with the following tag:
-		// <tags xmi:uuid="mmuuid:bf276c12-b07c-4473-8764-5ab7b14ed639" key="extension:sf:Supports Query" value="true"/>
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_QUERY, bool.toString());
-	}
-
-	public void setTableDeletable(BaseTable table, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_DELETE, bool.toString());		
-	}
-	
-	public void setTableCreatable(BaseTable table, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_CREATE, bool.toString());	
-	}
-	
-	public void setTableSearchable(BaseTable table, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_SEARCH, bool.toString());		
-	}
-	
-	public void setTableReplicate(BaseTable table, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_REPLICATE, bool.toString());;		
-	}
-	
-	public void setTableRetrieve(BaseTable table, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(table, EXT_PROP_NAMESPACE_PREFIX + TABLE_SUPPORTS_RETRIEVE, bool.toString());		
-	}
-
-	
 	/**
 	 * Set the value of the Picklist Values column attribute.
 	 * @param table
@@ -383,21 +286,14 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 			}	
 		}
 		 
-		helper.addProperty(column, EXT_PROP_NAMESPACE_PREFIX + COLUMN_PICKLIST_VALUES, picklistValues.toString());
-	}
-
-	public void setColumnCustom(Column column, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(column, EXT_PROP_NAMESPACE_PREFIX + TABLE_CUSTOM, bool.toString());	
-	}
-
-	public void setColumnCalculated(Column column, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(column, EXT_PROP_NAMESPACE_PREFIX + COLUMN_CALCULATED, bool.toString());	
-	}
-
-	public void setColumnDefaultedOnCreate(Column column, Boolean bool) throws ModelerCoreException {
-		helper.addProperty(column, EXT_PROP_NAMESPACE_PREFIX + COLUMN_DEFAULTED, bool.toString());	
+		helper.addProperty(column, EXT_PROP_NAMESPACE_PREFIX + SF_Column.PICKLIST_VALUES, picklistValues.toString());
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isExtendedKey(String)
+     */
 	public boolean isExtendedKey(String key) {
 		return key != null && key.startsWith(EXT_PROP_NAMESPACE_PREFIX);
 	}
@@ -409,22 +305,27 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		return null;
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getMissingDefaultProperties(EObject, Properties)
+     */
 	public Properties getMissingDefaultProperties(EObject target, Properties props) {
 		Properties missingProps = new Properties();
 		if( target instanceof BaseTable ) {
-			if( !props.containsKey(TABLE_CUSTOM) ) missingProps.put(TABLE_CUSTOM, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_CREATE) ) missingProps.put(TABLE_SUPPORTS_CREATE, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_DELETE) ) missingProps.put(TABLE_SUPPORTS_DELETE, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_LOOKUP) ) missingProps.put(TABLE_SUPPORTS_LOOKUP, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_MERGE) ) missingProps.put(TABLE_SUPPORTS_MERGE, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_QUERY) ) missingProps.put(TABLE_SUPPORTS_QUERY, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_REPLICATE) ) missingProps.put(TABLE_SUPPORTS_REPLICATE, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_RETRIEVE) ) missingProps.put(TABLE_SUPPORTS_RETRIEVE, FALSE_STR);
-			if( !props.containsKey(TABLE_SUPPORTS_SEARCH) ) missingProps.put(TABLE_SUPPORTS_SEARCH, FALSE_STR);
+			if( !props.containsKey(SF_Table.CUSTOM) ) missingProps.put(SF_Table.CUSTOM, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_CREATE) ) missingProps.put(SF_Table.SUPPORTS_CREATE, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_DELETE) ) missingProps.put(SF_Table.SUPPORTS_DELETE, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_LOOKUP) ) missingProps.put(SF_Table.SUPPORTS_LOOKUP, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_MERGE) ) missingProps.put(SF_Table.SUPPORTS_MERGE, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_QUERY) ) missingProps.put(SF_Table.SUPPORTS_QUERY, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_REPLICATE) ) missingProps.put(SF_Table.SUPPORTS_REPLICATE, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_RETRIEVE) ) missingProps.put(SF_Table.SUPPORTS_RETRIEVE, FALSE_STR);
+			if( !props.containsKey(SF_Table.SUPPORTS_SEARCH) ) missingProps.put(SF_Table.SUPPORTS_SEARCH, FALSE_STR);
 		} else if( target instanceof Column ) {
-			if( !props.containsKey(COLUMN_CALCULATED) ) missingProps.put(COLUMN_CALCULATED, FALSE_STR);
-			if( !props.containsKey(TABLE_CUSTOM) ) missingProps.put(TABLE_CUSTOM, FALSE_STR);
-			if( !props.containsKey(COLUMN_DEFAULTED) ) missingProps.put(COLUMN_DEFAULTED, FALSE_STR);
+			if( !props.containsKey(SF_Column.CALCULATED) ) missingProps.put(SF_Column.CALCULATED, FALSE_STR);
+			if( !props.containsKey(SF_Table.CUSTOM) ) missingProps.put(SF_Table.CUSTOM, FALSE_STR);
+			if( !props.containsKey(SF_Column.DEFAULTED) ) missingProps.put(SF_Column.DEFAULTED, FALSE_STR);
 			//if( !props.containsKey(COLUMN_PICKLIST_VALUES) ) missingProps.put(COLUMN_PICKLIST_VALUES, StringUtil.Constants.EMPTY_STRING);
 		}
 		
@@ -443,6 +344,12 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		return emptyProperties;
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getExtendedProperties(EObject)
+     */
+	@Override
 	public Properties getExtendedProperties(EObject target) throws ModelerCoreException {
 		if( target == null ) {
 			return null;
@@ -507,6 +414,11 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		return moepMap.values();
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getExtendedModelObject(EObject)
+     */
 	public ExtendedModelObject getExtendedModelObject(final EObject target ) throws ModelerCoreException {
 		Properties props = getExtendedProperties(target);
 		ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(target);
@@ -542,6 +454,11 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		return false;
 	}
 	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isApplicable(EObject)
+     */
 	public boolean isApplicable(EObject target)  {
 		ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(target);
 		if( modelResource != null ) {
@@ -557,7 +474,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		return false;
 	}
 	
-	public boolean isApplicable(IResource resource)  {
+	public static boolean isSaleforceResource(final IResource resource) {
 		if( resource instanceof IFile ) {
 			try {
 				ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)resource);
@@ -571,7 +488,18 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 				e.printStackTrace();
 			}
 		}
+		
 		return false;
+	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isApplicable(IResource)
+     */
+	@Override
+	public boolean isApplicable(IResource resource)  {
+		return isSaleforceResource(resource);
 	}
 	
     public PropertyDefinition[] getExtendedPropertyDefinitions(EObject target ) throws ModelWorkspaceException {
@@ -590,7 +518,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
         return null;
     }
     
-    private PropertyDefinition getPropertyDefinition(EObject target, String key) throws ModelWorkspaceException {
+    public PropertyDefinition getPropertyDefinition(EObject target, String key) throws ModelWorkspaceException {
     	for( PropertyDefinition propDef : getExtendedPropertyDefinitions(target) ) {
     		if( propDef.getId().equals(key) ) {
     			return propDef;
@@ -600,6 +528,11 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     	return null;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#save(EObject, Collection)
+     */
 	@Override
 	public void save(EObject target, Collection<ModelObjectExtendedProperty> properties) throws ModelerCoreException {
 		// Clear/remove old properties

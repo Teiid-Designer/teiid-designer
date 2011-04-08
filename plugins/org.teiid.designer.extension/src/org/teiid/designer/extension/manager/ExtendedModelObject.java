@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.extension.manager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IResource;
@@ -20,15 +21,15 @@ import com.metamatrix.modeler.core.ModelerCoreException;
  */
 public class ExtendedModelObject {
 	
-	private Collection<ModelObjectExtendedProperty> properties;
+	private final Collection<ModelObjectExtendedProperty> properties;
 	
-	private EObject eObject;
+	private final EObject eObject;
 	
-	private String name;
+	private final String name;
 	
-	private IResource resource;
+	private final IResource resource;
 	
-	private IExtensionPropertiesHandler extensionPropertiesHandler;
+	private final IExtensionPropertiesHandler extensionPropertiesHandler;
 
 	/**
 	 * Primary constructor for {@link ExtendedModelObject}
@@ -40,10 +41,10 @@ public class ExtendedModelObject {
 	 * @param properties the list of property objects
 	 */
 	public ExtendedModelObject(IExtensionPropertiesHandler extensionPropertiesHandler, 
-								IResource resource, 
-								EObject eObject, 
-								String name, 
-								Collection<ModelObjectExtendedProperty> properties) {
+			IResource resource, 
+			EObject eObject, 
+			String name, 
+			Collection<ModelObjectExtendedProperty> properties) {
 		super();
 		this.extensionPropertiesHandler = extensionPropertiesHandler;
 		this.resource = resource;
@@ -89,6 +90,17 @@ public class ExtendedModelObject {
 	 * @throws ModelerCoreException
 	 */
 	public void saveChanges() throws ModelerCoreException {
+		// Check properties for null values
+		Collection<ModelObjectExtendedProperty> props = new ArrayList<ModelObjectExtendedProperty>(this.properties.size());
+		for( ModelObjectExtendedProperty prop : this.properties ) {
+			if( prop.getValue() != null && prop.getValue().length() > 0 ) {
+				props.add(prop);
+			} else {
+				if( prop.getDefinition().getDefaultValue() != null ) {
+					props.add(prop);
+				}
+			}
+		}
 		this.extensionPropertiesHandler.save(eObject, this.properties);
 	}
 	

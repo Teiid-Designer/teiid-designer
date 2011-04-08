@@ -8,50 +8,18 @@
 
 package org.teiid.designer.extension.ui;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 
 import com.metamatrix.core.PluginUtil;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.LoggingUtil;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
 
 
 public class ExtensionUiPlugin  extends AbstractUiPlugin implements ExtensionUiConstants {
-
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(ExtensionUiPlugin.class);
-
-    /**
-     * Returns the string from the plugin's resource bundle, or 'key' if not found.
-     */
-    public static String getResourceString( String key ) {
-        ResourceBundle bundle = ExtensionUiPlugin.getDefault().getResourceBundle();
-        try {
-            return (bundle != null) ? bundle.getString(key) : key;
-        } catch (MissingResourceException e) {
-            return key;
-        }
-    }
-
-    private static String getString( String theKey ) {
-        return UTIL.getStringOrKey(PREFIX + theKey);
-    }
-
-    /**
-     * Used in non-Eclipse environments to identify the install location of the <code>modeler.transformation</code> plugin.
-     * <strong>To be used for testing purposes only.</strong>
-     * 
-     * @since 6.0.0
-     */
-    public String testInstallPath;
 
     // The shared instance.
     private static ExtensionUiPlugin plugin;
@@ -62,14 +30,6 @@ public class ExtensionUiPlugin  extends AbstractUiPlugin implements ExtensionUiC
     public static ExtensionUiPlugin getDefault() {
         return plugin;
     }
-
-    public static void showErrorDialog( Shell shell,
-                                        Exception error ) {
-        MessageDialog.openError(shell, getString("errorDialogTitle"), error.getMessage()); //$NON-NLS-1$
-    }
-
-    // Resource bundle.
-    private ResourceBundle resourceBundle;
 
     /**
      * The constructor.
@@ -107,13 +67,6 @@ public class ExtensionUiPlugin  extends AbstractUiPlugin implements ExtensionUiC
     @Override
     public PluginUtil getPluginUtil() {
         return UTIL;
-    }
-
-    /**
-     * Returns the plugin's resource bundle,
-     */
-    public ResourceBundle getResourceBundle() {
-        return resourceBundle;
     }
 
     /**

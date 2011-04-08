@@ -10,8 +10,6 @@ Export-Package: org.teiid.designer.extension,
  org.teiid.designer.extension.cnd,
  org.teiid.designer.extension.manager
 Require-Bundle: org.eclipse.core.runtime,
- org.jdom,
- teiid_embedded_query,
  org.eclipse.core.resources,
  org.teiid.core.designer,
  org.teiid.designer.modeshape,

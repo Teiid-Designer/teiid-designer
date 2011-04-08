@@ -15,7 +15,7 @@ Require-Bundle: org.teiid.designer.compare,
  org.eclipse.emf.ecore,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
- org.teiid.designer.modeshape;bundle-version="7.4.0"
+ org.teiid.designer.modeshape
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

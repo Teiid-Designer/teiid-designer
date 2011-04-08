@@ -14,15 +14,15 @@ import org.teiid.designer.extension.Messages;
 /**
  * Utility class to parse/hold simple name-space prefixed string names
  * 
- * Example:  sf:tableCapabilities can be passed in the fullName constructor or via ("sf", "tableCapabilites")
+ * Example:  salesforce:tableCapabilities can be passed in the fullName constructor or via ("salesforce", "tableCapabilites")
  * constructor.
  * 
  *
  */
 public class PrefixedName {
-	private String prefix;
+	private final String prefix;
 	
-	private String name;
+	private final String name;
 	
 	public PrefixedName(String prefix, String name) {
 		super();
@@ -32,10 +32,6 @@ public class PrefixedName {
 	
 	public PrefixedName(String fullName) {
 		super();
-		parseFullName(fullName);
-	}
-	
-	private void parseFullName(String fullName) {
 		int semiColonIndex = fullName.indexOf(':');
 		
 		if( semiColonIndex > -1 ) {
@@ -46,20 +42,20 @@ public class PrefixedName {
 		}
 	}
 
+	/**
+	 * The prefix
+	 * @return prefix the prefix
+	 */
 	public String getPrefix() {
 		return prefix;
 	}
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
+	/**
+	 * The name
+	 * @return name the name value
+	 */
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
