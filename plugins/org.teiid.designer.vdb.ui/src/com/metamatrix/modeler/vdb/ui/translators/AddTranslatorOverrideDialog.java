@@ -201,12 +201,11 @@ public class AddTranslatorOverrideDialog extends MessageDialog {
 
         this.messageLabel.setText(msg);
         GridDataFactory
-		.fillDefaults()
-		.align(SWT.FILL, SWT.BEGINNING)
-		.grab(true, false)
-		.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
-				SWT.DEFAULT).applyTo(messageLabel);
-//        this.messageLabel.pack();
+			.fillDefaults()
+			.align(SWT.FILL, SWT.BEGINNING)
+			.grab(true, false)
+			.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
+					SWT.DEFAULT).applyTo(messageLabel);
     }
 
     private String validateName() {
