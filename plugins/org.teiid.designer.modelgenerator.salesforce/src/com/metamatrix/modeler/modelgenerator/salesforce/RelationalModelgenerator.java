@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPropertiesManager;
 import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
 
 import com.metamatrix.metamodels.core.CoreFactory;

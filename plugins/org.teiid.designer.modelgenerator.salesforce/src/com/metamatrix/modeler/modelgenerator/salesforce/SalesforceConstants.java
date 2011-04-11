@@ -7,7 +7,7 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
-import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPropertiesManager;
 import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
 
 /**
