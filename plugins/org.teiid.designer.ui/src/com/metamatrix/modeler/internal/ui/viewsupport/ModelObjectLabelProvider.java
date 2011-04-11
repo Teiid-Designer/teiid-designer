@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPropertiesManager;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;

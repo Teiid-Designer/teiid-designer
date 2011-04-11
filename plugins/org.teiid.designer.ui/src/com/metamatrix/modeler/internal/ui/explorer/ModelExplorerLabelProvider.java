@@ -9,6 +9,7 @@ package com.metamatrix.modeler.internal.ui.explorer;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -33,7 +34,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.teiid.designer.extension.manager.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPropertiesManager;
 
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
