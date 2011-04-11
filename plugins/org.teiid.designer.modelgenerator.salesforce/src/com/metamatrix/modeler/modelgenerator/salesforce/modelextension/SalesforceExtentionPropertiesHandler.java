@@ -30,11 +30,11 @@ import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.cnd.CndNamespace;
 import org.teiid.designer.extension.cnd.CndPropertyDefinition;
 import org.teiid.designer.extension.cnd.CndTypeDefinition;
-import org.teiid.designer.extension.manager.ExtendedModelConstants;
-import org.teiid.designer.extension.manager.ExtendedModelObject;
-import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
-import org.teiid.designer.extension.manager.ModelExtensionDefinition;
-import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
+import org.teiid.designer.extension.properties.ExtendedModelConstants;
+import org.teiid.designer.extension.properties.ExtendedModelObject;
+import org.teiid.designer.extension.properties.IExtensionPropertiesHandler;
+import org.teiid.designer.extension.properties.ModelExtensionDefinition;
+import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
 
 import com.metamatrix.metamodels.relational.BaseTable;
 import com.metamatrix.metamodels.relational.Column;
@@ -256,7 +256,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getID()
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#getID()
      */
 	public String getID() {
 		return ID;
@@ -265,7 +265,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getDisplayName()
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#getDisplayName()
      */
 	public String getDisplayName() {
 		return DISPLAY_NAME;
@@ -292,7 +292,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isExtendedKey(String)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#isExtendedKey(String)
      */
 	public boolean isExtendedKey(String key) {
 		return key != null && key.startsWith(EXT_PROP_NAMESPACE_PREFIX);
@@ -308,7 +308,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getMissingDefaultProperties(EObject, Properties)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#getMissingDefaultProperties(EObject, Properties)
      */
 	public Properties getMissingDefaultProperties(EObject target, Properties props) {
 		Properties missingProps = new Properties();
@@ -347,7 +347,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getExtendedProperties(EObject)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#getExtendedProperties(EObject)
      */
 	@Override
 	public Properties getExtendedProperties(EObject target) throws ModelerCoreException {
@@ -417,7 +417,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#getExtendedModelObject(EObject)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#getExtendedModelObject(EObject)
      */
 	public ExtendedModelObject getExtendedModelObject(final EObject target ) throws ModelerCoreException {
 		Properties props = getExtendedProperties(target);
@@ -457,7 +457,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isApplicable(EObject)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#isApplicable(EObject)
      */
 	public boolean isApplicable(EObject target)  {
 		ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(target);
@@ -495,7 +495,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#isApplicable(IResource)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#isApplicable(IResource)
      */
 	@Override
 	public boolean isApplicable(IResource resource)  {
@@ -531,7 +531,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.manager.IExtensionPropertiesHandler#save(EObject, Collection)
+     * @see org.teiid.designer.extension.properties.IExtensionPropertiesHandler#save(EObject, Collection)
      */
 	@Override
 	public void save(EObject target, Collection<ModelObjectExtendedProperty> properties) throws ModelerCoreException {

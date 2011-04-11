@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
+import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.ui.table.PropertyEditingSupport;

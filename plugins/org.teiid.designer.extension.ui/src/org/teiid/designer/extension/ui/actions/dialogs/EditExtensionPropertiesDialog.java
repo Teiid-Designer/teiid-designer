@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.teiid.designer.extension.manager.ExtendedModelObject;
-import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
+import org.teiid.designer.extension.properties.ExtendedModelObject;
+import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.modeler.ui.UiPlugin;

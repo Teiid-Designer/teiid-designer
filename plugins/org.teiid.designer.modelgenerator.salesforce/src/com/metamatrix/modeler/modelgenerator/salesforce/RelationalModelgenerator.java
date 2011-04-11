@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.ExtensionPropertiesManager;
-import org.teiid.designer.extension.manager.ModelObjectExtendedProperty;
+import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
 
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;

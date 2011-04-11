@@ -20,8 +20,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.extension.ExtensionPropertiesManager;
-import org.teiid.designer.extension.manager.ExtendedModelObject;
-import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
+import org.teiid.designer.extension.properties.ExtendedModelObject;
+import org.teiid.designer.extension.properties.IExtensionPropertiesHandler;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.dialogs.EditExtensionPropertiesDialog;
 
