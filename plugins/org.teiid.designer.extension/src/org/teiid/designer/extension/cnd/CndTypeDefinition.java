@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.manager.PrefixedName;
+import org.teiid.designer.extension.properties.PrefixedName;
 
 import com.metamatrix.core.util.CoreArgCheck;
 

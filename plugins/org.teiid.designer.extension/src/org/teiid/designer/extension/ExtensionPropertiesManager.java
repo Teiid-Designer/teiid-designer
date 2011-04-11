@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.extension.manager.ExtendedModelObject;
-import org.teiid.designer.extension.manager.IExtensionPropertiesHandler;
+import org.teiid.designer.extension.properties.ExtendedModelObject;
+import org.teiid.designer.extension.properties.IExtensionPropertiesHandler;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCoreException;
