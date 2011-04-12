@@ -25,11 +25,9 @@ import com.metamatrix.modeler.compare.util.CompareUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.impl.DataModelImpl;
-import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider;
 
@@ -181,20 +179,6 @@ public class SalesforceImportWizardManager {
                 monitor.subTask(Messages.getString("SalesforceImportWizardManager.binding")); //$NON-NLS-1$
                 SalesForceConnectionInfoProvider helper = new SalesForceConnectionInfoProvider();
                 helper.setConnectionInfo(modelResource, connectionProfile);
-                
-                ResourceAnnotationHelper resourceHelper = new ResourceAnnotationHelper();
-                resourceHelper.setProperty(
-                		modelResource, 
-                		SalesforceConstants.EXTENSION_FULL_ID_KEY, 
-                		SalesforceConstants.MODEL_EXTENSION_ID);
-                resourceHelper.setProperty(
-                		modelResource, 
-                		SalesforceConstants.EXTENSION_FULL_NAMESPACE_KEY, 
-                		SalesforceConstants.NAMESPACE);
-                resourceHelper.setProperty(
-                		modelResource, 
-                		SalesforceConstants.EXTENSION_FULL_CND_KEY, 
-                		SalesforceExtentionPropertiesHandler.SF_CND_STRING);
                 try {
                     monitor.subTask(Messages.getString("SalesforceImportWizardManager.saving.model")); //$NON-NLS-1$
                     modelResource.save(monitor, false);
@@ -224,7 +208,7 @@ public class SalesforceImportWizardManager {
         }
 
         RelationalModelgenerator builder = new RelationalModelgenerator(this, monitor);
-        builder.createRelationalModel(resource);
+        builder.createRelationalModel(modelResource, resource);
         return modelResource;
     }
 
