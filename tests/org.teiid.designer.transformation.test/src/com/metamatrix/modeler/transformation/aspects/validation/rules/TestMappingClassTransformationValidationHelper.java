@@ -12,15 +12,15 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.SetQuery;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.metamodels.transformation.TransformationFactory;
 import com.metamatrix.modeler.core.validation.ValidationResult;
 import com.metamatrix.modeler.internal.core.validation.ValidationResultImpl;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.lang.SetQuery;
 
 
 /** 
@@ -136,13 +136,13 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
     
-    public void testNoInputSelectRecursiveMappingClassInputCriteria() throws Exception {
+    public void testInputSelectRecursiveMappingClassInputCriteria() throws Exception {
         Command command = parseCommand("SELECT e FROM g where x = Input.y");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
         rule.validate((Query)command, mappingClass, result);
-        assertTrue(result.hasProblems());
+        assertFalse(result.hasProblems());
     }
 
     public void testNoInputUNIONSelectRecursiveMappingClassNoInputCriteria() throws Exception {
@@ -156,13 +156,13 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         assertEquals(IStatus.WARNING, (result.getProblems()[0]).getSeverity());
     }
 
-    public void testNoInputUNIONSelectRecursiveMappingClassInputCriteria() throws Exception {
+    public void testInputUNIONSelectRecursiveMappingClassInputCriteria() throws Exception {
         Command command = parseCommand("SELECT e FROM g where x = Input.y UNION SELECT e FROM g");//$NON-NLS-1$
         MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
         MappingClass mappingClass = helpGetRecursiveMappingClass();
         ValidationResult result = new ValidationResultImpl(new Object());
         rule.validate((SetQuery)command, mappingClass, result);
-        assertTrue(result.hasProblems());
+        assertFalse(result.hasProblems());
     }
     
     public void testInputUNIONSelectRecursiveMappingClassNoCriteria() throws Exception {
