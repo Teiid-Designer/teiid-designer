@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -23,7 +24,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -1260,7 +1260,7 @@ public class RuntimeAdapter extends RecordFactory {
 
     /**
      * Create a {@link com.metamatrix.internal.core.index.impl.WordEntry} instance representing a annotation. This resulting
-     * WordEntry is of the form: recordType|objectID|propertyName|value|isExtention|footer|
+     * WordEntry is of the form: recordType|objectID|propertyName|value|isExtension|footer|
      */
     public static void addPropertyWord( final SqlAspect sqlAspect,
                                         final EObject eObject,
@@ -1318,7 +1318,6 @@ public class RuntimeAdapter extends RecordFactory {
                 propertyNames.add(propName);
             }
         }
-
         // there are properties on the annotation object as well that may/not be same as
         // the extention properties, filter the extetion props and add words for remaining
         // annotation props
@@ -1338,59 +1337,37 @@ public class RuntimeAdapter extends RecordFactory {
                     continue;
                 }
                 Object key = mapEntry.getKey();
-                if( !ExtensionPropertiesManager.isExtendedKey(key) && !ExtensionPropertiesManager.isNonIndexedKey(key) ) {
-	                Object value = mapEntry.getValue();
-	
-	                if (key == null || value == null) {
-	                    continue;
-	                }
-	
-	                String propName = key.toString();
-	                String propValue = value.toString();
-	
-	                if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
-	                    continue;
-	                }
-	
-	                if (!propertyNames.contains(propName)) {
-	                    // add property word
-	                    addPropertyWord(objectID, name, propName, propValue, false, modelPath, wordEntries);
-	
-	                }
+                Object value = mapEntry.getValue();
+
+                if (key == null || value == null) {
+                    continue;
                 }
-            }
-        }
-        
-        // Now we look for properties defined through the  ExtensionPropertiesManager
-        
-        Properties props = ExtensionPropertiesManager.getExtendedProperties(eObject);
-        
-        for( Object keyObj : props.keySet() ) {
-			if( keyObj instanceof String ) {
-				String propName = (String)keyObj;
-				String propValue = (String)props.get(propName);
+
+                String propName = key.toString();
+                String propValue = value.toString();
+
                 if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
                     continue;
                 }
+
                 if (!propertyNames.contains(propName)) {
                     // add property word
-                    addPropertyWord(objectID, name, propName, propValue, true, modelPath, wordEntries);
-                    
-                    propertyNames.add(propName);
+                    addPropertyWord(objectID, name, propName, propValue, false, modelPath, wordEntries);
+
                 }
-			}
+            }
         }
     }
 
     /**
      * Create a {@link com.metamatrix.internal.core.index.impl.WordEntry} instance representing a annotation. This resulting
-     * WordEntry is of the form: recordType|objectID|propertyName|value|isExtention|footer|
+     * WordEntry is of the form: recordType|objectID|propertyName|value|isExtension|footer|
      */
     public static void addPropertyWord( final String objectID,
                                         final String name,
                                         final String propName,
                                         final String propValue,
-                                        final boolean isExtention,
+                                        final boolean isExtension,
                                         final String modelPath,
                                         final Collection wordEntries ) {
 
@@ -1418,7 +1395,7 @@ public class RuntimeAdapter extends RecordFactory {
         sb.append(IndexConstants.RECORD_STRING.RECORD_DELIMITER);
 
         // Append the is extention value
-        appendBoolean(isExtention, sb);
+        appendBoolean(isExtension, sb);
         sb.append(IndexConstants.RECORD_STRING.RECORD_DELIMITER);
 
         // Append the footer

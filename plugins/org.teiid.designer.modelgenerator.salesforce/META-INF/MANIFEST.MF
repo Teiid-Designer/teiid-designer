@@ -23,8 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.codec,
  org.apache.commons.discovery,
  javax.xml.rpc,
- org.wsdl4j,
- org.teiid.designer.extension
+ org.wsdl4j
 Bundle-ActivationPolicy: lazy
 Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.framework",
  com.metamatrix.modeler.modelgenerator.salesforce.connection,

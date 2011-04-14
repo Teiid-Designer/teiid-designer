@@ -7,8 +7,6 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
-import org.teiid.designer.extension.ExtensionPropertiesManager;
-import org.teiid.designer.extension.properties.IExtensionPropertiesHandler;
 
 /**
  * Various SalesForce constants
@@ -19,14 +17,6 @@ public interface SalesforceConstants {
 	String NAMESPACE = "http://org.teiid.designer/metamodels/Salesforce"; //$NON-NLS-1$
 	String ID = "salesforce"; //$NON-NLS-1$
 	String DISPLAY_NAME = "Salesforce"; //$NON-NLS-1$
-	String EXT_PROP_NAMESPACE_PREFIX = ExtensionPropertiesManager.createExtendedModelNamespace(ID);
-	
-	// Need to construct unique ID key : ext-id:salesforce
-	String EXTENSION_FULL_ID_KEY = IExtensionPropertiesHandler.EXTENSION_ID_PREFIX + ID;
-	// Need to construct unique CND key : ext-cnd:salesforce
-	String EXTENSION_FULL_CND_KEY = IExtensionPropertiesHandler.EXTENSION_CND_PREFIX + ID;
-	// Need to construct unique Namespace key : ext-namespace:salesforce
-	String EXTENSION_FULL_NAMESPACE_KEY = IExtensionPropertiesHandler.EXTENSION_NAMESPACE_PREFIX + ID;
 	
 	/**
 	 * Character Constants

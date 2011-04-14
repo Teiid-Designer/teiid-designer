@@ -80,7 +80,6 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.teiid.designer.metamodels.core,
  org.jdom,
  org.teiid.designer.legacy,
- teiid_embedded_query,
- org.teiid.designer.extension
+ teiid_embedded_query
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

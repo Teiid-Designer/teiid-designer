@@ -22,6 +22,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.core.extension.XPackage;
 import com.metamatrix.metamodels.function.FunctionFactory;
 import com.metamatrix.metamodels.function.FunctionPackage;
 import com.metamatrix.metamodels.function.FunctionParameter;
@@ -33,7 +34,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler;
+import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.ExtensionManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -89,9 +90,14 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
             Object nextObj = allObjs.get(0);
             if (nextObj instanceof IFile && ModelIdentifier.isRelationalSourceModel((IFile)nextObj)) {
                 try {
+                    IFile file = ((IFile)nextObj);
                     ModelResource model = ModelUtil.getModelResource((IFile)nextObj, false);
-                    // Check to see if the model has the SalesForce Model Extension ID
-                    result = SalesforceExtentionPropertiesHandler.isSaleforceResource(model.getCorrespondingResource());
+                    XPackage extension = model.getModelAnnotation().getExtensionPackage();
+                    if (null != extension && extension.getName().equals(ExtensionManager.PACKAGE_NAME)) {
+                        if (!file.getParent().getFile(new Path("SalesforceFunctions.xmi")).exists()) { //$NON-NLS-1$
+                            result = true;
+                        }
+                    }
                 } catch (ModelWorkspaceException e) {
                     // do nothing
                 }
