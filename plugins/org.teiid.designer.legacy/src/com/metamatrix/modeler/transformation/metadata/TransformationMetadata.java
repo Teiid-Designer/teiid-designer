@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.TeiidException;
@@ -37,7 +36,6 @@ import org.teiid.query.metadata.BasicQueryMetadata;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.SupportConstants;
 import org.teiid.query.sql.lang.SPParameter;
-
 import com.metamatrix.core.index.CompositeIndexSelector;
 import com.metamatrix.core.index.IEntryResult;
 import com.metamatrix.core.index.RuntimeIndexSelector;
@@ -195,38 +193,10 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         MetadataRecord metadataRecord = (MetadataRecord)metadataID;
         return metadataRecord.getFullName();
     }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFullElementName(java.lang.String, java.lang.String)
-     */
-    @Override
-    public String getFullElementName( final String fullGroupName,
-                                      final String shortElementName ) throws TeiidComponentException, QueryMetadataException {
-        ArgCheck.isNotEmpty(fullGroupName);
-        ArgCheck.isNotEmpty(shortElementName);
-
-        if (UuidUtil.isStringifiedUUID(shortElementName)) {
-            // If element name is uuid, return element uuid (sans prefix)
-            return UuidUtil.stripPrefixFromUUID(shortElementName);
-        } else if (UuidUtil.isStringifiedUUID(fullGroupName)) {
-            // If group name is uuid and element is not, return just element uuid
-
-            // Lookup group name
-            MetadataRecord group = (MetadataRecord)getGroupID(fullGroupName);
-            String groupName = group.getFullName();
-
-            // Combine group name and element name to look it up
-            return groupName + DELIMITER_CHAR + shortElementName;
-        } else {
-            // Both are not UUIDs, so just combine them
-            return fullGroupName + DELIMITER_CHAR + shortElementName;
-        }
-    }
-
+    
     /* (non-Javadoc)
      * @see com.metamatrix.query.metadata.QueryMetadataInterface#getShortElementName(java.lang.String)
      */
-    @Override
     public String getShortElementName( final String fullElementName ) {
         ArgCheck.isNotEmpty(fullElementName);
         if (UuidUtil.isStringifiedUUID(fullElementName)) {
@@ -237,37 +207,6 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             return fullElementName.substring(index + 1);
         }
         return fullElementName;
-    }
-
-    /**
-     * Return the text portion of the fullElementName representing a group. That means that this should only return text that is
-     * part of the fullElementName and not look up new IDs or do much of anything fancy. This method is used by the resolver to
-     * decide which portion of a fully- qualified element name is the group name. It will compare whatever comes back with the
-     * actual group names and aliases in the query, which is why it is important not to introduce new metadata here. Also,
-     * returning null indicates that no portion of the fullElementName is a group name - that is ok as it will be resolved as an
-     * ambiguous element.
-     * 
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupName(java.lang.String)
-     */
-    @Override
-    public String getGroupName( final String fullElementName ) throws TeiidComponentException, QueryMetadataException {
-        ArgCheck.isNotEmpty(fullElementName);
-
-        int index = fullElementName.lastIndexOf(DELIMITER_CHAR);
-        if (index >= 0) {
-            return fullElementName.substring(0, index);
-        }
-        // Not fully qualified, but it still may be a UUID
-        if (UuidUtil.isStringifiedUUID(fullElementName)) {
-            String fullName = UuidUtil.stripPrefixFromUUID(fullElementName);
-            MetadataRecord record = (MetadataRecord)this.getElementID(fullName);
-            if (record != null) {
-                return record.getParentUUID();
-            }
-        }
-        // Otherwise return null, signifying that we were not
-        // able to resolve the UUID into a real element
-        return null;
     }
 
     /* (non-Javadoc)
@@ -319,6 +258,16 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
     @Override
     public StoredProcedureInfo getStoredProcedureInfoForProcedure( final String procedureName )
         throws TeiidComponentException, QueryMetadataException {
+        StoredProcedureInfo result = getStoredProcInfoDirect(procedureName);
+        if (result == null) {
+            throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
+        }
+        return result;
+    }
+    
+    public StoredProcedureInfo getStoredProcInfoDirect( final String procedureName )
+        throws TeiidComponentException, QueryMetadataException {
+
         ArgCheck.isNotEmpty(procedureName);
 
         ProcedureRecord procRecord = null;
@@ -335,7 +284,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 procRecord = (ProcedureRecord)results.iterator().next();
             } else if (resultSize == 0) {
                 if (StringUtil.startsWithIgnoreCase(procedureName, UUID.PROTOCOL)) {
-                    throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
+                    return null;
                 }
             } else {
                 // there should be only one for the full name
@@ -354,7 +303,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 // get the columnset record for this result
                 procRecord = (ProcedureRecord)results.iterator().next();
             } else if (resultSize == 0) {
-                throw new QueryMetadataException(procedureName + NOT_EXISTS_MESSAGE);
+                return null;
             } else {
                 // there should be only one for the UUID
                 throw new QueryMetadataException(RuntimeMetadataPlugin.Util.getString("TransformationMetadata.0", procedureName)); //$NON-NLS-1$
@@ -419,7 +368,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
         if (procRecord.isVirtual()) {
             String procedurePlan = getProcedurePlan(procedureFullName);
             if (procedurePlan != null) {
-                QueryNode queryNode = new QueryNode(procedureFullName, procedurePlan);
+                QueryNode queryNode = new QueryNode(procedurePlan);
                 procInfo.setQueryPlan(queryNode);
             }
         }
@@ -557,7 +506,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
                 final TransformationRecord transformRecord = (TransformationRecord)results.iterator().next();
 
                 String transQuery = transformRecord.getTransformation();
-                QueryNode queryNode = new QueryNode(groupName, transQuery);
+                QueryNode queryNode = new QueryNode(transQuery);
 
                 // get any bindings and add them onto the query node
                 List bindings = transformRecord.getBindings();
@@ -2045,6 +1994,32 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
             throw new TeiidRuntimeException("Multiple primary keys for table");
         }
         return pk.iterator().next();
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.query.metadata.BasicQueryMetadata#getName(java.lang.Object)
+     */
+    @Override
+    public String getName( Object metadataID ) {
+        ArgCheck.isInstanceOf(MetadataRecord.class, metadataID);
+        MetadataRecord metadataRecord = (MetadataRecord)metadataID;
+        return metadataRecord.getName(); 
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.query.metadata.BasicQueryMetadata#hasProcedure(java.lang.String)
+     */
+    @Override
+    public boolean hasProcedure( String name ) throws TeiidComponentException {
+        try {
+            return getStoredProcInfoDirect(name) != null;
+        } catch (QueryMetadataException e) {
+            return true;
+        }
     }
 
 }

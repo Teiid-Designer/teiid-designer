@@ -547,7 +547,7 @@ public class Binding {
                         result = (SingleElementSymbol)uSymbol.clone();
                     } else {
                         AliasSymbol aSym = (AliasSymbol)currentSymbol.clone();
-                        aSym.setName(currentAttrName);
+                        aSym.setShortName(currentAttrName);
                         result = aSym;
                     }
                     // If this is not an alias, make it one

@@ -25,8 +25,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
-import com.metamatrix.core.io.FileUrl;
 import org.teiid.core.util.FileUtils;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.DeclareStatement;
+import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
+import com.metamatrix.core.io.FileUrl;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
@@ -50,15 +59,6 @@ import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.modeler.webservice.procedure.XsdInstanceNode;
 import com.metamatrix.modeler.webservice.ui.WebServiceUiPlugin;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
-import org.teiid.query.sql.proc.AssignmentStatement;
-import org.teiid.query.sql.proc.Block;
-import org.teiid.query.sql.proc.CommandStatement;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.proc.DeclareStatement;
-import org.teiid.query.sql.symbol.Constant;
-import org.teiid.query.sql.symbol.ElementSymbol;
-import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.Function;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.SystemClipboardUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -679,13 +679,13 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
         String name1 = var1.getShortName();
         if (node1 != null) {
             name1 = node1.getName() + '_' + name1;
-            var1.setName(getQualifiedInputVariableName(name1));
+            var1.setShortName(WebServiceUtil.INPUT_VARIABLE_UNQUALIFIED_PREFIX + name1);
             node1 = node1.getParent();
         }
         String name2 = var2.getShortName();
         if (node2 != null) {
             name2 = node2.getName() + '_' + name2;
-            var2.setName(getQualifiedInputVariableName(name2));
+            var2.setShortName(WebServiceUtil.INPUT_VARIABLE_UNQUALIFIED_PREFIX + name2);
             node2 = node2.getParent();
         }
         if (!name1.equalsIgnoreCase(name2)) {
@@ -705,14 +705,14 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
         if (namespace1 != null) {
             int ndx = namespace1.lastIndexOf('.');
             name1 = namespace1.substring(ndx + 1) + '_' + name1;
-            var1.setName(getQualifiedInputVariableName(name1));
+            var1.setShortName(WebServiceUtil.INPUT_VARIABLE_UNQUALIFIED_PREFIX + name1);
             namespace1 = (ndx >= 0 ? namespace1.substring(0, ndx) : null);
         }
         String name2 = var2.getShortName();
         if (namespace2 != null) {
             int ndx = namespace2.lastIndexOf('.');
             name2 = namespace2.substring(ndx + 1) + '_' + name2;
-            var2.setName(getQualifiedInputVariableName(name2));
+            var2.setShortName(WebServiceUtil.INPUT_VARIABLE_UNQUALIFIED_PREFIX + name2);
             namespace2 = (ndx >= 0 ? namespace2.substring(0, ndx) : null);
         }
         if (!name1.equalsIgnoreCase(name2)) {

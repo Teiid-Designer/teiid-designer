@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +31,8 @@ import org.teiid.query.parser.QueryParser;
 import org.teiid.query.report.ReportItem;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorReport;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -962,18 +960,7 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
      */
     private Collection getGroups( final Criteria criteria,
                                   final QueryMetadataInterface metadata ) throws Exception {
-        Collection groups = new HashSet();
-        Iterator elemIter = ElementCollectorVisitor.getElements(criteria, true, true).iterator();
-        while (elemIter.hasNext()) {
-            ElementSymbol element = (ElementSymbol)elemIter.next();
-            String groupName = metadata.getGroupName(element.getName());
-            GroupSymbol group = new GroupSymbol(groupName);
-            if (!groups.contains(group)) {
-                group.setMetadataID(metadata.getGroupID(groupName));
-                groups.add(group);
-            }
-        }
-        return groups;
+        return GroupsUsedByElementsVisitor.getGroups(criteria);
     }
 
     /*

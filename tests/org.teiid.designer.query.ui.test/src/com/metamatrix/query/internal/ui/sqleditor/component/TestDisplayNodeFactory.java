@@ -1051,9 +1051,9 @@ public class TestDisplayNodeFactory extends TestCase {
     }
 
     public void testElementSymbol4() {
-        ElementSymbol es = new ElementSymbol("vdb.m.g.elem", true); //$NON-NLS-1$
+        ElementSymbol es = new ElementSymbol("elem", true); //$NON-NLS-1$
         es.setGroupSymbol(new GroupSymbol("m.g")); //$NON-NLS-1$
-        helpTest(es, "vdb.m.g.elem"); //$NON-NLS-1$
+        helpTest(es, "m.g.elem"); //$NON-NLS-1$
     }
 
     public void testElementSymbol5() {
@@ -1790,8 +1790,8 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testLimit() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new Object[] {new AllSymbol()}));
-        From from = new From(Arrays.asList(new Object[] {new UnaryFromClause(new GroupSymbol("a"))})); //$NON-NLS-1$
+        Select select = new Select(Arrays.asList(new AllSymbol()));
+        From from = new From(Arrays.asList(new UnaryFromClause(new GroupSymbol("a")))); //$NON-NLS-1$
         query.setSelect(select);
         query.setFrom(from);
         query.setLimit(new Limit(null, new Constant(new Integer(100))));
@@ -1800,8 +1800,8 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testLimitWithOffset() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new Object[] {new AllSymbol()}));
-        From from = new From(Arrays.asList(new Object[] {new UnaryFromClause(new GroupSymbol("a"))})); //$NON-NLS-1$
+        Select select = new Select(Arrays.asList(new AllSymbol()));
+        From from = new From(Arrays.asList(new UnaryFromClause(new GroupSymbol("a")))); //$NON-NLS-1$
         query.setSelect(select);
         query.setFrom(from);
         query.setLimit(new Limit(new Constant(new Integer(50)), new Constant(new Integer(100))));
@@ -1810,10 +1810,10 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQueryWithMakeDep() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new Object[] {new AllSymbol()}));
+        Select select = new Select(Arrays.asList(new AllSymbol()));
         FromClause fromClause = new UnaryFromClause(new GroupSymbol("a")); //$NON-NLS-1$
         fromClause.setMakeDep(true);
-        From from = new From(Arrays.asList(new Object[] {fromClause}));
+        From from = new From(Arrays.asList(fromClause));
         query.setSelect(select);
         query.setFrom(from);
         helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKEDEP"); //$NON-NLS-1$ 
@@ -1821,12 +1821,12 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQueryWithJoinPredicateMakeDep() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new Object[] {new AllSymbol()}));
+        Select select = new Select(Arrays.asList(new AllSymbol()));
         FromClause fromClause = new UnaryFromClause(new GroupSymbol("a")); //$NON-NLS-1$
         fromClause.setMakeNotDep(true);
         FromClause fromClause1 = new UnaryFromClause(new GroupSymbol("b")); //$NON-NLS-1$
         fromClause1.setMakeDep(true);
-        From from = new From(Arrays.asList(new Object[] {new JoinPredicate(fromClause, fromClause1, JoinType.JOIN_CROSS)}));
+        From from = new From(Arrays.asList(new JoinPredicate(fromClause, fromClause1, JoinType.JOIN_CROSS)));
         query.setSelect(select);
         query.setFrom(from);
         helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKENOTDEP CROSS JOIN b MAKEDEP"); //$NON-NLS-1$ 

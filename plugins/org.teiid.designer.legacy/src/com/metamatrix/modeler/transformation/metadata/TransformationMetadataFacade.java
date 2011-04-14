@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
 import org.teiid.core.util.ArgCheck;
@@ -28,19 +27,16 @@ import org.teiid.query.mapping.xml.MappingNode;
 import org.teiid.query.metadata.BasicQueryMetadataWrapper;
 import org.teiid.query.metadata.GroupInfo;
 import org.teiid.query.metadata.StoredProcedureInfo;
-
 import com.metamatrix.core.util.AssertionUtil;
-import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
-import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
-import com.metamatrix.modeler.core.metadata.runtime.TableRecord;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
 import com.metamatrix.modeler.core.metadata.runtime.ForeignKeyRecord.ForeignKeyRecordProperties;
+import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord.MetadataRecordProperties;
 import com.metamatrix.modeler.core.metadata.runtime.ProcedureRecord.ProcedureRecordProperties;
+import com.metamatrix.modeler.core.metadata.runtime.TableRecord;
 import com.metamatrix.modeler.core.metadata.runtime.TableRecord.TableRecordProperties;
-import com.metamatrix.modeler.internal.transformation.util.UuidUtil;
 
 /**
  * Modelers implementation of QueryMetadataInterface that reads columns, groups, modeles etc. index files for various metadata
@@ -183,63 +179,6 @@ public class TransformationMetadataFacade extends BasicQueryMetadataWrapper {
         }
 
         return modelRecord;
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getFullElementName(java.lang.String, java.lang.String)
-     */
-    @Override
-	public String getFullElementName( final String fullGroupName,
-                                      final String shortElementName ) throws TeiidComponentException, QueryMetadataException {
-        ArgCheck.isNotZeroLength(fullGroupName);
-        ArgCheck.isNotZeroLength(shortElementName);
-
-        if (UuidUtil.isStringifiedUUID(shortElementName)) {
-            // If element name is uuid, return element uuid (sans prefix)
-            return UuidUtil.stripPrefixFromUUID(shortElementName);
-        } else if (UuidUtil.isStringifiedUUID(fullGroupName)) {
-            // If group name is uuid and element is not, return just element uuid
-
-            // Lookup group name
-            MetadataRecord group = (MetadataRecord)getGroupID(fullGroupName);
-            if (group == null) {
-                throw new QueryMetadataException(
-                                                 RuntimeMetadataPlugin.Util.getString("TransformationMetadata.Unable_to_determine_fullname_for_element__1") + shortElementName); //$NON-NLS-1$
-            }
-            String groupName = group.getFullName();
-
-            // Combine group name and element name
-            return groupName + TransformationMetadata.DELIMITER_CHAR + shortElementName;
-        }
-        // Both are not UUIDs, so just combine them
-        return fullGroupName + TransformationMetadata.DELIMITER_CHAR + shortElementName;
-    }
-
-    /* (non-Javadoc)
-     * @see com.metamatrix.query.metadata.QueryMetadataInterface#getGroupName(java.lang.String)
-     */
-    @Override
-	public String getGroupName( final String fullElementName ) throws TeiidComponentException, QueryMetadataException {
-        ArgCheck.isNotZeroLength(fullElementName);
-
-        int index = fullElementName.lastIndexOf(TransformationMetadata.DELIMITER_CHAR);
-        if (index >= 0) {
-            return fullElementName.substring(0, index);
-        }
-        // Not fully qualified, but it still may be a UUID
-        if (UuidUtil.isStringifiedUUID(fullElementName)) {
-            String newFullElementName = UuidUtil.stripPrefixFromUUID(fullElementName);
-            MetadataRecord record = getRecordByID(newFullElementName);
-            // record could not be found in the cache look up transformation metadata
-            if (record == null) {
-                record = (MetadataRecord)this.metadata.getElementID(newFullElementName);
-                updateIdToRecordCache(newFullElementName, record);
-            }
-            return record.getParentUUID();
-        }
-        // Otherwise return null, signifying that we were not
-        // able to resolve the UUID into a real element
-        return null;
     }
 
     /* (non-Javadoc)

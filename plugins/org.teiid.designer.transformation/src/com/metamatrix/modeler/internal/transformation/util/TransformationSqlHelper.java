@@ -40,11 +40,11 @@ import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SetQuery.Operation;
 import org.teiid.query.sql.lang.SetQueryUtil;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.lang.SetQuery.Operation;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
@@ -2650,7 +2650,7 @@ public class TransformationSqlHelper implements SqlConstants {
                 // If seSymbol is in the Map, rename it and quit.
                 if (renamedSymbol.equals(seSymbol)) {
                     if (seSymbol instanceof AliasSymbol) {
-                        seSymbol.setName(newName);
+                        seSymbol.setShortName(newName);
                         resultSymbol = seSymbol;
                     } else {
                         resultSymbol = new AliasSymbol(newName, seSymbol);

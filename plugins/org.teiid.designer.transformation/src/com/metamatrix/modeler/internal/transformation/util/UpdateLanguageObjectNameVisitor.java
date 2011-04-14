@@ -12,12 +12,12 @@ import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.id.ObjectID;
-import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.query.sql.LanguageVisitor;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.symbol.SingleElementSymbol;
+import com.metamatrix.modeler.core.metamodel.aspect.AspectManager;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspect;
 
 
 /**
@@ -47,7 +47,16 @@ public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
      */
     @Override
     public void visit(ElementSymbol obj) {
-        updateSymbol(obj);
+        String fullName = obj.getShortName();
+        if (obj.getGroupSymbol() != null) {
+            fullName = obj.getGroupSymbol().getDefinition() + SingleElementSymbol.SEPARATOR + fullName;
+            visit(obj.getGroupSymbol());
+        } 
+        
+        String newName = getNewName(fullName);
+        if(newName != null) {
+            obj.setShortName(SingleElementSymbol.getShortName(newName));
+        }
     }
     
     /** 
@@ -56,54 +65,55 @@ public class UpdateLanguageObjectNameVisitor extends LanguageVisitor {
      */
     @Override
     public void visit(GroupSymbol obj) {
-        updateSymbol(obj);
+        String fullName = obj.getDefinition();
+        
+        String newName = getNewName(fullName);
+        if(newName != null) {
+            if (obj.getDefinition() == null) {
+                obj.setName(newName);
+            } else {
+                obj.setDefinition(newName);                
+            }
+        }
     }
     
     /**
-     * Update the name on the symbol by looking up the new name in the supplied map
-     * of old to new EObjects. 
-     * @param obj
-     * @since 4.2
+     * @param fullName
+     * @return
      */
-    private void updateSymbol(Symbol obj) {
-        String fullName = obj.getName();
-        
-        if(fullName != null) {
-            // if the names map is not populated, navigate throught the eObjects and populate it
-            // with names and uuids
-            if(this.oldToNewNames.isEmpty()) {
-	            // for each map entry
-			    for(final Iterator objIter = this.oldToNewObjects.entrySet().iterator(); objIter.hasNext();) {
-			        Map.Entry mapEntry = (Map.Entry) objIter.next();
-			        Object oldObj = mapEntry.getKey();
-			        Object newObj = mapEntry.getValue();
-			        if(oldObj != null && newObj != null && oldObj instanceof EObject && newObj instanceof EObject) {
-			            EObject oldEobject = (EObject) oldObj;
-			            EObject newEobject = (EObject) newObj;
-			            SqlAspect sqlAspect = AspectManager.getSqlAspect(oldEobject);
-			            // if it has a sql aspect (only then it has a name and can be used in sql)
-			            if(sqlAspect != null) {
-		                    ObjectID oldObjID = (ObjectID) sqlAspect.getObjectID(oldEobject);
-		                    ObjectID newObjID = (ObjectID) sqlAspect.getObjectID(newEobject);
-		                    if(oldObjID != null && newObjID != null) {
-				                this.oldToNewNames.put(oldObjID.toString().toUpperCase(), newObjID.toString());		                        
-		                    }
-		                    String oldObjName = sqlAspect.getFullName(oldEobject);
-		                    String newObjName = sqlAspect.getFullName(newEobject);
-		                    if(oldObjName != null && newObjName != null) {
-				                this.oldToNewNames.put(oldObjName.toUpperCase(), newObjName);		                        
-		                    }
-			            }
-			        }
-			    }
-            }
-
-            // look up new name and update symbol name
-            String newName = (String) this.oldToNewNames.get(fullName.toUpperCase());
-            if(newName != null) {
-                obj.setName(newName);
-            }
+    private String getNewName( String fullName ) {
+        // if the names map is not populated, navigate throught the eObjects and populate it
+        // with names and uuids
+        if(this.oldToNewNames.isEmpty()) {
+            // for each map entry
+		    for(final Iterator objIter = this.oldToNewObjects.entrySet().iterator(); objIter.hasNext();) {
+		        Map.Entry mapEntry = (Map.Entry) objIter.next();
+		        Object oldObj = mapEntry.getKey();
+		        Object newObj = mapEntry.getValue();
+		        if(oldObj != null && newObj != null && oldObj instanceof EObject && newObj instanceof EObject) {
+		            EObject oldEobject = (EObject) oldObj;
+		            EObject newEobject = (EObject) newObj;
+		            SqlAspect sqlAspect = AspectManager.getSqlAspect(oldEobject);
+		            // if it has a sql aspect (only then it has a name and can be used in sql)
+		            if(sqlAspect != null) {
+	                    ObjectID oldObjID = (ObjectID) sqlAspect.getObjectID(oldEobject);
+	                    ObjectID newObjID = (ObjectID) sqlAspect.getObjectID(newEobject);
+	                    if(oldObjID != null && newObjID != null) {
+			                this.oldToNewNames.put(oldObjID.toString().toUpperCase(), newObjID.toString());		                        
+	                    }
+	                    String oldObjName = sqlAspect.getFullName(oldEobject);
+	                    String newObjName = sqlAspect.getFullName(newEobject);
+	                    if(oldObjName != null && newObjName != null) {
+			                this.oldToNewNames.put(oldObjName.toUpperCase(), newObjName);		                        
+	                    }
+		            }
+		        }
+		    }
         }
+
+        // look up new name and update symbol name
+        String newName = (String) this.oldToNewNames.get(fullName.toUpperCase());
+        return newName;
     }    
 
 }

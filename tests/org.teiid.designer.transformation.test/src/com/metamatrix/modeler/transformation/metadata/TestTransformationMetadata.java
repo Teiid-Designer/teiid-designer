@@ -20,8 +20,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.teiid.core.TeiidComponentException;
-import org.teiid.api.exception.query.QueryMetadataException;
+import org.teiid.query.metadata.QueryMetadataInterface;
 import com.metamatrix.core.index.AbstractIndexSelector;
 import com.metamatrix.core.index.IDocument;
 import com.metamatrix.core.index.IEntryResult;
@@ -33,7 +32,6 @@ import com.metamatrix.internal.core.index.FileDocument;
 import com.metamatrix.internal.core.index.Index;
 import com.metamatrix.internal.core.index.WordEntry;
 import com.metamatrix.modeler.core.index.IndexConstants;
-import com.metamatrix.modeler.core.index.IndexSelector;
 import com.metamatrix.modeler.core.metadata.runtime.ColumnRecord;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
 import com.metamatrix.modeler.core.metadata.runtime.TableRecord;
@@ -42,7 +40,6 @@ import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlColumnAspect
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlModelAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.FakeSqlTableAspect;
 import com.metamatrix.modeler.internal.core.metadata.runtime.RuntimeAdapter;
-import org.teiid.query.metadata.QueryMetadataInterface;
 
 /**
  * TestTransformationMetadata
@@ -387,40 +384,6 @@ public class TestTransformationMetadata extends TestCase {
         assertNotNull(queryMetadata.getElementID("model2.table1.column2A")); //$NON-NLS-1$
         assertNotNull(queryMetadata.getElementID("model2.table1.column2B")); //$NON-NLS-1$
         assertNotNull(queryMetadata.getElementID("model2.table1.column2C")); //$NON-NLS-1$
-    }
-
-    public void testGetShortName() {
-        System.out.println("\nTestTransformationMetadata.testGetShortName()"); //$NON-NLS-1$
-
-        final IndexSelector selector = new TestIndexSelector(IndexConstants.INDEX_NAME.COLUMNS_INDEX);
-        QueryMetadataInterface queryMetadata = TransformationMetadataFactory.getInstance().getServerMetadata(selector);
-
-        String shortName = null;
-        try {
-            shortName = queryMetadata.getShortElementName("Model.table.column"); //$NON-NLS-1$
-        } catch (QueryMetadataException e) {
-            e.printStackTrace();
-        } catch (TeiidComponentException e) {
-            e.printStackTrace();
-        }
-        assertEquals("column", shortName); //$NON-NLS-1$
-    }
-
-    public void testGetFullElementName() {
-        System.out.println("\nTestTransformationMetadata.testGetFullElementName()"); //$NON-NLS-1$
-
-        final IndexSelector selector = new TestIndexSelector(IndexConstants.INDEX_NAME.COLUMNS_INDEX);
-        QueryMetadataInterface queryMetadata = TransformationMetadataFactory.getInstance().getServerMetadata(selector);
-
-        String shortName = null;
-        try {
-            shortName = queryMetadata.getFullElementName("Model.table", "column"); //$NON-NLS-1$ //$NON-NLS-2$
-        } catch (QueryMetadataException e) {
-            e.printStackTrace();
-        } catch (TeiidComponentException e) {
-            e.printStackTrace();
-        }
-        assertEquals("Model.table.column", shortName); //$NON-NLS-1$
     }
 
     static class TestIndexer implements IIndexer {
