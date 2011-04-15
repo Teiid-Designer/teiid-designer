@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -39,6 +40,7 @@ import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.SingleElementSymbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
@@ -2116,19 +2118,28 @@ public class TransformationHelper implements SqlConstants {
     public static boolean supportsUpdate( EObject transMappingRoot,
                                           EObject sourceTableEObject ) {
         // bmlTODO: Add logic to check if Update SQL contains the symbol for the input sourceTableEObject
-        return getUpdateSqlUUIDString(transMappingRoot) != null && isUpdateAllowed(transMappingRoot);
+    	if( isUpdateAllowed(transMappingRoot) ) {
+    		return getUpdateSqlUserString(transMappingRoot) != null || isUpdateSqlDefault(transMappingRoot);
+    	}
+        return false;
     }
 
     public static boolean supportsInsert( EObject transMappingRoot,
                                           EObject sourceTableEObject ) {
         // bmlTODO: Add logic to check if Insert SQL contains the symbol for the input sourceTableEObject
-        return getInsertSqlUUIDString(transMappingRoot) != null && isInsertAllowed(transMappingRoot);
+    	if( isInsertAllowed(transMappingRoot) ) {
+    		return getInsertSqlUserString(transMappingRoot) != null || isInsertSqlDefault(transMappingRoot);
+    	}
+        return false;
     }
 
     public static boolean supportsDelete( EObject transMappingRoot,
                                           EObject sourceTableEObject ) {
         // bmlTODO: Add logic to check if Delete SQL contains the symbol for the input sourceTableEObject
-        return getDeleteSqlUUIDString(transMappingRoot) != null && isDeleteAllowed(transMappingRoot);
+    	if( isDeleteAllowed(transMappingRoot) ) {
+    		return getDeleteSqlUserString(transMappingRoot) != null || isDeleteSqlDefault(transMappingRoot);
+    	}
+        return false;
     }
 
     public static boolean isAllowed( Object transMappingRoot,
@@ -3599,66 +3610,6 @@ public class TransformationHelper implements SqlConstants {
         String result = null;
         if (sqlTrans != null) {
             result = sqlTrans.getDeleteSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Select String, given a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Select String
-     */
-    private static String getSelectSqlUUIDString( Object transMappingRoot ) {
-        MappingHelper helper = getMappingHelper(transMappingRoot);
-        String result = null;
-        if (helper != null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getSelectSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Insert String, given a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Insert String
-     */
-    private static String getInsertSqlUUIDString( Object transMappingRoot ) {
-        MappingHelper helper = getMappingHelper(transMappingRoot);
-        String result = null;
-        if (helper != null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getInsertSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Update String, given a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Update String
-     */
-    private static String getUpdateSqlUUIDString( Object transMappingRoot ) {
-        MappingHelper helper = getMappingHelper(transMappingRoot);
-        String result = null;
-        if (helper != null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getUpdateSql();
-        }
-        return result;
-    }
-
-    /**
-     * Get the SQL Delete String, given a SqlTransformationMappingRoot
-     * 
-     * @param transMappingRoot the transformation mapping root
-     * @return the SQL Delete String
-     */
-    private static String getDeleteSqlUUIDString( Object transMappingRoot ) {
-        MappingHelper helper = getMappingHelper(transMappingRoot);
-        String result = null;
-        if (helper != null && helper instanceof SqlTransformation) {
-            result = ((SqlTransformation)helper).getDeleteSql();
         }
         return result;
     }
