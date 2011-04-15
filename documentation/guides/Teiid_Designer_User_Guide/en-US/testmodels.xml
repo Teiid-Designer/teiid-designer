@@ -336,7 +336,7 @@
 		<section id="creating-data-sources">
 			<title>Creating Data Sources</title>
 			<para>The mechanism by which VDBs are able to query actual data sources is the Data Source. These are deployed
-				 configurations backed by database or source connection jars. Each source model referenced within a VDB requiries
+				 configurations backed by database or source connection jars. Each source model referenced within a VDB requires
 				 a JNDI name representing a deployed Data Source.</para>
 			<para>When creating VDBs you do not need to have deployed data sources on your Teiid server, but if you wish to 
 				test your VDB, the data sources need to be present.</para>

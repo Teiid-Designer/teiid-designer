@@ -454,7 +454,7 @@
 
 	<section id="navigate-menu-section">
 		<title>Navigate Menu</title>
-		<para>Teiid Designer currently does not contribute actions to the Navigate menu. See Eclipse documention for details.</para>
+		<para>Teiid Designer currently does not contribute actions to the Navigate menu. See Eclipse documentation for details.</para>
 		
 		<figure>
 			<title>Navigate Menu</title>
@@ -502,7 +502,7 @@
 									</imageobject>
 								</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
 								Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
-								by specifying a relationship type, participant locations, and/or names containing sprcified
+								by specifying a relationship type, participant locations, and/or names containing specified
 								text.  Search results appear in 
 								the <xref linkend="search-results-view" /> view, 
 								and double-clicking a result will open that model in the appropriate editor.
@@ -715,7 +715,7 @@
 
 	<section id="run-menu-section">
 		<title>Run Menu</title>
-		<para>Teiid Designer currently does not contribute actions to the Run menu. See Eclipse documention for details.</para>
+		<para>Teiid Designer currently does not contribute actions to the Run menu. See Eclipse documentation for details.</para>
 		
 		<figure>
 			<title>Window Menu</title>

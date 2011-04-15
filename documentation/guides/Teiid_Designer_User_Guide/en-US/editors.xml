@@ -1062,7 +1062,7 @@
 				</mediaobject>
 			</figure>
 			<para>Clicking <emphasis>New...</emphasis> or <emphasis>Edit...</emphasis> will launch 
-				the <emphasis>New VDB Data Role</emphasis> editor dialog. Speicify a unique data role name, 
+				the <emphasis>New VDB Data Role</emphasis> editor dialog. Specify a unique data role name, 
 				add a optional description and modify the individual model element 
 				CRUD values by check or unchecking entries in the models section.</para>
 			<figure>

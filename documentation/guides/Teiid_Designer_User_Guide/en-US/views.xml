@@ -663,7 +663,7 @@
 					<para>
 						<emphasis role="bold">Paste</emphasis>
 						- Pastes the problem information located in the system clipboard (
-						if applicable ) into the curor location for a specified text
+						if applicable ) into the cursor location for a specified text
 						editor.
 					</para>
 				</listitem>
@@ -793,7 +793,7 @@
 							<imagedata fileref="images/icons/metadata-search.png"/>
 						</imageobject>
 					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches 
-						the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
+						the <emphasis role="bold">Teiid Designer Search</emphasis>.
 				</para>
 			</listitem>
 			<listitem>
@@ -848,7 +848,7 @@
 	
     <section id="model-classes-view">
       <title>Teiid Model Classes View</title>
-      <para>The Model Classes View provides a hiearchical EMF-centric view of the 
+      <para>The Model Classes View provides a hierarchical EMF-centric view of the 
       	various metamodel classes available within Teiid Designer. This view is primarily
       	for informational purposes, but can be used as a reference if creating relationships
       	or searching your workspace for specific metamodel constructs.

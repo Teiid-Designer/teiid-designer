@@ -94,7 +94,7 @@
 			   <para>You can create relational source models from your JDBC source schema data using the steps below.</para>
 					<note>
 						<para>Depending the detail provided in the database
-							connection url information and schema, Steps 5 through 7 may not be
+							connection URL information and schema, Steps 5 through 7 may not be
 							required.</para>
 					</note>
 					<itemizedlist>
@@ -122,7 +122,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
-								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								the <guilabel>New Connection Profile</guilabel> dialog (Eclispe Data Tools documentation) 
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.</para>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
@@ -527,7 +527,7 @@
 			by a WSDL file in your workspace or defined by a URL. Designer 
 			will interpret the WSDL, locate any associated or dependent XML 
 			schema files, generate a physical model to invoke the service, 
-			and generate virtual models containg procedures to build and parse
+			and generate virtual models containing procedures to build and parse
 			the XML declared as the service messages.</para>
 		<itemizedlist>
 			<listitem>
