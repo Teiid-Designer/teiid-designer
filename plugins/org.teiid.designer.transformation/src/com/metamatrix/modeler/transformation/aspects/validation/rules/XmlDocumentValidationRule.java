@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -29,6 +30,7 @@ import org.eclipse.xsd.XSDVariety;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.report.ReportItem;
+import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -960,7 +962,11 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
      */
     private Collection getGroups( final Criteria criteria,
                                   final QueryMetadataInterface metadata ) throws Exception {
-        return GroupsUsedByElementsVisitor.getGroups(criteria);
+        Set<GroupSymbol> groups = GroupsUsedByElementsVisitor.getGroups(criteria);
+        for (GroupSymbol groupSymbol : groups) {
+            ResolverUtil.resolveGroup(groupSymbol, metadata);
+        }
+        return groups;
     }
 
     /*
