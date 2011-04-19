@@ -13,7 +13,6 @@ import java.io.Reader;
 import java.net.URI;
 import java.util.Map;
 import org.eclipse.core.resources.FileInfoMatcherDescription;
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
@@ -639,6 +638,16 @@ public class MockFileResource implements IFile {
          * @see org.eclipse.core.resources.IProject#build(int, org.eclipse.core.runtime.IProgressMonitor)
          */
         public void build( int kind,
+                           IProgressMonitor monitor ) {
+
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.core.resources.IProject#build(int, java.lang.String, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+         */
+        public void build( int kind,
+                           String builderName,
+                           Map args,
                            IProgressMonitor monitor ) {
 
         }
@@ -1563,53 +1572,6 @@ public class MockFileResource implements IFile {
                                   URI arg1,
                                   IProgressMonitor arg2 ) throws CoreException {
         }
-
-		@Override
-		public void build(IBuildConfiguration config, int kind,
-				IProgressMonitor monitor) throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void build(int kind, String builderName,
-				Map<String, String> args, IProgressMonitor monitor)
-				throws CoreException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public IBuildConfiguration getActiveBuildConfig() throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration getBuildConfig(String configName)
-				throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration[] getBuildConfigs() throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public IBuildConfiguration[] getReferencedBuildConfigs(
-				String configName, boolean includeMissing) throws CoreException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean hasBuildConfig(String configName) throws CoreException {
-			// TODO Auto-generated method stub
-			return false;
-		}
     }
 
     public String getCharset() {
