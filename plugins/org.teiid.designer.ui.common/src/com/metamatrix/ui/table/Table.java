@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.TableColumn;
 public class Table<T> {
 
     final TableViewer viewer;
+    final List<TableViewerColumn> columns;
 
     /**
      * @param <V>
@@ -72,8 +73,11 @@ public class Table<T> {
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         // Create table columns
+        this.columns = new ArrayList<TableViewerColumn>();
+
         for (final ColumnProvider<T, V> columnProvider : columnProviders) {
             final TableViewerColumn viewerCol = new TableViewerColumn(viewer, columnProvider.getAlignment());
+            this.columns.add(viewerCol);
             viewerCol.setLabelProvider(new ColumnLabelProvider() {
 
                 @SuppressWarnings( "unchecked" )
@@ -137,7 +141,7 @@ public class Table<T> {
         }
         // Create listener to control position of images within cells
         final Listener paintListener = new Listener() {
-
+            @Override
             @SuppressWarnings( "unchecked" )
             public void handleEvent( final Event event ) {
                 final ColumnProvider<T, V> columnProvider = columnProviders[event.index];
@@ -187,6 +191,15 @@ public class Table<T> {
                 return 0;
             }
         });
+    }
+
+    /**
+     * @param index the index of the column being requested
+     * @return the column
+     * @throws IndexOutOfBoundsException if index is not valid
+     */
+    public TableViewerColumn getColumn( int index ) {
+        return this.columns.get(index);
     }
 
     /**

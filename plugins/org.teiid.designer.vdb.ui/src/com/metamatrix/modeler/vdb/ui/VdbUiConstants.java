@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.vdb.ui;
 
 import java.util.ResourceBundle;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.ui.UiConstants;
@@ -81,6 +82,14 @@ public interface VdbUiConstants {
         String REBUILD_VDB_ICON = CTOOL16 + "rebuild_vdb.gif"; //$NON-NLS-1$
         String SYNCHRONIZE_MODELS_ICON = CVIEW16 + "synchronizemodels.gif"; //$NON-NLS-1$
         String VISIBLE_ICON = CVIEW16 + "visible.gif"; //$NON-NLS-1$
+        
+        String ADD_FILE = CTOOL16 + "add-file.png"; //$NON-NLS-1$
+        String ADD_MODEL = CTOOL16 + "add-model.png"; //$NON-NLS-1$
+        String ADD_ROLE = CTOOL16 + "add-role.png"; //$NON-NLS-1$
+        String EDIT_ROLE = CTOOL16 + "edit-role.png"; //$NON-NLS-1$
+        String REMOVE_FILE = CTOOL16 + "remove-file.png"; //$NON-NLS-1$
+        String REMOVE_MODEL = CTOOL16 + "remove-model.png"; //$NON-NLS-1$
+        String REMOVE_ROLE = CTOOL16 + "remove-role.png"; //$NON-NLS-1$
     }
 
     /**

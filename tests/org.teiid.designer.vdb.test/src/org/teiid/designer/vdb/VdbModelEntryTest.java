@@ -17,7 +17,9 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 import javax.xml.bind.JAXBContext;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -31,6 +33,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelWorkspaceMock;
+
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.modeler.util.OperationUtil;
 import com.metamatrix.core.modeler.util.OperationUtil.ReturningUnreliable;
@@ -89,6 +92,7 @@ public class VdbModelEntryTest {
         when(ModelUtil.isPhysical(model)).thenReturn(true);
         final ModelResource modelResource = mock(ModelResource.class);
         when(ModelerCore.getModelEditor().findModelResource(model)).thenReturn(modelResource);
+        when(ModelerCore.getModelEditor().findModelResource(file)).thenReturn(modelResource);
         final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
         when(modelResource.getAnnotations()).thenReturn(annotations);
         entry = vdb.addModelEntry(modelPath, null);
