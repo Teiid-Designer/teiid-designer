@@ -333,6 +333,7 @@ public class DefaultCostAnalyzerImpl implements CostAnalyzer {
                 final ColumnStatistics colStat = (ColumnStatistics)colStats.get(colName);
                 if (colStat != null) {
                     colStat.setJdbcType(rs.getInt(5));
+                    colStat.setNativeType(rs.getString(6));
                     colStat.setNullable(rs.getInt(11) != DatabaseMetaData.attributeNoNulls);
                 }
             }
