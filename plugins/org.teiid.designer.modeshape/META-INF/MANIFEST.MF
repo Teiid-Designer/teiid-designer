@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modeshape;singleton:=true
-Bundle-Version: 7.4.0.qualifier
+Bundle-Version: 7.5.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
  external/lib/google-collections-1.0-rc3.jar,
