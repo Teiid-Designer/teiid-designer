@@ -8,9 +8,8 @@
 package com.metamatrix.modeler.ui.actions;
 
 import org.eclipse.ui.IWorkbenchActionConstants;
+
 import com.metamatrix.modeler.internal.ui.actions.CloneAction;
-import com.metamatrix.modeler.internal.ui.actions.CopyFullNameAction;
-import com.metamatrix.modeler.internal.ui.actions.CopyNameAction;
 import com.metamatrix.modeler.internal.ui.actions.EditAction;
 import com.metamatrix.modeler.internal.ui.actions.EditTableEditorPreferencesAction;
 import com.metamatrix.modeler.internal.ui.actions.InsertRowsAction;
@@ -40,10 +39,10 @@ public interface IModelerActionConstants extends IActionConstants {
         String CLONE = CloneAction.class.getName();
         
         /** Key for accessing the global copy full name action. */
-        String COPY_FULL_NAME = CopyFullNameAction.class.getName();
+//        String COPY_FULL_NAME = CopyFullNameAction.class.getName();
         
         /** Key for accessing the global copy name action. */
-        String COPY_NAME = CopyNameAction.class.getName();
+//        String COPY_NAME = CopyNameAction.class.getName();
         
         /** Key for accessing the global edit action. */
         String EDIT = EditAction.class.getName();
@@ -56,10 +55,7 @@ public interface IModelerActionConstants extends IActionConstants {
                                              PASTE_SPECIAL,
                                              CLONE,
                                              EDIT,
-                                             OPEN,
-                                             SET_DATATYPE,
-                                             COPY_FULL_NAME,
-                                             COPY_NAME,
+                                             OPEN
                                              };
     }
     
