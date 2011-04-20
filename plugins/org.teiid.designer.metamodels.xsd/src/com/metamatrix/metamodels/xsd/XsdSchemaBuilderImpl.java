@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -41,6 +42,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.TeiidRuntimeException;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.AccessPattern;
 import com.metamatrix.metamodels.relational.BaseTable;
@@ -54,6 +56,7 @@ import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.metamodels.relational.UniqueKey;
+import com.metamatrix.metamodels.relational.View;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -214,6 +217,11 @@ public class XsdSchemaBuilderImpl {
                     if (table.getPrimaryKey() != null) {
                         inputRoots.add(root);
                     } else if (!table.getAccessPatterns().isEmpty()) {
+                        inputRoots.add(root);
+                    }
+                } else if (root instanceof View) {
+                    final View view = (View)root;
+                    if (!view.getAccessPatterns().isEmpty()) {
                         inputRoots.add(root);
                     }
                 } else if (root instanceof Procedure) {
@@ -530,6 +538,26 @@ public class XsdSchemaBuilderImpl {
                 }
             } else {
                 atts = new ArrayList(table.getColumns());
+            }
+        } else if (entity instanceof View) {
+            final View view = (View)entity;
+            if (isInput) {
+                // Use the AccessPatterns to build the Input Document
+                
+
+                final Iterator accessPatterns = view.getAccessPatterns().iterator();
+                while (accessPatterns.hasNext()) {
+                    final AccessPattern ap = (AccessPattern)accessPatterns.next();
+                    final Iterator apCols = ap.getColumns().iterator();
+                    while (apCols.hasNext()) {
+                        final Object nextCol = apCols.next();
+                        if (!atts.contains(nextCol)) {
+                            atts.add(nextCol);
+                        }
+                    }
+                }
+            } else {
+                atts = new ArrayList(view.getColumns());
             }
         } else if (entity instanceof ProcedureResult) {
             final ProcedureResult procResult = (ProcedureResult)entity;
@@ -899,7 +927,7 @@ public class XsdSchemaBuilderImpl {
         final Iterator rootIT = roots.iterator();
         while (rootIT.hasNext()) {
             final Object next = rootIT.next();
-            if (!(next instanceof BaseTable) && !(next instanceof ProcedureResult) && !(next instanceof Procedure)) {
+            if (!(next instanceof View) && !(next instanceof BaseTable) && !(next instanceof ProcedureResult) && !(next instanceof Procedure)) {
                 final String invalidRoot = XsdPlugin.Util.getString("XsdSchemaBuilderImpl.invalidRoot", next.getClass().getName()); //$NON-NLS-1$
                 throw new TeiidRuntimeException(invalidRoot);
             }
