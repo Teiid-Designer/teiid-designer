@@ -56,6 +56,8 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.actions.BookmarkAction;
 import com.metamatrix.modeler.internal.ui.actions.CopyAction;
+import com.metamatrix.modeler.internal.ui.actions.CopyFullNameAction;
+import com.metamatrix.modeler.internal.ui.actions.CopyNameAction;
 import com.metamatrix.modeler.internal.ui.actions.CutAction;
 import com.metamatrix.modeler.internal.ui.actions.DeleteAction;
 import com.metamatrix.modeler.internal.ui.actions.FindAction;
@@ -131,9 +133,6 @@ public final class ModelerActionService extends AbstractActionService
     /** Map of default global actions. This map actually contains action for each action identifier. */
     private ModelerGlobalActionsMap defaultActionsMap;
 
-    /** The modeler plugin. */
-    private AbstractUiPlugin plugin;
-
     /** Utilities used for logging and localization. */
     private PluginUtil utils;
 
@@ -160,7 +159,6 @@ public final class ModelerActionService extends AbstractActionService
                                  IWorkbenchPage page ) {
         super(plugin, page);
 
-        this.plugin = plugin;
         utils = utility;
 
         // Need to wire any Special Actions to selection listener
@@ -213,18 +211,11 @@ public final class ModelerActionService extends AbstractActionService
         // Menu item group for insert child and sibling
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.INSERT_START));
+        theMenuMgr.add(getInsertChildMenu(theSelection));
 
-        if (isSubmenuSupported(ID_INSERT_CHILD_MENU)) {
-            theMenuMgr.add(getInsertChildMenu(theSelection));
-        }
+        theMenuMgr.add(getInsertSiblingMenu(theSelection));
 
-        if (isSubmenuSupported(ID_INSERT_SIBLING_MENU)) {
-            theMenuMgr.add(getInsertSiblingMenu(theSelection));
-        }
-
-        if (isSubmenuSupported(ID_INSERT_ASSOCIATION_MENU)) {
-            theMenuMgr.add(getCreateAssociationMenu(theSelection));
-        }
+        theMenuMgr.add(getCreateAssociationMenu(theSelection));
 
         MenuManager modelingActionMenu = getModelingActionMenu(theSelection);
         if (modelingActionMenu != null && modelingActionMenu.getItems().length > 0) {
@@ -239,22 +230,18 @@ public final class ModelerActionService extends AbstractActionService
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.UNDO_START));
 
-        if (isActionSupported(ActionValues.ID_UNDO_ACTION)) {
-            IAction undoAction = getAction(EclipseGlobalActions.UNDO, actionsMap);
-            theMenuMgr.add(undoAction);
+        IAction undoAction = getAction(EclipseGlobalActions.UNDO, actionsMap);
+        theMenuMgr.add(undoAction);
 
-            if (undoAction instanceof IMenuListener) {
-                ((IMenuListener)undoAction).menuAboutToShow(theMenuMgr);
-            }
+        if (undoAction instanceof IMenuListener) {
+            ((IMenuListener)undoAction).menuAboutToShow(theMenuMgr);
         }
 
-        if (isActionSupported(ActionValues.ID_REDO_ACTION)) {
-            IAction redoAction = getAction(EclipseGlobalActions.REDO, actionsMap);
-            theMenuMgr.add(redoAction);
+        IAction redoAction = getAction(EclipseGlobalActions.REDO, actionsMap);
+        theMenuMgr.add(redoAction);
 
-            if (redoAction instanceof IMenuListener) {
-                ((IMenuListener)redoAction).menuAboutToShow(theMenuMgr);
-            }
+        if (redoAction instanceof IMenuListener) {
+            ((IMenuListener)redoAction).menuAboutToShow(theMenuMgr);
         }
 
         theMenuMgr.add(new GroupMarker(ContextMenu.UNDO_END));
@@ -265,24 +252,12 @@ public final class ModelerActionService extends AbstractActionService
         // Menu item group for cut, copy, paste, clone, copyFullName, and copyName
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.CUT_START));
-
-        if (isActionSupported(ActionValues.ID_CUT_ACTION)) {
-            theMenuMgr.add(getAction(EclipseGlobalActions.CUT, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_COPY_ACTION)) {
-            theMenuMgr.add(getAction(EclipseGlobalActions.COPY, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_PASTE_ACTION)) {
-            theMenuMgr.add(getAction(EclipseGlobalActions.PASTE, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_CLONE_ACTION)) {
-            theMenuMgr.add(getAction(ModelerGlobalActions.CLONE, actionsMap));
-        }
-
-        MenuManager copyNameMenu = getCopyNameSubMenu(actionsMap);
+        theMenuMgr.add(getAction(EclipseGlobalActions.CUT, actionsMap));
+        theMenuMgr.add(getAction(EclipseGlobalActions.COPY, actionsMap));
+        theMenuMgr.add(getAction(EclipseGlobalActions.PASTE, actionsMap));
+        theMenuMgr.add(getAction(ModelerGlobalActions.CLONE, actionsMap));
+            
+        MenuManager copyNameMenu = getCopyNameSubMenu(theSelection);
 
         if (!copyNameMenu.isEmpty()) {
             theMenuMgr.add(copyNameMenu);
@@ -295,15 +270,8 @@ public final class ModelerActionService extends AbstractActionService
         // Menu item group for delete, rename
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.DELETE_START));
-
-        if (isActionSupported(ActionValues.ID_DELETE_ACTION)) {
-            theMenuMgr.add(getAction(EclipseGlobalActions.DELETE, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_RENAME_ACTION)) {
-            theMenuMgr.add(getAction(EclipseGlobalActions.RENAME, actionsMap));
-        }
-
+        theMenuMgr.add(getAction(EclipseGlobalActions.DELETE, actionsMap));
+        theMenuMgr.add(getAction(EclipseGlobalActions.RENAME, actionsMap));
         theMenuMgr.add(new GroupMarker(ContextMenu.DELETE_END));
         theMenuMgr.add(new Separator());
 
@@ -311,15 +279,8 @@ public final class ModelerActionService extends AbstractActionService
         // Menu item group for open, edit
         //
         theMenuMgr.add(new GroupMarker(ContextMenu.OPEN_START));
-
-        if (isActionSupported(ActionValues.ID_OPEN_ACTION)) {
-            theMenuMgr.add(getAction(ModelerGlobalActions.OPEN, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_EDIT_ACTION)) {
-            theMenuMgr.add(getAction(ModelerGlobalActions.EDIT, actionsMap));
-        }
-
+        theMenuMgr.add(getAction(ModelerGlobalActions.OPEN, actionsMap));
+        theMenuMgr.add(getAction(ModelerGlobalActions.EDIT, actionsMap));
         theMenuMgr.add(new GroupMarker(ContextMenu.OPEN_END));
         theMenuMgr.add(new Separator());
 
@@ -422,21 +383,6 @@ public final class ModelerActionService extends AbstractActionService
         }
 
         super.shutdown();
-    }
-
-    /**
-     * Indicates if the specified {@link IModelerProductContexts.ActionValues} is supported by the current product.
-     * 
-     * @param theProductContextActionValue the value being checked
-     * @return <code>true</code> if supported; <code>false</code> otherwise.
-     * @since 4.4
-     */
-    boolean isActionSupported( String theProductContextActionValue ) {
-        return this.plugin.isProductContextValueSupported(IModelerProductContexts.Actions.ACTION, theProductContextActionValue);
-    }
-
-    private boolean isSubmenuSupported( String theProductContextSubmenuValue ) {
-        return this.plugin.isProductContextValueSupported(IModelerProductContexts.Actions.SUB_MENU, theProductContextSubmenuValue);
     }
 
     /**
@@ -1016,20 +962,16 @@ public final class ModelerActionService extends AbstractActionService
 
             try {
                 // undo
-                if (isActionSupported(ActionValues.ID_REFACTOR_UNDO_ACTION)) {
-                    IActionDelegate delUndo = new UndoRefactoringAction();
-                    IAction actUndo = new DelegatableAction(delUndo, window);
-                    delUndo.selectionChanged(actUndo, theSelection);
-                    menu.add(actUndo);
-                }
+                IActionDelegate delUndo = new UndoRefactoringAction();
+                IAction actUndo = new DelegatableAction(delUndo, window);
+                delUndo.selectionChanged(actUndo, theSelection);
+                menu.add(actUndo);
 
                 // redo
-                if (isActionSupported(ActionValues.ID_REFACTOR_REDO_ACTION)) {
-                    IActionDelegate delRedo = new RedoRefactoringAction();
-                    IAction actRedo = new DelegatableAction(delRedo, window);
-                    delRedo.selectionChanged(actRedo, theSelection);
-                    menu.add(actRedo);
-                }
+                IActionDelegate delRedo = new RedoRefactoringAction();
+                IAction actRedo = new DelegatableAction(delRedo, window);
+                delRedo.selectionChanged(actRedo, theSelection);
+                menu.add(actRedo);
 
                 // separator
                 menu.add(new GroupMarker(ContextMenu.UNDO_END));
@@ -1077,18 +1019,16 @@ public final class ModelerActionService extends AbstractActionService
      * 
      * @return the Copy Name submenu
      */
-    public MenuManager getCopyNameSubMenu( GlobalActionsMap actionsMap ) {
-        //        System.out.println("[ModelerActionService.getCopyNameMenu] top");  //$NON-NLS-1$
-
+    public MenuManager getCopyNameSubMenu( Object selection) {
         MenuManager menu = new MenuManager(utils.getString(PREFIX + "copyNameSubMenu.title")); //$NON-NLS-1$
-
-        if (isActionSupported(ActionValues.ID_COPY_FULL_NAME_ACTION)) {
-            menu.add(getAction(ModelerGlobalActions.COPY_FULL_NAME, actionsMap));
-        }
-
-        if (isActionSupported(ActionValues.ID_COPY_NAME_ACTION)) {
-            menu.add(getAction(ModelerGlobalActions.COPY_NAME, actionsMap));
-        }
+        
+        CopyFullNameAction action1 = new CopyFullNameAction();
+        action1.getActionWorker().selectionChanged(selection);
+        menu.add(action1);
+        
+        CopyNameAction action2 = new CopyNameAction();
+        action1.getActionWorker().selectionChanged(selection);
+        menu.add(action2);
 
         return menu;
     }

@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -28,6 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
+
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
@@ -40,6 +42,8 @@ import com.metamatrix.modeler.diagram.ui.editor.DiagramEditor;
 import com.metamatrix.modeler.diagram.ui.editor.DiagramToolBarManager;
 import com.metamatrix.modeler.diagram.ui.pakkage.actions.RenameAction;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
+import com.metamatrix.modeler.internal.ui.actions.CopyFullNameAction;
+import com.metamatrix.modeler.internal.ui.actions.CopyNameAction;
 import com.metamatrix.modeler.internal.ui.actions.EditAction;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditorSite;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
@@ -450,7 +454,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                         theMenuMgr.appendToGroup(T_MARKER, this.addJoinExpressionAction);
                         theMenuMgr.add(new Separator(ContextMenu.TRANS_END));
                         // Defect 24443
-                        MenuManager copyMenu = getCopyNameSubMenu();
+                        MenuManager copyMenu = getCopyNameSubMenu(selection);
                         if (copyMenu != null) {
                             theMenuMgr.add(new Separator());
                             theMenuMgr.add(copyMenu);
@@ -482,7 +486,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                         }
                         theMenuMgr.add(new Separator(ContextMenu.TRANS_END));
                         // Defect 24443
-                        MenuManager copyMenu = getCopyNameSubMenu();
+                        MenuManager copyMenu = getCopyNameSubMenu(selection);
                         if (copyMenu != null) {
                             theMenuMgr.add(new Separator());
                             theMenuMgr.add(copyMenu);
@@ -874,26 +878,19 @@ public class TransformationActionAdapter extends DiagramActionAdapter
      * 
      * @return the Copy Name submenu
      */
-    private MenuManager getCopyNameSubMenu() {
-        boolean foundActions = false;
+    private MenuManager getCopyNameSubMenu(Object selection) {
+
         MenuManager menu = new MenuManager(
                                            com.metamatrix.modeler.ui.UiConstants.Util.getString("ModelerActionService.copyNameSubMenu.title")); //$NON-NLS-1$
-
-        IAction action = getAction(ModelerGlobalActions.COPY_FULL_NAME);
-        if (action != null) {
-            foundActions = true;
-            menu.add(getAction(ModelerGlobalActions.COPY_FULL_NAME));
-        }
-
-        action = getAction(ModelerGlobalActions.COPY_NAME);
-        if (action != null) {
-            foundActions = true;
-            menu.add(getAction(ModelerGlobalActions.COPY_NAME));
-        }
-
-        if (!foundActions) {
-            menu = null;
-        }
+        
+        CopyFullNameAction action1 = new CopyFullNameAction();
+        action1.getActionWorker().selectionChanged(selection);
+        menu.add(action1);
+        
+        CopyNameAction action2 = new CopyNameAction();
+        action1.getActionWorker().selectionChanged(selection);
+        menu.add(action2);
+        
         return menu;
     }
 
