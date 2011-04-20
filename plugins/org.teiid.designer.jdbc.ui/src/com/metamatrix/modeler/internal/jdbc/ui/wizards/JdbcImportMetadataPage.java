@@ -386,9 +386,15 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         boolean succeeded = false;
         try {
             final boolean enabled = this.indexesCheckBox.getSelection();
-            this.incls.setIncludeIndexes(enabled);
-            this.uniqueCheckBox.setEnabled(enabled);
+            // Keep approximations check box in sync when indexes are checked. This will improve import performance
+            // for the default case. users can uncheck approx. check box if they wish.
+            this.approximationsCheckBox.setSelection(enabled);
             this.approximationsCheckBox.setEnabled(enabled);
+            
+            this.incls.setIncludeIndexes(enabled);
+            this.incls.setApproximateIndexes(enabled);
+            this.uniqueCheckBox.setEnabled(enabled);
+            
             this.importSettings.setIncludeIndexes(this.incls.includeIndexes());
             this.importSettings.setIncludeUniqueIndexes(this.incls.getUniqueIndexesOnly());
             this.importSettings.setIncludeApproximateIndexes(this.incls.getApproximateIndexes());
