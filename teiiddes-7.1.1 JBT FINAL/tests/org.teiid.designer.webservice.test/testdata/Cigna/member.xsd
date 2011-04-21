@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xs:schema xmlns:pot="http://www.cigna.com/pot/common" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.cigna.com/pot/common" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="common.xsd"/>
+	<xs:element name="CignaMember" type="pot:CignaMemberType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="CignaSubscriber" type="pot:CignaSubscriberType"/>
+	<xs:complexType name="CignaMemberType">
+		<xs:sequence>
+			<xs:element name="Person" type="pot:PersonType" minOccurs="0"/>
+			<xs:element name="MembershipInfo" type="pot:MembershipInfoType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CignaSubscriberType">
+		<xs:sequence>
+			<xs:element name="Person" type="pot:PersonType"/>
+			<xs:element name="SubscriberInfo" type="pot:SubscriberInfoType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

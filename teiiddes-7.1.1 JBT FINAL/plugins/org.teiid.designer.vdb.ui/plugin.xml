@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+<!-- Model Editors -->
+   <extension
+         point="org.eclipse.ui.editors">
+<!-- VDB Editor -->
+      <editor
+            name="%vdbEditor"
+            default="true"
+            icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/VDB.gif"
+            extensions="vdb"
+            class="com.metamatrix.modeler.internal.vdb.ui.editor.VdbEditor"
+            id="vdbEditor">
+      </editor>
+   </extension>
+
+<!-- New wizards -->
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%modelCategory"
+            id="com.metamatrix.modeler.ui">
+      </category>
+<!-- New VDB wizard -->
+      <wizard
+            name="%newVdbWizard"
+            icon="icons/full/ctool16/newvdb_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.vdb.ui.wizards.NewVdbWizard"
+            id="newVdbWizard">
+         <description>
+            %newVdbWizardDescription
+         </description>
+      </wizard>
+   </extension> 
+<!-- Modeler VDB Import wizard 
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="%importVdbWizard.name"
+            icon="icons/full/ctool16/importvdb.gif"
+            class="com.metamatrix.modeler.internal.vdb.ui.wizards.ImportVdbWizard"
+            id="importVdbWizard">
+         <description>
+            %importVdbWizard.description
+         </description>
+      </wizard>
+   </extension> 
+-->
+
+</plugin>

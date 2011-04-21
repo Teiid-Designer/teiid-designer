@@ -1,0 +1,22 @@
+
+
+!*************
+!************* Dependencies for plugin
+
+!************* WSDL4J **************
+plugin@org.wsdl4j=v200602131706,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/wsdl/thirdparty/org.wsdl4j
+
+!************* WST Validation ******
+plugin@org.eclipse.wst.wsdl.validation=v200602030355,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/wsdl/plugins/org.eclipse.wst.wsdl.validation
+plugin@org.wsdl4j=v200602131706,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/wsdl/thirdparty/org.wsdl4j
+plugin@org.apache.xerces=v200602052214,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/xml/thirdparty/org.apache.xerces
+plugin@org.eclipse.wst.common.uriresolver=v200601310800,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.uriresolver
+plugin@org.eclipse.wst.validation=v200602070050,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/validation/plugins/org.eclipse.wst.validation
+plugin@org.eclipse.wst.common.frameworks=v200602070050,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.frameworks
+plugin@org.eclipse.wst.common.environment=v200602151541,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.environment
+plugin@org.eclipse.wst.xml.core=v200602050425,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/xml/plugins/org.eclipse.wst.xml.core
+plugin@org.eclipse.wst.sse.core=v200602041933,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/sse/plugins/org.eclipse.wst.sse.core
+plugin@org.eclipse.wst.common.emf=v200602070050,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.emf
+plugin@org.eclipse.wst.common.emfworkbench.integration=v200602070050,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.emfworkbench.integration
+plugin@org.eclipse.wst.common.project.facet.core=v200602070050,:pserver:anonymous@dev.eclipse.org:/cvsroot/webtools,,wst/components/common/plugins/org.eclipse.wst.common.project.facet.core
+

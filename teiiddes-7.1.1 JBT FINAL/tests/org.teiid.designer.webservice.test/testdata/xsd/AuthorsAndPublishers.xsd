@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xsd:schema targetNamespace="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:AuthPubNS="http://www.metamatrix.com/XMLSchema/DataSets/AuthorsAndPublishers"
+            xmlns:BookTypesNS="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes">
+
+  <xsd:import namespace="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes" schemaLocation="BookDatatypes.xsd"/>
+
+  <!-- ============= -->
+  <!-- DOCUMENTATION -->
+  <!-- ============= -->
+
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Books Data Set Version 1.1.
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+  <!-- =================== -->
+  <!-- ELEMENT DEFINITIONS -->
+  <!-- =================== -->
+
+
+  <!-- The set of possible root elements. -->
+
+  <xsd:element name="authors" type="AuthPubNS:Authors">            <!-- Multiple simple authors -->
+    <xsd:annotation>
+      <xsd:documentation>A set of authors, by name.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="author" type="AuthPubNS:Author">             <!-- Single simple author -->
+    <xsd:annotation>
+      <xsd:documentation>A single author, by name.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="authorsBooks" type="AuthPubNS:AuthorsBooks">       <!-- Multiple authors w/ books -->
+    <xsd:annotation>
+      <xsd:documentation>A set of authors and their books.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="authorBooks" type="AuthPubNS:AuthorBooks">        <!-- Single author w/ books -->
+    <xsd:annotation>
+      <xsd:documentation>A single author and his/her books.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+
+  <xsd:element name="publishers" type="AuthPubNS:Publishers">         <!-- Multiple simple publishers -->
+    <xsd:annotation>
+      <xsd:documentation>A set of publishers, by name and location.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="publisher" type="AuthPubNS:Publisher">          <!-- Single simple publisher -->
+    <xsd:annotation>
+      <xsd:documentation>A single publisher, by name and location.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="publishersBooks" type="AuthPubNS:PublishersBooks">    <!-- Multiple publishers w/ books -->
+    <xsd:annotation>
+      <xsd:documentation>A set of publishers and their published books.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="publisherBooks" type="AuthPubNS:PublisherBooks">     <!-- Single publisher w/ books -->
+    <xsd:annotation>
+      <xsd:documentation>A single publisher and their published books.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+
+  <xsd:element name="publisherAuthors" type="AuthPubNS:PublisherAuthors">   <!-- Single publisher w/ authors -->
+    <xsd:annotation>
+      <xsd:documentation>A oublisher and the authors who've written books for them.</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+
+
+  <!-- ======================== -->
+  <!-- DOMAIN TYPE DEFINITIONS -->
+  <!-- ======================== -->
+
+
+  <xsd:complexType name="Authors">
+    <xsd:annotation>
+      <xsd:documentation>A set of authors.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="author"        type="AuthPubNS:Author"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="AuthorsBooks">
+    <xsd:annotation>
+      <xsd:documentation>A set of authors and the books they've written.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="authorInfo" type="AuthPubNS:AuthorBooks"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AuthorBooks">
+    <xsd:annotation>
+      <xsd:documentation>A single author and the books he or she has written.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="author"        type="AuthPubNS:Author"/>
+      <xsd:element name="booksWritten"  type="AuthPubNS:BooksWritten"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Author">
+    <xsd:annotation>
+      <xsd:documentation>An author - first and last name, and middle initial.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="lastName"      type="xsd:string"/>
+      <xsd:element name="firstName"     type="xsd:string"/>
+      <xsd:element name="middleInitial" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="BooksWritten">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="book" type="AuthPubNS:BookByAuthor"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="BookByAuthor">
+    <xsd:sequence>
+      <xsd:element name="title"       type="xsd:string"/>
+      <xsd:element name="subtitle"    type="xsd:string" minOccurs="0"/>  
+      <xsd:element name="publisher"   type="xsd:string"/>
+      <xsd:element name="coAuthors"   minOccurs="0">  
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="coAuthor" type="xsd:string" maxOccurs="unbounded"/>  <!-- Full name -->
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="latestEdition" minOccurs="1" maxOccurs="1">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element name="edition" type="BookTypesNS:BookEdition" default=""/>
+            <xsd:element name="year"    type="BookTypesNS:PublicationYear"/>
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="isbn" type="BookTypesNS:ISBN"/>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="Publishers">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="publisher" type="AuthPubNS:Publisher"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="PublishersBooks">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="publisherInfo" type="AuthPubNS:PublisherBooks"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PublisherBooks">
+    <xsd:sequence>
+      <xsd:element name="publisher"       type="AuthPubNS:Publisher" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="booksPublished"  type="AuthPubNS:BooksPublished"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Publisher">
+    <xsd:sequence>
+      <xsd:element name="name"      type="xsd:string"/>
+      <xsd:element name="location"  type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="BooksPublished">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="book" type="AuthPubNS:BookByPublisher"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="BookByPublisher">
+    <xsd:sequence>
+      <xsd:element name="title"       type="xsd:string"/>
+      <xsd:element name="subtitle"    type="xsd:string" minOccurs="0"/>  
+      <xsd:element name="editions"    type="BookTypesNS:Quantity" default="1"/>
+      <xsd:element name="authors"     type="AuthPubNS:AuthorList"/>
+      <xsd:element name="publishDate" type="BookTypesNS:PublicationDate"/>
+    </xsd:sequence>
+    <xsd:attribute name="isbn" type="BookTypesNS:ISBN"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="AuthorList">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="author"  type="xsd:string"/>   <!-- Author full name -->
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <xsd:complexType name="PublisherAuthors">
+    <xsd:sequence>
+      <xsd:element name="publisher" type="AuthPubNS:Publisher" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="authors"   type="AuthPubNS:AuthorsEmployed"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AuthorsEmployed">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="author">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="booksWritten"  type="BookTypesNS:Quantity"/>
+            <xsd:element name="lastBook"      type="BookTypesNS:PublicationYear"/>
+          </xsd:sequence>
+          <xsd:attribute name="name" use="required"/>   <!-- Author full name -->
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+</xsd:schema>

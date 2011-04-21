@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+     <extension
+         id="generateVirtualModelContributor"
+         name="%generateVirtualModelContributor"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.modelgenerator.ui.wizards.GenerateVirtualModelContributor"
+            icon="icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/Relational"
+            isPhysical="true"
+            isVirtual="true">
+      </metamodelDescriptorType>
+   </extension>
+   <extension
+         id="uml2relational.pastespecial"
+         name="%relationalFromUml.name"
+         point="org.teiid.designer.ui.metadataPasteSpecial">
+      <class
+            label="%relationalFromUml.label"
+            description="%relationalFromUml.description"
+            classname="com.metamatrix.modeler.modelgenerator.ui.paste.Uml2RelationalPasteContributor">
+      </class>
+   </extension>
+   <extension
+         id="uml2relational.refresh"
+         name="%refreshRelationalFromUml.name"
+         point="org.teiid.designer.ui.metadataRefresh">
+      <class
+            label="%refreshRelationalFromUml.label"
+            description="%refreshRelationalFromUml.description"
+            classname="com.metamatrix.modeler.modelgenerator.ui.refresh.RefreshVirtualModelContributor">
+      </class>
+   </extension>
+
+</plugin>

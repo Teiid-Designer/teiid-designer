@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/ComplexSoapArray"
+	xmlns:tns="http://www.example.org/ComplexSoapArray"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+	
+	<element name="Array" type="tns:ArrayOfServiceSummary"/>
+				
+	<complexType name="ArrayOfServiceSummary">
+		<complexContent>
+			<restriction base="soapenc:Array">
+				<attribute ref="soapenc:arrayType"
+					wsdl:arrayType="tns:ServiceSummary[]" />
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ServiceSummary">
+		<sequence>
+			<element name="name" nillable="true" type="string" />
+			<element name="id" nillable="true" type="string" />
+			<element name="shortDescription" nillable="true"
+				type="string" />
+			<element name="wsdlURL" nillable="true" type="string" />
+			<element name="publisherID" nillable="true"
+				type="string" />
+		</sequence>
+	</complexType>
+
+</schema>

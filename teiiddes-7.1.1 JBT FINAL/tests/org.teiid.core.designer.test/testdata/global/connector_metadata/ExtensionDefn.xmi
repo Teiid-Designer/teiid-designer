@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:mmext="http://www.metamatrix.com/metamodels/Extension">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:a8690780-ac37-1efb-ad21-fc443676f2f5" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Extension" modelType="PHYSICAL" ProducerName="Teiid Designer" ProducerVersion="5.0"/>
+  <Diagram:DiagramContainer xmi:uuid="mmuuid:bec31341-ac37-1efb-ad21-fc443676f2f5">
+    <diagram xmi:uuid="mmuuid:bec31340-ac37-1efb-ad21-fc443676f2f5" type="packageDiagramType" target="mmuuid/a8690780-ac37-1efb-ad21-fc443676f2f5">
+      <diagramEntity xmi:uuid="mmuuid:12cef740-ac3a-1efb-ad21-fc443676f2f5" name="MyPackage" modelObject="mmuuid/1bba88c3-e66e-1fd6-933e-a31472036714" xPosition="140" yPosition="80" height="36" width="133"/>
+    </diagram>
+    <diagram xmi:uuid="mmuuid:0e28c7c0-ac3a-1efb-ad21-fc443676f2f5" type="packageDiagramType" target="mmuuid/1bba88c3-e66e-1fd6-933e-a31472036714"/>
+  </Diagram:DiagramContainer>
+  <mmext:XPackage xmi:uuid="mmuuid:1bba88c3-e66e-1fd6-933e-a31472036714" name="MyPackage">
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:1bba88c5-e66e-1fd6-933e-a31472036714" name="TableProps">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:1caeacc0-e66e-1fd6-933e-a31472036714" name="TestExtraProperty">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//BaseTable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:1da2d0c2-e66e-1fd6-933e-a31472036714" name="ColumnProps">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:1da2d0c3-e66e-1fd6-933e-a31472036714" name="ColProp" defaultValueLiteral="defaultvalue">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//Column"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:1da2d0c6-e66e-1fd6-933e-a31472036714" name="ProcedureProps">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:1da2d0c7-e66e-1fd6-933e-a31472036714" name="ProcProp">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//Procedure"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:1da2d0ca-e66e-1fd6-933e-a31472036714" name="ParameterProps">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:1da2d0cb-e66e-1fd6-933e-a31472036714" name="ParamProp">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//ProcedureParameter"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="mmext:XClass" xmi:uuid="mmuuid:1da2d0ce-e66e-1fd6-933e-a31472036714" name="ResultSetProps">
+      <eStructuralFeatures xsi:type="mmext:XAttribute" xmi:uuid="mmuuid:1da2d0cf-e66e-1fd6-933e-a31472036714" name="RSProp">
+        <eType xsi:type="ecore:EDataType" href="mtkplugin:///www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eStructuralFeatures>
+      <extendedClass href="mtkplugin:///com.metamatrix.metamodels.Relational#//ProcedureResult"/>
+    </eClassifiers>
+  </mmext:XPackage>
+</xmi:XMI>

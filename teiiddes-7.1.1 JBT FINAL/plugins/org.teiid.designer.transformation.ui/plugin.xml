@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Adding the Transformation Diagram Type extension-->
+   <extension
+         id="transformationDiagramType"
+         name="%transformDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramType"
+            simpleDiagram="true">
+      </diagram>
+   </extension>
+<!-- Adding the Dependency Type extension-->
+   <extension
+         id="dependencyDiagramType"
+         name="%dependencyDiagramType"
+         point="org.teiid.designer.diagram.ui.diagramType">
+      <diagram
+            class="com.metamatrix.modeler.transformation.ui.diagram.DependencyDiagramType"
+            simpleDiagram="true">
+      </diagram>
+   </extension>
+   <extension
+         id="transformationDiagramContentProvider"
+         name="Transformation Diagram Content Provider"
+         point="org.teiid.designer.ui.diagramContentProvider">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramContentProvider">
+      </class>
+      <diagramType
+            name="transformationDiagramType">
+      </diagramType>
+   </extension>
+   <extension
+         id="transformationDiagramLabelProvider"
+         name="Transformation Diagram LabelProvider"
+         point="org.teiid.designer.ui.diagramLabelProvider">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.diagram.TransformationDiagramLabelProvider">
+      </class>
+      <diagramType
+            name="transformationDiagramType">
+      </diagramType>
+   </extension>
+   <extension
+         id="TransformationObjectEditorPage"
+         name="Transformation Object Editor"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage">
+      </class>
+   </extension>
+<!-- Transformation Diagram Type Permanent Model Object Action Contributor -->
+   <extension
+         id="transformationDiagramModelObjectActionContributor"
+         point="org.teiid.designer.ui.modelObjectActionContributor">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.actions.TransformationDiagramPermanentActionContributor">
+      </class>
+   </extension>
+   <extension
+         id="transformationLinkContributor"
+         name="%transformationLinkContributor"
+         point="org.teiid.designer.ui.newModelWizardContributor">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.wizards.TransformationLinkContributor"
+            icon="icons/full/ctool16/newmodel_wiz.gif">
+      </class>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/Relational"
+            isPhysical="false"
+            isVirtual="true">
+      </metamodelDescriptorType>
+      <metamodelDescriptorType
+            name="http://www.metamatrix.com/metamodels/DataAccess"
+            isPhysical="false"
+            isVirtual="true">
+      </metamodelDescriptorType>
+   </extension>
+   <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="transformationObjectEditHelper"
+         name="%transformationObjectEditHelper"
+         point="org.teiid.designer.ui.modelObjectEditHelper">
+      <class
+        name="com.metamatrix.modeler.transformation.ui.actions.TransformationObjectEditHelper">
+      </class>
+   </extension>
+
+<!-- Action in the Metadata menu to revalidate model transformations -->
+<!-- Property Testers, Handlers, Commands, Menus extensions to add to Teiid Designer submenu in Search Menu -->
+
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="org.teiid.designer.transformation.ui.propertyTester"
+			type="org.eclipse.core.resources.IFile"
+			namespace="org.teiid.designer.transformation.ui"
+			properties="VIRTUAL_MODEL"
+			class="com.metamatrix.modeler.transformation.ui.actions.TransformationUiPropertyTester">
+		</propertyTester>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="com.metamatrix.modeler.transformation.ui.actions.ValidateModelTransformationsHandler"
+            commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand">
+			<enabledWhen>
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false">
+						<test property="org.teiid.designer.transformation.ui.VIRTUAL_MODEL" value="true" />
+					</iterate>
+				</and>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="com.metamatrix.modeler.transformation.ui.search.OpenTransformationSearchPageHandler"
+            commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand">
+		</handler>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.commands">
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+			name="%revalidateModelAction.label">
+	  </command>
+	  <command
+			categoryId="com.metamatrix.modeler.ui.category.modeler"
+			id="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+			name="%openTransformationSearchAction.label">
+	  </command>
+   </extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:project?after=additions">
+			<command commandId="com.metamatrix.modeler.transformation.ui.actions.validateModelTransformationsCommand"
+				label="%revalidateModelAction.label"
+             	icon="icons/full/cview16/validate.gif"
+             	tooltip="%revalidateModelAction.tooltip">
+             	<visibleWhen
+                    checkEnabled="false">
+					<with variable="activeWorkbenchWindow.activePerspective">
+                 		<equals value="modelerPerspective"/>
+              		</with>
+             	</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
+			<!-- Note: The Search menu (re-) definition has to be here due to bug: -->
+			<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
+			<menu
+				label="%searchMenu.label"
+				id="org.eclipse.search.menu">
+				<separator name="internalDialogGroup" visible="false" />
+           		<separator name="dialogGroup" visible="false" />
+           		<separator name="fileSearchContextMenuActionsGroup" visible="true" />
+           		<separator name="teiidDesignerSearchMenuActionsGroup" visible="true" />
+           		<separator name="contextMenuActionsGroup" visible="true" />
+           		<separator name="occurencesActionsGroup" visible="true" />
+           		<separator name="extraSearchGroup" visible="true" />
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.search.menu?after=teiidDesignerSearchMenuActionsGroup">
+			<menu id="designerSearchSubMenu" label="%designerSearchSubMenu.label">
+				<command commandId="com.metamatrix.modeler.transformation.ui.search.openTransformationSearchPageCommand"
+					label="%openTransformationSearchAction.label"
+                 	icon="icons/full/cview16/search_transformation.gif"
+                 	tooltip="%openTransformationSearchAction.tip">
+        		</command>
+			</menu>
+		</menuContribution>
+	</extension>
+
+<!--
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%metadataActionSet.label"
+            visible="true"
+            id="transformationMetadataActionSet">
+         <action
+               label="%revalidateModelAction.label"
+               tooltip="%revalidateModelAction.tooltip"
+               icon="icons/full/cview16/validate.gif"
+               class="com.metamatrix.modeler.transformation.ui.actions.RevalidateModelAction"
+               menubarPath="project/additions"
+               enablesFor="1"
+               id="revalidateModelAction">
+         </action>
+      </actionSet>
+   </extension>
+-->
+ <!-- Helper method to allow external edit for objects. i.e. Delete, Copy, etc.. -->
+   <extension
+         id="transformationUiNewModelObjectHelper"
+         name="%transformationUiNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="com.metamatrix.modeler.transformation.ui.util.TransformationUiNewModelObjectHelper">
+      </class>
+   </extension>
+       <!-- Text Importer Contribution -->
+   <extension
+         id="transformationUiTextImporter"
+         name="%transformationUiTextImporter"
+         point="org.teiid.designer.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.transformation.ui.wizards.ImportVirtualTablesMainPage">
+      </class>
+   </extension>
+   <extension
+		id="RevalidateModelTransformationsAction"
+		name="%revalidateModelTransformationsAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.transformation.ui.actions.RevalidateModelTransformationsAction"
+         label="%revalidateModelTransformationsAction.label">
+      </resourceAction>
+   </extension>
+<!-- XQuery Transformation Editor -->
+   <extension
+         id="XQueryTransformationObjectEditorPage"
+         name="XQuery Object Editor"
+         point="org.teiid.designer.ui.modelObjectEditorPage">
+      <class
+            name="com.metamatrix.modeler.transformation.ui.editors.XQueryObjectEditorPage">
+      </class>
+   </extension>
+       <extension
+		id="ImportTransformationSqlFromTextAction"
+		name="%importTransformationSqlFromTextAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.transformation.ui.actions.ImportTransformationSqlFromTextAction"
+         label="%importTransformationSqlFromTextAction.label">
+      </specialAction>
+   </extension>
+       <extension
+		id="ExportTransformationSqlToTextAction"
+		name="%exportTransformationSqlToTextAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.transformation.ui.actions.ExportTransformationSqlToTextAction"
+         label="%exportTransformationSqlToTextAction.label">
+      </specialAction>
+   </extension>
+   <extension
+		id="EditTransformationAction"
+		name="%editTransformationAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="com.metamatrix.modeler.transformation.ui.actions.EditTransformationAction"
+         label="%editTransformationAction.label">
+      </resourceAction>
+   </extension>
+
+   <!-- Action contributed to generate materialized views -->
+   <extension
+		id="CreateMaterializedViewsAction"
+		name="%createMaterializedViewsAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="com.metamatrix.modeler.transformation.ui.actions.CreateMaterializedViewsAction"
+         label="%createMaterializedViewsAction.label">
+      </specialAction>
+   </extension>
+
+</plugin>
