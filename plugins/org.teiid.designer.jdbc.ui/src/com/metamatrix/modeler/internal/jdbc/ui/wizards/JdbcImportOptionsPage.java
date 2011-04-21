@@ -56,6 +56,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -495,7 +496,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
                                                                            false,
                                                                            ((JdbcImportWizard)getWizard()).getFolder(),
                                                                            new ModelWorkspaceViewerFilter(true),
-                                                                           new ModelResourceSelectionValidator(descriptor, false));
+                                                                           new ModelResourceSelectionValidator(descriptor, false),
+                                                           				   new ModelExplorerLabelProvider());
 
         if ((resources != null) && (resources.length > 0)) {
             IFile model = (IFile)resources[0];

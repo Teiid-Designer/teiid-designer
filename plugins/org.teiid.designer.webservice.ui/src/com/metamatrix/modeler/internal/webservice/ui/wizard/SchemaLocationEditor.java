@@ -43,6 +43,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
@@ -409,7 +410,8 @@ public class SchemaLocationEditor extends GridPanel
                                                                            false,
                                                                            this.currentFolder,
                                                                            new ModelingResourceFilter(this.targetFilter),
-                                                                           null);
+                                                                           null,
+                                                           				   new ModelExplorerLabelProvider());
 
         if ((resources != null) && (resources.length > 0)) {
             setFolder(getContainerText((IContainer)resources[0]));

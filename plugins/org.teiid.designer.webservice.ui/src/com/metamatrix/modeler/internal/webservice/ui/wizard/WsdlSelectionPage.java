@@ -88,6 +88,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.wsdl.io.WsdlHelper;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
@@ -1128,7 +1129,8 @@ public final class WsdlSelectionPage extends AbstractWizardPage implements
 				getString("dialog.addWsdl.title"), //$NON-NLS-1$
 				getString("dialog.addWsdl.msg"), //$NON-NLS-1$
 				true, null, new ModelingResourceFilter(this.wsdlFilter),
-				this.wsdlValidator);
+				this.wsdlValidator,
+				   new ModelExplorerLabelProvider());
 
 		/*
 		 * Defect 18786: In order to get over the problems with the 'Workspace

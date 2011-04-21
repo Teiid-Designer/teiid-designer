@@ -55,6 +55,7 @@ import org.eclipse.xsd.XSDSchema;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.modelgenerator.xml.IUiConstants;
 import com.metamatrix.modeler.modelgenerator.xml.Util;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
@@ -571,7 +572,8 @@ public abstract class XsdSelectionPage extends AbstractWizardPage {
                                                                           true,
                                                                           null,
                                                                           new ModelingResourceFilter(this.xsdFilter),
-                                                                          this.xsdValidator);
+                                                                          this.xsdValidator,
+                                                       				   new ModelExplorerLabelProvider());
         if ((xsdFiles != null) && (xsdFiles.length > 0)) {
             addXsdFiles(xsdFiles, true);
         }

@@ -39,6 +39,7 @@ import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.modelgenerator.xml.XmlImporterUiPlugin;
@@ -190,7 +191,8 @@ public abstract class XSDElementProcedureBaseAction extends
 				util.getStringOrKey("XSDElementProcedureBaseAction.dialog.browseTargetModel.msg"), //$NON-NLS-1$
 				false, null,
 				filter,
-				new ModelResourceSelectionValidator(descriptor, false));
+				new ModelResourceSelectionValidator(descriptor, false),
+				new ModelExplorerLabelProvider());
 		if ((resources != null) && (resources.length > 0)) {
 			model = (IFile) resources[0];
 		}

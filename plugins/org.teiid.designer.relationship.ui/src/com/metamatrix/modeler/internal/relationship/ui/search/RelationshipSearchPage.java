@@ -52,6 +52,7 @@ import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.search.SearchPageUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relationship.RelationshipPlugin;
@@ -533,7 +534,8 @@ public final class RelationshipSearchPage extends DialogPage implements ISearchP
                                                                            true,
                                                                            null,
                                                                            new ModelingResourceFilter(this.filter),
-                                                                           null); // no need for selection validator because of
+                                                                           null,
+                                                           				   new ModelExplorerLabelProvider()); // no need for selection validator because of
         // filter
 
         List list = new LinkedList();

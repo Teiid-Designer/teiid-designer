@@ -33,6 +33,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.util.FileUtils;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceViewerFilter;
 import com.metamatrix.modeler.internal.webservice.ui.IInternalUiConstants;
@@ -264,7 +265,8 @@ public class XmlModelSelectionPage extends AbstractWizardPage
                                                                            false,
                                                                            this.modelLocation,
                                                                            this.viewerFilter,
-                                                                           null);
+                                                                           null,
+                                                           				   new ModelExplorerLabelProvider());
 
         if ((resources != null) && (resources.length > 0)) {
             setFolder(getLocationText((IContainer)resources[0]));
