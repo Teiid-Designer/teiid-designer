@@ -282,7 +282,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), oracle_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Set Connection Profile");
+		SWTBotShell shell = bot.shell("Select Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.ORACLE_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -294,7 +294,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.ORACLE_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Data Source Password");
+		shell = bot.shell("Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -319,7 +319,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), sql_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Set Connection Profile");
+		SWTBotShell shell = bot.shell("Select Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.SQLSERVER_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -331,7 +331,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.SQLSERVER_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Data Source Password");
+		shell = bot.shell("Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
