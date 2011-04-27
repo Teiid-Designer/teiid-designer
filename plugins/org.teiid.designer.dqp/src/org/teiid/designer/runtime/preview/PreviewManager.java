@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,17 +17,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -53,16 +49,13 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.datatools.JdbcTranslatorHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
-import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.ExecutionConfigurationEvent.EventType;
@@ -82,7 +75,6 @@ import org.teiid.designer.runtime.preview.jobs.ModelProjectOpenedJob;
 import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
@@ -440,6 +432,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @see org.teiid.designer.runtime.preview.PreviewContext#ensureConnectionInfoIsValid(org.teiid.designer.vdb.Vdb,
      *      org.teiid.designer.runtime.Server)
      */
+    @Override
     public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
                                                 Server previewServer ) throws Exception {
         assert (previewServer != null) : "Preview server is null"; //$NON-NLS-1$
@@ -614,66 +607,7 @@ public final class PreviewManager extends JobChangeAdapter
     public TeiidDataSource getOrCreateDataSource( ExecutionAdmin admin,
                                                   IFile model,
                                                   String jndiName ) throws Exception {
-        // String displayName = model.getFullPath().removeFileExtension().lastSegment();
-
-        ModelResource modelResource = ModelUtil.getModelResource(model, true);
-        ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
-        IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
-        Properties props = connInfoProvider.getConnectionProperties(modelResource);
-        String dataSourceType = connInfoProvider.getDataSourceType();
-
-        if (!props.isEmpty()) {
-            //
-            IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
-            // The data source property key represents what's needed as a property for the Teiid Data Source
-            // This is provided by the getDataSourcePasswordPropertyKey() method.
-            String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
-            boolean requiresPassword = dsPasswordKey != null;
-
-            if (modelConnectionProfile != null) {
-                String pwd = null;
-
-                // Check Password
-                if (requiresPassword) {
-                    // Check connection info provider. Property will be coming in with a key = "password
-                    pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-
-                    if (pwd == null) {
-                        IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
-
-                        if (existingConnectionProfile != null) {
-                            // make sure the password property is there. if not get from connection profile.
-		                	// Use DTP's constant for profile:  IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID = org.eclipse.datatools.connectivity.db.password
-		                	// DTP's connection profile "password" key, if exists for a profile type, is returned via the provider's
-                            // getPasswordPropertyKey() method. (this can be different than getDataSourcePasswordPropertyKey())
-                            if (requiresPassword && props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
-                                pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
-                            }
-                        }
-
-                        if (pwd == null && this.passwordProvider != null) {
-                            pwd = this.passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
-                        }
-                    }
-
-                    if (pwd != null) {
-                        props.setProperty(dsPasswordKey, pwd);
-                    }
-                }
-
-                if (!requiresPassword || (requiresPassword && pwd != null)) {
-                    TeiidDataSource tds = admin.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
-                    tds.setPreview(true);
-                    return tds;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public void setPasswordProvider( IPasswordProvider provider ) {
-        this.passwordProvider = provider;
+        return admin.getOrCreateDataSource(model, jndiName, true, this.passwordProvider);
     }
 
     Server getPreviewServer() {
@@ -1451,6 +1385,10 @@ public final class PreviewManager extends JobChangeAdapter
                                              boolean deploy ) {
         PreviewVdbStatus status = getStatus(pvdbPath);
         status.setDeploy(deploy);
+    }
+
+    public void setPasswordProvider(IPasswordProvider passwordProvider) {
+        this.passwordProvider = passwordProvider;
     }
 
     private void setPreviewServer( Server server ) {
