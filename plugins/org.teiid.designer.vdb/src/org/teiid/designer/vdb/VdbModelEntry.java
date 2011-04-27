@@ -64,6 +64,14 @@ public final class VdbModelEntry extends VdbEntry {
 
     private static final String INDEX_FOLDER = "runtime-inf/"; //$NON-NLS-1$
     private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
+    
+    /**
+     * @param path the model path (may not be <code>null</code>)
+     * @return the default name to use as the JNDI name (never <code>null</code>)
+     */
+    public static String createDefaultJndiName(IPath path) {
+        return path.removeFileExtension().lastSegment();
+    }
 
     private final String indexName;
     private final Set<Problem> problems = new HashSet<Problem>();
@@ -106,7 +114,7 @@ public final class VdbModelEntry extends VdbEntry {
             // if (emfModel.getModelAnnotation().getDescription() != null)
             // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
-                final String defaultName = name.removeFileExtension().lastSegment();
+                final String defaultName = createDefaultJndiName(name);
                 source.set(defaultName);
                 final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
                 final String translator = new ConnectionInfoHelper().getTranslatorName(mr);

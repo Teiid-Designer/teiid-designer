@@ -68,9 +68,14 @@ import com.metamatrix.core.util.StringUtilities;
 public final class Vdb {
 
     /**
-     * The file extension of VDBs ( {@value} )
+     * The file extension of VDBs including the dot. ( {@value} )
      */
     public static final String FILE_EXTENSION = ".vdb"; //$NON-NLS-1$
+
+    /**
+     * The file extension of a VDB but does not include the dot. ( {@value} )
+     */
+    public static final String FILE_EXTENSION_NO_DOT = "vdb"; //$NON-NLS-1$
 
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 

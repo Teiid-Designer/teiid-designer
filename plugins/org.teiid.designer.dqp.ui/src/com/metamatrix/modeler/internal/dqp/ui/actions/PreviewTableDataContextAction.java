@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,12 +61,9 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
-import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
-import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
-
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -92,9 +88,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 /**
  * @since 5.0
  */
-public class PreviewTableDataContextAction extends SortableSelectionAction  implements IPasswordProvider {
-	
-	private String password;
+public class PreviewTableDataContextAction extends SortableSelectionAction {
 	
     /**
      * @since 5.0
@@ -141,31 +135,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
 
     private Shell getShell() {
         return Display.getCurrent().getActiveShell();
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     *
-     * @see org.teiid.designer.runtime.connection.IPasswordProvider#getPassword(java.lang.String, java.lang.String)
-     */
-    public String getPassword(final String modelName, final String profileName) {
-    	
-    	UiUtil.runInSwtThread(new Runnable() {
-            public void run() {
-        		String message = DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.getMissingPassword", new Object[] {modelName, profileName}); //$NON-NLS-1$
-        		PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(getShell(), message);
-        		
-        		int result = dialog.open();
-        	    
-        	    if (result == Window.OK) {
-        	    	password = dialog.getPassword();
-        	    }
-            }
-        }, false);
-    	String pwd = password;
-    	password = null;
-    	return pwd;
     }
 
     /**
@@ -476,20 +445,16 @@ public class PreviewTableDataContextAction extends SortableSelectionAction  impl
         final PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
         assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
 
-        final IPasswordProvider pwdProvider = this;
         ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
             @Override
             public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
                 try {
-                	previewManager.setPasswordProvider(pwdProvider);
                     previewManager.previewSetup(eObj, monitor);
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {
                     throw new InvocationTargetException(e);
-                } finally {
-                	previewManager.setPasswordProvider(null);
                 }
             }
         };

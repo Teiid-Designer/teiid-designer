@@ -19,14 +19,21 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
 import org.teiid.designer.runtime.connection.ModelConnectionMatcher;
 import org.teiid.designer.vdb.Vdb;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  *
@@ -62,7 +69,7 @@ public class ExecutionAdmin {
         this.admin = admin;
         this.eventManager = eventManager;
         this.server = server;
-        this.connectionMatcher = new ModelConnectionMatcher(this);
+        this.connectionMatcher = new ModelConnectionMatcher();
 
         init();
         // refresh();
@@ -154,7 +161,7 @@ public class ExecutionAdmin {
         this.dataSourceNames = new ArrayList<String>();
         this.dataSourceByNameMap = new HashMap<String, TeiidDataSource>();
         this.dataSourceTypeNames = new HashSet<String>();
-        this.teiidVdbs = Collections.EMPTY_SET;
+        this.teiidVdbs = Collections.emptySet();
     }
     
     Admin getAdminApi() {
@@ -189,6 +196,76 @@ public class ExecutionAdmin {
      */
     EventManager getEventManager() {
         return this.eventManager;
+    }
+
+    public TeiidDataSource getOrCreateDataSource( IFile model,
+                                                  String jndiName,
+                                                  boolean previewVdb,
+                                                  IPasswordProvider passwordProvider ) throws Exception {
+
+        // first check to see if DS with that name already exists
+        TeiidDataSource dataSource = getDataSource(jndiName);
+
+        if (dataSource != null) {
+            return dataSource;
+        }
+
+        // need to create a DS
+        ModelResource modelResource = ModelUtil.getModelResource(model, true);
+        ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+        IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
+        Properties props = connInfoProvider.getConnectionProperties(modelResource);
+        String dataSourceType = connInfoProvider.getDataSourceType();
+
+        if (!props.isEmpty()) {
+            IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
+            // The data source property key represents what's needed as a property for the Teiid Data Source
+            // This is provided by the getDataSourcePasswordPropertyKey() method.
+            String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();
+            boolean requiresPassword = (dsPasswordKey != null);
+
+            if (modelConnectionProfile != null) {
+                String pwd = null;
+
+                // Check Password
+                if (requiresPassword) {
+                    // Check connection info provider. Property will be coming in with a key = "password"
+                    pwd = modelConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+
+                    if (pwd == null) {
+                        IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(modelConnectionProfile.getName());
+
+                        if (existingConnectionProfile != null) {
+                            // make sure the password property is there. if not get from connection profile.
+                            // Use DTP's constant for profile: IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID =
+                            // org.eclipse.datatools.connectivity.db.password
+                            // DTP's connection profile "password" key, if exists for a profile type, is returned via the
+                            // provider's getPasswordPropertyKey() method. This can be different than
+                            // getDataSourcePasswordPropertyKey().
+                            if (props.getProperty(connInfoProvider.getPasswordPropertyKey()) == null) {
+                                pwd = existingConnectionProfile.getBaseProperties().getProperty(connInfoProvider.getPasswordPropertyKey());
+                            }
+                        }
+
+                        if ((pwd == null) && (passwordProvider != null)) {
+                            pwd = passwordProvider.getPassword(modelResource.getItemName(), modelConnectionProfile.getName());
+                        }
+                    }
+
+                    if (pwd != null) {
+                        props.setProperty(dsPasswordKey, pwd);
+                    }
+                }
+
+                if (!requiresPassword || (pwd != null)) {
+                    TeiidDataSource tds = getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+                    tds.setPreview(previewVdb);
+                    return tds;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

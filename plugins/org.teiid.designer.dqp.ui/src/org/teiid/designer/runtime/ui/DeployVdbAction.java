@@ -7,23 +7,29 @@
  */
 package org.teiid.designer.runtime.ui;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.adminapi.VDB;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
 import org.teiid.designer.vdb.Vdb;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
@@ -32,22 +38,17 @@ import com.metamatrix.modeler.ui.actions.ISelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class DeployVdbAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
-    protected static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DeployVdbAction.class);
-    protected static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
 
-    protected boolean successfulRefresh = false;
-    private static VDB deployedVDB = null;
-    private static String vdbName = null;
-    
-    Collection<IFile> selectedVDBs;
-    Vdb vdb;
-    boolean contextIsLocal = false;
+    static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DeployVdbAction.class);
+
+    private final Collection<IFile> selectedVDBs = new ArrayList<IFile>();
 
     public DeployVdbAction() {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
     }
 
+    @Override
     public int compareTo( Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
@@ -60,128 +61,178 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     }
 
     /**
-     * @param selection
-     * @return
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.modeler.ui.actions.ISelectionAction#isApplicable(org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public boolean isApplicable( ISelection selection ) {
-        boolean result = false;
-        
         List objs = SelectionUtilities.getSelectedObjects(selection);
-        Iterator iter = objs.iterator();
         
-        while( iter.hasNext() ) {
-        	Object next = iter.next();
-            if (next instanceof IFile) {
-                String extension = ((IFile)next).getFileExtension();
-                if (extension != null && extension.equals("vdb")) { //$NON-NLS-1$
-                    result = true;
-                }
-            }
-            if (!result ) {
-            	break;
-            }
+        if (objs.isEmpty()) {
+            return false;
         }
 
-        return result;
+        for (Object obj : objs) {
+            if (obj instanceof IFile) {
+                String extension = ((IFile)obj).getFileExtension();
+
+                if ((extension == null) || !extension.equals(Vdb.FILE_EXTENSION_NO_DOT)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     /**
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.jface.action.Action#run()
      */
     @Override
     public void run() {
         Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 
-        for( IFile nextVDB : this.selectedVDBs ) {
-	        boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
-	        if( doDeploy ) {
-	        	deployVdb(server, nextVDB);
-	        }
+        for (IFile nextVDB : this.selectedVDBs) {
+            boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
+            if (doDeploy) {
+                deployVdb(server, nextVDB);
+            }
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
     public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
-        boolean enable = false;
-        List objs = SelectionUtilities.getSelectedObjects(selection);
-        Iterator iter = objs.iterator();
+        this.selectedVDBs.clear();
+        boolean enable = isApplicable(selection);
         
-        this.selectedVDBs = new ArrayList<IFile>();
-        
-        while( iter.hasNext() ) {
-        	Object next = iter.next();
-            if (next instanceof IFile) {
-                String extension = ((IFile)next).getFileExtension();
-                if (extension != null && extension.equals(VDB_EXTENSION)) {
-                    this.selectedVDBs.add((IFile)next);
-                    enable = true;
-                }
-            }
-            if( !enable ) {
-            	break;
-            }
-    	}
-        if( !enable ) {
-        	this.selectedVDBs.clear();
+        if (isEnabled() != enable) {
+            setEnabled(enable);
         }
-        setEnabled(enable);
+        
+        if (isEnabled()) {
+            List objs = SelectionUtilities.getSelectedObjects(selection);
+            this.selectedVDBs.addAll(objs);
+        }
     }
 
     public static VDB deployVdb( final Server server,
                                  final Object vdbOrVdbFile ) {
+        Shell shell = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+        VDB[] result = new VDB[1];
 
-        if (server == null) {
-        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.title"), //$NON-NLS-1$
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.noTeiidInstance.message")); //$NON-NLS-1$
-        	return null;
-        } else if( !server.isConnected() ) {
-        	MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.title"), //$NON-NLS-1$
-                    DqpUiConstants.UTIL.getString("DeployVdbAction.teiidNotConnected.message", server)); //$NON-NLS-1$
-        	return null;
-    	}
+        try {
+            if (server == null) {
+                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "noTeiidInstance.message")); //$NON-NLS-1$
+            }
 
-        BusyIndicator.showWhile(null, new Runnable() {
-			
-			@Override
-			public void run() {
-				
-		        try {
-					if (vdbOrVdbFile instanceof IFile) {
-					    deployedVDB = server.getAdmin().deployVdb((IFile)vdbOrVdbFile);
-					    vdbName = ((IFile)vdbOrVdbFile).getName();
-					} else {
-					    deployedVDB = server.getAdmin().deployVdb((Vdb)vdbOrVdbFile);
-					    vdbName = ((Vdb)vdbOrVdbFile).getName().toString();
-					}
+            if (!server.isConnected()) {
+                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "teiidNotConnected.message", server.getHost())); //$NON-NLS-1$
+            }
 
-					if (deployedVDB == null) {
-					    MessageDialog.openError(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-					                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedTitle"), //$NON-NLS-1$
-					                            DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotDeployedMessage", vdbName)); //$NON-NLS-1$
-					} else if (deployedVDB.getStatus().equals(VDB.Status.INACTIVE)) {
-					    StringBuilder message = new StringBuilder(
-					                                              DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveMessage", deployedVDB.getName())); //$NON-NLS-1$
-					    for (String error : deployedVDB.getValidityErrors()) {
-					        message.append("\n\nERROR:\t").append(error); //$NON-NLS-1$
-					    }
-					    MessageDialog.openWarning(DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
-					                              DqpUiConstants.UTIL.getString("DeployVdbAction.vdbNotActiveTitle"), //$NON-NLS-1$
-					                              message.toString());
-					}
-				} catch (Exception e) {
-					DqpUiConstants.UTIL.log(IStatus.ERROR,
-                            e,
-                            DqpUiConstants.UTIL.getString("DeployVdbAction.problemDeployingVdbToServer", //$NON-NLS-1$
-                            							  vdbName,
-                                                          server));
-				}
-			}
-		});
+            if (!(vdbOrVdbFile instanceof IFile) && !(vdbOrVdbFile instanceof Vdb)) {
+                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb")); //$NON-NLS-1$
+            }
 
+            Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile)vdbOrVdbFile, null) : (Vdb)vdbOrVdbFile);
+            final VdbDeployer deployer = new VdbDeployer(shell, vdb, server.getAdmin(), shouldAutoCreateDataSource());
+            ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 
-        return deployedVDB;
+            IRunnableWithProgress runnable = new IRunnableWithProgress() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+                 */
+                @Override
+                public void run( IProgressMonitor monitor ) throws InvocationTargetException {
+                    try {
+                        deployer.deploy(monitor);
+                    } catch (Exception e) {
+                        throw new InvocationTargetException(e);
+                    }
+                }
+            };
+
+            // deploy using progress monitor (UI is blocked)
+            dialog.run(true, false, runnable);
+
+            // process results
+            VdbDeployer.DeployStatus status = deployer.getStatus();
+
+            if (status.isError()) {
+                String message = null;
+
+                if (VdbDeployer.DeployStatus.CREATE_DATA_SOURCE_FAILED == status) {
+                    message = UTIL.getString(I18N_PREFIX + "createDataSourceFailed", deployer.getVdbName()); //$NON-NLS-1$
+                } else if (VdbDeployer.DeployStatus.DEPLOY_VDB_FAILED == status) {
+                    message = UTIL.getString(I18N_PREFIX + "vdbFailedToDeploy", deployer.getVdbName()); //$NON-NLS-1$
+                } else if (VdbDeployer.DeployStatus.TRANSLATOR_PROBLEM == status) {
+                    message = UTIL.getString(I18N_PREFIX + "translatorDoesNotExistOnServer", deployer.getVdbName()); //$NON-NLS-1$
+                } else if (VdbDeployer.DeployStatus.EXCEPTION == status) {
+                    throw deployer.getException(); // let catch block below handle
+                } else {
+                    // unexpected
+                    message = UTIL.getString(I18N_PREFIX + "unknownDeployError", deployer.getVdbName(), status); //$NON-NLS-1$
+                }
+
+                // show user the error
+                MessageDialog.openError(shell, UTIL.getString(I18N_PREFIX + "vdbNotDeployedTitle"), message); //$NON-NLS-1$
+            } else if (status.isDeployed()) {
+                VDB deployedVdb = deployer.getDeployedVdb();
+                result[0] = deployedVdb;
+
+                if (deployedVdb.getStatus().equals(VDB.Status.INACTIVE)) {
+                    StringBuilder message = new StringBuilder(UTIL.getString(I18N_PREFIX + "vdbNotActiveMessage", //$NON-NLS-1$
+                                                                             deployedVdb.getName()));
+
+                    for (String error : deployedVdb.getValidityErrors()) {
+                        message.append(UTIL.getString(I18N_PREFIX + "notActiveErrorMessage", error)); //$NON-NLS-1$
+                    }
+
+                    MessageDialog.openWarning(shell, UTIL.getString(I18N_PREFIX + "vdbNotActiveTitle"), message.toString()); //$NON-NLS-1$
+                }
+            }
+        } catch (Throwable e) {
+            if (e instanceof InvocationTargetException) {
+                e = ((InvocationTargetException)e).getCause();
+            }
+
+            String vdbName = null;
+
+            if (vdbOrVdbFile instanceof IFile) {
+                vdbName = ((IFile)vdbOrVdbFile).getName();
+            } else if (vdbOrVdbFile instanceof Vdb) {
+                vdbName = ((Vdb)vdbOrVdbFile).getFile().getName();
+            } else {
+                vdbName = UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb"); //$NON-NLS-1$
+            }
+
+            String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbToServer", vdbName, server); //$NON-NLS-1$
+            UTIL.log(e);
+            ErrorDialog.openError(shell, message, null, new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+        }
+
+        return result[0];
     }
- 
+
+    /**
+     * @return <code>true</code> if data source should be auto-created based on the current preference value
+     */
+    static boolean shouldAutoCreateDataSource() {
+        return DqpPlugin.getInstance().getPreferences().getBoolean(PreferenceConstants.AUTO_CREATE_DATA_SOURCE,
+                                                                   PreferenceConstants.AUTO_CREATE_DATA_SOURCE_DEFAULT);
+    }
+
 }

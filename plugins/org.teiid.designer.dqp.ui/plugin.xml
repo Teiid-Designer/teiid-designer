@@ -54,6 +54,12 @@
             categoryId="dqpUiPreferenceCategory"
             class="com.metamatrix.modeler.internal.dqp.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
       </preference>
+      <!-- Enable Auto-create Data Source Preference -->
+      <preference
+            id="autoCreateDataSourcePreferenceContributor"
+            categoryId="dqpUiPreferenceCategory"
+            class="com.metamatrix.modeler.internal.dqp.ui.preferences.AutoCreateDataSourcePreferenceContributor">
+      </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension

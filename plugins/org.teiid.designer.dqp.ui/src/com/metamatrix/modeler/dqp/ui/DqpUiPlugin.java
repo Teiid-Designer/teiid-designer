@@ -10,26 +10,29 @@ package com.metamatrix.modeler.dqp.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.runtime.ServerManager;
+import org.teiid.designer.runtime.connection.IPasswordProvider;
+import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
-
+import org.teiid.designer.runtime.ui.connection.PreviewMissingPasswordDialog;
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.dqp.DqpPlugin;
 import com.metamatrix.ui.AbstractUiPlugin;
 import com.metamatrix.ui.actions.ActionService;
+import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -119,6 +122,14 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         return image;
     }
 
+    /**
+     * @param shell the shell used to display any UI that is needed (can be <code>null</code>)
+     * @return the password provider (never <code>null</code>)
+     */
+    public IPasswordProvider getPasswordProvider(Shell shell) {
+        return new PasswordProvider(shell);
+    }
+
     @Override
     public PluginUtil getPluginUtil() {
         return UTIL;
@@ -140,7 +151,13 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         super.start(context);
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-
+        
+        // set the password provider
+        PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
+        
+        if (previewManager != null) {
+            previewManager.setPasswordProvider(new PasswordProvider(UiUtil.getWorkbenchShellOnlyIfUiThread()));
+        }
     }
 
     @Override
@@ -182,6 +199,49 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
             }
         } finally {
             super.stop(context);
+        }
+    }
+    
+    class PasswordProvider implements IPasswordProvider {
+        final Shell shell;
+
+        public PasswordProvider( Shell shell ) {
+            this.shell = shell;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.teiid.designer.runtime.connection.IPasswordProvider#getPassword(java.lang.String, java.lang.String)
+         */
+        @Override
+        public String getPassword( final String modelName,
+                                   final String profileName ) {
+            final String[] password = new String[1];
+
+            UiUtil.runInSwtThread(new Runnable() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see java.lang.Runnable#run()
+                 */
+                @Override
+                public void run() {
+                    String message = DqpUiConstants.UTIL.getString("PasswordProvider.missingPasswordMessage", //$NON-NLS-1$
+                                                                   new Object[] {modelName, profileName});
+                    PreviewMissingPasswordDialog dialog = new PreviewMissingPasswordDialog(getShell(), message);
+
+                    if (dialog.open() == Window.OK) {
+                        password[0] = dialog.getPassword();
+                    }
+                }
+            },
+                                  false);
+            return password[0];
+        }
+
+        Shell getShell() {
+            return this.shell;
         }
     }
 }
