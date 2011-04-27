@@ -240,7 +240,9 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 Collection<String> dataSourceNames = new ArrayList<String>();
 
                 for (TeiidDataSource dataSource : dataSources) {
-                    dataSourceNames.add(dataSource.getName());
+                    if (!dataSource.isPreview()) {
+                        dataSourceNames.add(dataSource.getName());
+                    }
                 }
 
                 return dataSourceNames.toArray(new String[dataSourceNames.size()]);
