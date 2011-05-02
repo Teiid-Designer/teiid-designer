@@ -232,12 +232,13 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
                 action = GlobalActionsMap.UNSUPPORTED_ACTION;
             }
 
-            getActionBars().setGlobalActionHandler(actionId, action);
-
             // must deactive if already one activated in order to get rid of an Eclipse warning message
             if (this.actionHandlerMap.containsKey(actionId)) {
-                svc.deactivateHandler(this.actionHandlerMap.get(actionId));
+                IHandlerActivation activation = this.actionHandlerMap.get(actionId);
+                activation.getHandlerService().deactivateHandler(activation);
             }
+
+            getActionBars().setGlobalActionHandler(actionId, action);
 
             this.actionHandlerMap.put(actionId, svc.activateHandler(actionId, new ActionHandler(action)));
         }
