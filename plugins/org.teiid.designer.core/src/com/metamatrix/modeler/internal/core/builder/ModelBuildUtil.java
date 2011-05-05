@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -44,6 +46,7 @@ import com.metamatrix.modeler.internal.core.index.ModelIndexer;
 import com.metamatrix.modeler.internal.core.index.ModelSearchIndexer;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
 /**
  * ModelBuildUtil has utility methoods that help validate a Resource.
@@ -87,8 +90,19 @@ public class ModelBuildUtil {
         // not modified
         final List modifiedResources = getModifiedResources();
 
+        // collection of models dependent on the models being validated
+        Set<IResource> dependentModels = new HashSet<IResource>();
+        
+        for (final Iterator rsourceIter = iResources.iterator(); rsourceIter.hasNext();) {
+            IResource resource = (IResource)rsourceIter.next();
+            Collection models = WorkspaceResourceFinderUtil.getResourcesThatUse(resource);
+            models.removeAll(iResources);
+            dependentModels.addAll(models);
+        }
+
         // index all the resources
         indexResources(monitor, iResources);
+        indexResources(monitor, dependentModels);
 
         // Reset the modified state of all EMF resources to what it was
         // prior to indexing. This needs to be done since indexing may
@@ -98,6 +112,7 @@ public class ModelBuildUtil {
 
         // validate all the resources
         validateResources(monitor, iResources, container, validateInContext);
+        validateResources(monitor, dependentModels, container, validateInContext);
 
         // Reset the modified state of all EMF resources to what it was prior to validating
         setModifiedResources(modifiedResources);
