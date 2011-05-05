@@ -5,10 +5,7 @@ import org.jboss.tools.ui.bot.ext.RequirementAwareSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.metamatrix.modeler.ui.bot.testcase.DDLExportTest;
 import com.metamatrix.modeler.ui.bot.testcase.ModelWizardTest;
-import com.metamatrix.modeler.ui.bot.testcase.TeiidSourceInHibernateToolsTest;
-import com.metamatrix.modeler.ui.bot.testcase.TeiidSourceInSeamTest;
 import com.metamatrix.modeler.ui.bot.testcase.VirtualGroupTutorialTest;
 
 
