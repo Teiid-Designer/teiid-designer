@@ -96,14 +96,6 @@
          version="0.0.0"
          unpack="false"/>
 
-<!--   <plugin
-         id="org.teiid.designer.core.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
    <plugin
          id="org.teiid.designer.core.xslt.test"
          download-size="0"
@@ -112,38 +104,6 @@
          fragment="true"
          unpack="false"/>
 
-<!--   <plugin
-         id="org.teiid.designer.ddl.importer.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
-<!--   <plugin
-         id="org.teiid.designer.dqp.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
-<!--   <plugin
-         id="org.teiid.designer.jdbc.relational.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
-<!--   <plugin
-         id="org.teiid.designer.jdbc.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
    <plugin
          id="org.teiid.designer.jdbc.test.framework"
          download-size="0"
@@ -304,14 +264,6 @@
          fragment="true"
          unpack="false"/>
 
-<!--   <plugin
-         id="org.teiid.designer.vdb.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
--->
    <plugin
          id="org.teiid.designer.webservice.test"
          download-size="0"
@@ -342,6 +294,20 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.ui.bot.ext"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.ui.bot.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
