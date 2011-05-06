@@ -47,6 +47,9 @@ public class TransformationRecordImpl extends com.metamatrix.metadata.runtime.im
     @Override
     public String getTransformation() {
 		if(super.eObject != null) {
+			if( getTransformationInfo() == null ) {
+				return null;
+			}
             return getTransformationInfo().getSqlTransform();
 		}
         return super.getTransformation();

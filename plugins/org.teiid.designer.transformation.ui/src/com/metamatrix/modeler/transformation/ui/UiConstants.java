@@ -86,6 +86,15 @@ public interface UiConstants {
       String EXPORT_TO_FILE    = PC.CVIEW16 + "export_to_file.gif"; //$NON-NLS-1$
 
     }
+    
+    interface SQLPanels {
+    	int SELECT = 0;
+    	int UPDATE_SELECT = 1;
+    	int UPDATE_INSERT = 2;
+    	int UPDATE_UPDATE = 3;
+    	int UPDATE_DELETE = 4;
+    	
+    }
 
     /**
      * Constants related to color of diagram objects

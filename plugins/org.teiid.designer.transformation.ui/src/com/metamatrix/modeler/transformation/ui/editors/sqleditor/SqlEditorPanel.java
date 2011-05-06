@@ -205,6 +205,8 @@ public class SqlEditorPanel extends SashForm
     String savedSql = BLANK;
     String currentMessage = BLANK;
     private List setQueryStates;
+    
+    private int panelType = UiConstants.SQLPanels.SELECT;
 
     /**
      * Constructor.
@@ -408,6 +410,7 @@ public class SqlEditorPanel extends SashForm
                 panelSqlText = proposedSqlText;
                 //System.out.println("  >> SEP.setText() Called:  calling queryDisplayComponent.setText() SQL = " + panelSqlText);
                 
+                
                 TransformationHelper.setSqlString(
                 		queryDisplayComponent.getMappingRoot(), 
                 		panelSqlText, 
@@ -415,7 +418,8 @@ public class SqlEditorPanel extends SashForm
                 		false, this);
                 
                 queryDisplayComponent.setText(panelSqlText, doResolveAndValidate, result, monitor);
-
+                
+                
                 // Refresh the EditorPanel, using the queryDisplayComponent
                 refreshWithDisplayComponent();
                 monitor.worked(10);
@@ -575,15 +579,15 @@ public class SqlEditorPanel extends SashForm
             event = new SqlEditorEvent(eventSource, getText(), SqlEditorEvent.CHANGED);
             // Sql changed, parsable but not resolvable
         } else if (!isResolvable) {
-            event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.PARSABLE);
+            event = new SqlEditorEvent(eventSource, getCommand(), getText(), SqlEditorEvent.PARSABLE);
             // Sql changed, resolvable but not validatable
         } else if (!isValidatable) {
             // fire the event
-            event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.RESOLVABLE);
+            event = new SqlEditorEvent(eventSource, getCommand(), getText(), SqlEditorEvent.RESOLVABLE);
             // Sql changed, validatable
         } else {
             // fire the event
-            event = new SqlEditorEvent(eventSource, getCommand(), SqlEditorEvent.VALIDATABLE);
+            event = new SqlEditorEvent(eventSource, getCommand(), getText(), SqlEditorEvent.VALIDATABLE);
         }
         notifyEventListeners(event);
     }
@@ -2170,5 +2174,13 @@ public class SqlEditorPanel extends SashForm
         setMessage(QUERY_CHANGES_PENDING_MESSAGE);
         fireEditorInternalEvent(SqlEditorInternalEvent.TEXT_CHANGED);
         fireEditorEvent();
+    }
+    
+    public void setPanelType(int type) {
+    	this.panelType = type;
+    }
+    
+    public int getPanelType() {
+    	return this.panelType;
     }
 }

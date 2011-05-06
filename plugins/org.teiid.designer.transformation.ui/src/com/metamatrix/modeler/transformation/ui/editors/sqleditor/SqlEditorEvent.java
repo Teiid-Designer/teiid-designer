@@ -54,6 +54,18 @@ public class SqlEditorEvent extends EventObject {
     public SqlEditorEvent(Command command, int type) {
         this(null,command,type);
     }
+    
+    public SqlEditorEvent(Object source, Command query, String SQLString, int type) {
+        super(source);
+        if ( type != PARSABLE
+          && type != RESOLVABLE
+          && type != VALIDATABLE) {
+            throw new AssertionError(type + " is not a valid for this SqlChangeEvent type"); //$NON-NLS-1$ 
+        }
+        this.command = query;
+        this.SQLString = SQLString;
+        this.type = type;
+    }
 
     public SqlEditorEvent(Object source, Command query, int type) {
         super(source);

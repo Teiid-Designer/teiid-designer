@@ -34,6 +34,7 @@ Require-Bundle: org.teiid.designer.core,
  org.teiid.designer.udf,
  org.teiid.designer.legacy,
  teiid_embedded_query,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.teiid.designer.metamodels.function
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -429,13 +429,13 @@ public class TransformationMappingHelper implements SqlConstants {
                 QueryMetadataInterface metadata = TransformationMetadataFactory.getInstance().getModelerMetadata(transMappingRoot,
                                                                                                                  false);
 
-                List symbolsToAdd = new ArrayList();
-                List symbolsIncluded = new ArrayList();
+                List<EObjectAlias> symbolsToAdd = new ArrayList<EObjectAlias>();
+                List<EObjectAlias> symbolsIncluded = new ArrayList<EObjectAlias>();
 
                 Iterator commandIter = allCommands.iterator();
                 while (commandIter.hasNext()) {
                     Command command = (Command)commandIter.next();
-                    getGroupSymbols(transMappingRoot, command, symbolsToAdd, symbolsIncluded, metadata);
+                    getEObjectAliases(transMappingRoot, command, symbolsToAdd, symbolsIncluded, metadata);
                 }
 
                 // All Aliases
@@ -454,14 +454,8 @@ public class TransformationMappingHelper implements SqlConstants {
                 }
 
                 // add aliases for the Group symbols
-                iter = symbolsToAdd.iterator();
-                while (iter.hasNext()) {
-                    GroupSymbol gSymbol = (GroupSymbol)iter.next();
-                    EObject symbolEObj = TransformationSqlHelper.getGroupSymbolEObject(gSymbol);
-                    String symbolName = TransformationSqlHelper.getGroupSymbolShortName(gSymbol);
-                    if (symbolEObj != null) {
-                        TransformationHelper.addSqlAlias(transMappingRoot, symbolEObj, symbolName, true, source);
-                    }
+                for (EObjectAlias eObjectAlias : symbolsToAdd) {
+                    TransformationHelper.addSqlAlias(transMappingRoot, eObjectAlias.object, eObjectAlias.name, true, source);
                 }
 
                 succeeded = true;
@@ -497,14 +491,39 @@ public class TransformationMappingHelper implements SqlConstants {
         return success;
     }
 
-    static List getLookupGroupSymbols( Collection functions,
-                                       QueryMetadataInterface metadata ) {
-        List groupSymbols = new ArrayList();
-        Iterator iter = functions.iterator();
-        while (iter.hasNext()) {
-            Function function = (Function)iter.next();
-            FunctionDescriptor fd = function.getFunctionDescriptor();
-            if (fd != null && fd.getName().equalsIgnoreCase(FunctionLibrary.LOOKUP)) {
+    static class EObjectAlias {
+    	EObject object;
+    	String name;
+    	
+		public EObjectAlias(EObject object, String name) {
+			super();
+			this.object = object;
+			this.name = name;
+		}
+    }
+
+    private static void getEObjectAliases( EObject transMappingRoot,
+                                         Command command,
+                                         List<EObjectAlias> toAdd,
+                                         List<EObjectAlias> included,
+                                         QueryMetadataInterface metadata ) {
+
+        // Get the GroupSymbols from the SQL command (duplicates removed)
+        Collection<GroupSymbol> sqlGroupSymbols = TransformationSqlHelper.getGroupSymbols(command);
+
+        Collection<Function> functions = FunctionCollectorVisitor.getFunctions(command, true, true);
+
+        // Get the SqlAliases for the mapping
+        List mappingAliases = TransformationHelper.getAllSqlAliases(transMappingRoot);
+
+        List<EObjectAlias> allAliases = new ArrayList<EObjectAlias>();
+        
+        for (Function function : functions) {
+        	FunctionDescriptor fd = function.getFunctionDescriptor();
+        	if (fd == null) {
+        		continue;
+        	}
+            if (fd.getName().equalsIgnoreCase(FunctionLibrary.LOOKUP)) {
                 Expression[] args = function.getArgs();
                 // First arg of the lookup is the group
                 if (args[0] instanceof Constant) {
@@ -514,8 +533,8 @@ public class TransformationMappingHelper implements SqlConstants {
                         Object metadataID = metadata.getGroupID(groupName);
                         GroupSymbol symbol = new GroupSymbol(groupName);
                         symbol.setMetadataID(metadataID);
-                        if (!groupSymbols.contains(symbol)) {
-                            groupSymbols.add(symbol);
+                        if (!TransformationSqlHelper.containsGroupSymbol(sqlGroupSymbols, symbol)) {
+                        	sqlGroupSymbols.add(symbol);
                         }
                     } catch (QueryMetadataException e) {
                         String message = TransformationPlugin.Util.getString("TransformationSqlHelper.groupIDNotFoundError", //$NON-NLS-1$
@@ -527,43 +546,39 @@ public class TransformationMappingHelper implements SqlConstants {
                         TransformationPlugin.Util.log(IStatus.WARNING, e, message);
                     }
                 }
+            } else if (fd.getMetadataID() instanceof EObject) {
+            	allAliases.add(new EObjectAlias((EObject) fd.getMetadataID(), fd.getName()));
             }
-        }
-        return groupSymbols;
-    }
-
-    // Get the list of GroupSymbols from the command that are not represented in the current
-    // transformation mapping.
-    private static void getGroupSymbols( EObject transMappingRoot,
-                                         Command command,
-                                         List toAdd,
-                                         List included,
-                                         QueryMetadataInterface metadata ) {
-
-        // Get the GroupSymbols from the SQL command (duplicates removed)
-        Collection sqlGroupSymbols = TransformationSqlHelper.getGroupSymbols(command);
-
-        Collection functions = FunctionCollectorVisitor.getFunctions(command, true, true);
-
-        sqlGroupSymbols.addAll(getLookupGroupSymbols(functions, metadata));
-
-        // Get the SqlAliases for the mapping
-        List mappingAliases = TransformationHelper.getAllSqlAliases(transMappingRoot);
-
+		}
+        
         // Check each GroupSymbol against the mapping SqlAliases. If not there add to result list
         Iterator iter = sqlGroupSymbols.iterator();
         while (iter.hasNext()) {
             GroupSymbol gSymbol = (GroupSymbol)iter.next();
-            // If group symbol not in alias list, add to result list
-            if (!(gSymbol.getMetadataID() instanceof TempMetadataID) || gSymbol.isProcedure()) {
-                if (!groupSymbolInAliasList(gSymbol, mappingAliases)) {
-                    toAdd.add(gSymbol);
-                } else {
-                    included.add(gSymbol);
-                }
-            }
-        }
 
+            // If group symbol not in alias list, add to result list
+            if ((gSymbol.getMetadataID() instanceof TempMetadataID) && !gSymbol.isProcedure()) {
+            	continue;
+            }
+            
+            // Get the Group EObject and Name
+            EObject groupEObj = TransformationSqlHelper.getGroupSymbolEObject(gSymbol);
+            String groupName = TransformationSqlHelper.getGroupSymbolShortName(gSymbol);
+
+            if (groupEObj == null || groupName == null) {
+            	continue;
+            }
+            
+            allAliases.add(new EObjectAlias(groupEObj, groupName));
+        }
+        
+        for (EObjectAlias eObjectAlias : allAliases) {
+            if (!inAliasList(eObjectAlias, mappingAliases)) {
+                toAdd.add(eObjectAlias);
+            } else {
+                included.add(eObjectAlias);
+            }
+		}
     }
 
     /**
@@ -573,24 +588,19 @@ public class TransformationMappingHelper implements SqlConstants {
      * @param sqlAliases the SqlAlias List
      * @return 'true' if the sqlAlias List contains the groupSymbol, 'false' if not.
      */
-    private static boolean groupSymbolInAliasList( GroupSymbol gSymbol,
+    private static boolean inAliasList( EObjectAlias alias,
                                                    List sqlAliases ) {
         boolean inSqlList = false;
-        // Get the Group EObject and Name
-        EObject groupEObj = TransformationSqlHelper.getGroupSymbolEObject(gSymbol);
-        String groupName = TransformationSqlHelper.getGroupSymbolShortName(gSymbol);
 
-        if (groupEObj != null && groupName != null) {
-            // Look for corresponding SqlAlias
-            Iterator iter = sqlAliases.iterator();
-            while (iter.hasNext()) {
-                SqlAlias sqlAlias = (SqlAlias)iter.next();
-                EObject aEObj = sqlAlias.getAliasedObject();
-                String aName = sqlAlias.getAlias();
-                if (aEObj != null && aName != null && aEObj.equals(groupEObj) && aName.equalsIgnoreCase(groupName)) {
-                    inSqlList = true;
-                    break;
-                }
+        // Look for corresponding SqlAlias
+        Iterator iter = sqlAliases.iterator();
+        while (iter.hasNext()) {
+            SqlAlias sqlAlias = (SqlAlias)iter.next();
+            EObject aEObj = sqlAlias.getAliasedObject();
+            String aName = sqlAlias.getAlias();
+            if (aEObj != null && aName != null && aEObj.equals(alias.object) && aName.equalsIgnoreCase(alias.name)) {
+                inSqlList = true;
+                break;
             }
         }
 
@@ -601,26 +611,19 @@ public class TransformationMappingHelper implements SqlConstants {
      * Determine if GroupSymbol is represented in the SqlAlias List.
      * 
      * @param sqlAlias the SqlAlias
-     * @param groupSymbols the GroupSymbol List
+     * @param objects
      * @return 'true' if the group Symbol List contains the sqlAlias, 'false' if not.
      */
     private static boolean sqlAliasInGroupSymbolList( SqlAlias sqlAlias,
-                                                      Collection groupSymbols ) {
+                                                      Collection<EObjectAlias> objects ) {
         boolean inGroupSymbolList = false;
 
         // Get the SqlAlias info
         EObject aliasEObj = sqlAlias.getAliasedObject();
         String aliasName = sqlAlias.getAlias();
 
-        // Look for corresponding GroupSymbol
-        Iterator iter = groupSymbols.iterator();
-        while (iter.hasNext()) {
-            GroupSymbol gSymbol = (GroupSymbol)iter.next();
-            // Get the Group EObject and Name
-            EObject groupEObj = TransformationSqlHelper.getGroupSymbolEObject(gSymbol);
-            String groupName = TransformationSqlHelper.getGroupSymbolShortName(gSymbol);
-
-            if (groupEObj != null && groupName != null && groupEObj.equals(aliasEObj) && groupName.equalsIgnoreCase(aliasName)) {
+        for (EObjectAlias eObjectAlias : objects) {
+            if (eObjectAlias.object.equals(aliasEObj) && eObjectAlias.name.equalsIgnoreCase(aliasName)) {
                 inGroupSymbolList = true;
                 break;
             }

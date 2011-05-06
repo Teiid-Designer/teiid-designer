@@ -501,7 +501,7 @@ public class TransformationSqlHelper implements SqlConstants {
                             // Set the new mappingRoot SQL
                             TransformationHelper.setSelectSqlString(transMappingRoot, cCommand.toString(), false, txnSource);
                         }
-                    } else {
+                    } else if( TransformationHelper.isSqlTable(aliasedEObject)) {
                         // Create empty SELECT * FROM query
                         Query qry = createDefaultQuery(null);
                         // Add the sqlAliases

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,10 +42,12 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.PredicateCollectorVisitor;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
@@ -219,8 +222,11 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                 }
             }
             SqlAspect sourceSqlAspect = com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.getSqlAspect(source);
-            if (sourceSqlAspect == null
-                || !(sourceSqlAspect instanceof SqlTableAspect || sourceSqlAspect instanceof SqlProcedureAspect)) {
+            
+            boolean isFunction = source instanceof ScalarFunction;
+
+            if( !isFunction && (sourceSqlAspect == null || 
+            	!(sourceSqlAspect instanceof SqlTableAspect || !(sourceSqlAspect instanceof SqlProcedureAspect))) ) {
                 ValidationProblem typeProblem = new ValidationProblemImpl(
                                                                           0,
                                                                           IStatus.ERROR,
@@ -228,37 +234,41 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
                 validationResult.addProblem(typeProblem);
                 return;
             }
-            boolean isValidSource = true;
-            if (targetSqlAspect instanceof SqlTableAspect) {
-                isValidSource = ((SqlTableAspect)targetSqlAspect).canAcceptTransformationSource(target, source);
-            } else if (targetSqlAspect instanceof SqlProcedureAspect) {
-                isValidSource = ((SqlProcedureAspect)targetSqlAspect).canAcceptTransformationSource(target, source);
-            }
-            if (!isValidSource) {
-                String targetName = targetSqlAspect.getName(target);
-                String sourceName = sourceSqlAspect.getName(source);
-                ValidationProblem typeProblem = new ValidationProblemImpl(
-                                                                          0,
-                                                                          IStatus.ERROR,
-                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.invalid_source_for_target", sourceName, targetName)); //$NON-NLS-1$
-                validationResult.addProblem(typeProblem);
-                return;
-            }
-            boolean isValidTarget = true;
-            if (sourceSqlAspect instanceof SqlTableAspect) {
-                isValidTarget = ((SqlTableAspect)sourceSqlAspect).canBeTransformationSource(source, target);
-            } else if (sourceSqlAspect instanceof SqlProcedureAspect) {
-                isValidTarget = ((SqlProcedureAspect)sourceSqlAspect).canBeTransformationSource(source, target);
-            }
-            if (!isValidTarget) {
-                String targetName = targetSqlAspect.getName(target);
-                String sourceName = sourceSqlAspect.getName(source);
-                ValidationProblem typeProblem = new ValidationProblemImpl(
-                                                                          0,
-                                                                          IStatus.ERROR,
-                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.invalid_target_for_source", targetName, sourceName)); //$NON-NLS-1$
-                validationResult.addProblem(typeProblem);
-                return;
+            
+            if( !isFunction ) {
+            	boolean isValidSource = true;
+	            if (targetSqlAspect instanceof SqlTableAspect) {
+	                isValidSource = ((SqlTableAspect)targetSqlAspect).canAcceptTransformationSource(target, source);
+	            } else if (targetSqlAspect instanceof SqlProcedureAspect) {
+	                isValidSource = ((SqlProcedureAspect)targetSqlAspect).canAcceptTransformationSource(target, source);
+	            }
+	            if (!isValidSource) {
+	                String targetName = targetSqlAspect.getName(target);
+	                String sourceName = sourceSqlAspect.getName(source);
+	                ValidationProblem typeProblem = new ValidationProblemImpl(
+	                                                                          0,
+	                                                                          IStatus.ERROR,
+	                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.invalid_source_for_target", sourceName, targetName)); //$NON-NLS-1$
+	                validationResult.addProblem(typeProblem);
+	                return;
+	            }
+
+	            boolean isValidTarget = true;
+	            if (sourceSqlAspect instanceof SqlTableAspect) {
+	                isValidTarget = ((SqlTableAspect)sourceSqlAspect).canBeTransformationSource(source, target);
+	            } else if (sourceSqlAspect instanceof SqlProcedureAspect) {
+	                isValidTarget = ((SqlProcedureAspect)sourceSqlAspect).canBeTransformationSource(source, target);
+	            }
+	            if (!isValidTarget) {
+	                String targetName = targetSqlAspect.getName(target);
+	                String sourceName = sourceSqlAspect.getName(source);
+	                ValidationProblem typeProblem = new ValidationProblemImpl(
+	                                                                          0,
+	                                                                          IStatus.ERROR,
+	                                                                          TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.invalid_target_for_source", targetName, sourceName)); //$NON-NLS-1$
+	                validationResult.addProblem(typeProblem);
+	                return;
+	            }
             }
         }
     }
@@ -759,14 +769,6 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             return;
         } else if (com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper.isUpdatableGroup(target)) {
             // no Insert/Update/Delete transform but the table is updatable
-//            if ((transformResult.isInsertAllowed() && !transformResult.hasInsertResult())
-//                || (transformResult.isUpdateAllowed() && !transformResult.hasUpdateResult())
-//                || (transformResult.isDeleteAllowed() && !transformResult.hasDeleteResult())) {
-//                String msg = TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_transformation_on_the_updatable_virtual_group_{0},_allows_Insert/Update/Delete_but_does_not_define_the_necessary_transformation._1", targetPath); //$NON-NLS-1$
-//                ValidationProblem failureProblem = new ValidationProblemImpl(0, IStatus.ERROR, msg);
-//                validationResult.addProblem(failureProblem);
-//                return;
-//            }
 
             // furthur validation checks on the update procedure.
             validateUpdateProcedures(transformResult, transRoot, validationResult);

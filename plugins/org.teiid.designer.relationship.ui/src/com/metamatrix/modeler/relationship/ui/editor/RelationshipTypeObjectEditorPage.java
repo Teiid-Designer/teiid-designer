@@ -27,6 +27,7 @@ import org.eclipse.ui.IPropertyListener;
 import com.metamatrix.metamodels.relationship.RelationshipType;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relationship.ui.UiConstants;
@@ -47,6 +48,7 @@ public class RelationshipTypeObjectEditorPage implements ModelObjectEditorPage,
     private Composite editorComposite;
     private Composite pnlStatusLine;
     private ScrolledComposite scrolledComposite;
+    private ModelEditor parentModelEditor;
 
     private String FOUR_BLANKS_STRING = "   ";  //$NON-NLS-1$
 //    private CLabel lblFiller1;
@@ -287,6 +289,9 @@ public class RelationshipTypeObjectEditorPage implements ModelObjectEditorPage,
      * @since 5.0.1
      */
     public void initialize(MultiPageModelEditor editor) {
+    	if( editor instanceof ModelEditor ) {
+    		this.parentModelEditor = (ModelEditor)editor;
+    	}
     }
     
     /**
@@ -296,5 +301,9 @@ public class RelationshipTypeObjectEditorPage implements ModelObjectEditorPage,
      * @since 5.0.1
      */
     public void setOverride(ModelObjectEditorPage editor) {
+    }
+    
+    public ModelEditor getParentModelEditor() {
+    	return this.parentModelEditor;
     }
 }

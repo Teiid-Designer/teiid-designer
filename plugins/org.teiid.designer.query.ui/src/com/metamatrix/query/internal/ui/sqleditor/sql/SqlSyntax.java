@@ -65,7 +65,7 @@ public class SqlSyntax {
 		Iterator iter;
 		try {
 			// FUNCTION NAMES List
-			FunctionLibrary functionLib = UdfManager.INSTANCE.getFunctionLibrary();
+			FunctionLibrary functionLib = UdfManager.INSTANCE.getSystemFunctionLibrary();
 			List allCategories = functionLib.getFunctionCategories();
 			iter = allCategories.iterator();
 			while (iter.hasNext()) {

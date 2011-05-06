@@ -14,12 +14,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.query.sql.lang.Command;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -678,6 +680,10 @@ public class SqlMappingRootCache implements SqlConstants {
      * @param cmdType the command type (SELECT, INSERT, UPDATE, DELETE)
      */
     private static void removeStatus(final EObject transMappingRoot,final int cmdType) {
+    	//if( cmdType == QueryValidator.SELECT_TRNS) {
+    	//	EObject target = TransformationHelper.getTransformationTarget(transMappingRoot);
+    	//	System.out.println(" ===>> SqlMappingRootCache.removeStatus(TYPE=" + cmdType + ")  Target = " + ModelerCore.getModelEditor().getName(target));
+    	//}
         HashMap cache = getCache(cmdType);
         cache.remove(transMappingRoot);
     }
@@ -737,7 +743,13 @@ public class SqlMappingRootCache implements SqlConstants {
     public static void setStatus(final EObject transMappingRoot,final int cmdType,final SqlTransformationResult status) {
         HashMap cache = getCache(cmdType);
         if(status!=null ) {
+        	//if( cmdType == QueryValidator.SELECT_TRNS) {
+        	//	EObject target = TransformationHelper.getTransformationTarget(transMappingRoot);
+        	//	System.out.println(" ===>> SqlMappingRootCache.setStatus(TYPE=" + cmdType + ")  Target = " + ModelerCore.getModelEditor().getName(target));
+        	//}
             cache.put(transMappingRoot,status);
+            
+            notifyEventListeners(new SqlTransformationStatusChangeEvent((EObject)transMappingRoot, new Object(), false));
         } else {
             removeStatus(transMappingRoot,cmdType);
         }

@@ -8,42 +8,44 @@
 package org.teiid.designer.udf;
 
 import java.io.File;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.metadata.FunctionMethod;
+import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.FunctionMethod.Determinism;
+import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.function.FunctionTree;
 import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
-import org.teiid.query.function.metadata.FunctionMetadataReader;
+
 import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.ModelType;
-import com.metamatrix.modeler.core.ModelEditor;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.validation.ValidationContext;
-import com.metamatrix.modeler.core.validation.ValidationProblem;
-import com.metamatrix.modeler.core.validation.ValidationResult;
+import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.util.ModelVisitor;
+import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.resource.EmfResource;
-import com.metamatrix.modeler.internal.core.validation.Validator;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 
@@ -52,24 +54,17 @@ public final class UdfManager implements IResourceChangeListener {
     public static final UdfManager INSTANCE = new UdfManager();
     
     public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
-
-    private static class UdfInfo {
-        String modelName;
-        UDFSource source;
-        
-        public UdfInfo(String modelname) {
-            this.modelName = modelname;
-        }
-    }
     
     private FunctionLibrary functionLibrary;
+    
+    private FunctionLibrary systemFunctionLibrary;
    
     /**
-     * A collection of function models.
+     * A set of function models.
      * 
      * @since 6.0.0
      */
-    private Map<URL, UdfInfo> functionModels = new HashMap<URL, UdfInfo>();
+    private Set<ModelResource> functionModels = new HashSet<ModelResource>();
 
     private volatile boolean initialized;
 
@@ -79,22 +74,6 @@ public final class UdfManager implements IResourceChangeListener {
      * @since 6.0.0
      */
     private UdfManager() {
-    }
-
-    /**
-     * @param udfModel the UDF model whose model resource is being requested
-     * @return the UDF model workspace resource
-     * @throws CoreException if there is a problem obtaining the resource
-     * @since 6.0.0
-     */
-    private EmfResource getFunctionModelResource( File udfModel ) throws CoreException {
-        String path = udfModel.getAbsolutePath();
-        URI uri = URI.createFileURI(path);
-        Resource r = ModelerCore.getModelContainer().getResource(uri, false);
-        if (r instanceof EmfResource) {
-            return (EmfResource)r;
-        }
-        return null;
     }
     
     /**
@@ -121,7 +100,7 @@ public final class UdfManager implements IResourceChangeListener {
                 ModelResource mr = ModelUtil.getModelResource((IFile)next, true);
 
                 if( mr.getModelType().getValue() == ModelType.FUNCTION) {
-                    registerFunctionModel(mr.getPath(), false);
+                    registerFunctionModel(mr, false);
                 } 
             }
         } catch (Exception err) {
@@ -137,51 +116,86 @@ public final class UdfManager implements IResourceChangeListener {
      * @throws CoreException if there is a problem obtaining the EMF resource of the workspace function model
      * @since 6.0.0
      */
-    private boolean isFunctionModelValid( File udfModel ) throws CoreException {
-        ValidationContext context = new ValidationContext();
+    private boolean isFunctionObjectErrorFree( EObject functionEObject, IMarker[] markers, ModelResource udfModelResource)  {
 
-        context.setResourceContainer(ModelerCore.getModelContainer());
-        EmfResource rsrc = getFunctionModelResource(udfModel);
+        if(markers != null && markers.length > 0) {
+            for (int ndx = markers.length; --ndx >= 0;) {
+                IMarker iMarker = markers[ndx];
 
-        if (rsrc == null) {
-            String msg = UdfPlugin.UTIL.getString(I18nUtil.getPropertyPrefix(UdfManager.class) + "nullFunctionModelResource", udfModel.getAbsolutePath()); //$NON-NLS-1$
-            IStatus status = new Status(IStatus.ERROR, UdfPlugin.PLUGIN_ID, msg);
-            throw new CoreException(status);
-        }
+                EObject targetEObject = null;
+                
+                try {
+					targetEObject = ModelWorkspaceManager.getModelWorkspaceManager().getMarkerManager().getMarkedEObject(udfModelResource.getCorrespondingResource(),
+					                                                                                                             iMarker);
+				} catch (ModelWorkspaceException ex) {
+					UdfPlugin.UTIL.log(ex);
+				}
 
-        // run the model through the validator to see if there are any errors
-        Validator.validate(null, rsrc, context);
-        List<ValidationResult> results = context.getValidationResults();
-
-        // if one of the results has an error then the model is not valid
-        if (results != null) {
-            for (ValidationResult result : results) {
-                for (ValidationProblem problem : result.getProblems()) {
-                    if (problem.getSeverity() == IStatus.ERROR) {
-                        return false;
-                    }
+                if( targetEObject == functionEObject ) {
+	                Object attribute = null;
+	                if( iMarker != null ) {
+	                    try {
+	                        attribute = iMarker.getAttribute(IMarker.SEVERITY);
+	                    } catch (CoreException e) {
+	                        // ResourceException is caught here because some calls to getAttribute() may be on an IMarker who's resource
+	                        // does not exist in the workspace any more.  (Defect 15552)
+	                        if (e instanceof ModelerCoreException ) {
+	                            UdfPlugin.UTIL.log(e);
+	                        }
+	                    }
+	                }
+	                if (attribute == null) {
+	                    return true;
+	                }
+	                // Asserting attr is an Integer...
+	                final int severity = ((Integer)attribute).intValue();
+	                if (severity == IMarker.SEVERITY_ERROR) {
+	                    return false;
+	                }
                 }
             }
         }
-
+        
         return true;
     }
+    
+    private IMarker[] getMarkers(ModelResource udfModelResource ) {
 
-    private synchronized boolean makeModification( File udfModel, String modelName,
-                                  boolean deleted ) throws Exception {
-        // let query engine know of the change so that functions can be available for modeling
-        URL url = udfModel.toURI().toURL();
-        boolean result = false;
-        if (deleted) {
-            result = this.functionModels.remove(url) != null;
-        } else {
-            result = true;
-            this.functionModels.put(url, new UdfInfo(modelName));
+    	IResource resrc = null;
+    	
+        if (udfModelResource != null && udfModelResource.exists() ) {
+            resrc = udfModelResource.getResource();
+            
+        }
+        if( resrc != null ) {
+        	IMarker[] markers = null;
+            
+            try {
+                markers = resrc.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+            } catch (CoreException ex) {
+                UdfPlugin.UTIL.log(ex);
+                return new Marker[0];
+            }
+           
+            return markers;
         }
         
-        if (result) {
-            functionLibrary = null;
+        return new Marker[0];
+    }
+
+    private synchronized boolean makeModification(ModelResource modelResource, boolean deleted ) throws Exception {
+        // let query engine know of the change so that functions can be available for modeling
+        boolean result = false;
+        if (deleted) {
+        	//System.out.println(" UDF model " + modelResource.getItemName() + " was REMOVED from the FunctionLibrary");
+            result = this.functionModels.remove(modelResource);
+        } else {
+            //System.out.println(" UDF model " + modelResource.getItemName() + " was ADDED to the FunctionLibrary");
+            result = this.functionModels.add(modelResource); //url, new UdfInfo(modelName, url, modelResource));
         }
+        
+        functionLibrary = null;
+        
         return result;
     }
 
@@ -193,61 +207,68 @@ public final class UdfManager implements IResourceChangeListener {
      * @throws Exception if there is a problem loading the file
      * @see #addFunctionModel(File)
      */
-    public void registerFunctionModel( IPath udfModel, boolean delete ) throws Exception {
-        File f = new File(udfModel.toOSString());
-        
-        if (!delete && !isFunctionModelValid(f)) {
-            return;
-        }
-        
-        makeModification(f, FileUtils.getFilenameWithoutExtension(udfModel.lastSegment()), delete);
+    public void registerFunctionModel( ModelResource modelResource, boolean delete ) throws Exception {
+        makeModification(modelResource, delete);
     }
 
     @Override
     public void resourceChanged( IResourceChangeEvent event ) {
-        if (!initialized || !ResourceChangeUtilities.isPostChange(event)) {
+        if (!initialized) {
             return;
         }
+        
+        if (ResourceChangeUtilities.isPreClose(event)) {
+            IProject project = (IProject)event.getResource();
 
-        ModelEditor modelEditor = ModelerCore.getModelEditor();
-        IResourceDelta[] children = event.getDelta().getAffectedChildren();
-
-        for (int i = 0; i < children.length; i++) {
-            IResource resource = children[i].getResource();
-
-            // Check to see if UDF model
-            
-            // make sure we are in the UDF project
-            if (resource == null || !(resource instanceof IProject) || !(resource.getParent() instanceof IWorkspaceRoot)) {
-                continue;
+            if (ModelerCore.hasModelNature(project)) {
+                modelProjectClosed(project);
             }
-            IResourceDelta[] udfFiles = children[i].getAffectedChildren();
-
-            for (int j = 0; j < udfFiles.length; j++) {
-                resource = udfFiles[j].getResource();
-
-                if (!(resource instanceof IFile)) {
-                    continue;
-                }
-
-                try {
-                    // make sure we're looking at a UDF model
-                    ModelResource modelResource = modelEditor.findModelResource((IFile)resource);
-                    IPath path = ((IFile)resource).getRawLocation();
-                    
-                    // model resource will be null for non-model files (like .project)
-                    if (modelResource == null) {
-                        if (path != null && ResourceChangeUtilities.isRemoved(udfFiles[j])) {
-                            registerFunctionModel(path, true);
-                        }
-                    } else if (modelResource.getModelType().getValue() == ModelType.FUNCTION && (ResourceChangeUtilities.isContentChanged(udfFiles[j]) || ResourceChangeUtilities.isAdded(udfFiles[j]))) {
-                        registerFunctionModel(path, false);
-                    }
-                } catch (Exception e) {
-                    UdfPlugin.UTIL.log(e);
-                }
+        } else if (ResourceChangeUtilities.isPreDelete(event)) {
+            IProject project = (IProject)event.getResource();
+            if (ModelerCore.hasModelNature(project)) {
+            	
+            	modelProjectDeleted(project);
             }
         }
+    }
+    
+    private void modelProjectClosed(IProject project) {
+    	modelProjectDeleted(project);
+    }
+    
+    private void modelProjectDeleted(IProject project) {
+    	//System.out.println(" Model Project " + project.getName() + " is being DELETED");
+    	try {
+			for( IResource res : project.members()) {
+				if( res instanceof IFolder ) {
+					folderDeleted((IFolder)res);
+				} else if(res instanceof IFile) {
+					fileDeleted((IFile)res);
+				}
+			}
+		} catch (CoreException ex) {
+			UdfPlugin.UTIL.log(ex);
+		} catch (Exception ex) {
+			UdfPlugin.UTIL.log(ex);
+		}
+    }
+    
+    private void folderDeleted(IFolder folder) throws CoreException, Exception {
+    	for( IResource res : folder.members()) {
+    		if( res instanceof IFolder ) {
+    			folderDeleted((IFolder)res);
+			} else if(res instanceof IFile) {
+				fileDeleted((IFile)res);
+			}
+    	}
+    }
+    
+    private void fileDeleted(IFile file) throws ModelWorkspaceException, Exception {
+    	// Do the check for UDF file and un-register the model
+    	ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(file);
+    	if( modelResource != null ) {
+    		UdfManager.INSTANCE.registerFunctionModel(modelResource, true);
+    	}
     }
 
     /**
@@ -260,24 +281,138 @@ public final class UdfManager implements IResourceChangeListener {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
+    public FunctionLibrary getSystemFunctionLibrary() {
+    	if( this.systemFunctionLibrary == null ) {
+    		this.systemFunctionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), new FunctionTree[0]);
+    	}
+    	return this.systemFunctionLibrary;
+    }
+    
     public synchronized FunctionLibrary getFunctionLibrary() {
         if (functionLibrary == null) {
             FunctionTree[] trees = new FunctionTree[functionModels.size()];
             int i = 0;
-            for (Map.Entry<URL, UdfInfo> entry : functionModels.entrySet()) {
-                try {
-                    UdfInfo value = entry.getValue();
-                    if (value.source == null) {
-                        Collection functionMethods = FunctionMetadataReader.loadFunctionMethods(entry.getKey().openStream());
-                        value.source = new UDFSource(functionMethods);
-                    }
-                    trees[i++] = new FunctionTree(value.modelName, value.source);
-                } catch (Exception e) {
-                    UdfPlugin.UTIL.log(e);
-				}
+            
+            for( ModelResource functionModelResource : functionModels ) {
+            	ScalarFunction[] functions = getScalarFunctions(functionModelResource);
+            	if( functions.length > 0 ) {
+            		IMarker[] markers = getMarkers(functionModelResource);
+            		
+            		String schema = FileUtils.getFilenameWithoutExtension(functionModelResource.getItemName());
+            		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
+            		
+            		for( ScalarFunction function : functions ) {
+            			// Function's must have a return parameter and a Scalar function may not yet have one after
+            			// it's initially created (intermediate state)
+            			// Also the Function AND it's return parameter (if non-null) need to be error free
+            			if( !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource) ||
+            				function.getReturnParameter() == null || 
+            				!isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource)) {
+            				continue;
+            			}
+            			String description = null;
+            			
+            			try {
+							description = ModelerCore.getModelEditor().getDescription(function);
+						} catch (ModelerCoreException ex) {
+							UdfPlugin.UTIL.log(ex);
+						}
+            			
+						boolean functionPamameterHasError = false;
+						
+            			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
+            			
+            			for( Object inputParam : function.getInputParameters() ) {
+            				if( inputParam instanceof com.metamatrix.metamodels.function.FunctionParameter) {
+            					com.metamatrix.metamodels.function.FunctionParameter param = (com.metamatrix.metamodels.function.FunctionParameter)inputParam;
+            					fParams.add(new FunctionParameter(param.getName(), param.getType()));
+            					// If any function parameter has an error don't add this
+            					if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){
+            						functionPamameterHasError = true;
+            					}
+            				}
+            			}
+            			
+            			if( functionPamameterHasError ) {
+            				continue;
+            			}
+            			
+            			String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
+            			FunctionParameter outputParam = new FunctionParameter(returnParamName, function.getReturnParameter().getType()); 
+            			
+            			FunctionMethod fMethod = 
+            				new FunctionMethod(
+            						function.getName(), 
+            						description, 
+            						function.getCategory(), 
+            						null, 
+            						function.getInvocationClass(), 
+            						function.getInvocationMethod(),
+            						fParams.toArray(new FunctionParameter[0]),
+            						outputParam,
+            					    false,
+            						null
+            						);
+            			fMethod.setPushDown(function.getPushDown().getLiteral());
+            			if( function.isDeterministic() ) {
+            				fMethod.setDeterminism(Determinism.DETERMINISTIC);
+            			} else {
+            				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
+            			}
+            			
+            			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
+            			fd.setMetadataID(function);
+            		}
+            		trees[i++] = tree;
+            	}
             }
+            
             functionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), trees);
         }
         return functionLibrary;
+    }
+    
+    private ScalarFunction[] getScalarFunctions(ModelResource mr) {
+        	ScalarFunctionFinder visitor = new ScalarFunctionFinder();
+        	final int mode = ModelVisitorProcessor.MODE_VISIBLE_CONTAINMENTS;   // show only those objects visible to user
+            final ModelVisitorProcessor processor = new ModelVisitorProcessor(visitor,mode);
+            
+            try {
+				processor.walk(mr, ModelVisitorProcessor.DEPTH_INFINITE);
+			} catch (ModelerCoreException ex) {
+				UdfPlugin.UTIL.log(ex);
+			}
+            
+            return visitor.getFunctions();
+            
+    }
+    
+    class ScalarFunctionFinder implements ModelVisitor {
+    	
+    	Collection<ScalarFunction> functions;
+
+		@Override
+		public boolean visit(EObject object) throws ModelerCoreException {
+			// Tables are contained by Catalogs, Schemas and Resources
+	        if (object instanceof ScalarFunction) {
+	        	if( functions == null ) {
+	        		functions = new ArrayList<ScalarFunction>();
+	        	}
+	        	functions.add((ScalarFunction)object);
+	            return true;
+	        }
+
+	        return false;
+		}
+
+		@Override
+		public boolean visit(Resource resource) throws ModelerCoreException {
+			return true;
+		}
+		
+		public ScalarFunction[] getFunctions() {
+			return functions.toArray(new ScalarFunction[0]);
+		}
+    	
     }
 }
