@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -238,6 +239,8 @@ public class TransformationObjectEditorPage
     private boolean isDirty = false;
 
     private ModelObjectEditorPage override;
+    
+    private ModelEditor parentModelEditor;
 
     /** List of listeners registered for this panels events */
     private List eventListeners;
@@ -255,6 +258,8 @@ public class TransformationObjectEditorPage
 
     private boolean noUpdatesAllowed = false;
     private boolean currentReadonlyState = false;
+    
+    private boolean deactivated = true;
 
     // SelectionListener for CheckBox controls
     private SelectionListener checkBoxListener = new SelectionListener() {
@@ -309,6 +314,10 @@ public class TransformationObjectEditorPage
         return objEditorParentLayout.topControl;
     }
 
+    public ModelEditor getParentModelEditor() {
+    	return this.parentModelEditor;
+    }
+
     private void createSqlControl( Composite parent ) {
         createSelectControlForNoUpdate(parent);
         setCurrentSqlEditor(sqlSelectEditorForNoUpdate);
@@ -350,6 +359,7 @@ public class TransformationObjectEditorPage
         sqlSelectPanelForUpdate.setLayout(glOuterGridLayout);
         sqlSelectPanelForUpdate.setLayoutData(createTextViewGridData());
         sqlSelectEditorForUpdate = createEditorPanel(sqlSelectPanelForUpdate, QueryValidator.SELECT_TRNS);
+        sqlSelectEditorForUpdate.setPanelType(UiConstants.SQLPanels.UPDATE_SELECT);
 
         sqlSelectEditorForUpdate.setEditable(true);
 
@@ -386,6 +396,7 @@ public class TransformationObjectEditorPage
         sqlSelectPanelForNoUpdate.setLayout(glOuterGridLayout);
         sqlSelectPanelForNoUpdate.setLayoutData(createTextViewGridData());
         sqlSelectEditorForNoUpdate = createSelectEditorForNoUpdate(this.sqlSelectPanelForNoUpdate);
+        sqlSelectEditorForNoUpdate.setPanelType(UiConstants.SQLPanels.SELECT);
         sqlSelectEditorForNoUpdate.setEditable(true);
         seSelectNoUpdateDropListener = createDropTargetListener(sqlSelectEditorForNoUpdate, currentMappingRoot);
 
@@ -424,6 +435,7 @@ public class TransformationObjectEditorPage
         chkUseDefaultForUpdate.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlUpdateEditor = createEditorPanel(sqlOuterUpdatePanel, QueryValidator.UPDATE_TRNS);
+        sqlUpdateEditor.setPanelType(UiConstants.SQLPanels.UPDATE_UPDATE);
 
         updateTab = new CTabItem(tabFolder, SWT.NONE);
         updateTab.setControl(sqlOuterUpdatePanel);
@@ -464,6 +476,7 @@ public class TransformationObjectEditorPage
         chkUseDefaultForInsert.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlInsertEditor = createEditorPanel(sqlOuterInsertPanel, QueryValidator.INSERT_TRNS);
+        sqlInsertEditor.setPanelType(UiConstants.SQLPanels.UPDATE_INSERT);
 
         insertTab = new CTabItem(tabFolder, SWT.NONE);
         insertTab.setControl(sqlOuterInsertPanel);
@@ -502,6 +515,7 @@ public class TransformationObjectEditorPage
         chkUseDefaultForDelete.setToolTipText(USE_DEFAULT_CHECKBOX_TOOLTIP);
 
         sqlDeleteEditor = createEditorPanel(sqlOuterDeletePanel, QueryValidator.DELETE_TRNS);
+        sqlDeleteEditor.setPanelType(UiConstants.SQLPanels.UPDATE_DELETE);
 
         deleteTab = new CTabItem(tabFolder, SWT.NONE);
         deleteTab.setControl(sqlOuterDeletePanel);
@@ -563,6 +577,7 @@ public class TransformationObjectEditorPage
      * Register this class to listen for Metadata Change Notifications and Tab Selections
      */
     private void registerListeners() {
+    	deactivated = false;
         ModelUtilities.addNotifyChangedListener(this);
         SqlMappingRootCache.addEventListener(this);
         if (tabFolderWithUpdateTabs != null) {
@@ -779,9 +794,9 @@ public class TransformationObjectEditorPage
         if (obj instanceof SqlTransformationMappingRoot) {
             SqlTransformationMappingRoot workingMappingRoot = (SqlTransformationMappingRoot)obj;
             // Wire listeners
-            ModelUtilities.addNotifyChangedListener(this);
-            SqlMappingRootCache.addEventListener(this);
-
+            if( deactivated ) {
+            	registerListeners();
+            }
             currentMappingRoot = workingMappingRoot;
             this.validator = new TransformationValidator(currentMappingRoot, false);
 
@@ -935,9 +950,14 @@ public class TransformationObjectEditorPage
             String sqlString = TransformationHelper.getSqlString(currentMappingRoot, cmdType);
             // Get valid status for the transformation
             boolean isValid = TransformationHelper.isValid(currentMappingRoot, cmdType);
+            
+            //System.out.println(" TOEP.setEditorContent()  QUERY VALID = " + isValid);
 
             if( sourceIsEvent ) {
             	showMessage = TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, txnSource);
+            }
+            if( !showMessage && !isValid ) {
+            	showMessage = true;
             }
             
             // If the command is a SetQuery (UNION), update the reconciled status on the editorPanel
@@ -980,7 +1000,7 @@ public class TransformationObjectEditorPage
                 // resetUndoManager(editor);
 
                 // Set Message and Message Visibility on EditorPanel
-                setEditorMessage(item, sqlString);
+                setEditorMessage(item);
 
             } // endif
 
@@ -1311,8 +1331,7 @@ public class TransformationObjectEditorPage
      * 
      * @param item
      */
-    private void setEditorMessage( Object item,
-                                   String sqlString ) {
+    private void setEditorMessage( Object item ) {
         int cmdType = getCommandTypeForItem(item);
         
         // This is the "Editor message panel" at the bottom of each SQL Editor.
@@ -1497,13 +1516,16 @@ public class TransformationObjectEditorPage
 
         // clear all undo histories
         resetAllUndoManagers();
-
+        
+        deactivated = true;
+        
         // -----------------------------------------------------------------------------------------------------------------------
         // DEFECT 23230
         // Added this call to clean up the SQL Editor SQL text so when re-opened, the text will be reset and validated correctly
         // -----------------------------------------------------------------------------------------------------------------------
         edit(null);
 
+        
         return true;
     }
 
@@ -1577,7 +1599,7 @@ public class TransformationObjectEditorPage
                                                 final Object txnSource,
                                                 final boolean overwriteDirty ) {
 
-        if (txnSource != this) {
+        if (txnSource != this && !(txnSource instanceof SqlEditorPanel)) {
             if (this.validator != null) {
                 boolean didSetText = false;
                 // synchronize the SELECT for noUpdates / Updates first...
@@ -1629,8 +1651,7 @@ public class TransformationObjectEditorPage
 
             }
         } else {
-            String theSQL = getCurrentSqlEditor().getText();
-            setEditorMessage(getSelectedItem(), theSQL);
+            setEditorMessage(getSelectedItem());
         }
 
         // Allow actions to update state based on changes in SQL and validation status
@@ -1701,17 +1722,17 @@ public class TransformationObjectEditorPage
         // Dont respond to events caused by this class
         // -------------------------------------------------
         if (!validNotifications.isEmpty() && !(txnSource instanceof TransformationObjectEditorPage)) {
-            if (Thread.currentThread() == getControl().getDisplay().getThread()) {
-                handleTransformationStatusChangeEvent(true, txnSource, true); // should this be true? I'm not sure when this
-                // method is called...
-            } else {
-                getControl().getDisplay().syncExec(new Runnable() {
-                    public void run() {
-                        handleTransformationStatusChangeEvent(true, txnSource, true); // should this be true? I'm not sure when
-                        // this method is called...
-                    }
-                });
-            }
+//            if (Thread.currentThread() == getControl().getDisplay().getThread()) {
+//                handleTransformationStatusChangeEvent(true, txnSource, true); // should this be true? I'm not sure when this
+//                // method is called...
+//            } else {
+//                getControl().getDisplay().syncExec(new Runnable() {
+//                    public void run() {
+//                        handleTransformationStatusChangeEvent(true, txnSource, true); // should this be true? I'm not sure when
+//                        // this method is called...
+//                    }
+//                });
+//            }
         }
     }
 
@@ -2612,7 +2633,7 @@ public class TransformationObjectEditorPage
                 // ------------------------------------------------------------------------
                 if (eventType == SqlEditorEvent.VALIDATABLE || eventType == SqlEditorEvent.RESOLVABLE
                     || eventType == SqlEditorEvent.PARSABLE) {
-                    handleSqlEditorCommandEvent(sqlEvent.getCommand(), eventType, eventSource);
+                    handleSqlEditorCommandEvent(sqlEvent.getCommand(), sqlEvent.getSQLString(), eventType, eventSource);
                     // ----------------------------------------------------------------
                     // Query Changed Event from EditorPanel
                     // ----------------------------------------------------------------
@@ -2634,6 +2655,7 @@ public class TransformationObjectEditorPage
      * @param eventSource the source of the event
      */
     private void handleSqlEditorCommandEvent( final Command command,
+    										  final String sqlString,
                                               int eventType,
                                               Object eventSource ) {
         Object selectedItem = getSelectedItem();
@@ -2647,7 +2669,7 @@ public class TransformationObjectEditorPage
         boolean succeeded = false;
         try {
             // Use this as the source - Handlers will not recognize SqlEditorPanel
-            TransformationHelper.setSqlString(currentMappingRoot, command.toString(), cmdType, false, this);
+            TransformationHelper.setSqlString(currentMappingRoot, sqlString, cmdType, false, this);
 
             // Reconcile the mapping root Inputs / Attributes / etc to conform to the SQL
             // (TransformationNotificationListener ignores sql Change generated by this panel)
@@ -2672,7 +2694,7 @@ public class TransformationObjectEditorPage
         }
 
         // Set editor message area
-        setEditorMessage(selectedItem, command.toString());
+        updateMessagePanel();
 
         setDirty(false);
 
@@ -3065,6 +3087,13 @@ public class TransformationObjectEditorPage
      * @since 5.0.1
      */
     public void initialize( MultiPageModelEditor editor ) {
+    	if( editor instanceof ModelEditor ) {
+    		this.parentModelEditor = (ModelEditor)editor;
+    	}
+    }
+    
+    public void updateMessagePanel() {
+    	setEditorMessage(getSelectedItem());
     }
 
     /**

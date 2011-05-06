@@ -44,6 +44,9 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.FunctionParameter;
+import com.metamatrix.metamodels.function.ReturnParameter;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.RelationalPackage;
@@ -584,7 +587,7 @@ public class TransformationHelper implements SqlConstants {
             // --------------------------------------------
             // If alias doesnt already exist, add is ok
             // --------------------------------------------
-            if (isValidSource(transMappingRoot, eObj) && !containsSqlAliasName(transMappingRoot, aliasName, eObj)) {
+            if ( (isValidSource(transMappingRoot, eObj) || eObj instanceof ScalarFunction) && !containsSqlAliasName(transMappingRoot, aliasName, eObj)) {
                 // start txn if not already in txn
                 boolean requiredStart = ModelerCore.startTxn(isSignificant, IS_UNDOABLE, ADD_SRC_ALIAS_TXN_DESCRIPTION, txnSource);
                 boolean succeeded = false;
@@ -2067,6 +2070,10 @@ public class TransformationHelper implements SqlConstants {
      */
     public static boolean isOperation( Object obj ) {
         return (obj != null && obj instanceof Operation);
+    }
+    
+    public static boolean isFunctionModelObject( Object obj) {
+    	return obj instanceof ScalarFunction || obj instanceof FunctionParameter || obj instanceof ReturnParameter;
     }
     
     /**
@@ -3656,6 +3663,11 @@ public class TransformationHelper implements SqlConstants {
                 boolean succeeded = false;
                 try {
                     userSqlTrans.setSelectSql(selectString); //SqlUtil.normalize(selectString));
+//                    String printSQL = selectString;
+//                    if( printSQL.length() > 30 ) {
+//                    	printSQL = printSQL.substring(0, 30) + "...";
+//                    }
+//                    System.out.println(" TransformationHelper.setSelectSqlUserString() SQL = \n" + printSQL);
                     changed = true;
                     succeeded = true;
                 } finally {

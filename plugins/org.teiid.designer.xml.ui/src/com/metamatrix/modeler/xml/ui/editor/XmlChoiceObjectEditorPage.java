@@ -64,6 +64,7 @@ public class XmlChoiceObjectEditorPage
     private static final String SLASH = " / "; //$NON-NLS-1$ 
     private ChoicePanel pnlChoicePanel;
     private IChoiceObject icoChoiceObject;
+    private ModelEditor parentModelEditor;
     
     /** 
      * @see com.metamatrix.modeler.ui.editors.ModelObjectEditorPage#canClose()
@@ -390,6 +391,9 @@ public class XmlChoiceObjectEditorPage
      * @since 5.0.1
      */
     public void initialize(MultiPageModelEditor editor) {
+    	if( editor instanceof ModelEditor ) {
+    		this.parentModelEditor = (ModelEditor)editor;
+    	}
     }
     
     /**
@@ -399,5 +403,9 @@ public class XmlChoiceObjectEditorPage
      * @since 5.0.1
      */
     public void setOverride(ModelObjectEditorPage editor) {
+    }
+    
+    public ModelEditor getParentModelEditor() {
+    	return this.parentModelEditor;
     }
 }

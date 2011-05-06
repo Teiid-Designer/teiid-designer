@@ -139,7 +139,7 @@ public class ReconcileTransformationAction extends TransformationAction implemen
 
         // Determine based on the current transformation if we can enable
         if (rootIsValid(transMappingRoot)) {
-            boolean canUseReconciler = TransformationHelper.canUseReconciler(transMappingRoot);
+            boolean canUseReconciler = true; //TransformationHelper.canUseReconciler(transMappingRoot);
             boolean isReadOnly = ModelObjectUtilities.isReadOnly(transMappingRoot);
             if (canUseReconciler && !isReadOnly) {
                 shouldEnable = true;
@@ -207,6 +207,17 @@ public class ReconcileTransformationAction extends TransformationAction implemen
     @Override
     protected void doRun() {
         Shell shell = super.getPlugin().getWorkbench().getActiveWorkbenchWindow().getShell();
+        
+        // Check for Dirty Model and if can use reconciler
+        if( this.tObjEditorPage == null ) return;
+        
+        if( this.tObjEditorPage.getParentModelEditor().isResourceDirty() ) {
+        	MessageDialog.openWarning(shell, 
+        			UiConstants.Util.getString("ReconcileTransformationAction.pendingChangesTitle"),  //$NON-NLS-1$
+        			UiConstants.Util.getString("ReconcileTransformationAction.pendingChangesMessage")); //$NON-NLS-1$
+        	return;
+        }
+        
         int subIndex = -1;
         List builderGroups = null;
         boolean isUnion = false;

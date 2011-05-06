@@ -81,6 +81,7 @@ Require-Bundle: org.eclipse.ui.cheatsheets,
  org.jdom,
  org.teiid.designer.legacy,
  teiid_embedded_query,
- org.teiid.designer.extension
+ org.teiid.designer.extension,
+ org.teiid.designer.udf
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

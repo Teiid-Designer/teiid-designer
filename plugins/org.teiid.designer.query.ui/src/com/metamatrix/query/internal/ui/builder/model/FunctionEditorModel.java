@@ -280,9 +280,10 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
             Expression[] newArgValues = theFunction.getArgs();
             FunctionForm functionForm = funcLib.findFunctionForm(theFunction.getName(), newArgValues.length);
 
-            setCategory(functionForm.getCategory());
-            setFunctionName(functionForm.getDisplayString());
-
+            if( functionForm != null ) {
+            	setCategory(functionForm.getCategory());
+            	setFunctionName(functionForm.getDisplayString());
+            }
             // set current arg values
             argValues = Arrays.asList(newArgValues);
         }

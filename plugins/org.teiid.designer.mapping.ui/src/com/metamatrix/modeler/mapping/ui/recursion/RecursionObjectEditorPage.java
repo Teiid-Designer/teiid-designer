@@ -26,6 +26,7 @@ import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.metamodels.transformation.MappingClass;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.editors.MultiPageModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
@@ -48,6 +49,7 @@ public class RecursionObjectEditorPage
     private RecursionPanel pnlRecursionPanel;
     private MappingClass mcRecursiveObject;
     private RecursionObject roRecursionObject;
+    private ModelEditor parentModelEditor;
         
     private boolean isActive = false;
     
@@ -326,6 +328,9 @@ public class RecursionObjectEditorPage
      * @since 5.0.1
      */
     public void initialize(MultiPageModelEditor editor) {
+    	if( editor instanceof ModelEditor ) {
+    		this.parentModelEditor = (ModelEditor)editor;
+    	}
     }
     
     /**
@@ -335,5 +340,9 @@ public class RecursionObjectEditorPage
      * @since 5.0.1
      */
     public void setOverride(ModelObjectEditorPage editor) {
+    }
+    
+    public ModelEditor getParentModelEditor() {
+    	return this.parentModelEditor;
     }
 }

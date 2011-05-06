@@ -477,9 +477,11 @@ public abstract class ModelUtilities implements UiConstants {
      * it will become a memory leak.... heap hog, or whatever you want to call it.
      */
     public static void addNotifyChangedListener( INotifyChangedListener listener ) {
-
         try {
+        	if( getWorkspaceContainer().getChangeNotifier().contains(listener) ) return;
+    	
             getWorkspaceContainer().getChangeNotifier().addListener(listener);
+            //System.out.println("    >>>  ModelUtilities.addNotifyChangedListener()  Adding New Listener = " + listener.getClass().getSimpleName());
         } catch (CoreException e) {
             e.printStackTrace(System.err);
         }
@@ -493,6 +495,7 @@ public abstract class ModelUtilities implements UiConstants {
     public static void removeNotifyChangedListener( INotifyChangedListener listener ) {
         try {
             getWorkspaceContainer().getChangeNotifier().removeListener(listener);
+            //System.out.println("    >>>  ModelUtilities.addNotifyChangedListener()  Removing Listener = " + listener.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

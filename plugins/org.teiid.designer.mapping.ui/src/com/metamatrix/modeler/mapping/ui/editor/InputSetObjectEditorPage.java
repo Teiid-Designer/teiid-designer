@@ -61,6 +61,7 @@ public class InputSetObjectEditorPage
     private InputSet inputSet;
     private InputSetPanel ispInputSetPanel;
     private InputSetAdapter isoInputSetObject;
+    private ModelEditor parentModelEditor;
 
     /**
      * @see com.metamatrix.modeler.ui.editors.ModelObjectEditorPage#canClose()
@@ -444,6 +445,9 @@ public class InputSetObjectEditorPage
      * @since 5.0.1
      */
     public void initialize( MultiPageModelEditor editor ) {
+    	if( editor instanceof ModelEditor ) {
+    		this.parentModelEditor = (ModelEditor)editor;
+    	}
     }
 
     /**
@@ -453,5 +457,9 @@ public class InputSetObjectEditorPage
      * @since 5.0.1
      */
     public void setOverride( ModelObjectEditorPage editor ) {
+    }
+    
+    public ModelEditor getParentModelEditor() {
+    	return this.parentModelEditor;
     }
 }

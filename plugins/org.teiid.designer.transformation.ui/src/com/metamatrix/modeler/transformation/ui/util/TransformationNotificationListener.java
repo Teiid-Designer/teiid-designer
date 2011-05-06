@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -34,6 +35,7 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.Select;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -115,6 +117,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
     private boolean ignoreTableSupportsUpdateChangedFalse = false;
     private boolean ignoreTableSupportsUpdateChangedTrue = false;
     boolean setColumnsUpdateableOnTableUpdateable = false;
+    
+    private IModelNotificationHandler functionHandler;
 
     /**
      * Construct an instance of TransformationNotificationListener.
@@ -130,6 +134,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
         } catch (EventSourceException e) {
             Util.log(IStatus.ERROR, e, e.getMessage());
         }
+        
+        functionHandler = new FunctionModelNotificationHandler();
     }
 
     public void setIgnoreNotifications( boolean shouldIgnore ) {
@@ -317,6 +323,10 @@ public class TransformationNotificationListener implements INotifyChangedListene
             if (!modelRenames.isEmpty()) {
                 handleModelRenameNotifications(modelRenames, source);
             }
+            // ---------------------------------------------------------
+            // Function Model Scalar Function or parameter changes
+            // ---------------------------------------------------------
+            functionHandler.handleNotifications(validNotifications, source);
         }
     }
 
@@ -341,12 +351,14 @@ public class TransformationNotificationListener implements INotifyChangedListene
             // 4) SqlColumn
             // 5) SqlProcedure
             // 6) ColumnSet - Virtual Procedure ResultSet
+            // 7) FunctionModel EObject
             if (changedObj != null && changedObj instanceof EObject && !DiagramUiUtilities.isDiagramObject((EObject)changedObj)) {
                 if (changedObj instanceof SqlTransformation || changedObj instanceof SqlTransformationMappingRoot
                     || TransformationHelper.isSqlTable(changedObj) || TransformationHelper.isSqlColumn(changedObj)
                     || TransformationHelper.isSqlProcedure(changedObj)
                     || TransformationHelper.isSqlProcedureParameter(changedObj)
-                    || TransformationHelper.isSqlColumnSet(changedObj)) {
+                    || TransformationHelper.isSqlColumnSet(changedObj) 
+                    || functionHandler.shouldHandleChangedObject(changedObj)) {
                     goodNotifications.add(notification);
                 } else if (NotificationUtilities.isRemoved(notification)) {
                     Object removedObj = notification.getOldValue();
@@ -2036,8 +2048,10 @@ public class TransformationNotificationListener implements INotifyChangedListene
         boolean hasSqlAlias = false;
         for (int i = 0; i < eObjects.length; i++) {
             if (eObjects[i] instanceof SqlAlias) {
-                hasSqlAlias = true;
-                break;
+            	if( !functionHandler.shouldHandleChangedObject( ((SqlAlias)eObjects[i]).getAliasedObject()) ) {
+            		hasSqlAlias = true;
+            		break;
+            	}
             }
         }
         return hasSqlAlias;
@@ -2273,6 +2287,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
                 }
             });
         }
+        
+        functionHandler.processModelResourceEvent(event);
     }
 
     private class WorkspaceNotificationListener implements ModelWorkspaceNotificationListener {
