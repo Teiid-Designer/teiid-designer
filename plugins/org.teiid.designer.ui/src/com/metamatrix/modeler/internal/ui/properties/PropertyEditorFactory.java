@@ -505,7 +505,7 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
             protected Object openDialogBox( Control cellEditorWindow ) {
                 // defect 18611 - make MOLD open faster.
                 ModelObjectListDialog dialog = new ModelObjectListDialog(composite.getShell(),
-                                                                         propertyDescriptor.getLabelProvider(), true, true);
+                                                                         propertyDescriptor.getLabelProvider(), true, false);
                 dialog.setContentFilter(new IFilter() {
 
                     public boolean passes( final Object object ) {
