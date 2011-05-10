@@ -20,11 +20,12 @@ import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.SetQueryUtil;
 import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
+
+import com.metamatrix.modeler.core.query.SetQueryUtil;
 
 
 /** 

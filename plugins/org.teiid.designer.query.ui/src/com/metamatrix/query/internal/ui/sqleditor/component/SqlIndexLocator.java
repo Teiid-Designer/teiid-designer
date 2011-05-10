@@ -32,6 +32,7 @@ import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.HasCriteria;
 import org.teiid.query.sql.symbol.ScalarSubquery;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
 /**
  * This class provides the GroupSymbolFinder the knowledge to know where the cursor is at so it can make decisions about what
@@ -159,7 +160,8 @@ public class SqlIndexLocator {
 
     public boolean hasSubQueries() {
         if (primaryLanguageObject != null && primaryLanguageObject instanceof Query) {
-            return !((Query)primaryLanguageObject).getSubCommands().isEmpty();
+        	List subCommands = CommandCollectorVisitor.getCommands((Query)primaryLanguageObject);
+            return !subCommands.isEmpty();
         }
 
         return false;
