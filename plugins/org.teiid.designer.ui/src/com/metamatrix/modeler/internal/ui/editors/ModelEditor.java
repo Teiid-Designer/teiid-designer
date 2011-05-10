@@ -728,13 +728,22 @@ public class ModelEditor extends MultiPageModelEditor
      */
     @Override
     public void setFocus() {
+        // because of the way Eclipse activates views, we must set focus to a control in our editor
+        // before calling super.setFocus(). If we don't then we get a "recursive attempt to activate part" warning.
+        ModelEditorPage page = (ModelEditorPage)getActiveEditor();
+
+        if ((page != null) && (page.getControl() != null)) {
+            // control is null if editor has not been created yet
+            page.getControl().setFocus();
+        }
+
         super.setFocus();
+
         ModelEditorActionContributor abc = getActionBarContributor();
         if (abc != null) {
             abc.setEditorInput((IFileEditorInput)getEditorInput());
             abc.setReadOnlyState();
             // let's notify the model editors that read-only changed.
-            ModelEditorPage page = (ModelEditorPage)super.getActiveEditor();
             if (page != null) {
                 page.updateReadOnlyState(abc.getReadOnlyState());
             }
