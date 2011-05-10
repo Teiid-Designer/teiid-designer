@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -50,6 +51,7 @@ import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+
 import com.metamatrix.metamodels.core.extension.XClass;
 import com.metamatrix.modeler.core.ModelEditor;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -505,7 +507,7 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
             protected Object openDialogBox( Control cellEditorWindow ) {
                 // defect 18611 - make MOLD open faster.
                 ModelObjectListDialog dialog = new ModelObjectListDialog(composite.getShell(),
-                                                                         propertyDescriptor.getLabelProvider(), true, true);
+                                                                         propertyDescriptor.getLabelProvider(), true, false);
                 dialog.setContentFilter(new IFilter() {
 
                     public boolean passes( final Object object ) {
