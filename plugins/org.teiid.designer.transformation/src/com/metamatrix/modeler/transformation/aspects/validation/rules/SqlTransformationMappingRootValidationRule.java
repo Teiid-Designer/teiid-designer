@@ -226,7 +226,7 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
             boolean isFunction = source instanceof ScalarFunction;
 
             if( !isFunction && (sourceSqlAspect == null || 
-            	!(sourceSqlAspect instanceof SqlTableAspect || !(sourceSqlAspect instanceof SqlProcedureAspect))) ) {
+            		!(sourceSqlAspect instanceof SqlTableAspect || sourceSqlAspect instanceof SqlProcedureAspect)) ) {
                 ValidationProblem typeProblem = new ValidationProblemImpl(
                                                                           0,
                                                                           IStatus.ERROR,
