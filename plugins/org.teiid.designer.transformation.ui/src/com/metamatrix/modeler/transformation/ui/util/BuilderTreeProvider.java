@@ -230,7 +230,7 @@ public class BuilderTreeProvider implements ITreeContentProvider, ILabelProvider
         } else if (obj instanceof ElementSymbol ) {
             return ((ElementSymbol) obj).getName();
         } else if (obj instanceof InputSet) {
-            return "InputSet"; //$NON-NLS-1$
+            return "INPUTS"; //$NON-NLS-1$
         } else if ( obj instanceof ModelResource ) {
             return ModelerCore.getModelEditor().getModelName((ModelResource) obj);
         } if (obj instanceof TempMetadataID) {
