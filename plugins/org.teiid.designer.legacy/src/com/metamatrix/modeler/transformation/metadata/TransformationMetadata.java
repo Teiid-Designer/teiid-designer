@@ -314,7 +314,7 @@ public abstract class TransformationMetadata extends BasicQueryMetadata {
 
         // create the storedProcedure info object that would hold procedure's metadata
         StoredProcedureInfo procInfo = new StoredProcedureInfo();
-        procInfo.setProcedureCallableName(procRecord.getName());
+        procInfo.setProcedureCallableName(procedureFullName);
         procInfo.setProcedureID(procRecord);
 
         // modelID for the procedure
