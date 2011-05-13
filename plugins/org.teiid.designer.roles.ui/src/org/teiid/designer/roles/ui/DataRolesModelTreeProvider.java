@@ -232,7 +232,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 				ModelType mType = ma.getModelType();
 				if( ModelType.PHYSICAL_LITERAL == mType ) {
 					return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_SOURCE_MODEL_ID);
-				} 
+				}else if ( ModelType.FUNCTION_LITERAL == mType ) {
+					return ModelIdentifier.getImage(ModelIdentifier.FUNCTION_MODEL_ID);
+				}
 				return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_VIEW_MODEL_ID);
 			} catch (ModelerCoreException e) {
 				RolesUiPlugin.UTIL.log(IStatus.ERROR, RolesUiPlugin.UTIL.getString("errorFindingImageForObject", element, e)); //$NON-NLS-1$

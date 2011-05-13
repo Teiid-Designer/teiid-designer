@@ -480,7 +480,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
                             if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
+                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI) || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -708,7 +708,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
                             if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
+                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI) || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
