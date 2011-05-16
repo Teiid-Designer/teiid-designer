@@ -188,6 +188,18 @@
 					</mediaobject>
 				</figure>
 			</section>
+			<section id="vdb-editor-prefs-section">
+				<title>VDB Editor Preferences</title>
+				<para><emphasis role="bold"><xref linkend="vdb-editor-section" /> Preferences</emphasis> provide a way to customize VDB editor behavior.</para>
+				<figure>
+					<title>VDB Editor Preferences Panel</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/vdb-editor-preferences.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
 		</section>
 		
 		<!-- ####### VALIDATION PREFERENCES ##################################### -->

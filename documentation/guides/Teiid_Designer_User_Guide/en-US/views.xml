@@ -459,14 +459,22 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para> You can click in the text field and edit in a similar fashion
-			with standard text editing. Below is a list of available right-click
+		<para> You can click the edit description action in the toolbar or right-click select "Edit"
+		in the context menu to bring up the Edit Description dialog.
 			edit actions.</para>
 		<figure id="description-view-menu-image">
 			<title>Description View Context Menu</title>
 			<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/screencaps/description-view-context-menu.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<figure id="edot-description-dialog-image">
+			<title>Edit Description Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/edit-description-dialog.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
