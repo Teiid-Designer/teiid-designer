@@ -6,10 +6,7 @@ Bundle-Version: 7.5.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.modelgenerator.ui.ModelerModelGeneratorUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Export-Package: com.metamatrix.modeler.modelgenerator.ui,
- com.metamatrix.modeler.modelgenerator.ui.paste,
- com.metamatrix.modeler.modelgenerator.ui.refresh,
- com.metamatrix.modeler.modelgenerator.ui.wizards
+Export-Package: com.metamatrix.modeler.modelgenerator.ui
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
