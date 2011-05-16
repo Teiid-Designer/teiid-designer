@@ -9,39 +9,4 @@
 -->
 <plugin>
 
-     <extension
-         id="generateVirtualModelContributor"
-         name="%generateVirtualModelContributor"
-         point="org.teiid.designer.ui.newModelWizardContributor">
-      <class
-            name="com.metamatrix.modeler.modelgenerator.ui.wizards.GenerateVirtualModelContributor"
-            icon="icons/full/ctool16/newmodel_wiz.gif">
-      </class>
-      <metamodelDescriptorType
-            name="http://www.metamatrix.com/metamodels/Relational"
-            isPhysical="true"
-            isVirtual="true">
-      </metamodelDescriptorType>
-   </extension>
-   <extension
-         id="uml2relational.pastespecial"
-         name="%relationalFromUml.name"
-         point="org.teiid.designer.ui.metadataPasteSpecial">
-      <class
-            label="%relationalFromUml.label"
-            description="%relationalFromUml.description"
-            classname="com.metamatrix.modeler.modelgenerator.ui.paste.Uml2RelationalPasteContributor">
-      </class>
-   </extension>
-   <extension
-         id="uml2relational.refresh"
-         name="%refreshRelationalFromUml.name"
-         point="org.teiid.designer.ui.metadataRefresh">
-      <class
-            label="%refreshRelationalFromUml.label"
-            description="%refreshRelationalFromUml.description"
-            classname="com.metamatrix.modeler.modelgenerator.ui.refresh.RefreshVirtualModelContributor">
-      </class>
-   </extension>
-
 </plugin>
