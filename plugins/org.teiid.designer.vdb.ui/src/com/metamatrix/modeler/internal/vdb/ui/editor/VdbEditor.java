@@ -13,7 +13,6 @@ import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -98,7 +96,6 @@ import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
@@ -161,7 +158,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
-    
+
     static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     static String i18n( final String id ) {
@@ -179,23 +176,23 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     Action cloneDataRoleAction;
     VdbDataRole selectedDataRole;
     VdbDataRoleResolver dataRoleResolver;
-    
+
     boolean disposed = false;
 
     private final TextColumnProvider<VdbEntry> descriptionColumnProvider = new TextColumnProvider<VdbEntry>() {
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getName()
          */
         @Override
         public String getName() {
             return DESCRIPTION_COLUMN_NAME;
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getImage()
          */
         @Override
@@ -205,7 +202,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
          */
         @Override
@@ -215,7 +212,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
          */
         @Override
@@ -225,7 +222,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
          */
         @Override
@@ -240,17 +237,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private final TextColumnProvider<VdbEntry> pathColumnProvider = new TextColumnProvider<VdbEntry>() {
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getName()
          */
         @Override
         public String getName() {
             return PATH_COLUMN_NAME;
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getImage()
          */
         @Override
@@ -260,7 +257,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
          */
         @Override
@@ -272,17 +269,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private final CheckBoxColumnProvider<VdbEntry> syncColumnProvider = new CheckBoxColumnProvider<VdbEntry>() {
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getName()
          */
         @Override
         public String getName() {
             return null;
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getImage()
          */
         @Override
@@ -292,7 +289,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.DefaultColumnProvider#getToolTip(java.lang.Object)
          */
         @Override
@@ -304,7 +301,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
          */
         @Override
@@ -314,7 +311,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
          */
         @Override
@@ -324,7 +321,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
          */
         @Override
@@ -333,12 +330,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
             // set value to true if preferene not found
             boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
-                                                                                                   : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
+            : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
             boolean synchronize = !showWarningDialog;
 
             if (showWarningDialog) {
-                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent()
-                                                                                                    .getActiveShell(),
+                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
                                                                                              CONFIRM_DIALOG_TITLE,
                                                                                              CONFIRM_SYNCHRONIZE_MESSAGE,
                                                                                              VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
@@ -364,7 +360,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                     /**
                      * {@inheritDoc}
-                     *
+                     * 
                      * @see java.lang.Runnable#run()
                      */
                     @Override
@@ -381,18 +377,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
          */
         @Override
         public IStatus validate( final Object[] selection ) {
             for (int ndx = selection.length; --ndx >= 0;)
-                if (selection[ndx] instanceof IContainer)
-                    return new Status(IStatus.ERROR,
-                                      VdbUiConstants.PLUGIN_ID,
-                                      0,
-                                      ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE,
-                                      null);
+                if (selection[ndx] instanceof IContainer) return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0,
+                                                                            ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
             return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
         }
     };
@@ -409,14 +401,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         modelsGroup.getTable().getViewer().refresh();
     }
-    
+
     private void createDataRolesControl( Composite parent ) {
         final String DATA_POLICY_COLUMN_NAME = i18n("dataPolicyName"); //$NON-NLS-1$
 
         final ButtonProvider editProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -426,7 +418,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -436,7 +428,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -446,7 +438,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -456,7 +448,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -479,8 +471,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)
+                                || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
+                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)
+                                || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -496,12 +490,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     ModelEditorImpl.setContainer(null);
                 }
 
-                DataRole dataPolicy = new DataRole(vdbDataRole.getName(),
-                                                   vdbDataRole.getDescription(),
-                                                   vdbDataRole.isAnyAuthenticated(),
-                                                   vdbDataRole.allowCreateTempTables(),
-                                                   vdbDataRole.getMappedRoleNames(),
-                                                   vdbDataRole.getPermissions());
+                DataRole dataPolicy = new DataRole(vdbDataRole.getName(), vdbDataRole.getDescription(),
+                                                   vdbDataRole.isAnyAuthenticated(), vdbDataRole.allowCreateTempTables(),
+                                                   vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
                 final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
@@ -524,7 +515,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         dataRolesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbDataRole>() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.DefaultTableProvider#doubleClicked(java.lang.Object)
              */
             @Override
@@ -534,7 +525,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.TableProvider#getElements()
              */
             @Override
@@ -542,10 +533,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 final Set<VdbDataRole> entries = getVdb().getDataPolicyEntries();
                 return entries.toArray(new VdbDataRole[entries.size()]);
             }
-            
+
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.DefaultTableProvider#isDoubleClickSupported()
              */
             @Override
@@ -555,7 +546,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }, new TextColumnProvider<VdbDataRole>() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.DefaultColumnProvider#getImage(java.lang.Object)
              */
             @Override
@@ -565,7 +556,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getName()
              */
             @Override
@@ -575,7 +566,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getImage()
              */
             @Override
@@ -585,7 +576,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
              */
             @Override
@@ -595,7 +586,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }, new TextColumnProvider<VdbDataRole>() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getName()
              */
             @Override
@@ -605,7 +596,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getImage()
              */
             @Override
@@ -615,7 +606,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
              */
             @Override
@@ -625,7 +616,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
              */
             @Override
@@ -635,7 +626,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
              */
             @Override
@@ -644,21 +635,21 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 element.setDescription(value);
             }
         });
-        
+
         ButtonProvider newProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
             public ImageDescriptor getImageDescriptor() {
                 return VdbUiPlugin.singleton.getImageDescriptor(Images.ADD_ROLE);
             }
-            
+
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -668,7 +659,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -678,7 +669,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -688,7 +679,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -707,8 +698,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             EObject firstEObj = r.getContents().get(0);
                             ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
                             String mmURI = ma.getPrimaryMetamodelUri();
-                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI) || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
-                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)) {
+                            if (RelationalPackage.eNS_URI.equalsIgnoreCase(mmURI)
+                                || XmlDocumentPackage.eNS_URI.equalsIgnoreCase(mmURI)
+                                || WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(mmURI)
+                                || ModelIdentifier.FUNCTION_MODEL_URI.equals(mmURI)) {
                                 // DO NOTHING. This leaves the resource in the temp container
                             } else {
                                 tempContainer.getResources().remove(r);
@@ -740,14 +733,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 }
             }
         };
-        
+
         dataRolesGroup.add(newProvider);
         dataRolesGroup.add(editProvider);
 
         ButtonProvider removeProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -757,7 +750,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -767,7 +760,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -777,7 +770,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -787,7 +780,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -797,31 +790,30 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         if (element instanceof VdbDataRole) {
                             getVdb().removeDataPolicy((VdbDataRole)element);
                         }
-    
+
                     }
                 }
             }
         };
-        
+
         dataRolesGroup.add(removeProvider);
         dataRolesGroup.setInput(vdb);
 
         this.cloneDataRoleAction = new Action(i18n("cloneDataRoleActionLabel")) { //$NON-NLS-1$
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.action.Action#run()
              */
             @Override
             public void run() {
 
                 if (selectedDataRole != null) {
-                    DataRole newDR = new DataRole(selectedDataRole.getName() + i18n("cloneDataRoleAction.copySuffix"), //$NON-NLS-1$
-                                                  selectedDataRole.getDescription(),
-                                                  selectedDataRole.isAnyAuthenticated(),
+                    DataRole newDR = new DataRole(
+                                                  selectedDataRole.getName() + i18n("cloneDataRoleAction.copySuffix"), //$NON-NLS-1$
+                                                  selectedDataRole.getDescription(), selectedDataRole.isAnyAuthenticated(),
                                                   selectedDataRole.allowCreateTempTables(),
-                                                  selectedDataRole.getMappedRoleNames(),
-                                                  selectedDataRole.getPermissions());
+                                                  selectedDataRole.getMappedRoleNames(), selectedDataRole.getPermissions());
                     getVdb().addDataPolicy(newDR, new NullProgressMonitor());
                     dataRolesGroup.getTable().getViewer().refresh();
                 }
@@ -841,7 +833,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         dataRolesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
             @Override
@@ -856,7 +848,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
         });
     }
-    
+
     private void createDescriptionControl( Composite parent ) {
         this.textEditor = new StyledTextEditor(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
@@ -866,7 +858,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         this.textEditor.getDocument().addDocumentListener(new IDocumentListener() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
              */
             @Override
@@ -876,7 +868,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
              */
             @Override
@@ -886,7 +878,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         });
     }
-    
+
     private void createEditorBottom( Composite parent ) {
         Composite pnlBottom = new Composite(parent, SWT.BORDER);
         pnlBottom.setLayout(new GridLayout());
@@ -903,7 +895,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             rolesTab.setControl(pnlRoles);
             createDataRolesControl(pnlRoles);
         }
-        
+
         { // description tab
             CTabItem descriptionTab = new CTabItem(tabFolder, SWT.NONE);
             descriptionTab.setText(i18n("descriptionTab")); //$NON-NLS-1$
@@ -914,7 +906,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             descriptionTab.setControl(pnlDescription);
             createDescriptionControl(pnlDescription);
         }
-        
+
         { // translator overrides tab
             CTabItem translatorOverridesTab = new CTabItem(tabFolder, SWT.NONE);
             translatorOverridesTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
@@ -925,94 +917,94 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         tabFolder.setSelection(0);
     }
-    
-    private void createOtherFilesControl ( Composite parent ) {
+
+    private void createOtherFilesControl( Composite parent ) {
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
         otherFilesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbEntry>() { //$NON-NLS-1$
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultTableProvider#doubleClicked(java.lang.Object)
-             */
-            @Override
-            public void doubleClicked( VdbEntry element ) {
-                openEditor(element);
-            }
-            
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.TableProvider#getElements()
-             */
-            @Override
-            public VdbEntry[] getElements() {
-                final Set<VdbEntry> entries = getVdb().getEntries();
-                return entries.toArray(new VdbEntry[entries.size()]);
-            }
-            
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultTableProvider#isDoubleClickSupported()
-             */
-            @Override
-            public boolean isDoubleClickSupported() {
-                return true;
-            }
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.DefaultTableProvider#doubleClicked(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public void doubleClicked( VdbEntry element ) {
+                                                      openEditor(element);
+                                                  }
 
-            void openEditor( final VdbEntry entry ) {
-                try {
-                    IDE.openEditor(UiUtil.getWorkbenchPage(), entry.findFileInWorkspace());
-                } catch (final Exception error) {
-                    throw new RuntimeException(error);
-                }
-            }
-        }, new TextColumnProvider<VdbEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#getImage(java.lang.Object)
-             */
-            @Override
-            public Image getImage( final VdbEntry element ) {
-                return workbenchLabelProvider.getImage(element.findFileInWorkspace());
-            }
-            
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.TableProvider#getElements()
+                                                   */
+                                                  @Override
+                                                  public VdbEntry[] getElements() {
+                                                      final Set<VdbEntry> entries = getVdb().getEntries();
+                                                      return entries.toArray(new VdbEntry[entries.size()]);
+                                                  }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return FILE_COLUMN_NAME;
-            }
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.DefaultTableProvider#isDoubleClickSupported()
+                                                   */
+                                                  @Override
+                                                  public boolean isDoubleClickSupported() {
+                                                      return true;
+                                                  }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbEntry element ) {
-                return element.getName().lastSegment();
-            }
-        }, this.pathColumnProvider, this.syncColumnProvider, this.descriptionColumnProvider);
+                                                  void openEditor( final VdbEntry entry ) {
+                                                      try {
+                                                          IDE.openEditor(UiUtil.getWorkbenchPage(), entry.findFileInWorkspace());
+                                                      } catch (final Exception error) {
+                                                          throw new RuntimeException(error);
+                                                      }
+                                                  }
+                                              }, new TextColumnProvider<VdbEntry>() {
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.DefaultColumnProvider#getImage(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public Image getImage( final VdbEntry element ) {
+                                                      return workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                                   */
+                                                  @Override
+                                                  public Image getImage() {
+                                                      return null;
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                                   */
+                                                  @Override
+                                                  public String getName() {
+                                                      return FILE_COLUMN_NAME;
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   * 
+                                                   * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public String getValue( final VdbEntry element ) {
+                                                      return element.getName().lastSegment();
+                                                  }
+                                              }, this.pathColumnProvider, this.syncColumnProvider, this.descriptionColumnProvider);
 
         ButtonProvider addProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -1022,7 +1014,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -1032,7 +1024,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -1042,7 +1034,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1052,7 +1044,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1060,8 +1052,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 final ViewerFilter filter = new ViewerFilter() {
                     /**
                      * {@inheritDoc}
-                     *
-                     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+                     * 
+                     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+                     *      java.lang.Object)
                      */
                     @Override
                     public boolean select( final Viewer viewer,
@@ -1096,14 +1089,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 if (firstTime) {
                     WidgetUtil.pack(otherFilesGroup.getTable().getViewer());
                 }
-            }            
+            }
         };
         otherFilesGroup.add(addProvider);
-        
+
         ButtonProvider removeProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -1113,7 +1106,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -1123,7 +1116,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -1133,7 +1126,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1143,27 +1136,24 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE))
-                    return;
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
                 final Set<VdbModelEntry> importedBy = new HashSet<VdbModelEntry>();
                 for (final Object element : selection.toList()) {
                     entries.add((VdbEntry)element);
-                    if (element instanceof VdbModelEntry)
-                        importedBy.addAll(((VdbModelEntry)element).getImportedBy());
+                    if (element instanceof VdbModelEntry) importedBy.addAll(((VdbModelEntry)element).getImportedBy());
                 }
-                if (!importedBy.isEmpty())
-                    importedBy.removeAll(entries);
+                if (!importedBy.isEmpty()) importedBy.removeAll(entries);
                 if (!importedBy.isEmpty()) {
                     if (!ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_REMOVE_IMPORTED_BY_MESSAGE) {
                         /**
                          * {@inheritDoc}
-                         *
+                         * 
                          * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
                          */
                         @Override
@@ -1173,7 +1163,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             viewer.setLabelProvider(new LabelProvider() {
                                 /**
                                  * {@inheritDoc}
-                                 *
+                                 * 
                                  * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
                                  */
                                 @Override
@@ -1185,8 +1175,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             viewer.setInput(importedBy);
                             return viewer.getControl();
                         }
-                    }))
-                        return;
+                    })) return;
                     entries.addAll(importedBy);
                 }
 
@@ -1222,14 +1211,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         SashForm sash = new SashForm(scroller, SWT.VERTICAL);
         sash.setLayoutData(new GridData(GridData.FILL_BOTH));
         scroller.setContent(sash);
-        
+
         createEditorTop(sash);
         createEditorBottom(sash);
         sash.setWeights(new int[] {50, 50});
 
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
-    
+
     private void createEditorTop( Composite parent ) {
         Composite pnlTop = new Composite(parent, SWT.BORDER);
         pnlTop.setLayout(new GridLayout());
@@ -1257,28 +1246,26 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             filesTab.setControl(pnlFiles);
             createOtherFilesControl(pnlFiles);
         }
-        
+
         { // synchronize button
-            synchronizeAllButton = WidgetFactory.createButton(pnlTop,
-                                                              i18n("synchronizeAllButton"), //$NON-NLS-1$
+            synchronizeAllButton = WidgetFactory.createButton(pnlTop, i18n("synchronizeAllButton"), //$NON-NLS-1$
                                                               GridData.HORIZONTAL_ALIGN_BEGINNING);
             synchronizeAllButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
             synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
                 /**
                  * {@inheritDoc}
-                 *
+                 * 
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
                  */
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
                     IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
                     boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
-                                                                                                           : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
+                    : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
                     boolean synchronize = !showWarningDialog;
-                    
+
                     if (showWarningDialog) {
-                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent()
-                                                                                                            .getActiveShell(),
+                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
                                                                                                      CONFIRM_DIALOG_TITLE,
                                                                                                      CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
                                                                                                      VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
@@ -1299,12 +1286,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             }
                         }
                     }
-                    
+
                     if (synchronize) {
                         BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
                             /**
                              * {@inheritDoc}
-                             *
+                             * 
                              * @see java.lang.Runnable#run()
                              */
                             @Override
@@ -1312,7 +1299,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 getVdb().synchronize(new NullProgressMonitor());
                                 modelsGroup.getTable().getViewer().refresh();
                                 otherFilesGroup.getTable().getViewer().refresh();
-                                
+
                                 dataRoleResolver.allSynchronized();
                                 VdbEditor.this.doSave(new NullProgressMonitor());
                             }
@@ -1325,302 +1312,308 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         tabFolder.setSelection(0);
     }
-    
+
     private void createModelsSection( Composite parent ) {
-        modelsGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbModelEntry>() { //$NON-NLS-1$
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultTableProvider#doubleClicked(java.lang.Object)
-             */
-            @Override
-            public void doubleClicked( final VdbModelEntry element ) {
-                openEditor(element);
-            }
+        modelsGroup = new TableAndToolBar(parent, 1,
+                                          new DefaultTableProvider<VdbModelEntry>() { //$NON-NLS-1$
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultTableProvider#doubleClicked(java.lang.Object)
+                                               */
+                                              @Override
+                                              public void doubleClicked( final VdbModelEntry element ) {
+                                                  openEditor(element);
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.TableProvider#getElements()
-             */
-            @Override
-            public VdbModelEntry[] getElements() {
-                final Set<VdbModelEntry> modelEntries = getVdb().getModelEntries();
-                return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.TableProvider#getElements()
+                                               */
+                                              @Override
+                                              public VdbModelEntry[] getElements() {
+                                                  final Set<VdbModelEntry> modelEntries = getVdb().getModelEntries();
+                                                  return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultTableProvider#isDoubleClickSupported()
-             */
-            @Override
-            public boolean isDoubleClickSupported() {
-                return true;
-            }
-        }, new TextColumnProvider<VdbModelEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#getImage(java.lang.Object)
-             */
-            @Override
-            public Image getImage( final VdbModelEntry element ) {
-                return ModelIdentifier.getModelImage(element.findFileInWorkspace());
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultTableProvider#isDoubleClickSupported()
+                                               */
+                                              @Override
+                                              public boolean isDoubleClickSupported() {
+                                                  return true;
+                                              }
+                                          }, new TextColumnProvider<VdbModelEntry>() {
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#getImage(java.lang.Object)
+                                               */
+                                              @Override
+                                              public Image getImage( final VdbModelEntry element ) {
+                                                  return ModelIdentifier.getModelImage(element.findFileInWorkspace());
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return MODEL_COLUMN_NAME;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                               */
+                                              @Override
+                                              public String getName() {
+                                                  return MODEL_COLUMN_NAME;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                               */
+                                              @Override
+                                              public Image getImage() {
+                                                  return null;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbModelEntry element ) {
-                return element.getName().lastSegment();
-            }
-        }, this.pathColumnProvider, this.syncColumnProvider, new CheckBoxColumnProvider<VdbModelEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return null;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                               */
+                                              @Override
+                                              public String getValue( final VdbModelEntry element ) {
+                                                  return element.getName().lastSegment();
+                                              }
+                                          }, this.pathColumnProvider, this.syncColumnProvider,
+                                          new CheckBoxColumnProvider<VdbModelEntry>() {
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                               */
+                                              @Override
+                                              public String getName() {
+                                                  return null;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.VISIBLE_ICON);
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                               */
+                                              @Override
+                                              public Image getImage() {
+                                                  return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.VISIBLE_ICON);
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#getToolTip(java.lang.Object)
-             */
-            @Override
-            public String getToolTip( final VdbModelEntry element ) {
-                return element.isVisible() ? VISIBLE_TOOLTIP : NOT_VISIBLE_TOOLTIP;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#getToolTip(java.lang.Object)
+                                               */
+                                              @Override
+                                              public String getToolTip( final VdbModelEntry element ) {
+                                                  return element.isVisible() ? VISIBLE_TOOLTIP : NOT_VISIBLE_TOOLTIP;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public Boolean getValue( final VdbModelEntry element ) {
-                return element.isVisible();
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                               */
+                                              @Override
+                                              public Boolean getValue( final VdbModelEntry element ) {
+                                                  return element.isVisible();
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
-             */
-            @Override
-            public boolean isEditable( final VdbModelEntry element ) {
-                return true;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
+                                               */
+                                              @Override
+                                              public boolean isEditable( final VdbModelEntry element ) {
+                                                  return true;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
-             */
-            @Override
-            public void setValue( final VdbModelEntry element,
-                                  final Boolean value ) {
-                element.setVisible(value);
-            }
-        }, new TextColumnProvider<VdbModelEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return SOURCE_NAME_COLUMN_NAME;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object,
+                                               *      java.lang.Object)
+                                               */
+                                              @Override
+                                              public void setValue( final VdbModelEntry element,
+                                                                    final Boolean value ) {
+                                                  element.setVisible(value);
+                                              }
+                                          }, new TextColumnProvider<VdbModelEntry>() {
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                               */
+                                              @Override
+                                              public String getName() {
+                                                  return SOURCE_NAME_COLUMN_NAME;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                               */
+                                              @Override
+                                              public Image getImage() {
+                                                  return null;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbModelEntry element ) {
-                final String value = element.getSourceName();
-                return value == null ? EMPTY_STRING : value;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                               */
+                                              @Override
+                                              public String getValue( final VdbModelEntry element ) {
+                                                  final String value = element.getSourceName();
+                                                  return value == null ? EMPTY_STRING : value;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
-             */
-            @Override
-            public boolean isEditable( final VdbModelEntry element ) {
-                return true;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
+                                               */
+                                              @Override
+                                              public boolean isEditable( final VdbModelEntry element ) {
+                                                  return true;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
-             */
-            @Override
-            public void setValue( final VdbModelEntry element,
-                                  final String value ) {
-                element.setSourceName(value);
-            }
-        }, new TextColumnProvider<VdbModelEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return TRANSLATOR_COLUMN_NAME;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object,
+                                               *      java.lang.Object)
+                                               */
+                                              @Override
+                                              public void setValue( final VdbModelEntry element,
+                                                                    final String value ) {
+                                                  element.setSourceName(value);
+                                              }
+                                          }, new TextColumnProvider<VdbModelEntry>() {
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                               */
+                                              @Override
+                                              public String getName() {
+                                                  return TRANSLATOR_COLUMN_NAME;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                               */
+                                              @Override
+                                              public Image getImage() {
+                                                  return null;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbModelEntry element ) {
-                final String value = element.getTranslator();
-                return value == null ? EMPTY_STRING : value;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                               */
+                                              @Override
+                                              public String getValue( final VdbModelEntry element ) {
+                                                  final String value = element.getTranslator();
+                                                  return value == null ? EMPTY_STRING : value;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
-             */
-            @Override
-            public boolean isEditable( final VdbModelEntry element ) {
-                return true;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
+                                               */
+                                              @Override
+                                              public boolean isEditable( final VdbModelEntry element ) {
+                                                  return true;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
-             */
-            @Override
-            public void setValue( final VdbModelEntry element,
-                                  final String value ) {
-                element.setTranslator(value);
-            }
-        }, new TextColumnProvider<VdbModelEntry>() {
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getName()
-             */
-            @Override
-            public String getName() {
-                return JNDI_NAME_COLUMN_NAME;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object,
+                                               *      java.lang.Object)
+                                               */
+                                              @Override
+                                              public void setValue( final VdbModelEntry element,
+                                                                    final String value ) {
+                                                  element.setTranslator(value);
+                                              }
+                                          }, new TextColumnProvider<VdbModelEntry>() {
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getName()
+                                               */
+                                              @Override
+                                              public String getName() {
+                                                  return JNDI_NAME_COLUMN_NAME;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getImage()
-             */
-            @Override
-            public Image getImage() {
-                return null;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getImage()
+                                               */
+                                              @Override
+                                              public Image getImage() {
+                                                  return null;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
-             */
-            @Override
-            public String getValue( final VdbModelEntry element ) {
-                final String value = element.getJndiName();
-                return value == null ? EMPTY_STRING : value;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.ColumnProvider#getValue(java.lang.Object)
+                                               */
+                                              @Override
+                                              public String getValue( final VdbModelEntry element ) {
+                                                  final String value = element.getJndiName();
+                                                  return value == null ? EMPTY_STRING : value;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
-             */
-            @Override
-            public boolean isEditable( final VdbModelEntry element ) {
-                return true;
-            }
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#isEditable(java.lang.Object)
+                                               */
+                                              @Override
+                                              public boolean isEditable( final VdbModelEntry element ) {
+                                                  return true;
+                                              }
 
-            /**
-             * {@inheritDoc}
-             *
-             * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
-             */
-            @Override
-            public void setValue( final VdbModelEntry element,
-                                  final String value ) {
-                element.setJndiName(value);
-            }
-        }, this.descriptionColumnProvider);
-        
+                                              /**
+                                               * {@inheritDoc}
+                                               * 
+                                               * @see com.metamatrix.ui.table.DefaultColumnProvider#setValue(java.lang.Object,
+                                               *      java.lang.Object)
+                                               */
+                                              @Override
+                                              public void setValue( final VdbModelEntry element,
+                                                                    final String value ) {
+                                                  element.setJndiName(value);
+                                              }
+                                          }, this.descriptionColumnProvider);
+
         ButtonProvider addProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -1630,7 +1623,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -1640,7 +1633,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -1650,7 +1643,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1660,7 +1653,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1668,21 +1661,19 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 final ViewerFilter filter = new ViewerFilter() {
                     /**
                      * {@inheritDoc}
-                     *
-                     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+                     * 
+                     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+                     *      java.lang.Object)
                      */
                     @Override
                     public boolean select( final Viewer viewer,
                                            final Object parent,
                                            final Object element ) {
-                        if (element instanceof IContainer)
-                            return true;
+                        if (element instanceof IContainer) return true;
                         final IFile file = (IFile)element;
-                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file))
-                            return false;
+                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) return false;
                         for (final VdbModelEntry modelEntry : getVdb().getModelEntries())
-                            if (file.equals(modelEntry.findFileInWorkspace()))
-                                return false;
+                            if (file.equals(modelEntry.findFileInWorkspace())) return false;
                         return true;
                     }
                 };
@@ -1723,7 +1714,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         ButtonProvider removeProvider = new ButtonProvider() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getImageDescriptor()
              */
             @Override
@@ -1733,7 +1724,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getText()
              */
             @Override
@@ -1743,7 +1734,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#getToolTip()
              */
             @Override
@@ -1753,7 +1744,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
@@ -1763,27 +1754,24 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see com.metamatrix.ui.internal.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE))
-                    return;
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
                 final Set<VdbModelEntry> importedBy = new HashSet<VdbModelEntry>();
                 for (final Object element : selection.toList()) {
                     entries.add((VdbEntry)element);
-                    if (element instanceof VdbModelEntry)
-                        importedBy.addAll(((VdbModelEntry)element).getImportedBy());
+                    if (element instanceof VdbModelEntry) importedBy.addAll(((VdbModelEntry)element).getImportedBy());
                 }
-                if (!importedBy.isEmpty())
-                    importedBy.removeAll(entries);
+                if (!importedBy.isEmpty()) importedBy.removeAll(entries);
                 if (!importedBy.isEmpty()) {
                     if (!ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_REMOVE_IMPORTED_BY_MESSAGE) {
                         /**
                          * {@inheritDoc}
-                         *
+                         * 
                          * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
                          */
                         @Override
@@ -1793,7 +1781,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             viewer.setLabelProvider(new LabelProvider() {
                                 /**
                                  * {@inheritDoc}
-                                 *
+                                 * 
                                  * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
                                  */
                                 @Override
@@ -1805,8 +1793,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             viewer.setInput(importedBy);
                             return viewer.getControl();
                         }
-                    }))
-                        return;
+                    })) return;
                     entries.addAll(importedBy);
                 }
 
@@ -1817,7 +1804,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 }
             }
         };
-        
+
         modelsGroup.add(removeProvider);
 
         // Add selection changed listener so if a Physical Source model is selected, the applicable menu actions are
@@ -1830,25 +1817,23 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
             @Override
             public void selectionChanged( final SelectionChangedEvent event ) {
                 menuManager.removeAll();
                 final Object[] actions = SourceHandlerExtensionManager.findApplicableActions(viewer.getSelection());
-                if (actions != null)
-                    for (final Object action : actions) {
-                        if (action instanceof IAction)
-                            menuManager.add((IAction)action);
-                    }
+                if (actions != null) for (final Object action : actions) {
+                    if (action instanceof IAction) menuManager.add((IAction)action);
+                }
             }
         });
-        
+
         // set a custom cell editor on translator column
         EditingSupport editor = new TranslatorEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
         modelsGroup.getTable().getColumn(5).setEditingSupport(editor);
-        
+
         // set a custom cell editor on JNDI column
         editor = new JndiEditingSupport(modelsGroup.getViewer(), getVdb().getFile());
         modelsGroup.getTable().getColumn(6).setEditingSupport(editor);
@@ -1863,7 +1848,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void dispose() {
-    	this.disposed = true;
+        this.disposed = true;
         if (vdb != null) try {
             vdb.removeChangeListener(vdbListener);
             vdb.close();
@@ -1872,10 +1857,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             VdbUiConstants.Util.log(err);
             WidgetUtil.showError(err);
         }
-        
+
         // Un-Register this for Resource change events
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-        
+
         super.dispose();
     }
 
@@ -1911,11 +1896,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     public Vdb getVdb() {
         return vdb;
     }
-    
+
     ModelLabelProvider getModelLabelProvider() {
         return this.modelLabelProvider;
     }
-    
+
     ISelectionStatusValidator getValidator() {
         return this.validator;
     }
@@ -1933,7 +1918,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         vdbListener = new PropertyChangeListener() {
             /**
              * {@inheritDoc}
-             *
+             * 
              * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
              */
             @Override
@@ -1941,14 +1926,14 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 UiUtil.runInSwtThread(new Runnable() {
                     /**
                      * {@inheritDoc}
-                     *
+                     * 
                      * @see java.lang.Runnable#run()
                      */
                     @Override
                     public void run() {
-                    	if( !disposed ) {
-                    		vdbNotification(event.getPropertyName());
-                    	}
+                        if (!disposed) {
+                            vdbNotification(event.getPropertyName());
+                        }
                     }
                 }, true);
             }
@@ -1957,7 +1942,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         setSite(site);
         setInput(input);
         setPartName(file.getName());
-        
+
         dataRoleResolver = new VdbDataRoleResolver(vdb);
     }
 
@@ -2000,31 +1985,30 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     void vdbNotification( final String property ) {
         if (CLOSED.equals(property)) return;
-        if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property)
-            || MODEL_JNDI_NAME.equals(property)) {
+        if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property) || MODEL_JNDI_NAME.equals(property)) {
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
             modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
         }
         boolean syncChanged = false;
-        for(VdbEntry entry : vdb.getEntries() ) {
-        	if( entry.getSynchronization() == Synchronization.NotSynchronized ) {
-        		syncChanged = true;
-        		break;
-        	}
+        for (VdbEntry entry : vdb.getEntries()) {
+            if (entry.getSynchronization() == Synchronization.NotSynchronized) {
+                syncChanged = true;
+                break;
+            }
         }
-        for(VdbEntry entry : vdb.getModelEntries() ) {
-        	if( entry.getSynchronization() == Synchronization.NotSynchronized ) {
-        		syncChanged = true;
-        		break;
-        	}
+        for (VdbEntry entry : vdb.getModelEntries()) {
+            if (entry.getSynchronization() == Synchronization.NotSynchronized) {
+                syncChanged = true;
+                break;
+            }
         }
         synchronizeAllButton.setEnabled(syncChanged);
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
-    
+
     /**
-     * @param event 
+     * @param event
      * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
      */
     @Override
@@ -2037,17 +2021,18 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     delta.accept(new IResourceDeltaVisitor() {
                         /**
                          * {@inheritDoc}
-                         *
+                         * 
                          * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
                          */
                         @Override
                         public boolean visit( IResourceDelta delta ) {
-                        	
-                            if (delta.getResource().equals(getVdb().getFile()) && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
+
+                            if (delta.getResource().equals(getVdb().getFile())
+                                && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
                                 Display.getDefault().asyncExec(new Runnable() {
                                     /**
                                      * {@inheritDoc}
-                                     *
+                                     * 
                                      * @see java.lang.Runnable#run()
                                      */
                                     @Override
@@ -2074,7 +2059,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
         }
     }
-    
+
     class TranslatorEditingSupport extends ResourceEditingSupport {
 
         /**
@@ -2085,10 +2070,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                          IResource vdb ) {
             super(viewer, vdb);
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
          */
         @Override
@@ -2105,10 +2090,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         protected String getElementValue( Object element ) {
             return ((VdbModelEntry)element).getTranslator();
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ResourceEditingSupport#refreshItems(java.lang.Object)
          */
         @Override
@@ -2116,7 +2101,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             List<String> translators = new ArrayList<String>();
             // get the available translators from the server
             String[] serverTypes = SourceHandlerExtensionManager.getVdbConnectionFinder().getTranslatorTypes();
-            
+
             if (serverTypes != null) {
                 translators.addAll(Arrays.asList(serverTypes));
             }
@@ -2145,7 +2130,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             ((VdbModelEntry)element).setTranslator(newValue);
         }
     }
-    
+
     class JndiEditingSupport extends ResourceEditingSupport {
 
         /**
@@ -2156,10 +2141,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                    IResource vdb ) {
             super(viewer, vdb);
         }
-        
+
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ResourceEditingSupport#canAddNewValue(java.lang.Object)
          */
         @Override
@@ -2179,7 +2164,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         /**
          * {@inheritDoc}
-         *
+         * 
          * @see com.metamatrix.ui.table.ResourceEditingSupport#refreshItems(java.lang.Object)
          */
         @Override
