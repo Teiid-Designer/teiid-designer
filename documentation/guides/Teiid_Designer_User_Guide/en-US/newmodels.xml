@@ -70,24 +70,6 @@
 							     </inlinemediaobject> <xref linkend="new-extension-model" />
 						</para>
 					</listitem>
-					<listitem>
-						<para>
-							<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/relationship-model.png"/>
-								</imageobject>
-							     </inlinemediaobject> <xref linkend="new-relationships-model" />
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							<inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/uml-model.png"/>
-								</imageobject>
-							     </inlinemediaobject> <xref linkend="new-uml-model" />
-						</para>
-					</listitem>
 				</itemizedlist>
 			</para>
 		</listitem>
@@ -184,13 +166,84 @@
 						<listitem>
 							<para>Copy from existing model of the same model class.</para>
 						</listitem>
-						<listitem>
-							<para>Generate from existing UML models.</para>
-						</listitem>
 					</itemizedlist>
 				</para>
 			</listitem>
 		</itemizedlist>
+		
+		<section id="relational-source-generate-file-translator-procedures-section">
+			<title>Generate File Translator Procedures</title>
+
+			<para>This builder option allows construction of a relational model containing one or more of the 
+			procedures required for accessing file-based data via a file translator. </para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create a new relational model containing file translator procedures, 
+						complete <xref linkend="create-empty-relational-source-model-section" /> above 
+						and continue with these additional steps:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
+								<emphasis role="bold">Generate File Translator Procedures</emphasis> and 
+								click <emphasis role="bold">Next ></emphasis>.  
+								The <emphasis role="bold">Generate File Translator Procedures</emphasis> dialog
+								will be displayed.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available File Translator Procedures</emphasis> 
+									Click <emphasis role="bold">Finish</emphasis></para>
+								<figure>
+									<title>Generate File Translator Procedures Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/new-model-wizard-generate-file-procedures.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<section id="relational-source-generate-web-service-translator-procedures-section">
+			<title>Generate Web Service Translator Procedures</title>
+
+			<para>This builder option allows construction of a relational model containing one or more of the 
+			procedures required for accessing web-service-based XML data via a web s translator. </para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create a new relational model containing file translator procedures, 
+						complete <xref linkend="create-empty-relational-source-model-section" /> above 
+						and continue with these additional steps:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
+								<emphasis role="bold">Generate Web Service Translator Procedures</emphasis> and 
+								click <emphasis role="bold">Next ></emphasis>.  
+								The <emphasis role="bold">Generate File Translator Procedures</emphasis> dialog
+								will be displayed.</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 6 </emphasis> - Check one ore more of the <emphasis role="bold">Available Web Services Translator Procedures</emphasis> 
+									Click <emphasis role="bold">Finish</emphasis></para>
+								<figure>
+									<title>Generate Web Service Translator Procedures Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/new-model-wizard-generate-file-procedures.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
 		
 		<section id="relational-source-copy-section">
 			<title>Copy From Existing Model</title>
@@ -242,105 +295,6 @@
 				</listitem>
 			</itemizedlist>
 		</section>
-		<section id="relational-source-generate-from-uml-section">
-			<title>Generate From Existing UML Model</title>
-
-			<para>In the Teiid Designer you can also turn your existing UML models 
-				into relational source or view models using the steps below. 
-				Note that one option of this builder is to generate relationships 
-				between the UML constructs and their generated Relational counterparts.</para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create a new relational model generated from an existing UML model, 
-						complete <xref linkend="create-empty-relational-source-model-section" /> above 
-						and continue with these additional steps:
-						<itemizedlist>
-							<listitem>
-								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-								<emphasis role="bold">Generate from existing UML models</emphasis> and 
-								click <emphasis role="bold"> Next ></emphasis>.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - On the next page, select the UML model
-								 you wish to convert and check/uncheck desired contents, then 
-								click <emphasis role="bold"> Next ></emphasis>.</para>
-								<figure>
-									<title>Select UML Features Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/generate-rel-from-uml-select-model.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 7 </emphasis> - On the next page select or create 
-									a relationship model to place your generated relationships in. If you do not 
-									wish to generate relationships, check the <emphasis role="bold">Do not create relationships to 
-									UML source entities</emphasis> option. When finished, click <emphasis role="bold">Next ></emphasis> or 
-									<emphasis role="bold">Finish</emphasis> to generate using default options.</para>
-								<figure>
-									<title>Relationship Options Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/generate-rel-from-uml-relationships-options.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 8 </emphasis> - The next page allows you 
-									to choose and customize various optional properties used in generating 
-									your relationship model entities. When finished with these options, 
-									click <emphasis role="bold">Next ></emphasis> or <emphasis role="bold">Finish</emphasis> to 
-									generate using default options.</para>
-								<figure>
-									<title>UML Generation Options Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/generate-rel-from-uml-general-options.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 9 </emphasis> - The next page allows you to choose 
-									and customize various optional datatype properties used in generating your 
-									relationship model entities. When finished with these options, click <emphasis role="bold">Next ></emphasis> or 
-									<emphasis role="bold">Finish</emphasis> to generate using default options.</para>
-								<figure>
-									<title>Datatype Properties Options Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/generate-rel-from-uml-select-datatypes.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 10 </emphasis> - The next page allows you to choose and 
-									customize various optional properties used in generating your relationship model entities. 
-									When finished with these options, click <emphasis role="bold">Next ></emphasis> or 
-									<emphasis role="bold">Finish</emphasis> to generate using default options.</para>
-								<figure>
-									<title>Generated Key Options Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/generate-rel-from-uml-key-options.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 11 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-			
-		</section>
 	</section>
 	
 	<!-- ####### RELATIONAL VIEW MODEL ######################################## -->
@@ -389,9 +343,6 @@
 						</listitem>
 						<listitem>
 							<para>Transform from existing model.</para>
-						</listitem>
-						<listitem>
-							<para>Generate from existing UML models.</para>
 						</listitem>
 					</itemizedlist>
 				</para>
@@ -451,15 +402,6 @@
 				<xref linkend="relational-view-copy-section" /> described above.</para>
 			<para>There is an additional option in the second page of the wizard which can automatically set the
 				relational table's supports update property to false. If this is unchecked the default value will be true.</para>
-		</section>
-		<section id="relational-view-generate-from-uml-section">
-			<title>Generate From Existing UML Model</title>
-
-			<para>In the Teiid Designer you can also turn your existing UML models 
-				into relational source or view models. Creating a relational view model utilizes
-				the <xref linkend="relational-source-generate-from-uml-section" /> with 
-				the one change of setting <emphasis role="bold">Model Type</emphasis> to <emphasis role="bold">View Model</emphasis> instead of 
-				<emphasis role="bold">Source Model</emphasis>.</para>
 		</section>
 		<section id="relational-view-create-from-schema-section">
 			<title>Create From XML Schema</title>
@@ -543,7 +485,7 @@
 		
 		<itemizedlist>
 			<listitem>
-				<para> In addition to creating a new empty XML document view model, the following builder options are available:
+				<para> In addition to creating a new empty xml document view model, the following builder options are available:
 					<itemizedlist>
 						<listitem>
 							<para>Copy from existing model of the same model class.</para>
@@ -565,7 +507,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new relational model by copying contents from another XML document view model, 
+						To create a new relational model by copying contents from another xml document view model, 
 						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -608,7 +550,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new XML document view model by from XML schema, 
+						To create a new xml document view model by from XML schema, 
 						complete <xref linkend="create-empty-xml-document-view-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -708,7 +650,7 @@
 		<itemizedlist id="create-empty-xml-schema-model-section">
 			<title>Create XML Schema Model</title>
 			<listitem>
-				<para>To create a new empty XML schema (.xsd) model:
+				<para>To create a new empty xml schema (.xsd) model:
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
@@ -738,7 +680,7 @@
 		
 		<itemizedlist>
 			<listitem>
-				<para> In addition to creating a new empty XML schema model, the following builder option is available:
+				<para> In addition to creating a new empty xml schema model, the following builder option is available:
 					<itemizedlist>
 						<listitem>
 							<para>Copy from existing model of the same model class.</para>
@@ -757,7 +699,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new relational model by copying contents from another XML schema model, 
+						To create a new relational model by copying contents from another xml schema model, 
 						complete <xref linkend="create-empty-xml-schema-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -1259,201 +1201,6 @@
 					<para>
 						To create a new relational model by copying contents from another extensions model, 
 						complete <xref linkend="create-empty-extensions-model-section" /> above 
-						and continue with these additional steps:
-						<itemizedlist>
-							<listitem>
-								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-								<emphasis role="bold">Copy from existing model of the same model class</emphasis> and 
-								click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Copy Existing Model</emphasis> dialog
-								will be displayed.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Select an existing relational model from 
-									the workspace using the browse button. <inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/elipsis.png"/>
-								</imageobject>
-							</inlinemediaobject></para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 7 </emphasis> - Check the <emphasis role="bold">Copy all descriptions</emphasis> option if desired. 
-									Click <emphasis role="bold">Finish</emphasis></para>
-								<figure>
-									<title>Copy An Existing Model Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/new-model-wizard-relational-copy-from.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-		</section>
-	</section>
-	
-	<!-- ####### RELATIONSHIPS MODEL ######################################## -->
-	
-	<section id="new-relationships-model">
-		<title>Creating New Relationship Model</title>
-		<para></para>
-		
-		<itemizedlist id="create-empty-relationships-model-section">
-			<title>Create New Relationship Model</title>
-			<listitem>
-				<para>To create a new empty relationships model:
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">Relationship</emphasis> option from <emphasis role="bold">Model Class</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Select <emphasis role="bold">Logical Model</emphasis> from <emphasis role="bold">Model Type</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>					
-		<note>
-			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
-				your workspace.
-			</para>
-		</note>
-		
-		<itemizedlist>
-			<listitem>
-				<para> In addition to creating a new empty relationship model, the following builder option is available:
-					<itemizedlist>
-						<listitem>
-							<para>Copy from existing model of the same model class.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-		
-		<section id="relationships-copy-section">
-			<title>Copy From Existing Model</title>
-
-			<para>This builder option performs a structural copy of the contents of an existing 
-				model to a newly defined model. You can choose a full copy or select individual model 
-				components for copy.</para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create a new relational model by copying contents from another relationships model, 
-						complete <xref linkend="create-empty-relationships-model-section" /> above 
-						and continue with these additional steps:
-						<itemizedlist>
-							<listitem>
-								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
-								<emphasis role="bold">Copy from existing model of the same model class</emphasis> and 
-								click <emphasis role="bold">Next ></emphasis>.  The <emphasis role="bold">Copy Existing Model</emphasis> dialog
-								will be displayed.</para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Select an existing relational model from 
-									the workspace using the browse button. <inlinemediaobject>
-								<imageobject>
-									<imagedata fileref="images/icons/elipsis.png"/>
-								</imageobject>
-							</inlinemediaobject></para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 7a </emphasis> - If <emphasis role="bold">Copy entire model</emphasis> option is selected, 
-									Click <emphasis role="bold">Finish</emphasis></para>
-							</listitem>
-							<listitem>
-								<para><emphasis role="bold">Step 7b </emphasis> - If <emphasis role="bold">Select Model Features to Copy</emphasis> option
-								is selected, select and/or de-select desired model objects to be included or excluded from
-								the structural copy and click <emphasis role="bold">Finish</emphasis>.</para>
-								<figure>
-									<title>Import Wizard Selection Dialog</title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/new-model-wizard-relational-copy-from.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-		</section>
-	</section>
-	
-	<!-- ####### RELATIONAL SOURCE MODEL ######################################## -->
-	
-	<section id="new-uml-model">
-		<title>Creating New UML 2.0 Model</title>
-		<para></para>
-		
-		<itemizedlist id="create-empty-uml-model-section">
-			<title>Create New UML 2.0 Model</title>
-			<listitem>
-				<para>To create a new empty UML 2.0 model:
-					<itemizedlist>
-						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - <xref linkend="launch-new-model-wizard" /></para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 2 </emphasis> - Specify a unique model name.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">UML 2.0</emphasis> option from <emphasis role="bold">Model Class</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - Select <emphasis role="bold">Logical Model</emphasis> from <emphasis role="bold">Model Type</emphasis> drop-down menu.</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Step 5 </emphasis> - Click <emphasis role="bold">Finish</emphasis>.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>					
-		<note>
-			<para>You can change the target location (i.e. project or folder) by 
-				selecting the <guibutton>Browse...</guibutton> button and selecting a project or folder within 
-				your workspace.
-			</para>
-		</note>
-		
-		<itemizedlist>
-			<listitem>
-				<para> In addition to creating a new empty uml model, the following builder option is available:
-					<itemizedlist>
-						<listitem>
-							<para>Copy from existing model of the same model class.</para>
-						</listitem>
-					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-		
-		<section id="uml-copy-section">
-			<title>Copy From Existing Model</title>
-
-			<para>This builder option performs a structural copy of the contents of an existing 
-				model to a newly defined model. You can choose a full copy or select individual model 
-				components for copy.</para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create a new relational model by copying contents from another UML model, 
-						complete <xref linkend="create-empty-uml-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
 							<listitem>

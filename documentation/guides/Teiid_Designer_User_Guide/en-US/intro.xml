@@ -96,7 +96,7 @@
 				structure.
 			</para>
 			<para>
-				Let us use the example of a very basic database, an address book. Within
+				Let’s use the example of a very basic database, an address book. Within
 				your address book you certainly have a field or column for the ZIP code
 				(or postal code number). Assuming that the address book services
 				addresses within the United States, you can surmise the following about
@@ -625,7 +625,7 @@
 			<title>Models and Connection Profiles</title>
 
 			<para>A connection profile  provides the connectivity to a data source and is 
-				defined by the DTP framework. Designer utilizes this framework from within 
+				defined by the DTP framework. Designer utilizes this framework from withing 
 				it's JDBC Importer.
 			</para>
 				

@@ -32,7 +32,7 @@
 			<listitem>
 				<para><emphasis>Open Designer perspective when model is opened</emphasis> - If a model is opened via importing projects, 
 					the New > Teiid Metadata Model menu and the Teiid Designer perspective is not open, you may want
-					to automatically open the perspective and begin working on your model.  This preference has 3 settings.
+					to automatically open the perspective and beging working on your model.  This preference has 3 settings.
 					Always open, which means always open the perspective without prompting; never open, which means
 					do not open the Teiid Designer perspective, or prompt, which will always ask you if you wish to
 					open the Teiid Designer perspective.</para>
@@ -184,6 +184,18 @@
 					<mediaobject>
 						<imageobject>
 							<imagedata fileref="images/screencaps/transformation-editor-preferences.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			<section id="vdb-editor-prefs-section">
+				<title>VDB Editor Preferences</title>
+				<para><emphasis role="bold"><xref linkend="vdb-editor-section" /> Preferences</emphasis> provide a way to customize VDB editor behavior.</para>
+				<figure>
+					<title>VDB Editor Preferences Panel</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/vdb-editor-preferences.png" />
 						</imageobject>
 					</mediaobject>
 				</figure>

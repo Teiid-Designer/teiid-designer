@@ -1016,7 +1016,8 @@
 			through a single, uniform API. A <emphasis role="bold">VDB</emphasis> contains models, which define the structural 
 			characteristics of data sources, views, and Web services. The <emphasis role="bold">VDB Editor</emphasis>, provides 
 			the means to manage the contents of the <emphasis role="bold">VDB</emphasis> as well as its deployable (validation) state.</para>
-		<para>The VDB Editor, shown below, contains a Description area, a Models area, an Other Files panel and a  VDB Data Roles panel.</para>
+		<para>The VDB Editor, shown below, contains a upper and lower panels. The upper panel contains the Models tab and an Other Files tab. The 
+		lower panel contains tabs for managing Data Roles, the VDB Description and Translator Overrides.</para>
 		<figure>
 			<title>VDB Editor</title>
 			<mediaobject>
@@ -1043,6 +1044,8 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<para>If you have a default Teiid server instance defined and connected the translator and JNDI table cells will
+		 contain drop-down lists of available translator and JNDI names available on that server.</para>
 		
 		<section id="editing-data-roles-section">
 			<title>Editing Data Roles</title>
@@ -1062,11 +1065,11 @@
 				</mediaobject>
 			</figure>
 			<para>Clicking <emphasis>New...</emphasis> or <emphasis>Edit...</emphasis> will launch 
-				the <emphasis>New VDB Data Role</emphasis> editor dialog. Specify a unique data role name, 
+				the <emphasis>New VDB Data Role</emphasis> editor dialog. Speicify a unique data role name, 
 				add a optional description and modify the individual model element 
 				CRUD values by check or unchecking entries in the models section.</para>
 			<figure>
-				<title>VDB Data Roles Panel</title>
+				<title>VDB Data Roles Tab</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/vdb-data-roles-dialog.png" />
@@ -1074,7 +1077,50 @@
 				</mediaobject>
 			</figure>
 		</section>
-
+		<section id="editing-translator-overrides-section">
+			<title>Editing Translator Overrides</title>
+			<para>Teiid Designer provides a means to create, edit and manage translator override properties specific 
+				to a VDB via the Tranlator Overrides tab. A translator override is a set of non-default properties targeted for
+				a specific source model's data source. So each translator override requires a target translator name like "oracle",
+				db2, mysql, etc. and a set of non-default key-value property sets.</para>
+			<para>The <emphasis>VDB Editor</emphasis> contains a <emphasis>Tranlator Overrides</emphasis> section 
+				consisting of a List of current tranlator overrides on the left, a properties editor panel on the right 
+				and <emphasis>Add</emphasis> (+) and <emphasis>Remove</emphasis> (-) action buttons
+				on the lower part of the panel.</para>
+			<figure>
+				<title>VDB Translator Overrides Tab</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/translator-overrides-editor-tab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>To override a specific translator type, select the add translator action (+). If a default Teiid server instance is
+			connected and available the Add Translator Override dialog (below) is presented, the user selects an existing tranlator type and clicks OK.
+			Note that the override is only applicable to sources within the VDB, so be sure and select a translator type that corresponds
+			to one of the VDB's source models. The properties panel on the right side of the panel will contain editiable cells for each property
+			type based on the data-type of the property. (i.e. boolean, integer, string, etc.).</para>
+			<figure>
+				<title>Add Translator Override Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/add-translator-override-dialog.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>If no default Teiid server instance is available, the "Add New Translator Override" dialog is presented. Enter a unique 
+			name for the tranlator override (i.e. "oracle_override"), a valid translator type name (i.e. "oracle") and click OK.
+			The properties panel on the right side of the panel will allow adding, editing and removing key-value string-based property sets.
+			When editing these properties all values will be treated as type string.</para>
+			<figure>
+				<title>Add New Translator Override Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/add-new-translator-override-dialog.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
 	</section>
     
 </chapter>

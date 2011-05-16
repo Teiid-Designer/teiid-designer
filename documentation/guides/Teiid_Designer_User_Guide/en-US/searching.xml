@@ -215,7 +215,7 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select <emphasis role="bold">Perform Search</emphasis> button. Any 
-								transformation object containing SQL text which contains occurences of your 
+								transformation object containing SQL text which contains occurances of your 
 								string will be displayed in the results section.</para>
 						</listitem>
 					</itemizedlist>
@@ -237,7 +237,7 @@
 		<para>If you wish to view the selected object and its SQL in a <emphasis role="bold">Model Editor</emphasis>, 
 			you can click the <emphasis role="bold">Edit</emphasis> button.  An editor will be opened if not already open. If an
 			editor is open its tab will be selected. In addition, the <emphasis role="bold">Transformation Editor</emphasis> will
-			be opened and you can perform <emphasis role="bold">Find/Replace</emphasis> (Ctrl+F) actions to highlight your original
+			be opened and you can perform <emphasis role="bold">Find/Replace</emphasis> (Ctrl-F) actions to highlight your original
 			searched text string and edit your SQL if you wish.</para>
 	</section>
 	

@@ -30,6 +30,23 @@
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>
+		<para>Teiid Designer integrates Data Tools Connection Profiles by persisting pertinent connection information in each
+		source model. This can occur through Importing process or through the <emphasis role="bold">Modeling > Set Connection Profile</emphasis> action.
+		</para>
+		<para>In addition to setting the connection profile on a source model you can also view a source model's connection profile 
+		information via the <emphasis role="bold">Modeling > View Connection Info</emphasis> action which displays the
+		detailed properties of the connection.</para>
+		<figure>
+			<title>Connection Profile Information Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/view-connection-info-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>As a user, you may not want this connection information (i.e. URL, username, etc...) shared through your VDB. Designer 
+		provides a means to remove this connection information via a <emphasis role="bold">Modeling > Remove Connection Info</emphasis> action.
+		When adding a source model without connection information will require the user to supply or select the correct translator type.</para>
 	</section>
 
 	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
@@ -336,7 +353,7 @@
 		<section id="creating-data-sources">
 			<title>Creating Data Sources</title>
 			<para>The mechanism by which VDBs are able to query actual data sources is the Data Source. These are deployed
-				 configurations backed by database or source connection jars. Each source model referenced within a VDB requires
+				 configurations backed by database or source connection jars. Each source model referenced within a VDB requiries
 				 a JNDI name representing a deployed Data Source.</para>
 			<para>When creating VDBs you do not need to have deployed data sources on your Teiid server, but if you wish to 
 				test your VDB, the data sources need to be present.</para>

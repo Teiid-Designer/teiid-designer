@@ -554,7 +554,7 @@
 										<imageobject>
 											<imagedata fileref="images/icons/preview-virtual-data.png"/>
 										</imageobject>
-									</inlinemediaobject> <emphasis role="bold">Preview Virtual Data</emphasis> - executes a simple 
+									</inlinemediaobject> <emphasis role="bold">Prevew Virtual Data</emphasis> - executes a simple 
 									preview query for the target table or procedure of the transformation being edited.
 								</para>
 							</listitem>
@@ -719,7 +719,7 @@
 										<imageobject>
 											<imagedata fileref="images/icons/import-from-file.png"/>
 										</imageobject>
-									</inlinemediaobject> <emphasis role="bold">Import SQL Text</emphasis> - allows you to import a SQL
+									</inlinemediaobject> <emphasis role="bold">Import SQL Text</emphasis> - allows you to import a sql
 									 statement from a text file on your file system. Pressing this button will display an import dialog 
 									 in which you can navigate to the file.
 								</para>
