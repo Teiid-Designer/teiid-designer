@@ -46,4 +46,22 @@
             isVirtual="false">
       </metamodelDescriptorType>
    </extension>
+   <extension
+         id="setModelObjectExtendedPropertyAction"
+         name="%setModelObjectExendedPropertyDialog.name"
+         point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.relational.ui.extended.properties.actions.SetModelObjectExtendedPropertyAction"
+         label="%setModelObjectExtendedPropertyDialog.label">
+      </specialAction>
+   </extension>
+   <extension
+         id="setModelResourceExtendedPropertyAction"
+         name="%setModelResourceExendedPropertyDialog.name"
+         point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.relational.ui.extended.properties.actions.SetModelResourceExtendedPropertyAction"
+         label="%setModelResourceExtendedPropertyDialog.label">
+      </resourceAction>
+   </extension>
 </plugin>

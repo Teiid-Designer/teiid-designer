@@ -212,7 +212,6 @@ public class ModelExplorerLabelProvider extends LabelProvider
                     return UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
                 }
                 return ModelUtilities.getEMFLabelProvider().getImage(element);
-
             } else if (element instanceof IFile && ModelUtilities.isModelFile((IFile)element) && ((IFile)element).exists()) {
                 return ModelIdentifier.getModelImage((IResource)element);
             }
