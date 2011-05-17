@@ -25,6 +25,7 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relational.ui.UiConstants;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
@@ -77,7 +78,7 @@ public class SetModelResourceExtendedPropertyAction extends SortableSelectionAct
                 if (modelResource != null && ModelUtilities.isRelationalModel(modelResource)) {
                     this.theEObject = modelResource.getModelAnnotation();
                     isValid = true;
-                    theImage = ModelUtilities.getModelObjectLabelProvider().getImage(obj);
+                    theImage = new ModelExplorerLabelProvider().getImage(this.theIFile);
                 }
             } catch (ModelWorkspaceException e) {
                 throw new RuntimeException(e);
