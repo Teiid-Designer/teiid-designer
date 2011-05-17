@@ -73,7 +73,7 @@ public class SetModelObjectExtendedPropertyAction extends SortableSelectionActio
                 || SqlAspectHelper.isProcedure(this.theEObject) || SqlAspectHelper.isForeignKey(this.theEObject)
                 || SqlAspectHelper.isColumnSet(this.theEObject) || SqlAspectHelper.isProcedureResultSet(this.theEObject)) {
                 isValid = true;
-                theImage = ModelUtilities.getModelObjectLabelProvider().getImage(this.theImage);
+                theImage = ModelUtilities.getModelObjectLabelProvider().getImage(this.theEObject);
             }
         }
 
