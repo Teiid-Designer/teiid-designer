@@ -23,11 +23,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
@@ -210,7 +211,7 @@ public class ModelObjectLabelProvider extends LabelProvider
                 }
             }); // endanon
         } // endif
-        
+
         // check if this node is excluded or is part of a subtree that is:
         if (XmlDocumentUtil.isExcluded(element, true)) {
             decoration.setForegroundColor(gray);
@@ -225,6 +226,15 @@ public class ModelObjectLabelProvider extends LabelProvider
                 ImageDescriptor enumIcon = UiPlugin.getDefault().getImageDescriptor(ENUM_OVERLAY_ICON);
                 decoration.addOverlay(enumIcon, IDecoration.BOTTOM_RIGHT);
             }
+        }
+
+        ModelObjectAnnotationHelper moah = new ModelObjectAnnotationHelper();
+        try {
+            if (moah.hasExtensionProperties(element)) {
+                decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+            }
+        } catch (ModelerCoreException e) {
+            Util.log(e);
         }
     }
 

@@ -9,7 +9,6 @@ package com.metamatrix.modeler.internal.ui.explorer;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -33,10 +32,11 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.viewsupport.DiagramLabelProvider;
@@ -210,7 +210,6 @@ public class ModelExplorerLabelProvider extends LabelProvider
                     return UiPlugin.getDefault().getImage("icons/full/obj16/Transform.gif"); //$NON-NLS-1$
                 }
                 return ModelUtilities.getEMFLabelProvider().getImage(element);
-
             } else if (element instanceof IFile && ModelUtilities.isModelFile((IFile)element) && ((IFile)element).exists()) {
                 return ModelIdentifier.getModelImage((IResource)element);
             }
@@ -334,6 +333,15 @@ public class ModelExplorerLabelProvider extends LabelProvider
         } catch (CoreException ex) {
             Util.log(ex);
         } // endtry
+
+        ModelObjectAnnotationHelper moah = new ModelObjectAnnotationHelper();
+        try {
+            if (moah.hasExtensionProperties(element)) {
+                decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+            }
+        } catch (ModelerCoreException e) {
+            Util.log(e);
+        }
 
     }
 
