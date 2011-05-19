@@ -218,7 +218,8 @@ public class AddExtendedPropertyDialog extends MessageDialog {
         }
 
         this.messageLabel.setText(msg);
-        this.messageLabel.pack();
+        ((Composite)getContents()).layout();
+
     }
 
     /**
