@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -25,9 +24,9 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relational.ui.UiConstants;
+import com.metamatrix.modeler.relational.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -40,10 +39,11 @@ public class SetModelResourceExtendedPropertyAction extends SortableSelectionAct
 
     private EObject theEObject;
     private IFile theIFile;
-    private Image theImage;
 
     public SetModelResourceExtendedPropertyAction() {
         super();
+        this.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.MANAGE_EXTENDED_PROPERTIES_ACTION_ICON));
+
     }
 
     @Override
@@ -69,7 +69,7 @@ public class SetModelResourceExtendedPropertyAction extends SortableSelectionAct
         boolean isValid = false;
         this.theEObject = null;
         this.theIFile = null;
-        this.theImage = null;
+
         Object obj = SelectionUtilities.getSelectedObject(selection);
         if (obj instanceof IFile) {
             this.theIFile = (IFile)obj;
@@ -78,7 +78,6 @@ public class SetModelResourceExtendedPropertyAction extends SortableSelectionAct
                 if (modelResource != null && ModelUtilities.isRelationalModel(modelResource)) {
                     this.theEObject = modelResource.getModelAnnotation();
                     isValid = true;
-                    theImage = new ModelExplorerLabelProvider().getImage(this.theIFile);
                 }
             } catch (ModelWorkspaceException e) {
                 throw new RuntimeException(e);
@@ -116,8 +115,7 @@ public class SetModelResourceExtendedPropertyAction extends SortableSelectionAct
                 }
 
                 ExtendedPropertiesDialog dialog = null;
-                dialog = new ExtendedPropertiesDialog(window.getShell(), this.theEObject, editor.getModelResource().isReadOnly(),
-                                                      this.theImage);
+                dialog = new ExtendedPropertiesDialog(window.getShell(), this.theEObject, editor.getModelResource().isReadOnly());
 
                 dialog.open();
 

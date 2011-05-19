@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -25,8 +24,8 @@ import org.teiid.designer.relational.ui.extended.properties.ExtendedPropertiesDi
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.relational.ui.UiConstants;
+import com.metamatrix.modeler.relational.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -39,10 +38,10 @@ public class SetModelObjectExtendedPropertyAction extends SortableSelectionActio
 
     private EObject theEObject;
     private IFile modelFile;
-    private Image theImage;
 
     public SetModelObjectExtendedPropertyAction() {
         super();
+        this.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.MANAGE_EXTENDED_PROPERTIES_ACTION_ICON));
     }
 
     @Override
@@ -73,7 +72,6 @@ public class SetModelObjectExtendedPropertyAction extends SortableSelectionActio
                 || SqlAspectHelper.isProcedure(this.theEObject) || SqlAspectHelper.isForeignKey(this.theEObject)
                 || SqlAspectHelper.isColumnSet(this.theEObject) || SqlAspectHelper.isProcedureResultSet(this.theEObject)) {
                 isValid = true;
-                theImage = ModelUtilities.getModelObjectLabelProvider().getImage(this.theEObject);
             }
         }
 
@@ -108,7 +106,7 @@ public class SetModelObjectExtendedPropertyAction extends SortableSelectionActio
                 if (!cont) {
                     return;
                 }
-                dialog = new ExtendedPropertiesDialog(window.getShell(), this.theEObject, modelFile.isReadOnly(), theImage);
+                dialog = new ExtendedPropertiesDialog(window.getShell(), this.theEObject, modelFile.isReadOnly());
 
                 dialog.open();
 

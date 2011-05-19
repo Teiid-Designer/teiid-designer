@@ -53,6 +53,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.relational.ui.UiConstants;
+import com.metamatrix.modeler.relational.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -67,14 +68,12 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExtendedPropertiesDialog.class);
     private static final String TITLE = Util.getString(I18N_PREFIX + "title"); //$NON-NLS-1$
     private static final String TITLE_READ_ONLY = Util.getString(I18N_PREFIX + "titleReadOnly"); //$NON-NLS-1$
-    private String message_Title = null;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
     private final EObject theEObject;
-    private final Image theImage;
     private final String theEObjectName;
     private final boolean modelResourceReadOnly;
     protected Properties workingprops = null;
@@ -109,17 +108,14 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
      */
     public ExtendedPropertiesDialog( Shell parent,
                                      EObject theEObject,
-                                     boolean modelResourceReadOnly,
-                                     Image theImage ) {
+                                     boolean modelResourceReadOnly ) {
 
         super(parent);
 
         this.parent = parent;
         this.modelResourceReadOnly = modelResourceReadOnly;
         this.theEObject = theEObject;
-        this.theImage = theImage;
-        this.theEObjectName = SqlAspectHelper.getSqlAspect(theEObject).getName(theEObject);
-        this.message_Title = Util.getString(I18N_PREFIX + "messageTitle", theEObjectName); //$NON-NLS-1$
+        this.theEObjectName = SqlAspectHelper.getSqlAspect(theEObject).getFullName(theEObject);
 
         // Initialize extended properties
         try {
@@ -199,8 +195,9 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
     protected Control createDialogArea( Composite parent ) {
         Composite contents = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
 
-        this.setMessage(message_Title);
-        this.setTitleImage(this.theImage);
+        this.setTitle(Util.getString(I18N_PREFIX + "messageTitle")); //$NON-NLS-1$
+        this.setMessage(this.theEObjectName);
+        this.setTitleImage(UiPlugin.getDefault().getImage(UiConstants.Images.MANAGE_EXTENDED_PROPERTIES_ICON));
         contents.setLayout(new GridLayout(1, false));
         contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
