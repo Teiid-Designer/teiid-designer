@@ -296,12 +296,13 @@
 			</mediaobject>
 		</figure>
 		<para>The dialog contains two
-			panels of input. The top panel, <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
+			three sections. The top panel contains host name and an option to customize the new Teiid instance label
+			in the teiid view.  The second panel <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
 			URL of your installed Teiid instance. The operations Designer exposes deal with deploying and undeploying VDBs
 			as well as managing your test data sources required by those VDBs to successfully connect and query data
 			through the Teiid runtime engine.
 		</para>
-		<para>The second panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
+		<para>The third panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
 			same Teiid instance. This information is required for Designer to make JDBC connections during execution of the
 			Preview Data feature.
 		</para>
@@ -354,6 +355,17 @@
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance</para></listitem>
 		</itemizedlist>
+		<para>
+			If you chose the <emphasis role="bold">Use a custom label</emphasis> option, the text entry field will enable as shown below.
+		</para>
+		<figure id="new-teiid-instance-dialog-custom-name-image">
+			<title>Use a Custom Label Option</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/new-teiid-instance-custom-name-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
 	</section>
 	
 	<!-- ####### PROPERTIES VIEW ######################################### -->

@@ -30,23 +30,49 @@
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>
-		<para>Teiid Designer integrates Data Tools Connection Profiles by persisting pertinent connection information in each
-		source model. This can occur through Importing process or through the <emphasis role="bold">Modeling > Set Connection Profile</emphasis> action.
-		</para>
-		<para>In addition to setting the connection profile on a source model you can also view a source model's connection profile 
-		information via the <emphasis role="bold">Modeling > View Connection Info</emphasis> action which displays the
-		detailed properties of the connection.</para>
-		<figure>
-			<title>Connection Profile Information Dialog</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/view-connection-info-dialog.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>As a user, you may not want this connection information (i.e. URL, username, etc...) shared through your VDB. Designer 
-		provides a means to remove this connection information via a <emphasis role="bold">Modeling > Remove Connection Info</emphasis> action.
-		When adding a source model without connection information will require the user to supply or select the correct translator type.</para>
+		
+		<!-- ####### Set Connection Profile Action ######################################### -->
+		<section id="set-connection-profile">
+			<title>Set Connection Profile for Source Model</title>
+			<para>Teiid Designer integrates Data Tools Connection Profiles by persisting pertinent connection information in each
+				source model. This can occur through Importing process or through the <emphasis role="bold">Modeling > Set Connection Profile</emphasis> action.
+			</para>
+		</section>
+		
+		<!-- ####### View Connection Profile Action ######################################### -->
+		<section id="view-connection-profile">
+			<title>View Connection Profile for Source Model</title>
+			<para>In addition to setting the connection profile on a source model you can also view a source model's connection profile 
+			information via the <emphasis role="bold">Modeling > View Connection Info</emphasis> action which displays the
+			detailed properties of the connection.</para>
+			<figure>
+				<title>Connection Profile Information Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/view-connection-info-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Note that if a source model has no associated connection profile the following dialog will be displayed.</para>
+			<figure>
+				<title>No Connection Info Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/no-connection-info-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### Remove Connection Profile Action ######################################### -->
+		<section id="remove-connection-profile">
+			<title>Remove Connection Profile from Source Model</title>
+			<para>As a user, you may not want this connection information (i.e. URL, username, etc...) shared through your VDB. Designer 
+				provides a means to remove this connection information via a <emphasis role="bold">Modeling > Remove Connection Info</emphasis> action.
+				When adding a source model without connection information will require the user to supply or select the correct translator type.
+			</para>
+		</section>
+		
 	</section>
 
 	<!-- ####### TEST MODELS WITH PREVIEW DATA ######################################### -->
@@ -357,13 +383,13 @@
 				 a JNDI name representing a deployed Data Source.</para>
 			<para>When creating VDBs you do not need to have deployed data sources on your Teiid server, but if you wish to 
 				test your VDB, the data sources need to be present.</para>
-			<para>Teiid Designer provides a <emphasis>Create Data Source</emphasis> action so you can create compatible data 
+			<para>Teiid Designer provides a <emphasis role="bold">Create Data Source</emphasis> action so you can create compatible data 
 				sources for your source model. If you wish to create a data source for a specific model you can select 
-				that source model in your workspace and select the <emphasis>Modeling > Create Data Source</emphasis> action. 
+				that source model in your workspace and select the <emphasis role="bold">Modeling > Create Data Source</emphasis> action. 
 				This will extract the connection profile data from your source model and create a corresponding data source 
 				on your default Teiid server.</para>
 			<para>You can also create data sources from the Teiid view. Select a Teiid server instance in the Teiid view 
-				and right-click select the <emphasis>Create Data Source</emphasis> action. This will launch the 
+				and right-click select the <emphasis role="bold">Create Data Source</emphasis> action. This will launch the 
 				Create Data Source Dialog shown below.</para>
 				<figure>
 					<title>Create Data Source Dialog</title>
@@ -375,7 +401,7 @@
 				</figure>
 			<para>You can either select and existing Connection Profile from the drop-down list (Use Connection Profile
 				Info option) or check the Use Model Info option and select an existing source model containing connection info.</para>
-			<para>After creating your new data source it should now be shown in the <emphasis>Data Sources</emphasis> folder of the corresponding 
+			<para>After creating your new data source it should now be shown in the <emphasis role="bold">Data Sources</emphasis> folder of the corresponding 
 				Teiid server.</para>
 		</section>
 		
@@ -389,7 +415,7 @@
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Right-click a VDB in your Model Explorer 
-									select <emphasis>Modeling > Execute VDB</emphasis> action.
+									select <emphasis role="bold">Modeling > Execute VDB</emphasis> action.
 									This action will insure your selected VDB is deployed to Teiid, create a Teiid Connection 
 									Profile specific for that VDB, open the Database Development perspective and 
 									create a connection to your VDB.</para>
@@ -404,9 +430,9 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select your new Teiid connection profile 
-									and right-click select <emphasis>Open SQL Scrapbook</emphasis>, enter your designer 
+									and right-click select <emphasis role="bold">Open SQL Scrapbook</emphasis>, enter your designer 
 									SQL (i.e. SELECT * FROM TableXXXX), select all text and right-click select 
-									<emphasis>Execute Selected Text</emphasis></para>
+									<emphasis role="bold">Execute Selected Text</emphasis></para>
 								<figure>
 									<title>SQL Scrapbook Editor</title>
 									<mediaobject>
@@ -418,7 +444,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Results of query should be displayed 
-									in the SQL Results view on the <emphasis>Result1</emphasis> tab.</para>
+									in the SQL Results view on the <emphasis role="bold">Result1</emphasis> tab.</para>
 								<figure>
 									<title>SQL Results View</title>
 									<mediaobject>
@@ -439,16 +465,16 @@
 			<title>Deploy VDB from Model Explorer</title>
 			<para>You can also deploy your VDB first by selecting it in the Model Explorer 
 				and dragging/dropping it onto a connected Teiid instance in the Teiid view, 
-				or right-click select <emphasis>Modeling > Deploy</emphasis> action.
+				or right-click select <emphasis role="bold">Modeling > Deploy</emphasis> action.
 			</para>
 			<para>Once deployed, you can select the VDB in the Teiid View and 
-				right-click select the <emphasis>Execute VDB</emphasis> action there. This will 
+				right-click select the <emphasis role="bold">Execute VDB</emphasis> action there. This will 
 				create a Teiid Connection Profile specific for that VDB, open the 
 				Database Development perspective and create a connection to your VDB. 
 				Continue with Step's 2 and 3 above.</para>
 			<para>Note that if you do not have a Teiid instance defined or your default 
 					Teiid instance is disconnected, the following dialog will be displayed 
-					if the <emphasis>Modeling > Deploy</emphasis> action is launched.
+					if the <emphasis role="bold">Modeling > Deploy</emphasis> action is launched.
 			</para>
 			<figure>
 				<title>No Teiid Instance Defined</title>
@@ -469,12 +495,12 @@
 					<para>To execute a VDB, that's been deployed manually, follow the steps below:
 						<itemizedlist>
 							<listitem>
-								<para><emphasis role="bold">Step 1 </emphasis> - Open the <emphasis>Database Development</emphasis> perspective.</para>
+								<para><emphasis role="bold">Step 1 </emphasis> - Open the <emphasis role="bold">Database Development</emphasis> perspective.</para>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 2 </emphasis> - Select the <emphasis>Database Connections</emphasis> 
-									folder and choose the <emphasis>New</emphasis> action to display 
-									the <emphasis>New Connection Profile</emphasis> dialog.</para>
+								<para><emphasis role="bold">Step 2 </emphasis> - Select the <emphasis role="bold">Database Connections</emphasis> 
+									folder and choose the <emphasis role="bold">New</emphasis> action to display 
+									the <emphasis role="bold">New Connection Profile</emphasis> dialog.</para>
 								<figure>
 									<title>New Connection Profile Dialog</title>
 									<mediaobject>
@@ -486,11 +512,11 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - Enter unique name for your profile, select an 
-									existing connection profile type and hit <emphasis>Next</emphasis>.</para>
+									existing connection profile type and hit <emphasis role="bold">Next</emphasis>.</para>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 4 </emphasis> - In the <emphasis>Teiid Profile Wizard</emphasis> page, 
-									select the <emphasis>New Driver Definition</emphasis> button to locate and select the 
+								<para><emphasis role="bold">Step 4 </emphasis> - In the <emphasis role="bold">Teiid Profile Wizard</emphasis> page, 
+									select the <emphasis role="bold">New Driver Definition</emphasis> button to locate and select the 
 									Teiid client jar on your file system. Configure your URL using your VDB Name, Host, Port, 
 									Username (default = "admin") and Password (default = "teiid").</para>
 								<figure>
@@ -503,7 +529,7 @@
 								</figure>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 5 </emphasis> - Select <emphasis>Next</emphasis> to view a 
+								<para><emphasis role="bold">Step 5 </emphasis> - Select <emphasis role="bold">Next</emphasis> to view a 
 									summary of your new Teiid Connection Profile.</para>
 								<figure>
 									<title>Teiid Connection Profile Summary</title>
@@ -515,13 +541,13 @@
 								</figure>
 							</listitem>
 							<listitem>
-								<para><emphasis role="bold">Step 6 </emphasis> - Select <emphasis>Finish</emphasis>.</para>
+								<para><emphasis role="bold">Step 6 </emphasis> - Select <emphasis role="bold">Finish</emphasis>.</para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 7 </emphasis> - Select your new Teiid connection profile 
-									and right-click select <emphasis>Open SQL Scrapboo</emphasis>k, enter your designer 
+									and right-click select <emphasis role="bold">Open SQL Scrapbook</emphasis>, enter your designer 
 									SQL (i.e. SELECT * FROM TableXXXX), select all text and right-click 
-									select <emphasis>Execute Selected Text</emphasis>.</para>
+									select <emphasis role="bold">Execute Selected Text</emphasis>.</para>
 								<figure>
 									<title>SQL Scrapbook Editor</title>
 									<mediaobject>
@@ -533,7 +559,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 8 </emphasis> - Results of query should be displayed 
-									in the SQL Results view on the <emphasis>Result1</emphasis> tab.</para>
+									in the SQL Results view on the <emphasis role="bold">Result1</emphasis> tab.</para>
 								<figure>
 									<title>SQL Results View</title>
 									<mediaobject>
