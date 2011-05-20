@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.util.StringUtil;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiStringUtil;
@@ -36,560 +35,511 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 /**
  * @since 7.1
  */
-public abstract class WarDeploymentInfoPanel extends Composite implements
-		InternalModelerWarUiConstants {
+public abstract class WarDeploymentInfoPanel extends Composite implements InternalModelerWarUiConstants {
 
-	// /////////////////////////////////////////////////////////////////////////////////////////////
-	// CONSTANTS
-	// /////////////////////////////////////////////////////////////////////////////////////////////
-	private static final String I18N_PREFIX = I18nUtil
-			.getPropertyPrefix(WarDeploymentInfoDialog.class);
-	protected static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
-	private static final String SECURITY_OPTIONS_GROUP = getString("securityOptionsGroup"); //$NON-NLS-1$
-	private static final String BASIC_OPTIONS_GROUP = getString("basicOptionsGroup"); //$NON-NLS-1$
-	private static final String WS_SECURITY_OPTIONS_GROUP = getString("wsSecurityOptionsGroup"); //$NON-NLS-1$
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTANTS
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(WarDeploymentInfoDialog.class);
+    protected static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
+    private static final String SECURITY_OPTIONS_GROUP = getString("securityOptionsGroup"); //$NON-NLS-1$
+    private static final String BASIC_OPTIONS_GROUP = getString("basicOptionsGroup"); //$NON-NLS-1$
+    private static final String WS_SECURITY_OPTIONS_GROUP = getString("wsSecurityOptionsGroup"); //$NON-NLS-1$
 
-	// /////////////////////////////////////////////////////////////////////////////////////////////
-	// FIELDS
-	// /////////////////////////////////////////////////////////////////////////////////////////////
-	protected IDialogSettings settings;
-	protected WarDeploymentInfoDialog dialog;
-	protected Text txfWarFileDeploymentLocation;
-	protected Text txfContext;
-	protected Text txfNamespace;
-	protected Text txfHost;
-	protected Text txfPort;
-	protected Text txfSecurityRealm;
-	protected Text txfSecurityRole;
-	protected Text txfSecurityUsername;
-	protected Text txfSecurityPassword;
-	public static final String NOSECURITY = getString("noSecurityButton"); //$NON-NLS-1$
-	public static final String BASIC = getString("basicButton"); //$NON-NLS-1$
-	public static final String WSSE = getString("wsSecurityButton"); //$NON-NLS-1$
-	protected Text txfJNDIName;
-	protected Button noSecurityButton, basicSecurityButton, wsSecurityButton;
-	private Button warBrowseButton;
-	private Button restoreDefaultButton;
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+    // FIELDS
+    // /////////////////////////////////////////////////////////////////////////////////////////////
+    protected IDialogSettings settings;
+    protected WarDeploymentInfoDialog dialog;
+    protected Text txfWarFileDeploymentLocation;
+    protected Text txfContext;
+    protected Text txfNamespace;
+    protected Text txfHost;
+    protected Text txfPort;
+    protected Text txfSecurityRealm;
+    protected Text txfSecurityRole;
+    protected Text txfSecurityUsername;
+    protected Text txfSecurityPassword;
+    public static final String NOSECURITY = getString("noSecurityButton"); //$NON-NLS-1$
+    public static final String BASIC = getString("basicButton"); //$NON-NLS-1$
+    public static final String WSSE = getString("wsSecurityButton"); //$NON-NLS-1$
+    protected Text txfJNDIName;
+    protected Button noSecurityButton, basicSecurityButton, wsSecurityButton;
+    private Button warBrowseButton;
+    private Button restoreDefaultButton;
 
-	protected IFile theVdb;
+    protected IFile theVdb;
 
-	protected String WARFILELOCATION;
-	protected String NAMESPACE;
-	protected String CONTEXTNAME;
-	protected String HOST;
-	protected String PORT;
-	protected String JNDI_NAME;
-	protected String SECURITY_TYPE;
-	protected String SECURITY_REALM;
-	protected String SECURITY_ROLE;
-	protected String SECURITY_USERNAME;
-	protected String SECURITY_PASSWORD;
-	
-	/**
-	 * @param parent
-	 * @param dialog
-	 * @param theVdb
-	 * @param theVdbContext
-	 * @since 7.1
-	 */
-	public WarDeploymentInfoPanel(Composite parent,
-			WarDeploymentInfoDialog dialog, IFile theVdb) {
-		super(parent, SWT.NONE);
-		this.dialog = dialog;
-		this.theVdb = theVdb;
-		this.setLayout(new GridLayout());
-		this.setLayoutData(new GridData(GridData.FILL_BOTH));
-		init(this);
-	}
+    protected String WARFILELOCATION;
+    protected String NAMESPACE;
+    protected String CONTEXTNAME;
+    protected String HOST;
+    protected String PORT;
+    protected String JNDI_NAME;
+    protected String SECURITY_TYPE;
+    protected String SECURITY_REALM;
+    protected String SECURITY_ROLE;
+    protected String SECURITY_USERNAME;
+    protected String SECURITY_PASSWORD;
 
-	/**
-	 * @param id
-	 * @return
-	 * @since 7.1
-	 */
-	protected static String getString(final String id) {
-		return DqpUiStringUtil.getString(I18N_PREFIX + id);
-	}
+    /**
+     * @param parent
+     * @param dialog
+     * @param theVdb
+     * @param theVdbContext
+     * @since 7.1
+     */
+    public WarDeploymentInfoPanel( Composite parent,
+                                   WarDeploymentInfoDialog dialog,
+                                   IFile theVdb ) {
+        super(parent, SWT.NONE);
+        this.dialog = dialog;
+        this.theVdb = theVdb;
+        this.setLayout(new GridLayout());
+        this.setLayoutData(new GridData(GridData.FILL_BOTH));
+        init(this);
+    }
 
-	/**
-	 * @since 7.1
-	 */
-	protected void loadData() {
+    /**
+     * @param id
+     * @return
+     * @since 7.1
+     */
+    protected static String getString( final String id ) {
+        return DqpUiStringUtil.getString(I18N_PREFIX + id);
+    }
 
-		try {
-			// war file location
-			String text = (this.settings.get(WARFILELOCATION) == null ? WarDataserviceModel
-					.getInstance().getWarFileLocation()
-					: this.settings.get(WARFILELOCATION));
-			txfWarFileDeploymentLocation.setText(text);
+    /**
+     * @since 7.1
+     */
+    protected void loadData() {
 
-			// TNS Name
-			text = (this.settings.get(NAMESPACE) == null ? WarDataserviceModel
-					.getInstance().getTns() : this.settings.get(NAMESPACE));
-			txfNamespace.setText(text);
+        try {
+            // war file location
+            String text = (this.settings.get(WARFILELOCATION) == null ? WarDataserviceModel.getInstance().getWarFileLocation() : this.settings.get(WARFILELOCATION));
+            txfWarFileDeploymentLocation.setText(text);
 
-			// context name should be populated as default, not from the
-			// settings.
-			text = WarDataserviceModel.getInstance().getContextName();
-			txfContext.setText(text);
+            // TNS Name
+            text = (this.settings.get(NAMESPACE) == null ? WarDataserviceModel.getInstance().getTns() : this.settings.get(NAMESPACE));
+            txfNamespace.setText(text);
 
-			// host name
-			text = (this.settings.get(HOST) == null ? WarDataserviceModel
-					.getInstance().getHostName() : this.settings.get(HOST));
-			txfHost.setText(text);
+            // context name should be populated as default, not from the
+            // settings.
+            text = WarDataserviceModel.getInstance().getContextName();
+            txfContext.setText(text);
 
-			// port
-			text = (this.settings.get(PORT) == null ? WarDataserviceModel
-					.getInstance().getPort() : this.settings.get(PORT));
-			txfPort.setText(text);
+            // host name
+            text = (this.settings.get(HOST) == null ? WarDataserviceModel.getInstance().getHostName() : this.settings.get(HOST));
+            txfHost.setText(text);
 
-			// JNDI Name
-			text = (this.settings.get(JNDI_NAME) == null ? WarDataserviceModel
-					.getInstance().getJndiName() : this.settings.get(JNDI_NAME));
-			txfJNDIName.setText(text);
+            // port
+            text = (this.settings.get(PORT) == null ? WarDataserviceModel.getInstance().getPort() : this.settings.get(PORT));
+            txfPort.setText(text);
 
-			// Security Realm Name
-			text = (this.settings.get(SECURITY_REALM) == null ? WarDataserviceModel
-					.getInstance().getSecurityRealm() : this.settings.get(SECURITY_REALM));
-			txfSecurityRealm.setText(text);
-			
-			// Security Role Name
-			text = (this.settings.get(SECURITY_ROLE) == null ? WarDataserviceModel
-					.getInstance().getSecurityRole() : this.settings.get(SECURITY_ROLE));
-			txfSecurityRole.setText(text);
-			
-			// Security Username
-			text = (this.settings.get(SECURITY_USERNAME) == null ? WarDataserviceModel
-					.getInstance().getSecurityUsername() : this.settings.get(SECURITY_USERNAME));
-			txfSecurityUsername.setText(text);
-			
-			// Security Password
-			text = (this.settings.get(SECURITY_PASSWORD) == null ? WarDataserviceModel
-					.getInstance().getSecurityPassword() : this.settings.get(SECURITY_PASSWORD));
-			txfSecurityPassword.setText(text);
-			
-			// Security type
-			text = (this.settings.get(SECURITY_TYPE) == null ? WarDataserviceModel
-					.getInstance().getSecurityType()
-					: this.settings.get(SECURITY_TYPE));
+            // JNDI Name
+            text = WarDataserviceModel.getInstance().getJndiName();
+            txfJNDIName.setText(text);
 
-			if (text.equals(NOSECURITY)) {
-				this.noSecurityButton.setSelection(true);
-			} else if (text.equals(BASIC)) {
-				this.basicSecurityButton.setSelection(true);
-			} else if (text.equals(WSSE)) {
-				this.basicSecurityButton.setSelection(true);
-			} else
-				this.noSecurityButton.setSelection(true);
+            // Security Realm Name
+            text = (this.settings.get(SECURITY_REALM) == null ? WarDataserviceModel.getInstance().getSecurityRealm() : this.settings.get(SECURITY_REALM));
+            txfSecurityRealm.setText(text);
 
-		} catch (RuntimeException err) {
-			DqpUiPlugin.UTIL.log(err);
-		}
+            // Security Role Name
+            text = (this.settings.get(SECURITY_ROLE) == null ? WarDataserviceModel.getInstance().getSecurityRole() : this.settings.get(SECURITY_ROLE));
+            txfSecurityRole.setText(text);
 
-	}
+            // Security Username
+            text = (this.settings.get(SECURITY_USERNAME) == null ? WarDataserviceModel.getInstance().getSecurityUsername() : this.settings.get(SECURITY_USERNAME));
+            txfSecurityUsername.setText(text);
 
-	/**
-	 * @param isValid
-	 * @since 7.1
-	 */
-	protected void setDialogMessage(boolean isValid) {
+            // Security Password
+            text = (this.settings.get(SECURITY_PASSWORD) == null ? WarDataserviceModel.getInstance().getSecurityPassword() : this.settings.get(SECURITY_PASSWORD));
+            txfSecurityPassword.setText(text);
 
-		this.dialog.setMessage(INITIAL_MESSAGE);
-		this.dialog.setOkButtonEnable(isValid);
-	}
+            // Security type
+            text = (this.settings.get(SECURITY_TYPE) == null ? WarDataserviceModel.getInstance().getSecurityType() : this.settings.get(SECURITY_TYPE));
 
-	/**
-	 * @param status
-	 * @since 7.1
-	 */
-	protected void setDialogMessage(IStatus status) {
-		boolean isError = (status.getSeverity() == IStatus.ERROR);
+            if (text.equals(NOSECURITY)) {
+                this.noSecurityButton.setSelection(true);
+            } else if (text.equals(BASIC)) {
+                this.basicSecurityButton.setSelection(true);
+            } else if (text.equals(WSSE)) {
+                this.basicSecurityButton.setSelection(true);
+            } else this.noSecurityButton.setSelection(true);
 
-		/**
-		 * Need to convert the error status code from 4 to 3 because error code
-		 * in setMessage() is not mapped correctly or IStatus.ERROR !=
-		 * IMessageProvider.ERROR
-		 */
-		int statusCode = (status.getSeverity() == IStatus.ERROR ? IMessageProvider.ERROR
-				: status.getSeverity());
+        } catch (RuntimeException err) {
+            DqpUiPlugin.UTIL.log(err);
+        }
 
-		this.dialog.setMessage(INITIAL_MESSAGE);
-		if (!status.isOK()) {
-			this.dialog.setMessage(status.getMessage(), statusCode);
-		}
+    }
 
-		this.dialog.setOkButtonEnable(!isError);
-	}
+    /**
+     * @param isValid
+     * @since 7.1
+     */
+    protected void setDialogMessage( boolean isValid ) {
 
-	/**
-	 * @since 7.1
-	 */
-	protected abstract void validatePage();
+        this.dialog.setMessage(INITIAL_MESSAGE);
+        this.dialog.setOkButtonEnable(isValid);
+    }
 
-	/**
-	 * @param parent
-	 * @since 7.1
-	 */
-	private void init(Composite parent) {
+    /**
+     * @param status
+     * @since 7.1
+     */
+    protected void setDialogMessage( IStatus status ) {
+        boolean isError = (status.getSeverity() == IStatus.ERROR);
 
-		createDeploymentInfoComposite(parent);
-		createRestoreDefault(parent);
+        /**
+         * Need to convert the error status code from 4 to 3 because error code in setMessage() is not mapped correctly or
+         * IStatus.ERROR != IMessageProvider.ERROR
+         */
+        int statusCode = (status.getSeverity() == IStatus.ERROR ? IMessageProvider.ERROR : status.getSeverity());
 
-		this.settings = WidgetUtil.initializeSettings(this, DqpUiPlugin
-				.getDefault());
+        this.dialog.setMessage(INITIAL_MESSAGE);
+        if (!status.isOK()) {
+            this.dialog.setMessage(status.getMessage(), statusCode);
+        }
 
-		addListeners();
-	}
+        this.dialog.setOkButtonEnable(!isError);
+    }
 
-	/**
-	 * @param parent
-	 * @since 7.1
-	 */
-	private void createDeploymentInfoComposite(final Composite parent) {
+    /**
+     * @since 7.1
+     */
+    protected abstract void validatePage();
 
-		// Create info group panel
-		String text = getString("grpPanelText"); //$NON-NLS-1$
-		Group pnlContents = WidgetFactory.createGroup(parent, text,
-				GridData.FILL_HORIZONTAL, 3, 3);
-		// ------------------------------------
-		// Web Service WAR components
-		// ------------------------------------
-		// contextLabel
-		CONTEXTNAME = getString("contextLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, CONTEXTNAME);
+    /**
+     * @param parent
+     * @since 7.1
+     */
+    private void init( Composite parent ) {
 
-		// context name
-		txfContext = WidgetFactory.createTextField(pnlContents,
-				GridData.FILL_HORIZONTAL, 2);
-		text = getString("contextTooltip"); //$NON-NLS-1$
-		txfContext.setToolTipText(text);
+        createDeploymentInfoComposite(parent);
+        createRestoreDefault(parent);
 
-		// hostLabel
-		HOST = getString("hostLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, HOST);
+        this.settings = WidgetUtil.initializeSettings(this, DqpUiPlugin.getDefault());
 
-		// host name
-		txfHost = WidgetFactory.createTextField(pnlContents,
-				GridData.FILL_HORIZONTAL, 2);
-		text = getString("hostTooltip"); //$NON-NLS-1$
-		txfHost.setToolTipText(text);
+        addListeners();
+    }
 
-		// portLabel
-		PORT = getString("portLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, PORT);
+    /**
+     * @param parent
+     * @since 7.1
+     */
+    private void createDeploymentInfoComposite( final Composite parent ) {
 
-		// port
-		txfPort = WidgetFactory.createTextField(pnlContents,
-				GridData.FILL_HORIZONTAL, 2);
-		text = getString("portTooltip"); //$NON-NLS-1$
-		txfPort.setToolTipText(text);
+        // Create info group panel
+        String text = getString("grpPanelText"); //$NON-NLS-1$
+        Group pnlContents = WidgetFactory.createGroup(parent, text, GridData.FILL_HORIZONTAL, 3, 3);
+        // ------------------------------------
+        // Web Service WAR components
+        // ------------------------------------
+        // contextLabel
+        CONTEXTNAME = getString("contextLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, CONTEXTNAME);
 
-		// JNDILabel
-		JNDI_NAME = getString("jndiLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, JNDI_NAME);
+        // context name
+        txfContext = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("contextTooltip"); //$NON-NLS-1$
+        txfContext.setToolTipText(text);
 
-		// jndi name
-		txfJNDIName = WidgetFactory.createTextField(pnlContents,
-				GridData.FILL_HORIZONTAL, 2);
-		text = getString("jndiTooltip"); //$NON-NLS-1$
-		txfJNDIName.setToolTipText(text);
+        // hostLabel
+        HOST = getString("hostLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, HOST);
 
-		final Group securityOptionsGroup = WidgetFactory.createGroup(
-				pnlContents, SECURITY_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
-				3);
-		{
-			CLabel label3 = new CLabel(securityOptionsGroup, SWT.WRAP);
-			label3
-					.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property."); //$NON-NLS-1$
-			final GridData gridData3 = new GridData(GridData.FILL_HORIZONTAL);
-			gridData3.horizontalSpan = 1;
-			label3.setLayoutData(gridData3);
+        // host name
+        txfHost = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("hostTooltip"); //$NON-NLS-1$
+        txfHost.setToolTipText(text);
 
-			this.noSecurityButton = WidgetFactory.createRadioButton(
-					securityOptionsGroup, NOSECURITY);
-			this.noSecurityButton.addSelectionListener(new SelectionAdapter() {
+        // portLabel
+        PORT = getString("portLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, PORT);
 
-				@Override
-				public void widgetSelected(final SelectionEvent event) {
-					noSecurityButtonSelected();
-				}
-			});
-			this.noSecurityButton.setSelection(true);
-			this.basicSecurityButton = WidgetFactory.createRadioButton(
-					securityOptionsGroup, BASIC);
-			this.basicSecurityButton
-					.addSelectionListener(new SelectionAdapter() {
+        // port
+        txfPort = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("portTooltip"); //$NON-NLS-1$
+        txfPort.setToolTipText(text);
 
-						@Override
-						public void widgetSelected(final SelectionEvent event) {
-							basicSecurityButtonSelected();
-						}
-					});
-			this.wsSecurityButton = WidgetFactory.createRadioButton(
-					securityOptionsGroup, WSSE);
-			this.wsSecurityButton.addSelectionListener(new SelectionAdapter() {
+        // JNDILabel
+        JNDI_NAME = getString("jndiLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, JNDI_NAME);
 
-				@Override
-				public void widgetSelected(final SelectionEvent event) {
-					wsSecurityButtonSelected();
-				}
-			});
-			
-			//HTTPBasic Options
-			final Group httpBasicFieldsGroup = WidgetFactory.createGroup(
-					securityOptionsGroup, BASIC_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
-					3, 3);
-			
-			// security realm Label
-			this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
-					1, SECURITY_REALM);
-			
-			// security realm
-			this.txfSecurityRealm = WidgetFactory.createTextField(httpBasicFieldsGroup,
-					GridData.FILL_HORIZONTAL, 2);
-			text = getString("securityRealmTooltip"); //$NON-NLS-1$;
-			this.txfSecurityRealm.setToolTipText(text);
-			this.txfSecurityRealm.setEnabled(false);
-			
-			// security role Label
-			this.SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
-					1, SECURITY_ROLE);
-			
-			// security role
-			this.txfSecurityRole = WidgetFactory.createTextField(httpBasicFieldsGroup,
-					GridData.FILL_HORIZONTAL, 2);
-			text = getString("securityRoleTooltip"); //$NON-NLS-1$;
-			this.txfSecurityRole.setToolTipText(text);
-			this.txfSecurityRole.setEnabled(false);
-			
-			//WS-Security Options
-			final Group wsSecurityFieldsGroup = WidgetFactory.createGroup(
-					securityOptionsGroup, WS_SECURITY_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
-					3, 3);
-			
-			// security username Label
-			this.SECURITY_USERNAME = getString("securityUsernameLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
-					1, SECURITY_USERNAME);
-			
-			// security username
-			this.txfSecurityUsername = WidgetFactory.createTextField(wsSecurityFieldsGroup,
-					GridData.FILL_HORIZONTAL, 2);
-			text = getString("securityUsernameTooltip"); //$NON-NLS-1$;
-			this.txfSecurityUsername.setToolTipText(text);
-			this.txfSecurityUsername.setEnabled(false);
-			
-			// security password Label
-			this.SECURITY_PASSWORD = getString("securityPasswordLabel"); //$NON-NLS-1$       
-			WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING,
-					1, SECURITY_PASSWORD);
-			
-			// security password
-			this.txfSecurityPassword = WidgetFactory.createTextField(wsSecurityFieldsGroup,
-					GridData.FILL_HORIZONTAL, 2);
-			text = getString("securityPasswordTooltip"); //$NON-NLS-1$;
-			this.txfSecurityPassword.setToolTipText(text);
-			this.txfSecurityPassword.setEnabled(false);
-		}
-		
-		// namespace Label
-		this.NAMESPACE = getString("namespaceLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, this.NAMESPACE);
+        // jndi name
+        txfJNDIName = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("jndiTooltip"); //$NON-NLS-1$
+        txfJNDIName.setToolTipText(text);
 
-		// namespace
-		this.txfNamespace = WidgetFactory.createTextField(pnlContents,
-				GridData.FILL_HORIZONTAL, 2);
-		text = getString("namespaceTooltip"); //$NON-NLS-1$
-		this.txfNamespace.setToolTipText(text);
+        final Group securityOptionsGroup = WidgetFactory.createGroup(pnlContents,
+                                                                     SECURITY_OPTIONS_GROUP,
+                                                                     GridData.FILL_HORIZONTAL,
+                                                                     3);
+        {
+            CLabel label3 = new CLabel(securityOptionsGroup, SWT.WRAP);
+            label3.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property."); //$NON-NLS-1$
+            final GridData gridData3 = new GridData(GridData.FILL_HORIZONTAL);
+            gridData3.horizontalSpan = 1;
+            label3.setLayoutData(gridData3);
 
-		// WAR file save location Label
-		this.WARFILELOCATION = getString("warFileSaveLocationLabel"); //$NON-NLS-1$       
-		WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_END,
-				1, this.WARFILELOCATION);
+            this.noSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, NOSECURITY);
+            this.noSecurityButton.addSelectionListener(new SelectionAdapter() {
 
-		// WAR file save location textfield
-		this.txfWarFileDeploymentLocation = WidgetFactory.createTextField(
-				pnlContents, GridData.FILL_HORIZONTAL, 2);
-		text = getString("warFileSaveLocationTooltip"); //$NON-NLS-1$
-		this.txfWarFileDeploymentLocation.setToolTipText(text);
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                    noSecurityButtonSelected();
+                }
+            });
+            this.noSecurityButton.setSelection(true);
+            this.basicSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, BASIC);
+            this.basicSecurityButton.addSelectionListener(new SelectionAdapter() {
 
-		// WAR folder browse button
-		this.warBrowseButton = WidgetFactory.createButton(pnlContents,
-				InternalUiConstants.Widgets.BROWSE_BUTTON);
-		this.warBrowseButton.setText(getString("changeButtonText")); //$NON-NLS-1$
-		this.warBrowseButton.setToolTipText(text);
-		this.warBrowseButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent theEvent) {
-				handleWarBrowseSourceSelected();
-			}
-		});
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                    basicSecurityButtonSelected();
+                }
+            });
+            this.wsSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, WSSE);
+            this.wsSecurityButton.addSelectionListener(new SelectionAdapter() {
 
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gridData.minimumHeight = 80;
-		gridData.verticalIndent = 10;
-		gridData.minimumWidth = 530;
-		pnlContents.setLayoutData(gridData);
-	}
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                    wsSecurityButtonSelected();
+                }
+            });
 
-	void setConnectionTypeModified() {
-		// disable JNDI name text
-	}
+            // HTTPBasic Options
+            final Group httpBasicFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
+                                                                         BASIC_OPTIONS_GROUP,
+                                                                         GridData.FILL_HORIZONTAL,
+                                                                         3,
+                                                                         3);
 
-	/**
-	 * @param parent
-	 * @since 7.1
-	 */
-	private void createRestoreDefault(final Composite parent) {
+            // security realm Label
+            this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
+            WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_REALM);
 
-		// Create page
-		Composite restoreDefault = WidgetFactory.createPanel(parent, SWT.NONE,
-				GridData.FILL_HORIZONTAL, 1);
+            // security realm
+            this.txfSecurityRealm = WidgetFactory.createTextField(httpBasicFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            text = getString("securityRealmTooltip"); //$NON-NLS-1$;
+            this.txfSecurityRealm.setToolTipText(text);
+            this.txfSecurityRealm.setEnabled(false);
 
-		GridLayout layout = new GridLayout();
-		restoreDefault.setLayout(layout);
-		layout.numColumns = 2;
+            // security role Label
+            this.SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
+            WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_ROLE);
 
-		// Restore default button
-		String text = getString("restoreDefaultButtonText"); //$NON-NLS-1$ 
-		this.restoreDefaultButton = WidgetFactory.createButton(restoreDefault, text,
-				GridData.END);
-		text = getString("restoreDefaultTooltip"); //$NON-NLS-1$
-		this.restoreDefaultButton.setToolTipText(text);
-		this.restoreDefaultButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(final SelectionEvent event) {
-				restoreDefaultButtonPressed();
-			}
-		});
+            // security role
+            this.txfSecurityRole = WidgetFactory.createTextField(httpBasicFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            text = getString("securityRoleTooltip"); //$NON-NLS-1$;
+            this.txfSecurityRole.setToolTipText(text);
+            this.txfSecurityRole.setEnabled(false);
 
-	}
+            // WS-Security Options
+            final Group wsSecurityFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
+                                                                          WS_SECURITY_OPTIONS_GROUP,
+                                                                          GridData.FILL_HORIZONTAL,
+                                                                          3,
+                                                                          3);
 
-	/**
-	 * @since 7.1
-	 */
-	private void addListeners() {
+            // security username Label
+            this.SECURITY_USERNAME = getString("securityUsernameLabel"); //$NON-NLS-1$       
+            WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_USERNAME);
 
-		ModifyListener modifyListener = new ModifyListener() {
-			public void modifyText(ModifyEvent theEvent) {
-				validatePage();
-				setWarFileNameInDialog();
-			}
-		};
+            // security username
+            this.txfSecurityUsername = WidgetFactory.createTextField(wsSecurityFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            text = getString("securityUsernameTooltip"); //$NON-NLS-1$;
+            this.txfSecurityUsername.setToolTipText(text);
+            this.txfSecurityUsername.setEnabled(false);
 
-		this.txfWarFileDeploymentLocation.addModifyListener(modifyListener);
-		this.txfContext.addModifyListener(modifyListener);
-		this.txfHost.addModifyListener(modifyListener);
-		this.txfPort.addModifyListener(modifyListener);
-		this.txfJNDIName.addModifyListener(modifyListener);
-		this.txfNamespace.addModifyListener(modifyListener);
-		this.txfSecurityRealm.addModifyListener(modifyListener);
-		this.txfSecurityRole.addModifyListener(modifyListener);
-		this.txfSecurityUsername.addModifyListener(modifyListener);
-		this.txfSecurityPassword.addModifyListener(modifyListener);
-	}
+            // security password Label
+            this.SECURITY_PASSWORD = getString("securityPasswordLabel"); //$NON-NLS-1$       
+            WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_PASSWORD);
 
-	protected void setWarFileNameInDialog() {
-		dialog.setWarFileName(txfContext.getText());
-	}
+            // security password
+            this.txfSecurityPassword = WidgetFactory.createTextField(wsSecurityFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            text = getString("securityPasswordTooltip"); //$NON-NLS-1$;
+            this.txfSecurityPassword.setToolTipText(text);
+            this.txfSecurityPassword.setEnabled(false);
+        }
 
-	/**
-	 * restore default values for text fields.
-	 * 
-	 * @since 7.1
-	 */
-	private void restoreDefaultButtonPressed() {
-		this.txfWarFileDeploymentLocation.setText(WarDataserviceModel.getInstance()
-				.getWarFilenameDefault());
-		this.txfContext.setText(WarDataserviceModel.getInstance()
-				.getContextNameDefault());
-		this.txfHost.setText(WarDataserviceModel.getInstance().getHostNameDefault());
-		this.txfPort.setText(WarDataserviceModel.getInstance().getPortDefault());
-		this.txfNamespace.setText(WarDataserviceModel.getInstance().getTnsDefault());
-		this.txfJNDIName.setText(WarDataserviceModel.getInstance()
-				.getJndiNameDefault());
-		this.noSecurityButton.setSelection(true);
-		this.basicSecurityButton.setSelection(false);
-		this.wsSecurityButton.setSelection(false);
-		this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
-		this.txfSecurityRealm.setEnabled(false);
-		this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
-		this.txfSecurityRole.setEnabled(false);
-		this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
-    	this.txfSecurityUsername.setEnabled(false);
-    	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
-    	this.txfSecurityPassword.setEnabled(false);
-	}
+        // namespace Label
+        this.NAMESPACE = getString("namespaceLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, this.NAMESPACE);
 
-	void handleWarBrowseSourceSelected() {
-		DirectoryDialog folderDialog = new DirectoryDialog(getShell());
-		folderDialog.setText(getString("warTitle")); //$NON-NLS-1$
-		folderDialog.setMessage(getString("warMessage")); //$NON-NLS-1$
-		folderDialog.setFilterPath(txfWarFileDeploymentLocation.getText());
-		String selectedUnit = folderDialog.open();
+        // namespace
+        this.txfNamespace = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("namespaceTooltip"); //$NON-NLS-1$
+        this.txfNamespace.setToolTipText(text);
 
-		// modify history if new model selected
-		if (selectedUnit != null) {
-			this.txfWarFileDeploymentLocation.setText(selectedUnit);
-		}
-	}
+        // WAR file save location Label
+        this.WARFILELOCATION = getString("warFileSaveLocationLabel"); //$NON-NLS-1$       
+        WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, this.WARFILELOCATION);
 
-	/**
-	 * @since 7.1.1
-	 */
-	void noSecurityButtonSelected() {
+        // WAR file save location textfield
+        this.txfWarFileDeploymentLocation = WidgetFactory.createTextField(pnlContents, GridData.FILL_HORIZONTAL, 2);
+        text = getString("warFileSaveLocationTooltip"); //$NON-NLS-1$
+        this.txfWarFileDeploymentLocation.setToolTipText(text);
+
+        // WAR folder browse button
+        this.warBrowseButton = WidgetFactory.createButton(pnlContents, InternalUiConstants.Widgets.BROWSE_BUTTON);
+        this.warBrowseButton.setText(getString("changeButtonText")); //$NON-NLS-1$
+        this.warBrowseButton.setToolTipText(text);
+        this.warBrowseButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent theEvent ) {
+                handleWarBrowseSourceSelected();
+            }
+        });
+        
+    }
+
+    void setConnectionTypeModified() {
+        // disable JNDI name text
+    }
+
+    /**
+     * @param parent
+     * @since 7.1
+     */
+    private void createRestoreDefault( final Composite parent ) {
+
+        // Create page
+        Composite restoreDefault = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL, 1);
+
+        GridLayout layout = new GridLayout();
+        restoreDefault.setLayout(layout);
+        layout.numColumns = 2;
+
+        // Restore default button
+        String text = getString("restoreDefaultButtonText"); //$NON-NLS-1$ 
+        this.restoreDefaultButton = WidgetFactory.createButton(restoreDefault, text, GridData.END);
+        text = getString("restoreDefaultTooltip"); //$NON-NLS-1$
+        this.restoreDefaultButton.setToolTipText(text);
+        this.restoreDefaultButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected( final SelectionEvent event ) {
+                restoreDefaultButtonPressed();
+            }
+        });
+
+    }
+
+    /**
+     * @since 7.1
+     */
+    private void addListeners() {
+
+        ModifyListener modifyListener = new ModifyListener() {
+            public void modifyText( ModifyEvent theEvent ) {
+                validatePage();
+                setWarFileNameInDialog();
+            }
+        };
+
+        this.txfWarFileDeploymentLocation.addModifyListener(modifyListener);
+        this.txfContext.addModifyListener(modifyListener);
+        this.txfHost.addModifyListener(modifyListener);
+        this.txfPort.addModifyListener(modifyListener);
+        this.txfJNDIName.addModifyListener(modifyListener);
+        this.txfNamespace.addModifyListener(modifyListener);
+        this.txfSecurityRealm.addModifyListener(modifyListener);
+        this.txfSecurityRole.addModifyListener(modifyListener);
+        this.txfSecurityUsername.addModifyListener(modifyListener);
+        this.txfSecurityPassword.addModifyListener(modifyListener);
+    }
+
+    protected void setWarFileNameInDialog() {
+        dialog.setWarFileName(txfContext.getText());
+    }
+
+    /**
+     * restore default values for text fields.
+     * 
+     * @since 7.1
+     */
+    private void restoreDefaultButtonPressed() {
+        this.txfWarFileDeploymentLocation.setText(WarDataserviceModel.getInstance().getWarFilenameDefault());
+        this.txfContext.setText(WarDataserviceModel.getInstance().getContextNameDefault());
+        this.txfHost.setText(WarDataserviceModel.getInstance().getHostNameDefault());
+        this.txfPort.setText(WarDataserviceModel.getInstance().getPortDefault());
+        this.txfNamespace.setText(WarDataserviceModel.getInstance().getTnsDefault());
+        this.txfJNDIName.setText(WarDataserviceModel.getInstance().getJndiNameDefault());
+        this.noSecurityButton.setSelection(true);
+        this.basicSecurityButton.setSelection(false);
+        this.wsSecurityButton.setSelection(false);
+        this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityRealm.setEnabled(false);
+        this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityRole.setEnabled(false);
+        this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityUsername.setEnabled(false);
+        this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+        this.txfSecurityPassword.setEnabled(false);
+    }
+
+    void handleWarBrowseSourceSelected() {
+        DirectoryDialog folderDialog = new DirectoryDialog(getShell());
+        folderDialog.setText(getString("warTitle")); //$NON-NLS-1$
+        folderDialog.setMessage(getString("warMessage")); //$NON-NLS-1$
+        folderDialog.setFilterPath(txfWarFileDeploymentLocation.getText());
+        String selectedUnit = folderDialog.open();
+
+        // modify history if new model selected
+        if (selectedUnit != null) {
+            this.txfWarFileDeploymentLocation.setText(selectedUnit);
+        }
+    }
+
+    /**
+     * @since 7.1.1
+     */
+    void noSecurityButtonSelected() {
         if (this.noSecurityButton.getSelection()) {
-        	WarDataserviceModel.getInstance().setSecurityTypeDefault(NOSECURITY);    
-        	this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityRealm.setEnabled(false);
-        	this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityRole.setEnabled(false);
-        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityUsername.setEnabled(false);
-        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityPassword.setEnabled(false);
+            WarDataserviceModel.getInstance().setSecurityTypeDefault(NOSECURITY);
+            this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRealm.setEnabled(false);
+            this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRole.setEnabled(false);
+            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setEnabled(false);
+            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setEnabled(false);
         }
     }
-	
-	/**
-	 * @since 7.1.1
-	 */
-	void basicSecurityButtonSelected() {
+
+    /**
+     * @since 7.1.1
+     */
+    void basicSecurityButtonSelected() {
         if (this.basicSecurityButton.getSelection()) {
-        	WarDataserviceModel.getInstance().setSecurityTypeDefault(BASIC);    
-        	this.txfSecurityRealm.setText("teiid-security"); //$NON-NLS-1$
-        	WarDataserviceModel.getInstance().setSecurityRealmDefault("teiid-security"); //$NON-NLS-1$
-        	this.txfSecurityRealm.setEnabled(true);
-        	this.txfSecurityRole.setText("MyRole"); //$NON-NLS-1$
-        	WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole"); //$NON-NLS-1$
-        	this.txfSecurityRole.setEnabled(true);
-        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityUsername.setEnabled(false);
-        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityPassword.setEnabled(false);
+            WarDataserviceModel.getInstance().setSecurityTypeDefault(BASIC);
+            this.txfSecurityRealm.setText("teiid-security"); //$NON-NLS-1$
+            WarDataserviceModel.getInstance().setSecurityRealmDefault("teiid-security"); //$NON-NLS-1$
+            this.txfSecurityRealm.setEnabled(true);
+            this.txfSecurityRole.setText("MyRole"); //$NON-NLS-1$
+            WarDataserviceModel.getInstance().setSecurityRoleDefault("MyRole"); //$NON-NLS-1$
+            this.txfSecurityRole.setEnabled(true);
+            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setEnabled(false);
+            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setEnabled(false);
         }
     }
-	
-	/**
-	 * @since 7.1.1
-	 */
-	void wsSecurityButtonSelected() {
+
+    /**
+     * @since 7.1.1
+     */
+    void wsSecurityButtonSelected() {
         if (this.wsSecurityButton.getSelection()) {
-        	WarDataserviceModel.getInstance().setSecurityTypeDefault(WSSE);        
-        	this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityRealm.setEnabled(false);
-        	this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityRole.setEnabled(false);
-        	this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityUsername.setEnabled(true);
-        	this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
-        	this.txfSecurityPassword.setEnabled(true);
+            WarDataserviceModel.getInstance().setSecurityTypeDefault(WSSE);
+            this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRealm.setEnabled(false);
+            this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityRole.setEnabled(false);
+            this.txfSecurityUsername.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityUsername.setEnabled(true);
+            this.txfSecurityPassword.setText(StringUtil.Constants.EMPTY_STRING);
+            this.txfSecurityPassword.setEnabled(true);
         }
     }
 

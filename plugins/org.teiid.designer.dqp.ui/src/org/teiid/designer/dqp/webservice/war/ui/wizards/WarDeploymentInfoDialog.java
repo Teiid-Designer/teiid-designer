@@ -165,17 +165,17 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         }
 
     }
-    
+
     @Override
     public int open() {
-    	// TODO Auto-generated method stub
-    	int rc = super.open();
-    	
-    	if (rc != CANCEL){
-    		return deploymentStatus.getSeverity();
-    	}
-    	
-    	return rc;
+        // TODO Auto-generated method stub
+        int rc = super.open();
+
+        if (rc != CANCEL) {
+            return deploymentStatus.getSeverity();
+        }
+
+        return rc;
     }
 
     void execute( IProgressMonitor monitor ) {
@@ -197,7 +197,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
                 // log status
                 DqpUiPlugin.UTIL.log(deploymentStatus);
                 setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity());
-                
+
                 super.okPressed();
             }
         } catch (RuntimeException err) {
@@ -303,23 +303,23 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     }
 
     /**
-     * set default jndiName, by default the jndiName is "java:teiidvdb".
+     * set default jndiName, by default the jndiName is "{REPLACE_WITH_VDB_JNDI_NAME}".
      * 
      * @since 7.1
      */
     private void loadJndiNameDefault() {
-        WarDataserviceModel.getInstance().setJndiNameDefault("java:teiidvdb");//$NON-NLS-1$
+        WarDataserviceModel.getInstance().setJndiNameDefault("java:{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
     }
 
     /**
-     * set default jndiName, by default the jndiName is "java:teiidvdb".
+     * set default security type, by default the type is "none".
      * 
      * @since 7.1.1
      */
     private void loadSecurityTypeDefault() {
         WarDataserviceModel.getInstance().setSecurityTypeDefault("none");//$NON-NLS-1$
     }
-    
+
     public void setWarFileName( String name ) {
         warFileName = name;
     }

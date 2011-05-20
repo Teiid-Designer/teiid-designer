@@ -31,7 +31,7 @@ public class WarDataserviceModel {
     private String securityRole;
     private String securityUsername;
     private String securityPassword;
-        
+
     private String warFilenameDefault;
     private String hostNameDefault;
     private String portDefault;
@@ -152,7 +152,7 @@ public class WarDataserviceModel {
     public String getJndiName() {
         return this.jndiName;
     }
-    
+
     /**
      * @return Returns securityType value.
      * @since 7.1
@@ -168,7 +168,7 @@ public class WarDataserviceModel {
     public String getSecurityRealm() {
         return this.securityRealm;
     }
-    
+
     /**
      * @return Returns securityRole value.
      * @since 7.1
@@ -176,7 +176,7 @@ public class WarDataserviceModel {
     public String getSecurityRole() {
         return this.securityRole;
     }
-    
+
     /**
      * @param vdbLocation The vdbLocation to set.
      * @since 7.1
@@ -200,11 +200,11 @@ public class WarDataserviceModel {
      * @since 7.1
      */
     public void setJndiNameDefault( String jndiNameDefault ) {
-        this.jndiNameDefault = jndiNameDefault;
+        // this.jndiNameDefault = jndiNameDefault;
         this.jndiName = jndiNameDefault;
 
     }
-    
+
     /**
      * @param securityType The SecurityType to set.
      * @since 7.1.1
@@ -224,7 +224,7 @@ public class WarDataserviceModel {
         this.securityRealm = securityRealmDefault;
 
     }
-    
+
     /**
      * @param securityRoleDefault The securityRoleDefault to set.
      * @since 7.1.1
@@ -234,7 +234,7 @@ public class WarDataserviceModel {
         this.securityRole = securityRoleDefault;
 
     }
-    
+
     /**
      * @param securityRealm The SecurityRealm to set.
      * @since 7.1.1
@@ -242,7 +242,7 @@ public class WarDataserviceModel {
     public void setSecurityRealm( String securityRealm ) {
         this.securityRealm = securityRealm;
     }
-    
+
     /**
      * @param securityRole The SecurityRole to set.
      * @since 7.1.1
@@ -251,7 +251,7 @@ public class WarDataserviceModel {
         this.securityRole = securityRole;
 
     }
-    
+
     /**
      * @param jndiName The jndiName to set.
      * @since 7.1
@@ -342,7 +342,7 @@ public class WarDataserviceModel {
     public String getSecurityTypeDefault() {
         return this.securityTypeDefault;
     }
-    
+
     /**
      * @return Returns the securityRealmDefault.
      * @since 7.1
@@ -350,7 +350,7 @@ public class WarDataserviceModel {
     public String getSecurityRealmDefault() {
         return this.securityRealmDefault;
     }
-    
+
     /**
      * @return Returns the securityRoleDefault.
      * @since 7.1
@@ -358,7 +358,7 @@ public class WarDataserviceModel {
     public String getSecurityRoleDefault() {
         return this.securityRoleDefault;
     }
-    
+
     /**
      * @return Returns the JNDINameDefault.
      * @since 7.1
@@ -436,71 +436,71 @@ public class WarDataserviceModel {
     }
 
     /**
-	 * @param securityUsername the securityUsername to set
-	 * @since 7.1.1
-	 */
-	public void setSecurityUsername(String securityUsername) {
-		this.securityUsername = securityUsername;
-	}
+     * @param securityUsername the securityUsername to set
+     * @since 7.1.1
+     */
+    public void setSecurityUsername( String securityUsername ) {
+        this.securityUsername = securityUsername;
+    }
 
-	/**
-	 * @return the securityUsername
-	 * @since 7.1.1
-	 */
-	public String getSecurityUsername() {
-		return securityUsername;
-	}
+    /**
+     * @return the securityUsername
+     * @since 7.1.1
+     */
+    public String getSecurityUsername() {
+        return securityUsername;
+    }
 
-	/**
-	 * @param securityPassword the securityPassword to set
-	 * @since 7.1.1
-	 */
-	public void setSecurityPassword(String securityPassword) {
-		this.securityPassword = securityPassword;
-	}
+    /**
+     * @param securityPassword the securityPassword to set
+     * @since 7.1.1
+     */
+    public void setSecurityPassword( String securityPassword ) {
+        this.securityPassword = securityPassword;
+    }
 
-	/**
-	 * @return the securityPassword
-	 * @since 7.1.1
-	 */
-	public String getSecurityPassword() {
-		return securityPassword;
-	}
+    /**
+     * @return the securityPassword
+     * @since 7.1.1
+     */
+    public String getSecurityPassword() {
+        return securityPassword;
+    }
 
-	/**
-	 * @param securityUsernameDefault the securityUsernameDefault to set
-	 * @since 7.1.1
-	 */
-	public void setSecurityUsernameDefault(String securityUsernameDefault) {
-		this.securityUsernameDefault = securityUsernameDefault;
-		this.securityUsername = securityUsernameDefault;
-	}
+    /**
+     * @param securityUsernameDefault the securityUsernameDefault to set
+     * @since 7.1.1
+     */
+    public void setSecurityUsernameDefault( String securityUsernameDefault ) {
+        this.securityUsernameDefault = securityUsernameDefault;
+        this.securityUsername = securityUsernameDefault;
+    }
 
-	/**
-	 * @return the securityUsernameDefault
-	 * @since 7.1.1 
-	 */
-	public String getSecurityUsernameDefault() {
-		return securityUsernameDefault;
-	}
+    /**
+     * @return the securityUsernameDefault
+     * @since 7.1.1
+     */
+    public String getSecurityUsernameDefault() {
+        return securityUsernameDefault;
+    }
 
-	/**
-	 * @param securityPasswordDefault the securityPasswordDefault to set
-	 * @since 7.1.1
-	 */
-	public void setSecurityPasswordDefault(String securityPasswordDefault) {
-		this.securityPasswordDefault = securityPasswordDefault;
-		this.securityPassword = securityPasswordDefault;
-	}
+    /**
+     * @param securityPasswordDefault the securityPasswordDefault to set
+     * @since 7.1.1
+     */
+    public void setSecurityPasswordDefault( String securityPasswordDefault ) {
+        this.securityPasswordDefault = securityPasswordDefault;
+        this.securityPassword = securityPasswordDefault;
+    }
 
-	/**
-	 * @return the securityPasswordDefault
-	 * @since 7.1.1 
-	 */
-	public String getSecurityPasswordDefault() {
-		return securityPasswordDefault;
-	}
-	
+    /**
+     * @return the securityPasswordDefault
+     * @since 7.1.1
+     */
+    public String getSecurityPasswordDefault() {
+        return securityPasswordDefault;
+    }
+
     /**
      * @return
      * @since 7.1
@@ -521,7 +521,7 @@ public class WarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
-        
+
         return properties;
     }
 }
