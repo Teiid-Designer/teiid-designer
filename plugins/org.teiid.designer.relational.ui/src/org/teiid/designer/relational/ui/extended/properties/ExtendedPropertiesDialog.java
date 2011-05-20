@@ -95,9 +95,14 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
     private IAction deleteAllPropertyAction;
 
     /**
-     * Action to remove a property
+     * Action to delete a property
      */
     private IAction deletePropertyAction;
+
+    /**
+     * Action to restore all properties to
+     */
+    private IAction restorePropertyAction;
 
     public static ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
@@ -167,24 +172,28 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         // If user clicks okay, remove properties that existed in the initial state
-        // and add properties from the working state
+        // and add properties from the working state. We will only do this if the properties
+        // have changed from the original state.
 
-        TableItem[] test = propertiesViewer.getTable().getItems();
-        Properties workingExtendedProperties = new Properties();
-        for (TableItem item : test) {
-            ExtendedProperty property = (ExtendedProperty)item.getData();
-            workingExtendedProperties.put(property.getDefinition().getDisplayName(), property.getValue());
-        }
+        if (currentStateDifferentFromInitalState()) {
 
-        try {
-            for (String key : this.initialExtendedProperties.stringPropertyNames()) {
-                ANNOTATION_HELPER.removeProperty(this.theEObject, key);
+            TableItem[] test = propertiesViewer.getTable().getItems();
+            Properties workingExtendedProperties = new Properties();
+            for (TableItem item : test) {
+                ExtendedProperty property = (ExtendedProperty)item.getData();
+                workingExtendedProperties.put(property.getDefinition().getDisplayName(), property.getValue());
             }
-            ANNOTATION_HELPER.addProperties(this.theEObject, workingExtendedProperties);
-            this.theEObject.eResource().setModified(true);
-        } catch (ModelerCoreException e) {
-            UiConstants.Util.log(e);
-            throw new RuntimeException();
+
+            try {
+                for (String key : this.initialExtendedProperties.stringPropertyNames()) {
+                    ANNOTATION_HELPER.removeProperty(this.theEObject, key);
+                }
+                ANNOTATION_HELPER.addProperties(this.theEObject, workingExtendedProperties);
+                this.theEObject.eResource().setModified(true);
+            } catch (ModelerCoreException e) {
+                UiConstants.Util.log(e);
+                throw new RuntimeException();
+            }
         }
 
         super.okPressed();
@@ -377,6 +386,27 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
         toolBarMgr.add(new Separator());
         toolBarMgr.add(this.deleteAllPropertyAction);
 
+        //
+        // add the restore properties action to the toolbar
+        //
+
+        this.restorePropertyAction = new Action(Util.getString(I18N_PREFIX + "restorePropertyAction.text"), SWT.BORDER) { //$NON-NLS-1$
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            @Override
+            public void run() {
+                handleRestoreProperties();
+            }
+        };
+
+        this.restorePropertyAction.setToolTipText(Util.getString(I18N_PREFIX + "restorePropertyAction.toolTip")); //$NON-NLS-1$
+        this.restorePropertyAction.setEnabled(false);
+        toolBarMgr.add(new Separator());
+        toolBarMgr.add(this.restorePropertyAction);
+
         // update toolbar to show all actions
         toolBarMgr.update(true);
 
@@ -394,6 +424,46 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
         }
 
         return (ExtendedProperty)((IStructuredSelection)selection).getFirstElement();
+    }
+
+    public boolean currentStateDifferentFromInitalState() {
+
+        Properties currentStateProperties = getCurrentState();
+
+        if (currentStateProperties.size() != this.initialExtendedProperties.size()) return true;
+
+        String currentValue;
+        String initialValue;
+
+        for (Object key : currentStateProperties.keySet()) {
+            if (this.workingExtendedProperties.containsKey(key)) {
+                currentValue = this.initialExtendedProperties.getProperty((String)key);
+                initialValue = currentStateProperties.getProperty((String)key);
+            } else {
+                return true;
+            }
+
+            if (!currentValue.equals(initialValue)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    private Properties getCurrentState() {
+        Properties properties = new Properties();
+
+        TableItem[] itemArray = this.propertiesViewer.getTable().getItems();
+        for (TableItem item : itemArray) {
+            ExtendedProperty property = (ExtendedProperty)item.getData();
+            String key = property.getDefinition().getDisplayName();
+            properties.setProperty(key, property.getValue());
+        }
+
+        return properties;
+
     }
 
     Set<ExtendedProperty> getExtendedProperties() {
@@ -462,6 +532,8 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
                     break;
                 }
             }
+
+            this.restorePropertyAction.setEnabled(currentStateDifferentFromInitalState());
         }
     }
 
@@ -471,6 +543,7 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
 
         this.workingExtendedProperties.remove(selectedProperty.getDefinition().getDisplayName());
 
+        this.restorePropertyAction.setEnabled(currentStateDifferentFromInitalState());
         // update UI
         this.propertiesViewer.refresh();
         WidgetUtil.pack(this.propertiesViewer);
@@ -484,6 +557,32 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
 
         if (cont) {
             this.workingExtendedProperties = new Properties();
+
+            this.restorePropertyAction.setEnabled(true);
+            // update UI
+            this.propertiesViewer.refresh();
+            WidgetUtil.pack(this.propertiesViewer);
+        }
+
+        this.restorePropertyAction.setEnabled(currentStateDifferentFromInitalState());
+    }
+
+    void handleRestoreProperties() {
+
+        boolean cont = false;
+        cont = MessageDialog.openConfirm(this.parent.getShell(), UiConstants.Util.getString(I18N_PREFIX + "confirmRestore"), //$NON-NLS-1$
+                                         UiConstants.Util.getString(I18N_PREFIX + "confirmRestoreMessage")); //$NON-NLS-1$
+
+        if (cont) {
+            try {
+                this.propertiesViewer.getTable().removeAll();
+                this.workingExtendedProperties.clear();
+                this.workingExtendedProperties = ANNOTATION_HELPER.getExtendedProperties(this.theEObject);
+            } catch (ModelerCoreException e) {
+
+            }
+
+            this.restorePropertyAction.setEnabled(false);
 
             // update UI
             this.propertiesViewer.refresh();
@@ -501,6 +600,8 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
         } else {
             this.deletePropertyAction.setEnabled(true);
         }
+
+        this.restorePropertyAction.setEnabled(currentStateDifferentFromInitalState());
     }
 
     class PropertyNameLabelProvider extends ColumnLabelProvider {
