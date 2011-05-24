@@ -25,7 +25,6 @@ import com.metamatrix.modeler.modelgenerator.uml2.Uml2ModelGeneratorPlugin;
 public class Uml2RelationalRelationTrackerImpl extends RelationTrackerImpl {
 
     private StringNameValidator validator = new StringNameValidator();
-    private Set existingNames = new HashSet();
     
     /**
      * Construct an instance of Uml2RelationalRelationTrackerImpl.
@@ -67,9 +66,8 @@ public class Uml2RelationalRelationTrackerImpl extends RelationTrackerImpl {
             params[1] = ""; //$NON-NLS-1$
         }
         String name = Uml2ModelGeneratorPlugin.Util.getString("Uml2RelationalRelationTrackerImpl.RelationalMetaclass_EntityName_generated_from_UMLmetaclass_EntityName",params); //$NON-NLS-1$
-        final String validName = validator.createUniqueName(name, this.existingNames);
+        final String validName = validator.createUniqueName(name);
         name = (validName == null ? name : validName);
-        this.existingNames.add(name);
         relationship.setName(name);
     }
 

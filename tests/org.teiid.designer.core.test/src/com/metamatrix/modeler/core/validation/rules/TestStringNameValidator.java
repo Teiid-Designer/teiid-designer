@@ -473,16 +473,32 @@ public class TestStringNameValidator extends TestCase {
         helpTestCreateUniqueName(val,201,MODEL_IMPORT_NAME_PREFIX.substring(0,length-1)+10);
     }
 
+    public void testCaseSensitiveValidator() {
+        StringNameValidator val = new StringNameValidator(true);
+        String existingName = "objectName"; //$NON-NLS-1$
+        val.addExistingName(existingName);
+        String name = val.createUniqueName(existingName.toUpperCase());
+        assertNull(name);
+    }
+
+    public void testCaseInsensitiveValidator() {
+        StringNameValidator val = new StringNameValidator(false);
+        String existingName = "objectName"; //$NON-NLS-1$
+        val.addExistingName(existingName);
+        String name = val.createUniqueName(existingName.toUpperCase());
+        assertNotNull(name);
+    }
+
     protected void helpTestCreateUniqueName( final StringNameValidator val, final int largest, final String expectedName ) {
         final String name = MODEL_IMPORT_NAME_PREFIX;
         final List existingNames = new LinkedList();
         existingNames.add(MODEL_IMPORT_NAME_PREFIX);
         for ( int j=0;j!=3;j++) {       // add 3 sets of duplicates
             for ( int i=1;i!=largest;++i ) {
-                existingNames.add(MODEL_IMPORT_NAME_PREFIX+i);
+                val.addExistingName(MODEL_IMPORT_NAME_PREFIX+i);
             }
         }
-        final String newName = val.createUniqueName(name,existingNames);
+        final String newName = val.createUniqueName(name);
         assertNotNull(newName);
         assertEquals(expectedName, newName);
     }

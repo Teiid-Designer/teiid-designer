@@ -80,6 +80,7 @@ public class XsdSchemaBuilderImpl {
     private final XSDFactory factory = XSDFactory.eINSTANCE;
     private final XsdBuilderOptions ops;
     private final StringNameValidator nameValidator = new StringNameValidator();
+    private final StringNameValidator inputNameValidator = new StringNameValidator();
     private final Collection addedNamespaces = new HashSet();
     private final Collection includedSchemas = new HashSet();
     private final Collection completedRoots = new HashSet();
@@ -92,9 +93,7 @@ public class XsdSchemaBuilderImpl {
     private XSDResourceImpl currentResource;
     private ModelResource modelResource;
     private Collection rootElements;
-    private Collection rootElementNames;
     private Collection inputRootElements;
-    private Collection inputRootElementNames;
     private HashMap outputToInputMap;
     private HashMap tableToOutputMap;
     private HashMap refMap;
@@ -159,9 +158,7 @@ public class XsdSchemaBuilderImpl {
         this.result = result == null ? new MultiStatus(XsdPlugin.PLUGIN_ID, 0,
                                                        XsdPlugin.Util.getString("XsdSchemaBuilderImpl.result"), null) : result; //$NON-NLS-1$
         rootElements = new ArrayList();
-        rootElementNames = new ArrayList();
         inputRootElements = new ArrayList();
-        inputRootElementNames = new ArrayList();
         outputToInputMap = new HashMap();
         tableToOutputMap = new HashMap();
         refMap = new HashMap();
@@ -281,7 +278,7 @@ public class XsdSchemaBuilderImpl {
         addedNamespaces.clear();
         includedSchemas.clear();
         outputRoots.clear();
-        inputRootElementNames = null;
+        this.inputNameValidator.clearExistingNames();
         inputRootElements = null;
         modelResource = null;
         reusableSchema = null;
@@ -651,9 +648,9 @@ public class XsdSchemaBuilderImpl {
         String rootName = entity.getName();
         String uniqueName = null;
         if (isInput) {
-            uniqueName = this.nameValidator.createValidUniqueName(rootName + INPUT_SUFFIX, inputRootElementNames);
+            uniqueName = this.inputNameValidator.createValidUniqueName(rootName + INPUT_SUFFIX);
         } else {
-            uniqueName = this.nameValidator.createValidUniqueName(rootName + OUTPUT_SUFFIX, rootElementNames);
+            uniqueName = this.nameValidator.createValidUniqueName(rootName + OUTPUT_SUFFIX);
         }
 
         // if null, that means original name was unique and valid
@@ -759,7 +756,6 @@ public class XsdSchemaBuilderImpl {
                 // Parent == null means this is a root entity
                 reusableSchema.getContents().add(element);
                 inputRootElements.add(element);
-                inputRootElementNames.add(uniqueName);
 
                 final XSDElementDeclaration outGlobal = (XSDElementDeclaration)tableToOutputMap.get(entity);
                 if (trackMappings && outGlobal != null) {

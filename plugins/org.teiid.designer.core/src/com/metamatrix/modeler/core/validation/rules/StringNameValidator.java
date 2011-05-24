@@ -9,18 +9,14 @@ package com.metamatrix.modeler.core.validation.rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
+import java.util.TreeMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
@@ -44,6 +40,8 @@ public class StringNameValidator {
     private final boolean caseSensitive;
     private final char replacementCharacter;
     private final char[] validNonLetterOrDigitChars;
+    
+    private final ExistingNames existingNames;
 
     /**
      * Construct an instance of StringNameValidator.
@@ -68,6 +66,22 @@ public class StringNameValidator {
 	        this.validNonLetterOrDigitChars = validNonLetterOrDigitChars;
 	        Arrays.sort(this.validNonLetterOrDigitChars);
         }
+
+        this.existingNames = new ExistingNames(this.caseSensitive);
+    }
+
+    /**
+     * @param name the name to add to the existing name collection (should not be <code>null</code>)
+     */
+    public void addExistingName(String name) {
+        this.existingNames.add(name);
+    }
+
+    /**
+     * Clears the existing name collection.
+     */
+    public void clearExistingNames() {
+        this.existingNames.clear();
     }
 
     /**
@@ -622,11 +636,9 @@ public class StringNameValidator {
      * Create a valid name that is does not match the supplied set of "existing" names.
      * 
      * @param name the name to be made valid; may not be null
-     * @param existingNames the (optional) set of "existing" names that, if supplied, the returned name should not match
      * @return the new name, or null if the name was already valid (i.e., would be unchanged by this method)
      */
-    public String createValidUniqueName( final String name,
-                                         final Collection existingNames ) {
+    public String createValidUniqueName( final String name ) {
         String result = null;
 
         // Create a valid name ...
@@ -635,7 +647,7 @@ public class StringNameValidator {
         else result = validName;
 
         // Create a unique name ...
-        final String uniqueName = createUniqueName(validName, existingNames);
+        final String uniqueName = createUniqueName(validName);
         if (uniqueName != null) {
             // Was not unique ...
             result = uniqueName;
@@ -648,33 +660,10 @@ public class StringNameValidator {
      * Create a name that is does not match the supplied set of "existing" names.
      * 
      * @param name the name to be made valid; may not be null
-     * @param existingNames the (optional) set of "existing" names that, if supplied, the returned name should not match
      * @return the new name, or null if the name was already unique (i.e., would be unchanged by this method)
      */
-    public String createUniqueName( final String name,
-                                    final Collection existingNames ) {
+    public String createUniqueName(final String name) {
         CoreArgCheck.isNotNull(name);
-        if (existingNames == null || existingNames.isEmpty()) {
-            return null;
-        }
-
-        // Build up the set of unique names ...
-        final Set names = new HashSet();
-        if (this.isCaseSensitive()) {
-            final Iterator iter = existingNames.iterator();
-            while (iter.hasNext()) {
-                final String existingName = (String)iter.next();
-                names.add(existingName);
-            }
-        } else {
-            final Iterator iter = existingNames.iterator();
-            while (iter.hasNext()) {
-                final String existingName = (String)iter.next();
-                if (existingName != null) {
-                    names.add(existingName.toUpperCase());
-                }
-            }
-        }
 
         // Compute the counter at which we have to start taking away characters ...
         final int roomForCounterChars = Math.max(0, this.getMaximumLength() - name.length());
@@ -684,14 +673,9 @@ public class StringNameValidator {
         boolean changed = false;
         int counter = 0;
         while (true) {
-            // See if the name is a duplicate ...
-            String workingName = this.isCaseSensitive() ? theName : theName.toUpperCase();
-            if (!names.contains(workingName)) {
+            if (this.existingNames.add(theName)) {
                 // It is unique, so return ...
-                if (changed) {
-                    return theName;
-                }
-                return null;
+                return (changed ? theName : null);
             }
 
             // The name is not unique, so compute a new one ...
@@ -729,6 +713,132 @@ public class StringNameValidator {
                 changed = true;
                 theName = name + counter;
             }
+        }
+    }
+
+    class Node implements Comparable {
+
+        private final char content;
+        boolean marker;
+        private TreeMap<Character, Node> kids;
+
+        Node( char c ) {
+            this.content = c;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see java.lang.Comparable#compareTo(java.lang.Object)
+         */
+        @Override
+        public int compareTo( Object obj ) {
+            Node that = (Node)obj;
+
+            if (this.content == that.content) {
+                return 0;
+            }
+
+            return (this.content - that.content);
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals( Object obj ) {
+            if (this == obj) {
+                return true;
+            }
+
+            if ((obj == null) || !getClass().equals(obj.getClass())) {
+                return false;
+            }
+
+            return (this.content == ((Node)obj).content);
+        }
+
+        void clearChildren() {
+            if (this.kids != null) {
+                this.kids.clear();
+            }
+        }
+
+        TreeMap getChildren() {
+            if (this.kids == null) {
+                this.kids = new TreeMap<Character, Node>();
+            }
+
+            return this.kids;
+        }
+
+        boolean hasChildren() {
+            return ((this.kids != null) && !this.kids.isEmpty());
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            return Character.valueOf(this.content).hashCode();
+        }
+
+        Node subNode( char c ) {
+            if (this.kids == null) {
+                return null;
+            }
+
+            return this.kids.get(c);
+        }
+    }
+
+    private class ExistingNames {
+
+        private final boolean caseSensitive;
+        private Node root;
+
+        public ExistingNames( boolean caseSensitive ) {
+            this.caseSensitive = caseSensitive;
+            this.root = new Node(' ');
+        }
+
+        public boolean add( String name ) {
+            boolean added = false;
+
+            if (!this.caseSensitive) {
+                name = name.toUpperCase();
+            }
+
+            Node current = this.root;
+
+            for (char c : name.toCharArray()) {
+                Node child = current.subNode(c);
+
+                if (child == null) {
+                    Node newKid = new Node(c);
+                    current.getChildren().put(c, newKid);
+                    current = newKid;
+                    added = true;
+                } else {
+                    current = child;
+                }
+            }
+
+            if (added || (current.marker == false)) {
+                // set marker to indicate end of a name
+                current.marker = true;
+            }
+
+            return added;
+        }
+
+        public void clear() {
+            this.root.clearChildren();
         }
     }
 
