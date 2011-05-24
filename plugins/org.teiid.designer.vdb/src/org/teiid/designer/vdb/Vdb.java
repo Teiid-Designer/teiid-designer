@@ -658,7 +658,6 @@ public final class Vdb {
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
          * is added.
          * 
-         * @see
          */
         public static final String TRANSLATOR_OVERRIDE_ADDED = "translatorOverrideAdded"; //$NON-NLS-1$
 
@@ -666,7 +665,6 @@ public final class Vdb {
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
          * override property is added, changed, or removed.
          * 
-         * @see
          */
         public static final String TRANSLATOR_PROPERTY = "translatorOverrideProperty"; //$NON-NLS-1$
 
@@ -674,7 +672,6 @@ public final class Vdb {
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a translator
          * is removed.
          * 
-         * @see
          */
         public static final String TRANSLATOR_OVERRIDE_REMOVED = "translatorOverrideRemoved"; //$NON-NLS-1$
     }
