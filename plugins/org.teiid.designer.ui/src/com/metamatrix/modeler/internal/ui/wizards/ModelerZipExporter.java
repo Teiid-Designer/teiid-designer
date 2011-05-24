@@ -131,10 +131,10 @@ public class ModelerZipExporter {
 		// this is a model file, look for "tags" with key values that start 
 		// with "connection" and remove the node
 		if (this.clearSourceConnectionInfo
-				&& resource.getFileExtension().equals("xmi")) {
+				&& resource.getFileExtension().equals("xmi")) { //$NON-NLS-1$
 			contentStream = resource.getContents(false);
 			doc = readXml(contentStream);
-			removeAll(doc, Node.ELEMENT_NODE, "tags", "connection");
+			removeAll(doc, Node.ELEMENT_NODE, "tags", "connection"); //$NON-NLS-1$ //$NON-NLS-2$
 			doc.normalize();
 			contentStream = convertDocToInputStream(doc);
 
@@ -166,7 +166,7 @@ public class ModelerZipExporter {
 	// of the specified type and specified name that satisfy the filter condition.
 	public static void removeAll(Node node, short nodeType, String name, String filter) {
 	    if (node.getNodeType() == nodeType && node.getNodeName().equals(name) 
-	    		&& node.getAttributes().getNamedItem("key").getTextContent().startsWith(filter)) {
+	    		&& node.getAttributes().getNamedItem("key").getTextContent().startsWith(filter)) { //$NON-NLS-1$
 	    	node.getParentNode().removeChild(node);
 	    } else {
 	        // Visit the children

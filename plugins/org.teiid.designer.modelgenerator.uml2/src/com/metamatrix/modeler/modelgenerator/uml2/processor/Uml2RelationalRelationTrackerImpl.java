@@ -7,11 +7,11 @@
  */
 package com.metamatrix.modeler.modelgenerator.uml2.processor;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.NamedElement;
+
 import com.metamatrix.metamodels.relational.RelationalEntity;
 import com.metamatrix.metamodels.relationship.Relationship;
 import com.metamatrix.metamodels.relationship.RelationshipFactory;

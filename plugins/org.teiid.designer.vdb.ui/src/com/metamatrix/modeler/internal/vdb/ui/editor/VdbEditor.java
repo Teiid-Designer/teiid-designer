@@ -928,7 +928,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     
     private void createOtherFilesControl ( Composite parent ) {
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
-        otherFilesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbEntry>() { //$NON-NLS-1$
+        otherFilesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbEntry>() {
             /**
              * {@inheritDoc}
              *
@@ -1327,7 +1327,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     }
     
     private void createModelsSection( Composite parent ) {
-        modelsGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbModelEntry>() { //$NON-NLS-1$
+        modelsGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbModelEntry>() {
             /**
              * {@inheritDoc}
              *
