@@ -86,10 +86,7 @@ public class MaterializationModelGenerator {
     	this.materializedViewModel = targetResource;
         
 //    	System.out.println("MVModelGenerator.execute()  target resource = " + targetResource.getItemName());
-    	
-    	// just a set of names to insure no two views are named the same
-        final Collection existingTableNames = new ArrayList();
-        
+    	        
         try {  
 //            System.out.println("MVModelGenerator.execute()  create schema for tables = " + targetResource.getItemName());
             
@@ -105,7 +102,7 @@ public class MaterializationModelGenerator {
 	            if(next instanceof Table ) {
 	            	((Table)next).setMaterialized(true);
 
-                	EObject mvTable = createMaterializedView( (Table)next, schema, existingTableNames);
+                	EObject mvTable = createMaterializedView( (Table)next, schema);
                 	
                 	((Table)next).setMaterializedTable((Table)mvTable);
 	            }
@@ -160,19 +157,16 @@ public class MaterializationModelGenerator {
         return this.materializedViewModel;
     }
     
-    private EObject createMaterializedView(Table table, final Schema owner, final Collection existingNames) {
+    private EObject createMaterializedView(Table table, final Schema owner) {
         
         //create the new table and the staging table and add them to the result physical model
         final Table mv = (Table)RelationalFactory.eINSTANCE.create(table.eClass() );
         
         //Create a uniqueName
         String name = table.getName();
-        String tmp = nameValidator.createValidUniqueName(name, existingNames);
-        if(tmp == null) {
-            existingNames.add(name);
-        }else {
+        String tmp = nameValidator.createValidUniqueName(name);
+        if(tmp != null) {
             name = tmp;
-            existingNames.add(name);
         }
         
         //Set table names

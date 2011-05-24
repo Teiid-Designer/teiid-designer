@@ -87,11 +87,11 @@ public class GenerateVirtualFromXsdHelper {
             if( resource != null && !types.isEmpty() ) {
                 int nTables = 0;
                 String sSize = Integer.toString(types.size());
-                final Collection tableNames = new ArrayList();
+
                 for(Iterator iter = types.iterator(); iter.hasNext(); ) {
                     nTables++;
                     final XSDConcreteComponent next = (XSDConcreteComponent)iter.next();
-                    final String tableName = createTableFromContent(next, tableNames);
+                    final String tableName = createTableFromContent(next);
                     if(!elementStack.isEmpty() ) {
                         elementStack.clear();
                     }
@@ -148,24 +148,22 @@ public class GenerateVirtualFromXsdHelper {
         return getString(key, new Object[] {} );
     }
     
-    private String createTableFromContent(XSDConcreteComponent content, Collection tableNames) throws ModelerCoreException{        
+    private String createTableFromContent(XSDConcreteComponent content) throws ModelerCoreException{        
         final String tableDesc = XsdUtil.getDescription(content);
         String tableName = ModelerCore.getModelEditor().getName(content);
         while( tableName.indexOf('.') > -1) {
             tableName = tableName.replace('.', '_');
         }
         
-        final String tmp = nameValidator.createValidUniqueName(tableName, tableNames);
+        final String tmp = nameValidator.createValidUniqueName(tableName);
         if(tmp != null) {
             tableName = tmp;
         }
-        tableNames.add(tableName);
         
         final EObject vTable = builder.createBaseTable(tableName, resource, false, tableDesc);
         builder.createXPathNIS(vTable, content);
         
         Collection columnsList = new ArrayList();
-        Collection columnNames = new ArrayList();
         XSDComplexTypeDefinition ctd = content instanceof XSDComplexTypeDefinition ? (XSDComplexTypeDefinition)content : null;
         if(content instanceof XSDElementDeclaration) {
             elementStack.push(content);
@@ -173,7 +171,7 @@ public class GenerateVirtualFromXsdHelper {
             if(type instanceof XSDComplexTypeDefinition) {
                 ctd = (XSDComplexTypeDefinition)type;
             }else {
-                processContent(type, resource, vTable, columnsList, columnNames);
+                processContent(type, resource, vTable, columnsList);
             }
         }
         
@@ -182,12 +180,12 @@ public class GenerateVirtualFromXsdHelper {
             Iterator  particles = group.getParticles().iterator();
             while(particles != null && particles.hasNext() ) {
                 XSDParticle nextPart = (XSDParticle)particles.next();
-                processContent(nextPart.getContent(), resource, vTable, columnsList, columnNames);
+                processContent(nextPart.getContent(), resource, vTable, columnsList);
             }
         }else if(ctd != null && ctd.getContent() instanceof XSDTypeDefinition) {
-            processContent(ctd.getContent(), resource, vTable, columnsList, columnNames);
+            processContent(ctd.getContent(), resource, vTable, columnsList);
         }else if(ctd != null && ctd.getContent() instanceof XSDAttributeDeclaration) {
-            processContent(ctd.getContent(), resource, vTable, columnsList, columnNames);
+            processContent(ctd.getContent(), resource, vTable, columnsList);
         }else {
             final String contentType = (ctd == null || ctd.getContent() == null) ? "null" : ctd.getContent().getClass().getName(); //$NON-NLS-1$
             final String msg = getString("CreateVirtualModelFromSchemaWizard.invalidContent", new Object[] {contentType}); //$NON-NLS-1$
@@ -204,7 +202,7 @@ public class GenerateVirtualFromXsdHelper {
         
     }
     
-    private void processContent(final XSDConcreteComponent content, final Resource resource, final EObject vTable, final Collection columnList, final Collection columnNames ) throws ModelerCoreException{
+    private void processContent(final XSDConcreteComponent content, final Resource resource, final EObject vTable, final Collection columnList) throws ModelerCoreException{
         if(content instanceof XSDElementDeclaration) {            
             final XSDElementDeclaration element = resolveElement( (XSDElementDeclaration)content);
             final XSDElementDeclaration parentElement = elementStack.isEmpty() ? null : (XSDElementDeclaration)elementStack.peek();
@@ -212,9 +210,9 @@ public class GenerateVirtualFromXsdHelper {
             elementStack.push(element);
             final XSDTypeDefinition typeDefn = element.getType();
             if(typeDefn instanceof XSDComplexTypeDefinition) {
-                addColumnsForComplexType((XSDComplexTypeDefinition)typeDefn, resource, vTable, columnList, columnNames);
+                addColumnsForComplexType((XSDComplexTypeDefinition)typeDefn, resource, vTable, columnList);
             }else {
-                processContent(typeDefn, resource, vTable, columnList, columnNames);
+                processContent(typeDefn, resource, vTable, columnList);
             }
             
             if(!elementStack.isEmpty() ) {
@@ -225,40 +223,40 @@ public class GenerateVirtualFromXsdHelper {
             if(complexType.getName() != null) {
                 currentRootName = complexType.getName();
             }
-            addColumnsForComplexType(complexType, resource, vTable, columnList, columnNames);
+            addColumnsForComplexType(complexType, resource, vTable, columnList);
         }else if(content instanceof XSDSimpleTypeDefinition) {
             XSDSimpleTypeDefinition simpleTypeDefn = (XSDSimpleTypeDefinition)content;
                         
-            createColumn(columnNames, columnList, vTable, simpleTypeDefn);
+            createColumn(columnList, vTable, simpleTypeDefn);
         }else if(content instanceof XSDAttributeDeclaration) {
             final XSDAttributeDeclaration attr = resolveAttribute( (XSDAttributeDeclaration)content);
             XSDSimpleTypeDefinition simpleTypeDefn = attr.getTypeDefinition();
             final XSDElementDeclaration parentElement = elementStack.isEmpty() ? null : (XSDElementDeclaration)elementStack.peek();
             currentRootName = parentElement == null ? attr.getName() : parentElement.getName() + SPACER + attr.getName();            
             
-            createColumn(columnNames, columnList, vTable, simpleTypeDefn);
+            createColumn(columnList, vTable, simpleTypeDefn);
         }else if(content instanceof XSDAttributeUse){
             final XSDAttributeDeclaration attr = resolveAttribute( ((XSDAttributeUse)content).getAttributeDeclaration() );
             XSDSimpleTypeDefinition simpleTypeDefn = attr.getTypeDefinition();
             final XSDElementDeclaration parentElement = elementStack.isEmpty() ? null : (XSDElementDeclaration)elementStack.peek();
             currentRootName = parentElement == null ? attr.getName() : parentElement.getName() + SPACER + attr.getName();            
             
-            createColumn(columnNames, columnList, vTable, simpleTypeDefn);        
+            createColumn(columnList, vTable, simpleTypeDefn);        
         }else if(content instanceof XSDAttributeGroupDefinition) {
             final XSDAttributeGroupDefinition attGroup = (XSDAttributeGroupDefinition)content;
             final Iterator atts = attGroup.getAttributeUses().iterator();
             while(atts.hasNext() ) {
-                processContent( (XSDConcreteComponent)atts.next(), resource, vTable, columnList, columnNames);
+                processContent( (XSDConcreteComponent)atts.next(), resource, vTable, columnList);
             }
         }else if(content instanceof XSDWildcard){
             final String tableName = getName(vTable);
             currentRootName = tableName == null ? ANY : tableName + SPACER + ANY;  
-            final String tmp = nameValidator.createValidUniqueName(currentRootName, columnNames);
+            final String tmp = nameValidator.createValidUniqueName(currentRootName);
             if(tmp != null) {
                 currentRootName = tmp;
             }
 
-            createColumn(columnNames, columnList, vTable, null);
+            createColumn(columnList, vTable, null);
         }else {
             final String contentType = content == null ? "null" : content.getClass().getName(); //$NON-NLS-1$
             final String msg = getString("CreateVirtualModelFromSchemaWizard.unexpectedContent", new Object[] {contentType}); //$NON-NLS-1$
@@ -279,7 +277,7 @@ public class GenerateVirtualFromXsdHelper {
         return null;
     }
     
-    private void createColumn(final Collection columnNames, final Collection columnList, final EObject vTable, XSDSimpleTypeDefinition simpleTypeDefn) throws ModelerCoreException{
+    private void createColumn(final Collection columnList, final EObject vTable, XSDSimpleTypeDefinition simpleTypeDefn) throws ModelerCoreException{
         //Use the passed in type to capture property values, use the builtIn type for that type
         //to calculate name and to use as the dataType for the column
         boolean isAny = simpleTypeDefn == null;
@@ -318,11 +316,10 @@ public class GenerateVirtualFromXsdHelper {
             currentRootName = builtInType.getName();
         }
 
-        final String tmp = nameValidator.createValidUniqueName(currentRootName, columnNames);
+        final String tmp = nameValidator.createValidUniqueName(currentRootName);
         if(tmp != null) {
             currentRootName = tmp;
         }
-        columnNames.add(currentRootName);
         
         
                           
@@ -334,7 +331,7 @@ public class GenerateVirtualFromXsdHelper {
         }        
     }
     
-    private void addColumnsForComplexType(XSDComplexTypeDefinition complexTypeDefn, Resource resource, EObject vTable, Collection columnsList, Collection columnNames) throws ModelerCoreException {
+    private void addColumnsForComplexType(XSDComplexTypeDefinition complexTypeDefn, Resource resource, EObject vTable, Collection columnsList) throws ModelerCoreException {
         if(recursionStack.contains(complexTypeDefn) ) {
             return;
         }
@@ -344,13 +341,13 @@ public class GenerateVirtualFromXsdHelper {
         XSDModelGroup group = XsdUtil.getCompositor(complexTypeDefn); 
         final XSDComplexTypeContent content = complexTypeDefn.getContent();
         if(group != null) {
-            processModelGroup(group, resource, vTable, columnsList, columnNames);
+            processModelGroup(group, resource, vTable, columnsList);
         }else if(content instanceof XSDComplexTypeDefinition) {
-            addColumnsForComplexType( (XSDComplexTypeDefinition)content, resource, vTable, columnsList, columnNames);
+            addColumnsForComplexType( (XSDComplexTypeDefinition)content, resource, vTable, columnsList);
         }else if(content instanceof XSDSimpleTypeDefinition) {
-            processContent(content, resource, vTable, columnsList, columnNames);
+            processContent(content, resource, vTable, columnsList);
         }else if(content instanceof XSDWildcard){
-            processContent(content, resource, vTable, columnsList, columnNames);
+            processContent(content, resource, vTable, columnsList);
         }else if(content != null) {
             final String contentType = content.getClass().getName(); 
             final String msg = getString("CreateVirtualModelFromSchemaWizard.unexpectedContent", new Object[] {contentType}); //$NON-NLS-1$
@@ -360,7 +357,7 @@ public class GenerateVirtualFromXsdHelper {
         final Iterator atts = complexTypeDefn.getAttributeContents().iterator();
         while(atts.hasNext() ) {
             final XSDConcreteComponent next = (XSDConcreteComponent)atts.next();
-            processContent(next, resource, vTable, columnsList, columnNames);
+            processContent(next, resource, vTable, columnsList);
         }
         
         if(!recursionStack.isEmpty() ) {
@@ -369,7 +366,7 @@ public class GenerateVirtualFromXsdHelper {
 
     }
     
-    private void processModelGroup(final XSDModelGroup group, final Resource resource, final EObject vTable, final Collection columnsList, final Collection columnNames) throws ModelerCoreException {
+    private void processModelGroup(final XSDModelGroup group, final Resource resource, final EObject vTable, final Collection columnsList) throws ModelerCoreException {
         if(group == null) {
             return;
         }
@@ -380,16 +377,16 @@ public class GenerateVirtualFromXsdHelper {
             XSDParticleContent partContent = nextPart.getContent();
             if( partContent instanceof XSDElementDeclaration ) {
                 final XSDElementDeclaration elementContent = resolveElement( (XSDElementDeclaration)partContent );
-                processContent(elementContent, resource, vTable, columnsList, columnNames);
+                processContent(elementContent, resource, vTable, columnsList);
             }else if(partContent instanceof XSDAttributeDeclaration) {
                 final XSDAttributeDeclaration attr = (XSDAttributeDeclaration)partContent;
                 currentRootName = attr.getName();
-                processContent(attr, resource, vTable, columnsList, columnNames);                                       
+                processContent(attr, resource, vTable, columnsList);                                       
             }else if(partContent instanceof XSDModelGroupDefinition) {
                 XSDModelGroup childGroup = ((XSDModelGroupDefinition)partContent).getModelGroup();
-                processModelGroup(childGroup, resource, vTable, columnsList, columnNames);
+                processModelGroup(childGroup, resource, vTable, columnsList);
             }else if(partContent instanceof XSDWildcard){
-                processContent(partContent, resource, vTable, columnsList, columnNames);
+                processContent(partContent, resource, vTable, columnsList);
             }else {
                 final String contentType = partContent == null ? "null" : partContent.getClass().getName(); //$NON-NLS-1$
                 final String msg = getString("CreateVirtualModelFromSchemaWizard.unexpectedContent", new Object[] {contentType}); //$NON-NLS-1$

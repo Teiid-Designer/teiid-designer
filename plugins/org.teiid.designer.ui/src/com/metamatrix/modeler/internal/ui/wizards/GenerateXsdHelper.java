@@ -406,23 +406,17 @@ public class GenerateXsdHelper {
             final Iterator mcCols = mc.getColumns().iterator();
             int index = 0;
             int outCount = 0;
-            boolean isProc = false;
 
-            Procedure proc = null;
             final List outCols = getOutParams(source);
             while (mcCols.hasNext()) {
                 final MappingClassColumn next = (MappingClassColumn)mcCols.next();
                 if (source instanceof ProcedureResult) {
                     final ProcedureResult procResult = (ProcedureResult)source;
-                    isProc = true;
-                    proc = procResult.getProcedure();
                     if (index >= procResult.getColumns().size()) {
                         // This is a procedure parameter mark the XMLElement as exclude from doc
                         mappingsForProcParams.add(next);
                     }
                 } else if (source instanceof Procedure) {
-                    isProc = true;
-                    proc = (Procedure)source;
                     if (outCount++ >= outCols.size()) {
                         // This is a procedure parameter mark the XMLElement as exclude from doc
                         mappingsForProcParams.add(next);
@@ -616,7 +610,6 @@ public class GenerateXsdHelper {
         }
 
         final StringNameValidator nameValidator = new StringNameValidator();
-        final Collection names = new ArrayList();
         final HashMap nameMap = new HashMap(roots.size());
         final Iterator rootIt = roots.iterator();
         while (rootIt.hasNext()) {
@@ -625,20 +618,18 @@ public class GenerateXsdHelper {
             final String nestedName = next.getName() + NESTED_SUFFIX;
             final String globalName = next.getName() + INSTANCE_SUFFIX;
 
-            String nestedUniqueName = nameValidator.createValidUniqueName(nestedName, names);
+            String nestedUniqueName = nameValidator.createValidUniqueName(nestedName);
             if (nestedUniqueName == null) {
                 nestedUniqueName = nestedName;
             }
 
-            names.add(nestedUniqueName);
             nameMap.put(nestedUniqueName, next);
 
-            String globalUniqueName = nameValidator.createValidUniqueName(globalName, names);
+            String globalUniqueName = nameValidator.createValidUniqueName(globalName);
             if (globalUniqueName == null) {
                 globalUniqueName = globalName;
             }
 
-            names.add(globalUniqueName);
             nameMap.put(globalUniqueName, next);
 
             if (ops.genInput() && next instanceof ProcedureResult) {
@@ -659,24 +650,6 @@ public class GenerateXsdHelper {
                 final ProcedureParameter next = (ProcedureParameter)params.next();
                 final DirectionKind dir = next.getDirection();
                 if (dir == DirectionKind.OUT_LITERAL || dir == DirectionKind.INOUT_LITERAL) {
-                    result.add(next);
-                }
-            }
-        }
-
-        return result;
-
-    }
-
-    private List getInParams( final RelationalEntity entity ) {
-        final List result = new ArrayList();
-        if (entity instanceof Procedure) {
-            final Procedure proc = (Procedure)entity;
-            final Iterator params = proc.getParameters().iterator();
-            while (params.hasNext()) {
-                final ProcedureParameter next = (ProcedureParameter)params.next();
-                final DirectionKind dir = next.getDirection();
-                if (dir == DirectionKind.IN_LITERAL || dir == DirectionKind.INOUT_LITERAL) {
                     result.add(next);
                 }
             }

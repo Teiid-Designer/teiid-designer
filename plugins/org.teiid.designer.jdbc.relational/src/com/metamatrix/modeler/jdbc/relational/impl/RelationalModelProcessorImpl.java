@@ -12,12 +12,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,6 +71,7 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.TransactionRunnable;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
+import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
@@ -2367,18 +2366,17 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // See if the name is valid within the context of the entity's parent ...
         RelationalStringNameRule rule = new RelationalStringNameRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
         final List siblings = rule.getSiblingsForUniquenessCheck(entity);
-        final Set siblingNames = new HashSet();
         final Iterator iter = siblings.iterator();
         while (iter.hasNext()) {
             final RelationalEntity sibling = (RelationalEntity)iter.next();
             if (sibling != entity) {
                 final String siblingName = sibling.getName();
                 if (siblingName != null) {
-                    siblingNames.add(siblingName);
+                    this.nameValidator.addExistingName(siblingName);
                 }
             }
         }
-        final String uniqueName = this.nameValidator.createValidUniqueName(convertedName, siblingNames);
+        final String uniqueName = this.nameValidator.createValidUniqueName(convertedName);
 
         //
         boolean forceSetNameInSource = false;
