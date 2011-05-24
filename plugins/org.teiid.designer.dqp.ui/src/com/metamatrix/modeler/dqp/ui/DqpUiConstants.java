@@ -63,8 +63,6 @@ public interface DqpUiConstants {
         String SQL_RESULTSET_PROCESSOR = /*EXT_PREFIX + DOT + */"sqlResultSetProcessor"; //$NON-NLS-1$
 
         String CONNECTORS_VIEW_ID = /*PLUGIN_ID + DOT + */"connectorsView"; //$NON-NLS-1$
-
-        String PREVIEW_DATA_VIEW = /*PLUGIN_ID + DOT + */"previewDataView"; //$NON-NLS-1$
     }
 
     interface Images {

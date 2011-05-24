@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -64,6 +65,8 @@ import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
+
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.webservice.Operation;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
@@ -81,6 +84,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
+import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.util.UiUtil;
@@ -89,7 +93,20 @@ import com.metamatrix.ui.internal.util.UiUtil;
  * @since 5.0
  */
 public class PreviewTableDataContextAction extends SortableSelectionAction {
+	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewTableDataContextAction.class);
 	
+    private static String getString( String key ) {
+        return DqpUiConstants.UTIL.getString(THIS_CLASS + key);
+    }
+
+    static String getString( final String key, final Object param ) {
+    	return DqpUiConstants.UTIL.getString(THIS_CLASS + key, param);
+	}
+    
+    static String getString( final String key, final Object param, final Object param2 ) {
+    	return DqpUiConstants.UTIL.getString(THIS_CLASS + key, param, param2);
+	}
+    
     /**
      * @since 5.0
      */
@@ -97,7 +114,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.PREVIEW_DATA_ICON));
         setWiredForSelection(true);
-        setToolTipText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.tooltip")); //$NON-NLS-1$
+        setToolTipText(getString("tooltip")); //$NON-NLS-1$
     }
 
     /**
@@ -280,8 +297,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     					DqpUiConstants.UTIL.log("Unspecified connection error"); //$NON-NLS-1$
     				}
   					MessageDialog.openError(getShell(),
-							DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_getting_connection.title"), //$NON-NLS-1$
-							DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_getting_connection.message")); //$NON-NLS-1$
+							getString("error_getting_connection.title"), //$NON-NLS-1$
+							getString("error_getting_connection.message")); //$NON-NLS-1$
   					return;
     			}
 
@@ -316,8 +333,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
 		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
 		if(!store.getBoolean("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile")){ //$NON-NLS-1$
 			boolean isOK = MessageDialog.openQuestion(getShell(), 
-					DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.propertyPromptTitle"),  //$NON-NLS-1$
-					DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.propertyPrompt")); //$NON-NLS-1$
+					getString("propertyPromptTitle"),  //$NON-NLS-1$
+					getString("propertyPrompt")); //$NON-NLS-1$
 			
 			if( isOK ) {
 				store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -384,6 +401,19 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @Override
     public void run() {
+    	// Check for unsaved changes
+    	// Walk through open ModelEditors and check if "isDirty()"
+    	
+    	if( !ModelEditorManager.getDirtyResources().isEmpty() ) {
+    		boolean doContinue = MessageDialog.openQuestion(getShell(), 
+    				getString("unsavedModelsWarning.title"),  //$NON-NLS-1$
+    				getString("unsavedModelsWarning.message")); //$NON-NLS-1$
+        	if( !doContinue ) {
+        		return;
+        	}
+    	}
+    	
+    	
         if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
                 (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
             PreviewUnavailableDialog dialog = new PreviewUnavailableDialog(getShell());
@@ -411,8 +441,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
         	if( !helper.hasConnectionInfo(mr)) {
 	        	MessageDialog.openWarning(getShell(), 
-	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noPreviewAvailableTitle"),  //$NON-NLS-1$
-	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
+	        			getString("noPreviewAvailableTitle"),  //$NON-NLS-1$
+	        			getString("noProfileAvailableMissingConnectionInfoMessage", mr.getItemName())); //$NON-NLS-1$
 	        	return;
 	        }
         	
@@ -428,8 +458,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         		
         		if( tt == null ) {
         			boolean result = MessageDialog.openQuestion(getShell(), 
-    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTranslatorTitle"),  //$NON-NLS-1$
-    	        			DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
+    	        			getString("noMatchingTranslatorTitle"),  //$NON-NLS-1$
+    	        			getString("noMatchingTeiidTranslatorMessage", translatorName, mr.getItemName())); //$NON-NLS-1$
         			if( !result ) {
         				return;
         			}
@@ -472,7 +502,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             DqpUiConstants.UTIL.log(e);
             MessageDialog.openError(getShell(),
                                     null,
-                                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
+                                    getString("error_in_execution")); //$NON-NLS-1$
         }
 
         if (dialog.getReturnCode() == Window.OK) {
@@ -483,7 +513,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
                 DqpUiConstants.UTIL.log(e);
                 MessageDialog.openError(getShell(),
                                         null,
-                                        DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.error_in_execution")); //$NON-NLS-1$
+                                        getString("error_in_execution")); //$NON-NLS-1$
             }
         }
     }
@@ -503,8 +533,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         boolean openProgressView = false;
 
         public PreviewUnavailableDialog( Shell parent ) {
-            super(parent, DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.title"), null, //$NON-NLS-1$
-                    DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.message"), //$NON-NLS-1$
+            super(parent, getString("previewUnavailableDialog.title"), null, //$NON-NLS-1$
+                    getString("previewUnavailableDialog.message"), //$NON-NLS-1$
                     MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
             setShellStyle(getShellStyle() | SWT.RESIZE);
         }
@@ -521,8 +551,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
             panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
             Button btnOpenProgressView = new Button(panel, SWT.CHECK);
-            btnOpenProgressView.setText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.btnShowProgressView.text")); //$NON-NLS-1$
-            btnOpenProgressView.setToolTipText(DqpUiConstants.UTIL.getString("PreviewTableDataContextAction.previewUnavailableDialog.btnShowProgressView.toolTip")); //$NON-NLS-1$
+            btnOpenProgressView.setText(getString("previewUnavailableDialog.btnShowProgressView.text")); //$NON-NLS-1$
+            btnOpenProgressView.setToolTipText(getString("previewUnavailableDialog.btnShowProgressView.toolTip")); //$NON-NLS-1$
             btnOpenProgressView.addSelectionListener(new SelectionAdapter() {
                 /**
                  * {@inheritDoc}
