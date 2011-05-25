@@ -308,7 +308,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
      * @since 7.1
      */
     private void loadJndiNameDefault() {
-        WarDataserviceModel.getInstance().setJndiNameDefault("java:{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
+        WarDataserviceModel.getInstance().setJndiNameDefault("{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
     }
 
     /**
