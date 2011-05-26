@@ -13,16 +13,15 @@ With Teiid Designer, not only do you create source data models and map your sour
 Visit the project home page at:  http://www.teiid.org  for details.
    </description>
    <feature url="features/org.teiid.designer.feature_0.0.0.jar" id="org.teiid.designer.feature" version="0.0.0">
-   	<category name="MetadataModeling"/>
+   	<category name="DataTools"/>
    </feature>
    <feature url="features/org.teiid.designer.runtime.feature_0.0.0.jar" id="org.teiid.designer.runtime.feature" version="0.0.0">
-   	<category name="MetadataModeling"/>
+   	<category name="DataTools"/>
    </feature>
    <feature url="features/org.teiid.datatools.connectivity.feature_0.0.0.jar" id="org.teiid.datatools.connectivity.feature" version="0.0.0">
-    <category name="MetadataModeling"/>
+    <category name="DataTools"/>
    </feature>
-   <category-def name="MetadataModeling" label="Teiid Designer">
-	<description>Metadata Modeling using Teiid Designer
-	</description>
+   <category-def name="DataTools" label="Data Services">
+    <description>Tools related to data services such as persistence and transformation.</description>
    </category-def>
 </site>
