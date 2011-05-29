@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.teiid.designer.modeshape;singleton:=true
 Bundle-Version: 7.4.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
- modeshape/lib/modeshape-common-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-graph-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-sequencer-ddl-2.5.0.Beta1.jar
+ modeshape/lib/modeshape-common.jar,
+ modeshape/lib/modeshape-graph.jar,
+ modeshape/lib/modeshape-sequencer-ddl.jar
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.modeshape,
