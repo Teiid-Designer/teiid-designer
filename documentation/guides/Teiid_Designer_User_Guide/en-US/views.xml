@@ -20,7 +20,6 @@
 		  <listitem><para><xref linkend="model-explorer-view" /></para></listitem>
 		  <listitem><para><xref linkend="datatypes-view" /></para></listitem>
 		  <listitem><para><xref linkend="description-view" /></para></listitem>
-		  <listitem><para><xref linkend="message-log-view" /></para></listitem>
 		  <listitem><para><xref linkend="problems-view" /></para></listitem>
 		  <listitem><para><xref linkend="teiid-view" /></para></listitem>
 		  <listitem><para><xref linkend="system-catalog-view" /></para></listitem>
@@ -296,12 +295,13 @@
 			</mediaobject>
 		</figure>
 		<para>The dialog contains two
-			panels of input. The top panel, <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
+			three sections. The top panel contains host name and an option to customize the new Teiid instance label
+			in the teiid view.  The second panel <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
 			URL of your installed Teiid instance. The operations Designer exposes deal with deploying and undeploying VDBs
 			as well as managing your test data sources required by those VDBs to successfully connect and query data
 			through the Teiid runtime engine.
 		</para>
-		<para>The second panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
+		<para>The third panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
 			same Teiid instance. This information is required for Designer to make JDBC connections during execution of the
 			Preview Data feature.
 		</para>
@@ -354,6 +354,17 @@
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance</para></listitem>
 		</itemizedlist>
+		<para>
+			If you chose the <emphasis role="bold">Use a custom label</emphasis> option, the text entry field will enable as shown below.
+		</para>
+		<figure id="new-teiid-instance-dialog-custom-name-image">
+			<title>Use a Custom Label Option</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/new-teiid-instance-custom-name-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
 	</section>
 	
 	<!-- ####### PROPERTIES VIEW ######################################### -->
@@ -539,7 +550,7 @@
 			for editing specific model object types. These object editors include:</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
+				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Web Service Operations.</para>
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
@@ -703,39 +714,6 @@
 		</section>
 	</section>
 	
-	<!-- ####### MESSAGE LOG VIEW ######################################### -->
-	
-	<section id="message-log-view">
-		<title>Message Log View</title>
-		<para>
-			The
-			<emphasis role="bold">Message Log</emphasis>
-			view provides a console-based view of any errors or warnings that may
-			occur during your
-			<emphasis role="bold">Teiid Designer</emphasis>
-			session.
-		</para>
-		<figure id="message-log-view-image">
-			<title>Message Log View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/message-log-view.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>You can perform various operations on the content of the
-			viewer via the toolbar actions or use the right-click menu shown
-			below.</para>
-		<figure id="message-log-view-context-menu-image">
-			<title>Message Log View Context Menu</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/message-log-view-context-menu.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</section>
-
     <!-- ####### SEARCH RESULTS VIEW  ############################################# -->
     
 	<section id="search-results-view">
