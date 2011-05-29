@@ -262,9 +262,6 @@
 							<para><emphasis><xref linkend="relational-virtual-tables-text-import-section" /></emphasis></para>
 						</listitem>
 						<listitem>
-							<para><emphasis><xref linkend="relationships-text-import-section" /></emphasis></para>
-						</listitem>
-						<listitem>
 							<para><emphasis><xref linkend="datatypes-text-import-section" /></emphasis></para>
 						</listitem>
 					</itemizedlist>
@@ -394,68 +391,7 @@
 				</listitem>
 			</itemizedlist>
 		</section>
-		
-		<!-- ####### RELATIONSHIPS TEXT IMPORTER ######################################### -->
-		
-		<section id="relationships-text-import-section">
-			<title>Import Relationships Text Importer</title>
-			<para></para>
-			<itemizedlist>
-				<listitem>
-					<para>
-						To create relationships from imported text file metadata:
-						<itemizedlist>
-							<listitem>
-								<para>
-									Perform <emphasis role="bold">Steps 1 through 3</emphasis> (above) 
-									and select the <emphasis role="bold">Relationships</emphasis> import type, 
-									then click <emphasis role="bold">Next ></emphasis>
-								</para>
-								<figure>
-									<title>Select Import Type - Relationships </title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/import-from-text-file-page-2-relationships.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 4 </emphasis>
-									- In the next page, you'll need to provide a source text file 
-									containing the metadata formatted to the specifications on the previous page.
-								</para>
-								<figure>
-									<title>Select Source Text File and Target Relationships Model </title>
-									<mediaobject>
-										<imageobject>
-											<imagedata fileref="images/screencaps/import-from-text-file-page-3-relationships.png"/>
-										</imageobject>
-									</mediaobject>
-								</figure>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 5 </emphasis>
-									- Select an existing relationship model as the target location for your new model 
-									components using the <emphasis role="bold">Browse...</emphasis> button to open the Relationship 
-									Model Selector Dialog. Select a relationship model from your workspace or specify a unique 
-									name to create a new model.
-								</para>
-							</listitem>
-							<listitem>
-								<para>
-									<emphasis role="bold">Step 6 </emphasis>
-									- Select <emphasis role="bold">Finish</emphasis>.
-								</para>
-							</listitem>
-						</itemizedlist>
-					</para>
-				</listitem>
-			</itemizedlist>
-		</section>
-		
+				
 		<!-- ####### DATATYPES TEXT IMPORTER ######################################### -->
 		
 		<section id="datatypes-text-import-section">

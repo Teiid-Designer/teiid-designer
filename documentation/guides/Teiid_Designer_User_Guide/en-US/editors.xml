@@ -64,7 +64,7 @@
 			for editing specific model object types. These "object" editors include:</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
+				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Web Service Operations.</para>
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
@@ -132,14 +132,6 @@
 								<imagedata fileref="images/icons/transformation-diagram.png"/>
 							</imageobject>
 						</inlinemediaobject> <emphasis role="bold">Mapping Transformation Diagram</emphasis>
-					</para>
-				</listitem>
-				<listitem>
-					<para><inlinemediaobject>
-							<imageobject>
-								<imagedata fileref="images/icons/relationship-diagram.png"/>
-							</imageobject>
-						</inlinemediaobject> <emphasis role="bold">Relationship Diagram</emphasis>
 					</para>
 				</listitem>
 
@@ -769,60 +761,6 @@
 				</itemizedlist>
 				<para><emphasis role="bold">Context menus</emphasis> for <emphasis role="bold">Mapping Transformation Diagrams</emphasis> identical
 					capabilities to the Transformation Diagram with the addition of managing and editing Input Sets.</para>
-			</section>
-			<section id="relationship-diagram-section">
-				<title>Relationship Diagram</title>
-				<para>The <emphasis role="bold">Relationship Diagram</emphasis> represents a view of relationships between sources and targets 
-					defined in your Relationship models as well as the relationships and hierarchy between relationship types.</para>
-				<figure id="relationship-diagram-image">
-					<title>Relationship Diagram Example</title>
-					<mediaobject>
-						<imageobject>
-							<imagedata fileref="images/screencaps/relationship-diagram.png" />
-						</imageobject>
-					</mediaobject>
-				</figure>
-				<itemizedlist>
-					<listitem>
-						<para> 
-							Relationship Diagram toolbar actions include:
-							<itemizedlist>
-								<listitem>
-									<para><inlinemediaobject>
-											<imageobject>
-												<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
-											</imageobject>
-										</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
-									</para>
-								</listitem>
-								<listitem>
-									<para><inlinemediaobject>
-											<imageobject>
-												<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
-											</imageobject>
-										</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
-									</para>
-								</listitem>
-								<listitem>
-									<para><inlinemediaobject>
-											<imageobject>
-												<imagedata fileref="images/icons/tb-remove-from-relationship.png"/>
-											</imageobject>
-										</inlinemediaobject> <emphasis role="bold">Remove From Relationship</emphasis> - Removes the selected source or targets from a relationship.
-									</para>
-								</listitem>
-								<listitem>
-									<para><inlinemediaobject>
-											<imageobject>
-												<imagedata fileref="images/icons/tb-save-diagram.png"/>
-											</imageobject>
-										</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
-									</para>
-								</listitem>
-							</itemizedlist>
-						</para>
-					</listitem>
-				</itemizedlist>
 			</section>
 		</section>
 		<section id="table-editor-section">

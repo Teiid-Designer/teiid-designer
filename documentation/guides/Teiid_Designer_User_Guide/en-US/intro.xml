@@ -534,9 +534,7 @@
 				<listitem> <para>Relational Tables and Views</para> </listitem>
 				<listitem> <para>XML</para> </listitem>
 				<listitem> <para>Web services</para> </listitem>
-				<listitem> <para>Relationships</para> </listitem>
 				<listitem> <para>Functions</para> </listitem>
-				<listitem> <para>UML 2.0</para> </listitem>
 			</itemizedlist>
 			<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
 			<para> A third model type, logical, provides the ability to define
@@ -599,15 +597,6 @@
 				<listitem> 
 					<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
 						user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">Relationship</emphasis> - The relationships metamodel supports 
-					creation and management of relationships between any other EMF-based metamodel objects.
-					See <xref linkend="relationships-chapter" /> section for details.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">UML 2.0</emphasis> - The UML metamodel supports basic UM2 object management.
-					This metamodel is rich and complex in its definition and is currently used sparingly within Teiid Designer.</para>
 				</listitem>
 			</itemizedlist>
 		</section>

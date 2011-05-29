@@ -20,7 +20,6 @@
 		  <listitem><para><xref linkend="model-explorer-view" /></para></listitem>
 		  <listitem><para><xref linkend="datatypes-view" /></para></listitem>
 		  <listitem><para><xref linkend="description-view" /></para></listitem>
-		  <listitem><para><xref linkend="message-log-view" /></para></listitem>
 		  <listitem><para><xref linkend="problems-view" /></para></listitem>
 		  <listitem><para><xref linkend="teiid-view" /></para></listitem>
 		  <listitem><para><xref linkend="system-catalog-view" /></para></listitem>
@@ -551,7 +550,7 @@
 			for editing specific model object types. These object editors include:</para>
 		<itemizedlist>
 			<listitem>
-				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Service View Operations.</para>
+				<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Web Service Operations.</para>
 			</listitem>
 			<listitem>
 				<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
@@ -715,39 +714,6 @@
 		</section>
 	</section>
 	
-	<!-- ####### MESSAGE LOG VIEW ######################################### -->
-	
-	<section id="message-log-view">
-		<title>Message Log View</title>
-		<para>
-			The
-			<emphasis role="bold">Message Log</emphasis>
-			view provides a console-based view of any errors or warnings that may
-			occur during your
-			<emphasis role="bold">Teiid Designer</emphasis>
-			session.
-		</para>
-		<figure id="message-log-view-image">
-			<title>Message Log View</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/message-log-view.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<para>You can perform various operations on the content of the
-			viewer via the toolbar actions or use the right-click menu shown
-			below.</para>
-		<figure id="message-log-view-context-menu-image">
-			<title>Message Log View Context Menu</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/message-log-view-context-menu.png"/>
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</section>
-
     <!-- ####### SEARCH RESULTS VIEW  ############################################# -->
     
 	<section id="search-results-view">

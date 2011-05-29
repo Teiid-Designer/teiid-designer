@@ -20,9 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-    <releaseinfo>7.1.0
+    <releaseinfo>7.4.0
     </releaseinfo>
-    <productnumber>7.1.0
+    <productnumber>7.4.0
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -34,7 +34,7 @@
       </imageobject>
     </mediaobject>
     <copyright>
-      <year>2010
+      <year>2011
       </year>
       <holder>Red Hat, Inc.
       </holder>
@@ -54,6 +54,5 @@
   <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="relationships.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

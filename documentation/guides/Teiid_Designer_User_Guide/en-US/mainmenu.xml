@@ -260,7 +260,8 @@
 	<section id="edit-menu-section">
 		<title>Edit Menu</title>
 		<para>The <emphasis role="bold">Edit</emphasis> menu provides actions to manage the content, structure and 
-			properties of your model and project resources. </para>
+			properties of your model and project resources. The figure below represents the Edit menu presented when
+			a metadata model is selected.</para>
 		
 		<figure>
 			<title>Edit Menu</title>
@@ -666,12 +667,6 @@
 							<para><emphasis role="bold">Update Model from Source</emphasis> - If the selected model is a 
 								relational source model that was originally created via JDBC Import, then the model will be
 								updated based on changes in the database schema.
-							</para>
-						</listitem>
-						<listitem>
-							<para><emphasis role="bold">Open in Relationship Navigator</emphasis> - Opens the 
-								<emphasis role="bold">Relationship Navigator</emphasis> view and displays the direct 
-								relationships to the selected object.
 							</para>
 						</listitem>
 						<listitem>
