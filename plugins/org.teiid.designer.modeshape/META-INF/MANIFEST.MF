@@ -10,13 +10,13 @@ Bundle-ClassPath: .,
  external/lib/joda-time-1.6.jar,
  external/lib/slf4j-api-1.5.11.jar,
  external/lib/slf4j-simple-1.5.11.jar,
- modeshape/lib/modeshape-cnd-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-common-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-graph-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-jcr-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-jcr-api-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-repository-2.5.0.Beta1.jar,
- modeshape/lib/modeshape-sequencer-ddl-2.5.0.Beta1.jar
+ modeshape/lib/modeshape-common.jar,
+ modeshape/lib/modeshape-graph.jar,
+ modeshape/lib/modeshape-sequencer-ddl.jar,
+ modeshape/lib/modeshape-cnd.jar,
+ modeshape/lib/modeshape-jcr-api.jar,
+ modeshape/lib/modeshape-jcr.jar,
+ modeshape/lib/modeshape-repository.jar
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: javax.jcr,

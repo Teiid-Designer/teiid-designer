@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-cnd-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-cnd-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-common-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-common-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-graph-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-graph-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-jcr-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr-api-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-jcr-api-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-repository-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-repository-2.5.0.Beta1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-sequencer-ddl-2.5.0.Beta1.jar" sourcepath="modeshape/src/modeshape-sequencer-ddl-2.5.0.Beta1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-cnd.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-repository.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-common.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-graph.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-sequencer-ddl.jar"/>
 	<classpathentry exported="true" kind="lib" path="external/lib/google-collections-1.0-rc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="external/lib/jcr-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="external/lib/joda-time-1.6.jar"/>
