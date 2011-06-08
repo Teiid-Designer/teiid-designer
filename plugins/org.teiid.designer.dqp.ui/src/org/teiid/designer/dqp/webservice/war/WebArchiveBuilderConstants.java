@@ -60,22 +60,22 @@ public class WebArchiveBuilderConstants {
      * Property indicating the security realm to use for the Teiid web service connection.
      */
     public static final String PROPERTY_SECURITY_REALM = "securityRealm"; //$NON-NLS-1$
-    
+
     /**
      * Property indicating the security role to use for the Teiid web service connection.
      */
     public static final String PROPERTY_SECURITY_ROLE = "securityRole"; //$NON-NLS-1$
-    
+
     /**
      * Property indicating the test security username to use for the Teiid web service connection when using WS-Security
      */
     public static final String PROPERTY_SECURITY_USERNAME = "securityUsername"; //$NON-NLS-1$
-    
+
     /**
      * Property indicating the test security password to use for the Teiid web service connection when using WS-Security
      */
     public static final String PROPERTY_SECURITY_PASSWORD = "securityPassword"; //$NON-NLS-1$
-    
+
     /**
      * Property indicating the VDB file to include in the WAR file.
      */
@@ -85,6 +85,11 @@ public class WebArchiveBuilderConstants {
      * Property indicating the web service models contained in the VDB
      */
     public static final String PROPERTY_VDB_WS_MODELS = "WebServiceModels"; //$NON-NLS-1$
+
+    /**
+     * Property indicating the REST procedures contained in virtual models of the VDB
+     */
+    public static final String PROPERTY_VDB_REST_PROCEDURES = "RESTProcedures"; //$NON-NLS-1$
 
     /********** STATUS CODES **********/
 
@@ -114,6 +119,11 @@ public class WebArchiveBuilderConstants {
      * Location where the WAR template is stored.
      */
     public static final String BUILD_DIR = "war_build"; //$NON-NLS-1$
+
+    /**
+     * Location where the REST WAR template is stored.
+     */
+    public static final String REST_BUILD_DIR = "rest_war_build"; //$NON-NLS-1$
 
     /**
      * Name of the template work directory.

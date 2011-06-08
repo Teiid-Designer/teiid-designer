@@ -95,7 +95,24 @@
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
          name="org.teiid.designer.runtime.ui.GenerateWarAction"
+         label="%generateWarAction.label"><extension
+        id="GenerateWarAction"
+        name="%generateWarAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.GenerateWarAction"
          label="%generateWarAction.label">
+      </resourceAction>
+   </extension>
+      </resourceAction>
+   </extension>
+   <extension
+        id="GenerateRestWarAction"
+        name="%generateRestWarAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.GenerateRestWarAction"
+         label="%generateRestWarAction.label">
       </resourceAction>
    </extension>
    <extension
@@ -116,7 +133,6 @@
          label="%setTranslatorNameAction.label">
       </resourceAction>
    </extension>
-
    <extension
          point="org.teiid.designer.vdb.sourceHandler">
       <class
