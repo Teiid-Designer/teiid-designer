@@ -10,17 +10,19 @@ package com.metamatrix.ui.internal.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -34,9 +36,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.ISaveableFilter;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -44,6 +48,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourcePatternFilter;
 import org.teiid.core.util.FileUtils;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.ui.UiConstants;
 import com.metamatrix.ui.UiPlugin;
@@ -338,6 +343,12 @@ public final class UiUtil implements UiConstants {
     public static IWorkbenchWindow getWorkbenchWindow() {
         UiUtil.runInSwtThread(new Runnable() {
 
+            /**
+             * {@inheritDoc}
+             *
+             * @see java.lang.Runnable#run()
+             */
+            @Override
             public void run() {
                 currentWorkbenchWindow = getWorkbench().getActiveWorkbenchWindow();
             }
@@ -405,6 +416,12 @@ public final class UiUtil implements UiConstants {
 
         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
+            /**
+             * {@inheritDoc}
+             *
+             * @see java.lang.Runnable#run()
+             */
+            @Override
             public void run() {
                 if (Program.findProgram(FileUtils.getExtension(theFileName)) != null) {
                     try {
@@ -489,6 +506,57 @@ public final class UiUtil implements UiConstants {
     }
 
     /**
+     * Saves all dirty editors in workspace. If <code>confirm</code> flag is <code>true</code>, a dialog showing all dirty editors
+     * is presented to the user. Assumes Eclipse workbench is running.
+     * 
+     * @param shellProvider the shell provide (can be <code>null</code>)
+     * @param filter a filter that can identify editors that must be saved (can be <code>null</code> if all files must be saved)
+     * @param confirm <code>true</code> if the user should be asked to confirm saving all dirty editors
+     * @return <code>true</code> if all applicable dirty editors have been saved
+     */
+    public static boolean saveDirtyEditors( IShellProvider shellProvider,
+                                            ISaveableFilter filter,
+                                            boolean confirm ) {
+        IWorkbench workbench = UiPlugin.getDefault().getWorkbench();
+
+        if (shellProvider == null) {
+            shellProvider = workbench.getActiveWorkbenchWindow();
+        }
+
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(shellProvider.getShell());
+
+        // if necessary display a save all open editors dialog
+        if (workbench.saveAll(shellProvider, dialog, filter, confirm)) {
+            IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+
+            // save all dialog OK'd but could still have unsaved models if user unchecked them on dialog
+            if (window != null) {
+                IWorkbenchPage page = window.getActivePage();
+
+                if (page != null) {
+                    IEditorPart[] dirtyEditors = page.getDirtyEditors();
+
+                    // if no filter than all editors have to have been saved
+                    if (filter == null) {
+                        return (dirtyEditors.length == 0);
+                    }
+
+                    // only editors selected by filter have to be saved
+                    for (IEditorPart part : dirtyEditors) {
+                        if (filter.select(null, new IWorkbenchPart[] { part })) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Updates the specified integer-based preference with the specified value if and only if:
      * <ul>
      * <li>It equals the specified default value and the current preference value is not zero (i.e., does not represent the
@@ -541,6 +609,12 @@ class CloseEditorRunnable implements Runnable {
         this.save = save;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Runnable#run()
+     */
+    @Override
     public void run() {
         final IEditorPart editor = UiUtil.getEditorForFile(modelFile, false);
         if (editor != null) {

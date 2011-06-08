@@ -13,28 +13,34 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.ISaveableFilter;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.Saveable;
+
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.WorkspaceResourceFinderUtil;
 import com.metamatrix.modeler.internal.ui.actions.workers.DeleteWorker;
 import com.metamatrix.modeler.internal.ui.refactor.RefactorCommandProcessorDialog;
-import com.metamatrix.modeler.internal.ui.refactor.SaveModifiedResourcesDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.TransactionSettings;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 /**
@@ -79,7 +85,7 @@ public class DeleteAction extends ModelObjectAction {
     public void doRun() {
         worker.createObjectDeleteCommand();
         // cleanup modified files before starting this operation
-        boolean bContinue = doResourceCleanup();
+        boolean bContinue = UiUtil.saveDirtyEditors(null, getResourcesFilter(), true);
  
         if ( bContinue ) {
             super.doRun();
@@ -92,7 +98,11 @@ public class DeleteAction extends ModelObjectAction {
                     = new RefactorCommandProcessorDialog( getShell(), worker.getObjectDeleteCommand() );
                 rcpdDialog.open();                           
             }  
-        }                      
+        } else {
+            MessageDialog.openInformation(getShell(),
+                                          UiConstants.Util.getString("DeleteAction.operationCanceledDialogTitle"), //$NON-NLS-1$
+                                          UiConstants.Util.getString("DeleteAction.operationCanceledDialogMessage")); //$NON-NLS-1$
+        }
 
 //        worker.selectionChanged(getSelection());
         }
@@ -100,49 +110,54 @@ public class DeleteAction extends ModelObjectAction {
     private Shell getShell() {
         return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
-    
-    private boolean doResourceCleanup() {
-        boolean bResult = true;
-        
-        if ( ModelEditorManager.getDirtyResources().size() > 0 ) {
-            
-            // create the dialog, passing in the List of selected resources so it can ignore them
-            /*
-             * fix for defect 12375: the 'ignore' set must also include the resources of the selected objects 
-             */
-            SaveModifiedResourcesDialog pnlSave 
-                = new SaveModifiedResourcesDialog( getShell(), getResourcesToIgnore() );
-            
-            if ( !pnlSave.getResourcesToDisplay().isEmpty() ) {
-                pnlSave.open();
-            
-                bResult = ( pnlSave.getReturnCode() == Window.OK );                    
-            } 
-        }                        
-        
-        return bResult;
-    }
 
-    private Collection getResourcesToIgnore() {
-        Collection colIgnore = null;
-        
+    private ISaveableFilter getResourcesFilter() {
         // first get the dependent resources
-        colIgnore = worker.getObjectDeleteCommand().getDependentResources();
-        
-        // then get the resources that own the selected objects.
-        EObject[] eoArray = worker.getSelectedEObjects();
+        final Collection ignoredResources = this.worker.getObjectDeleteCommand().getDependentResources();
+
+        // then get the resources that own the selected objects
         ModelResource mrTemp = null;
-        
-        for( int i = 0; i < eoArray.length; i++ ) {
-            mrTemp = ModelUtilities.getModelResourceForModelObject( eoArray[ i ] );
-            
-            // (also, do NOT allow duplicates)
-            if ( !colIgnore.contains( mrTemp ) ) {
-                colIgnore.add( mrTemp );
+
+        for (EObject modelObject : this.worker.getSelectedEObjects()) {
+            mrTemp = ModelUtilities.getModelResourceForModelObject(modelObject);
+
+            // do not allow duplicates
+            if (!ignoredResources.contains(mrTemp)) {
+                ignoredResources.add(mrTemp);
             }
         }
-        
-        return colIgnore;
+
+        ISaveableFilter filter = new ISaveableFilter() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.ui.ISaveableFilter#select(org.eclipse.ui.Saveable, org.eclipse.ui.IWorkbenchPart[])
+             */
+            @Override
+            public boolean select( Saveable saveable,
+                                   IWorkbenchPart[] containingParts ) {
+                // make sure first part is an editor
+                if ((containingParts != null) && (containingParts.length != 0) && (containingParts[0] instanceof IEditorPart)) {
+                    IEditorInput input = ((IEditorPart)containingParts[0]).getEditorInput();
+
+                    if (input instanceof IFileEditorInput) {
+                        ModelResource model = ModelUtilities.getModelResourceForIFile(((IFileEditorInput)input).getFile(),
+                                                                                      false);
+
+                        // don't select if an ignored resource
+                        if (model != null) {
+                            return !ignoredResources.contains(model);
+                        }
+                    }
+                }
+
+                // if no part or part is not an editor don't force save
+                return false;
+            }
+        };
+
+        return filter;
     }
     
     /**

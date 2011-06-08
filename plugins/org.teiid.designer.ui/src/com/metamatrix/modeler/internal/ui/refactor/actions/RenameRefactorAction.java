@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.ui.refactor.actions;
 
 import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -34,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.ResourceRefactorCommand;
 import com.metamatrix.modeler.core.refactor.ResourceRenameCommand;
@@ -118,6 +120,9 @@ public class RenameRefactorAction extends RefactorAction {
         boolean bContinue = doResourceCleanup();
 
         if (!bContinue) {
+            MessageDialog.openInformation(getShell(),
+                                          UiConstants.Util.getString("RenameRefactorAction.operationCanceledDialogTitle"), //$NON-NLS-1$
+                                          UiConstants.Util.getString("RenameRefactorAction.operationCanceledDialogMessage")); //$NON-NLS-1$
             return;
         }
 
@@ -149,6 +154,12 @@ public class RenameRefactorAction extends RefactorAction {
 
                 // run it
                 UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                    /**
+                     * {@inheritDoc}
+                     *
+                     * @see java.lang.Runnable#run()
+                     */
+                    @Override
                     public void run() {
                         executeCommand(rrcCommand);
                     }
@@ -334,6 +345,12 @@ public class RenameRefactorAction extends RefactorAction {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IPath prefix = resource.getFullPath().removeLastSegments(1);
         IInputValidator validator = new IInputValidator() {
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+             */
+            @Override
             public String isValid( String string ) {
                 if (resource.getName().equals(string)) {
                     return UiConstants.Util.getString("RenameResourceAction.nameMustBeDifferent"); //$NON-NLS-1$
@@ -373,6 +390,12 @@ public class RenameRefactorAction extends RefactorAction {
         // in the UI thread.
 
         Runnable query = new Runnable() {
+            /**
+             * {@inheritDoc}
+             *
+             * @see java.lang.Runnable#run()
+             */
+            @Override
             public void run() {
                 String pathName = destination.getFullPath().makeRelative().toString();
                 result[0] = MessageDialog.openQuestion(shell, "Resource Already Exists", //RESOURCE_EXISTS_TITLE, //$NON-NLS-1$

@@ -7,32 +7,78 @@
  */
 package com.metamatrix.modeler.internal.ui.actions;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.ISaveableFilter;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.Saveable;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.refactor.SaveModifiedResourcesDialog;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.wizards.CloneProjectWizard;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
+import com.metamatrix.ui.internal.util.UiUtil;
 
 
 /** 
  * @since 5.0
  */
 public class CloneProjectAction2 extends AbstractAction {
+
     private static final String TITLE = UiConstants.Util.getString("CloneProjectAction2.title"); //$NON-NLS-1$
+
+    /**
+     * The selected project or <code>null</code>.
+     */
+    private IProject project;
+
+    /**
+     * A filter to save only models in the selected project. The selected project cannot be <code>null</code>.
+     */
+    private ISaveableFilter filter = new ISaveableFilter() {
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.ui.ISaveableFilter#select(org.eclipse.ui.Saveable, org.eclipse.ui.IWorkbenchPart[])
+         */
+        @Override
+        public boolean select( Saveable saveable,
+                               IWorkbenchPart[] containingParts ) {
+            // make sure first part is an editor
+            if ((containingParts != null) && (containingParts.length != 0) && (containingParts[0] instanceof IEditorPart)) {
+                IEditorInput input = ((IEditorPart)containingParts[0]).getEditorInput();
+
+                if (input instanceof IFileEditorInput) {
+                    IFile file = ((IFileEditorInput)input).getFile();
+
+                    // if not a model editor don't force save as only models are cloned
+                    if (getProject().equals(file.getProject())) {
+                        return (ModelUtilities.getModelResourceForIFile(file, false) != null);
+                    }
+                }
+            }
+
+            // if no part or part is not an editor don't force save
+            return false;
+        }
+    };
+
     /**
      * Construct an instance of ImportMetadata.
      */
@@ -44,36 +90,54 @@ public class CloneProjectAction2 extends AbstractAction {
         setEnabled(true);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * @return the selected project or <code>null</code>
+     */
+    protected IProject getProject() {
+        return this.project;
+    }
     
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(IWorkbenchPart, ISelection)
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.actions.AbstractAction#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
         super.selectionChanged(thePart, theSelection);
         
+        this.project = null;
         Object selectedObject = SelectionUtilities.getSelectedObject(theSelection);
         boolean enable = false;
+
         if ( selectedObject instanceof IResource && 
              selectedObject instanceof IProject && 
              ModelerCore.hasModelNature((IProject)selectedObject)) {
+            this.project = (IProject)selectedObject;
             enable=true;
         }
         setEnabled(enable);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.metamatrix.ui.actions.AbstractAction#doRun()
+     */
     @Override
     protected void doRun() {
         // Changed to use method that insures Object editor mode is on
 
         // cleanup modified files before starting this operation
-        boolean bContinue = doResourceCleanup();
+        boolean bContinue = UiUtil.saveDirtyEditors(null, this.filter, true);
         
-        if ( !bContinue ) { return; }
+        if (!bContinue) {
+            MessageDialog.openInformation(getShell(),
+                                          UiConstants.Util.getString("CloneProjectAction.operationCanceledDialogTitle"), //$NON-NLS-1$
+                                          UiConstants.Util.getString("CloneProjectAction.operationCanceledDialogMessage")); //$NON-NLS-1$
+            return;
+        }
         
         final IWorkbenchWindow iww = UiPlugin.getDefault().getCurrentWorkbenchWindow();
         try {
@@ -91,23 +155,6 @@ public class CloneProjectAction2 extends AbstractAction {
             UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
         }
         setEnabled(true);
-    }
-    
-    
-    protected boolean doResourceCleanup() {
-        boolean bResult = false;
-        
-        if ( ModelEditorManager.getDirtyResources().size() > 0 ) {
-        
-            SaveModifiedResourcesDialog pnlSave = new SaveModifiedResourcesDialog( getShell() );
-            pnlSave.open();
-            
-            bResult = ( pnlSave.getReturnCode() == Window.OK );        
-        } else {
-            bResult = true;
-        }
-        
-        return bResult;
     }
     
     //

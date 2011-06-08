@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.ui.refactor.actions;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,7 +16,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -23,19 +23,19 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.refactor.RefactorCommand;
 import com.metamatrix.modeler.core.refactor.ResourceRefactorCommand;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.refactor.RefactorUndoManager;
-import com.metamatrix.modeler.internal.ui.refactor.SaveModifiedResourcesDialog;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.ModelerActionService;
-import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.widget.ListMessageDialog;
 
 /**
@@ -55,21 +55,12 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
      * @return the Label to use for UNDO
      */
     protected abstract String getUndoLabel();
-
+    
+    /**
+     * @return <code>true</code> if no unsaved editors in the workspace
+     */
     protected boolean doResourceCleanup() {
-        boolean bResult = false;
-
-        if (ModelEditorManager.getDirtyResources().size() > 0) {
-
-            SaveModifiedResourcesDialog pnlSave = new SaveModifiedResourcesDialog(getShell());
-            pnlSave.open();
-
-            bResult = (pnlSave.getReturnCode() == Window.OK);
-        } else {
-            bResult = true;
-        }
-
-        return bResult;
+        return UiUtil.saveDirtyEditors(null, null, true);
     }
 
     public RefactorUndoManager getRefactorUndoManager() {
@@ -86,10 +77,22 @@ public abstract class RefactorAction extends ActionDelegate implements IWorkbenc
         return status;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+     */
+    @Override
     public void init( IViewPart view ) {
         window = view.getSite().getWorkbenchWindow();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     */
+    @Override
     public void init( IWorkbenchWindow iww ) {
         window = iww;
     }
