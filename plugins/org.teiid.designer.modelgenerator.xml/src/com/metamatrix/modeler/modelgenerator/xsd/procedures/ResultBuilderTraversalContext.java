@@ -5,14 +5,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xsd.XSDTypeDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.DirectionKind;
@@ -160,7 +157,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 			sqlString.append(column.getNameInSource());
 			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-			sqlString.append(datatypeManager.getName(column.getType()));
+            sqlString.append(datatypeManager.getRuntimeTypeName(column.getType()));
 			// Not sure we need the path
 			//sqlString.append(V_FUNC_SPACE);
 			//sqlString.append(column.getName());
@@ -176,7 +173,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 		SqlTransformationMappingRoot root = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
 			TransformationHelper.setSqlString(root, sqlString.toString(),
 					QueryValidator.SELECT_TRNS, true, this);
-		TransformationMappingHelper.reconcileMappingsOnSqlChange((EObject) root, this);
+		TransformationMappingHelper.reconcileMappingsOnSqlChange(root, this);
 		}
 	}
 	
