@@ -160,7 +160,7 @@ public class ResultBuilderTraversalContext extends BaseTraversalContext implemen
 			sqlString.append(column.getNameInSource());
 			sqlString.append(IBuilderConstants.V_FUNC_DOUBLE_QUOTE);
 			sqlString.append(IBuilderConstants.V_FUNC_SPACE);
-			sqlString.append(datatypeManager.getName(column.getType()));
+			sqlString.append(datatypeManager.getRuntimeTypeName(column.getType()));
 			// Not sure we need the path
 			//sqlString.append(V_FUNC_SPACE);
 			//sqlString.append(column.getName());
