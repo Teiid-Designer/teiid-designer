@@ -15,7 +15,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 
 public class ModelObjectAnnotationHelper {
 
-    private static final String EXTENDED_PROPERTY_NAMESPACE = "ext-custom:"; //$NON-NLS-1$
+    public static final String EXTENDED_PROPERTY_NAMESPACE = "ext-custom:"; //$NON-NLS-1$
 
     public ModelObjectAnnotationHelper() {
         super();

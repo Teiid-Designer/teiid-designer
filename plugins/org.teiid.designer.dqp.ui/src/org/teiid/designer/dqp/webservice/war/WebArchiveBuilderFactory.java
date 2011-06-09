@@ -19,4 +19,12 @@ public class WebArchiveBuilderFactory {
 
         return new DefaultWebArchiveBuilderImpl();
     }
+
+    /**
+     * Creates an instance of a RestWebArchiveBuilder.
+     */
+    public static WebArchiveBuilder createRestWebArchiveBuilder() {
+
+        return new RestWebArchiveBuilderImpl();
+    }
 }

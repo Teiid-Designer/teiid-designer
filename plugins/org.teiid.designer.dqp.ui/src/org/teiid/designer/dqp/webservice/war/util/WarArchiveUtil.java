@@ -45,6 +45,21 @@ public class WarArchiveUtil {
         return schema;
     }
 
+    public static ArrayList<String> getPathParameters( String uri ) {
+        ArrayList pathParams = new ArrayList();
+        String param;
+        if (uri.contains("{")) { //$NON-NLS-1$
+            while (uri.indexOf("}") > -1) { //$NON-NLS-1$
+                int start = uri.indexOf("{"); //$NON-NLS-1$
+                int end = uri.indexOf("}"); //$NON-NLS-1$
+                param = uri.substring(start + 1, end);
+                uri = uri.substring(end + 1);
+                pathParams.add(param);
+            }
+        }
+        return pathParams;
+    }
+
     /**
      * Generate a WSDL file using passed in WS Model Resources and user supplied values
      * 
