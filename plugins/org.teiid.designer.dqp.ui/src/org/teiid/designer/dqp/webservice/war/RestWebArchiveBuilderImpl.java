@@ -47,7 +47,7 @@ import com.metamatrix.modeler.webservice.util.AntTasks;
 /**
  * This is the default implementation of a WebArchiveBuilder.
  * 
- * @since 7.1
+ * @since 7.4
  */
 public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
@@ -71,7 +71,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     /**
      * This constructor is package protected, so that only the factory can call it.
      * 
-     * @since 7.1
+     * @since 7.4
      */
     protected RestWebArchiveBuilderImpl() {
     }
@@ -142,7 +142,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
     /**
      * @see com.metamatrix.modeler.dataservices.lds.WebArchiveBuilder#createWebArchive(java.io.InputStream, java.util.Map)
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     public IStatus createWebArchive( Properties properties,
@@ -300,7 +300,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param contextName
      * @param chars
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     private String validateInvalidCharactersInContextName( String contextName,
                                                            String[] invalidChars ) {
@@ -323,7 +323,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param path
      * @param name
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     private String getFileName( String path,
                                 String name ) {
@@ -343,7 +343,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * 
      * @param contextDirectory
      * @param webInfDirectory
-     * @since 7.1
+     * @since 7.4
      */
     private void getWebFiles( File contextDirectory,
                               File webInfDirectory ) throws Exception {
@@ -361,7 +361,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectoryName
      * @param properties
      * @param contextName
-     * @since 7.1
+     * @since 7.4
      */
     protected void replaceWebXmlVariables( String webInfDirectoryName,
                                            Properties properties,
@@ -479,7 +479,15 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             task.call();
             fileManager.close();
 
-            webInfLibDirectory.delete();
+            Boolean includeJars = (Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS);
+
+            // Delete RESTEasy and dependent jars if the user elected not to include them
+            if (!includeJars) {
+
+                FileUtils.removeChildrenRecursively(webInfLibDirectory);
+
+            }
+
         }
     }
 

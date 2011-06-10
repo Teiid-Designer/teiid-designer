@@ -19,7 +19,7 @@ import org.teiid.designer.dqp.webservice.war.WebArchiveBuilderFactory;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 
 /**
- * @since 7.1
+ * @since 7.4
  */
 public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
 
@@ -31,7 +31,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
      * @param dialog
      * @param theVdb
      * @param theVdbContext
-     * @since 7.1
+     * @since 7.4
      */
     public RestWarDeploymentInfoDataPage( Composite parent,
                                           RestWarDeploymentInfoDialog dialog,
@@ -42,7 +42,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
 
     /**
      * @see com.metamatrix.modeler.internal.webservice.ui.war.wizards.WarDeploymentInfoPanel#validatePage()
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     protected void validatePage() {
@@ -60,7 +60,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
      * @param statusCode
      * @param msg
      * @param validationStatusCode
-     * @since 7.1
+     * @since 7.4
      */
     private void createStatus( int statusCode,
                                String msg,
@@ -72,7 +72,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
      * validate context name
      * 
      * @return boolean
-     * @since 7.1
+     * @since 7.4
      */
     private boolean validateContext() {
 
@@ -121,7 +121,7 @@ public class RestWarDeploymentInfoDataPage extends RestWarDeploymentInfoPanel {
      * check to see if a war folder location exist
      * 
      * @return boolean
-     * @since 7.1
+     * @since 7.4
      */
     private boolean validateWARFileFolder() {
         // Get directory text from the textField

@@ -36,7 +36,7 @@ import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 
 /**
- * @since 7.1
+ * @since 7.4
  */
 public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements InternalModelerWarUiConstants {
 
@@ -67,7 +67,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     /**
      * @param parent
      * @param title
-     * @since 7.1
+     * @since 7.4
      */
     public RestWarDeploymentInfoDialog( Shell parent,
                                         IFile theVdb,
@@ -95,7 +95,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
 
     /**
      * @see org.eclipse.jface.window.Window#setShellStyle(int)
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     protected void setShellStyle( int theNewShellStyle ) {
@@ -139,7 +139,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
      * override the method
      * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     protected void okPressed() {
@@ -213,7 +213,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
      * override the method
      * 
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     protected void cancelPressed() {
@@ -223,19 +223,16 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     /**
      * load default setting values for WAR file location, License file location, context name.
      * 
-     * @since 7.1
+     * @since 7.4
      */
     private void loadDefault() {
         loadWarFileLocationDefault();
         loadContextNameDefault();
-        loadHostNameDefault();
-        loadPortDefault();
-        loadTnsDefault();
         loadJndiNameDefault();
-        loadSecurityTypeDefault();
+        loadIncludeJarsDefault();
 
-        RestWarDataserviceModel.getInstance().setVdbFile(theVdb);
         RestWarDataserviceModel.getInstance().setRestProcedureArrayList(restProcedureMap);
+        RestWarDataserviceModel.getInstance().setVdbFile(theVdb);
 
         warDeploymentInfoDataPage.loadData();
         warDeploymentInfoDataPage.setWarFileNameInDialog();
@@ -244,7 +241,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     /**
      * set default war file location
      * 
-     * @since 7.1
+     * @since 7.4
      */
     private void loadWarFileLocationDefault() {
         try {
@@ -258,19 +255,19 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     /**
      * set default context name, by default context name is vdb name.
      * 
-     * @since 7.1
+     * @since 7.4
      */
     private void loadContextNameDefault() {
         try {
-            WarDataserviceModel.getInstance().setContextNameDefault("");//$NON-NLS-1$
+            RestWarDataserviceModel.getInstance().setContextNameDefault("");//$NON-NLS-1$
 
             if (theVdb == null) {
-                WarDataserviceModel.getInstance().setContextNameDefault("");//$NON-NLS-1$ 
+                RestWarDataserviceModel.getInstance().setContextNameDefault("");//$NON-NLS-1$ 
                 return;
             }
 
             String name = theVdb.getName().substring(0, theVdb.getName().lastIndexOf("."));//$NON-NLS-1$        
-            WarDataserviceModel.getInstance().setContextNameDefault(name);
+            RestWarDataserviceModel.getInstance().setContextNameDefault(name);
 
         } catch (Throwable theThrowable) {
             DqpUiConstants.UTIL.log(theThrowable);
@@ -278,48 +275,21 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     }
 
     /**
-     * set default context name, by default host name is "localhost".
-     * 
-     * @since 7.1
-     */
-    private void loadHostNameDefault() {
-        WarDataserviceModel.getInstance().setHostNameDefault("localhost");//$NON-NLS-1$
-    }
-
-    /**
-     * set default port, by default port is "8080".
-     * 
-     * @since 7.1
-     */
-    private void loadPortDefault() {
-        WarDataserviceModel.getInstance().setPortDefault("8080");//$NON-NLS-1$
-    }
-
-    /**
-     * set default tns, by default tns is "http://teiid.org".
-     * 
-     * @since 7.1
-     */
-    private void loadTnsDefault() {
-        WarDataserviceModel.getInstance().setTnsDefault("http://teiid.org");//$NON-NLS-1$
-    }
-
-    /**
      * set default jndiName, by default the jndiName is "{REPLACE_WITH_VDB_JNDI_NAME}".
      * 
-     * @since 7.1
+     * @since 7.4
      */
     private void loadJndiNameDefault() {
-        WarDataserviceModel.getInstance().setJndiNameDefault("{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
+        RestWarDataserviceModel.getInstance().setJndiNameDefault("{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
     }
 
     /**
-     * set default security type, by default the type is "none".
+     * set default for includeJars, by default includeJars is true.
      * 
-     * @since 7.1.1
+     * @since 7.4
      */
-    private void loadSecurityTypeDefault() {
-        WarDataserviceModel.getInstance().setSecurityTypeDefault("none");//$NON-NLS-1$
+    private void loadIncludeJarsDefault() {
+        RestWarDataserviceModel.getInstance().setIncludeJars(true);
     }
 
     public void setWarFileName( String name ) {

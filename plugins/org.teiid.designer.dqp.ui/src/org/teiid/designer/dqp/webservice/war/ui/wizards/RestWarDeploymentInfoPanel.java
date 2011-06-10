@@ -32,7 +32,7 @@ import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
- * @since 7.1
+ * @since 7.4
  */
 public abstract class RestWarDeploymentInfoPanel extends Composite implements InternalModelerWarUiConstants {
 
@@ -50,6 +50,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
     protected Text txfWarFileDeploymentLocation;
     protected Text txfContext;
     protected Text txfJNDIName;
+    protected Button checkboxIncludeRestJars;
     private Button warBrowseButton;
     private Button restoreDefaultButton;
 
@@ -64,7 +65,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
      * @param dialog
      * @param theVdb
      * @param theVdbContext
-     * @since 7.1
+     * @since 7.4
      */
     public RestWarDeploymentInfoPanel( Composite parent,
                                        RestWarDeploymentInfoDialog dialog,
@@ -80,29 +81,29 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
     /**
      * @param id
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     protected static String getString( final String id ) {
         return DqpUiStringUtil.getString(I18N_PREFIX + id);
     }
 
     /**
-     * @since 7.1
+     * @since 7.4
      */
     protected void loadData() {
 
         try {
             // war file location
-            String text = (this.settings.get(WARFILELOCATION) == null ? WarDataserviceModel.getInstance().getWarFileLocation() : this.settings.get(WARFILELOCATION));
+            String text = (this.settings.get(WARFILELOCATION) == null ? RestWarDataserviceModel.getInstance().getWarFileLocation() : this.settings.get(WARFILELOCATION));
             txfWarFileDeploymentLocation.setText(text);
 
             // context name should be populated as default, not from the
             // settings.
-            text = WarDataserviceModel.getInstance().getContextName();
+            text = RestWarDataserviceModel.getInstance().getContextName();
             txfContext.setText(text);
 
             // JNDI Name
-            text = WarDataserviceModel.getInstance().getJndiName();
+            text = RestWarDataserviceModel.getInstance().getJndiName();
             txfJNDIName.setText(text);
 
         } catch (RuntimeException err) {
@@ -113,7 +114,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
 
     /**
      * @param isValid
-     * @since 7.1
+     * @since 7.4
      */
     protected void setDialogMessage( boolean isValid ) {
 
@@ -123,7 +124,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
 
     /**
      * @param status
-     * @since 7.1
+     * @since 7.4
      */
     protected void setDialogMessage( IStatus status ) {
         boolean isError = (status.getSeverity() == IStatus.ERROR);
@@ -143,18 +144,18 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
     }
 
     /**
-     * @since 7.1
+     * @since 7.4
      */
     protected abstract void validatePage();
 
     /**
      * @param parent
-     * @since 7.1
+     * @since 7.4
      */
     private void init( Composite parent ) {
 
         createDeploymentInfoComposite(parent);
-        createRestoreDefault(parent);
+        createRestoreDefaultAndIncludeJars(parent);
 
         this.settings = WidgetUtil.initializeSettings(this, DqpUiPlugin.getDefault());
 
@@ -163,7 +164,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
 
     /**
      * @param parent
-     * @since 7.1
+     * @since 7.4
      */
     private void createDeploymentInfoComposite( final Composite parent ) {
 
@@ -215,9 +216,9 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
 
     /**
      * @param parent
-     * @since 7.1
+     * @since 7.4
      */
-    private void createRestoreDefault( final Composite parent ) {
+    private void createRestoreDefaultAndIncludeJars( final Composite parent ) {
 
         // Create page
         Composite restoreDefault = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL, 1);
@@ -226,8 +227,20 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
         restoreDefault.setLayout(layout);
         layout.numColumns = 2;
 
+        this.checkboxIncludeRestJars = WidgetFactory.createCheckBox(restoreDefault, getString("includeJars.text"), //$NON-NLS-1$
+                                                                    GridData.FILL_HORIZONTAL,
+                                                                    true);
+        String text = getString("includeJars.tooltip"); //$NON-NLS-1$
+        this.checkboxIncludeRestJars.setToolTipText(text);
+        this.checkboxIncludeRestJars.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent theEvent ) {
+                handleIncludeJarsSelected();
+            }
+        });
+
         // Restore default button
-        String text = getString("restoreDefaultButtonText"); //$NON-NLS-1$ 
+        text = getString("restoreDefaultButtonText"); //$NON-NLS-1$ 
         this.restoreDefaultButton = WidgetFactory.createButton(restoreDefault, text, GridData.END);
         text = getString("restoreDefaultTooltip"); //$NON-NLS-1$
         this.restoreDefaultButton.setToolTipText(text);
@@ -241,7 +254,7 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
     }
 
     /**
-     * @since 7.1
+     * @since 7.4
      */
     private void addListeners() {
 
@@ -281,4 +294,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements In
         }
     }
 
+    void handleIncludeJarsSelected() {
+
+        RestWarDataserviceModel.getInstance().setIncludeJars(this.checkboxIncludeRestJars.getSelection());
+    }
 }

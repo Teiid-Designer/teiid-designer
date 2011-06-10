@@ -82,6 +82,11 @@ public class WebArchiveBuilderConstants {
     public static final String PROPERTY_VDB_FILE_NAME = "VdbFileName"; //$NON-NLS-1$
 
     /**
+     * Property indicating whether to include RESTEasy jars in WAR.
+     */
+    public static final String PROPERTY_INCLUDE_RESTEASY_JARS = "IncludeJars"; //$NON-NLS-1$
+
+    /**
      * Property indicating the web service models contained in the VDB
      */
     public static final String PROPERTY_VDB_WS_MODELS = "WebServiceModels"; //$NON-NLS-1$
