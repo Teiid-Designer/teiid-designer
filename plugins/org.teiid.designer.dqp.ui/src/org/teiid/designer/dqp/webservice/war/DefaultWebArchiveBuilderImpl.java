@@ -120,6 +120,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         this.operationToProcedureMap = operationToProcedureMap;
     }
 
+    @Override
     public IStatus validateContextName( String contextName ) {
 
         try {
@@ -173,6 +174,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @see com.metamatrix.modeler.dataservices.lds.WebArchiveBuilder#createWebArchive(java.io.InputStream, java.util.Map)
      * @since 7.1
      */
+    @Override
     public IStatus createWebArchive( Properties properties,
                                      IProgressMonitor monitor ) {
 
@@ -304,6 +306,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return status;
     }
 
+    @Override
     public boolean targetWarFileExists( Properties properties ) {
         boolean fileExists = false;
 
