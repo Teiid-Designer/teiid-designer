@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.util.StringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.dqp.ui.DqpUiStringUtil;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -168,7 +169,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
             } else this.noSecurityButton.setSelection(true);
 
         } catch (RuntimeException err) {
-            DqpUiPlugin.UTIL.log(err);
+            DqpUiConstants.UTIL.log(err);
         }
 
     }
@@ -391,7 +392,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
                 handleWarBrowseSourceSelected();
             }
         });
-        
+
     }
 
     void setConnectionTypeModified() {
@@ -417,6 +418,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         text = getString("restoreDefaultTooltip"); //$NON-NLS-1$
         this.restoreDefaultButton.setToolTipText(text);
         this.restoreDefaultButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected( final SelectionEvent event ) {
                 restoreDefaultButtonPressed();
             }
@@ -430,6 +432,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     private void addListeners() {
 
         ModifyListener modifyListener = new ModifyListener() {
+            @Override
             public void modifyText( ModifyEvent theEvent ) {
                 validatePage();
                 setWarFileNameInDialog();
@@ -452,12 +455,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         dialog.setWarFileName(txfContext.getText());
     }
 
-    /**
-     * restore default values for text fields.
-     * 
-     * @since 7.1
-     */
-    private void restoreDefaultButtonPressed() {
+    void restoreDefaultButtonPressed() {
         this.txfWarFileDeploymentLocation.setText(WarDataserviceModel.getInstance().getWarFilenameDefault());
         this.txfContext.setText(WarDataserviceModel.getInstance().getContextNameDefault());
         this.txfHost.setText(WarDataserviceModel.getInstance().getHostNameDefault());
