@@ -142,7 +142,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     private boolean verbose = false;
     private RelationalTypeMapping typeMapping;
     private DatatypeManager datatypeManager;
-    private StringNameValidator nameValidator;
     DifferenceProcessor diffProc;
     DifferenceReport drDifferenceReport;
     private boolean moveRatherThanCopyAdds;
@@ -165,7 +164,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         CoreArgCheck.isNotNull(factory);
         this.factory = factory;
         this.typeMapping = mapping;
-        this.nameValidator = new StringNameValidator();
     }
 
     protected class WorkingArea {
@@ -2354,6 +2352,29 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                            final String name,
                                            final JdbcNode node,
                                            final Context context ) {
+
+        // See if the name is valid within the context of the entity's parent ...
+        RelationalStringNameRule rule = new RelationalStringNameRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
+        StringNameValidator siblingNameValidator = new StringNameValidator();
+
+        for (Object sibling : rule.getSiblingsForUniquenessCheck(entity)) {
+            if (sibling != entity) {
+                String siblingName = ((RelationalEntity)sibling).getName();
+
+                if (siblingName != null) {
+                    siblingNameValidator.addExistingName(siblingName);
+                }
+            }
+        }
+
+        setNameAndNameInSource(entity, name, node, context, siblingNameValidator);
+    }
+
+    private void setNameAndNameInSource( final RelationalEntity entity,
+                                           final String name,
+                                           final JdbcNode node,
+                                           final Context context,
+                                           final StringNameValidator validator ) {
         // If the name is null, create a new replacement name ...
         String theName = name;
         if (theName == null || theName.trim().length() == 0) {
@@ -2362,24 +2383,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
         // Convert the name based upon the preferences/options ...
         final String convertedName = convertName(theName, context);
-
-        // See if the name is valid within the context of the entity's parent ...
-        RelationalStringNameRule rule = new RelationalStringNameRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
-        final List siblings = rule.getSiblingsForUniquenessCheck(entity);
-        final Iterator iter = siblings.iterator();
-        while (iter.hasNext()) {
-            final RelationalEntity sibling = (RelationalEntity)iter.next();
-            if (sibling != entity) {
-                final String siblingName = sibling.getName();
-                if (siblingName != null) {
-                    this.nameValidator.addExistingName(siblingName);
-                }
-            }
-        }
-        final String uniqueName = this.nameValidator.createValidUniqueName(convertedName);
-
-        //
+        final String uniqueName = validator.createValidUniqueName(convertedName);
         boolean forceSetNameInSource = false;
+
         if (uniqueName == null) {
             // name was already unique ...
             entity.setName(convertedName);
