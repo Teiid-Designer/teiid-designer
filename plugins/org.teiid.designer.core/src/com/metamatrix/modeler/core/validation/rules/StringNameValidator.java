@@ -73,8 +73,8 @@ public class StringNameValidator {
     /**
      * @param name the name to add to the existing name collection (should not be <code>null</code>)
      */
-    public void addExistingName(String name) {
-        this.existingNames.add(name);
+    public boolean addExistingName(String name) {
+        return this.existingNames.add(name);
     }
 
     /**
@@ -673,7 +673,7 @@ public class StringNameValidator {
         boolean changed = false;
         int counter = 0;
         while (true) {
-            if (this.existingNames.add(theName)) {
+            if (addExistingName(theName)) {
                 // It is unique, so return ...
                 return (changed ? theName : null);
             }
