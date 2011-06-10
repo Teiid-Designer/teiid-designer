@@ -47,7 +47,7 @@ import com.metamatrix.modeler.webservice.util.AntTasks;
 /**
  * This is the default implementation of a WebArchiveBuilder.
  * 
- * @since 7.1
+ * @since 7.4
  */
 public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
@@ -71,7 +71,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     /**
      * This constructor is package protected, so that only the factory can call it.
      * 
-     * @since 7.1
+     * @since 7.4
      */
     protected RestWebArchiveBuilderImpl() {
     }
@@ -142,7 +142,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
     /**
      * @see com.metamatrix.modeler.dataservices.lds.WebArchiveBuilder#createWebArchive(java.io.InputStream, java.util.Map)
-     * @since 7.1
+     * @since 7.4
      */
     @Override
     public IStatus createWebArchive( Properties properties,
@@ -300,7 +300,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param contextName
      * @param chars
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     private String validateInvalidCharactersInContextName( String contextName,
                                                            String[] invalidChars ) {
@@ -323,7 +323,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param path
      * @param name
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     private String getFileName( String path,
                                 String name ) {
@@ -343,7 +343,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * 
      * @param contextDirectory
      * @param webInfDirectory
-     * @since 7.1
+     * @since 7.4
      */
     private void getWebFiles( File contextDirectory,
                               File webInfDirectory ) throws Exception {
@@ -361,7 +361,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectoryName
      * @param properties
      * @param contextName
-     * @since 7.1
+     * @since 7.4
      */
     protected void replaceWebXmlVariables( String webInfDirectoryName,
                                            Properties properties,
@@ -479,7 +479,15 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             task.call();
             fileManager.close();
 
-            webInfLibDirectory.delete();
+            Boolean includeJars = (Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS);
+
+            // Delete RESTEasy and dependent jars if the user elected not to include them
+            if (!includeJars) {
+
+                FileUtils.removeChildrenRecursively(webInfLibDirectory);
+
+            }
+
         }
     }
 
@@ -490,13 +498,13 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         Iterator<RestProcedure> procedureIter = procedureList.iterator();
         while (procedureIter.hasNext()) {
             RestProcedure restProcedure = procedureIter.next();
-            sb.append("@" + restProcedure.getRestMethod().toUpperCase() + newline + "\t");
-            sb.append("@Path( \"" + restProcedure.getUri() + "\" )" + newline + "\t"); //$NON-NLS-2$
+            sb.append("@" + restProcedure.getRestMethod().toUpperCase() + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$
+            sb.append("@Path( \"" + restProcedure.getUri() + "\" )" + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
             if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-                sb.append(restProcedure.getConsumesAnnotation() + newline + "\t");
+                sb.append(restProcedure.getConsumesAnnotation() + newline + "\t"); //$NON-NLS-1$
             }
             if (restProcedure.getProducesAnnotation() != null && !restProcedure.getProducesAnnotation().isEmpty()) {
-                sb.append(restProcedure.getProducesAnnotation() + newline + "\t");
+                sb.append(restProcedure.getProducesAnnotation() + newline + "\t"); //$NON-NLS-1$
             }
             // Gen method signature
             sb.append("public String " + restProcedure.getProcedureName() + "( "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -506,32 +514,32 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             int pathParamCount = 0;
             for (String param : pathParams) {
                 pathParamCount++;
-                sb.append("@PathParam( \"" + param + "\" ) String " + param);
+                sb.append("@PathParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
                 if (pathParamCount < pathParams.size()) {
-                    sb.append(", ");
+                    sb.append(", "); //$NON-NLS-1$
                 }
             }
             if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
                 if (pathParams.size() > 0) {
-                    sb.append(", ");
+                    sb.append(", "); //$NON-NLS-1$
                 }
-                sb.append(" InputStream is ) { " + newline + "\t");
+                sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                sb.append(" ) { " + newline + "\t");
+                sb.append(" ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             // Gen setting of parameter(s)
-            sb.append("\tparameterMap.clear();" + newline + "\t");
+            sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
             if (pathParams.size() > 0) {
                 for (String param : pathParams) {
-                    sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t");
+                    sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 }
             }
             if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-                sb.append("\tparameterMap = getInputs(is);" + newline + "\t");
+                sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             // Gen return and execute
-            sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline
-                      + "}" + newline + "\t");
+            sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
+                      + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
 

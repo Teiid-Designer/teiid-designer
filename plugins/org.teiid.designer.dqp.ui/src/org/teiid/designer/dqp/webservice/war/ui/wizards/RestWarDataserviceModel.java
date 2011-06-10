@@ -15,7 +15,7 @@ import org.teiid.designer.dqp.webservice.war.WebArchiveBuilderConstants;
 import org.teiid.designer.dqp.webservice.war.objects.RestProcedure;
 
 /**
- * @since 7.1
+ * @since 7.4
  */
 public class RestWarDataserviceModel {
 
@@ -23,10 +23,12 @@ public class RestWarDataserviceModel {
     private String contextName;
     private String vdbLocation;
     private String jndiName;
+    private boolean includeJars;
 
     private String warFilenameDefault;
     private String contextNameDefault;
     private String jndiNameDefault;
+    private boolean includeJarsDefault;
 
     private IFile theVdb;
     private Map<String, List<RestProcedure>> restProcedureMap;
@@ -49,14 +51,14 @@ public class RestWarDataserviceModel {
     }
 
     /**
-     * @since 7.1
+     * @since 7.4
      */
     private RestWarDataserviceModel() {
     }
 
     /**
      * @return DataserviceModel
-     * @since 7.1
+     * @since 7.4
      */
     public static RestWarDataserviceModel getInstance() {
         if (dataserviceModel == null) {
@@ -67,7 +69,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the contextName.
-     * @since 7.1
+     * @since 7.4
      */
     public String getContextName() {
         return this.contextName;
@@ -75,7 +77,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param contextName The contextName to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setContextName( String contextName ) {
         this.contextName = contextName;
@@ -83,7 +85,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the warFilename.
-     * @since 7.1
+     * @since 7.4
      */
     public String getWarFileLocation() {
         return this.warFilename;
@@ -91,7 +93,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param warFilename The warFilename to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setWarFileLocation( String warFilename ) {
         this.warFilename = warFilename;
@@ -99,15 +101,31 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the vdbLocation.
-     * @since 7.1
+     * @since 7.4
      */
     public String getVdbLocation() {
         return this.vdbLocation;
     }
 
     /**
+     * @return Returns the includeJars.
+     * @since 7.4
+     */
+    public boolean isIncludeJars() {
+        return this.includeJars;
+    }
+
+    /**
+     * @return Sets the includeJars.
+     * @since 7.4
+     */
+    public void setIncludeJars( boolean includeJars ) {
+        this.includeJars = includeJars;
+    }
+
+    /**
      * @return Returns the jndiName.
-     * @since 7.1
+     * @since 7.4
      */
     public String getJndiName() {
         return this.jndiName;
@@ -115,7 +133,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param vdbLocation The vdbLocation to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setVdbLocation( String vdbLocation ) {
         this.vdbLocation = vdbLocation;
@@ -123,7 +141,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param contextNameDefault The contextNameDefault to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setContextNameDefault( String contextNameDefault ) {
         this.contextNameDefault = contextNameDefault;
@@ -133,7 +151,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param jndiNameDefault The jndiNameDefault to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setJndiNameDefault( String jndiNameDefault ) {
         // this.jndiNameDefault = jndiNameDefault;
@@ -142,8 +160,27 @@ public class RestWarDataserviceModel {
     }
 
     /**
+     * @param includeJarsDefault The includeJarsDefault to set.
+     * @since 7.4
+     */
+    public void setIncludeJarsDefault( boolean includeJarsDefault ) {
+        this.includeJarsDefault = includeJarsDefault;
+        this.includeJarsDefault = includeJarsDefault;
+
+    }
+
+    /**
+     * @param includeJarsDefault The includeJarsDefault
+     * @since 7.4
+     */
+    public boolean isIncludeJarsDefault() {
+        return this.includeJarsDefault;
+
+    }
+
+    /**
      * @param jndiName The jndiName to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setJndiName( String jndiName ) {
         this.jndiName = jndiName;
@@ -151,7 +188,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param warFilenameDefault The warFilenameDefault to set.
-     * @since 7.1
+     * @since 7.4
      */
     public void setWarFilenameDefault( String warFilenameDefault ) {
         this.warFilenameDefault = warFilenameDefault;
@@ -160,7 +197,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the contextNameDefault.
-     * @since 7.1
+     * @since 7.4
      */
     public String getContextNameDefault() {
         return this.contextNameDefault;
@@ -168,7 +205,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the warFilenameDefault.
-     * @since 7.1
+     * @since 7.4
      */
     public String getWarFilenameDefault() {
         return this.warFilenameDefault;
@@ -176,7 +213,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return Returns the JNDINameDefault.
-     * @since 7.1
+     * @since 7.4
      */
     public String getJndiNameDefault() {
         return this.jndiNameDefault;
@@ -184,7 +221,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return boolean isReadyForFinish
-     * @since 7.1
+     * @since 7.4
      */
     public boolean isReadyForFinish() {
         return this.isReadyForFinish;
@@ -192,7 +229,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param boolean isReadyForFinish
-     * @since 7.1
+     * @since 7.4
      */
     public void setIsReadyForFinish( boolean isReadyForFinish ) {
         this.isReadyForFinish = isReadyForFinish;
@@ -200,7 +237,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @param theVdb
-     * @since 7.1
+     * @since 7.4
      */
     public void setVdbFile( IFile theVdb ) {
         this.theVdb = theVdb;
@@ -208,7 +245,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     public IFile getVdbFile() {
         return this.theVdb;
@@ -216,7 +253,7 @@ public class RestWarDataserviceModel {
 
     /**
      * @return
-     * @since 7.1
+     * @since 7.4
      */
     public Properties getProperties() {
         Properties properties = new Properties();
@@ -225,6 +262,7 @@ public class RestWarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME, this.getContextName());
         properties.put(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME, this.getJndiName());
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME, this.getVdbFile().getLocation().toOSString());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS, this.isIncludeJars());
         properties.put(WebArchiveBuilderConstants.PROPERTY_VDB_REST_PROCEDURES, this.getRestProcedureMap());
 
         return properties;
