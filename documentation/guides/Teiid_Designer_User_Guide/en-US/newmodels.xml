@@ -91,7 +91,7 @@
 		</listitem>
 		<listitem>
 			<para>
-				Select a project or folder in the <xref linkend="model-explorer-view" /> and choose the same action in the right-click menu. 
+				Select a project or folder in the <xref linkend="model-explorer-view-image" /> and choose the same action in the right-click menu. 
 			</para>
 		</listitem>
 		<listitem>
@@ -273,7 +273,7 @@
 							</inlinemediaobject></para>
 							<note>
 								<para>An existing model will be pre-selected if a relational 
-									model in the workspace is selected in the <xref linkend="model-explorer-view" /> 
+									model in the workspace is selected in the <xref linkend="model-explorer-view-image" /> 
 									prior to starting the new model wizard.
 								</para>
 							</note>
@@ -414,7 +414,7 @@
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select any <emphasis role="bold">XML Schema model (XSD)</emphasis> in 
-								in the <xref linkend="model-explorer-view" /> tree.</para>
+								in the <xref linkend="model-explorer-view-image" /> tree.</para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Right-click to display the context menu 
@@ -872,7 +872,7 @@
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select any combination of relational 
-									models, tables and/or procedures in the <xref linkend="model-explorer-view" /> tree..</para>
+									models, tables and/or procedures in the <xref linkend="model-explorer-view-image" /> tree..</para>
 								<note>
 									<para>It is recommended that the user selects single source models, which 
 										enables auto-naming of input/output schema and Web service models in \
@@ -940,7 +940,7 @@
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select either a single XML Document or 
-									single <emphasis role="bold">XML Document root</emphasis> in <xref linkend="model-explorer-view" />.</para>
+									single <emphasis role="bold">XML Document root</emphasis> in <xref linkend="model-explorer-view-image" />.</para>
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select 

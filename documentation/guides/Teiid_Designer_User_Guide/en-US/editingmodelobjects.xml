@@ -22,7 +22,7 @@
 			
 		<itemizedlist>
 			<listitem>
-				<para>You can create new model objects directly in the <xref linkend="model-explorer-view" /> view, 
+				<para>You can create new model objects directly in the <xref linkend="model-explorer-view-image" />, 
 					<xref linkend="diagram-editor-section" /> or 
 					<xref linkend="table-editor-section" /> using the following actions:</para>
 				<itemizedlist>
@@ -45,7 +45,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create new child model objects in the <xref linkend="model-explorer-view" />:
+						To create new child model objects in the <xref linkend="model-explorer-view-image" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the parent object to which you 
@@ -66,7 +66,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
-									the <xref linkend="model-explorer-view" /> and is highlighted for renaming.</para>
+									the <xref linkend="model-explorer-view-image" /> and is highlighted for renaming.</para>
 								<figure>
 									<title>New Model Object In Explorer</title>
 									<mediaobject>
@@ -163,7 +163,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create new sibling model objects in the <xref linkend="model-explorer-view" />:
+						To create new sibling model objects in the <xref linkend="model-explorer-view-image" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select the object to which you want to 
@@ -184,7 +184,7 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 3 </emphasis> - The new model object displays on 
-									the <xref linkend="model-explorer-view" /> and is highlighted for renaming.</para>
+									the <xref linkend="model-explorer-view-image" /> and is highlighted for renaming.</para>
 							</listitem>
 						</itemizedlist>
 					</para>
@@ -264,7 +264,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create new associations between model objects in the <xref linkend="model-explorer-view" />:
+						To create new associations between model objects in the <xref linkend="model-explorer-view-image" />:
 						<itemizedlist>
 							<listitem>
 								<para><emphasis role="bold">Step 1 </emphasis> - Select two objects you wish to associate. 
@@ -421,7 +421,7 @@
 		</para>		
 		<para> These actions are presented in Teiid Designer's main <emphasis role="bold">Edit</emphasis> menu and also
 			in the right-click context menus for model objects selected in the
-			<emphasis role="bold"><xref linkend="model-explorer-view" /></emphasis>, 
+			<emphasis role="bold"><xref linkend="model-explorer-view-image" /></emphasis>, 
 			<emphasis role="bold"><xref linkend="diagram-editor-section" /></emphasis> and 
 			<emphasis role="bold"><xref linkend="table-editor-section" /></emphasis>.</para>
 
@@ -1075,7 +1075,7 @@
 				your applications cannot directly query an <emphasis role="bold">Input Set</emphasis>. 
 				<emphasis role="bold">Input Sets</emphasis> only display in the XML transformation diagram 
 				to which they belong. <emphasis role="bold">Input Sets</emphasis> do
-				not display on the <xref linkend="model-explorer-view" /> view and you cannot use them as you
+				not display on the <xref linkend="model-explorer-view-image" /> and you cannot use them as you
 				would a normal class, such as for source classes in other transformations.</para>	
 			<para>To open the <emphasis role="bold">Input Set Editor</emphasis>, either double-click the input set in the <emphasis role="bold">Mapping 
 				Transformation Diagram</emphasis> or click the edit button on the <emphasis role="bold">Input Set</emphasis> in 

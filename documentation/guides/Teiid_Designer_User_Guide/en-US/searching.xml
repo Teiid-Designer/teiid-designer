@@ -152,7 +152,7 @@
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Relationships...</emphasis> 
-								action on the Teiid Designer main menu <inlinemediaobject>
+								action on the main menu <inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/relationship-search-page.png"/>
 								</imageobject>
@@ -195,7 +195,7 @@
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Transformations...</emphasis> 
-								action on the Teiid Designer main menu <inlinemediaobject>
+								action on the main menu <inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/search-transformation.png"/>
 								</imageobject>
@@ -254,7 +254,7 @@
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Select <emphasis role="bold">Search > Metadata...</emphasis> 
-								action on the main Teiid Designer toolbar <inlinemediaobject>
+								action on the main toolbar <inlinemediaobject>
 								<imageobject>
 									<imagedata fileref="images/icons/metadata-search.png"/>
 								</imageobject>
