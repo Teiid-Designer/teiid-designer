@@ -246,7 +246,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
     private void loadWarFileLocationDefault() {
         try {
             String warDir = WebServicePlugin.getDefaultWarFileSaveLocation();
-            WarDataserviceModel.getInstance().setWarFilenameDefault(warDir);
+            RestWarDataserviceModel.getInstance().setWarFilenameDefault(warDir);
         } catch (Throwable theThrowable) {
             DqpUiConstants.UTIL.log(theThrowable);
         }
