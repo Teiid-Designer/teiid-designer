@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-cnd.jar" sourcepath="modeshape/src/modeshape-cnd-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr-api.jar" sourcepath="modeshape/src/modeshape-jcr-api-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-jcr.jar" sourcepath="modeshape/src/modeshape-jcr-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-repository.jar" sourcepath="modeshape/src/modeshape-repository-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-graph.jar"/>
 	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-common.jar" sourcepath="modeshape/src/modeshape-common-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-graph.jar" sourcepath="modeshape/src/modeshape-graph-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="modeshape/lib/modeshape-sequencer-ddl.jar" sourcepath="modeshape/src/modeshape-sequencer-ddl-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="external/lib/google-collections-1.0-rc3.jar"/>
-	<classpathentry exported="true" kind="lib" path="external/lib/jcr-2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="external/lib/joda-time-1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="external/lib/slf4j-api-1.5.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="external/lib/slf4j-simple-1.5.11.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>

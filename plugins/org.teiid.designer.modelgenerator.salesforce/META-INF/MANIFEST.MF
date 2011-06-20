@@ -41,4 +41,3 @@ Bundle-ClassPath: .,
  commons-httpclient-3.0.1.jar,
  saaj.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.modeshape.graph.mimetype

@@ -7,33 +7,20 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.modelextension;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-
-import javax.jcr.PropertyType;
-import javax.jcr.Value;
-import javax.jcr.nodetype.NodeTypeDefinition;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
-import org.modeshape.graph.ExecutionContext;
-import org.modeshape.graph.property.NamespaceRegistry.Namespace;
-import org.modeshape.jcr.CndNodeTypeReader;
 import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.cnd.CndNamespace;
-import org.teiid.designer.extension.cnd.CndPropertyDefinition;
 import org.teiid.designer.extension.cnd.CndTypeDefinition;
-import org.teiid.designer.extension.properties.ExtendedModelConstants;
 import org.teiid.designer.extension.properties.ExtendedModelObject;
 import org.teiid.designer.extension.properties.IExtensionPropertiesHandler;
-import org.teiid.designer.extension.properties.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
 
 import com.metamatrix.metamodels.relational.BaseTable;
@@ -151,7 +138,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 
 
 	private void parseCnd() {
-		
+/*
 		
 		ExecutionContext context = new ExecutionContext();
 		
@@ -251,6 +238,7 @@ public class SalesforceExtentionPropertiesHandler implements IExtensionPropertie
 		}
 		
 		this.cndWasParsed = true;
+*/
 	}
 	
     /**

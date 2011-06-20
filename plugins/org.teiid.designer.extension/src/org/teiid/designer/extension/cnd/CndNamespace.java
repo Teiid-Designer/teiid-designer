@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.extension.cnd;
 
-import org.modeshape.graph.property.NamespaceRegistry.Namespace;
 
 /**
  * This class provides a non-Modeshape equivalent of a Namespace object. Provides simple prefix & namespace values and
@@ -60,7 +59,7 @@ public class CndNamespace {
     /**
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public int compareTo( Namespace that ) {
+    public int compareTo( CndNamespace that ) {
         if (that == null) return 1;
         if (this == that) return 0;
         return this.getNamespaceUri().compareTo(that.getNamespaceUri());
@@ -72,8 +71,8 @@ public class CndNamespace {
     @Override
     public boolean equals( Object obj ) {
         if (obj == this) return true;
-        if (obj instanceof Namespace) {
-            Namespace that = (Namespace)obj;
+        if (obj instanceof CndNamespace) {
+        	CndNamespace that = (CndNamespace)obj;
             if (!this.namespaceUri.equals(that.getNamespaceUri())) return false;
             // if (!this.prefix.equals(that.getPrefix())) return false;
             return true;
