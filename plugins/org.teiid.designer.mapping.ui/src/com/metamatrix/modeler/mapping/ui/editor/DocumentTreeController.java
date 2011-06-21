@@ -100,9 +100,12 @@ public class DocumentTreeController implements ITreeViewerListener, ISelectionPr
     }
 
     public void resetExtentsFromDocument() {
-        int selectedRow = docTreeVertScrollBar.getSelection();
-        int newY = 0 - ROW_HEIGHT * selectedRow;
-        verticalScrollValue = selectedRow;
+    	// getSelection() is returning a pixel value for the upper scroll bar location
+    	//  (int)(0.5f + ((maximum - thumb - minimum) * value + minimum));
+    	
+        int newY = 0 - docTreeVertScrollBar.getSelection();
+        verticalScrollValue = docTreeVertScrollBar.getSelection()/ROW_HEIGHT;
+
         diagramController.resetExtentLocationsFromDocument(newY);
     }
 
