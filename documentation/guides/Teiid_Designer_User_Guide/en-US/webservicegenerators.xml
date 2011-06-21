@@ -281,7 +281,7 @@
 				<para>Once you have added all of your procedures along with the required extended properties, be
 					sure and add the model to your VDB or synchronize if it's already included in
 					the VDB. You will then need to re-deploy the VDB. </para>
-					<tip><para><emphasis>If you redeploy your VDB during development, you may receive an <emphasis
+					<important><para><emphasis>If you redeploy your VDB during development, you may receive an <emphasis
 								role="bold">"Invalid Session Exception" </emphasis>due to a stale
 							connection obtained for the pool. This can be corrected by flushing the
 							data source or, alternatively, you could add a test query to your VDB
@@ -290,7 +290,7 @@
 								<emphasis role="bold"><emphasis role="italic"
 									>&lt;check-valid-connection-sql&gt;some arbitrary
 									sql&lt;/check-valid-connection-sql&gt;</emphasis></emphasis>"
-						</emphasis></para></tip>
+						</emphasis></para></important>
 				</listitem>
 				<listitem>
 					<para><emphasis role="bold">Step 3 </emphasis> - 3. If you have not already done so, you will
