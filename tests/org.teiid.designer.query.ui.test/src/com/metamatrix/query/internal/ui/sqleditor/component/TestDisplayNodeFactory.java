@@ -1816,7 +1816,8 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(fromClause));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKEDEP"); //$NON-NLS-1$ 
+        String expectedSQL = "SELECT\n\t\t*\n\tFROM\n\t\t/*+ MAKEDEP */ a";  //$NON-NLS-1$ 
+        helpTest(query, expectedSQL);
     }
 
     public void testQueryWithJoinPredicateMakeDep() {
@@ -1829,12 +1830,12 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(new JoinPredicate(fromClause, fromClause1, JoinType.JOIN_CROSS)));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKENOTDEP CROSS JOIN b MAKEDEP"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\t/*+ MAKENOTDEP */ a CROSS JOIN /*+ MAKEDEP */ b"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithNestedJoinPredicateMakeDep() throws Exception {
         Query query = (Query)QueryParser.getQueryParser().parseCommand("Select a From (db.g1 JOIN db.g2 ON a = b) makedep LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
-        helpTest(query, "SELECT\n\t\ta\n\tFROM\n\t\t(db.g1 INNER JOIN db.g2 ON a = b) MAKEDEP LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
+        helpTest(query, "SELECT\n\t\ta\n\tFROM\n\t\t/*+ MAKEDEP */ (db.g1 INNER JOIN db.g2 ON a = b) LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
     }
     
     public void testCast() throws Exception {
