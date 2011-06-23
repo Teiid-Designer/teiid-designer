@@ -84,14 +84,6 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
             addPrimaryMetamodelUriPropertyDescriptor(object);
             addModelTypePropertyDescriptor(object);
             // addVisiblePropertyDescriptor(object); // hidden, since settable in 4.2 using VDB Editor
-            if (!isXsd) {
-                addMaxSetSizePropertyDescriptor(object);
-                addSupportsDistinctPropertyDescriptor(object);
-                addSupportsJoinPropertyDescriptor(object);
-                addSupportsOrderByPropertyDescriptor(object);
-                addSupportsOuterJoinPropertyDescriptor(object);
-                addSupportsWhereAllPropertyDescriptor(object);
-            }
             // End customized code
             addNamespaceUriPropertyDescriptor(object);
             addExtensionPackagePropertyDescriptor(object);
@@ -112,13 +104,6 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
             addNameInSourcePropertyDescriptor(object);
             addPrimaryMetamodelUriPropertyDescriptor(object);
             addModelTypePropertyDescriptor(object);
-            addMaxSetSizePropertyDescriptor(object);
-            addVisiblePropertyDescriptor(object);
-            addSupportsDistinctPropertyDescriptor(object);
-            addSupportsJoinPropertyDescriptor(object);
-            addSupportsOrderByPropertyDescriptor(object);
-            addSupportsOuterJoinPropertyDescriptor(object);
-            addSupportsWhereAllPropertyDescriptor(object);
             addNamespaceUriPropertyDescriptor(object);
             addProducerNamePropertyDescriptor(object);
             addProducerVersionPropertyDescriptor(object);
@@ -277,17 +262,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addMaxSetSizePropertyDescriptor( Object object ) {
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_MaxSetSize"), //$NON-NLS-1$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature_category"), //$NON-NLS-1$
-                                                                 // End customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -296,15 +271,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addMaxSetSizePropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_maxSetSize_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_maxSetSize_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_MaxSetSize(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -327,7 +294,13 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
     }
 
     /**
-     * This adds a property descriptor for the Visible feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * This adds a property descrip//            addMaxSetSizePropertyDescriptor(object);
+//            addVisiblePropertyDescriptor(object);
+//            addSupportsDistinctPropertyDescriptor(object);
+//            addSupportsJoinPropertyDescriptor(object);
+//            addSupportsOrderByPropertyDescriptor(object);
+//            addSupportsOuterJoinPropertyDescriptor(object);
+//            addSupportsWhereAllPropertyDescriptor(object);tor for the Visible feature. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
      */
@@ -349,20 +322,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addSupportsDistinctPropertyDescriptor( Object object ) {
-        // If the ModelAnnotation is contained within a virtual model then "supportsDistinct" cannot be set
-        boolean isSettable = !(isVirtual(object));
-
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsDistinct"), //$NON-NLS-1$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
-                                                                 isSettable,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature_category"), //$NON-NLS-1$
-                                                                 // End customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -371,15 +331,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addSupportsDistinctPropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsDistinct_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsDistinct_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsDistinct(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -388,20 +340,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addSupportsJoinPropertyDescriptor( Object object ) {
-        // If the ModelAnnotation is contained within a virtual model then "supportsJoin" cannot be set
-        boolean isSettable = !(isVirtual(object));
-
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsJoin"), //$NON-NLS-1$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
-                                                                 isSettable,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature_category"), //$NON-NLS-1$
-                                                                 // End customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -410,15 +349,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addSupportsJoinPropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsJoin_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsJoin(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -427,20 +358,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addSupportsOrderByPropertyDescriptor( Object object ) {
-        // If the ModelAnnotation is contained within a virtual model then "supportsOrderBy" cannot be set
-        boolean isSettable = !(isVirtual(object));
-
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOrderBy"), //$NON-NLS-1$                                  
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
-                                                                 isSettable,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature_category"), //$NON-NLS-1$
-                                                                 // End customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -449,15 +367,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addSupportsOrderByPropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsOrderBy_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOrderBy_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOrderBy(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -466,20 +376,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addSupportsOuterJoinPropertyDescriptor( Object object ) {
-        // If the ModelAnnotation is contained within a virtual model then "supportsOuterJoin" cannot be set
-        boolean isSettable = !(isVirtual(object));
-
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsOuterJoin"), //$NON-NLS-1$                 
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
-                                                                 isSettable,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature_category"), //$NON-NLS-1$
-                                                                 // End customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -488,15 +385,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addSupportsOuterJoinPropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsOuterJoin_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsOuterJoin_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsOuterJoin(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -505,20 +394,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated NOT
      */
     protected void addSupportsWhereAllPropertyDescriptor( Object object ) {
-        // If the ModelAnnotation is contained within a virtual model then "supportsWhereAll" cannot be set
-        boolean isSettable = !(isVirtual(object));
-
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 getString("ModelAnnotationItemProvider._UI_ModelAnnotation_SupportsWhereAll"), //$NON-NLS-1$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
-                                                                 isSettable,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature_category"), //$NON-NLS-1$
-                                                                 // Start customized code
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
@@ -527,15 +403,7 @@ public class ModelAnnotationItemProvider extends ItemProviderAdapter
      * @generated
      */
     protected void addSupportsWhereAllPropertyDescriptorGen( Object object ) { // NO_UCD
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                                                                 getResourceLocator(),
-                                                                 getString("_UI_ModelAnnotation_supportsWhereAll_feature"), //$NON-NLS-1$
-                                                                 getString("_UI_PropertyDescriptor_description", "_UI_ModelAnnotation_supportsWhereAll_feature", "_UI_ModelAnnotation_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                                                 CorePackage.eINSTANCE.getModelAnnotation_SupportsWhereAll(),
-                                                                 true,
-                                                                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-                                                                 null,
-                                                                 null));
+    	// Property no longer supported
     }
 
     /**
