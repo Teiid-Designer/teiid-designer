@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -81,6 +82,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.core.util.I18nUtil;
@@ -824,7 +826,26 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             // Let's set up/insert our Insert markers
 
             if (theMenu.find(OpenFileAction.ID) != null) {
+            	// Case for Non-project resources
                 theMenu.insertBefore(OpenFileAction.ID, new GroupMarker(ContextMenu.INSERT_START));
+                theMenu.insertAfter(ContextMenu.INSERT_START, new Separator(ContextMenu.INSERT_END));
+            } else {
+            	// Get first separator 
+            	IContributionItem[] items = theMenu.getItems();
+            	theMenu.removeAll();
+            	String sepID = "separator_999"; //$NON-NLS-1$
+            	
+            	boolean foundFirstSeparator = false;
+            	for( IContributionItem item : items ) {
+            		if( !foundFirstSeparator && item.isSeparator() ) {
+            			foundFirstSeparator = true;
+            			Separator sep = new Separator(sepID);
+            			theMenu.add(sep);
+            		} else {
+            			theMenu.add(item);
+            		}
+            	}
+            	theMenu.insertBefore(sepID, new GroupMarker(ContextMenu.INSERT_START));
                 theMenu.insertAfter(ContextMenu.INSERT_START, new Separator(ContextMenu.INSERT_END));
             }
             // if single selection and model resource add new child menu

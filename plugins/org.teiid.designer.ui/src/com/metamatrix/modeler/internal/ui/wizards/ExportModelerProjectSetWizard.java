@@ -313,7 +313,8 @@ public final class ExportModelerProjectSetWizard extends AbstractWizard
         // Initialize widgets
         if (this.selection != null) {
             final Iterator iter = this.selection.iterator();
-            for (int ndx = 0; iter.hasNext(); ++ndx) {
+            for (@SuppressWarnings("unused")
+			int ndx = 0; iter.hasNext(); ++ndx) {
                 final Object obj = iter.next();
                 final IPath path = (obj instanceof IResource ? ((IResource)obj).getFullPath() : view.getPath(obj));
                 if (path != null) {
