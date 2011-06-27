@@ -8,6 +8,7 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
+<!--
 	<extension
 		id="EditExtensionPropertiesAction"
 		name="%editExtensionPropertiesAction.name"
@@ -17,4 +18,5 @@
          label="%editExtensionPropertiesAction.label">
       </specialAction>
    </extension>
+   -->
 </plugin>
