@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.ui.navigator.model.ModelNavigator"
+            icon="platform:/plugin/org.teiid.designer.ui/icons/full/cview16/projects.gif"
+            id="org.teiid.designer.ui.navigator.model.modelExplorer"
+            name="%view.modelNavigator.name"
+            restorable="true">
+            <description>%view.modelNavigator.description</description>
+      </view>
+   </extension>
+
+   <extension
+         id="org.teiid.designer.ui.navigator.model.modelExplorer.viewer"
+         name="%view.modelNavigator.name"
+         point="org.eclipse.ui.navigator.viewer">
+         <viewer
+               viewerId="org.teiid.designer.ui.navigator.model.modelExplorer">
+            <popupMenu
+                  allowsPlatformContributions="true">
+               <insertionPoint name="group.new" separator="true" />
+               <insertionPoint name="group.goto" />
+               <insertionPoint name="group.open" separator="true" />
+               <insertionPoint name="group.openWith" />
+               <insertionPoint name="group.edit" separator="true" />
+               <insertionPoint name="group.show" separator="true" />
+               <insertionPoint name="group.reorganize" />
+               <insertionPoint name="group.port" />
+               <insertionPoint name="group.generate" separator="true" />
+               <insertionPoint name="group.search" separator="true" />
+               <insertionPoint name="group.build" separator="true" />
+               <insertionPoint name="additions" separator="true" />
+               <insertionPoint name="group.properties" separator="true" />
+            </popupMenu>
+         </viewer>
+         <viewerContentBinding
+               viewerId="org.teiid.designer.ui.navigator.model.modelExplorer">
+            <includes>
+               <contentExtension
+                     pattern="org.eclipse.ui.navigator.resourceContent">
+               </contentExtension>
+               <contentExtension
+                     pattern="org.eclipse.ui.navigator.resources.filters.*">
+               </contentExtension>
+               <contentExtension
+                     isRoot="true"
+                     pattern="org.teiid.designer.ui.navigator.modelContents">
+               </contentExtension>
+               <contentExtension
+                     pattern="org.teiid.designer.ui.navigator.filters.*">
+               </contentExtension>
+            </includes>
+         </viewerContentBinding>
+         <viewerActionBinding
+               viewerId="org.teiid.designer.ui.navigator.model.modelExplorer">
+            <includes>
+               <actionExtension
+                     pattern="org.eclipse.ui.navigator.resources.*">
+               </actionExtension>
+            </includes>
+         </viewerActionBinding>
+   </extension>
+   <extension
+         id="org.teiid.designer.ui.navigator.model.modelExplorer.modelContent"
+         name="Model Project Filter"
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <commonFilter
+            description="%filter.hideNonModelProjects.description"
+            id="org.teiid.designer.ui.navigator.filters.hideNonModelProjects"
+            name="%filter.hideNonModelProjects.name">
+         <filterExpression>
+            <not>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        forcePluginActivation="true"
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.teiid.designer.core.modelNature">
+                  </test>
+               </adapt>
+            </not>
+         </filterExpression>
+      </commonFilter>
+      <commonFilter
+            description="%filter.hideDotProjectFiles.description"
+            id="org.teiid.designer.ui.navigator.filters.hideDotProjectFiles"
+            name="%filter.hideDotProjectFiles.name">
+         <filterExpression>
+               <adapt
+                     type="org.eclipse.core.resources.IFile">
+                  <test
+                        forcePluginActivation="true"
+                        property="org.eclipse.core.resources.name"
+                        value=".project">
+                  </test>
+               </adapt>
+         </filterExpression>
+      </commonFilter>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.teiid.designer.ui.navigator.model.ModelNavigatorContentProvider"
+            id="org.teiid.designer.ui.navigator.modelContents"
+            labelProvider="org.teiid.designer.ui.navigator.model.ModelNavigatorLabelProvider"
+            name="%content.modelNavigator"
+            priority="normal">
+         <triggerPoints>
+            <instanceof
+               value="org.eclipse.core.resources.IResource">
+            </instanceof>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IResource">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.emf.ecore.EObject">
+               </instanceof>
+            </or>
+         </possibleChildren>
+         <actionProvider
+               id="org.teiid.designer.ui.navigator.model.modelActionProvider"
+               class="org.teiid.designer.ui.navigator.model.ModelActionProvider">
+         </actionProvider>
+         <commonSorter
+               class="org.teiid.designer.ui.navigator.model.ModelContentsSorter"
+               id="org.teiid.designer.ui.navigator.model.modelContentsSorter">
+         </commonSorter>
+      </navigatorContent>
+      <commonWizard
+            type="new"
+            wizardId="newModelProject">
+         <enablement></enablement>
+      </commonWizard>
+      <commonWizard
+            type="new"
+            wizardId="org.eclipse.ui.wizards.new.folder">
+         <enablement>
+            <or>
+                <adapt type="org.eclipse.core.resources.IFile" />   
+                <adapt type="org.eclipse.core.resources.IFolder" />
+                <adapt type="org.eclipse.core.resources.IProject" /> 
+                <adapt type="org.eclipse.core.resources.IWorkspaceRoot" />  
+            </or>
+         </enablement>
+      </commonWizard>
+   </extension>
+
+</fragment>

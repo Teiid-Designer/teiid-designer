@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.ui;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;
 import com.metamatrix.ui.UiConstants;
@@ -123,6 +124,7 @@ public interface PluginConstants {
             String LOGICAL_AS_RELATIONAL = "logicalAsRelational"; //$NON-NLS-1$
             String AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED = "autoOpenPerspectiveWhenModelEditorOpened"; //$NON-NLS-1$
             String SHOW_NON_MODELS_IN_MODEL_EXPLORER = "showNonModelsInModelExplorer"; //$NON-NLS-1$
+            String SHOW_IMPORTS_IN_MODEL_EXPLORER = "showImportsInModelExplorer"; //$NON-NLS-1$
             PreferenceKeyAndDefaultValue[] PREFERENCES = new PreferenceKeyAndDefaultValue[] {
                 new PreferenceKeyAndDefaultValue(LOCK_TARGET_VIRTUAL_ATTRIBUTES_BY_DEFAULT, new Boolean(false)),
                 new PreferenceKeyAndDefaultValue(SHOW_MODEL_CONTENTS_IN_MODEL_EXPLORER, new Boolean(true)),
@@ -130,7 +132,8 @@ public interface PluginConstants {
                 new PreferenceKeyAndDefaultValue(AUTO_OPEN_EDITOR_IF_NEEDED, new Boolean(false)),
                 new PreferenceKeyAndDefaultValue(AUTO_OPEN_PERSPECTIVE_WHEN_MODEL_EDITOR_OPENED, MessageDialogWithToggle.PROMPT),
                 new PreferenceKeyAndDefaultValue(AUTO_UPDATE_IMPORTS_ON_SAVE, new Boolean(true)),
-                new PreferenceKeyAndDefaultValue(SHOW_NON_MODELS_IN_MODEL_EXPLORER, new Boolean(true))};
+                new PreferenceKeyAndDefaultValue(SHOW_NON_MODELS_IN_MODEL_EXPLORER, new Boolean(true)),
+                new PreferenceKeyAndDefaultValue(SHOW_IMPORTS_IN_MODEL_EXPLORER, new Boolean(true))};
         }
     }
 
