@@ -224,7 +224,20 @@ public class TransformationDiagramNotificationHelper {
                 if (diagramEObjects.contains(targetObject)) {
                     refreshDiagram = true;
                     break;
-                } // endif
+                }
+                
+                // Check Removed
+                if( NotificationUtilities.isRemoved(nextNotification) ) {
+                	EObject[] remChildren = NotificationUtilities.getRemovedChildren(nextNotification);
+                	for( EObject eobj : remChildren ) {
+                		if( diagramEObjects.contains(eobj) ) {
+                			refreshDiagram = true;
+                		}
+                	}
+                }
+                if( refreshDiagram ) {
+                	break;
+                }
             } // endwhile -- all notifications
         }
     }
