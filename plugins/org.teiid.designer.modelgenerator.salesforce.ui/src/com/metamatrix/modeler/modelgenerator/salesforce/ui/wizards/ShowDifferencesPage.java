@@ -10,6 +10,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.PropertyDifference;
@@ -118,6 +120,7 @@ public class ShowDifferencesPage extends AbstractWizardPage
                 Throwable cause = e.getCause();
                 Shell shell = this.getShell();
                 Status status = new Status(IStatus.ERROR, PLUGIN_ID, 0, cause.getLocalizedMessage(), cause);
+                System.err.println("cause message="+cause.getLocalizedMessage());
                 ErrorDialog.openError(shell,
                                       getString("dialog.dataModelCreationError.title"), cause.getLocalizedMessage(), status); //$NON-NLS-1$  
                 super.setVisible(false);

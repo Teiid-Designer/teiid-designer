@@ -9,6 +9,7 @@ package com.metamatrix.modeler.modelgenerator.salesforce.ui.wizards;
 
 import java.io.File;
 import java.net.MalformedURLException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -16,7 +17,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -43,13 +46,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.metamodel.MetamodelDescriptor;
 import com.metamatrix.modeler.core.workspace.ModelProject;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -73,7 +76,7 @@ public class ModelSelectionPage extends AbstractWizardPage
     ModelGeneratorSalesforceUiConstants.HelpContexts {
 
     /** Used as a prefix to properties file keys. */
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(ModelSelectionPage.class);
+    static final String PREFIX = I18nUtil.getPropertyPrefix(ModelSelectionPage.class);
 
     protected SalesforceImportWizardManager importManager;
 
@@ -363,13 +366,12 @@ public class ModelSelectionPage extends AbstractWizardPage
      */
     void handleBrowseWorkspaceForTargetModel() {
         // Open the selection dialog for the target relational model
-        MetamodelDescriptor descriptor = ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(RelationalPackage.eNS_URI);
         Object[] resources = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("dialog.browseTargetModel.title"), //$NON-NLS-1$
                                                                            getString("dialog.browseTargetModel.msg"), //$NON-NLS-1$
                                                                            false,
                                                                            this.importManager.getTargetModelLocation(),
                                                                            new XMLExtensionsFilter(),
-                                                                           new ModelResourceSelectionValidator(descriptor, false),
+                                                                           new ValidationFilter(),
                                                            				   new ModelExplorerLabelProvider());
         // Update the manager and the controls with selection
         if ((resources != null) && (resources.length > 0)) {
@@ -467,15 +469,18 @@ public class ModelSelectionPage extends AbstractWizardPage
                 try {
                     model = ModelerCore.getModelEditor().findModelResource(file);
                     if (model.isReadOnly()) {
-                        WizardUtil.setPageComplete(this, getString("readOnlyModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+                        WizardUtil.setPageComplete(this, UTIL.getString(PREFIX + "readOnlyModelMessage", file.getName()), //$NON-NLS-1$
+                                                   IMessageProvider.ERROR);
                         return false;
                     }
                     if (!RelationalPackage.eNS_URI.equals(model.getPrimaryMetamodelDescriptor().getNamespaceURI())) {
-                        WizardUtil.setPageComplete(this, getString("notRelationalModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+                        WizardUtil.setPageComplete(this, UTIL.getString(PREFIX + "notRelationalModelMessage", file.getName()), //$NON-NLS-1$
+                                                   IMessageProvider.ERROR);
                         return false;
                     }
                     if (model.getModelType().getValue() == ModelType.VIRTUAL) {
-                        WizardUtil.setPageComplete(this, getString("virtualModelMessage"), IMessageProvider.ERROR); //$NON-NLS-1$
+                        WizardUtil.setPageComplete(this, UTIL.getString(PREFIX + "virtualModelMessage", file.getName()), //$NON-NLS-1$
+                                                   IMessageProvider.ERROR);
                         return false;
                     }
                     this.importManager.setUpdatedModel(model);
@@ -633,5 +638,42 @@ public class ModelSelectionPage extends AbstractWizardPage
     @Override
     public boolean canFlipToNextPage() {
         return super.canFlipToNextPage() && updating;
+    }
+    
+    class ValidationFilter extends ModelResourceSelectionValidator {
+
+        public ValidationFilter() {
+            super(ModelerCore.getMetamodelRegistry().getMetamodelDescriptor(RelationalPackage.eNS_URI), false);
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator#validate(java.lang.Object[])
+         */
+        @Override
+        public IStatus validate( Object[] selection ) {
+            IStatus status = super.validate(selection);
+
+            if (status.getSeverity() != IStatus.ERROR) {
+                IFile file = (IFile)selection[0];
+
+                try {
+                    ModelResource model = ModelerCore.getModelEditor().findModelResource(file);
+    
+                    if (model.isReadOnly()) {
+                        status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString(PREFIX + "dialog.readOnlyModelMessage")); //$NON-NLS-1$
+                    }
+    
+                    if (model.getModelType().getValue() == ModelType.VIRTUAL) {
+                        status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString(PREFIX + "dialog.virtualModelMessage")); //$NON-NLS-1$
+                    }
+                } catch (Exception e) {
+                    status = new Status(IStatus.ERROR, PLUGIN_ID, null, e);
+                }
+            }
+
+            return status;
+        }
     }
 }
