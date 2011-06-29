@@ -11,8 +11,8 @@ import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.runtime.ServerManager;
@@ -26,10 +26,6 @@ import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
  */
 public class NewServerAction extends Action {
 
-    // ===========================================================================================================================
-    // Fields
-    // ===========================================================================================================================
-
     /**
      * The server manager used to create and edit servers.
      */
@@ -39,10 +35,8 @@ public class NewServerAction extends Action {
      * The shell used to display the dialog that edits and creates servers.
      */
     private final Shell shell;
-
-    // ===========================================================================================================================
-    // Constructors
-    // ===========================================================================================================================
+    
+    private boolean showConnectionFailedDialog = true;
 
     /**
      * @param shell the parent shell used to display the dialog
@@ -61,10 +55,6 @@ public class NewServerAction extends Action {
         this.shell = shell;
         this.serverManager = serverManager;
     }
-
-    // ===========================================================================================================================
-    // Methods
-    // ===========================================================================================================================
 
     /**
      * {@inheritDoc}
@@ -88,27 +78,32 @@ public class NewServerAction extends Action {
                 }
             }
         };
-
-        int result = dialog.open();
         
-        if( result == Dialog.OK) {
-	        
-	        if( wizard.shouldAutoConnect() ) {
-	            	try {
-	    				wizard.getServer().getAdmin();
-	    				wizard.getServer().setConnectionError(null);
-	    				this.serverManager.setDefaultServer(wizard.getServer());
-	    				
-	    			} catch (Exception e) {
-	    				String msg = UTIL.getString("serverWizardNewServerAutoConnectError"); //$NON-NLS-1$
-	    				MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), //$NON-NLS-1$
-	    						msg);
-	    				wizard.getServer().setConnectionError(msg);
-	    				wizard.getServer().notifyRefresh();
-	    			}
+        if (dialog.open() == Window.OK) {
+            if (wizard.shouldAutoConnect()) {
+                try {
+                    wizard.getServer().getAdmin();
+                    wizard.getServer().setConnectionError(null);
+                    this.serverManager.setDefaultServer(wizard.getServer());
+                } catch (Exception e) {
+                    String msg = UTIL.getString("serverWizardNewServerAutoConnectError"); //$NON-NLS-1$
 
-	        }
+                    if (this.showConnectionFailedDialog) {
+                        MessageDialog.openError(this.shell, UTIL.getString("newServerActionAutoConnectProblemTitle"), msg); //$NON-NLS-1$
+                    }
+
+                    wizard.getServer().setConnectionError(msg);
+                    wizard.getServer().notifyRefresh();
+                }
+            }
         }
+    }
+
+    /**
+     * @param showConnectionFailedDialog <code>true</code> if an error dialog should be shown when auto-connecting fails
+     */
+    public void setShowConnectionFailedDialog( boolean showConnectionFailedDialog ) {
+        this.showConnectionFailedDialog = showConnectionFailedDialog;
     }
 
 }
