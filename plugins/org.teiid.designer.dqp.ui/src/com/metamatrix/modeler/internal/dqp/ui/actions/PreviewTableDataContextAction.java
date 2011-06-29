@@ -68,6 +68,7 @@ import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.webservice.Operation;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlProcedureAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlTableAspect;
@@ -375,6 +376,8 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @Override
     protected boolean isValidSelection( ISelection selection ) {
+    	setToolTipText(getString("tooltip")); //$NON-NLS-1$
+    	setText(getString("tooltip")); //$NON-NLS-1$
         // An object can be previewed if it is of a certain object type in a Source/Relational model
         // This is changed from previous releases because the requirement of having a Source binding prior to
         // enablement has changed. Now the binding check is moved to the run() method which performs the check
@@ -392,7 +395,12 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         if (eObj == null) return false;
 
         // eObj must be previewable
-        return ModelObjectUtilities.isExecutable(eObj);
+        boolean isExecutable = ModelObjectUtilities.isExecutable(eObj);
+        if( !isExecutable ) return false;
+        
+        setToolTipText(getString("tooltipOnEnable", ModelerCore.getModelEditor().getName(eObj))); //$NON-NLS-1$
+        setText(getString("tooltipOnEnable", ModelerCore.getModelEditor().getName(eObj))); //$NON-NLS-1$
+        return true;
     }
 
     /**

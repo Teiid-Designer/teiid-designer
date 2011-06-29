@@ -36,7 +36,6 @@ import com.metamatrix.modeler.diagram.ui.model.DiagramModelNode;
 import com.metamatrix.modeler.diagram.ui.notation.uml.part.UmlClassifierEditPart;
 import com.metamatrix.modeler.diagram.ui.util.RelationalUmlEObjectHelper;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
-import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.GlobalActionsMap;
@@ -346,17 +345,6 @@ public class PackageDiagramActionAdapter
             tbm.add(this.upPackageDiagramAction);
     		tbm.add(new Separator());
     		
-    		IAction previewAction = ModelerSpecialActionManager.getAction(com.metamatrix.modeler.ui.UiConstants.Extensions.PREVIEW_DATA_ACTION_ID);
-    		
-            if( previewAction != null ) {
-                tbm.add(previewAction);
-                tbm.add(new Separator());
-            }
-//        tbm.add(new Separator());
-//        tbm.add(newRectangleACI.getAction());
-//        tbm.add(newEllipseACI.getAction());
-//        tbm.add(newTextACI.getAction());
-//        tbm.add(newNoteACI.getAction());
             tbm.add(new Separator());
             tbm.add(this.saveDiagramAction);
             tbm.add(this.diagramPageSetupAction);
@@ -366,10 +354,6 @@ public class PackageDiagramActionAdapter
             
             this.refreshDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
             this.upPackageDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
-//        ((NewNoteAction)newNoteACI.getAction()).setDiagramEditor((DiagramEditor)getEditorPage());
-//        ((NewEllipseAction)newEllipseACI.getAction()).setDiagramEditor((DiagramEditor)getEditorPage());
-//        ((NewTextAction)newTextACI.getAction()).setDiagramEditor((DiagramEditor)getEditorPage());
-//        ((NewRectangleAction)newRectangleACI.getAction()).setDiagramEditor((DiagramEditor)getEditorPage());
         
             tbm.update(true);
         }

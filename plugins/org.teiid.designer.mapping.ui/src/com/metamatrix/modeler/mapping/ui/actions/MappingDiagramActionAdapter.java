@@ -80,7 +80,6 @@ import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.modeler.ui.actions.ModelerGlobalActionsMap;
-import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.ControlledPopupMenuExtender;
@@ -571,12 +570,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
 
         if (isDetailedMapping()) {
             tbm.add(new Separator());
-            final IAction previewAction = ModelerSpecialActionManager.getAction(com.metamatrix.modeler.ui.UiConstants.Extensions.PREVIEW_DATA_ACTION_ID);
-            if (previewAction != null) {
-                tbm.add(previewAction);
-                tbm.add(new Separator());
-            }
-
             tbm.add(this.newMappingLinkAction);
             tbm.add(this.deleteMappingLinksAction);
 
@@ -602,11 +595,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
             tbm.add(this.diagramPageSetupAction);
         } else {
             tbm.add(new Separator());
-            final IAction previewAction = ModelerSpecialActionManager.getAction(com.metamatrix.modeler.ui.UiConstants.Extensions.PREVIEW_DATA_ACTION_ID);
-            if (previewAction != null) {
-                tbm.add(previewAction);
-                tbm.add(new Separator());
-            }
 
             if (!logicalModel) {
                 tbm.add(this.generateMappingClassesAction);

@@ -11,15 +11,16 @@ package com.metamatrix.modeler.diagram.ui.custom.actions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
+
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramPageSetupAction;
@@ -36,7 +37,6 @@ import com.metamatrix.modeler.diagram.ui.pakkage.actions.IPackageDiagramActionCo
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.modeler.ui.actions.ModelerActionService;
-import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.GlobalActionsMap;
@@ -428,12 +428,6 @@ public class CustomDiagramActionAdapter
 		tbm.add(this.refreshDiagramAction);
 		tbm.add(this.upPackageDiagramAction);
 		tbm.add(new Separator());
-        
-        IAction previewAction = ModelerSpecialActionManager.getAction(com.metamatrix.modeler.ui.UiConstants.Extensions.PREVIEW_DATA_ACTION_ID);
-        if( previewAction != null ) {
-            tbm.add(previewAction);
-            tbm.add(new Separator());
-        }
         
         tbm.add(this.addAction);
         tbm.add(this.removeAction);
