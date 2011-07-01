@@ -54,7 +54,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
     public CreatePreviewVdbJob( IFile model,
                                 PreviewContext context ) throws Exception {
         super(NLS.bind(Messages.CreatePreviewVdbJob, model.getFullPath()), context);
-        assert PreviewManager.isPreviewable(model) : "model is not previewable" + model.getFullPath(); //$NON-NLS-1$
+        assert PreviewManager.isPreviewableResource(model) : "model is not previewable" + model.getFullPath(); //$NON-NLS-1$
         this.model = model;
         this.project = null;
         initialize();

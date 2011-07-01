@@ -191,7 +191,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @param file the file being checked (may not be <code>null</code>)
      * @return <code>true</code> if the file is a previewable model
      */
-    public static boolean isPreviewable( IFile file ) {
+    public static boolean isPreviewableResource( IFile file ) {
         if (ModelUtil.isModelFile(file)) {
             if (ModelUtil.isXsdFile(file)) {
                 return true;
@@ -207,8 +207,8 @@ public final class PreviewManager extends JobChangeAdapter
                     ModelResource modelResource = ModelUtil.getModelResource(file, true);
                     assert (modelResource != null); // already determined it is a model
                     MetamodelDescriptor descriptor = ModelerCore.getModelEditor().getPrimaryMetamodelDescriptor(modelResource);
-                    if( descriptor == null ) {
-                    	return false;
+                    if (descriptor == null) {
+                        return false;
                     }
                     metamodelUri = descriptor.getNamespaceURI();
                 } catch (ModelWorkspaceException e) {
@@ -762,12 +762,12 @@ public final class PreviewManager extends JobChangeAdapter
         // When a model is created a resource added event is followed immediately by a resource changed event. So, the
         // handling of a changed model first makes sure the Preview VDB exists before synchronizing with the changed model.
         if (ResourceChangeUtilities.isChanged(fileDelta) && ResourceChangeUtilities.isContentChanged(fileDelta)
-            && isPreviewable(file)) {
+            && isPreviewableResource(file)) {
             modelChanged(file);
         } else if (ResourceChangeUtilities.isRemoved(fileDelta)) {
             // this occurs when a model is deleted or renamed (old model location)
             fileDeleted(file);
-        } else if (ResourceChangeUtilities.isAdded(fileDelta) && isPreviewable(file)) {
+        } else if (ResourceChangeUtilities.isAdded(fileDelta) && isPreviewableResource(file)) {
             // this occurs on a rename (new model location) => ResourceChangeUtilities.isMovedFrom(fileDelta)
             // this also occurs on a save as
             modelChanged(file);
@@ -935,7 +935,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void modelChanged( IFile model ) {
         assert (model != null) : "model is null"; //$NON-NLS-1$
-        assert isPreviewable(model) : "model is not previewable: " + model; //$NON-NLS-1$
+        assert isPreviewableResource(model) : "model is not previewable: " + model; //$NON-NLS-1$
 
         try {
             ModelChangedJob job = new ModelChangedJob(model, this.context, getPreviewServer());
@@ -1387,7 +1387,7 @@ public final class PreviewManager extends JobChangeAdapter
         status.setDeploy(deploy);
     }
 
-    public void setPasswordProvider(IPasswordProvider passwordProvider) {
+    public void setPasswordProvider( IPasswordProvider passwordProvider ) {
         this.passwordProvider = passwordProvider;
     }
 

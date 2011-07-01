@@ -36,7 +36,7 @@ public final class ModelChangedJob extends CompositePreviewJob {
                             PreviewContext context,
                             Server previewServer ) throws Exception {
         super(NLS.bind(Messages.ModelChangedJob, changedModel), context, previewServer, true); // run jobs in sequence
-        assert PreviewManager.isPreviewable(changedModel) : "model is not previewable" + changedModel.getFullPath(); //$NON-NLS-1$
+        assert PreviewManager.isPreviewableResource(changedModel) : "model is not previewable" + changedModel.getFullPath(); //$NON-NLS-1$
         this.changedModel = changedModel;
         process(previewServer);
     }

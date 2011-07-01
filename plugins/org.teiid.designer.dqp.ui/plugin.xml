@@ -160,5 +160,22 @@
             </objectClass>
          </enablement>
       </decorator>
+      <decorator
+            lightweight="true"
+            location="BOTTOM_RIGHT"
+            adaptable="true"
+            label="%previewDecoratorr.label"
+            state="true"
+            class="com.metamatrix.modeler.internal.dqp.ui.workspace.PreviewModelObjectLabelProvider"
+            id="org.teiid.designer.dqp.ui.previewDecorator">
+         <description>
+            %previewDecorator.description
+         </description>
+         <enablement>
+            <objectClass
+                  name="org.eclipse.emf.ecore.EObject">
+            </objectClass>
+         </enablement>
+      </decorator>
    </extension>
 </plugin>
