@@ -14,9 +14,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
@@ -718,7 +720,7 @@ public class StringNameValidator {
 
     class Node implements Comparable {
 
-        private final char content;
+        final char content;
         boolean marker;
         private TreeMap<Character, Node> kids;
 
@@ -832,13 +834,41 @@ public class StringNameValidator {
             if (added || (current.marker == false)) {
                 // set marker to indicate end of a name
                 current.marker = true;
+                added = true;
             }
 
             return added;
         }
 
+        private void buildNodeNameList( String name,
+                                        Node node,
+                                        StringBuilder txt ) {
+            // add if node is an existing name
+            if (node.marker) {
+                txt.append(name).append(',');
+            }
+
+            // process children
+            for (Object obj : node.getChildren().values()) {
+                Node kid = (Node)obj;
+                buildNodeNameList(name + kid.content, kid, txt);
+            }
+        }
+
         public void clear() {
             this.root.clearChildren();
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            StringBuilder txt = new StringBuilder();
+            buildNodeNameList("", this.root, txt); //$NON-NLS-1$
+            return txt.substring(0, txt.length() - 1).toString(); // remove last comma
         }
     }
 
