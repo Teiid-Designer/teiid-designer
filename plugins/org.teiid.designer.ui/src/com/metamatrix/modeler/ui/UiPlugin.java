@@ -86,6 +86,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     ImageDescriptor errorDecoratorImage;
     ImageDescriptor warningDecoratorImage;
     ImageDescriptor extensionDecoratorImage;
+    ImageDescriptor previewableDecoratorImage;
 
     private final ModelEditorProjectListener projectListener = new ModelEditorProjectListener();
     private EObjectPropertiesOrderPreferences eObjectPropertiesOrderPreferences;
@@ -191,16 +192,19 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
     }
     
     public ImageDescriptor getExtensionDecoratorImage() {
-    	return extensionDecoratorImage;
+        return extensionDecoratorImage;
+    }
+
+    public ImageDescriptor getPreviewableDecoratorImage() {
+        return previewableDecoratorImage;
     }
 
     /**
      * @return
      * @since 4.0
      */
-    public static void registerActionForSelection(ISelectionListener action) {
-        ActionService actionService =
-            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+    public static void registerActionForSelection( ISelectionListener action ) {
+        ActionService actionService = UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
         actionService.addWorkbenchSelectionListener(action);
     }
 
@@ -208,12 +212,11 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
      * @return
      * @since 4.0
      */
-    public static void unregisterActionForSelection(ISelectionListener action) {
-        ActionService actionService =
-            UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
+    public static void unregisterActionForSelection( ISelectionListener action ) {
+        ActionService actionService = UiPlugin.getDefault().getActionService(UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage());
         actionService.removeWorkbenchSelectionListener(action);
     }
-    
+
     void initializeModelTableColumnUtilsFromPreferenceStore() {
         getEObjectPropertiesOrderPreferences().initializeFromString(getPreferenceStore().getString(COLUMN_ORDER));
     }
@@ -281,6 +284,7 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
                     UiPlugin.this.errorDecoratorImage = getImageDescriptor(Images.ERROR_DECORATOR);
                     UiPlugin.this.warningDecoratorImage = getImageDescriptor(Images.WARNING_DECORATOR);
                     UiPlugin.this.extensionDecoratorImage = getImageDescriptor(Images.EXTENSION_DECORATOR);
+                    UiPlugin.this.previewableDecoratorImage = getImageDescriptor(Images.PREVIEWABLE_DECORATOR);
                 }
             }, true);
         } catch (final Throwable err) {
