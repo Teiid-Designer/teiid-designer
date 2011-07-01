@@ -50,7 +50,8 @@ public interface PluginConstants {
 
         String ERROR_DECORATOR = OVR16 + "error_co.gif"; //$NON-NLS-1$
         String WARNING_DECORATOR = OVR16 + "warning_co.gif"; //$NON-NLS-1$
-        String EXTENSION_DECORATOR = OVR16 + "extension_ovr.gif";  //$NON-NLS-1$
+        String EXTENSION_DECORATOR = OVR16 + "extension_ovr.gif"; //$NON-NLS-1$
+        String PREVIEWABLE_DECORATOR = OVR16 + "run_co.gif"; //$NON-NLS-1$
 
         String EXPORT_ICON = CTOOL16 + "export_wiz.gif"; //$NON-NLS-1$
         String IMPORT_ICON = CTOOL16 + "import_wiz.gif"; //$NON-NLS-1$
