@@ -38,7 +38,7 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(int code, String message) {
-        super(code, message);
+        super(Integer.toString(code), message);
     }
 
     /**
@@ -65,7 +65,7 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
      * @param message
      */
     public ModelerCoreRuntimeException(Throwable e, int code, String message) {
-        super(e, code, message);
+        super(e, Integer.toString(code), message);
     }
 
 }

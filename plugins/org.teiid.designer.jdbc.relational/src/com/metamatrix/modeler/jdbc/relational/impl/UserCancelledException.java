@@ -42,7 +42,7 @@ public class UserCancelledException extends TeiidRuntimeException {
      * @param message
      */
     public UserCancelledException(int code, String message) {
-        super(code, message);
+        super(Integer.toString(code), message);
     }
 
     /**
@@ -69,7 +69,7 @@ public class UserCancelledException extends TeiidRuntimeException {
      * @param message
      */
     public UserCancelledException(Throwable e, int code, String message) {
-        super(e, code, message);
+        super(e, Integer.toString(code), message);
     }
 
 }
