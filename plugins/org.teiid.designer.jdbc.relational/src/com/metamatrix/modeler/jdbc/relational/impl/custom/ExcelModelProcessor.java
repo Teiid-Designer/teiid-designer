@@ -66,11 +66,12 @@ public class ExcelModelProcessor extends RelationalModelProcessorImpl {
                                           final String name,
                                           final JdbcNode node,
                                           final Context context,
-                                          final boolean forced ) {
+                                          final boolean forced, 
+                                          List problems) {
         if (object instanceof Table && node instanceof JdbcTable && "Excel_Sheet".equals(((JdbcTable)node).getRemarks())) {//$NON-NLS-1$
             return "[" + node.getName() + "$]";//$NON-NLS-1$         //$NON-NLS-2$ 
         }
-        return super.computeNameInSource(object, name, node, context, forced);
+        return super.computeNameInSource(object, name, node, context, forced, problems);
     }
 
     @Override
@@ -138,7 +139,7 @@ public class ExcelModelProcessor extends RelationalModelProcessorImpl {
             primaryKey.setTable((BaseTable)table);
 
             if (pkName != null) {
-                setNameAndNameInSource(primaryKey, pkName, tableNode, context);
+                setNameAndNameInSource(primaryKey, pkName, tableNode, context, problems);
             }
             // Add the columns in the correct order
             final List keyColumns = primaryKey.getColumns();

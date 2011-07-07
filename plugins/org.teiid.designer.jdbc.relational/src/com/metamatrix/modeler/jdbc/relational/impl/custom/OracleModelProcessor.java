@@ -257,9 +257,10 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
                                           final String name,
                                           final JdbcNode node,
                                           final Context context,
-                                          final boolean forced ) {
+                                          final boolean forced, 
+                                          List problems) {
 
-        String nis = super.computeNameInSource(object, name, node, context, forced);
+        String nis = super.computeNameInSource(object, name, node, context, forced, problems);
         if (nis != null) {
             nis = nis.replace('@', '.');
         }

@@ -8,6 +8,8 @@
 package com.metamatrix.modeler.jdbc.relational.impl;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,9 +33,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.mapping.Mapping;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -1019,30 +1024,32 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                               msg, null);
             problems.add(status);
         }
+        
+        String subtaskMsg;
 
         RelationalEntity obj = null;
         switch (nodeType) {
             case JdbcNode.CATALOG:
-                final Catalog cat = factory.createCatalog();
-                setNameAndNameInSource(cat, nodeName, node, context);
-                final Object[] catParams = new Object[] {nodeName, new Integer(totalNum), new Integer(index)};
-                String subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_catalog", catParams); //$NON-NLS-1$
-                monitor.subTask(subtaskMsg);
-                obj = cat;
-                monitor.worked(unitsPerModelObject);
+//                final Catalog cat = factory.createCatalog();
+//                setNameAndNameInSource(cat, nodeName, node, context);
+//                final Object[] catParams = new Object[] {nodeName, new Integer(totalNum), new Integer(index)};
+//                String subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_catalog", catParams); //$NON-NLS-1$
+//                monitor.subTask(subtaskMsg);
+//                obj = cat;
+//                monitor.worked(unitsPerModelObject);
                 break;
             case JdbcNode.SCHEMA:
-                final Schema schema = factory.createSchema();
-                final Object[] schemaParams = new Object[] {nodeName, new Integer(totalNum), new Integer(index)};
-                subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_schema", schemaParams); //$NON-NLS-1$
-                monitor.subTask(subtaskMsg);
-                // Set the owner ...
-                if (parent instanceof Catalog) {
-                    schema.setCatalog((Catalog)parent);
-                }
-                setNameAndNameInSource(schema, nodeName, node, context);
-                obj = schema;
-                monitor.worked(unitsPerModelObject);
+//                final Schema schema = factory.createSchema();
+//                final Object[] schemaParams = new Object[] {nodeName, new Integer(totalNum), new Integer(index)};
+//                subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_schema", schemaParams); //$NON-NLS-1$
+//                monitor.subTask(subtaskMsg);
+//                // Set the owner ...
+//                if (parent instanceof Catalog) {
+//                    schema.setCatalog((Catalog)parent);
+//                }
+//                setNameAndNameInSource(schema, nodeName, node, context);
+//                obj = schema;
+//                monitor.worked(unitsPerModelObject);
                 break;
             case JdbcNode.TABLE:
                 // Create the correct type of object ...
@@ -1075,7 +1082,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 }
 
                 // Set the name ...
-                setNameAndNameInSource(table, nodeName, node, context);
+                setNameAndNameInSource(table, nodeName, node, context, problems);
 
                 // Set the description ...
                 final String desc = tableNode.getRemarks();
@@ -1113,7 +1120,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                     // need to add procedure directly to resource as catalogs and schemas are not included in model
                     context.getResource().getContents().add(proc);
                 }
-                setNameAndNameInSource(proc, nodeName, node, context);
+                setNameAndNameInSource(proc, nodeName, node, context, problems);
                 obj = proc;
 
                 // Create the parameters and return/results ...
@@ -1228,7 +1235,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                   final String defaultValue,
                                   final int charOctetLen ) {
 
-        setNameAndNameInSource(column, name, tableNode, context);
+        setNameAndNameInSource(column, name, tableNode, context, true, problems);
 
         // Set the type information ...
         column.setFixedLength(isFixedLength(type, typeName));
@@ -1487,7 +1494,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 String columnName = results.getString(row, 3); // COLUMN_NAME
                 pkName = results.getString(row, 5);
                 // Convert the column name to match the form stored in the 'name in source'.
-                columnName = tableNode.getUnqualifiedName(columnName);
+                String quoteStr = getQuoteString(context, problems);
+                if( quoteStr != null ) {
+                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                } else {
+                	columnName = tableNode.getUnqualifiedName(columnName);
+                }
+                columnName = convertName(columnName, context);
                 final Column column = (Column)columnsByName.get(columnName);
                 if (column != null) {
                     // Find the column in the table ...
@@ -1502,7 +1515,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             primaryKey.setTable((BaseTable)table);
 
             if (pkName != null) {
-                setNameAndNameInSource(primaryKey, pkName, tableNode, context);
+                setNameAndNameInSource(primaryKey, pkName, tableNode, context, true, problems);
             }
             // Add the columns in the correct order
             final List keyColumns = primaryKey.getColumns();
@@ -1584,8 +1597,20 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 String fkColumnName = results.getString(row, 7); // FKCOLUMN_NAME
                 String pkColumnName = results.getString(row, 3); // PKCOLUMN_NAME
                 // Convert the column name to match the form stored in the 'name in source'.
-                fkColumnName = tableNode.getUnqualifiedName(fkColumnName);
-                pkColumnName = tableNode.getUnqualifiedName(pkColumnName);
+                String quoteStr = getQuoteString(context, problems);
+                if( quoteStr != null ) {
+                	fkColumnName =  tableNode.getUnqualifiedName(fkColumnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                } else {
+                	fkColumnName = tableNode.getUnqualifiedName(fkColumnName);
+                }
+                fkColumnName = convertName(fkColumnName, context);
+                
+                if( quoteStr != null ) {
+                	pkColumnName =  tableNode.getUnqualifiedName(pkColumnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                } else {
+                	pkColumnName = tableNode.getUnqualifiedName(pkColumnName);
+                }
+                pkColumnName = convertName(pkColumnName, context);
                 // Find the column ...
                 final Column column = (Column)columnsByName.get(fkColumnName);
                 final String fkName = results.getString(row, 11); // FK_NAME
@@ -1633,7 +1658,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 // Find or create the foreign key ...
                 final ForeignKey fk = factory.createForeignKey();
                 fk.setTable((BaseTable)table);
-                setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context);
+                setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context, true, problems);
                 // Put the columns into the foreign key ...
                 fk.getColumns().addAll(columnsForKey);
 
@@ -1797,7 +1822,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final short position = results.getShort(row, 7);
                 String columnName = results.getString(row, 8);
                 // Convert the column name to match the form stored in the 'name in source'.
-                columnName = tableNode.getUnqualifiedName(columnName);
+                String quoteStr = getQuoteString(context, problems);
+                if( quoteStr != null ) {
+                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                } else {
+                	columnName = tableNode.getUnqualifiedName(columnName);
+                }
+                columnName = convertName(columnName, context);
                 // Find the column ...
                 final Column column = (Column)columnsByName.get(columnName);
                 if (position == 1) {
@@ -1827,7 +1858,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 modifyIndexName(indexSpec);
 
                 // Find or create the index ...
-                final Index index = findIndex(table, indexSpec, tableNode, context, true);
+                final Index index = findIndex(table, indexSpec, tableNode, context, true, problems);
                 // Index may be null if we shouldn't create one!
                 if (index != null) {
                     updateCardinality(table, indexSpec.cardinality);
@@ -1875,7 +1906,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                final IndexSpec spec,
                                final JdbcTable tableNode,
                                final Context context,
-                               final boolean createIfRequired ) {
+                               final boolean createIfRequired,
+                               List problems) {
         // Get all of the existing indexes ...
         final EObject tableOwner = table.eContainer();
         if (tableOwner != null) {
@@ -1893,7 +1925,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final boolean isMatch = isMatchingIndex(index, spec);
                 if (isMatch) {
                     // Ensure the name is correct ...
-                    setNameAndNameInSource(index, spec.indexName, tableNode, context);
+                    setNameAndNameInSource(index, spec.indexName, tableNode, context, problems);
                     return index;
                 }
             }
@@ -1910,7 +1942,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         final Index index = (Index)rootObj;
                         if (isMatchingIndex(index, spec)) {
                             // Ensure the name is correct ...
-                            setNameAndNameInSource(index, spec.indexName, tableNode, context);
+                            setNameAndNameInSource(index, spec.indexName, tableNode, context, problems);
                             return index;
                         }
                     }
@@ -1944,7 +1976,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             CoreArgCheck.isNotNull(resource);
             resource.getContents().add(index);
         }
-        setNameAndNameInSource(index, spec.indexName, tableNode, context);
+        setNameAndNameInSource(index, spec.indexName, tableNode, context, problems);
         index.setUnique(!spec.nonUnique);
         index.getColumns().addAll(spec.columns);
         index.setFilterCondition(spec.filterCondition);
@@ -2067,7 +2099,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         ++numParamsWithNullName;
                         name = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.DefaultNameForProcParamWithNoName", numParamsWithNullName); //$NON-NLS-1$
                     }
-                    setNameAndNameInSource(param, name, procNode, context);
+                    setNameAndNameInSource(param, name, procNode, context, true, problems);
 
                     // Set the type information ...
                     param.setNativeType(typeName);
@@ -2134,13 +2166,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         procResult = this.factory.createProcedureResult();
                         procResult.setProcedure(proc); // adds result to procedure
                         final String resultSetName = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.ResultSetName"); //$NON-NLS-1$
-                        setNameAndNameInSource(procResult, resultSetName, procNode, context);
+                        setNameAndNameInSource(procResult, resultSetName, procNode, context, true, problems);
                     }
                     // Determine whether the column represents the ResultSet or a column in the ResultSet ...
                     final boolean includeColumn = includeColumnInProcedureResult(columnType, type, typeName);
                     if (!includeColumn) {
                         // this column represents the result set, so change the name ...
-                        setNameAndNameInSource(procResult, name, procNode, context);
+                        setNameAndNameInSource(procResult, name, procNode, context, true, problems);
 
                         // Set the description (after adding column to table)...
                         if (remarks != null && remarks.trim().length() != 0) {
@@ -2151,7 +2183,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                     } else {
                         final Column param = this.factory.createColumn();
                         param.setOwner(procResult);
-                        setNameAndNameInSource(param, name, procNode, context);
+                        setNameAndNameInSource(param, name, procNode, context, true, problems);
 
                         // Set the type information ...
                         param.setNativeType(typeName);
@@ -2351,7 +2383,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     protected void setNameAndNameInSource( final RelationalEntity entity,
                                            final String name,
                                            final JdbcNode node,
-                                           final Context context ) {
+                                           final Context context, 
+                                           List problems) {
 
         // See if the name is valid within the context of the entity's parent ...
         RelationalStringNameRule rule = new RelationalStringNameRule(RelationalPackage.RELATIONAL_ENTITY__NAME);
@@ -2367,14 +2400,39 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
         }
 
-        setNameAndNameInSource(entity, name, node, context, siblingNameValidator);
+        setNameAndNameInSource(entity, name, node, context, siblingNameValidator, false, problems);
     }
+    
+	protected void setNameAndNameInSource(final RelationalEntity entity,
+			final String name, final JdbcNode node, final Context context, final boolean ignoreFullyQualifiedName, List problems) {
+
+		// See if the name is valid within the context of the entity's parent
+		// ...
+		RelationalStringNameRule rule = new RelationalStringNameRule(
+				RelationalPackage.RELATIONAL_ENTITY__NAME);
+		StringNameValidator siblingNameValidator = new StringNameValidator();
+
+		for (Object sibling : rule.getSiblingsForUniquenessCheck(entity)) {
+			if (sibling != entity) {
+				String siblingName = ((RelationalEntity) sibling).getName();
+
+				if (siblingName != null) {
+					siblingNameValidator.addExistingName(siblingName);
+				}
+			}
+		}
+
+		setNameAndNameInSource(entity, name, node, context,
+				siblingNameValidator, ignoreFullyQualifiedName, problems);
+	}
 
     private void setNameAndNameInSource( final RelationalEntity entity,
                                            final String name,
                                            final JdbcNode node,
                                            final Context context,
-                                           final StringNameValidator validator ) {
+                                           final StringNameValidator validator,
+                                           final boolean ignoreFullyQualifiedName,
+                                           List problems) {
         // If the name is null, create a new replacement name ...
         String theName = name;
         if (theName == null || theName.trim().length() == 0) {
@@ -2383,25 +2441,91 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
         // Convert the name based upon the preferences/options ...
         final String convertedName = convertName(theName, context);
-        final String uniqueName = validator.createValidUniqueName(convertedName);
+        String uniqueName = validator.createValidUniqueName(convertedName);
         boolean forceSetNameInSource = false;
 
+        // Set the entity's name in source ...
+        String nameInSource = convertedName;
+        if( !ignoreFullyQualifiedName ) {
+        	nameInSource = computeNameInSource(entity, name, node, context, forceSetNameInSource, problems);
+        }
+        if (nameInSource != null) {
+        	
+            entity.setNameInSource(convertName(nameInSource, context));
+        }
+        
+        final JdbcImportSettings settings = context.getJdbcImportSettings();
+        final SourceNames sourceNames = settings.getGenerateSourceNamesInModel();
+        final int value = sourceNames.getValue();
+        
+        if (! ignoreFullyQualifiedName && value == SourceNames.FULLY_QUALIFIED) {
+        	uniqueName = nameInSource;
+        	String quoteStr =  getQuoteString(context, problems);
+        	if( quoteStr != null && quoteStr.length() > 0 ) {
+        		uniqueName = nameInSource.replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+        	}
+        	
+        }
+        
         if (uniqueName == null) {
             // name was already unique ...
-            entity.setName(convertedName);
+            entity.setName(convertName(convertedName, context));
         } else {
             // name had to be changed to be unique ...
-            entity.setName(uniqueName);
+            entity.setName(convertName(uniqueName, context));
             forceSetNameInSource = true;
         }
-
-        // Set the entity's name in source ...
-        final String nameInSource = computeNameInSource(entity, name, node, context, forceSetNameInSource);
-        if (nameInSource != null) {
-            entity.setNameInSource(nameInSource);
-        }
     }
-
+    
+    /*
+     * Get the quoted string from the Database metadata. May be NULL
+     */
+    private String getQuoteString(final Context context, List problems) {
+    	String quoteStr =  null;
+    	
+    	try {
+			quoteStr = context.getJdbcDatabase().getDatabaseMetaData().getIdentifierQuoteString();
+		} catch (JdbcException ex) {
+			final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Error_while_obtaining_quote_string",  //$NON-NLS-1$
+					context.getJdbcDatabase().getName()) + ex.getLocalizedMessage();
+            final IStatus status = new Status(IStatus.ERROR,
+                                              com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
+                                              msg, ex);
+            problems.add(status);
+		} catch (SQLException ex) {
+			final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Error_while_obtaining_quote_string",  //$NON-NLS-1$
+					context.getJdbcDatabase().getName()) + ex.getLocalizedMessage();
+            final IStatus status = new Status(IStatus.ERROR,
+                                              com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
+                                              msg, ex);
+            problems.add(status);
+		}
+    	return quoteStr;
+    }
+    
+    private ResultSet getCatalogs(final Context context, List problems) {
+    	ResultSet catalogs =  null;
+    	
+    	try {
+    		catalogs =  context.getJdbcDatabase().getDatabaseMetaData().getCatalogs();
+		} catch (JdbcException ex) {
+			final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Error_while_obtaining_catalogs",  //$NON-NLS-1$
+					context.getJdbcDatabase().getName()) + ex.getLocalizedMessage();
+            final IStatus status = new Status(IStatus.ERROR,
+                                              com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
+                                              msg, ex);
+            problems.add(status);
+		} catch (SQLException ex) {
+			final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Error_while_obtaining_catalogs",  //$NON-NLS-1$
+					context.getJdbcDatabase().getName()) + ex.getLocalizedMessage();
+            final IStatus status = new Status(IStatus.ERROR,
+                                              com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
+                                              msg, ex);
+            problems.add(status);
+		}
+    	return catalogs;
+    }
+    
     protected String convertName( final String originalName,
                                   final Context context ) {
         String name = originalName;
@@ -2451,58 +2575,53 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                           final String name,
                                           final JdbcNode node,
                                           final Context context,
-                                          final boolean forced ) {
+                                          final boolean forced,
+                                          List problems) {
         if (name == null) {
             return null;
         }
 
         // It is not forced, so look at the import settings ...
         final JdbcImportSettings settings = context.getJdbcImportSettings();
-        final SourceNames sourceNames = settings.getGenerateSourceNamesInModel();
-        final int value = sourceNames.getValue();
-
-        if (value == SourceNames.NONE) {
-            return null;
-        }
-
-        // Determine whether the object is a child of the node or whether they
-        // represent the same object. This logic looks at the parent, and if there is a parent
-        // AND the parent is a Table, Index or Procedure, then the object is considered a child
-        final EObject parent = object.eContainer();
-        final boolean childOfNode = parent != null
-                                    && (parent instanceof Table || parent instanceof Index || parent instanceof Procedure);
-
-        // If the name in source is required ...
-        if (forced) {
-            if (childOfNode) {
-                // These are always unqualified, and the name has to be supplied
-                // to the 'node.getUnqualified' method
-                return node.getUnqualifiedName(name);
-            }
-            // It is always unqualified by default
-            return node.getUnqualifiedName();
-        }
-
-        if (value == SourceNames.FULLY_QUALIFIED) {
-            if (childOfNode) {
-                // These are always unqualified, and the name has to be supplied
-                // to the 'node.getUnqualified' method
-                return node.getUnqualifiedName(name);
-            }
-            return node.getFullyQualifiedName();
-        }
-
-        if (value == SourceNames.UNQUALIFIED) {
-            if (childOfNode) {
-                // These are always unqualified, and the name has to be supplied
-                // to the 'node.getUnqualified' method
-                return node.getUnqualifiedName(name);
-            }
-            return node.getUnqualifiedName();
-        }
-
-        // No reason to compute the name in source ...
-        return null;
+        
+        boolean includeCatalogs = settings.isCreateCatalogsInModel();
+        
+        ResultSet cats = null;
+        String fullyQualifiedName = node.getFullyQualifiedName();
+        String finalName = fullyQualifiedName;
+        
+        if( !includeCatalogs ) {
+	        try {
+	        	String quoteStr = getQuoteString(context, problems);
+	        	
+				cats = getCatalogs(context, problems);
+		        if( cats != null ) {
+		        	int i = 0;
+		        	while( cats.next() ) {
+		                final String catalogName = cats.getString(i+1);
+		                if( catalogName.length() > 0 ) {
+		                	String matchStr = catalogName + '.';
+		                	if( quoteStr != null ) {
+		                		matchStr = quoteStr + catalogName + quoteStr + '.';
+		                	}
+		                    if( fullyQualifiedName.indexOf(matchStr) > -1) {
+		                    	finalName = fullyQualifiedName.replaceFirst(matchStr, StringUtilities.EMPTY_STRING);
+		                    	break;
+		                    }
+		                }
+		            }
+		        }
+			} catch (SQLException ex) {
+				final String msg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Error_while_obtaining_catalogs",  //$NON-NLS-1$
+						context.getJdbcDatabase().getName()) + ex.getLocalizedMessage();
+	            final IStatus status = new Status(IStatus.ERROR,
+	                                              com.metamatrix.modeler.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID, 0,
+	                                              msg, ex);
+	            problems.add(status);
+			}
+	    }
+        
+        return finalName;
     }
 
     /**

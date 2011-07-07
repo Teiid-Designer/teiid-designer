@@ -128,7 +128,7 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
 
                         if (foundMatchingIndex) {
                             // Set the primary key name to that of the index ...
-                            setNameAndNameInSource(pk, indexName, tableNode, context);
+                            setNameAndNameInSource(pk, indexName, tableNode, context, problems);
                             break;
                         }
                     } // end of while loop over indexes

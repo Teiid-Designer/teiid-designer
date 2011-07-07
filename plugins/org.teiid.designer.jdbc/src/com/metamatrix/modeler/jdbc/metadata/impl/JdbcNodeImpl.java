@@ -677,25 +677,25 @@ public abstract class JdbcNodeImpl implements JdbcNode, Comparable, InternalJdbc
             return originalName;
         }
 
-        // See if the name even needs the quote string ...
-        boolean extraCharsUsed = true; // assume they are ...
-        try {
-            final String extraChars = this.getJdbcDatabase().getCapabilities().getExtraNameCharacters();
-            if (extraChars != null && extraChars.length() != 0) {
-                extraCharsUsed = containsCharacters(originalName, extraChars);
-            }
-        } catch (JdbcException e) {
-            JdbcPlugin.Util.log(e); // not expected, but log just in case
-        } catch (SQLException e) {
-            // ignore;
-        }
-        if (!extraCharsUsed && isValidName(originalName)) {
-            // Case 3263: Regardless of result returned above, we should always consider
-            // name with spaces as needing to be quoted.
-            if (originalName.indexOf(" ") == -1) { //$NON-NLS-1$
-                return originalName;
-            }
-        }
+//        // See if the name even needs the quote string ...
+//        boolean extraCharsUsed = true; // assume they are ...
+//        try {
+//            final String extraChars = this.getJdbcDatabase().getCapabilities().getExtraNameCharacters();
+//            if (extraChars != null && extraChars.length() != 0) {
+//                extraCharsUsed = containsCharacters(originalName, extraChars);
+//            }
+//        } catch (JdbcException e) {
+//            JdbcPlugin.Util.log(e); // not expected, but log just in case
+//        } catch (SQLException e) {
+//            // ignore;
+//        }
+//        if (!extraCharsUsed && isValidName(originalName)) {
+//            // Case 3263: Regardless of result returned above, we should always consider
+//            // name with spaces as needing to be quoted.
+//            if (originalName.indexOf(" ") == -1) { //$NON-NLS-1$
+//                return originalName;
+//            }
+//        }
 
         final StringBuffer sb = new StringBuffer();
         sb.append(quoteString);

@@ -62,10 +62,11 @@ public class XmlSchemaAsRelationalModelProcessor extends RelationalModelProcesso
     protected void setNameAndNameInSource( final RelationalEntity entity,
                                            final String name,
                                            final JdbcNode node,
-                                           final Context context ) {
+                                           final Context context, 
+                                           List problems ) {
         // This is the only callout that we get from the base model processor,
         // so we use it for things other than name and name in source
-        super.setNameAndNameInSource(entity, name, node, context);
+        super.setNameAndNameInSource(entity, name, node, context, problems);
         processNewEntity(entity, name, node, context);
     }
 
@@ -124,7 +125,8 @@ public class XmlSchemaAsRelationalModelProcessor extends RelationalModelProcesso
                                           final String name,
                                           final JdbcNode node,
                                           final Context context,
-                                          final boolean forced ) {
+                                          final boolean forced, 
+                                          List problems ) {
         String retval;
         if (object instanceof com.metamatrix.metamodels.relational.Table) {
             retval = getTableNameInSource(object, name, node, context);
@@ -135,7 +137,7 @@ public class XmlSchemaAsRelationalModelProcessor extends RelationalModelProcesso
         } else if (object instanceof com.metamatrix.metamodels.relational.ForeignKey) {
             retval = getForeignKeyNameInSource(object, name, node, context);
         } else {
-            retval = super.computeNameInSource(object, name, node, context, forced);
+            retval = super.computeNameInSource(object, name, node, context, forced, problems);
         }
         return retval;
     }
