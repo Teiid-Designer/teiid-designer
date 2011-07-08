@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -21,10 +22,12 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.diagram.DiagramLinkType;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.notification.util.DefaultIgnorableNotificationSource;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -1181,4 +1184,27 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
 
         reconcileClassifierNodes = null;
     }
+
+	@Override
+	public boolean shouldRefreshDiagram(Notification notification,
+			DiagramModelNode diagramModelNode, String sDiagramTypeId) {
+		
+		if( notification instanceof SourcedNotification ) {
+			SourcedNotification sNot = (SourcedNotification)notification;
+			if( sNot.getSource() instanceof DefaultIgnorableNotificationSource) {
+				DefaultIgnorableNotificationSource isrc = (DefaultIgnorableNotificationSource)sNot.getSource();
+				if( isrc.getActualSource().getClass().getName().indexOf("JdbcImportWizard") > -1 && //$NON-NLS-1$
+						isrc.getSourceIdentifier() != null) {
+					// Check same model name
+					String mrName = ModelUtilities.getModelResource(diagramModelNode.getModelObject()).getItemName();
+					if( mrName.equalsIgnoreCase(isrc.getSourceIdentifier())) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+    
 }

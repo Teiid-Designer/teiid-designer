@@ -15,6 +15,8 @@ public class DefaultIgnorableNotificationSource implements
                                                IgnorableNotificationSource {
 
     Object actualSource;
+    
+    String sourceID;
     /** 
      * 
      * @since 5.0
@@ -22,6 +24,12 @@ public class DefaultIgnorableNotificationSource implements
     public DefaultIgnorableNotificationSource() {
         super();
     }
+    
+    public DefaultIgnorableNotificationSource(Object source, String sourceID) {
+        this(source);
+        this.sourceID = sourceID;
+    }
+    
     
     /** 
      * 
@@ -41,4 +49,9 @@ public class DefaultIgnorableNotificationSource implements
         return this.actualSource;
     }
 
+	public String getSourceIdentifier() {
+		return sourceID;
+	}
+
+    
 }

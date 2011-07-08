@@ -257,7 +257,7 @@ public class JdbcImportWizard extends AbstractWizard
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 // Wrap in transaction so it doesn't result in Significant Undoable
                 boolean started = ModelerCore.startTxn(false, false, "Changing Sql Connections", //$NON-NLS-1$
-                                                       new DefaultIgnorableNotificationSource(JdbcImportWizard.this));
+                                                       new DefaultIgnorableNotificationSource(JdbcImportWizard.this, modelName));
                 boolean succeeded = false;
                 try {
                     runFinish(monitor);
