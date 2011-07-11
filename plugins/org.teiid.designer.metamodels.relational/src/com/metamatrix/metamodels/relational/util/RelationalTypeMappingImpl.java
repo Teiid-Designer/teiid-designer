@@ -39,7 +39,7 @@ public class RelationalTypeMappingImpl implements RelationalTypeMapping {
     static {
         Field[] fields = Types.class.getDeclaredFields();
         for (Field field : fields) {
-            if (field.getType() == Integer.class) {
+            if (field.getType() == int.class) {
                 try {
                     SQL_TYPE_MAPPING.put(field.getName(), field.getInt(null));
                 } catch (Exception e) {
