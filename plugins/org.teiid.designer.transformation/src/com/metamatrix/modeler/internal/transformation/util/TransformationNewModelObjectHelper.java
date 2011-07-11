@@ -22,6 +22,7 @@ import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 public class TransformationNewModelObjectHelper implements INewModelObjectHelper {
 
     public static final String VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE = "clearSupportsUpdate"; //$NON-NLS-1$
+    public static final String VIRTUAL_PROCEDURE_TEMPLATE_SQL = "CREATE VIRTUAL PROCEDURE\nBEGIN\n <--insert SQL here-->;\nEND"; //$NON-NLS-1$
 
     /**
      * @since 4.3
@@ -91,8 +92,11 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
 	                    // Add Sql Mapping Helper under it.
 	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-	                    return true;
+
                 	}
+                	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
+                    TransformationHelper.setSelectSqlString(tRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
+                    return true;
                 }
             }            
         }
