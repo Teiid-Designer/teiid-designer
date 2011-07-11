@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,22 +26,24 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressConstants;
+
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.Schema;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.util.RelationalUtil;
+import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
+import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.relational.CostAnalyzer;
@@ -51,6 +54,7 @@ import com.metamatrix.modeler.jdbc.ui.ModelerJdbcUiConstants;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.ISelectionAction;
+import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class JdbcCostAnalysisAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
@@ -98,85 +102,15 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             try {
                 ModelResource modelResource = ModelUtil.getModelResource(this.selectedModel, false);
                 if (modelResource != null) {
-                    final Resource resource = modelResource.getEmfResource();
-                    if (resource != null) {
-                        final JdbcSource source = JdbcUtil.findJdbcSource(resource);
-                        if (source != null) {
-                            final List emfTables = RelationalUtil.findTables(resource);
-                            final Map tblStats = createTableInfos(emfTables);
-                            if (tblStats != null && tblStats.size() > 0) {
-                                CostAnalysisDialog dialog = new CostAnalysisDialog(
-                                                                                   shell,
-                                                                                   InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), //$NON-NLS-1$
-                                                                                   InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.passwordPrompt", new Object[] {source.getUrl(), source.getUsername()}), null, null); //$NON-NLS-1$
-                                dialog.open();
-
-                                final String successMessage = InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.statisticsUpdatedFinished", emfTables.size()); //$NON-NLS-1$
-
-                                final String password = dialog.getValue();
-                                if (password != null) {
-                                    final Job job = new Job(
-                                                            InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.jobDescription")) { //$NON-NLS-1$
-                                        @Override
-                                        protected IStatus run( IProgressMonitor monitor ) {
-                                            boolean wasSuccessful = false;
-                                            try {
-                                                monitor.beginTask(InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), calculateNumberOfWorkIncrements(tblStats.values())); //$NON-NLS-1$
-
-                                                CostAnalyzer costAnalyzer = CostAnalyzerFactory.getCostAnalyzerFactory().getCostAnalyzer(source,
-                                                                                                                                         password);
-                                                // log output to standard out
-                                                // costAnalyzer.setOutputStream(System.out);
-                                                costAnalyzer.collectStatistics(tblStats, monitor);
-
-                                                if (!monitor.isCanceled()) {
-                                                    populateEmfColumnStatistics(emfTables, tblStats);
-                                                }
-
-                                                monitor.done();
-
-                                                if (monitor.isCanceled()) {
-                                                    return Status.CANCEL_STATUS;
-                                                }
-                                                wasSuccessful = true;
-                                                return new Status(
-                                                                  IStatus.OK,
-                                                                  ModelerJdbcUiConstants.PLUGIN_ID,
-                                                                  IStatus.OK,
-                                                                  InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.statusFinished", emfTables.size()), null); //$NON-NLS-1$
-                                            } catch (Exception e) {
-                                                InternalModelerJdbcUiPluginConstants.Util.log(e);
-                                                return new Status(
-                                                                  IStatus.ERROR,
-                                                                  ModelerJdbcUiConstants.PLUGIN_ID,
-                                                                  IStatus.ERROR,
-                                                                  InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.errorMessage"), e); //$NON-NLS-1$
-                                            } finally {
-                                                if (wasSuccessful) {
-                                                    Display.getDefault().asyncExec(new Runnable() {
-                                                        public void run() {
-                                                            MessageDialog.openInformation(shell,
-                                                                                          InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.updateCompleteTitle"),//$NON-NLS-1$ 
-                                                                                          successMessage);
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    };
-
-                                    job.setSystem(false);
-                                    job.setUser(true);
-                                    job.setProperty(IProgressConstants.KEEP_PROPERTY, Boolean.TRUE);
-                                    // start as soon as possible
-                                    job.schedule();
-                                }
-                            } else {
-                                MessageDialog.openInformation(shell,
-                                                              InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.noValidTablesMessage")); //$NON-NLS-1$ //$NON-NLS-2$
-                            }
-                        }
-                    }
+                	
+                	boolean cancelled = openEditorIfNeeded(modelResource);
+                	
+                	if( cancelled ) {
+                		return;
+                	}
+                	final Resource resource = modelResource.getEmfResource();
+                	
+                    executeInTransaction(resource, shell);
                 }
             } catch (Exception e) {
                 InternalModelerJdbcUiPluginConstants.Util.log(e);
@@ -186,7 +120,95 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
             }
         }
     }
+    
+    private void executeInTransaction(final Resource resource, final Shell shell) {
+        boolean requiredStart = ModelerCore.startTxn(true,true,"Update Cost Statistics",this); //$NON-NLS-1$
+        boolean succeeded = false;
+        try {
+        	internalExecute(resource, shell);
+        	
+            succeeded = true;
+        } finally {
+            //if we started the txn, commit it.
+            if(requiredStart){
+                if(succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+            }
+        }
+         
+    }
+    
+    private void internalExecute(final Resource resource, final Shell shell) {
+    	if (resource != null) {
+            final JdbcSource source = JdbcUtil.findJdbcSource(resource);
+            if (source != null) {
+                final List emfTables = RelationalUtil.findTables(resource);
+                final Map tblStats = createTableInfos(emfTables);
+                if (tblStats != null && tblStats.size() > 0) {
+                    CostAnalysisDialog dialog = new CostAnalysisDialog(
+                                                                       shell,
+                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), //$NON-NLS-1$
+                                                                       InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.passwordPrompt", new Object[] {source.getUrl(), source.getUsername()}), null, null); //$NON-NLS-1$
+                    dialog.open();
 
+                    final String password = dialog.getValue();
+                    if (password != null) {
+                        final Job job = new Job(
+                                                InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.jobDescription")) { //$NON-NLS-1$
+                            @Override
+                            protected IStatus run( IProgressMonitor monitor ) {
+                                try {
+                                    monitor.beginTask(InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), calculateNumberOfWorkIncrements(tblStats.values())); //$NON-NLS-1$
+
+                                    CostAnalyzer costAnalyzer = CostAnalyzerFactory.getCostAnalyzerFactory().getCostAnalyzer(source,
+                                                                                                                             password);
+                                    // log output to standard out
+                                    // costAnalyzer.setOutputStream(System.out);
+                                    costAnalyzer.collectStatistics(tblStats, monitor);
+
+                                    if (!monitor.isCanceled()) {
+                                        populateEmfColumnStatistics(emfTables, tblStats);
+                                    }
+
+                                    monitor.done();
+
+                                    if (monitor.isCanceled()) {
+                                        return Status.CANCEL_STATUS;
+                                    }
+
+                                    return new Status(
+                                                      IStatus.OK,
+                                                      ModelerJdbcUiConstants.PLUGIN_ID,
+                                                      IStatus.OK,
+                                                      InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.statusFinished", emfTables.size()), null); //$NON-NLS-1$
+                                } catch (Exception e) {
+                                    InternalModelerJdbcUiPluginConstants.Util.log(e);
+                                    return new Status(
+                                                      IStatus.ERROR,
+                                                      ModelerJdbcUiConstants.PLUGIN_ID,
+                                                      IStatus.ERROR,
+                                                      InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.errorMessage"), e); //$NON-NLS-1$
+                                } finally {
+                                }
+                            }
+                        };
+
+                        job.setSystem(false);
+                        job.setUser(true);
+                        job.setProperty(IProgressConstants.KEEP_PROPERTY, Boolean.TRUE);
+                        // start as soon as possible
+                        job.schedule();
+                    }
+                } else {
+                    MessageDialog.openInformation(shell,
+                                                  InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.taskDescription"), InternalModelerJdbcUiPluginConstants.Util.getString("CostAnalysisAction.noValidTablesMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+        }
+    }
     // calculate the number of work units for the progress monitoring
     // of this cost analysis task
     int calculateNumberOfWorkIncrements( Collection tblStats ) {
@@ -323,5 +345,47 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         }
 
         return result;
+    }
+    
+    
+    /**
+     * Should only be called if current object and model are not <code>null</code>.
+     * 
+     * @since 5.5.3
+     */
+    private boolean openEditorIfNeeded(ModelResource currentModel) {
+    	boolean openEditorCancelled = false;
+        // we only need to worry about the readonly status if the file is not currently open,
+        // and its underlying IResource is not read only
+        
+    	if( currentModel == null ) {
+    		
+    	} else if (!isEditorOpen(currentModel) && !currentModel.getResource().getResourceAttributes().isReadOnly()) {
+            final IFile modelFile = (IFile)currentModel.getResource();
+            Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+
+            // may want to change these text strings eventually:
+            if (MessageDialog.openQuestion(shell,
+                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE,
+                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE)) {
+                // load and activate, not async (to prevent multiple dialogs from coming up):
+                // Changed to use method that insures Object editor mode is on
+                ModelEditorManager.openInEditMode(modelFile, true, UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
+
+            } else {
+            	openEditorCancelled = true;
+            }
+        }
+        
+        return openEditorCancelled;
+    }
+    
+    private boolean isEditorOpen(ModelResource currentModel) {
+        if (currentModel != null) {
+            IFile modelFile = (IFile)currentModel.getResource();
+            return (ModelEditorManager.isOpen(modelFile));
+        }
+
+        return false;
     }
 }
