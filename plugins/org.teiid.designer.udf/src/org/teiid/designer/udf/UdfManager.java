@@ -55,8 +55,6 @@ public final class UdfManager implements IResourceChangeListener {
     
     public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
     
-    private FunctionLibrary functionLibrary;
-    
     private FunctionLibrary systemFunctionLibrary;
    
     /**
@@ -194,8 +192,6 @@ public final class UdfManager implements IResourceChangeListener {
             result = this.functionModels.add(modelResource); //url, new UdfInfo(modelName, url, modelResource));
         }
         
-        functionLibrary = null;
-        
         return result;
     }
 
@@ -289,87 +285,84 @@ public final class UdfManager implements IResourceChangeListener {
     }
     
     public synchronized FunctionLibrary getFunctionLibrary() {
-        if (functionLibrary == null) {
-            FunctionTree[] trees = new FunctionTree[functionModels.size()];
-            int i = 0;
-            
-            for( ModelResource functionModelResource : functionModels ) {
-            	ScalarFunction[] functions = getScalarFunctions(functionModelResource);
-            	if( functions.length > 0 ) {
-            		IMarker[] markers = getMarkers(functionModelResource);
-            		
-            		String schema = FileUtils.getFilenameWithoutExtension(functionModelResource.getItemName());
-            		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
-            		
-            		for( ScalarFunction function : functions ) {
-            			// Function's must have a return parameter and a Scalar function may not yet have one after
-            			// it's initially created (intermediate state)
-            			// Also the Function AND it's return parameter (if non-null) need to be error free
-            			if( !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource) ||
-            				function.getReturnParameter() == null || 
-            				!isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource)) {
-            				continue;
-            			}
-            			String description = null;
-            			
-            			try {
-							description = ModelerCore.getModelEditor().getDescription(function);
-						} catch (ModelerCoreException ex) {
-							UdfPlugin.UTIL.log(ex);
-						}
-            			
-						boolean functionPamameterHasError = false;
-						
-            			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
-            			
-            			for( Object inputParam : function.getInputParameters() ) {
-            				if( inputParam instanceof com.metamatrix.metamodels.function.FunctionParameter) {
-            					com.metamatrix.metamodels.function.FunctionParameter param = (com.metamatrix.metamodels.function.FunctionParameter)inputParam;
-            					fParams.add(new FunctionParameter(param.getName(), param.getType()));
-            					// If any function parameter has an error don't add this
-            					if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){
-            						functionPamameterHasError = true;
-            					}
-            				}
-            			}
-            			
-            			if( functionPamameterHasError ) {
-            				continue;
-            			}
-            			
-            			String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
-            			FunctionParameter outputParam = new FunctionParameter(returnParamName, function.getReturnParameter().getType()); 
-            			
-            			FunctionMethod fMethod = 
-            				new FunctionMethod(
-            						function.getName(), 
-            						description, 
-            						function.getCategory(), 
-            						null, 
-            						function.getInvocationClass(), 
-            						function.getInvocationMethod(),
-            						fParams.toArray(new FunctionParameter[0]),
-            						outputParam,
-            					    false,
-            						null
-            						);
-            			fMethod.setPushDown(function.getPushDown().getLiteral());
-            			if( function.isDeterministic() ) {
-            				fMethod.setDeterminism(Determinism.DETERMINISTIC);
-            			} else {
-            				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
-            			}
-            			
-            			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
-            			fd.setMetadataID(function);
-            		}
-            		trees[i++] = tree;
-            	}
-            }
-            
-            functionLibrary = new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), trees);
+    	// Dynamically return a function library for each call rather than cache it here.
+        Collection<FunctionTree> functionTrees = new ArrayList<FunctionTree>();
+        
+        for( ModelResource functionModelResource : functionModels ) {
+        	ScalarFunction[] functions = getScalarFunctions(functionModelResource);
+        	if( functions.length > 0 ) {
+        		IMarker[] markers = getMarkers(functionModelResource);
+        		
+        		String schema = FileUtils.getFilenameWithoutExtension(functionModelResource.getItemName());
+        		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
+        		
+        		for( ScalarFunction function : functions ) {
+        			// Function's must have a return parameter and a Scalar function may not yet have one after
+        			// it's initially created (intermediate state)
+        			// Also the Function AND it's return parameter (if non-null) need to be error free
+        			if( !isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource) ||
+        				function.getReturnParameter() == null || 
+        				!isFunctionObjectErrorFree(function.getReturnParameter(), markers, functionModelResource)) {
+        				continue;
+        			}
+        			String description = null;
+        			
+        			try {
+						description = ModelerCore.getModelEditor().getDescription(function);
+					} catch (ModelerCoreException ex) {
+						UdfPlugin.UTIL.log(ex);
+					}
+        			
+					boolean functionPamameterHasError = false;
+					
+        			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
+        			
+        			for( Object inputParam : function.getInputParameters() ) {
+        				if( inputParam instanceof com.metamatrix.metamodels.function.FunctionParameter) {
+        					com.metamatrix.metamodels.function.FunctionParameter param = (com.metamatrix.metamodels.function.FunctionParameter)inputParam;
+        					fParams.add(new FunctionParameter(param.getName(), param.getType()));
+        					// If any function parameter has an error don't add this
+        					if( !functionPamameterHasError && !isFunctionObjectErrorFree(param, markers, functionModelResource)){
+        						functionPamameterHasError = true;
+        					}
+        				}
+        			}
+        			
+        			if( functionPamameterHasError ) {
+        				continue;
+        			}
+        			
+        			String returnParamName = ModelerCore.getModelEditor().getName(function.getReturnParameter());
+        			FunctionParameter outputParam = new FunctionParameter(returnParamName, function.getReturnParameter().getType()); 
+        			
+        			FunctionMethod fMethod = 
+        				new FunctionMethod(
+        						function.getName(), 
+        						description, 
+        						function.getCategory(), 
+        						null, 
+        						function.getInvocationClass(), 
+        						function.getInvocationMethod(),
+        						fParams.toArray(new FunctionParameter[0]),
+        						outputParam,
+        					    false,
+        						null
+        						);
+        			fMethod.setPushDown(function.getPushDown().getLiteral());
+        			if( function.isDeterministic() ) {
+        				fMethod.setDeterminism(Determinism.DETERMINISTIC);
+        			} else {
+        				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
+        			}
+        			
+        			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
+        			fd.setMetadataID(function);
+        		}
+        		functionTrees.add(tree);
+        	}
         }
-        return functionLibrary;
+
+        return new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), functionTrees.toArray(new FunctionTree[functionTrees.size()]));
     }
     
     private ScalarFunction[] getScalarFunctions(ModelResource mr) {
@@ -411,6 +404,9 @@ public final class UdfManager implements IResourceChangeListener {
 		}
 		
 		public ScalarFunction[] getFunctions() {
+			if( functions == null ) {
+        		functions = new ArrayList<ScalarFunction>();
+        	}
 			return functions.toArray(new ScalarFunction[0]);
 		}
     	

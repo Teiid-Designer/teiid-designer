@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.ui;
 
 import static com.metamatrix.modeler.ui.UiConstants.TableEditorAttributes.COLUMN_ORDER;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -28,7 +29,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.CoreConstants.Debug;
-import org.teiid.designer.udf.UdfManager;
 
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.event.EventBroker;
@@ -310,9 +310,6 @@ public final class UiPlugin extends AbstractUiPlugin implements Debug, PluginCon
 
         // Initialize the ModelWorkspaceManager
         ModelWorkspaceManager.getModelWorkspaceManager();
-        
-        // Initialize the User Defined Functions manager
-        UdfManager.INSTANCE.getFunctionLibrary();
 
         // Register a listener for ModelWorkspaceNotifications ...
         final ModelWorkspaceNotificationListener modelWsListener = new ModelWorkspaceNotificationListener() {

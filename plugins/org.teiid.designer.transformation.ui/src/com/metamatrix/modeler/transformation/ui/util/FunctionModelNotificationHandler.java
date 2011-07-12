@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 
 import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.transformation.SqlAlias;
@@ -31,6 +32,7 @@ import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.query.QueryValidator;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
 import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.transformation.util.SqlMappingRootCache;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
@@ -79,6 +81,16 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
                     result.add(notification);
                     // Remove from notifications collection
                     iter.remove();
+                } else if( changedObj != null && changedObj instanceof EmfResource) {
+                	ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
+                	if( ModelIdentifier.isFunctionModel(mr) ) {
+                		if (result == null) {
+                            result = new ArrayList(notifications.size());
+                        }
+                        result.add(notification);
+                        // Remove from notifications collection
+                        iter.remove();
+                	}
                 }
             }
         }
@@ -97,11 +109,21 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
             if( NotificationUtilities.isAdded(notification) || NotificationUtilities.isRemoved(notification)) { 
             	// Get all Transformation Roots for the resource and clean out the cache for ALL of them
             	Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
-
+            		ModelResource changedModelResource = null;
+            		
+            		
 	            	if( changedObj instanceof ScalarFunction ) {
 	            		EObject eObject = (EObject)changedObj;
-            			ModelResource changedModelResource = ModelUtilities.getModelResource(eObject);
+            			changedModelResource = ModelUtilities.getModelResource(eObject);
             			// Get the dependent resources
+	            	} else if( changedObj instanceof EmfResource ) {
+	            		ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
+	                	if( ModelIdentifier.isFunctionModel(mr) ) {
+	                		changedModelResource = mr;
+	                	}
+	            	}
+	            	
+	            	if( changedModelResource != null ) {
             			Set<ModelResource> affectedDependentModelResources = new HashSet<ModelResource>();
                 		
                     	affectedDependentModelResources.addAll(ModelUtilities.getResourcesThatUse(changedModelResource));
@@ -117,10 +139,12 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
 								    EObject eObj = (EObject)i.next();
 								    if (eObj instanceof SqlTransformationMappingRoot) {
 								        SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)eObj;
-
+								        //System.out.println(" >> FunctionModelNotificationHandler.handleModelChanged()  Invalidating Status for Object " + mappingRoot.getTarget());
 								        SqlMappingRootCache.invalidateStatus(mappingRoot, true, txnSource);
 								    }
 								}
+								
+								rebuildImportsInTransaction(modelResource.getEmfResource());
 							}
 						} catch (ModelWorkspaceException ex) {
 							Util.log(IStatus.ERROR, ex, ex.getMessage());
@@ -316,6 +340,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
         if( !changedMRs.isEmpty() ) {
         	for( ModelResource mr: changedMRs) {
         		try {
+        			rebuildImportsInTransaction(mr.getEmfResource());
 					mr.save(new NullProgressMonitor(), false);
 				} catch (ModelWorkspaceException ex) {
 					Util.log(IStatus.ERROR, ex, ex.getMessage());
@@ -334,7 +359,6 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
     	}
     }
 
-    
 	@Override
 	public void processModelResourceEvent(ModelResourceEvent event) {
         if( ModelIdentifier.isFunctionModel(event.getModelResource())) {
@@ -483,5 +507,24 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
                 }
             }
         }
+	}
+	
+	private void rebuildImportsInTransaction(final Resource resource) {
+        boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, false, "Rebuild Imports", this); //$NON-NLS-1$
+        boolean succeeded = false;
+        try {
+        	ModelBuildUtil.rebuildImports(resource, true);
+			succeeded = true;
+        } finally {
+            // If we started Txn, commit it
+            if (requiredStart) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+            }
+        }
+		
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -39,6 +40,7 @@ import org.teiid.query.sql.lang.Select;
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.ModelAnnotation;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -65,6 +67,7 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelp
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
@@ -367,7 +370,13 @@ public class TransformationNotificationListener implements INotifyChangedListene
                         goodNotifications.add(notification);
                     }
                 }
+            } else if( changedObj != null && changedObj instanceof EmfResource) {
+            	ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
+            	if( ModelIdentifier.isFunctionModel(mr) ) {
+            		goodNotifications.add(notification);
+            	}
             }
+            
         }
         return goodNotifications;
     }
@@ -1795,6 +1804,10 @@ public class TransformationNotificationListener implements INotifyChangedListene
                 SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
             }
         }
+        // ---------------------------------------------------------
+        // Function Model Scalar Function or parameter changes
+        // ---------------------------------------------------------
+        functionHandler.handleNotifications(notifications, txnSource);
     }
 
     /* 
@@ -2083,8 +2096,14 @@ public class TransformationNotificationListener implements INotifyChangedListene
         if (changedObj instanceof SqlTransformation) {
             // See if the changed feature is the aliases
             int changedFeature = notification.getFeatureID(SqlTransformation.class);
-
-            if (changedFeature == TransformationPackage.SQL_TRANSFORMATION__ALIASES) {
+            boolean isFunction = false;
+            if( notification.getOldValue() instanceof SqlAlias ) {
+            	SqlAlias alias = (SqlAlias)notification.getOldValue();
+            	if( alias.getAliasedObject() instanceof ScalarFunction ) {
+            		isFunction = true;
+            	}
+            }
+            if (!isFunction && changedFeature == TransformationPackage.SQL_TRANSFORMATION__ALIASES) {
                 aliasesChanged = true;
             }
         }

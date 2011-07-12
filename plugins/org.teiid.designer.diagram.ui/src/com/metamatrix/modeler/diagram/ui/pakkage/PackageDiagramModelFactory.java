@@ -44,6 +44,7 @@ import com.metamatrix.modeler.diagram.ui.notation.NotationModelGenerator;
 import com.metamatrix.modeler.diagram.ui.notation.uml.model.UmlClassifierNode;
 import com.metamatrix.modeler.diagram.ui.util.DiagramEntityManager;
 import com.metamatrix.modeler.diagram.ui.util.DiagramUiUtilities;
+import com.metamatrix.modeler.internal.core.resource.EmfResource;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 
@@ -376,34 +377,46 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                 Object source = ((SourcedNotification)notification).getSource();
                 if (source == null || !source.equals(this)) {
                     Collection notifications = ((SourcedNotification)notification).getNotifications();
-                    Iterator iter = notifications.iterator();
-                    Notification nextNotification = null;
-
-                    while (iter.hasNext() && !shouldHandle) {
-                        nextNotification = (Notification)iter.next();
-                        Object targetObject = ModelerCore.getModelEditor().getChangedObject(nextNotification);
-                        if (targetObject != null) {
-                            if (targetObject instanceof EObject
-                                && !DiagramUiUtilities.isNonDrawingDiagramObject((EObject)targetObject)) {
-                                // If notification is from another "model resource" we don't care for Coarse
-                                // Mapping diagram. All objects are in same model.
-                                // Check here if the targetObject and document have the same resource, then set to TRUE;
-                                ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
-                                if (mr != null && mr.equals(diagramMR)) {
-                                    shouldHandle = true;
-                                }
-                            } else if (targetObject instanceof Resource && diagramModelResource != null) {
-                                Resource targetResource = (Resource)targetObject;
-                                if (targetResource.equals(diagramModelResource)) shouldHandle = true;
-                            } else if (targetObject instanceof Diagram && NotificationUtilities.isRemoved(nextNotification)) {
-                                ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
-                                if (mr != null && mr.equals(diagramMR)) {
-                                    shouldHandle = true;
-                                }
-                            } else if (targetObject instanceof Diagram) {
-                                if (notification.getNewValue() instanceof DiagramLinkType) shouldHandle = true;
-                            }
-                        }
+                    
+                    if( !notifications.isEmpty() ) {
+	                    Iterator iter = notifications.iterator();
+	                    Notification nextNotification = null;
+	                    
+	                    while (iter.hasNext() && !shouldHandle) {
+	                        nextNotification = (Notification)iter.next();
+	                        Object targetObject = ModelerCore.getModelEditor().getChangedObject(nextNotification);
+	                        if (targetObject != null) {
+	                            if (targetObject instanceof EObject
+	                                && !DiagramUiUtilities.isNonDrawingDiagramObject((EObject)targetObject)) {
+	                                // If notification is from another "model resource" we don't care for Coarse
+	                                // Mapping diagram. All objects are in same model.
+	                                // Check here if the targetObject and document have the same resource, then set to TRUE;
+	                                ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
+	                                if (mr != null && mr.equals(diagramMR)) {
+	                                    shouldHandle = true;
+	                                }
+	                            } else if (targetObject instanceof Resource && diagramModelResource != null) {
+	                                Resource targetResource = (Resource)targetObject;
+	                                if (targetResource.equals(diagramModelResource)) shouldHandle = true;
+	                            } else if (targetObject instanceof Diagram && NotificationUtilities.isRemoved(nextNotification)) {
+	                                ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
+	                                if (mr != null && mr.equals(diagramMR)) {
+	                                    shouldHandle = true;
+	                                }
+	                            } else if (targetObject instanceof Diagram) {
+	                                if (notification.getNewValue() instanceof DiagramLinkType) shouldHandle = true;
+	                            }
+	                        }
+	                    }
+                    } else {
+                    	// Single SourceNotificationImpl
+                    	Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
+                    	if( changedObj != null && changedObj instanceof EmfResource) {
+                        	ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
+                        	if( mr == diagramMR) {
+                        		shouldHandle = true;
+                        	}
+                    	}
                     }
                 }
             } else { // SINGLE NOTIFICATION
@@ -473,9 +486,13 @@ public class PackageDiagramModelFactory extends DiagramModelFactoryImpl implemen
                                     DiagramModelNode packageDiagramModelNode ) {
         if (notification instanceof SourcedNotification) {
             Collection notifications = ((SourcedNotification)notification).getNotifications();
-            Iterator iter = notifications.iterator();
-            while (iter.hasNext()) {
-                handleSingleNotification((Notification)iter.next(), packageDiagramModelNode);
+            if( !notifications.isEmpty() ) {
+	            Iterator iter = notifications.iterator();
+	            while (iter.hasNext()) {
+	                handleSingleNotification((Notification)iter.next(), packageDiagramModelNode);
+	            }
+            } else {
+            	handleSingleNotification(notification, packageDiagramModelNode);
             }
         } else {
             handleSingleNotification(notification, packageDiagramModelNode);
