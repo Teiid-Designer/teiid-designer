@@ -624,10 +624,6 @@
 							</para>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Build Packages</emphasis> - TBD
-							</para>
-						</listitem>
-						<listitem>
 							<para><emphasis role="bold">Validate Model Transformations</emphasis> - Revalidates all 
 								transformations for the selected view model.
 							</para>

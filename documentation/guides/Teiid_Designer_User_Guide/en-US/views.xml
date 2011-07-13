@@ -778,8 +778,7 @@
 						<imageobject>
 							<imagedata fileref="images/icons/metadata-search.png"/>
 						</imageobject>
-					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches 
-						the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
+					</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Runs the current search again.
 				</para>
 			</listitem>
 			<listitem>
