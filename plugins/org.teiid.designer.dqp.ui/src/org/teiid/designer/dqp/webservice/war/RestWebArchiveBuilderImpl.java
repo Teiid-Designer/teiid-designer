@@ -458,10 +458,18 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         if (compilerTool != null) {
             StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
 
-            String pathToJaxrsJar = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
+            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-core-asl-1.8.3.jar"; //$NON-NLS-1$
+            String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-jaxrs-1.8.3.jar"; //$NON-NLS-1$
+            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.8.3.jar"; //$NON-NLS-1$
+            String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + "json-1.0.jar"; //$NON-NLS-1$
+            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
 
-            File jaxrsJar = new File(pathToJaxrsJar);
-            List<File> classPaths = Arrays.asList(jaxrsJar);
+            File jar1 = new File(pathToJar1);
+            File jar2 = new File(pathToJar2);
+            File jar3 = new File(pathToJar3);
+            File jar4 = new File(pathToJar4);
+            File jar5 = new File(pathToJar5);
+            List<File> classPaths = Arrays.asList(jar1, jar2, jar3, jar4, jar5);
             fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
 
             List<File> sourceFileList = new ArrayList<File>();
@@ -498,53 +506,98 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         Iterator<RestProcedure> procedureIter = procedureList.iterator();
         while (procedureIter.hasNext()) {
             RestProcedure restProcedure = procedureIter.next();
-            sb.append("@" + restProcedure.getRestMethod().toUpperCase() + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$
-            sb.append("@Path( \"" + restProcedure.getUri() + "\" )" + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-            if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-                sb.append(restProcedure.getConsumesAnnotation() + newline + "\t"); //$NON-NLS-1$
-            }
-            if (restProcedure.getProducesAnnotation() != null && !restProcedure.getProducesAnnotation().isEmpty()) {
-                sb.append(restProcedure.getProducesAnnotation() + newline + "\t"); //$NON-NLS-1$
-            }
-            // Gen method signature
-            sb.append("public String " + restProcedure.getProcedureName() + "( "); //$NON-NLS-1$ //$NON-NLS-2$
-            // Check for URI parameters and add as @PathParams
-            String uri = restProcedure.getUri();
-            Collection<String> pathParams = WarArchiveUtil.getPathParameters(uri);
-            int pathParamCount = 0;
-            for (String param : pathParams) {
-                pathParamCount++;
-                sb.append("@PathParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
-                if (pathParamCount < pathParams.size()) {
-                    sb.append(", "); //$NON-NLS-1$
-                }
-            }
-            if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-                if (pathParams.size() > 0) {
-                    sb.append(", "); //$NON-NLS-1$
-                }
-                sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            if (restProcedure.getProducesAnnotation() != null
+                && restProcedure.getProducesAnnotation().contains("MediaType.APPLICATION_XML")) { //$NON-NLS-1$
+                createXMLMethod(sb, restProcedure);
             } else {
-                sb.append(" ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+                createJSONMethod(sb, restProcedure);
             }
-            // Gen setting of parameter(s)
-            sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
-            if (pathParams.size() > 0) {
-                for (String param : pathParams) {
-                    sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                }
-            }
-            if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-                sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            // Gen return and execute
-            sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
-                      + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
 
         return sb.toString();
 
+    }
+
+    /**
+     * @param sb
+     * @param restProcedure
+     */
+    private void createXMLMethod( StringBuilder sb,
+                                  RestProcedure restProcedure ) {
+        commonRestMethodLogic(sb, restProcedure, ""); //$NON-NLS-1$
+        if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
+            sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        // Gen return and execute
+        sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
+                  + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * @param sb
+     * @param restProcedure
+     */
+    private void createJSONMethod( StringBuilder sb,
+                                   RestProcedure restProcedure ) {
+        commonRestMethodLogic(sb, restProcedure, "json"); //$NON-NLS-1$
+        if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
+            sb.append("\tparameterMap = getJSONInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        // Gen return and execute
+        sb.append("\tString result = teiidProvider.execute(\"" + restProcedure.getProcedureName() + "\", parameterMap);" + newline //$NON-NLS-1$ //$NON-NLS-2$
+                  + "\t"); //$NON-NLS-1$
+        sb.append("\tString json = convertXMLToJSON(result);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\treturn json;" + newline + "\t" + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+    }
+
+    /**
+     * @param sb
+     * @param restProcedure
+     */
+    private void commonRestMethodLogic( StringBuilder sb,
+                                        RestProcedure restProcedure,
+                                        String methodAppendString ) {
+        sb.append("@" + restProcedure.getRestMethod().toUpperCase() + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$
+        String uri = methodAppendString == "" ? restProcedure.getUri() : methodAppendString + "/" + restProcedure.getUri(); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("@Path( \"" + uri + "\" )" + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
+            sb.append(restProcedure.getConsumesAnnotation() + newline + "\t"); //$NON-NLS-1$
+        }
+        if (restProcedure.getProducesAnnotation() != null && !restProcedure.getProducesAnnotation().isEmpty()) {
+            sb.append(restProcedure.getProducesAnnotation() + newline + "\t"); //$NON-NLS-1$
+        }
+        // Gen method signature
+        sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
+        // Check for URI parameters and add as @PathParams
+        Collection<String> pathParams = WarArchiveUtil.getPathParameters(uri);
+        int pathParamCount = 0;
+        for (String param : pathParams) {
+            pathParamCount++;
+            sb.append("@PathParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
+            if (pathParamCount < pathParams.size()) {
+                sb.append(", "); //$NON-NLS-1$
+            }
+        }
+        if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
+            if (pathParams.size() > 0) {
+                sb.append(", "); //$NON-NLS-1$
+            }
+            sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+            sb.append(" ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        // Gen setting of parameter(s)
+        sb.append("\tparameterMap.clear();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (pathParams.size() > 0) {
+            for (String param : pathParams) {
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            }
+        }
     }
 
     /**

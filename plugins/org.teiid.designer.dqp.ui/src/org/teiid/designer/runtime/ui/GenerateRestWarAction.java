@@ -260,24 +260,35 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 return;
             }
 
-            // If the parameterCount is greater than the number of parameters passed
-            // on the URI, we can expect more parameters via an input stream
-            // so the consumes annotation will need to be set
-
-            if (uriParameterCount < parameterCount) {
-                restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
-            }
-
-            if (hasReturn) {
-                restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
-            }
-
             restProcedure.setRestMethod((String)restMethod);
             restProcedure.setUri((String)uri);
             restProcedure.setProcedureName(name);
             restProcedure.setFullyQualifiedProcedureName(fullName);
 
+            // Create JSON version
+            RestProcedure jsonRestProcedure = new RestProcedure();
+            jsonRestProcedure.setFullyQualifiedProcedureName(restProcedure.getFullyQualifiedProcedureName());
+            jsonRestProcedure.setModelName(restProcedure.getModelName());
+            jsonRestProcedure.setProcedureName(restProcedure.getProcedureName());
+            jsonRestProcedure.setRestMethod(restProcedure.getRestMethod());
+            jsonRestProcedure.setUri(restProcedure.getUri());
+
+            // If the parameterCount is greater than the number of parameters passed
+            // on the URI, we can expect more parameters via an input stream
+            // so the consumes annotation will need to be set. We will set for XML and JSON methods.
+
+            if (uriParameterCount < parameterCount) {
+                restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
+                jsonRestProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
+            }
+
+            if (hasReturn) {
+                restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
+                jsonRestProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
+            }
+
             restfulProcedureArray.add(restProcedure);
+            restfulProcedureArray.add(jsonRestProcedure);
         }
     }
 }
