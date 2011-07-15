@@ -20,7 +20,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.ui.UiConstants;
 
 /**
@@ -183,7 +182,13 @@ public class MetadataSearchResult extends AbstractTextSearchResult implements IE
                                     IEditorPart editor ) {
         if (match instanceof IModelObjectMatch) {
             String matchResourcePath = ((IModelObjectMatch)match).getResourcePath();
-            String editorResourcePath = ((ModelEditor)editor).getModelFile().getFullPath().toOSString();
+            String editorResourcePath = null;
+            if (editor != null) {
+                IEditorInput editorInput = editor.getEditorInput();
+                if (editorInput instanceof IFileEditorInput) {
+                    editorResourcePath = ((IFileEditorInput)editorInput).getFile().getFullPath().toOSString();
+                }
+            }
 
             return matchResourcePath.equals(editorResourcePath);
         }
