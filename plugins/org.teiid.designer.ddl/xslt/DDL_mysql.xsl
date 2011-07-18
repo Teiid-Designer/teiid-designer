@@ -557,7 +557,7 @@ CREATE </xsl:text>
 		<!-- If 'float' -->
 		<xsl:when test=". = 'float'">
 			<xsl:text>FLOAT</xsl:text>
-            <xsl:call-template name="column-numericLength">
+            <xsl:call-template name="column-floatLength">
                 <xsl:with-param name="precision" select="../@precision"/>
                 <xsl:with-param name="scale" select="../@scale"/>
             </xsl:call-template>
@@ -565,7 +565,7 @@ CREATE </xsl:text>
 		<!-- If 'double' -->
 		<xsl:when test=". = 'double'">
 			<xsl:text>DOUBLE</xsl:text>
-			<xsl:call-template name="column-numericLength">
+			<xsl:call-template name="column-floatLength">
 				<xsl:with-param name="precision" select="../@precision"/>
 				<xsl:with-param name="scale" select="../@scale"/>
 			</xsl:call-template>
@@ -787,6 +787,29 @@ CREATE </xsl:text>
 	</xsl:choose>
 </xsl:template>
 
+<!-- float, real, double do not have optional scale param --> 
+<xsl:template name="column-floatLength">
+    <xsl:param name="precision"/>
+    <xsl:param name="scale"/>
+    <xsl:choose>
+        <xsl:when test="string-length($precision)!=0 and $precision!='0'">
+            <xsl:text>(</xsl:text>
+            <xsl:value-of select="$precision"/>
+            <xsl:choose>
+                <xsl:when test="string-length($scale)!=0 and $scale!='0'">
+                    <xsl:text>,</xsl:text>
+                    <xsl:value-of select="$scale"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>,10</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text>)</xsl:text>
+        </xsl:when>
+    </xsl:choose>
+            
+</xsl:template>
+
 <!--
   ************************************************************************
   ** Convert to uppercase
@@ -913,7 +936,7 @@ Comment on Column </xsl:text>
   ** Process column initial value
   ************************************************************************ -->
 <xsl:template name="column-default" match="column/@initialValue">
-	<xsl:if test="string-length(.)!=0"> DEFAULT ('<xsl:value-of select="."/>')</xsl:if>
+	<xsl:if test="string-length(.)!=0"> DEFAULT '<xsl:value-of select="."/>'</xsl:if>
 </xsl:template>
 
 <!--
