@@ -23,13 +23,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
+import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.FunctionParameter;
+import com.metamatrix.metamodels.function.ReturnParameter;
 import com.metamatrix.metamodels.function.ScalarFunction;
+import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.relational.ProcedureParameter;
+import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
 import com.metamatrix.metamodels.transformation.SqlTransformationMappingRoot;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.query.QueryValidator;
+import com.metamatrix.modeler.core.util.ModelObjectCollector;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.builder.ModelBuildUtil;
@@ -57,6 +64,19 @@ import com.metamatrix.modeler.ui.event.ModelResourceEvent;
  */
 public class FunctionModelNotificationHandler implements IModelNotificationHandler, UiConstants {
     
+	private boolean isFunctionModelObject( Object obj) {
+    	if( obj instanceof ScalarFunction || 
+    		   obj instanceof FunctionParameter || 
+    		   obj instanceof ReturnParameter ) {
+    		return true;
+    	} else if( obj instanceof Procedure ) {
+    		return ((Procedure)obj).isFunction();
+    	} else if(obj instanceof ProcedureParameter) {
+    		return ((ProcedureParameter)obj).getProcedure().isFunction();
+    	}
+    	return false;
+    }
+	
     /* 
      * Get all Function Model object change Notifications.
      * @param notifications the collection of all notifications
@@ -74,7 +94,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
                 // Get the object that was changed
                 Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
                 // changed object -
-                if (TransformationHelper.isFunctionModelObject(changedObj) ) {
+                if (isFunctionModelObject(changedObj) ) {
                 	if (result == null) {
                         result = new ArrayList(notifications.size());
                     }
@@ -118,7 +138,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
             			// Get the dependent resources
 	            	} else if( changedObj instanceof EmfResource ) {
 	            		ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
-	                	if( ModelIdentifier.isFunctionModel(mr) ) {
+	                	if( ModelIdentifier.isFunctionModel(mr) || isSourceModelWithPushdownFunction(mr) ) {
 	                		changedModelResource = mr;
 	                	}
 	            	}
@@ -157,7 +177,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
             	ModelResource changedModelResource = null;
             	
             	try {
-	            	if( changedObj instanceof ScalarFunction ) {
+	            	if( changedObj instanceof EObject && isFunction((EObject)changedObj)) {
 	            		EObject eObject = (EObject)changedObj;
 	            		final EStructuralFeature nameFeature = ModelerCore.getModelEditor().getNameFeature(eObject);
 	            		// check that the change was to the "name" property
@@ -394,7 +414,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
 
 	@Override
 	public boolean shouldHandleChangedObject(Object object) {
-		return TransformationHelper.isFunctionModelObject(object);
+		return isFunctionModelObject(object);
 	}
 
 	private void updateSqlInTransaction(EObject mappingRoot, int sqlType, String sql, boolean significant, Object txnSource) {
@@ -526,5 +546,39 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
             }
         }
 		
+	}
+	
+	private boolean isSourceModelWithPushdownFunction(ModelResource modelResource) {
+		try {
+			String uri = modelResource.getPrimaryMetamodelUri();
+			if( ! RelationalPackage.eNS_URI.equalsIgnoreCase(uri) &&
+				! (modelResource.getModelType() == ModelType.PHYSICAL_LITERAL) ) {
+				return false;
+			}
+	        	
+	    	final ModelObjectCollector moc = new ModelObjectCollector(modelResource.getEmfResource());
+	        for( Object eObj : moc.getEObjects()){
+	        	if( eObj instanceof Procedure ) {
+	        		if( ((Procedure)eObj).isFunction()) {
+	        			return true;
+	        		}
+	        	}
+	        }
+		} catch (ModelWorkspaceException ex) {
+			Util.log(IStatus.ERROR, ex, ex.getMessage());
+		}
+    	
+    	return false;
+	}
+	
+	private boolean isFunction(EObject eObject) {
+		if( eObject instanceof ScalarFunction ) {
+			return true;
+		} else if( eObject instanceof Procedure &&
+				   ((Procedure)eObject).isFunction()) {
+			return true;
+    	}
+		
+		return false;
 	}
 }

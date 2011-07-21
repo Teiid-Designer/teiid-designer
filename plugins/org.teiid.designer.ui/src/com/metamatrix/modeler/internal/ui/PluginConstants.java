@@ -98,6 +98,7 @@ public interface PluginConstants {
         String COLLAPSE_ALL_ICON = CVIEW16 + "collapseall.gif"; //$NON-NLS-1$
 
         String MODEL_STATISTICS_ICON = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
+        String NEW_PUSHDOWN_FUNCTION = OBJ16 + "PushdownFunction.gif"; //$NON-NLS-1$
         String BUILD_MODEL_IMPORTS_ICON = OBJ16 + "Imports.gif"; //$NON-NLS-1$
         String FIND = CVIEW16 + "find.gif"; //$NON-NLS-1$
         String FIND_REPLACE = CVIEW16 + "find_replace.gif"; //$NON-NLS-1$

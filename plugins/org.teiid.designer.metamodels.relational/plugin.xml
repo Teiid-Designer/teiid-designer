@@ -25,12 +25,14 @@
       <alternateUri>
          mtkplugin:///com.metamatrix.metamodels.Relational
       </alternateUri>
+      <!-- 
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.Catalog">
       </rootEntityClass>
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.Schema">
       </rootEntityClass>
+      -->
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.BaseTable">
       </rootEntityClass>
@@ -42,9 +44,6 @@
       </rootEntityClass>
       <rootEntityClass
             name="com.metamatrix.metamodels.relational.Procedure">
-      </rootEntityClass>
-      <rootEntityClass
-            name="com.metamatrix.metamodels.relational.LogicalRelationship">
       </rootEntityClass>
       <properties
             createAsPhysical="true"

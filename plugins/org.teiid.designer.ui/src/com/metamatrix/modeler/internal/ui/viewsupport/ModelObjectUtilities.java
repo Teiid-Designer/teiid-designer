@@ -51,6 +51,7 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -328,6 +329,10 @@ public abstract class ModelObjectUtilities {
         if ((TransformationHelper.isMappingClass(eObject) && !TransformationHelper.isStagingTable(eObject))
             || TransformationHelper.isSqlInputSet(eObject)) {
             return false;
+        }
+        
+        if( eObject instanceof Procedure && ((Procedure)eObject).isFunction() ) {
+        	return false;
         }
 
         boolean hasValidQuery = true;

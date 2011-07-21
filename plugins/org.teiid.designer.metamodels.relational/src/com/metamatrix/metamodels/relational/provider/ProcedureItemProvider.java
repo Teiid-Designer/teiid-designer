@@ -124,6 +124,9 @@ public class ProcedureItemProvider extends RelationalEntityItemProvider {
      */
     @Override
     public Object getImage( Object object ) {
+    	if( ((Procedure)object).isFunction() ) {
+    		return getResourceLocator().getImage("full/obj16/PushdownFunction");  //$NON-NLS-1$
+    	}
         return getResourceLocator().getImage("full/obj16/Procedure"); //$NON-NLS-1$
     }
 

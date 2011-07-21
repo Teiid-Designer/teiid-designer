@@ -651,14 +651,18 @@ public final class ModelerActionService extends AbstractActionService
                                 HashMap actionMap = new HashMap();
                                 Iterator iter = descriptors.iterator();
                                 while (iter.hasNext()) {
-                                    NewChildAction action = new NewChildAction(resource, (Command)iter.next());
-                                    actionMap.put(action.getText(), action);
-                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
-
-                                    // disable if read-only. obj should be EObject or an IResource.
-                                    if (isReadOnly) {
-                                        action.setEnabled(false);
-                                    }
+                                	Command nextCommand = (Command)iter.next();
+                                	if( !nextCommand.getLabel().equalsIgnoreCase("schema")  //$NON-NLS-1$
+                                			&& !nextCommand.getLabel().equalsIgnoreCase("catalog") ) { //$NON-NLS-1$
+	                                    NewChildAction action = new NewChildAction(resource, nextCommand);
+	                                    actionMap.put(action.getText(), action);
+	                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
+	
+	                                    // disable if read-only. obj should be EObject or an IResource.
+	                                    if (isReadOnly) {
+	                                        action.setEnabled(false);
+	                                    }
+                                	}
                                 }
 
                                 // sort the keys of the actionMap to put them in alphabetical order
@@ -667,6 +671,18 @@ public final class ModelerActionService extends AbstractActionService
                                 while (iter.hasNext()) {
                                     // add each action to the menu
                                     menu.add((IAction)actionMap.get(iter.next()));
+                                }
+                                
+                                // get the NewChildAction extensions and populate with any actions
+                                // Note: these should not be sorted - they always go on the bottom of the menu
+                                for (int i = 0; i < getNewChildExtensions().length; ++i) {
+                                    INewChildAction action = getNewChildExtensions()[i];
+                                    if (action.canCreateChild((IFile)obj)) {
+                                        menu.add(action);
+                                        if (isReadOnly) {
+                                            action.setEnabled(false);
+                                        }
+                                    }
                                 }
 
                             }

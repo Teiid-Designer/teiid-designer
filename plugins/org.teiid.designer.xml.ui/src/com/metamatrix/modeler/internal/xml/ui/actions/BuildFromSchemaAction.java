@@ -7,11 +7,13 @@
  */
 package com.metamatrix.modeler.internal.xml.ui.actions;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+
 import com.metamatrix.metamodels.xml.XmlDocumentNode;
 import com.metamatrix.modeler.internal.xml.ui.wizards.NumberOfLevelsWizard;
 import com.metamatrix.modeler.ui.actions.INewChildAction;
@@ -47,6 +49,13 @@ public class BuildFromSchemaAction extends Action implements INewChildAction,
     		}
     	}
     	return canCreate;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.ui.actions.INewChildAction#canCreateChild(org.eclipse.core.resources.IFile)
+     */
+    public boolean canCreateChild(IFile parent) {
+    	return false;
     }
 
 	public XmlDocumentNode getNode() {

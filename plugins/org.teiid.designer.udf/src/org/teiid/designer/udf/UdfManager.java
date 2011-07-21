@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.internal.resources.Marker;
@@ -27,8 +28,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.metadata.FunctionMethod;
-import org.teiid.metadata.FunctionParameter;
 import org.teiid.metadata.FunctionMethod.Determinism;
+import org.teiid.metadata.FunctionParameter;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.function.FunctionTree;
@@ -36,14 +37,22 @@ import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 
 import com.metamatrix.core.modeler.util.FileUtils;
-import com.metamatrix.core.util.ModelType;
+import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.function.ScalarFunction;
+import com.metamatrix.metamodels.relational.DirectionKind;
+import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.relational.ProcedureParameter;
+import com.metamatrix.metamodels.relational.RelationalPackage;
+import com.metamatrix.metamodels.relational.util.PushdownFunctionData;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
+import com.metamatrix.modeler.core.util.ModelObjectCollector;
 import com.metamatrix.modeler.core.util.ModelVisitor;
 import com.metamatrix.modeler.core.util.ModelVisitorProcessor;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelObjectAnnotationHelper;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.core.workspace.ResourceChangeUtilities;
@@ -54,6 +63,8 @@ public final class UdfManager implements IResourceChangeListener {
     public static final UdfManager INSTANCE = new UdfManager();
     
     public static final SystemFunctionManager SYSTEM_FUNCTION_MANAGER = new SystemFunctionManager();
+    
+    private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
     
     private FunctionLibrary systemFunctionLibrary;
    
@@ -361,8 +372,129 @@ public final class UdfManager implements IResourceChangeListener {
         		functionTrees.add(tree);
         	}
         }
+        
+        // Now walk "Source relational models" to search for new Procedures that have FUNCTION = true set
+        
+        for( ModelResource sourceModel : getSourceRelationalModels() ) {
+        	
+    		IMarker[] markers = getMarkers(sourceModel);
+    		
+    		String schema = FileUtils.getFilenameWithoutExtension(sourceModel.getItemName());
+    		FunctionTree tree = new FunctionTree(schema, new UDFSource(Collections.EMPTY_LIST), false);
+    		
+    		for( Procedure procedure : getPushdownFunctions(sourceModel) ) {
+    			// Also the Function's input parameters AND it's return parameter (if non-null) need to be error free
+    			
+    			ProcedureWrapper wrappedProcedure = new ProcedureWrapper(procedure);
+    			
+    			if( !isFunctionObjectErrorFree(wrappedProcedure.getReturnParameter(), markers, sourceModel) ||
+    					wrappedProcedure.getReturnParameter() == null || 
+    				!isFunctionObjectErrorFree(wrappedProcedure.getReturnParameter(), markers, sourceModel)) {
+    				continue;
+    			}
+    			String description = null;
+    			
+    			try {
+					description = ModelerCore.getModelEditor().getDescription(procedure);
+				} catch (ModelerCoreException ex) {
+					UdfPlugin.UTIL.log(ex);
+				}
+    			
+				boolean functionPamameterHasError = false;
+				
+    			Collection<FunctionParameter> fParams = new ArrayList<FunctionParameter>();
+    			
+    			for( ProcedureParameter inputParam : wrappedProcedure.getInputParameters() ) {
+    				String dTypeName = ModelerCore.getModelEditor().getName(inputParam.getType());
+					fParams.add(new FunctionParameter(inputParam.getName(), dTypeName));
+					// If any function parameter has an error don't add this
+					if( !functionPamameterHasError && !isFunctionObjectErrorFree(inputParam, markers, sourceModel)){
+						functionPamameterHasError = true;
+					}
+    			}
+    			
+    			if( functionPamameterHasError ) {
+    				continue;
+    			}
+    			
+    			String dTypeName = ModelerCore.getModelEditor().getName(wrappedProcedure.getReturnParameter().getType());
+    			String returnParamName = ModelerCore.getModelEditor().getName(wrappedProcedure.getReturnParameter());
+    			FunctionParameter outputParam = new FunctionParameter(returnParamName, dTypeName); 
+    			
+    			// Set the category name as the Model Name
+    			String category = sourceModel.getItemName();
+    			if( category.endsWith(".xmi")) { //$NON-NLS-1$
+    				category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
+    			}
+    			
+    			FunctionMethod fMethod = 
+    				new FunctionMethod(
+    						wrappedProcedure.getName(), 
+    						description, 
+    						category, 
+    						null, 
+    						null, 
+    						null,
+    						fParams.toArray(new FunctionParameter[0]),
+    						outputParam,
+    					    false,
+    						null
+    						);
+    			fMethod.setPushDown(Boolean.toString(true));
+    			if( wrappedProcedure.isDeterministic() ) {
+    				fMethod.setDeterminism(Determinism.DETERMINISTIC);
+    			} else {
+    				fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
+    			}
+    			
+    			FunctionDescriptor fd = tree.addFunction(schema, null, fMethod);
+    			fd.setMetadataID(procedure);
+    		}
+    		functionTrees.add(tree);
+        }
 
         return new FunctionLibrary(SYSTEM_FUNCTION_MANAGER.getSystemFunctions(), functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+    }
+    
+    private Collection<Procedure> getPushdownFunctions(ModelResource sourceModel) {
+    	Collection<Procedure> functions = new ArrayList<Procedure>();
+    	
+    	try {
+        	
+        	final ModelObjectCollector moc = new ModelObjectCollector(sourceModel.getEmfResource());
+            for( Object eObj : moc.getEObjects()){
+            	if( eObj instanceof Procedure ) {
+            		if( ((Procedure)eObj).isFunction()) {
+            			functions.add((Procedure)eObj);
+            		}
+            	}
+            }
+		} catch (CoreException ex) {
+            UdfPlugin.UTIL.log(ex);
+		}
+    	return functions;
+    }
+    
+    private Collection<ModelResource> getSourceRelationalModels() {
+    	Collection<ModelResource> sources = new ArrayList<ModelResource>();
+    	
+    	try {
+			ModelResource[] allModels = ModelWorkspaceManager.getModelWorkspaceManager().getModelWorkspace().getModelResources();
+			
+			for( ModelResource model : allModels ) {
+				String uri = model.getPrimaryMetamodelUri();
+				if( RelationalPackage.eNS_URI.equalsIgnoreCase(uri) &&
+					model.getModelType() == ModelType.PHYSICAL_LITERAL ) {
+					sources.add(model);
+				}
+			}
+			
+		} catch (CoreException ex) {
+            UdfPlugin.UTIL.log(ex);
+		}
+    	
+    	
+    	return sources;
     }
     
     private ScalarFunction[] getScalarFunctions(ModelResource mr) {
@@ -410,5 +542,58 @@ public final class UdfManager implements IResourceChangeListener {
 			return functions.toArray(new ScalarFunction[0]);
 		}
     	
+    }
+    
+    class ProcedureWrapper {
+    	Procedure procedure;
+    	ProcedureParameter returnParam;
+    	Collection<ProcedureParameter> inputParams;
+    	boolean deterministic = false;
+    	
+    	public ProcedureWrapper(Procedure procedure) {
+    		super();
+    		this.procedure = procedure;
+    		init();
+    	}
+    	
+    	private void init() {
+    		inputParams = new ArrayList<ProcedureParameter>();
+    		for( Object obj : procedure.getParameters() ) {
+    			ProcedureParameter param = (ProcedureParameter)obj;
+    			if( param.getDirection() == DirectionKind.IN_LITERAL ) {
+    				inputParams.add(param);
+    			} else if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
+    				returnParam = param;
+    			}
+    		}
+    		try {
+				Properties props = ANNOTATION_HELPER.getExtendedProperties(procedure);
+				
+				if( props != null && props.size() > 0 ) {
+					Object determValue = props.get(PushdownFunctionData.DETERMINISTIC_PROPERTY_KEY);
+					if( determValue != null ) {
+						deterministic = Boolean.valueOf((String)determValue);
+					}
+				}
+			} catch (ModelerCoreException ex) {
+				UdfPlugin.UTIL.log(ex);
+			}
+    	}
+    	
+    	public ProcedureParameter getReturnParameter() {
+    		return this.returnParam;
+    	}
+    	
+    	public Collection<ProcedureParameter> getInputParameters() {
+    		return this.inputParams;
+    	}
+    	
+    	public String getName() {
+    		return ModelerCore.getModelEditor().getName(procedure);
+    	}
+    	
+    	public boolean isDeterministic() {
+    		return this.deterministic;
+    	}
     }
 }

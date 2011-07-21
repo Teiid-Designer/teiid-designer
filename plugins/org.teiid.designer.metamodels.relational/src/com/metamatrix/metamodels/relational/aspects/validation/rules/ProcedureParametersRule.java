@@ -69,6 +69,27 @@ public class ProcedureParametersRule implements ObjectValidationRule {
                 return;                
             }
         }
+        
+        // Need to validate for Pushdown Functions if "FUNCTION = TRUE" property set
+        // 1) Can have multiple input parameters
+        // 2) Requires "Output Parameter" and CANNOT have multiple
+        if( procedure.isFunction() ) {
+        	paramIter = procedure.getParameters().iterator();
+            while(paramIter.hasNext()) {
+            	ProcedureParameter param = (ProcedureParameter) paramIter.next();
+            	DirectionKind direction = param.getDirection();
+            	int directionKind = direction.getValue();
+            	if( directionKind == DirectionKind.INOUT ||
+            		directionKind == DirectionKind.OUT || 
+            		directionKind == DirectionKind.UNKNOWN ) {
+                    ValidationProblem problem = new ValidationProblemImpl(0, IStatus.ERROR, RelationalPlugin.Util.getString("ProcedureParametersRule.Procedure_{0}_is_defined_as_function_and_can_only_have_in_parameters_and_one_return_parameter",  new Object[]{procedure.getName()})); //$NON-NLS-1$
+                    result.addProblem(problem);
+
+            	}
+            }
+        }
+        
+        
 		// add the result to the context
 		context.addResult(result);
     }

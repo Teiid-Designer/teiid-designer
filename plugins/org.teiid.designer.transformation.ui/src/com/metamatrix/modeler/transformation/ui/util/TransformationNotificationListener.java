@@ -208,6 +208,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
         // Do a first-pass - ignore irrelevant notifications
         // --------------------------------------------------------
         Collection validNotifications = filterNotifications(notifications);
+        
+        Collection originalNotifications = new ArrayList(validNotifications);
         // ----------------------------------------
         // Process remaining valid notifications
         // ----------------------------------------
@@ -329,7 +331,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
             // ---------------------------------------------------------
             // Function Model Scalar Function or parameter changes
             // ---------------------------------------------------------
-            functionHandler.handleNotifications(validNotifications, source);
+            functionHandler.handleNotifications(originalNotifications, source);
         }
     }
 

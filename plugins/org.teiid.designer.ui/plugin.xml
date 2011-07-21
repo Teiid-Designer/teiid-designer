@@ -917,6 +917,24 @@
          label="%setDatatypeModelingAction.label">
       </specialAction>
    </extension>
+	<extension
+         id="newChildPushdownFunction"
+         name="%newChildPushdownFunction"
+         point="org.teiid.designer.ui.newChildAction">
+      <class
+            name="com.metamatrix.modeler.internal.ui.actions.CreatePushdownFunctionAction">
+      </class>
+   </extension>
+
+   <extension
+         id="newSiblingPushdownFunction"
+         name="%newSiblingPushdownFunction"
+         point="org.teiid.designer.ui.newSiblingAction">
+      <class
+            name="com.metamatrix.modeler.internal.ui.actions.CreatePushdownFunctionAction">
+      </class>
+   </extension>
+
 
 <!-- Adding Model Explorer action to show/hide non-model files -->
 	<extension
