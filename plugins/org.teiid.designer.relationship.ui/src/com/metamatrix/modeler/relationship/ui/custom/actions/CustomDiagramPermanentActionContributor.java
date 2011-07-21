@@ -28,7 +28,6 @@ import com.metamatrix.modeler.relationship.ui.actions.RelationshipAction;
 import com.metamatrix.modeler.relationship.ui.diagram.RelationshipDiagramUtil;
 import com.metamatrix.modeler.relationship.ui.navigation.actions.OpenInNavigatorAction;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
-import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 /**
@@ -128,27 +127,27 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     }
     
     private void addToChildMenu(IMenuManager theMenuMgr) {
-        String menuPath = ModelerActionBarIdManager.getInsertChildMenuId();
-                
-        IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
-                
-        if( mm != null ) {
-            mm.add(createDiagramAction);
-        } else {
-            theMenuMgr.add(createDiagramAction);
-        }
+//        String menuPath = ModelerActionBarIdManager.getInsertChildMenuId();
+//                
+//        IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
+//                
+//        if( mm != null ) {
+//            mm.add(createDiagramAction);
+//        } else {
+//            theMenuMgr.add(createDiagramAction);
+//        }
     }
     
     private void addToSiblingMenu(IMenuManager theMenuMgr) {
-        String menuPath = ModelerActionBarIdManager.getInsertSiblingMenuId();
-                
-        IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
-                
-        if( mm != null ) {
-            mm.add(createDiagramSiblingAction);
-        } else {
-            theMenuMgr.add(createDiagramSiblingAction);
-        }
+//        String menuPath = ModelerActionBarIdManager.getInsertSiblingMenuId();
+//                
+//        IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
+//                
+//        if( mm != null ) {
+//            mm.add(createDiagramSiblingAction);
+//        } else {
+//            theMenuMgr.add(createDiagramSiblingAction);
+//        }
     }
     
     private boolean isPackage(EObject eObject) {

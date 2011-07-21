@@ -8,7 +8,6 @@
 package com.metamatrix.modeler.modelgenerator.ui;
 
 import org.teiid.core.types.DataTypeManager;
-import com.metamatrix.modeler.modelgenerator.uml2.processor.Uml2RelationalOptions;
 import com.metamatrix.ui.PreferenceKeyAndDefaultValue;
 
 
@@ -50,8 +49,8 @@ public interface PluginConstants {
                         new PreferenceKeyAndDefaultValue(CLASS_IGNORED_STEREOTYPES,
                                 ZERO_LENGTH_STRING),
                                 
-                        new PreferenceKeyAndDefaultValue(PACKAGE_USAGE,
-                                new Integer(Uml2RelationalOptions.DEFAULT_PACKAGE_USAGE.getValue())),
+//                        new PreferenceKeyAndDefaultValue(PACKAGE_USAGE,
+//                                new Integer(Uml2RelationalOptions.DEFAULT_PACKAGE_USAGE.getValue())),
                         
                         new PreferenceKeyAndDefaultValue(REACHABILITY_CONTRAINT,
                                 new Integer(1)),

@@ -13,13 +13,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.uml.UmlPackage;
+import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.diagram.ui.DiagramUiPlugin;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramAction;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.actions.IModelObjectActionContributor;
@@ -74,7 +77,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
                     }
                 } else if( (selectedObject instanceof IResource) && 
                             ModelUtilities.isModelFile((IResource)selectedObject)&&
-                            !ModelUtil.isXsdFile((IResource)selectedObject) ) {
+                            !ModelUtil.isXsdFile((IResource)selectedObject) && !ModelIdentifier.isRelationshipModel((IResource)selectedObject) ) {
                     addToResourceChildMenu(theMenuMgr);
                 }
             }
@@ -125,6 +128,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramAction);
         }
     }
@@ -135,8 +139,10 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramAction);
         } else {
+        	theMenuMgr.add(new Separator());
             theMenuMgr.add(createDiagramAction);
         }
     }
@@ -147,6 +153,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramSiblingAction);
         }
     }
@@ -161,9 +168,18 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     }
     
     private boolean supportsDiagrams(Object input) {
+    	ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)input);
+    	
         if( input instanceof Diagram ) {
             // Let's get the model resource and call with it instead of diagram.
-            return ModelUtilities.supportsDiagrams(ModelUtilities.getModelResourceForModelObject((EObject)input));
+        	if( !ModelIdentifier.isRelationshipModel(mr) ) {
+        		return ModelUtilities.supportsDiagrams(mr);
+        	}
+        	
+            return false;
+        }
+        if( ModelIdentifier.isRelationshipModel(mr) ) {
+        	return false;
         }
         
         return ModelUtilities.supportsDiagrams(input);

@@ -60,10 +60,9 @@
             name="relationshipDiagramType">
       </diagramType>
    </extension>
-<!-- Modeler view category -->
+<!-- Modeler view category
    <extension
          point="org.eclipse.ui.views">
-<!-- Navigation view -->
       <view
             name="%relationshipNavigationView"
             icon="icons/full/cview16/navigator_view.gif"
@@ -72,7 +71,8 @@
             id="relationship.ui.navigation.navigationView">
       </view>
    </extension>
-<!-- Adding the Relationship Custom Diagram Type extension-->
+ -->
+<!-- Adding the Relationship Custom Diagram Type extension
    <extension
          id="customRelationshipDiagramType"
          name="%customRelationshipDiagramType"
@@ -82,7 +82,8 @@
             simpleDiagram="true">
       </diagram>
    </extension>
-<!-- Relationship Custom Diagram Type Permanent Model Object Action Contributor -->
+-->
+<!-- Relationship Custom Diagram Type Permanent Model Object Action Contributor 
    <extension
          id="customRelationishipModelObjectActionContributor"
          point="org.teiid.designer.ui.modelObjectActionContributor">
@@ -90,7 +91,8 @@
             name="com.metamatrix.modeler.relationship.ui.custom.actions.CustomDiagramPermanentActionContributor">
       </class>
    </extension>
-<!-- Custom Diagram Content Provider -->
+-->
+<!-- Custom Diagram Content Provider 
    <extension
          id="customRelationshipDiagramContentProvider"
          name="%customRelationshipDiagramContentProvider"
@@ -102,7 +104,8 @@
             name="customDiagramType">
       </diagramType>
    </extension>
-<!-- Custom Diagram Label Provider -->
+-->
+<!-- Custom Diagram Label Provider
    <extension
          id="customRelationshipDiagramLabelProvider"
          name="%customRelationshipDiagramLabelProvider"
@@ -114,7 +117,8 @@
             name="customRelationshipDiagramType">
       </diagramType>
    </extension>
-<!-- Relationship Object Editor Page -->
+ -->
+<!-- Relationship Object Editor Page
    <extension
          id="relationshipObjectEditorPage"
          name="%relationshipEditorName"
@@ -123,7 +127,8 @@
             name="com.metamatrix.modeler.relationship.ui.editor.RelationshipObjectEditorPage">
       </class>
    </extension>
-<!-- Relationship Type Editor Object Editor Page -->
+ -->
+<!-- Relationship Type Editor Object Editor Page
    <extension
          id="relationshipObjectEditorPage"
          name="%relationshipEditorName"
@@ -132,10 +137,11 @@
             name="com.metamatrix.modeler.relationship.ui.editor.RelationshipTypeObjectEditorPage">
       </class>
    </extension>
+ -->
 <!--
 	Add the Navigation Action Set to the Modeler Perspective MetaData menu. In order to do
 	this we must make sure the MetaData Action Set has also been activated. Also add the search action set.
--->
+
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
@@ -145,7 +151,8 @@
          </actionSet>
       </perspectiveExtension>
    </extension>
-<!-- New Object Wizard for Relationship -->
+-->
+<!-- New Object Wizard for Relationship 
    <extension
          id="NewRelationshipContributor"
          name="%relationshipWizardName"
@@ -157,7 +164,8 @@
             name="com.metamatrix.metamodels.relationship.Relationship">
       </descriptorType>
    </extension>
-<!-- New Association Wizard for Relationship -->
+-->
+<!-- New Association Wizard for Relationship
    <extension
          id="NewRelationshipAssociationContributor"
          name="%relationshipWizardName"
@@ -169,7 +177,8 @@
             name="RelationshipAssociationDescriptor">
       </descriptorType>
    </extension>
-<!-- New Object Wizard for Relationship Type -->
+ -->
+<!-- New Object Wizard for Relationship Type
    <extension
          id="NewRelationshipTypeContributor"
          name="%relationshipTypeWizardName"
@@ -181,7 +190,8 @@
             name="com.metamatrix.metamodels.relationship.RelationshipType">
       </descriptorType>
    </extension>
-<!-- Relationship Search Page -->
+ -->
+<!-- Relationship Search Page
    <extension
          point="org.eclipse.search.searchPages">
       <page
@@ -194,9 +204,10 @@
             id="relationshipSearchPage">
       </page>
    </extension>
+ -->
 
 <!-- Handlers, Commands, Menus extensions to add to Teiid Designer submenu in Search Menu -->
-
+<!--
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
@@ -204,7 +215,8 @@
             commandId="com.metamatrix.modeler.relationship.ui.search.openRelationshipSearchPageCommand">
 		</handler>
    </extension>
-
+-->
+<!--
    <extension
          point="org.eclipse.ui.commands">
 	  <command
@@ -213,11 +225,13 @@
 			name="%openRelationshipSearchAction.label">
 	  </command>
    </extension>
+-->
 
-	<extension point="org.eclipse.ui.menus">
-		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
 			<!-- Note: The Search menu (re-) definition has to be here due to bug: -->
 			<!-- see http://bugs.eclipse.org/bugs/show_bug.cgi?id=15684    -->
+<!--
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=navigate">
 			<menu
 				label="%searchMenu.label"
 				id="org.eclipse.search.menu">
@@ -240,7 +254,8 @@
 			</menu>
 		</menuContribution>
 	</extension>
-
+-->
+<!--
    <extension
          id="RelationshipPropertyEditorFactory"
          name="%relationshipPropertyEditorFactory"
@@ -249,7 +264,9 @@
             name="com.metamatrix.modeler.relationship.ui.properties.RelationshipPropertyEditorFactory">
       </class>
    </extension>
+-->
    <!-- Helper method to allow external edit for diagrams. i.e. Delete, Copy, etc.. -->
+ <!-- 
       <extension
          id="customDiagramHelper"
          name="%customDiagramHelper"
@@ -259,7 +276,9 @@
          diagramType="customRelationshipDiagramType">
       </class>
    </extension>
+-->
    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+<!--
    <extension
          id="relationshipPerspectiveContributor"
          name="%relationshipPerspectiveContributor"
@@ -268,7 +287,9 @@
         name="com.metamatrix.modeler.relationship.ui.RelationshipPerspectiveContributor">
       </class>
    </extension>
+-->
        <!-- Text Importer Contribution -->
+<!--
       <extension
          id="relationshipsUiTextImporter"
          name="%relationshipsUiTextImporter"
@@ -277,6 +298,8 @@
         name="com.metamatrix.modeler.internal.relationship.ui.wizards.ImportRelationshipsMainPage">
       </class>
    </extension>
+-->
+<!--
     <extension
 		id="GenerateSqlRelationshipsAction"
 		name="%generateSqlRelationshipsAction.name"
@@ -286,4 +309,5 @@
          label="%generateSqlRelationshipsAction.label">
       </specialAction>
    </extension>
+-->
 </plugin>

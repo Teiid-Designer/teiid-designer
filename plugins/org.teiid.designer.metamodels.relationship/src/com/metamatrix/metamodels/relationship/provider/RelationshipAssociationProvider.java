@@ -33,8 +33,8 @@ public class RelationshipAssociationProvider implements AssociationProvider {
             return Collections.EMPTY_LIST;
         }
 
-        final RelationshipAssociationDescriptor desc = new RelationshipAssociationDescriptor(eObjects);
-        return Collections.singletonList(desc);
+        //final RelationshipAssociationDescriptor desc = new RelationshipAssociationDescriptor(eObjects);
+        return Collections.EMPTY_LIST; //Collections.singletonList(desc);
     }
 
 }
