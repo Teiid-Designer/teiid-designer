@@ -9,6 +9,8 @@ package com.metamatrix.modeler.diagram.ui.custom.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
@@ -168,8 +170,16 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
     }
     
     private boolean supportsDiagrams(Object input) {
-    	ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)input);
+    	ModelResource mr = null;
     	
+    	if( input instanceof EObject ) {
+    		mr = ModelUtilities.getModelResourceForModelObject((EObject)input);
+    	} else if( input instanceof IFile ) {
+    		mr = ModelUtilities.getModelResourceForIFile((IFile)input, false);
+    	}
+    	if( mr == null ) {
+    		return false;
+    	}
         if( input instanceof Diagram ) {
             // Let's get the model resource and call with it instead of diagram.
         	if( !ModelIdentifier.isRelationshipModel(mr) ) {
