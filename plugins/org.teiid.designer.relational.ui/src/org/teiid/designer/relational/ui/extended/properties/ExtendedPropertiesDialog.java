@@ -436,14 +436,15 @@ public class ExtendedPropertiesDialog extends TitleAreaDialog {
         String initialValue;
 
         for (Object key : currentStateProperties.keySet()) {
-            if (this.workingExtendedProperties.containsKey(key)) {
-                currentValue = this.initialExtendedProperties.getProperty((String)key);
-                initialValue = currentStateProperties.getProperty((String)key);
+            if (currentStateProperties.containsKey(key)) {
+                initialValue = this.initialExtendedProperties.getProperty((String)key);
+                currentValue = currentStateProperties.getProperty((String)key);
             } else {
                 return true;
             }
 
-            if (!currentValue.equals(initialValue)) {
+            // If initial value is null, this is a new row
+            if (initialValue == null || !currentValue.equals(initialValue)) {
                 return true;
             }
         }
