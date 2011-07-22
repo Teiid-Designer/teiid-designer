@@ -37,7 +37,7 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
       <import feature="org.eclipse.datatools.enablement.feature" 				version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.enablement.hsqldb.feature"			version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.enablement.ibm.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.ingres.feature" 		version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.ingres.feature" 		version="1.9.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.enablement.jdbc.feature" 			version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.enablement.jdt.feature" 			version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.enablement.msft.feature" 			version="1.7.0" match="greaterOrEqual"/>
