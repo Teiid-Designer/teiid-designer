@@ -68,6 +68,34 @@ public class ModelObjectAnnotationHelper {
     }
 
     /**
+     * Retrieves the value of an object stored on an <code>Annotation</code> in the tags map based on the input key uses upper and
+     * lower case (excluding the namespace which is always lower case).
+     * 
+     * @param modelObject the <code>EObject</code>. may not be null;
+     * @param key the key for the mapped value. may not be null;
+     * @return the object value stored in the annotation's tags
+     * @throws ModelerCoreException
+     */
+    public Object getPropertyValueAnyCase( final EObject modelObject,
+                                           final String key ) throws ModelerCoreException {
+        CoreArgCheck.isNotNull(modelObject, "modelObject"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(key, "key"); //$NON-NLS-1$
+        Annotation annotation = getModelObjectAnnotation(modelObject, false);
+        if (annotation != null) {
+            int beginIndex = key.indexOf(":"); //$NON-NLS-1$
+            String upperCase = key.substring(0, beginIndex) + key.substring(beginIndex).toUpperCase();
+            Object tag = annotation.getTags().get(upperCase);
+            if (tag == null) {
+                String lowerCase = key.substring(0, beginIndex) + key.substring(beginIndex).toLowerCase();
+                tag = annotation.getTags().get(lowerCase);
+            }
+            return tag;
+
+        }
+        return null;
+    }
+
+    /**
      * Returns all properties who's keys are prefixed with the given name-space prefix
      * 
      * @param modelObject the <code>EObject</code>. may not be null;

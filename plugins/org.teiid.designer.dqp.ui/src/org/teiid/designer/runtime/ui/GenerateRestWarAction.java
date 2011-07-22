@@ -230,11 +230,12 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         int parameterCount = ((ProcedureImpl)eObject).getParameters().size();
         int uriParameterCount = 0;
         RestProcedure restProcedure = new RestProcedure();
-        restMethod = ANNOTATION_HELPER.getPropertyValue(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                 + "REST-METHOD"); //$NON-NLS-1$
+        restMethod = ANNOTATION_HELPER.getPropertyValueAnyCase(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                        + "REST-METHOD"); //$NON-NLS-1$
 
         if (restMethod != null) {
-            uri = ANNOTATION_HELPER.getPropertyValue(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE + "URI"); //$NON-NLS-1$
+            uri = ANNOTATION_HELPER.getPropertyValueAnyCase(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                     + "URI"); //$NON-NLS-1$
             if (uri != null) {
                 // Get all child EObjects for this procedure
                 EList<EObject> contents = eObject.eContents();
