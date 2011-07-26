@@ -29,6 +29,7 @@ import org.teiid.designer.dqp.webservice.war.WebArchiveBuilder;
 import org.teiid.designer.dqp.webservice.war.WebArchiveBuilderFactory;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
 import com.metamatrix.modeler.webservice.WebServicePlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -80,7 +81,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         this.theVdb = theVdb;
         this.wsModelResourcearrayList = wsModelResources;
         this.initialStatus = initialStatus;
-        deploymentStatus = new Status(IStatus.OK, DqpUiPlugin.PLUGIN_ID, IStatus.OK, "WAR file created successfully", null);//$NON-NLS-1$
+        deploymentStatus = new Status(IStatus.OK, DqpUiConstants.PLUGIN_ID, IStatus.OK, "WAR file created successfully", null);//$NON-NLS-1$
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +124,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
     }
 
     protected static String getString( final String id ) {
-        return DqpUiPlugin.UTIL.getString(I18N_PREFIX + id);
+        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
     }
 
     @Override
@@ -145,6 +146,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         // create VDB resource
 
         final IRunnableWithProgress op = new IRunnableWithProgress() {
+            @Override
             public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     execute(monitor);
@@ -161,14 +163,13 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
             if (err instanceof InvocationTargetException) {
                 err = ((InvocationTargetException)err).getTargetException();
             }
-            DqpUiPlugin.UTIL.log(err);
+            DqpUiConstants.UTIL.log(err);
         }
 
     }
 
     @Override
     public int open() {
-        // TODO Auto-generated method stub
         int rc = super.open();
 
         if (rc != CANCEL) {
@@ -192,17 +193,17 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
 
             }
             if (createWar) {
-                monitor.beginTask(DqpUiPlugin.UTIL.getString(CREATING_WAR_FILE_MESSAGE_ID, warFileName), 100);
+                monitor.beginTask(DqpUiConstants.UTIL.getString(CREATING_WAR_FILE_MESSAGE_ID, warFileName), 100);
                 deploymentStatus = webArchiveBuilder.createWebArchive(WarDataserviceModel.getInstance().getProperties(), monitor);
                 // log status
-                DqpUiPlugin.UTIL.log(deploymentStatus);
+                DqpUiConstants.UTIL.log(deploymentStatus);
                 setMessage(deploymentStatus.getMessage(), deploymentStatus.getSeverity());
 
                 super.okPressed();
             }
         } catch (RuntimeException err) {
             // BusyCursor.endBusy();
-            DqpUiPlugin.UTIL.log(err);
+            DqpUiConstants.UTIL.log(err);
             setMessage("Error while generating the WAR file check log for detail message.", InternalModelerWarUiConstants.ERROR); //$NON-NLS-1$
         }
     }
@@ -231,6 +232,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         loadTnsDefault();
         loadJndiNameDefault();
         loadSecurityTypeDefault();
+        loadUseMTOMDefault();
 
         WarDataserviceModel.getInstance().setVdbFile(theVdb);
         WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
@@ -249,7 +251,20 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
             String warDir = WebServicePlugin.getDefaultWarFileSaveLocation();
             WarDataserviceModel.getInstance().setWarFilenameDefault(warDir);
         } catch (Throwable theThrowable) {
-            DqpUiPlugin.UTIL.log(theThrowable);
+            DqpUiConstants.UTIL.log(theThrowable);
+        }
+    }
+
+    /**
+     * set default war file location
+     * 
+     * @since 7.5
+     */
+    private void loadUseMTOMDefault() {
+        try {
+            WarDataserviceModel.getInstance().setUseMtom(false);
+        } catch (Throwable theThrowable) {
+            DqpUiConstants.UTIL.log(theThrowable);
         }
     }
 
@@ -271,7 +286,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
             WarDataserviceModel.getInstance().setContextNameDefault(name);
 
         } catch (Throwable theThrowable) {
-            DqpUiPlugin.UTIL.log(theThrowable);
+            DqpUiConstants.UTIL.log(theThrowable);
         }
     }
 
@@ -308,7 +323,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
      * @since 7.1
      */
     private void loadJndiNameDefault() {
-        WarDataserviceModel.getInstance().setJndiNameDefault("java:{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
+        WarDataserviceModel.getInstance().setJndiNameDefault("{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
     }
 
     /**

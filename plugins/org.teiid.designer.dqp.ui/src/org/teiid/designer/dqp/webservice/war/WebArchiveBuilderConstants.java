@@ -77,6 +77,11 @@ public class WebArchiveBuilderConstants {
     public static final String PROPERTY_SECURITY_PASSWORD = "securityPassword"; //$NON-NLS-1$
 
     /**
+     * Property indicating the MTOM should be used for the response
+     */
+    public static final String PROPERTY_USE_MTOM = "mtom"; //$NON-NLS-1$
+
+    /**
      * Property indicating the VDB file to include in the WAR file.
      */
     public static final String PROPERTY_VDB_FILE_NAME = "VdbFileName"; //$NON-NLS-1$
