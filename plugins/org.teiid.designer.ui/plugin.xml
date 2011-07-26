@@ -403,6 +403,14 @@
                id="refreshAction">
          </action>
          <action
+               label="%showSQLReservedWordsAction.label"
+               helpContextId="showSQLReservedWordsAction.helpContext"
+               tooltip="%showSQLReservedWordsAction.tooltip"
+               class="com.metamatrix.modeler.internal.ui.actions.ShowSQLReservedWordsAction"
+               menubarPath="metadataMenu/slot2"
+               id="showSQLReservedWordsAction">
+         </action>
+         <action
                label="%showDatatypeHierarchyAction.label"
                icon="icons/full/cview16/typeHierarchy.gif"
                helpContextId="showDatatypeHierarchyAction.helpContext"
@@ -816,6 +824,13 @@
             category="com.metamatrix.modeler.ui"
             class="com.metamatrix.modeler.internal.ui.views.SystemModelView"
             id="views.systemModelView">
+      </view>
+<!-- SQL Reserved Words view -->
+      <view
+            name="%sqlReservedWordsView.name"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.internal.ui.views.SQLReservedWordsView"
+            id="views.sqlReservedWordsView">
       </view>
    </extension>
    <extension

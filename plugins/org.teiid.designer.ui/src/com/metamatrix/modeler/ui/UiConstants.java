@@ -85,6 +85,7 @@ public interface UiConstants {
         String PROPERTY_VIEW = IPageLayout.ID_PROP_SHEET;
         String SEARCH_RESULT_VIEW = NewSearchUI.SEARCH_VIEW_ID;
         String SYSTEM_CATALOG_VIEW = "views.systemModelView"; //$NON-NLS-1$
+        String SQL_RESERVED_WORDS_VIEW = "views.sqlReservedWordsView"; //$NON-NLS-1$
         String ECLIPSE_CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView";//$NON-NLS-1$
 
         // Model Editor Pages
