@@ -325,8 +325,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                     final String debugMsg = ModelerCore.Util.getString("ModelWorkspaceManager.DEBUG.Creating_ModelResource_instance_for_0_2", params); //$NON-NLS-1$
                     ModelerCore.Util.log(IStatus.INFO, debugMsg);
                 }
-                if (resource.getType() == IResource.FILE) newResource = project.createModelResource((IFile)resource);
-                else if (resource.getType() == IResource.FOLDER) newResource = project.createModelFolder((IFolder)resource);
+                if (resource.getType() == IResource.FILE && ((IFile)resource).getFileExtension() != null
+                    && ModelUtil.isModelFile(resource)) {
+                    newResource = project.createModelResource((IFile)resource);
+                } else if (resource.getType() == IResource.FOLDER) newResource = project.createModelFolder((IFolder)resource);
                 parentItem = this.modelWorkspace.getParent(resource);
             } catch (final Exception e) {
                 ModelerCore.Util.log(IStatus.ERROR,
