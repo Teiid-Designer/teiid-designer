@@ -57,6 +57,7 @@ public interface UiConstants {
             private static final String DVIEW16 = FULL + "dview16/"; //$NON-NLS-1$
             //            private static final String COBJ  = FULL + "cobj16/"; //$NON-NLS-1$
             private static final String OVR16 = FULL + "ovr16/"; //$NON-NLS-1$
+            private static final String WIZBAN = FULL + "wizban/"; //$NON-NLS-1$
         }
 
         String ADD_SOURCES = PC.CVIEW16 + "tb_add_to_diagram.gif"; //$NON-NLS-1$
@@ -72,6 +73,8 @@ public interface UiConstants {
 
         String SAVE = PC.CVIEW16 + "save.gif"; //$NON-NLS-1$
         String SAVE_DISABLED = PC.DVIEW16 + "save.gif"; //$NON-NLS-1$
+        
+        String IMPORT_TEIID_METADATA = PC.WIZBAN + "importTeiidMetadataWiz.gif"; //$NON-NLS-1$
         
       String CRITERIA_BUILDER  = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
       String EXPRESSION_BUILDER= PC.CVIEW16 + "launch_expression_builder.gif"; //$NON-NLS-1$
