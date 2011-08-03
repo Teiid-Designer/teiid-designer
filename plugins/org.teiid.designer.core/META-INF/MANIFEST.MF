@@ -64,6 +64,7 @@ Export-Package: com.metamatrix.common.protocol,
  com.metamatrix.modeler.internal.core.validation,
  com.metamatrix.modeler.internal.core.workspace,
  com.metamatrix.modeler.internal.core.writer,
+ org.teiid.designer.core.extension,
  org.teiid.designer.core.util,
  org.teiid.designer.core.xmi
 Require-Bundle: org.eclipse.core.runtime,
@@ -81,7 +82,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.teiid.core.designer,
  org.jdom,
  org.teiid.designer.legacy,
- teiid_embedded_query
+ teiid_embedded_query,
+ org.teiid.designer.extension
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.teiid.designer.extension

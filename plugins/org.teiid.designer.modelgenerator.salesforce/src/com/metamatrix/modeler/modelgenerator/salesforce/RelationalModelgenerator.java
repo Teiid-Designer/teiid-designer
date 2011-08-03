@@ -7,9 +7,11 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column.PICKLIST_VALUES;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,11 +21,14 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.properties.PropertyDefinition;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
-import org.teiid.designer.extension.properties.ModelObjectExtendedProperty;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
+import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -44,28 +49,22 @@ import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.internal.core.workspace.ResourceAnnotationHelper;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Table;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.Relationship;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceField;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;
-import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.NameUtil;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class RelationalModelgenerator {
-	public static final String SCHEMA_NAME = "salesforce"; //$NON-NLS-1$
 
     private IProgressMonitor monitor;
 
-    // The wrapper around the salesforce extension model
-    //private ExtensionManager exManager;
+    private final ModelExtensionAssistant assistant;
     
-    private SalesforceExtentionPropertiesHandler exHandler;
-
     // The relationships to create between salesforce objects
     private List relationships;
 
@@ -76,7 +75,7 @@ public class RelationalModelgenerator {
 
     /**
      * @param salesforceImportWizardManager
-     * @param monitor2
+     * @param monitor
      */
     public RelationalModelgenerator( SalesforceImportWizardManager wizardManager,
                                      IProgressMonitor monitor ) {
@@ -84,6 +83,14 @@ public class RelationalModelgenerator {
         this.monitor = monitor;
         relationships = new ArrayList();
         tablesByName = new HashMap();
+
+        // the assistant should be found in the registry
+        this.assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
+
+        if (this.assistant == null) {
+            throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())
+                    + "modelExtensionAssistantNotFound")); //$NON-NLS-1$
+        }
     }
 
     /**
@@ -93,40 +100,18 @@ public class RelationalModelgenerator {
      * @throws ModelBuildingException
      * @throws ModelerCoreException 
      */
-    public void createRelationalModel( ModelResource modelResource, Resource resource ) throws ModelBuildingException, ModelerCoreException {
-        // Get the salesforce extension model and create it in the target directory
-        // if it is not already there.
-        //exManager = new ExtensionManager();
-        //exManager.loadModelExtensions(wizardManager.getTargetModelLocation(), monitor);
-        
-        this.exHandler = (SalesforceExtentionPropertiesHandler)ExtensionPropertiesManager.getHandler(SalesforceConstants.ID);
-
+    public void createRelationalModel( ModelResource modelResource, Resource resource ) throws ModelBuildingException {
         // Create the model annotation, the top level object in our of our models and
         // set some of its attributes
         ModelAnnotation annotation = CoreFactory.eINSTANCE.createModelAnnotation();
         annotation.setModelType(ModelType.PHYSICAL_LITERAL);
         annotation.setPrimaryMetamodelUri(RelationalPackage.eINSTANCE.getNsURI());
-        //annotation.setExtensionPackage(exManager.getSalesforcePackage());
         resource.getContents().add(annotation);
         
-        ResourceAnnotationHelper annotationHelper = new ResourceAnnotationHelper();
-        annotationHelper.setProperty(
-        		modelResource, 
-        		SalesforceConstants.EXTENSION_FULL_ID_KEY, 
-        		SalesforceConstants.MODEL_EXTENSION_ID);
-        annotationHelper.setProperty(
-        		modelResource, 
-        		SalesforceConstants.EXTENSION_FULL_NAMESPACE_KEY, 
-        		SalesforceConstants.NAMESPACE);
-        annotationHelper.setProperty(
-        		modelResource, 
-        		SalesforceConstants.EXTENSION_FULL_CND_KEY, 
-        		SalesforceExtentionPropertiesHandler.SF_CND_STRING);
-
         // Create a schema object in the relational model.
         Schema schema = RelationalFactory.eINSTANCE.createSchema();
-        schema.setName(SCHEMA_NAME);
-        schema.setNameInSource(SCHEMA_NAME);
+        schema.setName(NAMESPACE_PREFIX);
+        schema.setNameInSource(NAMESPACE_PREFIX);
         resource.getContents().add(schema);
 
         // Loop over the salesforce metadata creating tables and columns
@@ -165,7 +150,7 @@ public class RelationalModelgenerator {
      * @throws ModelerCoreException 
      */
     private void addTableToModel( SalesforceObject sfo,
-                                  Schema schema ) throws ModelBuildingException, ModelerCoreException {
+                                  Schema schema ) throws ModelBuildingException {
         BaseTable newTable = RelationalFactory.eINSTANCE.createBaseTable();
 
         this.relationships.addAll(sfo.getSelectedRelationships());
@@ -185,37 +170,35 @@ public class RelationalModelgenerator {
 
         newTable.setSupportsUpdate(sfo.isUpdateable());
 
-        Collection<ModelObjectExtendedProperty> props = new ArrayList<ModelObjectExtendedProperty>();
-        
-        // Extensions
-        if (sfo.isQueryable()) {
-        	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_QUERY);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        if (sfo.isDeleteable()) {
-        	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_DELETE);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        if (sfo.isCreateable()) {
-        	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_CREATE);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        if (sfo.isSearchable()) {
-        	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_SEARCH);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        if (sfo.isReplicateable()) {
-        	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_REPLICATE);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        if (sfo.isRetrieveable()) {
-        	PropertyDefinition propDef =this. exHandler.getPropertyDefinition(newTable, SF_Table.SUPPORTS_RETRIEVE);
-        	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-        }
-        
-        this.exHandler.save(newTable, props);
+        // extension properties
+        try {
+            // add extension properties (set to default values) to the new table
+            this.assistant.syncProperties(newTable);
 
+            // update property values if different from default value
+            setInitialPropertyValue(newTable, SF_Table.CUSTOM, Boolean.toString(sfo.isCustom()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_CREATE, Boolean.toString(sfo.isCreateable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_DELETE, Boolean.toString(sfo.isDeleteable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_MERGE, Boolean.toString(sfo.isMergeable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_QUERY, Boolean.toString(sfo.isQueryable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_REPLICATE, Boolean.toString(sfo.isReplicateable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_RETRIEVE, Boolean.toString(sfo.isRetrieveable()));
+            setInitialPropertyValue(newTable, SF_Table.SUPPORTS_SEARCH, Boolean.toString(sfo.isSearchable()));
+        } catch (Exception e) {
+            throw new ModelBuildingException(e);
+        }
+
+        // add columns to the new table
         addColumnsToTable(sfo, newTable);
+    }
+
+    private void setInitialPropertyValue(EObject eObject, String simplePropertyId, String expectedValue) throws Exception {
+        String propId = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, simplePropertyId);
+        String currentValue = this.assistant.getPropertyValue(eObject, propId);
+
+        if (!CoreStringUtil.equals(expectedValue, currentValue)) {
+            this.assistant.setPropertyValue(eObject, propId, expectedValue);
+        }
     }
 
     private int getCardinality( SalesforceObject sfo ) {
@@ -248,7 +231,7 @@ public class RelationalModelgenerator {
      * @throws ModelerCoreException 
      */
     private void addColumnsToTable( SalesforceObject sfo,
-                                    BaseTable newTable ) throws ModelBuildingException, ModelerCoreException {
+                                    BaseTable newTable ) throws ModelBuildingException {
         boolean hasUpdateableColumn = false;
         SalesforceField[] fields = sfo.getFields();
         for (int i = 0; i < fields.length; i++) {
@@ -271,21 +254,21 @@ public class RelationalModelgenerator {
                 column.setUpdateable(true);
                 hasUpdateableColumn = true;
             }
-
-            Collection<ModelObjectExtendedProperty> props = new ArrayList<ModelObjectExtendedProperty>();
             
-            if (field.isCustom()) {
-            	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(column, SF_Column.CUSTOM);
-            	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
+
+            // extension properties
+            try {
+                // add extension properties (set to default values) to the new column
+                this.assistant.syncProperties(column);
+
+                // update property values if different from default value
+                setInitialPropertyValue(column, SF_Column.CALCULATED, Boolean.toString(field.isCalculated()));
+                setInitialPropertyValue(column, SF_Column.CUSTOM, Boolean.toString(field.isCustom()));
+                setInitialPropertyValue(column, SF_Column.DEFAULTED, Boolean.toString(field.isDefaultedOnCreate()));
+            } catch (Exception e) {
+                throw new ModelBuildingException(e);
             }
-            if (field.isCalculated()) {
-            	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(column, SF_Column.CALCULATED);
-            	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-            }
-            if (field.isDefaultedOnCreate()) {
-            	PropertyDefinition propDef = this.exHandler.getPropertyDefinition(column, SF_Column.DEFAULTED);
-            	props.add(new ModelObjectExtendedProperty(propDef, Boolean.TRUE.toString()));
-            }
+
             setColumnType(field, column);
 
             if (field.isPrimaryKey()) {
@@ -301,8 +284,6 @@ public class RelationalModelgenerator {
                 int distinctValues = getDistinctValueCount(sfo.getName(), field.getName());
                 column.setDistinctValueCount(distinctValues);
             }
-            
-            this.exHandler.save(newTable, props);
         }
 
         // A salesforceobject might say it supports updates,
@@ -353,6 +334,21 @@ public class RelationalModelgenerator {
         }
     }
 
+    private String createPickListString( List<String> allowedValues ) {
+        StringBuilder picklistValues = new StringBuilder();
+        Iterator iter = allowedValues.iterator();
+
+        while (iter.hasNext()) {
+            picklistValues.append((String)iter.next());
+
+            if (iter.hasNext()) {
+                picklistValues.append(',');
+            }
+        }
+
+        return picklistValues.toString();
+    }
+
     private void setColumnType( SalesforceField field,
                                 Column column ) throws ModelBuildingException {
         DatatypeManager dtMgr = ModelerCore.getBuiltInTypesManager();
@@ -370,7 +366,8 @@ public class RelationalModelgenerator {
                 } else {
                     column.setNativeType(SalesforceField.PICKLIST_TYPE);
                 }
-                this.exHandler.setAllowedColumnValues(column, field.getAllowedValues());
+
+                setInitialPropertyValue(column, PICKLIST_VALUES, createPickListString(field.getAllowedValues()));
             } else if (fieldType.equals(SalesforceField.MULTIPICKLIST_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
                 if (field.isRestrictedPicklist()) {
@@ -378,7 +375,8 @@ public class RelationalModelgenerator {
                 } else {
                     column.setNativeType(SalesforceField.MULTIPICKLIST_TYPE);
                 }
-                this.exHandler.setAllowedColumnValues(column, field.getAllowedValues());
+
+                setInitialPropertyValue(column, PICKLIST_VALUES, createPickListString(field.getAllowedValues()));
             } else if (fieldType.equals(SalesforceField.COMBOBOX_TYPE)) {
                 column.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.STRING));
                 column.setNativeType(SalesforceField.COMBOBOX_TYPE);

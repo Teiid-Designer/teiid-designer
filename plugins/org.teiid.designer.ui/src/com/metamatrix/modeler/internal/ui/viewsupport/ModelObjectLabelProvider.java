@@ -23,7 +23,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPlugin;
+
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -175,6 +176,7 @@ public class ModelObjectLabelProvider extends LabelProvider
      * @see org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang.Object, org.eclipse.jface.viewers.IDecoration)
      * @since 4.0
      */
+    @Override
     public void decorate( final Object element,
                           final IDecoration decoration ) {
         final Display display = Display.getDefault();
@@ -207,6 +209,12 @@ public class ModelObjectLabelProvider extends LabelProvider
         // first, obtain gray from the system if we don't have it yet:
         if (gray == null) {
             Display.getDefault().syncExec(new Runnable() {
+                /**
+                 * {@inheritDoc}
+                 *
+                 * @see java.lang.Runnable#run()
+                 */
+                @Override
                 public void run() {
                     gray = UiUtil.getSystemColor(SWT.COLOR_GRAY);
                 }
@@ -214,7 +222,7 @@ public class ModelObjectLabelProvider extends LabelProvider
         } // endif
 
         if (element instanceof EObject) {
-            if (ExtensionPropertiesManager.isApplicable((EObject)element)) {
+            if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(element.getClass().getName())) {
                 decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
             }
         }

@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -63,6 +64,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#createPropertyEditor(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public CellEditor createPropertyEditor(Composite parent) {
         if ( status ==  READ_ONLY_RESOURCE ) {
             Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
@@ -73,8 +75,8 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
                 // can't modify a property value on an EObject if it's ModelEditor is not open.
                 Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
                 if ( MessageDialog.openQuestion(shell, 
-                        ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE, 
-                        ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE) ) {
+                        ModelEditorManager.OPEN_EDITOR_TITLE, 
+                        ModelEditorManager.OPEN_EDITOR_MESSAGE) ) {
                     ModelEditorManager.activate(modelFile, true);
                 }
                 return null;
@@ -87,6 +89,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getCategory()
      */
+    @Override
     public String getCategory() {
         return delegate.getCategory();
     }
@@ -94,6 +97,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getDescription()
      */
+    @Override
     public String getDescription() {
         return delegate.getDescription();
     }
@@ -101,6 +105,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getDisplayName()
      */
+    @Override
     public String getDisplayName() {
         return delegate.getDisplayName();
     }
@@ -108,6 +113,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getFilterFlags()
      */
+    @Override
     public String[] getFilterFlags() {
         return delegate.getFilterFlags();
     }
@@ -115,6 +121,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getHelpContextIds()
      */
+    @Override
     public Object getHelpContextIds() {
         return delegate.getHelpContextIds();
     }
@@ -122,6 +129,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getId()
      */
+    @Override
     public Object getId() {
         return delegate.getId();
     }
@@ -129,6 +137,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#getLabelProvider()
      */
+    @Override
     public ILabelProvider getLabelProvider() {
         return delegate.getLabelProvider();
     }
@@ -136,6 +145,7 @@ public class ReadOnlyPropertyDescriptor implements IPropertyDescriptor {
     /* (non-Javadoc)
      * @see org.eclipse.ui.views.properties.IPropertyDescriptor#isCompatibleWith(org.eclipse.ui.views.properties.IPropertyDescriptor)
      */
+    @Override
     public boolean isCompatibleWith(IPropertyDescriptor anotherProperty) {
         return delegate.isCompatibleWith(anotherProperty);
     }

@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -23,7 +24,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -1268,11 +1270,9 @@ public class RuntimeAdapter extends RecordFactory {
                                         final Collection wordEntries ) {
 
         EObject extObject = null;
-        EObject annotationObject = null;
         try {
             ModelEditor editor = ModelerCore.getModelEditor();
             extObject = editor.getExtension(eObject);
-            annotationObject = editor.getAnnotation(eObject, false);
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
@@ -1318,67 +1318,33 @@ public class RuntimeAdapter extends RecordFactory {
                 propertyNames.add(propName);
             }
         }
-
-        // there are properties on the annotation object as well that may/not be same as
-        // the extention properties, filter the extetion props and add words for remaining
-        // annotation props
-        if (annotationObject != null) {
-
-            final SqlAnnotationAspect annotationAspect = (SqlAnnotationAspect)AspectManager.getSqlAspect(annotationObject);
-            // get the prop value pairs
-            Map propValues = annotationAspect.getTags(annotationObject);
-
-            if (propValues == null || propValues.isEmpty()) {
-                return;
+         
+        // Now we look for extension properties
+        for (ModelExtensionAssistant assistant : ExtensionPlugin.getInstance()
+                                                                .getRegistry()
+                                                                .getModelExtensionAssistants(eObject.getClass().getName())) {
+            if (assistant == null) {
+                break;
             }
 
-            for (Iterator entryIter = propValues.entrySet().iterator(); entryIter.hasNext();) {
-                Map.Entry mapEntry = (Map.Entry)entryIter.next();
-                if (mapEntry == null) {
-                    continue;
+            try {
+                Properties extensionProperties = assistant.getPropertyValues(eObject);
+
+                for (String propName : extensionProperties.stringPropertyNames()) {
+                    String propValue = extensionProperties.getProperty(propName);
+
+                    if (CoreStringUtil.isEmpty(propValue)) {
+                        continue;
+                    }
+
+                    if (!propertyNames.contains(propName)) {
+                        addPropertyWord(objectID, name, propName, propValue, true, modelPath, wordEntries);
+                        propertyNames.add(propName);
+                    }
                 }
-                Object key = mapEntry.getKey();
-                if( !ExtensionPropertiesManager.isExtendedKey(key) && !ExtensionPropertiesManager.isNonIndexedKey(key) ) {
-	                Object value = mapEntry.getValue();
-	
-	                if (key == null || value == null) {
-	                    continue;
-	                }
-	
-	                String propName = key.toString();
-	                String propValue = value.toString();
-	
-	                if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
-	                    continue;
-	                }
-	
-	                if (!propertyNames.contains(propName)) {
-	                    // add property word
-	                    addPropertyWord(objectID, name, propName, propValue, false, modelPath, wordEntries);
-	
-	                }
-                }
+            } catch (Exception e) {
+                ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
             }
-        }
-        
-        // Now we look for properties defined through the  ExtensionPropertiesManager
-        
-        Properties props = ExtensionPropertiesManager.getExtendedProperties(eObject);
-        
-        for( Object keyObj : props.keySet() ) {
-			if( keyObj instanceof String ) {
-				String propName = (String)keyObj;
-				String propValue = (String)props.get(propName);
-                if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
-                    continue;
-                }
-                if (!propertyNames.contains(propName)) {
-                    // add property word
-                    addPropertyWord(objectID, name, propName, propValue, true, modelPath, wordEntries);
-                    
-                    propertyNames.add(propName);
-                }
-			}
         }
     }
 

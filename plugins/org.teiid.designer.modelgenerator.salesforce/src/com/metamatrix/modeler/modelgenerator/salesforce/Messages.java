@@ -11,21 +11,20 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String PACKAGE_ID = Messages.class.getPackage().getName();
-	
-	private static final String I18N_NAME = PACKAGE_ID + ".messages"; //$NON-NLS-1$
+    private static final String PACKAGE_ID = Messages.class.getPackage().getName();
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(I18N_NAME);
+    private static final String I18N_NAME = PACKAGE_ID + ".messages"; //$NON-NLS-1$
 
-	private Messages() {
-	}
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(I18N_NAME);
 
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
-	}
+    private Messages() {
+    }
+
+    public static String getString( String key ) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

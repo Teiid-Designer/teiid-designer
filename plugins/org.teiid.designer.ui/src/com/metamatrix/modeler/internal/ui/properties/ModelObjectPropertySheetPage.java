@@ -11,19 +11,32 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.ModelAnnotation;
@@ -101,6 +114,7 @@ public class ModelObjectPropertySheetPage
      * Listens to notifications that change the currently displayed object so that the panel can be refreshed.
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
      */
+    @Override
     public void notifyChanged(Notification notification) {
         // to prevent looping, do not process any notifications that occur during refresh.
         if ( handlingNotification ) {
@@ -189,8 +203,89 @@ public class ModelObjectPropertySheetPage
 //        if ( control instanceof TableTree ) {
 //            new TableSizeAdapter(((TableTree) control).getTable());
 //        }
+        setupTooltip();
     }
-    
+
+    private void setupTooltip() {
+        final Tree tree = (Tree)getControl();
+
+        final Listener listener = new Listener() {
+            Shell tip = null;
+            Label label = null;
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+             */
+            @Override
+            public void handleEvent( Event event ) {
+                switch (event.type) {
+                case SWT.Dispose:
+                case SWT.KeyDown:
+                case SWT.MouseExit:
+                case SWT.MouseDown:
+                case SWT.MouseMove:
+                    if (tip != null) {
+                        tip.dispose();
+                        tip = null;
+                        label = null;
+                    }
+
+                    break;
+                case SWT.MouseHover:
+                    if (tip != null) {
+                        tip.dispose();
+                        tip = null;
+                        label = null;
+                    }
+
+                    String tooltip = null;
+                    TreeItem item = tree.getItem(new Point(event.x, event.y));
+
+                    if (item != null) {
+                        Object data = item.getData();
+
+                        if (data instanceof PropertySheetEntry) {
+                            tooltip = ((PropertySheetEntry)data).getDescription();
+                        }
+
+                        if (tooltip != null) {
+                            Shell shell = tree.getShell();
+                            Display display = tree.getDisplay();
+
+                            tip = new Shell(shell, SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
+                            tip.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+                            FillLayout layout = new FillLayout();
+                            layout.marginWidth = 2;
+                            tip.setLayout(layout);
+                            label = new Label(tip, SWT.NONE);
+                            label.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+                            label.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+                            label.setData("_TABLEITEM", item); //$NON-NLS-1$
+                            label.setText(tooltip);
+                            label.addListener(SWT.MouseExit, this);
+                            label.addListener(SWT.MouseDown, this);
+                            Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                            Rectangle rect = item.getBounds(0);
+                            // Display the tooltip on the same line as the property,
+                            // but offset to the right of wherever the mouse cursor was,
+                            // such that it does not obscure the list of properties.
+                            Point pt = tree.toDisplay(event.x + 15, rect.y);
+                            tip.setBounds(pt.x, pt.y, size.x, size.y);
+                            tip.setVisible(true);
+                        }
+                    }
+                }
+            }
+        };
+
+        tree.addListener(SWT.Dispose, listener);
+        tree.addListener(SWT.KeyDown, listener);
+        tree.addListener(SWT.MouseMove, listener);
+        tree.addListener(SWT.MouseHover, listener);
+    }
+
     /* (non-Javadoc)
      * Overridden to unhook this page as a notification listener.
      * @see org.eclipse.ui.part.IPage#dispose()
@@ -210,10 +305,12 @@ public class ModelObjectPropertySheetPage
      * @see com.metamatrix.core.event.EventObjectListener#processEvent(java.util.EventObject)
      * @since 4.2
      */
+    @Override
     public void processEvent(EventObject obj) {
         ModelResourceEvent event = (ModelResourceEvent) obj;
         if ( event.getType() == ModelResourceEvent.RELOADED ) {
             Display.getDefault().asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     selectionChanged(null, new StructuredSelection(Collections.EMPTY_LIST));
                 }

@@ -12,14 +12,30 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
-	public static String ExtensionPropertiesManager_loadExtensionsErrorMessage;
-    public static String InvalidPropertyValue;
-    public static String InvalidPropertyEditorConstrainedValue;
-    public static String InvalidPropertyEditorValue;
-    public static String InvalidNullPropertyValue;
-    public static String MissingPropertyDefinition;
-    public static String PrefixedName_invalidPrefix;
-    public static String UnknownPropertyType;
+    public static String definitionFileNotFoundInFilesystem;
+    public static String definitionFileNotFoundInWorkspace;
+    public static String definitionSchemaFileNotFoundInFilesystem;
+    public static String definitionSchemaFileNotFoundInWorkspace;
+    public static String descriptorToolTip;
+    public static String emptyPropertyValue;
+    public static String errorProcessingDefinitionFile;
+    public static String errorProcessingExtensionPoint;
+    public static String errorProcessingModelExtension;
+    public static String extensionPropertyNotAdded;
+    public static String incorrectModelExtensionAssistantClass;
+    public static String invalidAllowedValues;
+    public static String invalidBooleanAllowedValue;
+    public static String invalidDefinitionFileNewVersion;
+    public static String invalidDefinitionFileVersion;
+    public static String invalidPropertyValueForType;
+    public static String missingDefinitionPath;
+    public static String modelExtensionAssistantSetIdCalled;
+    public static String namespacePrefixAlreadyRegistered;
+    public static String namespaceUriAlreadyRegistered;
+    public static String problemConstructingModelExtensionAssistantClass;
+    public static String unknownPropertyType;
+    public static String unknownRegistryQueryType;
+    public static String valueDoesNotMatchAnAllowedValue;
 
     static {
         NLS.initializeMessages("org.teiid.designer.extension.messages", Messages.class); //$NON-NLS-1$

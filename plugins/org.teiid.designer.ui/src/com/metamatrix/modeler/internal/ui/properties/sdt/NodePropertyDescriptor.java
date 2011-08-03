@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.w3c.dom.Node;
+
 import com.metamatrix.metamodels.xsd.aspects.sql.XsdSimpleTypeDefinitionAspect;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.properties.ReadOnlyPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -114,8 +114,8 @@ public class NodePropertyDescriptor extends TextPropertyDescriptor {
                 if (MessageDialog
                     .openQuestion(
                         shell,
-                        ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE,
-                        ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE)) {
+                        ModelEditorManager.OPEN_EDITOR_TITLE,
+                        ModelEditorManager.OPEN_EDITOR_MESSAGE)) {
                     ModelEditorManager.open(eObject, true);
                 }
                 return null;

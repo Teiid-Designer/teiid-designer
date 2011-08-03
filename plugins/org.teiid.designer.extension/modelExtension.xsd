@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://org.teiid.modelExtension/2011"
+	targetNamespace="http://org.teiid.modelExtension/2011" elementFormDefault="qualified" attributeFormDefault="unqualified"
+>
+	<xs:element name="modelExtension">
+		<xs:annotation>
+			<xs:documentation>Extends one or more of a metamodel's' metaclasses by adding extended properties.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="description" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>An optional description of the purpose for this model extension.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="extendedMetaclass" type="metaclassType" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>One or more metaclasses being extended by this model extension.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="namespacePrefix" use="required" type="xs:NCName">
+				<xs:annotation>
+					<xs:documentation>A unique prefix for the namespace being registered.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="namespaceUri" use="required" type="xs:anyURI">
+				<xs:annotation>
+					<xs:documentation>The unique namespace URI being registered.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="metamodelUri" use="required" type="xs:anyURI">
+				<xs:annotation>
+					<xs:documentation>The metamodel URI being extended.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="version" default="1" type="xs:positiveInteger">
+				<xs:annotation>
+					<xs:documentation>An optional version identifier.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="nonEmptyString">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="propertyType">
+		<xs:annotation>
+			<xs:documentation>An extended property definition.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="description" minOccurs="0" maxOccurs="unbounded" type="displayType">
+				<xs:annotation>
+					<xs:documentation>An optional description for this property.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+            <xs:element name="display" type="displayType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>One or more locale-specific text entries specifying how to display the property's name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allowedValue" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>One or more values that define all the allowed values.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:NCName" use="required">
+			<xs:annotation>
+				<xs:documentation>A unique name, within the metaclass, for this extended property.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" default="string">
+			<xs:annotation>
+				<xs:documentation>The Teiid runtime type of the property.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="biginteger" />
+					<xs:enumeration value="bigdecimal" />
+					<xs:enumeration value="blob" />
+					<xs:enumeration value="boolean" />
+					<xs:enumeration value="byte" />
+					<xs:enumeration value="char" />
+					<xs:enumeration value="clob" />
+					<xs:enumeration value="date" />
+					<xs:enumeration value="double" />
+					<xs:enumeration value="float" />
+					<xs:enumeration value="integer" />
+					<xs:enumeration value="long" />
+					<xs:enumeration value="object" />
+					<xs:enumeration value="short" />
+					<xs:enumeration value="string" />
+					<xs:enumeration value="time" />
+					<xs:enumeration value="timestamp" />
+					<xs:enumeration value="xml" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="required" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Indicates if this property is required to have a value.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="defaultValue" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					The default value used if the user doesn't provide one.
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="fixedValue" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>
+					The fixed value for this property.
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="advanced" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Indicates if this property is one that is not frequently changed and typically modified by an
+					advanced users.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="masked" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Indicates if this property's value should be masked when being displayed.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="metaclassType">
+		<xs:annotation>
+			<xs:documentation>The fully qualified name of the metaclass being extended along with the extended property
+				definitions.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="property" type="propertyType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>One or more extended property definitions.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:NCName" use="required">
+			<xs:annotation>
+				<xs:documentation>The fully qualified class name being extended.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="displayType">
+		<xs:annotation>
+			<xs:documentation>Identifies the extended properties display text for one or more languages.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="nonEmptyString">
+				<xs:attribute name="locale" type="xs:NCName">
+					<xs:annotation>
+						<xs:documentation>The code for language, country, and variant. If not present the default locale is used.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+</xs:schema>

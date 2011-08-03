@@ -7,38 +7,29 @@
  */
 package org.teiid.designer.extension;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.osgi.util.NLS;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.PluginUtil;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
 
 public class ExtensionPlugin extends Plugin {
-
-    /**
-     * This plugin's identifier.
-     */
-    public static final String PLUGIN_ID = "org.teiid.designer.extension"; //$NON-NLS-1$
-
-    /**
-     * The package identifier.
-     */
-    public static final String PACKAGE_ID = ExtensionPlugin.class.getPackage().getName();
-    
-    private static IPath runtimePath;
-
-    /**
-     * Provides access to the plugin's log and to it's resources.
-     * 
-     * @since 4.2.1
-     */
-    public static PluginUtil Util = new LoggingUtil(PLUGIN_ID);
 
     /**
      * The shared instance.
@@ -46,63 +37,115 @@ public class ExtensionPlugin extends Plugin {
     private static ExtensionPlugin plugin;
 
     /**
-     * @return DqpPlugin
-     * @since 4.3
+     * The plugin identifier.
      */
+    public static final String PLUGIN_ID = "org.teiid.designer.extension"; //$NON-NLS-1$
+
+    public static PluginUtil Util = new LoggingUtil(PLUGIN_ID);
+
     public static ExtensionPlugin getInstance() {
         return plugin;
     }
 
+    private ModelExtensionRegistry registry;
 
-    /**
-     * Obtains the current plubin preferences values. <strong>This method should be used instead of
-     * {@link Plugin#getPluginPreferences()}.</strong>
-     * 
-     * @return the preferences (never <code>null</code>)
-     */
-    public IEclipsePreferences getPreferences() {
-        return new InstanceScope().getNode(PLUGIN_ID);
+    public ModelExtensionRegistry getRegistry() {
+        return this.registry;
     }
-    
-    /**
-     * @return the <code>designer.dqp</code> plugin's runtime workspace path or the test runtime path
-     * @throws IOException if an error occurs obtaining the path
-     * @since 6.0.0
-     */
-    public IPath getRuntimePath() {
-        if (runtimePath == null) {
-            runtimePath = ExtensionPlugin.getInstance().getStateLocation();
+
+    private void loadRegistry() {
+        final String EXT_PT = PLUGIN_ID + ".modelExtensionProvider"; //$NON-NLS-1$
+        final String PATH = "path"; //$NON-NLS-1$
+        final String CLASS_NAME = "className"; //$NON-NLS-1$
+
+        try {
+            IConfigurationElement[] configElements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_PT);
+
+            for (IConfigurationElement configElement : configElements) {
+                final String pluginId = configElement.getNamespaceIdentifier();
+
+                try {
+                    // loop over model definitions
+                    String tempPath = configElement.getAttribute(PATH);
+
+                    // make sure path attribute exists
+                    if (CoreStringUtil.isEmpty(tempPath)) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.missingDefinitionPath, pluginId, PATH));
+                        continue;
+                    }
+
+                    // make sure path represents a file in workspace and on the filesystem
+                    Bundle bundle = Platform.getBundle(pluginId);
+                    final Path path = new Path(tempPath);
+                    URL url = FileLocator.find(bundle, path, null);
+
+                    if (url == null) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.definitionFileNotFoundInWorkspace, path, pluginId));
+                        continue;
+                    }
+
+                    final File defnFile = new File(FileLocator.toFileURL(url).getFile());
+
+                    if (!defnFile.isFile() || !defnFile.exists()) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.definitionFileNotFoundInFilesystem, path, pluginId));
+                        continue;
+                    }
+
+                    // must have a model extension assistant
+                    Object tempAssistant = null;
+
+                    try {
+                        tempAssistant = configElement.createExecutableExtension(CLASS_NAME);
+                    } catch (Exception e) {
+                        // attribute CLASS_NAME could be missing or a no-arg constructor in was not found
+                        Util.log(IStatus.ERROR,
+                                 NLS.bind(Messages.problemConstructingModelExtensionAssistantClass,
+                                          ModelExtensionAssistant.class.getSimpleName(), pluginId));
+                        continue;
+                    }
+
+                    final Object assistant = tempAssistant;
+
+                    if ((assistant != null) && !(assistant instanceof ModelExtensionAssistant)) {
+                        Util.log(IStatus.ERROR,
+                                 NLS.bind(Messages.incorrectModelExtensionAssistantClass, assistant.getClass().getName(), pluginId));
+                        continue;
+                    }
+
+                    ISafeRunnable runnable = new ISafeRunnable() {
+                        /**
+                         * {@inheritDoc}
+                         * 
+                         * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
+                         */
+                        @Override
+                        public void handleException( Throwable e ) {
+                            Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingDefinitionFile, path, pluginId));
+                        }
+
+                        /**
+                         * {@inheritDoc}
+                         * 
+                         * @see org.eclipse.core.runtime.ISafeRunnable#run()
+                         */
+                        @Override
+                        public void run() throws Exception {
+                            getRegistry().addDefinition(new FileInputStream(defnFile), (ModelExtensionAssistant)assistant);
+                        }
+                    };
+
+                    SafeRunner.run(runnable);
+                } catch (Exception e) {
+                    Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorProcessingModelExtension, pluginId));
+                }
+            }
+        } catch (Exception e) {
+            Util.log(IStatus.ERROR, e, Messages.errorProcessingExtensionPoint);
         }
-
-        return (IPath)runtimePath.clone();
-    }
-
-    private void initializeDefaultPreferences() {
-//        IEclipsePreferences prefs = new DefaultScope().getNode(DqpPlugin.getInstance().getBundle().getSymbolicName());
-//
-//        // initialize the Teiid cleanup enabled preference
-//        prefs.putBoolean(PreferenceConstants.PREVIEW_ENABLED, PreferenceConstants.PREVIEW_ENABLED_DEFAULT);
-//
-//        // initialize the Teiid cleanup enabled preference
-//        prefs.putBoolean(PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED,
-//                         PreferenceConstants.PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT);
-
     }
 
     /**
-     * Option names can be found in the <code>.debug</code> file and in {@link DebugConstants}.
-     * 
-     * @param option the option being checked
-     * @return <code>true</code> if in debugging mode and the debug option is enabled
-     */
-    public boolean isDebugOptionEnabled( String option ) {
-        return (isDebugging() && Boolean.toString(true).equals(Platform.getDebugOption(option)));
-    }
-
-    /**
-     * <p>
      * {@inheritDoc}
-     * </p>
      * 
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      */
@@ -114,19 +157,15 @@ public class ExtensionPlugin extends Plugin {
         // initialize logger first so that other methods can use logger
         ((LoggingUtil)Util).initializePlatformLogger(this);
 
-        // initialize preferences
-        initializeDefaultPreferences();
+        try {
+            this.registry = new ModelExtensionRegistry();
 
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-     */
-    @Override
-    public void stop( final BundleContext context ) throws Exception {
-        super.stop(context);
+            // load model extension registry
+            loadRegistry();
+        } catch (Exception e) {
+            Util.log(e);
+            throw e;
+        }
     }
 
 }

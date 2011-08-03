@@ -35,11 +35,10 @@
             profile="org.teiid.designer.datatools.salesforce.connectionProfile"/>
    </extension>
    <extension
-		id="org.teiid.designer.model.extension.salesforce"
-		name="%salesforceExtensionPropertiesHandler.name"
-        point="org.teiid.designer.extension.extensionPropertiesHandler">
-      <propertiesHandler
-         name="com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler">
-      </propertiesHandler>
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.modelgenerator.salesforce.extension.SalesforceModelExtensionAssistant"
+            path="salesforce.mxd">
+      </extensionDefinition>
    </extension>
 </plugin>

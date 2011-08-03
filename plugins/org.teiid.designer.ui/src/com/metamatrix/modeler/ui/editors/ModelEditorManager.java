@@ -7,10 +7,14 @@
  */
 package com.metamatrix.modeler.ui.editors;
 
+import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.AUTO_OPEN_EDITOR_IF_NEEDED;
+import static com.metamatrix.modeler.ui.UiConstants.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -19,7 +23,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -29,9 +37,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
+
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -46,8 +57,16 @@ import com.metamatrix.ui.internal.viewsupport.UiBusyIndicator;
  * an object in the correct ModelObjectEditor.
  */
 abstract public class ModelEditorManager {
-    static final String vrMsg = UiConstants.Util.getString("ModelEditor.virtualRelationalNotLicensedMessage"); //$NON-NLS-1$
-    static final String xmlMsg = UiConstants.Util.getString("ModelEditor.xmlNotLicensedMessage"); //$NON-NLS-1$
+
+    public static final String OPEN_EDITOR_TITLE = Util.getString("ModelEditorManager.openModelEditorTitle"); //$NON-NLS-1$
+    public static final String OPEN_EDITOR_MESSAGE = Util.getString("ModelEditorManager.openModelEditorMessage"); //$NON-NLS-1$
+    private static final String ALWAY_FORCE_OPEN_MESSAGE = Util.getString("ModelEditorManager.alwaysForceOpenMessage"); //$NON-NLS-1$
+
+    private static final String READ_ONLY_TITLE = Util.getString("ModelEditorManager.alwaysForceOpenMessage"); //$NON-NLS-1$
+    private static final String READ_ONLY_MESSAGE = Util.getString("ModelEditorManager.alwaysForceOpenMessage"); //$NON-NLS-1$
+
+    static final String VR_MSG = Util.getString("ModelEditor.virtualRelationalNotLicensedMessage"); //$NON-NLS-1$
+    static final String XML_MSG = Util.getString("ModelEditor.xmlNotLicensedMessage"); //$NON-NLS-1$
 
     private static final ModelerUndoManager undoManager = ModelerUndoManager.getInstance();
 
@@ -77,6 +96,7 @@ abstract public class ModelEditorManager {
                                  final boolean forceOpen,
                                  boolean async ) {
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 final ModelEditor modelEditor = getModelEditorForFile(modelFile, forceOpen);
                 if (modelEditor != null) {
@@ -119,6 +139,7 @@ abstract public class ModelEditorManager {
                                  final boolean forceOpen,
                                  final boolean maintainActivePart ) {
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 IWorkbenchPart activePart = null;
                 IWorkbenchPage activePage = null;
@@ -151,6 +172,7 @@ abstract public class ModelEditorManager {
     public static void autoSelectEditor( final ModelEditor editor,
                                          final ModelEditorPage thePage ) {
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 for (Iterator iter = editor.getAllEditors().iterator(); iter.hasNext();) {
                     Object nextPage = iter.next();
@@ -160,6 +182,75 @@ abstract public class ModelEditorManager {
                 }
             }
         });
+    }
+
+    /**
+     * In order for a model object to be edited, it's editor must be open. This method uses the user preference for auto-opening the
+     * editor. If the preference is set to auto-open the editor is automatically opened. Otherwise, a dialog is opened asking the
+     * user if they want to open the editor.
+     * 
+     * @param shell the shell to display the dialog (can be <code>null</code>)
+     * @param eObject the model object whose editor is being requested to be opened (cannot be <code>null</code>)
+     * @return <code>true</code> if the editor was opened
+     */
+    public static boolean autoOpen( Shell shell,
+                                    EObject eObject,
+                                    boolean showReadOnlyDialog ) {
+        CoreArgCheck.isNotNull(eObject, "eObject is null"); //$NON-NLS-1$
+
+        ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(eObject);
+
+        // if the modelResource is null, we can't edit the properties
+        if (modelResource == null) {
+            return false;
+        }
+
+        if (!ModelEditorManager.isOpen(eObject)) {
+            // if readonly can't open
+            if (ModelUtil.isIResourceReadOnly(modelResource.getResource())) {
+                if (showReadOnlyDialog) {
+                    MessageDialog.openError(shell, READ_ONLY_TITLE, READ_ONLY_MESSAGE);
+                }
+
+                return false;
+            }
+
+            // get preference value for auto-open-editor
+            String autoOpen = UiPlugin.getDefault().getPreferenceStore().getString(AUTO_OPEN_EDITOR_IF_NEEDED);
+
+            // if the preference is to auto-open, then set forceOpen so we don't prompt the user
+            boolean forceOpen = MessageDialogWithToggle.ALWAYS.equals(autoOpen);
+
+            if (!forceOpen) {
+                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(shell, OPEN_EDITOR_TITLE,
+                                                                                                 OPEN_EDITOR_MESSAGE,
+                                                                                                 ALWAY_FORCE_OPEN_MESSAGE, false,
+                                                                                                 UiPlugin.getDefault()
+                                                                                                         .getPreferenceStore(),
+                                                                                                 AUTO_OPEN_EDITOR_IF_NEEDED);
+                int result = dialog.getReturnCode();
+                switch (result) {
+                // yes, ok
+                case IDialogConstants.YES_ID:
+                case IDialogConstants.OK_ID:
+                    forceOpen = true;
+                    break;
+                // no
+                case IDialogConstants.NO_ID:
+                    forceOpen = false;
+                    break;
+                }
+            }
+
+            if (forceOpen) {
+                open(eObject, true);
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -173,6 +264,7 @@ abstract public class ModelEditorManager {
     public static void open( final EObject object,
                              final boolean forceOpen ) {
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+            @Override
             public void run() {
                 if (object != null) {
                     final ModelEditor modelEditor = getModelEditorForObject(object, forceOpen);
@@ -204,14 +296,14 @@ abstract public class ModelEditorManager {
                 theEObject = ModelUtilities.getModelResourceForIFile((IFile)input, true).getModelAnnotation();
             } catch (ModelWorkspaceException err) {
                 WidgetUtil.showError(err);
-                UiConstants.Util.log(err);
+                Util.log(err);
             }
         } else if (input instanceof ModelResource) {
             try {
                 theEObject = ((ModelResource)input).getModelAnnotation();
             } catch (ModelWorkspaceException err) {
                 WidgetUtil.showError(err);
-                UiConstants.Util.log(err);
+                Util.log(err);
             }
         }
 
@@ -232,6 +324,7 @@ abstract public class ModelEditorManager {
                              final boolean forceOpen,
                              final int objectEditorValue ) {
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+            @Override
             public void run() {
                 if (object != null) {
                     final ModelEditor modelEditor = getModelEditorForObject(object, forceOpen);
@@ -275,12 +368,13 @@ abstract public class ModelEditorManager {
                     final OpenModelEditorJob openJob = new OpenModelEditorJob((IFile)mr.getCorrespondingResource(),
                                                                               editableObject);
                     UiUtil.runInSwtThread(new Runnable() {
+                        @Override
                         public void run() {
                             openJob.schedule();
                         }
                     }, true);
                 } catch (ModelWorkspaceException theException) {
-                    UiConstants.Util.log(theException);
+                    Util.log(theException);
                 }
             }
         }
@@ -391,6 +485,7 @@ abstract public class ModelEditorManager {
     public static void edit( final EObject object,
                              final String editorId ) {
         UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+            @Override
             public void run() {
                 if (object != null) {
                     final ModelEditor modelEditor = getModelEditorForObject(object, true);
@@ -534,6 +629,7 @@ abstract public class ModelEditorManager {
 
                     if (result == null && forceOpen) {
                         UiUtil.runInSwtThread(new Runnable() {
+                            @Override
                             public void run() {
                                 // there is no editor open for this object. Open one and hand it the double-click target.
                                 try {
@@ -546,16 +642,16 @@ abstract public class ModelEditorManager {
                                 } catch (PartInitException e) {
                                     String message = e.getStatus().getMessage();
                                     if (message != null) {
-                                        String targetVrMsg = vrMsg;
-                                        String targetXmlMsg = xmlMsg;
+                                        String targetVrMsg = VR_MSG;
+                                        String targetXmlMsg = XML_MSG;
                                         if (message.equals(targetVrMsg)) {
-                                            UiConstants.Util.log(IStatus.WARNING, targetVrMsg);
+                                            Util.log(IStatus.WARNING, targetVrMsg);
                                         } else if (message.equals(targetXmlMsg)) {
-                                            UiConstants.Util.log(IStatus.WARNING, targetXmlMsg);
+                                            Util.log(IStatus.WARNING, targetXmlMsg);
                                         } else {
-                                            UiConstants.Util.log(IStatus.ERROR,
-                                                                 e,
-                                                                 UiConstants.Util.getString("ModelEditorManager.getModelEditorForFile", file.toString())); //$NON-NLS-1$
+                                            Util.log(IStatus.ERROR,
+                                                     e,
+                                                     Util.getString("ModelEditorManager.getModelEditorForFile", file.toString())); //$NON-NLS-1$
                                         }
                                     }
                                     staticEditor = null;
@@ -737,6 +833,7 @@ class CloseEditorRunnable implements Runnable {
         this.save = save;
     }
 
+    @Override
     public void run() {
         final ModelEditor modelEditor = ModelEditorManager.getModelEditorForFile(modelFile, false);
         if (modelEditor != null) {

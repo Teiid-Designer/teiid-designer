@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClassifier;
@@ -24,6 +25,8 @@ import org.eclipse.emf.edit.ui.provider.PropertySource;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.teiid.designer.ui.properties.extension.ModelExtensionPropertySource;
+
 import com.metamatrix.metamodels.diagram.PresentationEntity;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -48,7 +51,16 @@ public class ModelObjectPropertySource extends PropertySource {
     // Instance variables
     private boolean isReadOnlyType = false;
     private boolean isPrimaryMetamodelObject = false;
+
+    /**
+     * This is the extension metamodel.
+     */
     private ExtensionPropertySource extensionDelegate;
+
+    /**
+     * This is the new model extension framework (non-metamodel).
+     */
+    private ModelExtensionPropertySource modelExtensionDelegate;
 
     /**
      * Collection of transient descriptors.
@@ -83,6 +95,8 @@ public class ModelObjectPropertySource extends PropertySource {
                     isReadOnlyType = false;
                 } 
             }
+
+            this.modelExtensionDelegate = new ModelExtensionPropertySource(eObject);
         }
         extensionDelegate = new ExtensionPropertySource((EObject) object);
 	}
@@ -116,6 +130,14 @@ public class ModelObjectPropertySource extends PropertySource {
                 boolean started = ModelerCore.startTxn(SET + propertyId.toString(), this);
                 boolean succeeded = false;
                 try {
+                    // see if non-metamodel model extension property
+                    if (this.modelExtensionDelegate.isExtensionProperty(propertyId)) {
+                        this.modelExtensionDelegate.setPropertyValue(propertyId, value);
+                        succeeded = true;
+                        return;
+                    }
+
+                    // see if model extension metamodel proeprty
                     if ( extensionDelegate.isExtensionProperty(propertyId) ) {
                         extensionDelegate.setPropertyValue(propertyId, value);
                         succeeded = true;
@@ -186,6 +208,7 @@ public class ModelObjectPropertySource extends PropertySource {
         IPropertyDescriptor[] emfDescriptors = super.getPropertyDescriptors();
         IPropertyDescriptor[] extDescriptors = extensionDelegate.getPropertyDescriptors();
         this.transientDescriptors = getTransientPropertyDescriptors(this.object);
+        IPropertyDescriptor[] modelExtensionDescriptors = this.modelExtensionDelegate.getPropertyDescriptors();
         
         // keep track of the property IDs contributed by the transient descriptors
         if (this.transientDescriptors.length > 0) {
@@ -197,7 +220,8 @@ public class ModelObjectPropertySource extends PropertySource {
         }
 
         // combine all descriptors
-        IPropertyDescriptor[] result = new IPropertyDescriptor[emfDescriptors.length + extDescriptors.length + transientDescriptors.length];
+        IPropertyDescriptor[] result = new IPropertyDescriptor[emfDescriptors.length + extDescriptors.length
+                + transientDescriptors.length + modelExtensionDescriptors.length];
         int resultIndex = 0;
 
         // add EMF descriptors
@@ -207,7 +231,7 @@ public class ModelObjectPropertySource extends PropertySource {
             }
         }
         
-        // add extension descriptors
+        // add model extension metamodel descriptors
         if (extDescriptors.length != 0) {
             for (int i = 0; i < extDescriptors.length; ++i, ++resultIndex) {
                 result[resultIndex] = extDescriptors[i];
@@ -220,7 +244,14 @@ public class ModelObjectPropertySource extends PropertySource {
                 result[resultIndex] = transientDescriptors[i];
             }
         }
-
+        
+        // add non-metamodel model extension descriptors
+        if (modelExtensionDescriptors.length != 0) {
+            for (int i = 0; i < modelExtensionDescriptors.length; ++i, ++resultIndex) {
+                result[resultIndex] = modelExtensionDescriptors[i];
+            }
+        }
+        
         return result;
     }
     
@@ -295,6 +326,12 @@ public class ModelObjectPropertySource extends PropertySource {
      */
     @Override
     public Object getPropertyValue(Object propertyId) {
+        // see if non-metamodel model extension property
+        if ( this.modelExtensionDelegate.isExtensionProperty(propertyId) ) {
+            return this.modelExtensionDelegate.getPropertyValue(propertyId);
+        }
+
+        // see if metamodel model extension property
         if ( extensionDelegate.isExtensionProperty(propertyId) ) {
             return extensionDelegate.getPropertyValue(propertyId);
         }
@@ -356,6 +393,14 @@ public class ModelObjectPropertySource extends PropertySource {
                 boolean started = ModelerCore.startTxn(SET + propertyId.toString(), this);
                 boolean succeeded = false;
                 try {
+                    // see if non-metamodel contributed extension property
+                    if ( this.modelExtensionDelegate.isExtensionProperty(propertyId) ) {
+                        this.modelExtensionDelegate.resetPropertyValue(propertyId);
+                        succeeded = true;
+                        return;
+                    }
+
+                    // see if extension metamodel contributed property
                     if ( extensionDelegate.isExtensionProperty(propertyId) ) {
                         extensionDelegate.resetPropertyValue(propertyId);
                         succeeded = true;

@@ -43,7 +43,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.jdbc.JdbcUtil;
 import com.metamatrix.modeler.internal.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import com.metamatrix.modeler.internal.jdbc.ui.ModelerJdbcUiPlugin;
-import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.jdbc.JdbcSource;
 import com.metamatrix.modeler.jdbc.relational.CostAnalyzer;
@@ -65,6 +64,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         setImageDescriptor(ModelerJdbcUiPlugin.getDefault().getImageDescriptor(ModelerJdbcUiConstants.Images.COST_ANALYSIS));
     }
 
+    @Override
     public void selectionChanged( IWorkbenchPart part,
                                   ISelection selection ) {
         boolean enable = false;
@@ -316,6 +316,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         }
     }
 
+    @Override
     public int compareTo( Object o ) {
         if (o instanceof String) {
             return getText().compareTo((String)o);
@@ -327,6 +328,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         return 0;
     }
 
+    @Override
     public boolean isApplicable( ISelection selection ) {
         boolean result = false;
         try {
@@ -366,8 +368,8 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
 
             // may want to change these text strings eventually:
             if (MessageDialog.openQuestion(shell,
-                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE,
-                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE)) {
+                                           ModelEditorManager.OPEN_EDITOR_TITLE,
+                                           ModelEditorManager.OPEN_EDITOR_MESSAGE)) {
                 // load and activate, not async (to prevent multiple dialogs from coming up):
                 // Changed to use method that insures Object editor mode is on
                 ModelEditorManager.openInEditMode(modelFile, true, UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -43,7 +42,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPlugin;
 
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
@@ -196,9 +195,15 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
         }
 
         // Lastly, decorate with Extension if applicable
-        if (element instanceof IResource && !(element instanceof IFolder) && !(element instanceof IProject)) {
-            if (ExtensionPropertiesManager.isApplicable((IResource)element)) {
-                decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+        if (element instanceof IFile) {
+            IFile file = (IFile)element;
+
+            try {
+                if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file.getLocation().toFile())) {
+                    decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                }
+            } catch (Exception e) {
+                Util.log(e);
             }
         }
 

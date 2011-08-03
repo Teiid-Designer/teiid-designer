@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+
 import org.teiid.core.CorePlugin;
 import org.teiid.core.TeiidRuntimeException;
 
@@ -78,6 +79,7 @@ public final class CoreStringUtil {
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          * @since 4.2
          */
+        @Override
         public int compare( Object o1,
                             Object o2 ) {
             if (o1 == o2) {
@@ -1051,5 +1053,19 @@ public final class CoreStringUtil {
             throw new TeiidRuntimeException(e);
         }
         return (String[])result.toArray(new String[result.size()]);
+    }
+
+    /**
+     * @param thisString the first string being compared (may be <code>null</code>)
+     * @param thatString the other string being compared (may be <code>null</code>)
+     * @return <code>true</code> if the supplied strings are both <code>null</code> or have equal values
+     */
+    public static boolean equals( final String thisString,
+                                  final String thatString ) {
+        if (thisString == null) {
+            return (thatString == null);
+        }
+
+        return thisString.equals(thatString);
     }
 }

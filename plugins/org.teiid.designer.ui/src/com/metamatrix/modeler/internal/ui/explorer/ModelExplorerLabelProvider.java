@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
@@ -34,7 +33,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.teiid.designer.extension.ExtensionPropertiesManager;
+import org.teiid.designer.extension.ExtensionPlugin;
 
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
@@ -85,6 +84,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
 
         // Add listener for model validation completion events
         this.resrcChgListener = new IResourceChangeListener() {
+            @Override
             public void resourceChanged( final IResourceChangeEvent event ) {
                 final Display display = Display.getDefault();
                 if (display.isDisposed()) {
@@ -109,6 +109,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
                     final Object[] resourcesToUpdate = resources.toArray();
 
                     display.asyncExec(new Runnable() {
+                        @Override
                         public void run() {
                             changeLabel(resourcesToUpdate);
                         }
@@ -292,6 +293,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
      * @see org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang.Object, org.eclipse.jface.viewers.IDecoration)
      * @since 4.0
      */
+    @Override
     public void decorate( final Object element,
                           final IDecoration decoration ) {
         final Display display = Display.getDefault();
@@ -338,10 +340,16 @@ public class ModelExplorerLabelProvider extends LabelProvider
         
         // Lastly, decorate with Extension if applicable
         
-        if( element instanceof IResource && !(element instanceof IFolder) && !(element instanceof IProject) ) {
-        	if( ExtensionPropertiesManager.isApplicable((IResource)element)) {
-        		decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
-        	}
+        if( element instanceof IFile ) {
+            IFile file = (IFile)element;
+
+            try {
+                if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file.getLocation().toFile())) {
+                    decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                }
+            } catch (Exception e) {
+                Util.log(e);
+            }
         }
 
     }

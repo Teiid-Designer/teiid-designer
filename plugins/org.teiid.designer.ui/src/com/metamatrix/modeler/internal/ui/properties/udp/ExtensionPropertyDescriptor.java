@@ -20,10 +20,10 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
-import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.properties.PropertyEditorFactory;
 import com.metamatrix.modeler.internal.ui.properties.ReadOnlyPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -138,7 +138,7 @@ public class ExtensionPropertyDescriptor implements IPropertyDescriptor {
             if ( ! ModelEditorManager.isOpen(file) ) {
                 // can't modify a property value on an EObject if it's ModelEditor is not open.
                 Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-                if ( MessageDialog.openQuestion(shell, ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE, ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE) ) {
+                if ( MessageDialog.openQuestion(shell, ModelEditorManager.OPEN_EDITOR_TITLE, ModelEditorManager.OPEN_EDITOR_MESSAGE) ) {
                     ModelEditorManager.open(extendedObject, true);
                 }
                 return null;

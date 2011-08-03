@@ -55,7 +55,6 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.properties.ModelObjectPropertyDescriptor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -403,8 +402,8 @@ public class DescriptionView extends ModelerView
 
             // may want to change these text strings eventually:
             if (MessageDialog.openQuestion(shell,
-                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_TITLE,
-                                           ModelObjectPropertyDescriptor.OPEN_EDITOR_MESSAGE)) {
+                                           ModelEditorManager.OPEN_EDITOR_TITLE,
+                                           ModelEditorManager.OPEN_EDITOR_MESSAGE)) {
                 // load and activate, not async (to prevent multiple dialogs from coming up):
                 // Changed to use method that insures Object editor mode is on
                 ModelEditorManager.openInEditMode(modelFile, true, UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);

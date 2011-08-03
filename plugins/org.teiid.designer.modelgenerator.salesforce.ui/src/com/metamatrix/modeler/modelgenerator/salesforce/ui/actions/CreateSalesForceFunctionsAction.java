@@ -7,8 +7,10 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.ui.actions;
 
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,9 +18,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.teiid.designer.extension.ExtensionPlugin;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -31,9 +35,7 @@ import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
-import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.SalesforceExtentionPropertiesHandler;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.Activator;
 import com.metamatrix.modeler.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -83,21 +85,20 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
     }
 
     private boolean sourceModelSelected( ISelection theSelection ) {
-        boolean result = false;
-        List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
-        if (!allObjs.isEmpty() && allObjs.size() == 1) {
-            Object nextObj = allObjs.get(0);
-            if (nextObj instanceof IFile && ModelIdentifier.isRelationalSourceModel((IFile)nextObj)) {
+        if (SelectionUtilities.isSingleSelection(theSelection)) {
+            Object selectedObj = ((IStructuredSelection)theSelection).getFirstElement();
+
+            if ((selectedObj instanceof IFile) && ModelIdentifier.isRelationalSourceModel((IFile)selectedObj)) {
+                File file = ((IFile)selectedObj).getLocation().toFile();
                 try {
-                    ModelResource model = ModelUtil.getModelResource((IFile)nextObj, false);
-                    // Check to see if the model has the SalesForce Model Extension ID
-                    result = SalesforceExtentionPropertiesHandler.isSaleforceResource(model.getCorrespondingResource());
-                } catch (ModelWorkspaceException e) {
-                    // do nothing
+                    return ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file, NAMESPACE_PREFIX);
+                } catch (Exception e) {
+                    UiConstants.Util.log(e);
                 }
             }
         }
-        return result;
+
+        return false;
     }
 
     /**
@@ -130,7 +131,7 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
 
                     succeeded = true;
                 } catch (ModelWorkspaceException e) {
-                    final String msg = ModelGeneratorSalesforceUiConstants.UTIL.getString("create.functions.errorMessage", new Object[] {e.getMessage()}); //$NON-NLS-1$
+                    final String msg = ModelGeneratorSalesforceUiConstants.UTIL.getString("create.functions.errorMessage", new Object[] { e.getMessage() }); //$NON-NLS-1$
                     UiConstants.Util.log(IStatus.ERROR, e, msg);
                 } finally {
                     if (started) {

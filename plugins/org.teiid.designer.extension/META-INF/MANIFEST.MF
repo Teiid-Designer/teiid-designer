@@ -7,12 +7,10 @@ Bundle-Activator: org.teiid.designer.extension.ExtensionPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: org.teiid.designer.extension,
- org.teiid.designer.extension.cnd,
- org.teiid.designer.extension.properties
+ org.teiid.designer.extension.definition,
+ org.teiid.designer.extension.properties,
+ org.teiid.designer.extension.registry
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.teiid.core.designer,
- org.teiid.designer.modeshape,
- org.eclipse.emf.ecore
+ org.teiid.core.designer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
