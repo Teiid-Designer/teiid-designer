@@ -12,8 +12,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
@@ -63,7 +65,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     private static final String EDIT_TITLE = getString("editTitle"); //$NON-NLS-1$
 
     private static final ImageDescriptor IMAGE = RolesUiPlugin.getInstance().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
-    
+
     private static final String DEFAULT_NAME = "Data Role 1"; //getString("undefinedName"); //$NON-NLS-1$
     private static final String SYS_ADMIN_TABLE_TARGET = "sysadmin"; //$NON-NLS-1$
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
@@ -71,10 +73,10 @@ public class NewDataRoleWizard extends AbstractWizard {
     private static String getString( final String id ) {
         return RolesUiPlugin.UTIL.getString(I18N_PREFIX + id);
     }
-    
+
     private DataRole dataRole;
     private Container tempContainer;
-    
+
     private boolean isEdit = false;
     private WizardPage wizardPage;
     private Text dataRoleNameText;
@@ -86,7 +88,7 @@ public class NewDataRoleWizard extends AbstractWizard {
     private Button allowCreateTempTablesCheckBox;
 
     private DataRolesModelTreeProvider treeProvider;
-    
+
     private String dataRoleName;
     private String description;
     private Set<String> mappedRoleNames;
@@ -95,66 +97,64 @@ public class NewDataRoleWizard extends AbstractWizard {
     private boolean allowCreateTempTables;
 
     String roleNameTextEntry;
-    
+
     private Map<Object, Permission> permissionsMap;
-    
-	/**
+
+    /**
      * @since 4.0
      */
     public NewDataRoleWizard(Container tempContainer, DataRole existingDataRole) {
-    	super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
-    	this.tempContainer = tempContainer;
-    	if( existingDataRole == null ) {
-    		this.dataRole = new DataRole(DEFAULT_NAME);
-    		this.dataRoleName = DEFAULT_NAME;
-    		this.isEdit = false;
-    		this.allowSystemTables = true;
-    		this.anyAuthentication = false;
-    		this.allowCreateTempTables = false;
-    	} else {
-    		this.dataRole = existingDataRole;
-    		this.isEdit = true;
-    		this.setWindowTitle(EDIT_TITLE);
-    	}
+        super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
+        this.tempContainer = tempContainer;
+        if (existingDataRole == null) {
+            this.dataRole = new DataRole(DEFAULT_NAME);
+            this.dataRoleName = DEFAULT_NAME;
+            this.isEdit = false;
+            this.allowSystemTables = true;
+            this.anyAuthentication = false;
+            this.allowCreateTempTables = false;
+        } else {
+            this.dataRole = existingDataRole;
+            this.isEdit = true;
+            this.setWindowTitle(EDIT_TITLE);
+        }
         this.mappedRoleNames = new HashSet<String>(dataRole.getRoleNames());
         this.permissionsMap = new HashMap<Object, Permission>();
     }
 
     /**
-     * 
-     * 
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
     public void init( IWorkbench workbench,
                       IStructuredSelection selection ) {
-    	this.wizardPage = new WizardPage(NewDataRoleWizard.class.getSimpleName(), TITLE, null) {
+        this.wizardPage = new WizardPage(NewDataRoleWizard.class.getSimpleName(), TITLE, null) {
+            @Override
             public void createControl( final Composite parent ) {
                 setControl(createPageControl(parent));
             }
         };
-        
+
         this.wizardPage.setPageComplete(false);
-        if( isEdit ) {
-        	this.wizardPage.setMessage(getString("initialEditMessage")); //$NON-NLS-1$
-        	this.wizardPage.setTitle(EDIT_TITLE);
+        if (isEdit) {
+            this.wizardPage.setMessage(getString("initialEditMessage")); //$NON-NLS-1$
+            this.wizardPage.setTitle(EDIT_TITLE);
         } else {
-        	this.wizardPage.setMessage(getString("initialCreateMessage")); //$NON-NLS-1$
+            this.wizardPage.setMessage(getString("initialCreateMessage")); //$NON-NLS-1$
         }
         addPage(wizardPage);
-    	
+
     }
-    
+
     /**
-     * @param parent 
+     * @param parent
      * @return composite the page
      * @since 4.0
      */
-	Composite createPageControl( final Composite parent ) {
-    	// Tree Content Provider
-    	
-    	treeProvider = new DataRolesModelTreeProvider(this.permissionsMap);
-    	
-    	
+    Composite createPageControl( final Composite parent ) {
+        // Tree Content Provider
+
+        treeProvider = new DataRolesModelTreeProvider(this.permissionsMap);
+
         // ===========>>>> Create page composite
         final Composite mainPanel = new Composite(parent, SWT.NONE);
         GridData pgGD = new GridData(GridData.FILL_BOTH);
@@ -162,17 +162,18 @@ public class NewDataRoleWizard extends AbstractWizard {
         mainPanel.setLayout(new GridLayout(2, false));
         // Add widgets to page
         WidgetFactory.createLabel(mainPanel, getString("nameLabel")); //$NON-NLS-1$
-        
+
         this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, DEFAULT_NAME);
-        
+
         this.dataRoleNameText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dataRoleName = dataRoleNameText.getText();
-				validateInputs();
-			}
-		});
-        
-        // ===========>>>> Create Description Group 
+            @Override
+            public void modifyText( ModifyEvent e ) {
+                dataRoleName = dataRoleNameText.getText();
+                validateInputs();
+            }
+        });
+
+        // ===========>>>> Create Description Group
         final Group descGroup = WidgetFactory.createGroup(mainPanel, getString("desciptionGroupLabel"), GridData.FILL_HORIZONTAL, 2); //$NON-NLS-1$
         descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
         final GridData descGridData = new GridData(GridData.FILL_BOTH);
@@ -183,51 +184,50 @@ public class NewDataRoleWizard extends AbstractWizard {
         descriptionTextEditor.setLayoutData(descGridData);
         descriptionTextEditor.setText(""); //$NON-NLS-1$
         descriptionTextEditor.getDocument().addDocumentListener(new IDocumentListener() {
-			
-			@Override
-			public void documentChanged(DocumentEvent event) {
-				description = descriptionTextEditor.getText();
-			}
-			
-			@Override
-			public void documentAboutToBeChanged(DocumentEvent event) {
-				// NO OP
-			}
-		});
-        
+
+            @Override
+            public void documentChanged( DocumentEvent event ) {
+                description = descriptionTextEditor.getText();
+            }
+
+            @Override
+            public void documentAboutToBeChanged( DocumentEvent event ) {
+                // NO OP
+            }
+        });
+
         allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(mainPanel,
-                getString("allowCreateTempTablesCheckBox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
+                                                                     getString("allowCreateTempTablesCheckBox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
         allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected( final SelectionEvent event ) {
-					allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
-				}
-		});
-       
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
+            }
+        });
 
         anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(mainPanel,
-		                getString("anyAuthenticatedCheckbox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
+                                                                getString("anyAuthenticatedCheckbox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
         anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected( final SelectionEvent event ) {
-					anyAuthentication = anyAuthenticatedCheckBox.getSelection();
-					if( mappedRolesPanel != null ) {
-						mappedRolesPanel.setEnabled(!anyAuthentication);
-					}
-				}
-		});
-        
-        // ===========>>>> Create Roles List Panel Editor 
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                anyAuthentication = anyAuthenticatedCheckBox.getSelection();
+                if (mappedRolesPanel != null) {
+                    mappedRolesPanel.setEnabled(!anyAuthentication);
+                }
+            }
+        });
+
+        // ===========>>>> Create Roles List Panel Editor
         final IListPanelController ctrlr = new ListPanelAdapter() {
             @Override
             public Object[] addButtonSelected() {
                 String title = getString("roleInputDialog.title"); //$NON-NLS-1$
                 String label = getString("roleInputDialog.label"); //$NON-NLS-1$
                 String textEntry = showTextEntryDialog(title, label, null);
-                if( textEntry != null && textEntry.length() > 0 ) {
-                	mappedRoleNames.add(textEntry);
+                if (textEntry != null && textEntry.length() > 0) {
+                    mappedRoleNames.add(textEntry);
                 } else {
-                	return Collections.EMPTY_LIST.toArray();
+                    return Collections.EMPTY_LIST.toArray();
                 }
                 return new String[] {textEntry};
             }
@@ -235,42 +235,42 @@ public class NewDataRoleWizard extends AbstractWizard {
             @Override
             public Object[] removeButtonSelected( IStructuredSelection selection ) {
                 Object[] objArray = selection.toArray();
-                for( Object obj : objArray ) {
-                	mappedRoleNames.remove(obj);
+                for (Object obj : objArray) {
+                    mappedRoleNames.remove(obj);
                 }
                 return objArray;
             }
-            
+
             @Override
             public Object editButtonSelected( IStructuredSelection selection ) {
                 Object[] objArray = selection.toArray();
                 String title = getString("roleInputDialog.title"); //$NON-NLS-1$
                 String label = getString("roleInputDialog.label"); //$NON-NLS-1$
                 String textEntry = showTextEntryDialog(title, label, (String)objArray[0]);
-                if( textEntry != null && textEntry.length() > 0 ) {
-                	mappedRoleNames.add(textEntry);
-                }else {
-                	return null;
+                if (textEntry != null && textEntry.length() > 0) {
+                    mappedRoleNames.add(textEntry);
+                } else {
+                    return null;
                 }
-                
+
                 return textEntry;
             }
-            
-        	@Override
-            public void itemsSelected(final IStructuredSelection selection) {
-        		Object[] objArray = selection.toArray();
-        		boolean enableEdit = true;
-        		if( objArray == null ) {
-        			enableEdit = false;
-        		} else if( objArray.length == 1 ) {
-        			enableEdit = false;
-        		} else {
-        			enableEdit = true;
-        		}
-        		mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(enableEdit);
-        	}
+
+            @Override
+            public void itemsSelected( final IStructuredSelection selection ) {
+                Object[] objArray = selection.toArray();
+                boolean enableEdit = true;
+                if (objArray == null) {
+                    enableEdit = false;
+                } else if (objArray.length == 1) {
+                    enableEdit = false;
+                } else {
+                    enableEdit = true;
+                }
+                mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(enableEdit);
+            }
         };
-        mappedRolesPanel = new ListPanel(mainPanel, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2);  //$NON-NLS-1$
+        mappedRolesPanel = new ListPanel(mainPanel, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2); //$NON-NLS-1$
 
         final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
         rolesGridData.horizontalSpan = 2;
@@ -280,50 +280,49 @@ public class NewDataRoleWizard extends AbstractWizard {
         mappedRolesPanel.setLayoutData(rolesGridData);
         mappedRolesPanel.getButton(ListPanel.EDIT_BUTTON).setEnabled(false);
         mappedRolesPanel.getButton(ListPanel.REMOVE_BUTTON).setEnabled(false);
-        
+
         mappedRolesPanel.setEnabled(!anyAuthentication);
-        
-        
+
         // ===========>>>> Create Relational Models Tree Viewer/Editor
-        Group group = WidgetFactory.createGroup(mainPanel, getString("relationalModelsGroup"),  //$NON-NLS-1$
+        Group group = WidgetFactory.createGroup(mainPanel, getString("relationalModelsGroup"), //$NON-NLS-1$
         		GridData.FILL_BOTH, 2, 2);
-        
+
         final GridData modelsGridData = new GridData(GridData.FILL_BOTH);
         modelsGridData.horizontalSpan = 2;
         modelsGridData.heightHint = 220;
         modelsGridData.minimumHeight = 220;
         modelsGridData.grabExcessVerticalSpace = true;
         group.setLayoutData(modelsGridData);
-        
-        treeViewer = new TreeViewer(group,  SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+
+        treeViewer = new TreeViewer(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         Tree tree = treeViewer.getTree();
 
-        final GridData gridData = new GridData(GridData.FILL_BOTH); //SWT.FILL, SWT.FILL, true, true);
+        final GridData gridData = new GridData(GridData.FILL_BOTH); // SWT.FILL, SWT.FILL, true, true);
         gridData.grabExcessHorizontalSpace = true;
         treeViewer.getControl().setLayoutData(gridData);
-        
+
         tree.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseUp(MouseEvent e) {
-				// NO OP
-			}
-			
-			@Override
-			public void mouseDown(MouseEvent e) {
-				Point pt = new Point(e.x, e.y);
+
+            @Override
+            public void mouseUp( MouseEvent e ) {
+                // NO OP
+            }
+
+            @Override
+            public void mouseDown( MouseEvent e ) {
+                Point pt = new Point(e.x, e.y);
 				if( treeViewer.getCell(pt) != null && 
 					treeViewer.getCell(pt).getViewerRow() != null &&
 					treeViewer.getCell(pt).getViewerRow().getItem() != null ) {
 					handleSelection((treeViewer.getCell(pt).getColumnIndex()), treeViewer.getCell(pt).getViewerRow().getItem().getData());
-				}
-			}
-			
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// NO OP
-			}
-		});
+                }
+            }
+
+            @Override
+            public void mouseDoubleClick( MouseEvent e ) {
+                // NO OP
+            }
+        });
 
         treeViewer.setUseHashlookup(true);
 
@@ -351,7 +350,7 @@ public class NewDataRoleWizard extends AbstractWizard {
         layout.addColumnData(new ColumnWeightData(10));
         layout.addColumnData(new ColumnWeightData(10));
 
-        tree.setLayout(layout); 
+        tree.setLayout(layout);
 
         treeViewer.setContentProvider(treeProvider);
         treeViewer.setLabelProvider(treeProvider);
@@ -372,112 +371,125 @@ public class NewDataRoleWizard extends AbstractWizard {
         });
 
         // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
-        if( isEdit )  {
-        	loadExistingPermissions();
+        if (isEdit) {
+            loadExistingPermissions();
         }
-        
+
         return mainPanel;
     }
-    
+
     private void loadExistingPermissions() {
-    	this.dataRoleName = this.dataRole.getName();
-    	this.anyAuthentication = this.dataRole.isAnyAuthenticated();
-    	this.allowCreateTempTables = this.dataRole.allowCreateTempTables();
-    	this.dataRoleNameText.setText(this.dataRole.getName());
-    	this.mappedRolesPanel.addItems(this.dataRole.getRoleNames().toArray());
-    	this.descriptionTextEditor.setText(this.dataRole.getDescription());
-    	
-    	for( Permission perm : dataRole.getPermissions() ) {
-    		Object obj = treeProvider.getPermissionTargetObject(perm);
-    		if( obj != null ) {
-    			if( obj instanceof Resource ) {
-    				perm.setPrimary(true);
-    			}
-    			this.permissionsMap.put(obj, perm);
+        this.dataRoleName = this.dataRole.getName();
+        this.anyAuthentication = this.dataRole.isAnyAuthenticated();
+        this.allowCreateTempTables = this.dataRole.allowCreateTempTables();
+        this.dataRoleNameText.setText(this.dataRole.getName());
+        this.mappedRolesPanel.addItems(this.dataRole.getRoleNames().toArray());
+        this.descriptionTextEditor.setText(this.dataRole.getDescription());
+
+        for (Permission perm : dataRole.getPermissions()) {
+            Object obj = treeProvider.getPermissionTargetObject(perm);
+            if (obj != null) {
+                if (obj instanceof Resource) {
+                    perm.setPrimary(true);
+                }
+                this.permissionsMap.put(obj, perm);
     		} else if (perm.getTargetName().equalsIgnoreCase(SYS_ADMIN_TABLE_TARGET) ||
     				perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)) { // This is for backward compatability
                 allowSystemTables = true;
                 allowSystemTablesCheckBox.setSelection(allowSystemTables);
             }
-    	}
-    	
-    	this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
-    	this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
-    	this.mappedRolesPanel.setEnabled(!anyAuthentication);
-    	
-    	treeViewer.refresh();
-    	
-    	validateInputs();
+        }
+
+        this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
+        this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
+        this.mappedRolesPanel.setEnabled(!anyAuthentication);
+
+        treeViewer.refresh();
+
+        validateInputs();
     }
-    
 
     /*
      * This method tells the Tree Provider that 
      */
     private void handleSelection(int column, Object rowData) {
-    	if( column > 0 ) {
-    		Crud.Type crudType = Crud.getCrudType(column);
-    		this.treeProvider.togglePermission(rowData, crudType);
-    	}
-    	
-    	treeViewer.refresh();
-    	
-    	validateInputs();
+        if (column > 0) {
+            Crud.Type crudType = Crud.getCrudType(column);
+            // Determine any info or warning messages that should be issued before toggling
+            boolean doToggle = true;
+            IStatus toggleStatus = this.treeProvider.getToggleStatus(rowData, crudType);
+            // If info is returned, the element cannot be toggled - display info dialog
+            if (toggleStatus.getSeverity() == IStatus.INFO) {
+                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeInfoDialog.title"); //$NON-NLS-1$
+                MessageDialog.openInformation(getShell(), title, toggleStatus.getMessage());
+                doToggle = false;
+            } else if (toggleStatus.getSeverity() == IStatus.WARNING) {
+                String title = RolesUiPlugin.UTIL.getString("NewDataRoleWizard.stateChangeConfirmDialog.title"); //$NON-NLS-1$
+                doToggle = MessageDialog.openConfirm(getShell(), title, toggleStatus.getMessage());
+            }
+            // Toggle the state
+            if (doToggle) {
+                this.treeProvider.togglePermission(rowData, crudType);
+            }
+        }
+
+        treeViewer.refresh();
+
+        validateInputs();
     }
-    
-	/**
+
+    /**
      * @see org.eclipse.jface.wizard.IWizard#canFinish()
      * @since 4.0
      */
     @Override
     public boolean canFinish() {
         boolean canFinish = true;
-        
-        
+
         return canFinish;
     }
-    
-	@Override
-	public boolean finish() {
-		return true;
-	}
+
+    @Override
+    public boolean finish() {
+        return true;
+    }
 
     public DataRole getDataRole() {
-    	if( dataRole != null ) {
-	    	dataRole.setName(this.dataRoleName);
-	    	dataRole.setAnyAuthenticated(this.anyAuthentication);
-	    	dataRole.setAllowCreateTempTables(this.allowCreateTempTables);
-	    	dataRole.setDescription(this.description);
-	    	dataRole.setPermissions(permissionsMap.values());
-	    	if (allowSystemTables) {
+        if (dataRole != null) {
+            dataRole.setName(this.dataRoleName);
+            dataRole.setAnyAuthenticated(this.anyAuthentication);
+            dataRole.setAllowCreateTempTables(this.allowCreateTempTables);
+            dataRole.setDescription(this.description);
+            dataRole.setPermissions(permissionsMap.values());
+            if (allowSystemTables) {
                 dataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET, false, true, false, false));
             }
-	    	if( !this.anyAuthentication && !mappedRoleNames.isEmpty() ) {
-	    		dataRole.setRoleNames(mappedRoleNames);
-	    	} else {
-	    		dataRole.getRoleNames().clear();
-	    	}
-    	}
-		return dataRole;
-	}
+            if (!this.anyAuthentication && !mappedRoleNames.isEmpty()) {
+                dataRole.setRoleNames(mappedRoleNames);
+            } else {
+                dataRole.getRoleNames().clear();
+            }
+        }
+        return dataRole;
+    }
 
-	public void setDataRole(DataRole dataRole) {
-		this.dataRole = dataRole;
-	}
-	
-	private void validateInputs() {
-		// Check that name != null
-		if( this.dataRoleName == null || this.dataRoleName.length() == 0 ) {
-			wizardPage.setErrorMessage(getString("nullNameMessage")); //$NON-NLS-1$
-			wizardPage.setPageComplete(false);
-		} else {
-			wizardPage.setErrorMessage(null);
-			wizardPage.setMessage(getString("okToFinishMessage")); //$NON-NLS-1$
-			wizardPage.setPageComplete(true);
-		}
-		
-	}
-	
+    public void setDataRole( DataRole dataRole ) {
+        this.dataRole = dataRole;
+    }
+
+    private void validateInputs() {
+        // Check that name != null
+        if (this.dataRoleName == null || this.dataRoleName.length() == 0) {
+            wizardPage.setErrorMessage(getString("nullNameMessage")); //$NON-NLS-1$
+            wizardPage.setPageComplete(false);
+        } else {
+            wizardPage.setErrorMessage(null);
+            wizardPage.setMessage(getString("okToFinishMessage")); //$NON-NLS-1$
+            wizardPage.setPageComplete(true);
+        }
+
+    }
+
     /**
      * Show a simple text entry dialog and get the result
      * 
@@ -487,9 +499,9 @@ public class NewDataRoleWizard extends AbstractWizard {
      */
     String showTextEntryDialog( final String title,
                                 final String label,
-                                String initialText) {
+                                String initialText ) {
         // Dialog for string entry
-    	final String text = initialText;
+        final String text = initialText;
         Shell shell = this.wizardPage.getShell();
         final Dialog dlg = new Dialog(shell, title) {
             @Override
@@ -499,8 +511,8 @@ public class NewDataRoleWizard extends AbstractWizard {
                 Group group = WidgetFactory.createGroup(dlgPanel, label,
                 		GridData.FILL_BOTH, 1, 1);
                 final Text nameText = WidgetFactory.createTextField(group, GridData.FILL_HORIZONTAL);
-                if( text != null ) {
-                	nameText.setText(text);
+                if (text != null) {
+                    nameText.setText(text);
                 }
                 nameText.setSelection(0);
                 nameText.addModifyListener(new ModifyListener() {
@@ -522,7 +534,7 @@ public class NewDataRoleWizard extends AbstractWizard {
                 final boolean valid = (newName.length() > 0);
                 getButton(IDialogConstants.OK_ID).setEnabled(valid);
                 if (valid) {
-                	roleNameTextEntry = nameText.getText();
+                    roleNameTextEntry = nameText.getText();
                 }
             }
         };
