@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.Server;
+import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.vdb.Vdb;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.dqp.DqpPlugin;
@@ -95,12 +96,17 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      */
     @Override
     public void run() {
-        Server server = DqpPlugin.getInstance().getServerManager().getDefaultServer();
+        Server server = getServerManager().getDefaultServer();
 
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
             if (doDeploy) {
-                deployVdb(server, nextVDB);
+                VDB deployedVdb = deployVdb(server, nextVDB);
+
+                // make sure deployment worked before going on to the next one
+                if (deployedVdb == null) {
+                    break;
+                }
             }
         }
     }
@@ -108,8 +114,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged( IWorkbenchPart part,
@@ -127,22 +132,28 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         }
     }
 
-    public static VDB deployVdb( final Server server,
+    private static ServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
+    }
+
+    /**
+     * @param server the server where the VDB is being deployed to (can be <code>null</code>)
+     * @param vdbOrVdbFile the VDB being deployed
+     * @return the Teiid deployed VDB or <code>null</code> if deployment was canceled
+     */
+    public static VDB deployVdb( Server server,
                                  final Object vdbOrVdbFile ) {
         Shell shell = DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
         VDB[] result = new VDB[1];
 
         try {
-            if (server == null) {
-                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "noTeiidInstance.message")); //$NON-NLS-1$
-            }
-
-            if (!server.isConnected()) {
-                throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "teiidNotConnected.message", server.getHost())); //$NON-NLS-1$
-            }
-
             if (!(vdbOrVdbFile instanceof IFile) && !(vdbOrVdbFile instanceof Vdb)) {
                 throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb")); //$NON-NLS-1$
+            }
+
+            // make sure there is a Teiid connection
+            if (!RuntimeAssistant.ensureServerConnection(shell, UTIL.getString(I18N_PREFIX + "noTeiidInstanceMsg"))) { //$NON-NLS-1$
+                return null;
             }
 
             Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile)vdbOrVdbFile, null) : (Vdb)vdbOrVdbFile);
@@ -231,8 +242,10 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * @return <code>true</code> if data source should be auto-created based on the current preference value
      */
     static boolean shouldAutoCreateDataSource() {
-        return DqpPlugin.getInstance().getPreferences().getBoolean(PreferenceConstants.AUTO_CREATE_DATA_SOURCE,
-                                                                   PreferenceConstants.AUTO_CREATE_DATA_SOURCE_DEFAULT);
+        return DqpPlugin.getInstance()
+                        .getPreferences()
+                        .getBoolean(PreferenceConstants.AUTO_CREATE_DATA_SOURCE,
+                                    PreferenceConstants.AUTO_CREATE_DATA_SOURCE_DEFAULT);
     }
 
 }

@@ -59,12 +59,14 @@ import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.TeiidTranslator;
 import org.teiid.designer.runtime.TeiidVdb;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
 import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
+import org.teiid.designer.runtime.ui.RuntimeAssistant;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.webservice.Operation;
@@ -82,7 +84,6 @@ import com.metamatrix.modeler.internal.dqp.ui.workspace.dialogs.ParameterInputDi
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
-import com.metamatrix.modeler.jdbc.JdbcException;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.webservice.util.WebServiceUtil;
@@ -95,7 +96,7 @@ import com.metamatrix.ui.internal.util.UiUtil;
 public class PreviewTableDataContextAction extends SortableSelectionAction {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewTableDataContextAction.class);
 	
-    private static String getString( String key ) {
+    static String getString( String key ) {
         return DqpUiConstants.UTIL.getString(THIS_CLASS + key);
     }
 
@@ -150,17 +151,15 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         return dialog;
     }
 
+    private ServerManager getServerManager() {
+        return DqpPlugin.getInstance().getServerManager();
+    }
+
     private Shell getShell() {
         return Display.getCurrent().getActiveShell();
     }
 
-    /**
-     * @param profile
-     * @return
-     * @throws SQLException
-     * @throws JdbcException
-     */
-    private IConnection getSqlConnection( IConnectionProfile profile ) throws SQLException, JdbcException {
+    private IConnection getSqlConnection( IConnectionProfile profile ) {
         IConnectionProfileProvider provider = profile.getProvider();
         IConnectionFactoryProvider factory = provider.getConnectionFactory("java.sql.Connection"); //$NON-NLS-1$
         final String factoryId = factory.getId();
@@ -273,7 +272,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
     				vdbName = vdbName.substring(0, vdbName.length() - 4);
     			}
 //    			String currentDefaultServerURL = DqpPlugin.getInstance().getServerManager().getDefaultServer().getUrl();
-    			TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, DqpPlugin.getInstance().getServerManager().getDefaultServer().getTeiidJdbcInfo());
+    			TeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, getServerManager().getDefaultServer().getTeiidJdbcInfo());
     			
 //    			String connectionURL = jdbcInfo.getURL(); //"jdbc:teiid:" + vdbName + "@" + currentDefaultServerURL; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -381,12 +380,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         // and queries the user for any additional info that's needed to execute the preview, including creating
         // a source binding if necessary.
 
-        // see if preview enabled
-        if (!DqpPlugin.getInstance().getServerManager().getPreviewManager().isPreviewEnabled()) return false;
-
-        // first must have a Teiid to run preview on
-        if (DqpPlugin.getInstance().getServerManager().getDefaultServer() == null) return false;
-
         // must have one and only one EObject selected
         EObject eObj = SelectionUtilities.getSelectedEObject(selection);
         if (eObj == null) return false;
@@ -401,9 +394,6 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
      */
     @Override
     public void run() {
-    	// Check for unsaved changes
-    	// Walk through open ModelEditors and check if "isDirty()"
-    	
     	if( !ModelEditorManager.getDirtyResources().isEmpty() ) {
     		boolean doContinue = MessageDialog.openQuestion(getShell(), 
     				getString("unsavedModelsWarning.title"),  //$NON-NLS-1$
@@ -412,7 +402,13 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         		return;
         	}
     	}
-    	
+
+    	// make sure preview is enabled and that there is a Teiid server
+    	if (!RuntimeAssistant.ensurePreviewEnabled(getShell())) {
+    	    return;
+    	}
+
+    	// if we get here we know preview is enabled and a server exists and can be connected to
     	
         if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
                 (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
@@ -451,7 +447,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         		TeiidTranslator tt = null; 
         		
         		try {
-					tt = DqpPlugin.getInstance().getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
+					tt = getServerManager().getDefaultServer().getAdmin().getTranslator(translatorName);
 				} catch (Exception e) {
 					DqpUiConstants.UTIL.log(e);
 				}
@@ -472,7 +468,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         	return;
         }
         
-        final PreviewManager previewManager = DqpPlugin.getInstance().getServerManager().getPreviewManager();
+        final PreviewManager previewManager = getServerManager().getPreviewManager();
         assert (previewManager != null) : "PreviewManager is null"; //$NON-NLS-1$
 
         ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
