@@ -78,7 +78,7 @@ public final class ModelProjectOpenedJob extends CompositePreviewJob {
         for (IResource resource : container.members()) {
             if (resource instanceof IContainer) {
                 process((IContainer)resource);
-            } else if ((resource instanceof IFile) && PreviewManager.isPreviewable((IFile)resource)) {
+            } else if ((resource instanceof IFile) && PreviewManager.isPreviewableResource((IFile)resource)) {
                 CreatePreviewVdbJob job = new CreatePreviewVdbJob((IFile)resource, context);
                 add(job);
             }
