@@ -44,7 +44,7 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
     // Static variables
     // ============================================================
     final public static int DEFAULT_RESET_BUTTON_MARGIN_HEIGHT = 10;
-    final public static int DEFAULT_LEFT_SIDE_WIDTH_HINT = (int)(Display.getDefault().getBounds().width * .25);
+    final public static int DEFAULT_LEFT_SIDE_WIDTH_HINT = (int)(Display.getDefault().getBounds().width * .10);
     final public static int DEFAULT_RIGHT_SIDE_WIDTH_HINT = DEFAULT_LEFT_SIDE_WIDTH_HINT;
     final public static int DEFAULT_LEFT_AND_RIGHT_SIDE_HEIGHT_HINT = (int)(Display.getDefault().getBounds().height * .10);
 
@@ -119,12 +119,12 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         if (leftSideWidthHint < 1) {
             this.leftSideWidthHint = DEFAULT_LEFT_SIDE_WIDTH_HINT;
         } else {
-        this.leftSideWidthHint = leftSideWidthHint;
+            this.leftSideWidthHint = leftSideWidthHint;
         }
         if (rightSideWidthHint < 1) {
             this.rightSideWidthHint = DEFAULT_RIGHT_SIDE_WIDTH_HINT;
         } else {
-        this.rightSideWidthHint = rightSideWidthHint;
+            this.rightSideWidthHint = rightSideWidthHint;
         }
         if (leftAndRightSideHeightHint < 1) {
             this.leftAndRightSideHeightHint = DEFAULT_LEFT_AND_RIGHT_SIDE_HEIGHT_HINT;
@@ -402,7 +402,7 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
         // Initialize changeListeners to empty
         changeListeners = new ArrayList();
     }
-    
+
     public void addAccumulatedValuesChangeListener( IAccumulatedValuesChangeListener listener ) {
         changeListeners.add(listener);
     }
