@@ -31,6 +31,7 @@ public class WarDataserviceModel {
     private String securityRole;
     private String securityUsername;
     private String securityPassword;
+    private boolean useMtom;
 
     private String warFilenameDefault;
     private String hostNameDefault;
@@ -43,6 +44,7 @@ public class WarDataserviceModel {
     private String securityRoleDefault;
     private String securityUsernameDefault;
     private String securityPasswordDefault;
+    private boolean useMtomDefault;
 
     private IFile theVdb;
     private ArrayList<ModelResource> wsModelResourceArrayList;
@@ -200,7 +202,7 @@ public class WarDataserviceModel {
      * @since 7.1
      */
     public void setJndiNameDefault( String jndiNameDefault ) {
-        // this.jndiNameDefault = jndiNameDefault;
+        this.jndiNameDefault = jndiNameDefault;
         this.jndiName = jndiNameDefault;
 
     }
@@ -502,6 +504,34 @@ public class WarDataserviceModel {
     }
 
     /**
+     * @param useMtomDefault Sets useMtomDefault to the specified value.
+     */
+    public void setUseMtomDefault( boolean useMtomDefault ) {
+        this.useMtomDefault = useMtomDefault;
+    }
+
+    /**
+     * @return useMtomDefault
+     */
+    public boolean getUseMtomDefault() {
+        return useMtomDefault;
+    }
+
+    /**
+     * @param useMtom Sets useMtom to the specified value.
+     */
+    public void setUseMtom( boolean useMtom ) {
+        this.useMtom = useMtom;
+    }
+
+    /**
+     * @return useMtom
+     */
+    public boolean getUseMtom() {
+        return useMtom;
+    }
+
+    /**
      * @return
      * @since 7.1
      */
@@ -520,8 +550,9 @@ public class WarDataserviceModel {
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_REALM, this.getSecurityRealm());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_ROLE, this.getSecurityRole());
         properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_USERNAME, this.getSecurityUsername());
-        properties.put(WebArchiveBuilderConstants.PROPERTY_SECURITY_PASSWORD, this.getSecurityPassword());
+        properties.put(WebArchiveBuilderConstants.PROPERTY_USE_MTOM, this.getUseMtom());
 
         return properties;
     }
+
 }

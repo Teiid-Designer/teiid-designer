@@ -233,6 +233,7 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
         loadTnsDefault();
         loadJndiNameDefault();
         loadSecurityTypeDefault();
+        loadUseMTOMDefault();
 
         WarDataserviceModel.getInstance().setVdbFile(theVdb);
         WarDataserviceModel.getInstance().setWsModelResourcearrayList(wsModelResourcearrayList);
@@ -311,6 +312,19 @@ public class WarDeploymentInfoDialog extends TitleAreaDialog implements Internal
      */
     private void loadJndiNameDefault() {
         WarDataserviceModel.getInstance().setJndiNameDefault("{REPLACE_WITH_VDB_JNDI_NAME}");//$NON-NLS-1$
+    }
+    
+    /**
+     * set default use MTOM default
+     * 
+     * @since 7.5
+     */
+    private void loadUseMTOMDefault() {
+        try {
+            WarDataserviceModel.getInstance().setUseMtom(false);
+        } catch (Throwable theThrowable) {
+            DqpUiConstants.UTIL.log(theThrowable);
+        }
     }
 
     /**

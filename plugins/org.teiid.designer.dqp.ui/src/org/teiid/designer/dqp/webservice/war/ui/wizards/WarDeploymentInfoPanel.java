@@ -44,6 +44,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(WarDeploymentInfoDialog.class);
     protected static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
     private static final String SECURITY_OPTIONS_GROUP = getString("securityOptionsGroup"); //$NON-NLS-1$
+    private static final String GENERAL_OPTIONS_GROUP = getString("generalOptionsGroup"); //$NON-NLS-1$
     private static final String BASIC_OPTIONS_GROUP = getString("basicOptionsGroup"); //$NON-NLS-1$
     private static final String WS_SECURITY_OPTIONS_GROUP = getString("wsSecurityOptionsGroup"); //$NON-NLS-1$
 
@@ -64,8 +65,10 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     public static final String NOSECURITY = getString("noSecurityButton"); //$NON-NLS-1$
     public static final String BASIC = getString("basicButton"); //$NON-NLS-1$
     public static final String WSSE = getString("wsSecurityButton"); //$NON-NLS-1$
+    public static final String MTOM = getString("mtomButton"); //$NON-NLS-1$
     protected Text txfJNDIName;
     protected Button noSecurityButton, basicSecurityButton, wsSecurityButton;
+    protected Button mtomButton;
     private Button warBrowseButton;
     private Button restoreDefaultButton;
 
@@ -364,6 +367,24 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
             this.txfSecurityPassword.setEnabled(false);
         }
 
+        final Group generalOptionsGroup = WidgetFactory.createGroup(pnlContents,
+                                                                    GENERAL_OPTIONS_GROUP,
+                                                                    GridData.FILL_HORIZONTAL,
+                                                                    3);
+        {
+
+            this.mtomButton = WidgetFactory.createCheckBox(generalOptionsGroup, MTOM, false);
+            text = getString("mtomTooltip"); //$NON-NLS-1$
+            this.mtomButton.setToolTipText(text);
+            this.mtomButton.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                    handleMtomButtonSelected();
+                }
+            });
+        }
+
         // namespace Label
         this.NAMESPACE = getString("namespaceLabel"); //$NON-NLS-1$       
         WidgetFactory.createLabel(pnlContents, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, this.NAMESPACE);
@@ -465,6 +486,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         this.noSecurityButton.setSelection(true);
         this.basicSecurityButton.setSelection(false);
         this.wsSecurityButton.setSelection(false);
+        this.mtomButton.setSelection(false);
         this.txfSecurityRealm.setText(StringUtil.Constants.EMPTY_STRING);
         this.txfSecurityRealm.setEnabled(false);
         this.txfSecurityRole.setText(StringUtil.Constants.EMPTY_STRING);
@@ -486,6 +508,14 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         if (selectedUnit != null) {
             this.txfWarFileDeploymentLocation.setText(selectedUnit);
         }
+    }
+
+    /**
+     * @since 7.5
+     */
+    void handleMtomButtonSelected() {
+        boolean selection = this.mtomButton.getSelection();
+        WarDataserviceModel.getInstance().setUseMtom(selection);
     }
 
     /**

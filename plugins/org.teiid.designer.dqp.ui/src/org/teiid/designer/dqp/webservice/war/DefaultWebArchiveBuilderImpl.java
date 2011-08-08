@@ -70,6 +70,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     private List<String> ports = new ArrayList<String>();
     private Map<String, String> operationToProcedureMap = new HashMap<String, String>();
     private String wsdlFilename = StringUtil.Constants.EMPTY_STRING;
+    private static final String JNDI_PREFIX = "java:"; //$NON-NLS-1$
 
     // =============================================================
     // Constants
@@ -81,7 +82,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
     private static final String TASK_CREATING_WAR_ARCHIVE = getString("taskCreatingWarArchive"); //$NON-NLS-1$
     private static final String TASK_COPYING_WAR_FILE = getString("taskCopyingWarFile"); //$NON-NLS-1$
     private static final String TASK_CLEANUP = getString("taskCleanup"); //$NON-NLS-1$
-    private static final String JNDI_PREFIX = "java:"; //$NON-NLS-1$
 
     /**
      * This constructor is package protected, so that only the factory can call it.
@@ -598,6 +598,10 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return properties.get(WebArchiveBuilderConstants.PROPERTY_SECURITY_TYPE).equals(WarDeploymentInfoPanel.WSSE);
     }
 
+    private boolean isUseMTOM( Properties properties ) {
+        return properties.get(WebArchiveBuilderConstants.PROPERTY_USE_MTOM).equals(Boolean.TRUE);
+    }
+
     /**
      * Return the path to the lib directory
      * 
@@ -814,6 +818,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         String namespace = " xmlns:s=\""; //$NON-NLS-1$
         String wsseInterceptor1 = "\t\t<jaxws:inInterceptors>\n\t\t\t<ref bean=\"UsernameToken_Request\" />\n\t\t\t<bean "; //$NON-NLS-1$
         String wsseInterceptor2 = "class=\"org.apache.cxf.binding.soap.saaj.SAAJInInterceptor\" />\n\t\t</jaxws:inInterceptors>\n"; //$NON-NLS-1$
+        String useMTOM = "\t\t<jaxws:properties>\n\t\t\t<entry key=\"mtom-enabled\" value=\"true\"/>\n\t\t</jaxws:properties>\n"; //$NON-NLS-1$
 
         for (String port : tags) {
             endpointTags.append(startJaxwsEndpoint).append("\"").append(port).append("\"").append(serviceName); //$NON-NLS-1$ //$NON-NLS-2$
@@ -822,6 +827,9 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             endpointTags.append(namespace).append(tns).append("\">\n"); //$NON-NLS-1$
             if (isWSSecurity(properties)) {
                 endpointTags.append(wsseInterceptor1).append(wsseInterceptor2);
+            }
+            if (isUseMTOM(properties)) {
+                endpointTags.append(useMTOM);
             }
             endpointTags.append(endJaxwsEndpoint);
         }
