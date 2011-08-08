@@ -44,7 +44,7 @@ public class AccumulatorPanel extends Composite implements InternalUiConstants {
     // Static variables
     // ============================================================
     final public static int DEFAULT_RESET_BUTTON_MARGIN_HEIGHT = 10;
-    final public static int DEFAULT_LEFT_SIDE_WIDTH_HINT = (int)(Display.getDefault().getBounds().width * .25);
+    final public static int DEFAULT_LEFT_SIDE_WIDTH_HINT = (int)(Display.getDefault().getBounds().width * .10);
     final public static int DEFAULT_RIGHT_SIDE_WIDTH_HINT = DEFAULT_LEFT_SIDE_WIDTH_HINT;
     final public static int DEFAULT_LEFT_AND_RIGHT_SIDE_HEIGHT_HINT = (int)(Display.getDefault().getBounds().height * .10);
 
