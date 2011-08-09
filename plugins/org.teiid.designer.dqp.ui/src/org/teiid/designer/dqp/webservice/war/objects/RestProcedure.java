@@ -106,20 +106,6 @@ public class RestProcedure {
     }
 
     /**
-     * @return produces
-     */
-    public String getProduces() {
-        return producesAnnotation;
-    }
-
-    /**
-     * @param produces Sets produces to the specified value.
-     */
-    public void setProduces( String produces ) {
-        this.producesAnnotation = produces;
-    }
-
-    /**
      * @return uri
      */
     public String getUri() {

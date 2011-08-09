@@ -12,8 +12,13 @@ import javax.xml.transform.Source;
 import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceProvider;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +37,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.teiid.rest.RestPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,6 +82,81 @@ public class ${className}{
         }
     }
 
+    protected Map<String, String> getJSONInputs( InputStream is ) {
+        Map parameters;
+        try {
+            String jsonString = convertStreamToString(is);
+
+            // Do this to validate the JSON string. If we don't blow up, then we are good.
+            new JSONObject(jsonString);
+
+            parameters = convertJSONStringToMap(jsonString);
+        } catch (Exception e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
+        return parameters;
+    }
+
+    public String convertStreamToString( InputStream is ) throws IOException {
+        /*
+         * To convert the InputStream to String we use the
+         * Reader.read(char[] buffer) method. 
+         */
+        if (is != null) {
+            Writer writer = new StringWriter();
+
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); //$NON-NLS-1$
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                is.close();
+            }
+            return writer.toString();
+        }
+
+        return ""; //$NON-NLS-1$
+    }
+
+    public Map<String, String> convertJSONStringToMap( String jsonString ) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonFactory factory = mapper.getJsonFactory();
+        JsonParser jp = null;
+        try {
+            jp = factory.createJsonParser(jsonString);
+        } catch (JsonParseException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        } catch (IOException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
+
+        try {
+            jp.nextToken();
+        } catch (JsonParseException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        } catch (IOException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
+        try {
+            while (jp.nextToken() != JsonToken.END_OBJECT) {
+                String fieldname = jp.getCurrentName();
+                jp.nextToken(); // move to value, or START_OBJECT/START_ARRAY
+                String value = jp.getText();
+                parameterMap.put(fieldname, value);
+            }
+        } catch (JsonParseException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        } catch (IOException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
+
+        return parameterMap;
+    }
+
     private void loadProperties() {
         try {
             // Get the inputStream
@@ -80,11 +168,31 @@ public class ${className}{
             properties.load(inputStream);
 
         } catch (IOException e) {
-            String msg = RestPlugin.Util.getString("TeiidWSProvider.1"); //$NON-NLS-1$
+            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
             logger.logrb(Level.SEVERE, "TeiidWSProvider", "loadProperties", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Converts XML to JSON
+     */
+    public static String convertXMLToJSON( String XMLfile ) {
+        // obj that will convert xml string to json obj
+        JSONObject jsonObj;
+        String jsonString = ""; //$NON-NLS-1$
+
+        // convert xml to json obj
+        try {
+            jsonObj = XML.toJSONObject(XMLfile);
+            jsonString = jsonObj.toString(1);
+        } catch (JSONException je) {
+            String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
+            logger.logrb(Level.SEVERE, "TeiidRSProvider", "convertXMLToJSON", RestPlugin.PLUGIN_ID, msg, new Throwable(je)); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new RuntimeException(je);
+        }
+
+        return jsonString;
+    }
 }
 
