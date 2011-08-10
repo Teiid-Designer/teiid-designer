@@ -15,6 +15,8 @@ import com.metamatrix.core.util.CoreArgCheck;
 public class TeiidColumnInfo {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
 	
+	public static final int DEFAULT_WIDTH = 10;
+	
     /**
      * The unique column name (never <code>null</code> or empty).
      */
@@ -24,6 +26,11 @@ public class TeiidColumnInfo {
      * The unique column datatype (never <code>null</code> or empty).
      */
 	private String datatype;
+	
+	 /**
+     * The column width value
+     */
+	private int width = DEFAULT_WIDTH;
 	
 	/**
 	 * 
@@ -45,6 +52,18 @@ public class TeiidColumnInfo {
         
 		this.name = name;
 		this.datatype = datatype;
+	}
+	
+	/**
+	 * 
+	 * @param name the column name (never <code>null</code> or empty).
+	 * @param datatype the column datatype (never <code>null</code> or empty).
+	 */
+	public TeiidColumnInfo(String name, String datatype, int width) {
+		this(name, datatype);
+        CoreArgCheck.isPositive(width, "width is zero or less"); //$NON-NLS-1$
+        
+		this.width = width;
 	}
 
 	/**
@@ -79,6 +98,23 @@ public class TeiidColumnInfo {
 	public void setDatatype(String datatype) {
 		CoreArgCheck.isNotNull(datatype, "datatype is null"); //$NON-NLS-1$
 		this.datatype = datatype;
+	}
+	
+	/**
+	 * 
+	 * @return name the column name
+	 */
+	public int getWidth() {
+		return this.width;
+	}
+
+	/**
+	 * 
+	 * @param name the column name (never <code>null</code> or empty).
+	 */
+	public void setWidth(int width) {
+		CoreArgCheck.isPositive(width, "width is less than 1"); //$NON-NLS-1$
+		this.width = width;
 	}
 	
     /**

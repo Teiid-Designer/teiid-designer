@@ -80,6 +80,7 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
     private static final int STATUS_BAD_FILENAME 		= 6;
     private static final int STATUS_CLOSED_PROJECT 		= 7;
     private static final int STATUS_NO_PROJECT_NATURE 	= 8;
+    private static final int STATUS_SAME_MODEL_NAMES 	= 9;
     
     private static final String DEFAULT_EXTENSION = ".xmi"; //$NON-NLS-1$
 	
@@ -330,13 +331,15 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
     		}
     		
     		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
-    		if( item != null ) {//modelPath.toFile().exists() ) {
+    		if( item != null ) {
     			this.updateViewModelCheckBox.setSelection(true);
     			
     		} else {
     			this.updateViewModelCheckBox.setSelection(false);
     		}
-    		this.info.setViewModelName(this.viewModelFileText.getText());
+    		if( this.viewModelFileText.getText().length() > 0 ) {
+    			this.info.setViewModelName(this.viewModelFileText.getText());
+    		}
     	}
     	updateViewModelCheckBoxSelected();
         updateStatusMessage();
@@ -416,7 +419,11 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             case (STATUS_NO_VIEW_FILENAME):
                 updateStatus(Util.getString(I18N_PREFIX + "viewFileNameMustBeSpecified")); //$NON-NLS-1$
                 break;
-
+                
+            case (STATUS_SAME_MODEL_NAMES):
+            	updateStatus(Util.getString(I18N_PREFIX + "sourceAndViewFilesCannotHaveSameName")); //$NON-NLS-1$
+            	break;
+            
             case (STATUS_OK):
             default:
                 updateStatus(panelMessage);
@@ -503,6 +510,14 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             currentStatus = STATUS_BAD_FILENAME;
             return false;
         }
+        
+        String viewFileName = getViewFileName();
+        String sourceFilename = getSourceFileName();
+        if( viewFileName.equalsIgnoreCase(sourceFilename) ) {
+        	currentStatus = STATUS_SAME_MODEL_NAMES;
+        	return false;
+        }
+        
         
         currentStatus = STATUS_OK;
         return true;

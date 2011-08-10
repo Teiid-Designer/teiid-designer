@@ -279,7 +279,7 @@
 <!-- Teiid Metadata Import Wizard -->
       <wizard
             name="%teiidMetadataImportWizard.name"
-            icon="icons/full/ctool16/jdbc_import.gif"
+            icon="icons/full/cview16/import_teiid_metadata.png"
             category="com.metamatrix.modeler.ui"
             class="com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard"
             id="teiidMetadataImportWizard">

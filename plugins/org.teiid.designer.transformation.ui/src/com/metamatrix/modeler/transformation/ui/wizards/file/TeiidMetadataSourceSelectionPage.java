@@ -24,9 +24,12 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -37,6 +40,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
@@ -314,7 +318,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
         column.getColumn().setText(getString("viewFileNameColumn")); //$NON-NLS-1$
         column.setLabelProvider(new DataFileContentColumnLabelProvider(COLUMN_VIEW_TABLE_NAME));
-//        column.setEditingSupport(new DataFileContentColumnLabelProvider(this.propertiesViewer, this.vdb.getFile()));
+        column.setEditingSupport(new ColumnWidthEditingSupport(this.fileViewer));
         column.getColumn().pack();
         
         column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
@@ -324,8 +328,8 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         column.getColumn().pack();
         
         // Add a Context Menu
-        final MenuManager dataRolesMenuManager = new MenuManager();
-        this.fileViewer.getControl().setMenu(dataRolesMenuManager.createContextMenu(parent));
+        final MenuManager columnMenuManager = new MenuManager();
+        this.fileViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
         this.fileViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
@@ -334,12 +338,12 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
              */
             @Override
             public void selectionChanged( final SelectionChangedEvent event ) {
-                dataRolesMenuManager.removeAll();
+            	columnMenuManager.removeAll();
                 IStructuredSelection sel = (IStructuredSelection)fileViewer.getSelection();
                 if (sel.size() == 1) {
                     configureButton.setEnabled(true);
-                    dataRolesMenuManager.add(configureDataFileAction);
-                    dataRolesMenuManager.add(editViewTableNameAction);
+                    columnMenuManager.add(configureDataFileAction);
+                    columnMenuManager.add(editViewTableNameAction);
                 }
 
             }
@@ -813,6 +817,74 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		}
 		
 		
+	}
+	
+    class ColumnWidthEditingSupport extends EditingSupport {
+    	
+		private TextCellEditor editor;
+
+		/**
+		 * Create a new instance of the receiver.
+		 * 
+		 * @param viewer
+		 */
+		public ColumnWidthEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+			this.editor = new TextCellEditor((Composite) viewer.getControl());
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
+		 */
+		protected boolean canEdit(Object element) {
+			return true;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
+		 */
+		protected CellEditor getCellEditor(Object element) {
+			return editor;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
+		 */
+		protected Object getValue(Object element) {
+			if( element instanceof File ) {
+				TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
+				if( fileInfo != null ) {
+					return ((TeiidMetadataFileInfo)fileInfo).getViewTableName();
+				}
+			}
+			return ""; //$NON-NLS-1$
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
+		 *      java.lang.Object)
+		 */
+		protected void setValue(Object element, Object value) {
+			if( element instanceof File ) {
+				TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
+				if( fileInfo != null ) {
+					String oldValue = fileInfo.getViewTableName();
+					String newValue = (String)value;
+					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
+						fileInfo.setViewTableName(newValue);
+					}
+				}
+			}
+		}
+
 	}
 	
 	class EditViewTableNameDialog extends TitleAreaDialog {
