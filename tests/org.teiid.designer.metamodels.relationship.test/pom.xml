@@ -13,8 +13,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
     <build>
         <plugins>
             <plugin>
-                <groupId>org.sonatype.tycho</groupId>
-                <artifactId>maven-osgi-compiler-plugin</artifactId>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-compiler-plugin</artifactId>
                 <version>${tychoVersion}</version>
                 <!-- not strictly needed but this suppresses warnings when compiling 
                     that the default value (1.5) is being overwritten by the value in the MANIFEST.MF -->
