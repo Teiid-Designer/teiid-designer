@@ -63,7 +63,6 @@ public class RelationalStringNameRule extends StringNameRule {
      * <li></li>
      * </ul>
      * 
-     * @see com.metamatrix.modeler.core.validation.rules.StringNameRule#getSiblingsForUniquenessCheck(org.eclipse.emf.ecore.EObject)
      */
     @Override
     public List getSiblingsForUniquenessCheck( final EObject eObject ) {

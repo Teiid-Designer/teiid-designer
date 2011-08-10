@@ -12,7 +12,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  * The <code>ElementEditorModel</code> class is used as a model for the
- * {@link com.metamatrix.modeler.transformation.ui.builder.expression.ElementEditor}.
+ * com.metamatrix.modeler.transformation.ui.builder.expression.ElementEditor.
  */
 public class ElementEditorModel extends AbstractLanguageObjectEditorModel {
     // /////////////////////////////////////////////////////////////////////////////////////////////

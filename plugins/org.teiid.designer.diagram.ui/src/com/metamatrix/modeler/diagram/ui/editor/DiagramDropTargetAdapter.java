@@ -102,7 +102,6 @@ public class DiagramDropTargetAdapter extends AbstractTransferDropTargetListener
     }
 
     /**
-     * @see org.eclipse.emf.edit.ui.dnd.EditingDomainViewerDropAdapter#helper(org.eclipse.swt.dnd.DropTargetEvent)
      */
     protected void helper( DropTargetEvent theEvent ) {
         // System.out.println("  DiagramDropTargetAdapter.helper() Called");

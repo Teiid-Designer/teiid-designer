@@ -286,9 +286,6 @@ public class ModelOutlineTreeViewer extends ContentOutlinePage
         }
     }
 
-    /**
-     * @see com.metamatrix.modeler.ui.views.ModelViewer#removeModelObjectDoubleClickListener(org.eclipse.jface.viewers.IDoubleClickListener)
-     */
     public void removeModelObjectDoubleClickListener( IDoubleClickListener listener ) {
         getTreeViewer().removeDoubleClickListener(listener);
     }

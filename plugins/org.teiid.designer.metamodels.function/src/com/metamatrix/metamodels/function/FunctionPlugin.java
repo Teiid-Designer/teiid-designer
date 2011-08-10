@@ -93,7 +93,6 @@ public class FunctionPlugin extends Plugin {
     };
 
     /**
-     * Called by the {@link com.metamatrix.metamodels.transformation.provider.TransformationEditPlugin}
      * 
      * @return the EMF ResourceLocator used when run as a plugin
      */

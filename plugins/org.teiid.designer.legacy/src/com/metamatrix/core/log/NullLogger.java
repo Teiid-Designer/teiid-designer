@@ -15,18 +15,14 @@ import org.teiid.logging.Logger;
 public class NullLogger implements Logger {
 
     /**
-     * {@inheritDoc}
      *
-     * @see com.metamatrix.core.log.Logger#log(int, java.lang.String)
      */
     public void log( int arg0,
                      String arg1 ) {
     }
 
     /**
-     * {@inheritDoc}
      *
-     * @see com.metamatrix.core.log.Logger#log(int, java.lang.Throwable, java.lang.String)
      */
     public void log( int arg0,
                      Throwable arg1,

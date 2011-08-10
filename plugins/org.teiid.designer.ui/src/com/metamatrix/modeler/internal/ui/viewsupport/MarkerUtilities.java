@@ -15,8 +15,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.WorkbenchException;
 
 import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.validation.ProblemMarker;
-import com.metamatrix.modeler.core.validation.Severity;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -37,7 +35,7 @@ public abstract class MarkerUtilities {
     /**
      * Helper method to generically wrap the IMarker.getAttribute() method so ResourceException can be caught and managed
      * 
-     * @param marker
+     * @param iMarker
      * @param attributeName
      * @return attribute
      * @since 4.2
@@ -64,7 +62,7 @@ public abstract class MarkerUtilities {
     /**
      * Helper method to generically wrap the IMarker.getAttribute() method so ResourceException can be caught and managed.
      * This method provides an additional check if input model resource != null to verify that it exists() and isOpen()
-     * @param marker
+     * @param iMarker
      * @param attributeName
      * @param resource
      * @return attribute
@@ -91,30 +89,6 @@ public abstract class MarkerUtilities {
             break;
     
             case IStatus.INFO:
-              sev = IMarker.SEVERITY_INFO;
-            break;
-    
-            default:
-              sev = -1;
-            break;
-        } // endswitch
-    
-        return sev;
-    }
-
-    public static int getMarkerStatus(ProblemMarker pm) {
-        int sev;
-    
-        switch (pm.getSeverity().getValue()) {
-            case Severity.ERROR:
-              sev = IMarker.SEVERITY_ERROR;
-            break;
-    
-            case Severity.WARNING:
-              sev = IMarker.SEVERITY_WARNING;
-            break;
-    
-            case Severity.INFO:
               sev = IMarker.SEVERITY_INFO;
             break;
     

@@ -12,7 +12,7 @@ import org.teiid.query.sql.symbol.Function;
 
 /**
  * The <code>FunctionDisplayEditorModel</code> class is used as a model for the
- * {@link com.metamatrix.modeler.transformation.ui.builder.expression.FunctionDisplayEditor}.
+ *  com.metamatrix.modeler.transformation.ui.builder.expression.FunctionDisplayEditor.
  */
 public class FunctionDisplayEditorModel extends AbstractLanguageObjectEditorModel {
 

@@ -65,11 +65,6 @@ public final class NewRelationshipTypeWizard extends AbstractWizard
     // Implemented Methods
 
 
-    /**<p>
-     * </p>
-     * @see org.eclipse.team.ui.IConfigurationWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.core.resources.IProject)
-     * @since 4.0
-     */
     public void init( final IWorkbench workbench ) {
 //        System.out.println("[NewRelationshipWizard.init 2] selection: " + selection );
         // Create and add pages (selection may be null or not; the constructor will handle it)

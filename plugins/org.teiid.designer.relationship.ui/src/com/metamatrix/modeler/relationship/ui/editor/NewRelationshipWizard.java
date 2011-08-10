@@ -77,9 +77,6 @@ public final class NewRelationshipWizard extends AbstractWizard
         return true;                
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.wizards.INewAssociationWizard#setAssociationDescriptor(com.metamatrix.modeler.core.association.AssociationDescriptor)
-     */
     public void setAssociationDescriptor( AssociationDescriptor adAssociationDescriptor ) {
 //        System.out.println("[NewRelationshipWizard.setAssociationDescriptor] adAssociationDescriptor: " + adAssociationDescriptor.getClass().getName() );
         if ( adAssociationDescriptor instanceof RelationshipAssociationDescriptor ) {        
@@ -87,19 +84,12 @@ public final class NewRelationshipWizard extends AbstractWizard
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.metamatrix.modeler.ui.wizards.INewModelObjectWizard#setCommand(org.eclipse.emf.common.command.Command)
-     */
     public void setCommand( Command cdCommand ) {
 //        System.out.println("[NewRelationshipWizard.setCommand] cdCommand: " + cdCommand.getClass().getName() );
         this.cdCommand = cdCommand;
     }
 
-    /**<p>
-     * </p>
-     * @see org.eclipse.team.ui.IConfigurationWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.core.resources.IProject)
-     * @since 4.0
-     */
+
     public void init( final IWorkbench workbench ) {
         // Create and add pages (selection may be null or not; the constructor will handle it)
         

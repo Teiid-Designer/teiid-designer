@@ -22,8 +22,7 @@ import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 
 /**
- * ModelObjectPropertyDescriptor Extension to PropertyDescriptor to use a {@link AccumulatorDialog} rather than a
- * FeatureEditorDialog.
+ * ModelObjectPropertyDescriptor Extension to PropertyDescriptor
  */
 public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
 

@@ -22,7 +22,7 @@ import org.teiid.query.sql.symbol.Constant;
 
 /**
  * The <code>ConstantEditorModel</code> class is used as a model for the
- * {@link com.metamatrix.modeler.transformation.ui.builder.expression.ConstantEditor}.
+ * com.metamatrix.modeler.transformation.ui.builder.expression.ConstantEditor.
  */
 public class ConstantEditorModel extends AbstractLanguageObjectEditorModel implements BuilderUtils.LoggingConstants {
 
@@ -69,8 +69,7 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
     /**
      * Gets the <code>boolean</code> value.
      * 
-     * @return the value
-     * @throws com.metamatrix.core.util.AssertionError if type is not boolean #see BuilderUtils#BOOLEAN_TYPES
+     * @return the value if type is not boolean #see BuilderUtils#BOOLEAN_TYPES
      */
     public boolean getBoolean() {
         if (!isBoolean()) {
@@ -149,7 +148,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * Gets the <code>Date</code> value.
      * 
      * @return the value
-     * @throws com.metamatrix.core.util.AssertionError if type is not date #see BuilderUtils#DATE_TYPES
      */
     public Date getDate() {
         if (!isDate()) {
@@ -167,7 +165,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * Gets the <code>String</code> value.
      * 
      * @return the value
-     * @throws com.metamatrix.core.util.AssertionError if type is not String #see BuilderUtils#STRING_TYPES
      */
     public String getText() {
         if (!isText()) {
@@ -185,7 +182,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * Gets the <code>Time</code> value.
      * 
      * @return the value
-     * @throws com.metamatrix.core.util.AssertionError if type is not time #see BuilderUtils#DATE_TYPES
      */
     public Time getTime() {
         CoreArgCheck.isTrue(isTime(), Util.getString(PREFIX + "invalidRequest", //$NON-NLS-1$
@@ -207,7 +203,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
      * Gets the <code>Time</code> value.
      * 
      * @return the value
-     * @throws com.metamatrix.core.util.AssertionError if type is not timestamp #see BuilderUtils#DATE_TYPES
      */
     public Timestamp getTimestamp() {
         if (!isTimestamp()) {

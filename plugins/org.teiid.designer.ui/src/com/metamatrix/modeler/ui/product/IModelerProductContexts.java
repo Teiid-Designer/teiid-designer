@@ -108,7 +108,7 @@ public interface IModelerProductContexts extends IProductContexts {
     }
 
     /**
-     * A collection of {@link IProductContext}s specific to the {@link com.metamatrix.modeler.vdbview.ui.views.VdbView}.
+     * A collection of {@link IProductContext}s.
      * 
      * @since 4.4
      */

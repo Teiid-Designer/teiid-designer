@@ -68,7 +68,6 @@ public class AbstractBinaryAssociation
     /**
      * Set the association that the other methods will use
      * @param assoc
-     * @return the end count
      */
     public void setEObject( EObject eObj ) {
         this.eObj = eObj;
@@ -77,7 +76,6 @@ public class AbstractBinaryAssociation
     /**
      * Set the association that the other methods will use
      * @param assoc
-     * @return the end count
      */
     public EObject getEObject() {
         return eObj;
@@ -86,7 +84,6 @@ public class AbstractBinaryAssociation
     /**
      * Set the association that the other methods will use
      * @param assoc
-     * @return the end count
      */
     public void setUmlAspect( UmlRelationship umlAspect ) {
         this.umlAspect = umlAspect;
