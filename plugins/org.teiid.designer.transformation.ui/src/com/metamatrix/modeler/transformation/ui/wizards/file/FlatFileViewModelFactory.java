@@ -63,9 +63,9 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );
         resrc.getModelAnnotation().setModelType(ModelType.VIRTUAL_LITERAL);
         ModelUtilities.initializeModelContainers(resrc, "Create Model Containers", this); //$NON-NLS-1$ 
-    	if( resrc !=null ) {
-    		resrc.save(null, true);
-    	}
+//    	if( resrc !=null ) {
+//    		resrc.save(null, true);
+//    	}
 
         return resrc;
     }
@@ -167,7 +167,7 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     		}
     	}
     	if( info.doIncludeSkip() && info.getFirstDataRow() > 1 ) {
-    		sb.append("SKIP"); //$NON-NLS-1$
+    		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
     		sb.append(SPACE).append(Integer.toString(info.getFirstDataRow()-1));
     	}
     	String string_4 = sb.toString();

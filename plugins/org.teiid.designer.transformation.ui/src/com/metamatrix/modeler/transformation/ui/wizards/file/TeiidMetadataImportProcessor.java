@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider;
 
@@ -32,7 +32,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
-import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
@@ -59,32 +58,31 @@ public class TeiidMetadataImportProcessor implements UiConstants {
 	}
 	
 	public IStatus execute() {
-		final IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
-                monitor.beginTask(getString("task.creatingSourceModel", info.getSourceModelName()), 100); //$NON-NLS-1$
-                createStatus = createSourceModelInTxn(monitor);
+		final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+            @Override
+            public void execute( final IProgressMonitor theMonitor ) {
+            	theMonitor.beginTask(getString("task.creatingSourceModel", info.getSourceModelName()), 100); //$NON-NLS-1$
+                createStatus = createSourceModelInTxn(theMonitor);
 
                 if( info.viewModelExists() ) {
-                	createViewsInExistingModelInTxn(monitor);
+                	createViewsInExistingModelInTxn(theMonitor);
             	} else {
-            		createStatus = createViewModelInTxn(monitor);
+            		createStatus = createViewModelInTxn(theMonitor);
             	}
-                monitor.worked(50);
+                theMonitor.worked(50);
 
                 
 
-                monitor.worked(10);
+                theMonitor.worked(10);
+                
+                theMonitor.done();
             }
         };
-
         try {
-            final ProgressMonitorDialog dlg = new ProgressMonitorDialog(UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
-            dlg.run(false, true, op);
-            if (dlg.getProgressMonitor().isCanceled()) {
-                // DO NOTHING
-            }
-        } catch (final InterruptedException ignored) {
-
+            new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, op);
+        } catch (final InterruptedException e) {
+        } catch (final InvocationTargetException e) {
+            UiConstants.Util.log(e.getTargetException());
         } catch (final Exception err) {
             Throwable t = err;
 
@@ -206,7 +204,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
             MessageDialog.openError(Display.getCurrent().getActiveShell(),
             		getString("exceptionMessage_4", info.getViewModelName()), e.getMessage()); //$NON-NLS-1$
             IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID,
-            		getString(".exceptionMessage", info.getViewModelName()), e); //$NON-NLS-1$
+            		getString("exceptionMessage_4", info.getViewModelName()), e); //$NON-NLS-1$
             UiConstants.Util.log(status);
             return status;
         } finally {
