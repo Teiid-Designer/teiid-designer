@@ -9,6 +9,7 @@ package com.metamatrix.query.internal.ui.sqleditor.component;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.Command;
@@ -30,8 +31,6 @@ import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.proc.ExpressionStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.AllInGroupSymbol;
-import org.teiid.query.sql.symbol.AllSymbol;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
@@ -262,11 +261,8 @@ public class DisplayNodeFactory {
         } else if (obj instanceof GroupSymbol) {
             GroupSymbolDisplayNode node = new GroupSymbolDisplayNode(parentNode, (GroupSymbol)obj);
             return node;
-        } else if (obj instanceof AllSymbol) {
-            SymbolDisplayNode node = new SymbolDisplayNode(parentNode, (AllSymbol)obj);
-            return node;
-        } else if (obj instanceof AllInGroupSymbol) {
-            SymbolDisplayNode node = new SymbolDisplayNode(parentNode, (AllInGroupSymbol)obj);
+        } else if (obj instanceof MultipleElementSymbol) {
+            SymbolDisplayNode node = new SymbolDisplayNode(parentNode, (MultipleElementSymbol)obj);
             return node;
         } else if (obj instanceof LanguageObject) {
             DisplayNode node = new DisplayNode();

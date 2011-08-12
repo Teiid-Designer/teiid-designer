@@ -319,12 +319,12 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
     
     void handleSourceModelTextChanged() {
     	String newName = ""; //$NON-NLS-1$
-    	if( this.sourceModelFileText.getText() != null ) {
+    	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > 0 ) {
     		newName = this.sourceModelFileText.getText();
+    		this.info.setSourceModelName(newName);
+    		
     	}
-    	this.info.setSourceModelName(newName);
-    	
-        updateStatusMessage();
+    	updateStatusMessage();
     }
     
     void handleViewModelTextChanged() {

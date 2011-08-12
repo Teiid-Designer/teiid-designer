@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -48,7 +49,6 @@ import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.symbol.AliasSymbol;
-import org.teiid.query.sql.symbol.AllSymbol;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -63,6 +63,7 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.sql.visitor.ReferenceCollectorVisitor;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.transformation.InputSet;
 import com.metamatrix.metamodels.transformation.SqlAlias;
@@ -603,7 +604,7 @@ public class TransformationSqlHelper implements SqlConstants {
 
             // Replace the Select with newSymbols, default to SELECT * if no symbols
             if (newSelectSymbols.size() == 0) {
-                newSelectSymbols.add(new AllSymbol());
+                newSelectSymbols.add(new MultipleElementSymbol());
                 select.setSymbols(newSelectSymbols);
             } else {
                 select.setSymbols(newSelectSymbols);
@@ -988,7 +989,7 @@ public class TransformationSqlHelper implements SqlConstants {
             }
             // Replace the SELECT with new Symbols, default to SELECT * if no symbols left
             if (newSelectSymbols.size() == 0) {
-                newSelectSymbols.add(new AllSymbol());
+                newSelectSymbols.add(new MultipleElementSymbol());
                 select.setSymbols(newSelectSymbols);
             } else {
                 select.setSymbols(newSelectSymbols);
@@ -1041,7 +1042,8 @@ public class TransformationSqlHelper implements SqlConstants {
             GroupBy groupBy = result.getGroupBy();
             List currentGroupBySymbols = groupBy.getSymbols();
             List newGroupBySymbols = removeSymbols(currentGroupBySymbols, removeNames);
-            groupBy.replaceSymbols(newGroupBySymbols);
+            groupBy.getSymbols().clear();
+            groupBy.getSymbols().addAll(newGroupBySymbols);
 
             // If there are no symbols left, remove the group by
             if (groupBy.getCount() == 0) {
@@ -1285,8 +1287,8 @@ public class TransformationSqlHelper implements SqlConstants {
             	List currentSelectSymbols = resolvedQuery.getSelect().getSymbols();
                 if (currentSelectSymbols.size() == 1) {
                     SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
-                    if (singleSelectSymbol instanceof AllSymbol) {
-                    	List<ElementSymbol> elementSymbols = ((AllSymbol)singleSelectSymbol).getElementSymbols();
+                    if (singleSelectSymbol instanceof MultipleElementSymbol) {
+                    	List<ElementSymbol> elementSymbols = ((MultipleElementSymbol)singleSelectSymbol).getElementSymbols();
                     	// Reset the Select Symbols
                         Select newSelect = new Select(elementSymbols);
                         modifiedQuery.setSelect(newSelect);
@@ -1307,7 +1309,7 @@ public class TransformationSqlHelper implements SqlConstants {
     public static Query createDefaultQuery( EObject source ) {
         // create SELECT *
         Select newSelect = new Select();
-        newSelect.addSymbol(new AllSymbol());
+        newSelect.addSymbol(new MultipleElementSymbol());
 
         // Create FROM
         From newFrom = new From();
@@ -3141,7 +3143,7 @@ public class TransformationSqlHelper implements SqlConstants {
         List currentSelectSymbols = select.getSymbols();
         if (currentSelectSymbols.size() == 1) {
             SelectSymbol singleSelectSymbol = (SelectSymbol)currentSelectSymbols.get(0);
-            if (singleSelectSymbol instanceof AllSymbol) {
+            if (singleSelectSymbol instanceof MultipleElementSymbol) {
                 result = true;
             }
         }

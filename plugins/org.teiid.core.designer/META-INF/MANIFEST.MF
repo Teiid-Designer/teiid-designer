@@ -18,6 +18,7 @@ Export-Package: com.metamatrix.core,
  com.metamatrix.modeler.core,
  org.teiid.core,
  org.teiid.core.exception,
+ org.teiid.core.id,
  org.teiid.core.properties
 Require-Bundle: org.eclipse.core.runtime,
  teiid_embedded_query,
