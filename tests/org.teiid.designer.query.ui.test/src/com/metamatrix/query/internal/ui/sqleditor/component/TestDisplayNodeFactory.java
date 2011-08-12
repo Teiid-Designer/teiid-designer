@@ -71,6 +71,7 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 
@@ -490,7 +491,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery1() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         Query query = new Query();
@@ -502,7 +503,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery2() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         CompareCriteria cc = new CompareCriteria(
@@ -527,7 +528,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery3() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         GroupBy groupBy = new GroupBy();
@@ -549,7 +550,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery4() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         CompareCriteria cc = new CompareCriteria(
@@ -571,7 +572,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery5() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         CompareCriteria cc = new CompareCriteria(
@@ -593,7 +594,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery6() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         CompareCriteria cc = new CompareCriteria(
@@ -615,7 +616,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQuery7() {
         Select select = new Select();
-        select.addSymbol(new AllSymbol());
+        select.addSymbol(new MultipleElementSymbol());
         From from = new From();
         from.addGroup(new GroupSymbol("m.g")); //$NON-NLS-1$
         CompareCriteria cc = new CompareCriteria(
@@ -973,12 +974,8 @@ public class TestDisplayNodeFactory extends TestCase {
         helpTest(as, "y AS \"select\""); //$NON-NLS-1$
     }
 
-    public void testAllSymbol() {
-        helpTest(new AllSymbol(), "*"); //$NON-NLS-1$
-    }
-
-    public void testAllInGroupSymbol() {
-        helpTest(new AllInGroupSymbol("m.g.*"), "m.g.*"); //$NON-NLS-1$ //$NON-NLS-2$
+    public void testMultipleElementSymbol() {
+        helpTest(new MultipleElementSymbol(), "*"); //$NON-NLS-1$
     }
 
     public void testConstantNull() {
@@ -1790,7 +1787,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testLimit() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new AllSymbol()));
+        Select select = new Select(Arrays.asList(new MultipleElementSymbol()));
         From from = new From(Arrays.asList(new UnaryFromClause(new GroupSymbol("a")))); //$NON-NLS-1$
         query.setSelect(select);
         query.setFrom(from);
@@ -1800,7 +1797,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testLimitWithOffset() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new AllSymbol()));
+        Select select = new Select(Arrays.asList(new MultipleElementSymbol()));
         From from = new From(Arrays.asList(new UnaryFromClause(new GroupSymbol("a")))); //$NON-NLS-1$
         query.setSelect(select);
         query.setFrom(from);
@@ -1810,7 +1807,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQueryWithMakeDep() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new AllSymbol()));
+        Select select = new Select(Arrays.asList(new MultipleElementSymbol()));
         FromClause fromClause = new UnaryFromClause(new GroupSymbol("a")); //$NON-NLS-1$
         fromClause.setMakeDep(true);
         From from = new From(Arrays.asList(fromClause));
@@ -1822,7 +1819,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public void testQueryWithJoinPredicateMakeDep() {
         Query query = new Query();
-        Select select = new Select(Arrays.asList(new AllSymbol()));
+        Select select = new Select(Arrays.asList(new MultipleElementSymbol()));
         FromClause fromClause = new UnaryFromClause(new GroupSymbol("a")); //$NON-NLS-1$
         fromClause.setMakeNotDep(true);
         FromClause fromClause1 = new UnaryFromClause(new GroupSymbol("b")); //$NON-NLS-1$
