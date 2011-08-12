@@ -86,7 +86,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                    } // endif
 	                    return true;
                 	}
-                } else if (TransformationHelper.isSqlProcedure(newTarget)) {
+                } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
                 	// Add T-Root
                 	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
 	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
