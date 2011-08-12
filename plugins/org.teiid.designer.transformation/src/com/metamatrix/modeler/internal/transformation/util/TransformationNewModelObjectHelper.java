@@ -70,35 +70,39 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 
         if (newObject instanceof EObject) {
             EObject newTarget = (EObject)newObject;
-            if (TransformationHelper.isVirtual(newTarget)  ){
+            if (TransformationHelper.isVirtual(newTarget)) {
                 // If the createdObject is VirtualTable, set supportsUpdate to false & create T-Root if it doesn't exist
                 MetamodelAspect aspect = AspectManager.getSqlAspect(newTarget);
                 if (aspect != null && aspect instanceof SqlTableAspect) {
                     // Add T-Root
-                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
-	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-	                    // Add Sql Mapping Helper under it.
-	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-	                    // defect 19675 - allow a straight-up copy of a table if desired
-	                    if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
-	                        SqlTableAspect tableAspect = (SqlTableAspect)aspect;
-	                        tableAspect.setSupportsUpdate(newTarget, false);
-	                    } // endif
-	                    return true;
-                	}
-                } else if (TransformationHelper.isSqlProcedure(newTarget)) {
-                	// Add T-Root
-                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
-	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-	                    // Add Sql Mapping Helper under it.
-	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
+                    if (!TransformationHelper.hasSqlTransformationMappingRoot(newTarget)) {
+                        EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget,
+                                                                                                              false,
+                                                                                                              this);
+                        // Add Sql Mapping Helper under it.
+                        ModelResourceContainerFactory.addMappingHelper(newRoot);
+                        // defect 19675 - allow a straight-up copy of a table if desired
+                        if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
+                            SqlTableAspect tableAspect = (SqlTableAspect)aspect;
+                            tableAspect.setSupportsUpdate(newTarget, false);
+                        } // endif
+                        return true;
+                    }
+                } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
+                    // Add T-Root
+                    if (!TransformationHelper.hasSqlTransformationMappingRoot(newTarget)) {
+                        EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget,
+                                                                                                              false,
+                                                                                                              this);
+                        // Add Sql Mapping Helper under it.
+                        ModelResourceContainerFactory.addMappingHelper(newRoot);
 
-                	}
-                	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
+                    }
+                    EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
                     TransformationHelper.setSelectSqlString(tRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
                     return true;
                 }
-            }            
+            }
         }
         return false;
     }
