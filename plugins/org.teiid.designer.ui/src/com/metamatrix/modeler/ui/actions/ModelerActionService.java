@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -43,7 +42,6 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelImport;
@@ -256,7 +254,7 @@ public final class ModelerActionService extends AbstractActionService
         theMenuMgr.add(getAction(EclipseGlobalActions.COPY, actionsMap));
         theMenuMgr.add(getAction(EclipseGlobalActions.PASTE, actionsMap));
         theMenuMgr.add(getAction(ModelerGlobalActions.CLONE, actionsMap));
-            
+
         MenuManager copyNameMenu = getCopyNameSubMenu(theSelection);
 
         if (!copyNameMenu.isEmpty()) {
@@ -651,13 +649,18 @@ public final class ModelerActionService extends AbstractActionService
                                 HashMap actionMap = new HashMap();
                                 Iterator iter = descriptors.iterator();
                                 while (iter.hasNext()) {
-                                    NewChildAction action = new NewChildAction(resource, (Command)iter.next());
-                                    actionMap.put(action.getText(), action);
-                                    action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(), theSelection);
+                                    Command nextCommand = (Command)iter.next();
+                                    if (!nextCommand.getLabel().equalsIgnoreCase("schema") //$NON-NLS-1$
+                                        && !nextCommand.getLabel().equalsIgnoreCase("catalog")) { //$NON-NLS-1$
+                                        NewChildAction action = new NewChildAction(resource, nextCommand);
+                                        actionMap.put(action.getText(), action);
+                                        action.selectionChanged(getWorkbenchWindow().getPartService().getActivePart(),
+                                                                theSelection);
 
-                                    // disable if read-only. obj should be EObject or an IResource.
-                                    if (isReadOnly) {
-                                        action.setEnabled(false);
+                                        // disable if read-only. obj should be EObject or an IResource.
+                                        if (isReadOnly) {
+                                            action.setEnabled(false);
+                                        }
                                     }
                                 }
 
@@ -667,6 +670,18 @@ public final class ModelerActionService extends AbstractActionService
                                 while (iter.hasNext()) {
                                     // add each action to the menu
                                     menu.add((IAction)actionMap.get(iter.next()));
+                                }
+
+                                // get the NewChildAction extensions and populate with any actions
+                                // Note: these should not be sorted - they always go on the bottom of the menu
+                                for (int i = 0; i < getNewChildExtensions().length; ++i) {
+                                    INewChildAction action = getNewChildExtensions()[i];
+                                    if (action.canCreateChild((IFile)obj)) {
+                                        menu.add(action);
+                                        if (isReadOnly) {
+                                            action.setEnabled(false);
+                                        }
+                                    }
                                 }
 
                             }
@@ -923,7 +938,7 @@ public final class ModelerActionService extends AbstractActionService
         if (addedActions) {
             menu.add(new Separator());
         }
-        
+
         if (menu.isEmpty()) {
             // just add a disabled "none allowed" item so menu is not empty
             menu.add(new NewChildAction());
@@ -1019,13 +1034,13 @@ public final class ModelerActionService extends AbstractActionService
      * 
      * @return the Copy Name submenu
      */
-    public MenuManager getCopyNameSubMenu( Object selection) {
+    public MenuManager getCopyNameSubMenu( Object selection ) {
         MenuManager menu = new MenuManager(utils.getString(PREFIX + "copyNameSubMenu.title")); //$NON-NLS-1$
-        
+
         CopyFullNameAction action1 = new CopyFullNameAction();
         action1.getActionWorker().selectionChanged(selection);
         menu.add(action1);
-        
+
         CopyNameAction action2 = new CopyNameAction();
         action1.getActionWorker().selectionChanged(selection);
         menu.add(action2);

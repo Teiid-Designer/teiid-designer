@@ -51,6 +51,7 @@ import org.eclipse.xsd.util.XSDResourceImpl;
 import com.metamatrix.common.xmi.XMIHeader;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.xsd.XsdUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
@@ -330,6 +331,10 @@ public abstract class ModelObjectUtilities {
             return false;
         }
 
+        if (eObject instanceof Procedure && ((Procedure)eObject).isFunction()) {
+            return false;
+        }
+
         boolean hasValidQuery = true;
         if (TransformationHelper.isVirtualSqlTable(eObject) && !TransformationHelper.isXmlDocument(eObject)
             && !TransformationHelper.tableIsMaterialized(eObject)) {
@@ -404,32 +409,31 @@ public abstract class ModelObjectUtilities {
         }
         return names.toArray(new String[names.size()]);
     }
-    
+
     /**
-     * Helper method returns a list of dependent physical models based on an input EObject, including the model containing
-     * the EObject if it is a physical model.
-     * 
+     * Helper method returns a list of dependent physical models based on an input EObject, including the model containing the
+     * EObject if it is a physical model.
      * 
      * @param eObject
      * @return the set of dependent physical models
      * @throws ModelWorkspaceException
      */
     public static Set<IResource> getDependentPhysicalModels( EObject eObject ) throws ModelWorkspaceException {
-    	Set<IResource> result = new HashSet<IResource>();
+        Set<IResource> result = new HashSet<IResource>();
 
         // given the object get all the dependent physical models that this
         // is dependent upon
-    	Set<ModelResource> physicalModels = new HashSet<ModelResource>();
+        Set<ModelResource> physicalModels = new HashSet<ModelResource>();
         ModelResource model = ModelUtilities.getModelResourceForModelObject(eObject);
         if (model != null) {
             if (ModelUtilities.isPhysical(model)) {
-            	physicalModels.add(model);
+                physicalModels.add(model);
             }
             ModelUtilities.getDependentPhysicalModelResources(model, physicalModels);
         }
 
-        for(ModelResource mr : physicalModels ) {
-        	result.add(mr.getCorrespondingResource());
+        for (ModelResource mr : physicalModels) {
+            result.add(mr.getCorrespondingResource());
         }
         return result;
     }

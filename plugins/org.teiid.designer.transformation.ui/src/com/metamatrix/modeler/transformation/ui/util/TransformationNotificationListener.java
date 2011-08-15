@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -24,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,10 +35,10 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.Select;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.ModelAnnotation;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.transformation.SqlAlias;
 import com.metamatrix.metamodels.transformation.SqlTransformation;
@@ -65,6 +65,7 @@ import com.metamatrix.modeler.internal.transformation.util.TransformationSqlHelp
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.refactor.actions.RenameRefactorAction;
 import com.metamatrix.modeler.internal.ui.undo.ModelerUndoManager;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.TransformationPlugin;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
@@ -117,7 +118,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
     private boolean ignoreTableSupportsUpdateChangedFalse = false;
     private boolean ignoreTableSupportsUpdateChangedTrue = false;
     boolean setColumnsUpdateableOnTableUpdateable = false;
-    
+
     private IModelNotificationHandler functionHandler;
 
     /**
@@ -134,7 +135,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
         } catch (EventSourceException e) {
             Util.log(IStatus.ERROR, e, e.getMessage());
         }
-        
+
         functionHandler = new FunctionModelNotificationHandler();
     }
 
@@ -205,6 +206,8 @@ public class TransformationNotificationListener implements INotifyChangedListene
         // Do a first-pass - ignore irrelevant notifications
         // --------------------------------------------------------
         Collection validNotifications = filterNotifications(notifications);
+
+        Collection originalNotifications = new ArrayList(validNotifications);
         // ----------------------------------------
         // Process remaining valid notifications
         // ----------------------------------------
@@ -326,7 +329,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
             // ---------------------------------------------------------
             // Function Model Scalar Function or parameter changes
             // ---------------------------------------------------------
-            functionHandler.handleNotifications(validNotifications, source);
+            functionHandler.handleNotifications(originalNotifications, source);
         }
     }
 
@@ -357,17 +360,21 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     || TransformationHelper.isSqlTable(changedObj) || TransformationHelper.isSqlColumn(changedObj)
                     || TransformationHelper.isSqlProcedure(changedObj)
                     || TransformationHelper.isSqlProcedureParameter(changedObj)
-                    || TransformationHelper.isSqlColumnSet(changedObj) 
-                    || functionHandler.shouldHandleChangedObject(changedObj)) {
+                    || TransformationHelper.isSqlColumnSet(changedObj) || functionHandler.shouldHandleChangedObject(changedObj)) {
                     goodNotifications.add(notification);
                 } else if (NotificationUtilities.isRemoved(notification)) {
                     Object removedObj = notification.getOldValue();
-                    if (TransformationHelper.isSqlTable(removedObj) ||
-                    	changedObj instanceof ModelAnnotation) {
+                    if (TransformationHelper.isSqlTable(removedObj) || changedObj instanceof ModelAnnotation) {
                         goodNotifications.add(notification);
                     }
                 }
+            } else if (changedObj != null && changedObj instanceof EmfResource) {
+                ModelResource mr = ModelUtilities.getModelResource((Resource)changedObj, false);
+                if (ModelIdentifier.isFunctionModel(mr)) {
+                    goodNotifications.add(notification);
+                }
             }
+
         }
         return goodNotifications;
     }
@@ -700,7 +707,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
         return null;
     }
-    
+
     private Notification getTableMaterializedViewChange( Collection notifications ) {
         Iterator iter = notifications.iterator();
         while (iter.hasNext()) {
@@ -1357,18 +1364,18 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     }
                 }
             }
-            
+
             notif = getTableMaterializedViewChange(notifications);
-            if( notif != null ) {
-            	boolean isMaterialized = notif.getNewBooleanValue();
-            	if( !isMaterialized ) {
-            		// Need to remove the reference
+            if (notif != null) {
+                boolean isMaterialized = notif.getNewBooleanValue();
+                if (!isMaterialized) {
+                    // Need to remove the reference
                     Object table = notif.getNotifier();
-                    if( TransformationHelper.isVirtualSqlTable(table) ) {
-                    	((Table)table).setMaterializedTable(null);
+                    if (TransformationHelper.isVirtualSqlTable(table)) {
+                        ((Table)table).setMaterializedTable(null);
                     }
-            	}
-            	
+                }
+
             }
 
             SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
@@ -1742,31 +1749,31 @@ public class TransformationNotificationListener implements INotifyChangedListene
             while (iter.hasNext()) {
                 Notification notification = (Notification)iter.next();
                 if (NotificationUtilities.isChanged(notification)) {
-                	// Get all Transformation Roots for the resource and clean out the cache for ALL of them
-                	Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
-                	ModelResource modelResource = ModelUtilities.getModelResource(changedObj);
-                	if( modelResource != null ) {
-                		
-	                    try {
-							// Process all transformations in the TransformationContainer
-							final EmfResource emfRes = (EmfResource)modelResource.getEmfResource();
-							
-							final List transformations = emfRes.getModelContents().getTransformations();
-							for (Iterator i = transformations.iterator(); i.hasNext();) {
-							    EObject eObj = (EObject)i.next();
-							    if (eObj instanceof SqlTransformationMappingRoot) {
-							        SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)eObj;
+                    // Get all Transformation Roots for the resource and clean out the cache for ALL of them
+                    Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
+                    ModelResource modelResource = ModelUtilities.getModelResource(changedObj);
+                    if (modelResource != null) {
 
-						        	SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
-						        	SqlMappingRootCache.invalidateInsertStatus(mappingRoot, true, txnSource);
-						        	SqlMappingRootCache.invalidateUpdateStatus(mappingRoot, true, txnSource);
-						        	SqlMappingRootCache.invalidateDeleteStatus(mappingRoot, true, txnSource);
-							    }
-							}
-						} catch (ModelWorkspaceException e) {
-							Util.log(IStatus.ERROR, e, e.getMessage());
-						}
-                	}
+                        try {
+                            // Process all transformations in the TransformationContainer
+                            final EmfResource emfRes = (EmfResource)modelResource.getEmfResource();
+
+                            final List transformations = emfRes.getModelContents().getTransformations();
+                            for (Iterator i = transformations.iterator(); i.hasNext();) {
+                                EObject eObj = (EObject)i.next();
+                                if (eObj instanceof SqlTransformationMappingRoot) {
+                                    SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot)eObj;
+
+                                    SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
+                                    SqlMappingRootCache.invalidateInsertStatus(mappingRoot, true, txnSource);
+                                    SqlMappingRootCache.invalidateUpdateStatus(mappingRoot, true, txnSource);
+                                    SqlMappingRootCache.invalidateDeleteStatus(mappingRoot, true, txnSource);
+                                }
+                            }
+                        } catch (ModelWorkspaceException e) {
+                            Util.log(IStatus.ERROR, e, e.getMessage());
+                        }
+                    }
                 }
             }
         }
@@ -1795,6 +1802,10 @@ public class TransformationNotificationListener implements INotifyChangedListene
                 SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
             }
         }
+        // ---------------------------------------------------------
+        // Function Model Scalar Function or parameter changes
+        // ---------------------------------------------------------
+        functionHandler.handleNotifications(notifications, txnSource);
     }
 
     /* 
@@ -2048,10 +2059,10 @@ public class TransformationNotificationListener implements INotifyChangedListene
         boolean hasSqlAlias = false;
         for (int i = 0; i < eObjects.length; i++) {
             if (eObjects[i] instanceof SqlAlias) {
-            	if( !functionHandler.shouldHandleChangedObject( ((SqlAlias)eObjects[i]).getAliasedObject()) ) {
-            		hasSqlAlias = true;
-            		break;
-            	}
+                if (!functionHandler.shouldHandleChangedObject(((SqlAlias)eObjects[i]).getAliasedObject())) {
+                    hasSqlAlias = true;
+                    break;
+                }
             }
         }
         return hasSqlAlias;
@@ -2083,8 +2094,14 @@ public class TransformationNotificationListener implements INotifyChangedListene
         if (changedObj instanceof SqlTransformation) {
             // See if the changed feature is the aliases
             int changedFeature = notification.getFeatureID(SqlTransformation.class);
-
-            if (changedFeature == TransformationPackage.SQL_TRANSFORMATION__ALIASES) {
+            boolean isFunction = false;
+            if (notification.getOldValue() instanceof SqlAlias) {
+                SqlAlias alias = (SqlAlias)notification.getOldValue();
+                if (alias.getAliasedObject() instanceof ScalarFunction) {
+                    isFunction = true;
+                }
+            }
+            if (!isFunction && changedFeature == TransformationPackage.SQL_TRANSFORMATION__ALIASES) {
                 aliasesChanged = true;
             }
         }
@@ -2287,7 +2304,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
                 }
             });
         }
-        
+
         functionHandler.processModelResourceEvent(event);
     }
 

@@ -97,6 +97,7 @@ public interface PluginConstants {
         String COLLAPSE_ALL_ICON = CVIEW16 + "collapseall.gif"; //$NON-NLS-1$
 
         String MODEL_STATISTICS_ICON = CVIEW16 + "statistics.gif"; //$NON-NLS-1$
+        String NEW_PUSHDOWN_FUNCTION = OBJ16 + "PushdownFunction.gif"; //$NON-NLS-1$
         String BUILD_MODEL_IMPORTS_ICON = OBJ16 + "Imports.gif"; //$NON-NLS-1$
         String FIND = CVIEW16 + "find.gif"; //$NON-NLS-1$
         String FIND_REPLACE = CVIEW16 + "find_replace.gif"; //$NON-NLS-1$
@@ -104,9 +105,9 @@ public interface PluginConstants {
         String ENUM_OVERLAY_ICON = OVR16 + "enum_co.gif"; //$NON-NLS-1$
 
         String CREATE_WEB_SERVICE_ICON = CTOOL16 + "create_web_service.png"; //$NON-NLS-1$
-        
-        String EDIT_DOCUMENT_ICON = CVIEW16 + "edit-document.png";  //$NON-NLS-1$
-        String CLEAR_DOCUMENT_ICON = CVIEW16 + "clear-document.png";  //$NON-NLS-1$
+
+        String EDIT_DOCUMENT_ICON = CVIEW16 + "edit-document.png"; //$NON-NLS-1$
+        String CLEAR_DOCUMENT_ICON = CVIEW16 + "clear-document.png"; //$NON-NLS-1$
         String EDIT_EXTENSION_PROPERTIES_ICON = CVIEW16 + "edit-extension-properties.png"; //$NON-NLS-1$
 
     }
