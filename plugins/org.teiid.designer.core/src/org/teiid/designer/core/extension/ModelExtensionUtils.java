@@ -283,8 +283,10 @@ public class ModelExtensionUtils {
                 // allowed values
                 String[] allowedValues = propDefn.getAllowedValues();
 
-                if ((allowedValues == null) || (allowedValues.length == 0)) {
-                    propDefTags.removeKey(PropertyTagKeys.ADVANCED);
+                // don't save if no allowed values or if a boolean
+                if ((allowedValues == null) || (allowedValues.length == 0)
+                        || ModelExtensionPropertyDefinition.Type.BOOLEAN.getRuntimeType().equals(propDefn.getRuntimeType())) {
+                    propDefTags.removeKey(PropertyTagKeys.ALLOWED_VALUES);
                 } else {
                     Annotation allowedValuesAnnotation = getAnnotation(modelResource, propDefAnnotation,
                                                                        PropertyTagKeys.ALLOWED_VALUES,
