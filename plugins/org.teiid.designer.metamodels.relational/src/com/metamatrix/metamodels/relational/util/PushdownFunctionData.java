@@ -35,7 +35,7 @@ public class PushdownFunctionData {
 	ParameterData returnParameter;
 	public static String DEFAULT_TYPE = "string"; //$NON-NLS-1$
 	public static int DEFAULT_LENGTH = 255;
-	public static String DETERMINISTIC_PROPERTY_KEY = "ext-custom:determistic"; //$NON-NLS-1$
+	public static String DETERMINISTIC_PROPERTY_KEY = "ext-custom:deterministic"; //$NON-NLS-1$
 	
 	private StringNameValidator validator = new StringNameValidator(1, 200, false);
     	
