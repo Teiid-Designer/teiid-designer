@@ -70,11 +70,11 @@
                 </xs:annotation>
             </xs:element>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:NCName" use="required">
-			<xs:annotation>
-				<xs:documentation>A unique name, within the metaclass, for this extended property.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
+        <xs:attribute name="name" type="xs:NCName" use="required">
+            <xs:annotation>
+                <xs:documentation>A unique name, within the metaclass, for this extended property.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
 		<xs:attribute name="type" default="string">
 			<xs:annotation>
 				<xs:documentation>The Teiid runtime type of the property.</xs:documentation>
@@ -127,11 +127,16 @@
 					advanced users.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="masked" type="xs:boolean" default="false">
-			<xs:annotation>
-				<xs:documentation>Indicates if this property's value should be masked when being displayed.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
+        <xs:attribute name="masked" type="xs:boolean" default="false">
+            <xs:annotation>
+                <xs:documentation>Indicates if this property's value should be masked when being displayed.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="index" type="xs:boolean" default="true">
+            <xs:annotation>
+                <xs:documentation>Indicates if this property should be indexed for use by the Teiid server.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="metaclassType">

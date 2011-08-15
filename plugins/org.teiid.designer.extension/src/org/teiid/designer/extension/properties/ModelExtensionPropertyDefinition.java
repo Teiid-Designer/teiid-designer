@@ -68,6 +68,11 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     void setDescription( String newDescription );
 
     /**
+     * @return <code>true</code> if this property should be indexed for use by the Teiid server
+     */
+    boolean shouldBeIndexed();
+
+    /**
      * The property names that can be changed.
      */
     public enum PropertyName {

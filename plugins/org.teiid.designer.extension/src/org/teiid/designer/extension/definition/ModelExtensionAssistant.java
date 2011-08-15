@@ -46,11 +46,13 @@ public abstract class ModelExtensionAssistant {
 
     /**
      * @param modelObject the model object being checked (cannot be <code>null</code>)
-     * @param definition the model extension definition that is being looked for (cannot be <code>null</code>)
-     * @return <code>true</code> if the definition was found in the model object
+     * @param namespacePrefix the namespace prefix of the model extension definition that is being looked for (cannot be
+     *            <code>null</code>)
+     * @return <code>true</code> if the definition was found in the model object's resource
+     * @throws Exception if there is a problem accessing the model object's resource
      */
-    protected abstract boolean contains( Object modelObject,
-                                         ModelExtensionDefinition definition );
+    protected abstract boolean containsModelExtensionDefinition( Object modelObject,
+                                                                 String namespacePrefix ) throws Exception;
 
     /**
      * @param namespacePrefix the unique namespace prefix (never <code>null</code> or empty)
@@ -58,9 +60,9 @@ public abstract class ModelExtensionAssistant {
      * @param metamodelUri the metamodel URI this definition is extending (never <code>null</code> or empty)
      * @return the new model extension definition (never <code>null</code>)
      */
-    public ModelExtensionDefinition createModelExtensionDefintion( String namespacePrefix,
-                                                                   String namespaceUri,
-                                                                   String metamodelUri ) {
+    public ModelExtensionDefinition createModelExtensionDefinition( String namespacePrefix,
+                                                                    String namespaceUri,
+                                                                    String metamodelUri ) {
         return new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri);
     }
 
@@ -73,7 +75,6 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
-     * @param namespacePrefix the namespace prefix (cannot be <code>null</code> or empty)
      * @param simpleId the property identifier without the namespace prefix (cannot be <code>null</code> or empty)
      * @param displayName the display name (may be <code>null</code> or empty)
      * @param runtimeType the Teiid runtime type (cannot be <code>null</code> or empty)
@@ -84,18 +85,20 @@ public abstract class ModelExtensionAssistant {
      * @param advanced <code>true</code> string if this property should only be shown to advances users (cannot be <code>null</code>
      *            or empty)
      * @param masked <code>true</code> string if this property value must be masked (cannot be <code>null</code> or empty)
+     * @param index <code>true</code> string if this property value must be indexed for use by the Teiid server (cannot be
+     *            <code>null</code> or empty)
      * @return the new extension property definition (never <code>null</code>)
      */
-    public ModelExtensionPropertyDefinition createPropertyDefinition( String namespacePrefix,
-                                                                      String simpleId,
+    public ModelExtensionPropertyDefinition createPropertyDefinition( String simpleId,
                                                                       String displayName,
                                                                       String runtimeType,
                                                                       String required,
                                                                       String defaultValue,
                                                                       String fixedValue,
                                                                       String advanced,
-                                                                      String masked ) {
-        return new ModelExtensionPropertyDefinitionImpl(namespacePrefix,
+                                                                      String masked,
+                                                                      String index ) {
+        return new ModelExtensionPropertyDefinitionImpl(getNamespacePrefix(),
                                                         simpleId,
                                                         displayName,
                                                         runtimeType,
@@ -103,14 +106,21 @@ public abstract class ModelExtensionAssistant {
                                                         defaultValue,
                                                         fixedValue,
                                                         advanced,
-                                                        masked);
+                                                        masked,
+                                                        index);
     }
 
     /**
-     * @param modelObject the model object whose extension property value is being requested (cannot be <code>null</code>)
-     * @return the model extension definitions contained in the model object (never <code>null</code>)
+     * @return the namespace prefix (never <code>null</code> or empty)
      */
-    protected abstract Collection<ModelExtensionDefinition> getModelExtensionDefinitions( Object modelObject );
+    public abstract String getNamespacePrefix();
+
+    /**
+     * @param modelObject the model object whose supported namespaces is being requested (cannot be <code>null</code>)
+     * @return the namespace prefixes contained in the model object's resource (never <code>null</code>)
+     * @throws Exception if there is a problem accessing the model object's model resource
+     */
+    public abstract Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception;
 
     /**
      * Obtains from the model object, the overridden property value of the specified property definition identifier. If the current
@@ -185,22 +195,28 @@ public abstract class ModelExtensionAssistant {
 
     /**
      * @param file the file being checked for extension properties (cannot be <code>null</code>)
-     * @param namespacePrefix the extension property namespace prefix (cannot be <code>null</code>)
-     * @return <code>true</code> if the file contains extension properties of the specified namespace prefix
+     * @return <code>true</code> if the file contains extension properties defined by the assistant's namespace prefix
      * @throws Exception if there is a problem working with the file
      */
-    public abstract boolean hasExtensionProperties( File file,
-                                                    String namespacePrefix ) throws Exception;
+    public abstract boolean hasExtensionProperties( File file ) throws Exception;
+
+    /**
+     * @param modelObject the model object being checked for the existence of extension properties (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object has extension properties
+     * @throws Exception if there is a problem accessing the model object
+     */
+    public abstract boolean hasExtensionProperties( Object modelObject ) throws Exception;
 
     /**
      * Removes the model extension definition and it's associated properties from the model object.
      * 
-     * @param modelObject the model object that the model extension definition is being removed from (cannot be <code>null</code>)
-     * @param definition the model extension definition being deleted (cannot be <code>null</code>)
+     * @param modelObject the model object whose resource the model extension definition is being removed from (cannot be
+     *            <code>null</code>)
+     * @param namespacePrefix the namespace prefix of the model extension definition being deleted (cannot be <code>null</code>)
      * @throws Exception if the model extension definition could not be removed
      */
     protected abstract void removeModelExtensionDefinition( Object modelObject,
-                                                            ModelExtensionDefinition definition ) throws Exception;
+                                                            String namespacePrefix ) throws Exception;
 
     /**
      * @param modelObject the model object whose property is being removed (cannot be <code>null</code>)
@@ -211,12 +227,13 @@ public abstract class ModelExtensionAssistant {
                                             String id ) throws Exception;
 
     /**
-     * @param modelObject the model object that has properties defined in the specified definition (cannot be <code>null</code>)
+     * @param modelResource the model object or resource where the specified definition will be saved to (cannot be
+     *            <code>null</code>)
      * @param definition the model extension definition that needs to be saved (cannot be <code>null</code>)
      * @throws Exception if there is a problem saving the definition
      */
-    protected abstract void saveModelExtensionDefinition( Object modelObject,
-                                                          ModelExtensionDefinition definition ) throws Exception;
+    public abstract void saveModelExtensionDefinition( Object modelObject,
+                                                       ModelExtensionDefinition definition ) throws Exception;
 
     /**
      * @param propertyDefinition the property definition (cannot be <code>null</code>)
@@ -282,30 +299,34 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
-     * Adds any applicable, missing model extension definitions and extension properties to the model object. And removes any model
-     * extension definitions and extension properties that are no longer registered.
+     * @param modelObject the model object whose resource is being checked to see if it has the specified model extension definition
+     *            saved (cannot be <code>null</code>)
+     * @param namespacePrefix the namespace prefix being looked for (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the model object's resource contains the namespace prefix
+     * @throws Exception if there is a problem checking the model object's resource
+     */
+    public abstract boolean supports( Object modelObject,
+                                      String namespacePrefix ) throws Exception;
+
+    /**
+     * Removes unregistered model extension definitions and unregistered extension properties stored in the model object's resource.
      * 
      * @param modelObject the model object whose extension definitions and properties are being synchronized (cannot be
      *            <code>null</code>)
+     * @throws Exception if there is a problem working with the model object's resource
      */
     public void syncProperties( Object modelObject ) throws Exception {
         ModelExtensionRegistry registry = getRegistry();
 
-        // synchronize model extension definitions
-
         // remove non-registered definitions
-        for (ModelExtensionDefinition definition : getModelExtensionDefinitions(modelObject)) {
-            String namespacePrefix = definition.getNamespacePrefix();
-
+        for (String namespacePrefix : getSupportedNamespaces(modelObject)) {
             // if definition is registered just save it to make sure it is the latest version
             if (registry.isRegistered(namespacePrefix)) {
-                saveModelExtensionDefinition(modelObject, definition);
+                saveModelExtensionDefinition(modelObject, registry.getDefinition(namespacePrefix));
             } else {
-                removeModelExtensionDefinition(modelObject, definition);
+                removeModelExtensionDefinition(modelObject, namespacePrefix);
             }
         }
-
-        // synchronize extension properties
 
         // remove non-registered properties
         for (String propId : getPropertyValues(modelObject).stringPropertyNames()) {
@@ -315,23 +336,6 @@ public abstract class ModelExtensionAssistant {
                 removeProperty(modelObject, propId);
             }
         }
-
-        // add missing registered properties
-        Properties currentExtensionProps = getPropertyValues(modelObject);
-
-        for (ModelExtensionProperty newProp : registry.createProperties(modelObject.getClass().getName())) {
-            // add property if it doesn't exist
-            if (!currentExtensionProps.containsKey(newProp.getId())) {
-                setPropertyValue(modelObject, newProp.getId(), newProp.getValue());
-            }
-        }
-
-        // TODO add missing registered definitions
-        // for (ModelExtensionDefinition registeredDefinition : registry.getAllDefinitions()) {
-        // if (!contains(modelObject, registeredDefinition)) {
-        // saveModelExtensionDefinition(modelObject, registeredDefinition);
-        // }
-        // }
     }
 
 }

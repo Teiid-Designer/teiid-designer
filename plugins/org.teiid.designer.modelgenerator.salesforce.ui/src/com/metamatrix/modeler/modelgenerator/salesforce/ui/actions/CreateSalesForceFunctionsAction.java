@@ -23,6 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -91,7 +92,10 @@ public class CreateSalesForceFunctionsAction extends SortableSelectionAction {
             if ((selectedObj instanceof IFile) && ModelIdentifier.isRelationalSourceModel((IFile)selectedObj)) {
                 File file = ((IFile)selectedObj).getLocation().toFile();
                 try {
-                    return ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file, NAMESPACE_PREFIX);
+                    ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                                       .getRegistry()
+                                                                       .getModelExtensionAssistant(NAMESPACE_PREFIX);
+                    return assistant.hasExtensionProperties(file);
                 } catch (Exception e) {
                     UiConstants.Util.log(e);
                 }

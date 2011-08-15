@@ -9,17 +9,16 @@ package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
@@ -156,14 +155,14 @@ public final class ModelExtensionRegistry {
      * @return a collection of all model extension definition namespace prefixes (never <code>null</code>)
      */
     public Set<String> getAllNamespacePrefixes() {
-        return this.namespaces.keySet();
+        return new HashSet<String>(namespaces.values());
     }
 
     /**
      * @return a collection of all model extension definition namespaces (never <code>null</code>)
      */
-    public Collection<String> getAllNamespaces() {
-        return this.namespaces.values();
+    public Set<String> getAllNamespaces() {
+        return this.namespaces.keySet();
     }
 
     /**
@@ -294,75 +293,44 @@ public final class ModelExtensionRegistry {
                                                                    String id ) {
         CoreArgCheck.isNotEmpty(id, "id is empty"); //$NON-NLS-1$
 
-        for (ModelExtensionPropertyDefinition propDefn : getPropertyDefinitions(metaclassName)) {
-            if (propDefn.getId().equals(id)) {
-                return propDefn;
+        // get the namespace prefix from the id
+        String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(id);
+
+        if (!CoreStringUtil.isEmpty(namespacePrefix)) {
+            ModelExtensionDefinition definition = getDefinition(namespacePrefix);
+
+            if (definition != null) {
+                for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(metaclassName)) {
+                    if (propDefn.getId().equals(id)) {
+                        return propDefn;
+                    }
+                }
             }
         }
 
+        // not found
         return null;
     }
 
     /**
+     * @param namespacePrefix the namespace prefix containing the extension property definitions being requested (cannot be
+     *            <code>null</code> or empty )
      * @param metaclassName the metaclass name whose extension property definitions are being requested (cannot be <code>null</code>
-     *            )
+     *            or empty )
      * @return the property definitions (never <code>null</code>)
      */
-    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( String metaclassName ) {
+    public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( String namespacePrefix,
+                                                                                String metaclassName ) {
+        CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
-        Map<String, ModelExtensionPropertyDefinition> propDefns = new HashMap<String, ModelExtensionPropertyDefinition>();
 
-        for (ModelExtensionDefinition definition : getDefinitions(QueryType.METACLASS, metaclassName)) {
-            for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(metaclassName)) {
-                String id = propDefn.getId();
+        ModelExtensionDefinition definition = getDefinition(namespacePrefix);
 
-                if (propDefns.containsKey(id)) {
-                    Util.log(IStatus.ERROR, NLS.bind(Messages.extensionPropertyNotAdded, id, propDefn.getNamespacePrefix()));
-                } else {
-                    propDefns.put(id, propDefn);
-                }
-            }
+        if (definition != null) {
+            return definition.getPropertyDefinitions(metaclassName);
         }
 
-        return propDefns.values();
-    }
-
-    /**
-     * @param modelFile the file being checked
-     * @return <code>true</code> if the file is a model file and it contains extension properties
-     * @throws Exception if the file is <code>null</code> or can't be opened
-     */
-    public boolean hasExtensionProperties( File modelFile ) throws Exception {
-        return hasExtensionProperties(modelFile, null);
-    }
-
-    /**
-     * @param modelFile the file being checked
-     * @param namespacePrefix the namespace prefix of the model extension (non-<code>null</code> or empty if only a certain
-     *            namespace extension properties are to be looked for)
-     * @return <code>true</code> if the file is a model file and it contains the desired extension properties
-     * @throws Exception if the file is <code>null</code> or can't be opened
-     */
-    public boolean hasExtensionProperties( File file,
-                                           String namespacePrefix ) throws Exception {
-        for (ModelExtensionDefinition defn : getAllDefinitions()) {
-            if (CoreStringUtil.isEmpty(namespacePrefix) || defn.getNamespacePrefix().equals(namespacePrefix)) {
-                if (defn.getModelExtensionAssistant().hasExtensionProperties(file, namespacePrefix)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param metaclassName the metaclass name whose existence of extension properties is being requested (cannot be
-     *            <code>null</code>)
-     * @return <code>true</code> if extension properties exist
-     */
-    public boolean hasExtensionProperties( String metaclassName ) {
-        return !getPropertyDefinitions(metaclassName).isEmpty();
+        return Collections.emptyList();
     }
 
     /**

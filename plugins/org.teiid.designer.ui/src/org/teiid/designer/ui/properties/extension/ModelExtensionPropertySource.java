@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
@@ -31,15 +31,11 @@ public class ModelExtensionPropertySource implements IPropertySource {
 
     // TODO see ModelRowElement uses ExtensionPropertySource should it also use this?
 
-    private final ModelObjectExtensionAssistant assistant;
-
     private final EObject eObject;
 
     public ModelExtensionPropertySource( EObject eObject ) {
         CoreArgCheck.isNotNull(eObject, "eObject is null"); //$NON-NLS-1$
         this.eObject = eObject;
-        this.assistant = new ModelObjectExtensionAssistant() {
-        };
     }
 
     /**
@@ -64,13 +60,14 @@ public class ModelExtensionPropertySource implements IPropertySource {
         Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
 
         try {
-            for (String propId : this.assistant.getPropertyValues(this.eObject).stringPropertyNames()) {
-                ModelExtensionPropertyDefinition propDefn = registry.getPropertyDefinition(metaclassName, propId);
+            // use first assistant to get the supported namespaces persisted in the model resource
+            Collection<ModelExtensionAssistant> assistants = registry.getModelExtensionAssistants(metaclassName);
 
-                if (propDefn == null) {
-                    Util.log(IStatus.ERROR, NLS.bind(Messages.missingPropertyDefinition, propId, metaclassName));
-                } else {
-                    propDefns.add(propDefn);
+            if (!assistants.isEmpty()) {
+                for (String namespacePrefix : assistants.iterator().next().getSupportedNamespaces(this.eObject)) {
+                    for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(namespacePrefix, metaclassName)) {
+                        propDefns.add(propDefn);
+                    }
                 }
             }
         } catch (Exception e) {

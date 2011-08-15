@@ -7,6 +7,7 @@
  */
 package com.metamatrix.modeler.internal.ui.explorer;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
@@ -341,11 +344,17 @@ public class ModelExplorerLabelProvider extends LabelProvider
         // Lastly, decorate with Extension if applicable
         
         if( element instanceof IFile ) {
-            IFile file = (IFile)element;
+            File file = ((IFile)element).getLocation().toFile();
+            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 
             try {
-                if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file.getLocation().toFile())) {
-                    decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                for (String namespacePrefix : registry.getAllNamespacePrefixes()) {
+                    ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
+
+                    if (assistant.hasExtensionProperties(file)) {
+                        decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 Util.log(e);

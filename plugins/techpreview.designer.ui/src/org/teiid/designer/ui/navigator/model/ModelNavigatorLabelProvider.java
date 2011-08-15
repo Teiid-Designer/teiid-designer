@@ -12,6 +12,7 @@ import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.gener
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.genericTransformationLabel;
 import static org.teiid.designer.ui.navigator.model.ModelNavigatorMessages.problemMarkerBrackets;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,6 +44,8 @@ import org.eclipse.ui.navigator.IDescriptionProvider;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDParticle;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
@@ -196,11 +199,17 @@ public class ModelNavigatorLabelProvider extends LabelProvider implements IDescr
 
         // Lastly, decorate with Extension if applicable
         if (element instanceof IFile) {
-            IFile file = (IFile)element;
+            File file = ((IFile)element).getLocation().toFile();
+            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 
             try {
-                if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(file.getLocation().toFile())) {
-                    decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                for (String namespacePrefix : registry.getAllNamespacePrefixes()) {
+                    ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(namespacePrefix);
+
+                    if (assistant.hasExtensionProperties(file)) {
+                        decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 Util.log(e);

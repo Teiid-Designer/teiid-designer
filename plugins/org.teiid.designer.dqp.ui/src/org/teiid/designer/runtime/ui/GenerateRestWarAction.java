@@ -7,14 +7,19 @@
  */
 package org.teiid.designer.runtime.ui;
 
+import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -30,13 +35,18 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.dqp.webservice.war.objects.RestProcedure;
 import org.teiid.designer.dqp.webservice.war.ui.wizards.RestWarDeploymentInfoDialog;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+
 import com.metamatrix.core.modeler.util.FileUtils;
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.impl.ProcedureImpl;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -48,22 +58,17 @@ import com.metamatrix.modeler.ui.actions.ISelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class GenerateRestWarAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
-    protected static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(GenerateRestWarAction.class);
-    protected static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+    static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(GenerateRestWarAction.class);
+    private static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+    private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
-    protected static ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
-
-    protected boolean successfulRefresh = false;
-
-    IFile selectedVDB;
+    private IFile selectedVDB;
     // Map of models containing restful procedures
-    Map<String, List<RestProcedure>> restfulProcedureMap = new HashMap<String, List<RestProcedure>>();
-    Vdb vdb;
-    boolean contextIsLocal = false;
+    private Map<String, List<RestProcedure>> restfulProcedureMap = new HashMap<String, List<RestProcedure>>();
 
     public GenerateRestWarAction() {
-        this.setText(DqpUiConstants.UTIL.getString(I18N_PREFIX + "text")); //$NON-NLS-1$
-        this.setToolTipText(DqpUiConstants.UTIL.getString(I18N_PREFIX + "tooltip")); //$NON-NLS-1$
+        this.setText(UTIL.getString(I18N_PREFIX + "text")); //$NON-NLS-1$
+        this.setToolTipText(UTIL.getString(I18N_PREFIX + "tooltip")); //$NON-NLS-1$
         this.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setDisabledImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_WAR));
         setEnabled(false);
@@ -112,8 +117,8 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         boolean cont = true;
         if (compiler == null) {
-            cont = MessageDialog.openConfirm(window.getShell(), DqpUiConstants.UTIL.getString(I18N_PREFIX + "javaWarningTitle"), //$NON-NLS-1$
-                                             DqpUiConstants.UTIL.getString(I18N_PREFIX + "invalidJDKMessage")); //$NON-NLS-1$
+            cont = MessageDialog.openConfirm(window.getShell(), UTIL.getString(I18N_PREFIX + "javaWarningTitle"), //$NON-NLS-1$
+                                             UTIL.getString(I18N_PREFIX + "invalidJDKMessage")); //$NON-NLS-1$
         }
 
         if (!cont) {
@@ -129,7 +134,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         // Retrieve the file name for the confirmation dialog
         String warFileName = dialog.getWarFileName();
 
-        final String successMessage = DqpUiConstants.UTIL.getString(I18N_PREFIX + "warFileCreated", warFileName); //$NON-NLS-1$
+        final String successMessage = UTIL.getString(I18N_PREFIX + "warFileCreated", warFileName); //$NON-NLS-1$
 
         boolean wasSuccessful = (rc == Window.OK);
         if (wasSuccessful) {
@@ -137,14 +142,14 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 @Override
                 public void run() {
                     MessageDialog.openInformation(window.getShell(),
-                                                  DqpUiConstants.UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
+                                                  UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
                                                   successMessage);
                 }
             });
         } else {
             if (rc != Window.CANCEL) {
 
-                MessageDialog.openError(window.getShell(), DqpUiConstants.UTIL.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
+                MessageDialog.openError(window.getShell(), UTIL.getString(I18N_PREFIX + "creationFailedTitle"),//$NON-NLS-1$ 
                                         dialog.getMessage());
             }
         }
@@ -167,7 +172,8 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                     Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
                     Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
                     for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                        final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                        final ModelResource modelResource = ModelerCore.getModelWorkspace()
+                                                                       .findModelResource(vdbModelEntry.getName());
                         if (ModelIdentifier.isVirtualModelType(modelResource)) {
                             restfulProcedureArray = new ArrayList<RestProcedure>();
                             String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
@@ -188,7 +194,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                                         }
                                         String fullName = sb.toString();
                                         String name = ((ProcedureImpl)eObject).getName();
-                                        createRestProcedureCollection(eObject, name, fullName, restfulProcedureArray);
+                                        createRestProcedureCollection((Procedure)eObject, name, fullName, restfulProcedureArray);
                                     }
                                 }
 
@@ -197,8 +203,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                                 }
 
                             } catch (ModelWorkspaceException e) {
-                                throw new RuntimeException(e);
-                            } catch (ModelerCoreException e) {
                                 throw new RuntimeException(e);
                             }
 
@@ -215,30 +219,74 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         setEnabled(enable);
     }
 
+    private String getRestMethod( Procedure procedure ) {
+        String restMethod = null;
+
+        try {
+            // try new way first
+            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                               .getRegistry()
+                                                               .getModelExtensionAssistant(NAMESPACE_PREFIX);
+            restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
+
+            if (CoreStringUtil.isEmpty(restMethod)) {
+                // try old way
+                restMethod = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
+                                                                               ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                                       + "REST-METHOD"); //$NON-NLS-1$
+            }
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
+        return restMethod;
+    }
+
+    private String getUri( Procedure procedure ) {
+        String uri = null;
+
+        try {
+            // try new way first
+            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                               .getRegistry()
+                                                               .getModelExtensionAssistant(NAMESPACE_PREFIX);
+            uri = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
+
+            if (CoreStringUtil.isEmpty(uri)) {
+                uri = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
+                                                                        ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
+                                                                                + "URI"); //$NON-NLS-1$
+            }
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
+        return uri;
+    }
+
     /**
      * @param eObject
      * @return
      * @throws ModelerCoreException
      */
-    private void createRestProcedureCollection( EObject eObject,
+    private void createRestProcedureCollection( Procedure procedure,
                                                 String name,
                                                 String fullName,
-                                                List restfulProcedureArray ) throws ModelerCoreException {
-        Object restMethod;
-        Object uri;
-        boolean hasReturn = false;
-        int parameterCount = ((ProcedureImpl)eObject).getParameters().size();
-        int uriParameterCount = 0;
-        RestProcedure restProcedure = new RestProcedure();
-        restMethod = ANNOTATION_HELPER.getPropertyValueAnyCase(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                        + "REST-METHOD"); //$NON-NLS-1$
+                                                List restfulProcedureArray ) {
+        String restMethod = getRestMethod(procedure);
 
         if (restMethod != null) {
-            uri = ANNOTATION_HELPER.getPropertyValueAnyCase(eObject, ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                     + "URI"); //$NON-NLS-1$
+            String uri = getUri(procedure);
+
+            // the procedure is not eligible for REST exposure with a URI defined
             if (uri != null) {
+                boolean hasReturn = false;
+                int parameterCount = procedure.getParameters().size();
+                int uriParameterCount = 0;
+                RestProcedure restProcedure = new RestProcedure();
+
                 // Get all child EObjects for this procedure
-                EList<EObject> contents = eObject.eContents();
+                EList<EObject> contents = procedure.eContents();
                 for (EObject eobject : contents) {
                     // If this is a result set, set hasReturn true and we will
                     // add the produces annotation to the RestProcedure instance
@@ -249,47 +297,43 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
                 }
 
-                String uriString = (String)uri;
+                String uriString = uri;
                 for (int i = 0; i < uriString.length(); i++) {
                     String character = uriString.substring(i, i + 1);
                     if (character.equals("{")) { //$NON-NLS-1$
                         uriParameterCount++;
                     }
                 }
-            } else {
-                // The procedure is not eligible for REST exposure with a URI defined
-                return;
+                restProcedure.setRestMethod(restMethod);
+                restProcedure.setUri(uri);
+                restProcedure.setProcedureName(name);
+                restProcedure.setFullyQualifiedProcedureName(fullName);
+
+                // Create JSON version
+                RestProcedure jsonRestProcedure = new RestProcedure();
+                jsonRestProcedure.setFullyQualifiedProcedureName(restProcedure.getFullyQualifiedProcedureName());
+                jsonRestProcedure.setModelName(restProcedure.getModelName());
+                jsonRestProcedure.setProcedureName(restProcedure.getProcedureName());
+                jsonRestProcedure.setRestMethod(restProcedure.getRestMethod());
+                jsonRestProcedure.setUri(restProcedure.getUri());
+
+                // If the parameterCount is greater than the number of parameters passed
+                // on the URI, we can expect more parameters via an input stream
+                // so the consumes annotation will need to be set. We will set for XML and JSON methods.
+
+                if (uriParameterCount < parameterCount) {
+                    restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
+                    jsonRestProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
+                }
+
+                if (hasReturn) {
+                    restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
+                    jsonRestProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
+                }
+
+                restfulProcedureArray.add(restProcedure);
+                restfulProcedureArray.add(jsonRestProcedure);
             }
-
-            restProcedure.setRestMethod((String)restMethod);
-            restProcedure.setUri((String)uri);
-            restProcedure.setProcedureName(name);
-            restProcedure.setFullyQualifiedProcedureName(fullName);
-
-            // Create JSON version
-            RestProcedure jsonRestProcedure = new RestProcedure();
-            jsonRestProcedure.setFullyQualifiedProcedureName(restProcedure.getFullyQualifiedProcedureName());
-            jsonRestProcedure.setModelName(restProcedure.getModelName());
-            jsonRestProcedure.setProcedureName(restProcedure.getProcedureName());
-            jsonRestProcedure.setRestMethod(restProcedure.getRestMethod());
-            jsonRestProcedure.setUri(restProcedure.getUri());
-
-            // If the parameterCount is greater than the number of parameters passed
-            // on the URI, we can expect more parameters via an input stream
-            // so the consumes annotation will need to be set. We will set for XML and JSON methods.
-
-            if (uriParameterCount < parameterCount) {
-                restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
-                jsonRestProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
-            }
-
-            if (hasReturn) {
-                restProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
-                jsonRestProcedure.setProducesAnnotation("@Produces( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
-            }
-
-            restfulProcedureArray.add(restProcedure);
-            restfulProcedureArray.add(jsonRestProcedure);
         }
     }
 }

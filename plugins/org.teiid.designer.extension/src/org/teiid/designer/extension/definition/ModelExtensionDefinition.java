@@ -164,6 +164,13 @@ public class ModelExtensionDefinition {
     }
 
     /**
+     * @return the metaclass names that have extended properties defined (never <code>null</code>)
+     */
+    public String[] getExtendedMetaclasses() {
+        return this.properties.keySet().toArray(new String[this.properties.size()]);
+    }
+
+    /**
      * @return the metamodel URI (never <code>null</code> or empty)
      */
     public String getMetamodelUri() {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant"
+            path="rest.mxd">
+      </extensionDefinition>
+   </extension>
+
+</plugin>

@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.modelgenerator.salesforce.extension;
 
+import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,23 +55,32 @@ public final class SalesforceModelExtensionAssistant extends ModelObjectExtensio
      *      java.lang.String, java.lang.String)
      */
     @Override
-    public ModelExtensionPropertyDefinition createPropertyDefinition( String namespacePrefix,
-                                                                      String id,
+    public ModelExtensionPropertyDefinition createPropertyDefinition( String id,
                                                                       String displayName,
                                                                       String type,
                                                                       String required,
                                                                       String defaultValue,
                                                                       String fixedValue,
                                                                       String advanced,
-                                                                      String masked ) {
+                                                                      String masked,
+                                                                      String index ) {
         String mappedId = propIds.get(id);
 
         if (!CoreStringUtil.isEmpty(mappedId)) {
             id = mappedId;
         }
 
-        return super.createPropertyDefinition(namespacePrefix, id, displayName, type, required, defaultValue, fixedValue, advanced,
-                                              masked);
+        return super.createPropertyDefinition(id, displayName, type, required, defaultValue, fixedValue, advanced, masked, index);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
+     */
+    @Override
+    public String getNamespacePrefix() {
+        return NAMESPACE_PREFIX;
     }
 
 }

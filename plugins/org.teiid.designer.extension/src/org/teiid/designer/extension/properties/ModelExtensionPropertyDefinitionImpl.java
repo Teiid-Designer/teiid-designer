@@ -39,6 +39,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     private String description;
     private String displayName;
     private String fixedValue;
+    private final boolean index;
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners;
     private final boolean masked;
     private final String namespacePrefix;
@@ -58,6 +59,8 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @param advanced <code>true</code> string if this property should only be shown to advances users (cannot be <code>null</code>
      *            or empty)
      * @param masked <code>true</code> string if this property value must be masked (cannot be <code>null</code> or empty)
+     * @param index <code>true</code> string if this property should be indexed for use by the Teiid server (cannot be
+     *            <code>null</code> or empty)
      */
     public ModelExtensionPropertyDefinitionImpl( String namespacePrefix,
                                                  String simpleId,
@@ -67,13 +70,15 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
                                                  String defaultValue,
                                                  String fixedValue,
                                                  String advanced,
-                                                 String masked ) {
+                                                 String masked,
+                                                 String index ) {
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(simpleId, "simpleId is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(runtimeType, "runtimeType is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(required, "required is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(advanced, "advanced is empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(masked, "masked is empty"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(index, "index is empty"); //$NON-NLS-1$
 
         this.namespacePrefix = namespacePrefix;
         this.simpleId = simpleId;
@@ -84,6 +89,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         this.fixedValue = fixedValue;
         this.advanced = Boolean.parseBoolean(advanced);
         this.masked = Boolean.parseBoolean(masked);
+        this.index = Boolean.parseBoolean(index);
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
 
         if (Type.BOOLEAN == this.type) {
@@ -147,13 +153,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getDescription() {
-        String txt = getId();
-
-        if (!CoreStringUtil.isEmpty(this.description)) {
-            txt = NLS.bind(Messages.descriptorToolTip, txt, this.description);
-        }
-
-        return txt;
+        return this.description;
     }
 
     /**
@@ -469,13 +469,13 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
                     Util.log(IStatus.ERROR, NLS.bind(Messages.invalidAllowedValues, getId(), errorMsg));
                     break;
                 }
+            }
 
-                if (newValues.size() != newAllowedValues.length) {
-                    changed = newValues.isEmpty();
+            if (newValues.size() != newAllowedValues.length) {
+                changed = newValues.isEmpty();
 
-                    if (changed) {
-                        newAllowedValues = newValues.toArray(new String[newValues.size()]);
-                    }
+                if (changed) {
+                    newAllowedValues = newValues.toArray(new String[newValues.size()]);
                 }
             }
         }
@@ -500,6 +500,16 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
             // alert listeners
             notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.description);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#shouldBeIndexed()
+     */
+    @Override
+    public boolean shouldBeIndexed() {
+        return this.index;
     }
 
     /**

@@ -115,6 +115,7 @@ public interface DqpUiConstants {
         public static final String PREVIEW_DATA_ICON = PC.CTOOL16 + "previewData.gif"; //$NON-NLS-1$
         public static final String SHOW_HIDE_CONNECTORS_ICON = PC.CTOOL16 + "showHideConnectors.png"; //$NON-NLS-1$
         public static final String COLLAPSE_ALL_ICON = PC.CTOOL16 + "collapseall.gif"; //$NON-NLS-1$
+        public static final String EXTENSION_PROPS_ICON = PC.CTOOL16 + "extension-props.png"; //$NON-NLS-1$
 
         public static final String IMPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "import_connectors.jpg"; //$NON-NLS-1$
         public static final String EXPORT_CONNECTORS_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //$NON-NLS-1$

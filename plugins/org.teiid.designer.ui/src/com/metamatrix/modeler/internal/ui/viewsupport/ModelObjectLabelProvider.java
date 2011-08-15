@@ -24,6 +24,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.xml.util.XmlDocumentUtil;
@@ -222,8 +224,17 @@ public class ModelObjectLabelProvider extends LabelProvider
         } // endif
 
         if (element instanceof EObject) {
-            if (ExtensionPlugin.getInstance().getRegistry().hasExtensionProperties(element.getClass().getName())) {
-                decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+            ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+
+            try {
+                for (ModelExtensionAssistant assistant : registry.getModelExtensionAssistants(element.getClass().getName())) {
+                    if (assistant.hasExtensionProperties(element)) {
+                        decoration.addOverlay(UiPlugin.getDefault().getExtensionDecoratorImage(), IDecoration.TOP_LEFT);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                Util.log(e);
             }
         }
 

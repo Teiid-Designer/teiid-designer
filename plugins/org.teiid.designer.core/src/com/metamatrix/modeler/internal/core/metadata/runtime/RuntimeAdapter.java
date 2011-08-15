@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -1320,17 +1322,22 @@ public class RuntimeAdapter extends RecordFactory {
         }
          
         // Now we look for extension properties
-        for (ModelExtensionAssistant assistant : ExtensionPlugin.getInstance()
-                                                                .getRegistry()
-                                                                .getModelExtensionAssistants(eObject.getClass().getName())) {
-            if (assistant == null) {
-                break;
-            }
+        ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        String metaclassName = eObject.getClass().getName();
 
+        for (ModelExtensionAssistant assistant : registry.getModelExtensionAssistants(metaclassName)) {
             try {
+                // gets the current value and if missing in EObject the default property value
                 Properties extensionProperties = assistant.getPropertyValues(eObject);
 
                 for (String propName : extensionProperties.stringPropertyNames()) {
+                    ModelExtensionPropertyDefinition propDefn = registry.getPropertyDefinition(metaclassName, propName);
+
+                    // make sure the property should be indexed
+                    if (!propDefn.shouldBeIndexed()) {
+                        continue;
+                    }
+
                     String propValue = extensionProperties.getProperty(propName);
 
                     if (CoreStringUtil.isEmpty(propValue)) {

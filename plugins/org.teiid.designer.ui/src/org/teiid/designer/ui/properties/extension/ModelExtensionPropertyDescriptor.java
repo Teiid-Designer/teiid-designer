@@ -72,7 +72,9 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
 
     public ModelExtensionPropertyDescriptor( EObject eObject,
                                              ModelExtensionPropertyDefinition propDefn ) {
-        super(propDefn.getId(), (CoreStringUtil.isEmpty(propDefn.getDisplayName()) ? propDefn.getId() : propDefn.getDisplayName()));
+        super(propDefn.getId(), (CoreStringUtil.isEmpty(propDefn.getDisplayName()) ? propDefn.getId()
+                                                                                  : propDefn.getNamespacePrefix() + ':'
+                                                                                          + propDefn.getDisplayName()));
 
         CoreArgCheck.isNotNull(eObject, "eObject is null"); //$NON-NLS-1$
         this.eObject = eObject;
@@ -317,8 +319,29 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
             if (value instanceof String) {
                 String errorMsg = propDefn.isValidValue((String)value);
 
+                // add error icon
                 if (!CoreStringUtil.isEmpty(errorMsg)) {
                     return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+                }
+
+                String stringValue = (String)value;
+                String defaultValue = propDefn.getDefaultValue();
+
+                if ((CoreStringUtil.isEmpty(stringValue) && CoreStringUtil.isEmpty(defaultValue))
+                        || CoreStringUtil.equals(stringValue, defaultValue)) {
+                    return null;
+                }
+
+                // add icon to show value is different than the default
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+            }
+
+            // integer values are indexes into allowed values collection
+            if (value instanceof Integer) {
+                String stringValue = propDefn.getAllowedValues()[(Integer)value];
+
+                if (!CoreStringUtil.equals(stringValue, propDefn.getDefaultValue())) {
+                    return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
                 }
             }
 

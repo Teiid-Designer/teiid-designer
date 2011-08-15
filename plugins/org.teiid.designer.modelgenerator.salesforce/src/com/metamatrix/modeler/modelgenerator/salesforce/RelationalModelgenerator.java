@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -65,6 +66,8 @@ public class RelationalModelgenerator {
 
     private final ModelExtensionAssistant assistant;
     
+    private final ModelExtensionDefinition definition;
+    
     // The relationships to create between salesforce objects
     private List relationships;
 
@@ -91,6 +94,14 @@ public class RelationalModelgenerator {
             throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())
                     + "modelExtensionAssistantNotFound")); //$NON-NLS-1$
         }
+
+        // the definition should be found in the registry
+        this.definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
+
+        if (this.definition == null) {
+            throw new IllegalStateException(Messages.getString(I18nUtil.getPropertyPrefix(getClass())
+                    + "modelExtensionDefinitionNotFound")); //$NON-NLS-1$
+        }
     }
 
     /**
@@ -100,7 +111,7 @@ public class RelationalModelgenerator {
      * @throws ModelBuildingException
      * @throws ModelerCoreException 
      */
-    public void createRelationalModel( ModelResource modelResource, Resource resource ) throws ModelBuildingException {
+    public void createRelationalModel( ModelResource modelResource, Resource resource ) throws Exception {
         // Create the model annotation, the top level object in our of our models and
         // set some of its attributes
         ModelAnnotation annotation = CoreFactory.eINSTANCE.createModelAnnotation();
@@ -113,6 +124,10 @@ public class RelationalModelgenerator {
         schema.setName(NAMESPACE_PREFIX);
         schema.setNameInSource(NAMESPACE_PREFIX);
         resource.getContents().add(schema);
+        
+        // add Salesforce MED
+        ModelExtensionDefinition definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
+        this.assistant.saveModelExtensionDefinition(modelResource, definition);
 
         // Loop over the salesforce metadata creating tables and columns
         Object[] objects = wizardManager.getDataModel().getSalesforceObjects();
@@ -170,12 +185,8 @@ public class RelationalModelgenerator {
 
         newTable.setSupportsUpdate(sfo.isUpdateable());
 
-        // extension properties
+        // update extension property values if different from default value
         try {
-            // add extension properties (set to default values) to the new table
-            this.assistant.syncProperties(newTable);
-
-            // update property values if different from default value
             setInitialPropertyValue(newTable, SF_Table.CUSTOM, Boolean.toString(sfo.isCustom()));
             setInitialPropertyValue(newTable, SF_Table.SUPPORTS_CREATE, Boolean.toString(sfo.isCreateable()));
             setInitialPropertyValue(newTable, SF_Table.SUPPORTS_DELETE, Boolean.toString(sfo.isDeleteable()));
@@ -256,12 +267,8 @@ public class RelationalModelgenerator {
             }
             
 
-            // extension properties
+            // update extension property values if different from default value
             try {
-                // add extension properties (set to default values) to the new column
-                this.assistant.syncProperties(column);
-
-                // update property values if different from default value
                 setInitialPropertyValue(column, SF_Column.CALCULATED, Boolean.toString(field.isCalculated()));
                 setInitialPropertyValue(column, SF_Column.CUSTOM, Boolean.toString(field.isCustom()));
                 setInitialPropertyValue(column, SF_Column.DEFAULTED, Boolean.toString(field.isDefaultedOnCreate()));

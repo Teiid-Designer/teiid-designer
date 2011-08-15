@@ -11,27 +11,27 @@ import static com.metamatrix.modeler.core.ModelerCore.Util;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
-import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.ModelerCore;
-import com.metamatrix.modeler.core.ModelerCoreException;
-import com.metamatrix.modeler.core.util.ModelContents;
-import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
 import com.metamatrix.modeler.core.workspace.ModelResource;
-import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 /**
  * The <code>ModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.
@@ -43,37 +43,39 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#contains(java.lang.Object,
-     *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#containsModelExtensionDefinition(java.lang.Object,
+     *      java.lang.String)
+     * @throws IllegalArgumentException if the model object is not an {@link EObject} or {@link ModelResource} or if the model
+     *             resource cannot be found
      */
     @Override
-    protected boolean contains( Object modelObject,
-                                ModelExtensionDefinition definition ) {
-        // TODO implement contains
-        return true;
+    protected boolean containsModelExtensionDefinition( Object modelObject,
+                                                        String namespacePrefix ) throws Exception {
+        return ModelExtensionUtils.containsModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getModelExtensionDefinitions(java.lang.Object)
+     * @param modelObject the model object (must be either an
+     * @return the model resource (never <code>null</code>)
+     * @throws IllegalArgumentException if the model object is not either an {@link EObject} or a {@link ModelResource}
      */
-    @Override
-    protected Collection<ModelExtensionDefinition> getModelExtensionDefinitions( Object modelObject ) {
-        // TODO implement contains
-        return Collections.emptyList();
-    }
+    protected ModelResource getModelResource( Object modelObject ) throws Exception {
+        ModelResource modelResource = null;
 
-    /**
-     * @param modelObject the model object whose annotationis being requested (cannot be <code>null</code>)
-     * @param forceCreate <code>true</code> if the annotation should be created if it does not exist
-     * @return the annotation (never <code>null</code>)
-     * @throws ModelerCoreException
-     */
-    protected Annotation getModelObjectAnnotation( EObject modelObject,
-                                                   boolean forceCreate ) throws ModelerCoreException {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
-        return ModelerCore.getModelEditor().getAnnotation(modelObject, forceCreate);
+        if (modelObject instanceof ModelResource) {
+            modelResource = (ModelResource)modelObject;
+        } else if (modelObject instanceof EObject) {
+            modelResource = ModelerCore.getModelEditor().findModelResource((EObject)modelObject);
+        } else if (modelObject instanceof IFile) {
+            modelResource = ModelerCore.getModelEditor().findModelResource((IFile)modelObject);
+        }
+
+        // should have a model resource
+        if (modelResource == null) {
+            CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
+        }
+
+        return modelResource;
     }
 
     /**
@@ -89,12 +91,13 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
+     * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
     public String getOverriddenValue( Object modelObject,
                                       String propId ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
-        Annotation annotation = getModelObjectAnnotation((EObject)modelObject, false);
+        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
 
         if (annotation != null) {
             EMap<String, String> tags = annotation.getTags();
@@ -152,13 +155,13 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValues(java.lang.Object)
+     * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
     public Properties getOverriddenValues( Object modelObject ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
-        Annotation annotation = getModelObjectAnnotation((EObject)modelObject, false);
+        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
         Properties props = new Properties();
 
         if (annotation != null) {
@@ -205,21 +208,37 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getExtensionPropertyValues(java.lang.Object)
-     * @throws IllegalArgumentException if the model object is <code>null</code> or not an {@link EObject}
+     * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
     @Override
     public Properties getPropertyValues( Object modelObject ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
+        ModelExtensionRegistry registry = getRegistry();
         Properties props = getOverriddenValues(modelObject);
 
-        // need to add in properties that have default values
-        for (ModelExtensionPropertyDefinition propDefn : getRegistry().getPropertyDefinitions(modelObject.getClass().getName())) {
-            if (!props.containsKey(propDefn.getId())) {
-                String defaultValue = propDefn.getDefaultValue();
-                props.put(propDefn.getId(), (CoreStringUtil.isEmpty(defaultValue) ? CoreStringUtil.Constants.EMPTY_STRING
-                                                                                 : defaultValue));
+        // need to add in properties that have default values so see what MEDs are contained in the model
+        Collection<ModelExtensionAssistant> assistants = registry.getModelExtensionAssistants(modelObject.getClass().getName());
+
+        // just return props if no assistants found
+        if (assistants.isEmpty()) {
+            return props;
+        }
+
+        // just take first assistant
+        ModelExtensionAssistant assistant = assistants.iterator().next();
+        String metaclassName = modelObject.getClass().getName();
+
+        for (String savedNamespacePrefix : assistant.getSupportedNamespaces(modelObject)) {
+            for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(savedNamespacePrefix, metaclassName)) {
+                if (!props.containsKey(propDefn.getId())) {
+                    String defaultValue = propDefn.getDefaultValue();
+
+                    // add only if there is a default value
+                    if (!CoreStringUtil.isEmpty(defaultValue)) {
+                        props.put(propDefn.getId(), defaultValue);
+                    }
+                }
             }
         }
 
@@ -227,60 +246,54 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     }
 
     /**
-     * Retrieves the tagged resource <code>Annotation</code> object referenced to a <code>ModelResource</code>'s
-     * <code>ModelAnnotation</code>
+     * {@inheritDoc}
      * 
-     * @param modelResource the <code>ModelResource</code>. may not be null
-     * @param forceCreate forces creation of the annotation if it does not exist.
-     * @return the <code>Annotation</code>
-     * @throws ModelWorkspaceException
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getSupportedNamespaces(java.lang.Object)
      */
-    protected Annotation getResourceAnnotation( ModelResource modelResource,
-                                                boolean forceCreate ) throws ModelWorkspaceException {
-        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        Annotation annotation = null;
-
-        if ((modelResource.getAnnotations() != null) && (modelResource.getModelAnnotation() != null)) {
-            annotation = modelResource.getAnnotations().getAnnotation(modelResource.getModelAnnotation());
-
-            if ((annotation == null) && forceCreate) {
-                annotation = ModelResourceContainerFactory.createNewAnnotation(modelResource.getModelAnnotation(),
-                                                                               modelResource.getEmfResource());
-
-                ModelContents contents = ModelerCore.getModelEditor().getModelContents(modelResource);
-                AnnotationContainer ac = contents.getAnnotationContainer(false);
-
-                if (ac != null) {
-                    annotation.setAnnotationContainer(ac);
-                }
-            }
-        }
-
-        return annotation;
+    @Override
+    public Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception {
+        return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject));
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.io.File, java.lang.String)
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.io.File)
      */
     @Override
-    public boolean hasExtensionProperties( File file,
-                                           String namespacePrefix ) throws Exception {
-        // TODO implement hasExtensionProperties
+    public boolean hasExtensionProperties( File file ) throws Exception {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IPath location = Path.fromOSString(file.getAbsolutePath());
+        IFile modelFile = workspace.getRoot().getFileForLocation(location);
+
+        if (modelFile != null) {
+            return getSupportedNamespaces(modelFile).contains(getNamespacePrefix());
+        }
+
+        // none found
         return false;
     }
 
     /**
      * {@inheritDoc}
      * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.lang.Object)
+     */
+    @Override
+    public boolean hasExtensionProperties( Object modelObject ) throws Exception {
+        return !getPropertyValues(modelObject).isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeModelExtensionDefinition(java.lang.Object,
-     *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
+     *      java.lang.String)
      */
     @Override
     protected void removeModelExtensionDefinition( Object modelObject,
-                                                   ModelExtensionDefinition definition ) {
-        // TODO implement removeModelExtensionDefinition
+                                                   String namespacePrefix ) throws Exception {
+        ModelExtensionUtils.removeModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
     }
 
     /**
@@ -291,7 +304,6 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     @Override
     protected void removeProperty( Object modelObject,
                                    String id ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         CoreArgCheck.isNotEmpty(id, "id is empty"); //$NON-NLS-1$
 
@@ -309,19 +321,9 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
      */
     @Override
-    protected void saveModelExtensionDefinition( Object modelObject,
-                                                 ModelExtensionDefinition definition ) throws Exception {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
-        CoreArgCheck.isInstanceOf(EObject.class, modelObject);
-
-        // ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((EObject)modelObject);
-        // Annotation annotation = getResourceAnnotation(modelResource, true);
-        // EMap<String, String> tags = annotation.getTags();
-
-        // TODO implement saveModelExtensionDefinition
-        //
-        // String uuid = tags.put(definition.getNamespacePrefix(), property.getValue());
-        // tags.g
+    public void saveModelExtensionDefinition( Object modelObject,
+                                              ModelExtensionDefinition definition ) throws Exception {
+        ModelExtensionUtils.updateModelExtensionDefinition(getModelResource(modelObject), definition);
     }
 
     /**
@@ -351,4 +353,22 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
             annotation.getTags().put(propId, newValue);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supports(java.lang.Object, java.lang.String)
+     */
+    @Override
+    public boolean supports( Object modelObject,
+                             String namespacePrefix ) throws Exception {
+        for (String supportedNamespacePrefix : getSupportedNamespaces(modelObject)) {
+            if (supportedNamespacePrefix.equals(namespacePrefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

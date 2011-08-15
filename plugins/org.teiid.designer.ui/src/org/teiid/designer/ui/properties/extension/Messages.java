@@ -17,7 +17,6 @@ public class Messages extends NLS {
     public static String errorObtainingPropertyFromAssistant;
     public static String modelExtensionAssistantNotFound;
 	public static String modelExtensionPropertyCategory;
-	public static String missingPropertyDefinition;
 	public static String namespacePrefixIsEmpty;
     public static String openEditorDialogMessage;
 	public static String openEditorDialogTitle;

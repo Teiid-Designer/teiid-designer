@@ -178,4 +178,13 @@
          </enablement>
       </decorator>
    </extension>
+   <extension
+         id="applyRestWarExtensionPropertiesAction"
+         name="%applyRestWarExtensionPropertiesAction.name"
+         point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.runtime.ui.extension.ApplyRestWarExtensionPropertiesAction"
+         label="%applyRestWarExtensionPropertiesAction.label">
+      </specialAction>
+   </extension>
 </plugin>

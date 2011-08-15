@@ -117,7 +117,7 @@ public class ModelExtensionDefinitionParser {
     }
 
     /**
-     * The handler used by the parser. Each instance should be only used to parse one file. 
+     * The handler used by the parser. Each instance should be only used to parse one file.
      */
     class Handler extends DefaultHandler {
 
@@ -137,6 +137,7 @@ public class ModelExtensionDefinitionParser {
         private final Stack<String> elements;
         private String fixedValue;
         private String id;
+        private String index;
         private String masked;
         private String metaclassName;
         private String metamodelUri;
@@ -249,7 +250,7 @@ public class ModelExtensionDefinitionParser {
                     System.err.println("reset: id=" + this.id + ", displayName=" + this.displayName + ", type=" + this.type //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                             + ", required=" + this.required + ", defaultValue=" + this.defaultValue + ", fixedValue=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                             + this.fixedValue + ", advanced=" + this.advanced + ", masked=" + this.masked + ", displayDescription=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                            + this.displayDescription);
+                            + this.displayDescription + ", index=" + this.index); //$NON-NLS-1$
                 }
 
                 // reset all property definition related fields
@@ -261,6 +262,7 @@ public class ModelExtensionDefinitionParser {
                 this.fixedValue = null;
                 this.advanced = null;
                 this.masked = null;
+                this.index = null;
                 this.displayDescription = null;
                 this.allowedValues.clear();
                 this.propDefn = null;
@@ -403,8 +405,8 @@ public class ModelExtensionDefinitionParser {
          * Saves the model extension definition that was just parsed.
          */
         private void saveModelExtensionDefinition() {
-            this.definition = this.assistant.createModelExtensionDefintion(this.namespacePrefix, this.namespaceUri,
-                                                                           this.metamodelUri);
+            this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
+                                                                            this.metamodelUri);
             this.assistant.setDescription(this.definition, this.description);
             this.assistant.setVersion(this.definition, this.version);
 
@@ -421,9 +423,9 @@ public class ModelExtensionDefinitionParser {
          * Saves the property definition that was just parsed.
          */
         private void savePropertyDefinition() {
-            this.propDefn = this.assistant.createPropertyDefinition(this.namespacePrefix, this.id, this.displayName, this.type,
-                                                                    this.required, this.defaultValue, this.fixedValue,
-                                                                    this.advanced, this.masked);
+            this.propDefn = this.assistant.createPropertyDefinition(this.id, this.displayName, this.type, this.required,
+                                                                    this.defaultValue, this.fixedValue, this.advanced, this.masked,
+                                                                    this.index);
             // if necessary set description
             if (!CoreStringUtil.isEmpty(this.displayDescription)) {
                 this.assistant.setDescription(this.propDefn, this.displayDescription);
@@ -499,6 +501,9 @@ public class ModelExtensionDefinitionParser {
 
                 this.masked = attributes.getValue(Tags.Attributes.MASKED);
                 assert !CoreStringUtil.isEmpty(this.masked) : "masked is empty"; //$NON-NLS-1$
+
+                this.index = attributes.getValue(Tags.Attributes.INDEX);
+                assert !CoreStringUtil.isEmpty(this.index) : "index is empty"; //$NON-NLS-1$
             } else if (Tags.Elements.DISPLAY.equals(getCurrentElement())) {
                 processLocaleString(attributes.getValue(Tags.Attributes.LOCALE), true);
             } else if (Tags.Elements.DESCRIPTION.equals(getCurrentElement()) && Tags.Elements.PROPERTY.equals(getPreviousElement())) {
@@ -526,6 +531,7 @@ public class ModelExtensionDefinitionParser {
             String ADVANCED = "advanced"; //$NON-NLS-1$
             String DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
             String FIXED_VALUE = "fixedValue"; //$NON-NLS-1$
+            String INDEX = "index"; //$NON-NLS-1$
             String LOCALE = "locale"; //$NON-NLS-1$
             String MASKED = "masked"; //$NON-NLS-1$
             String METAMODEL_URI = "metamodelUri"; //$NON-NLS-1$
