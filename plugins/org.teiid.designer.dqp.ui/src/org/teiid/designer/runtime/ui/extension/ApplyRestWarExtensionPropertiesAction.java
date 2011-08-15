@@ -96,8 +96,6 @@ public class ApplyRestWarExtensionPropertiesAction extends SortableSelectionActi
         boolean succeeded = false;
 
         try {
-            // Shell shell = Display.getCurrent().getActiveShell();
-
             if (ModelEditorManager.autoOpen(null, this.procedure, true)) {
                 // store REST MED in model
                 ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
@@ -116,10 +114,6 @@ public class ApplyRestWarExtensionPropertiesAction extends SortableSelectionActi
                         assistant.saveModelExtensionDefinition(this.procedure, definition);
 
                         // need to wiggle the selection so that the properties view gets the new properties
-                        // ModelEditor editor =
-                        // ModelEditorManager.getModelEditorForFile((IFile)this.modelResource.getCorrespondingResource(),
-                        // false);
-
                         IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 
                         if (part != null) {
@@ -130,8 +124,6 @@ public class ApplyRestWarExtensionPropertiesAction extends SortableSelectionActi
                                 selectionProvider.setSelection(new StructuredSelection(this.procedure));
                             }
                         }
-//                        editor.setSelection(StructuredSelection.EMPTY);
-//                        editor.setSelection(new StructuredSelection(this.procedure));
 
                         succeeded = true;
                         MessageDialog.openInformation(null, null, UTIL.getString(PREFIX + "restExtensionPropertiesSaved")); //$NON-NLS-1$
