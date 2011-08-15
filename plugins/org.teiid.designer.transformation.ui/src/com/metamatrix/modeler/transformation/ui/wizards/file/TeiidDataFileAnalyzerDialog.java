@@ -295,7 +295,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan=4;
         this.fileContentsViewer.getControl().setLayoutData(data);
-        for( String row : this.fileInfo.getFirstSixLines() ) {
+        for( String row : this.fileInfo.getCachedFirstLines() ) {
         	if( row != null ) {
         		this.fileContentsViewer.add(row);
         	}

@@ -88,6 +88,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 */
 	private IStatus status;
 	
+	private IStatus NO_FILES_STATUS;
+	
 	/**
 	 * Basic constructor
 	 */
@@ -98,6 +100,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	private void initialize() {
 		fileInfoMap = new HashMap<File, TeiidMetadataFileInfo>();
+		NO_FILES_STATUS = new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesInDataFolder")); //$NON-NLS-1$
+		status = NO_FILES_STATUS;
 	}
 	
 	/**

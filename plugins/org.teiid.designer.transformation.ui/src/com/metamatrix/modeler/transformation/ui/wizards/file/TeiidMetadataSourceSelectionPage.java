@@ -229,6 +229,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
             }
         });
         
+        editCPButton.setEnabled(false);
         
         createFolderContentsListGroup(mainPanel);
         

@@ -146,11 +146,6 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	/**
 	 * The cached <code>Collection</code> of the first 6 lines to use for UI display purposes
 	 */
-	private String[] firstSixLines;
-	
-	/**
-	 * The cached <code>Collection</code> of the first 6 lines to use for UI display purposes
-	 */
 	private String[] cachedFirstLines;
 	
 	/**
@@ -218,7 +213,6 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		this.includeQuote = info.doIncludeQuote();
 		this.includeSkip = info.doIncludeSkip();
 		this.cachedFirstLines = info.cachedFirstLines;
-		this.firstSixLines = info.getFirstSixLines();
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), colInfo.getDatatype(), colInfo.getWidth()));
@@ -232,7 +226,6 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	private void initialize() {
 		this.status = Status.OK_STATUS;
 		this.columnDatatypeMap = new HashMap<String, String>();
-		this.firstSixLines = new String[0];
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		
@@ -390,6 +383,9 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	}
 	
 	public String getHeaderString() {
+		if( cachedFirstLines.length == 0 ) {
+			return null;
+		}
 		return this.cachedFirstLines[this.headerLineNumber-1];
 	}
 
@@ -426,7 +422,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
                 if( cachedFirstLines.length > 6 ) {
                 	lines.add("... more ..."); //$NON-NLS-1$
                 }
-                this.firstSixLines = lines.toArray(new String[0]);
+
             }catch(Exception e){
             	Util.log(IStatus.ERROR, e, 
                 		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", this.dataFile.getName())); //$NON-NLS-1$
@@ -447,10 +443,10 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	
 	/**
 	 * 
-	 * @return firstSixLines the <code>String[]</code> array from the data file
+	 * @return cachedFirstLines the <code>String[]</code> array from the data file
 	 */
-	public String[] getFirstSixLines() {
-		return this.firstSixLines;
+	public String[] getCachedFirstLines() {
+		return this.cachedFirstLines;
 	}
 	
 	/**
