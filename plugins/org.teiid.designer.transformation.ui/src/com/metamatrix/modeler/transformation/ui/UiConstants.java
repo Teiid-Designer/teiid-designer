@@ -57,6 +57,8 @@ public interface UiConstants {
             private static final String DVIEW16 = FULL + "dview16/"; //$NON-NLS-1$
             //            private static final String COBJ  = FULL + "cobj16/"; //$NON-NLS-1$
             private static final String OVR16 = FULL + "ovr16/"; //$NON-NLS-1$
+            private static final String OBJ16 = FULL + "obj16/"; //$NON-NLS-1$
+            private static final String WIZBAN = FULL + "wizban/"; //$NON-NLS-1$
         }
 
         String ADD_SOURCES = PC.CVIEW16 + "tb_add_to_diagram.gif"; //$NON-NLS-1$
@@ -66,34 +68,37 @@ public interface UiConstants {
         String LOCK_VIRTUAL_GROUP = PC.OVR16 + "lock_vg.gif"; //$NON-NLS-1$
         String LOCK_MAPPING_CLASS = PC.CVIEW16 + "lock_mapping_class.gif"; //$NON-NLS-1$
         String UNLOCK_MAPPING_CLASS = PC.CVIEW16 + "unlock_mapping_class.gif"; //$NON-NLS-1$
-        String NOT_ALLOWED    = PC.CVIEW16 + "not-allowed.png"; //$NON-NLS-1$
-        String WARNING    = PC.OVR16 + "warning_co.gif"; //$NON-NLS-1$
-        String ERROR    = PC.OVR16 + "error_co.gif"; //$NON-NLS-1$
+        String NOT_ALLOWED = PC.CVIEW16 + "not-allowed.png"; //$NON-NLS-1$
+        String WARNING = PC.OVR16 + "warning_co.gif"; //$NON-NLS-1$
+        String ERROR = PC.OVR16 + "error_co.gif"; //$NON-NLS-1$
 
         String SAVE = PC.CVIEW16 + "save.gif"; //$NON-NLS-1$
         String SAVE_DISABLED = PC.DVIEW16 + "save.gif"; //$NON-NLS-1$
-        
-      String CRITERIA_BUILDER  = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
-      String EXPRESSION_BUILDER= PC.CVIEW16 + "launch_expression_builder.gif"; //$NON-NLS-1$
-      String EXPAND_SELECT     = PC.CVIEW16 + "expand.gif"; //$NON-NLS-1$
-      String UP_FONT           = PC.CVIEW16 + "inc_font.gif"; //$NON-NLS-1$
-      String DOWN_FONT         = PC.CVIEW16 + "dec_font.gif"; //$NON-NLS-1$
-      String VALIDATE          = PC.CVIEW16 + "validate.gif"; //$NON-NLS-1$
-      String SHOW_MESSAGES     = PC.CVIEW16 + "show_message_off.gif"; //$NON-NLS-1$
-      String SHOW_PREFERENCES  = PC.CVIEW16 + "show_preferences.gif"; //$NON-NLS-1$
-      String SHORT_NAMES       = PC.CVIEW16 + "short_names.gif"; //$NON-NLS-1$
-      String IMPORT_FROM_FILE  = PC.CVIEW16 + "import_from_file.gif"; //$NON-NLS-1$
-      String EXPORT_TO_FILE    = PC.CVIEW16 + "export_to_file.gif"; //$NON-NLS-1$
+
+        String IMPORT_TEIID_METADATA = PC.WIZBAN + "importTeiidMetadataWiz.gif"; //$NON-NLS-1$
+        String COLUMN_ICON = PC.OBJ16 + "Column.gif"; //$NON-NLS-1$
+
+        String CRITERIA_BUILDER = PC.CVIEW16 + "launch_criteria_builder.gif"; //$NON-NLS-1$
+        String EXPRESSION_BUILDER = PC.CVIEW16 + "launch_expression_builder.gif"; //$NON-NLS-1$
+        String EXPAND_SELECT = PC.CVIEW16 + "expand.gif"; //$NON-NLS-1$
+        String UP_FONT = PC.CVIEW16 + "inc_font.gif"; //$NON-NLS-1$
+        String DOWN_FONT = PC.CVIEW16 + "dec_font.gif"; //$NON-NLS-1$
+        String VALIDATE = PC.CVIEW16 + "validate.gif"; //$NON-NLS-1$
+        String SHOW_MESSAGES = PC.CVIEW16 + "show_message_off.gif"; //$NON-NLS-1$
+        String SHOW_PREFERENCES = PC.CVIEW16 + "show_preferences.gif"; //$NON-NLS-1$
+        String SHORT_NAMES = PC.CVIEW16 + "short_names.gif"; //$NON-NLS-1$
+        String IMPORT_FROM_FILE = PC.CVIEW16 + "import_from_file.gif"; //$NON-NLS-1$
+        String EXPORT_TO_FILE = PC.CVIEW16 + "export_to_file.gif"; //$NON-NLS-1$
 
     }
-    
+
     interface SQLPanels {
-    	int SELECT = 0;
-    	int UPDATE_SELECT = 1;
-    	int UPDATE_INSERT = 2;
-    	int UPDATE_UPDATE = 3;
-    	int UPDATE_DELETE = 4;
-    	
+        int SELECT = 0;
+        int UPDATE_SELECT = 1;
+        int UPDATE_INSERT = 2;
+        int UPDATE_UPDATE = 3;
+        int UPDATE_DELETE = 4;
+
     }
 
     /**
