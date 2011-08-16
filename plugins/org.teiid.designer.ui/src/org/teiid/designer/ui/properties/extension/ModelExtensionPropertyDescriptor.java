@@ -303,6 +303,16 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
+
+    /**
      * Used only for the value column in the properties view.
      */
     protected class ModelExtensionDescriptorLabelProvider extends LabelProvider {

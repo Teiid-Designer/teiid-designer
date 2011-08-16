@@ -92,7 +92,7 @@ public class ApplyRestWarExtensionPropertiesAction extends SortableSelectionActi
      */
     @Override
     public void run() {
-        boolean requiredStart = ModelerCore.startTxn(true, true, "Set Model Resource Extended Properties", this); //$NON-NLS-1$
+        boolean requiredStart = ModelerCore.startTxn(true, true, UTIL.getString(PREFIX + "makeRestfulTransactionName"), this); //$NON-NLS-1$
         boolean succeeded = false;
 
         try {

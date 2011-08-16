@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.core.extension;
 
+import static com.metamatrix.modeler.core.ModelerCore.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +21,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -32,6 +35,8 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
  * Utilities that manage persisting of model extension definitions in model objects.
  */
 public class ModelExtensionUtils {
+
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelExtensionUtils.class);
 
     private static final String DEFN_PREFIX = "modelExtensionDefinition"; //$NON-NLS-1$
 
@@ -55,6 +60,7 @@ public class ModelExtensionUtils {
      */
     public static boolean containsModelExtensionDefinition( ModelResource modelResource,
                                                             String namespacePrefix ) throws Exception {
+        // transaction logic not needed as this is a readonly operation
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         return (getDefinitionAnnotation(modelResource, false, namespacePrefix) != null);
     }
@@ -64,6 +70,7 @@ public class ModelExtensionUtils {
                                              String tagId,
                                              String value,
                                              boolean forceCreate ) throws Exception {
+        // transaction logic not needed as this is not a public method
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(parentAnnotation, "parentAnnotation is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(tagId, "tagId is null"); //$NON-NLS-1$
@@ -100,6 +107,7 @@ public class ModelExtensionUtils {
     private static Annotation getDefinitionAnnotation( ModelResource modelResource,
                                                        boolean forceCreate,
                                                        String namespacePrefix ) throws Exception {
+        // transaction logic not needed as this is not a public method
         Annotation annotation = getResourceAnnotation(modelResource, forceCreate);
 
         if (annotation != null) {
@@ -110,29 +118,47 @@ public class ModelExtensionUtils {
         return null;
     }
 
+    private static Annotation getModelObjectAnnotationImpl( EObject modelObject,
+                                                            boolean forceCreate ) throws ModelerCoreException {
+        // transaction logic not needed as this is not a public method
+        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
+        return ModelerCore.getModelEditor().getAnnotation(modelObject, forceCreate);
+    }
+
     /**
-     * @param modelObject the model object whose annotationis being requested (cannot be <code>null</code>)
+     * @param modelObject the model object whose annotation is being requested (cannot be <code>null</code>)
      * @param forceCreate <code>true</code> if the annotation should be created if it does not exist
      * @return the annotation (never <code>null</code>)
      * @throws ModelerCoreException
      */
     public static Annotation getModelObjectAnnotation( EObject modelObject,
                                                        boolean forceCreate ) throws ModelerCoreException {
-        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
-        return ModelerCore.getModelEditor().getAnnotation(modelObject, forceCreate);
+        // transaction needed if forcing creation of objects
+        if (forceCreate) {
+            boolean requiredStart = ModelerCore.startTxn(true, true, Util.getString(I18N_PREFIX + "getModelObjectAnnotation"), //$NON-NLS-1$
+                                                         modelObject);
+            boolean succeeded = false;
+
+            try {
+                return getModelObjectAnnotationImpl(modelObject, true);
+            } finally {
+                // if we started the transaction, commit it.
+                if (requiredStart) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
+                }
+            }
+        }
+
+        return getModelObjectAnnotationImpl(modelObject, false);
     }
 
-    /**
-     * Retrieves the tagged resource <code>Annotation</code> object referenced to a <code>ModelResource</code>'s
-     * <code>ModelAnnotation</code>
-     * 
-     * @param modelResource the <code>ModelResource</code>. may not be null
-     * @param forceCreate forces creation of the annotation if it does not exist.
-     * @return the annotation
-     * @throws ModelWorkspaceException
-     */
-    public static Annotation getResourceAnnotation( ModelResource modelResource,
-                                                    boolean forceCreate ) throws ModelWorkspaceException {
+    private static Annotation getResourceAnnotationImpl( ModelResource modelResource,
+                                                         boolean forceCreate ) throws ModelWorkspaceException {
+        // transaction logic not needed as this is not a public method
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
         Annotation annotation = null;
 
@@ -156,12 +182,47 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * Retrieves the tagged resource <code>Annotation</code> object referenced to a <code>ModelResource</code>'s
+     * <code>ModelAnnotation</code>
+     * 
+     * @param modelResource the <code>ModelResource</code>. may not be null
+     * @param forceCreate forces creation of the annotation if it does not exist.
+     * @return the annotation
+     * @throws ModelWorkspaceException
+     */
+    public static Annotation getResourceAnnotation( ModelResource modelResource,
+                                                    boolean forceCreate ) throws ModelWorkspaceException {
+        // transaction needed if forcing creation of objects
+        if (forceCreate) {
+            boolean requiredStart = ModelerCore.startTxn(true, true, Util.getString(I18N_PREFIX + "getResourceAnnotation"), //$NON-NLS-1$
+                                                         modelResource);
+            boolean succeeded = false;
+
+            try {
+                return getResourceAnnotationImpl(modelResource, true);
+            } finally {
+                // if we started the transaction, commit it.
+                if (requiredStart) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
+                }
+            }
+        }
+
+        return getResourceAnnotationImpl(modelResource, false);
+    }
+
+    /**
      * @param modelResource the model resource whose supported namespaces is being checked (cannot be <code>null</code>)
      * @return the namespace prefixes of all model extension definitions that are persisted in the model resource (never
      *         <code>null</code>)
      * @throws Exception if there is a problem accessing the model resource
      */
     public static Collection<String> getSupportedNamespaces( ModelResource modelResource ) throws Exception {
+        // transaction logic not needed since readonly operation
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         Annotation annotation = getResourceAnnotation(modelResource, false);
 
@@ -198,7 +259,24 @@ public class ModelExtensionUtils {
 
             for (String key : tags.keySet()) {
                 if (key.equals(constructKey(DEFN_PREFIX, namespacePrefix))) {
-                    tags.remove(key);
+                    boolean requiredStart = ModelerCore.startTxn(true, true,
+                                                                 Util.getString(I18N_PREFIX + "removeModelExtensionDefinition"), //$NON-NLS-1$
+                                                                 modelResource);
+                    boolean succeeded = false;
+
+                    try {
+                        succeeded = tags.remove(key);
+                    } finally {
+                        // if we started the transaction, commit it.
+                        if (requiredStart) {
+                            if (succeeded) {
+                                ModelerCore.commitTxn();
+                            } else {
+                                ModelerCore.rollbackTxn();
+                            }
+                        }
+                    }
+
                     break;
                 }
             }
@@ -215,156 +293,171 @@ public class ModelExtensionUtils {
     public static void updateModelExtensionDefinition( ModelResource modelResource,
                                                        ModelExtensionDefinition definition ) throws Exception {
         // TODO need to remove things from model that no longer exist in definition
+        // TODO transaction needed if changes were made
 
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(definition, "definition is null"); //$NON-NLS-1$
 
         // update model extension definition properties
         String namespacePrefix = definition.getNamespacePrefix();
-        Annotation definitionAnnotation = getDefinitionAnnotation(modelResource, true, namespacePrefix);
-        EMap<String, String> definitionTags = definitionAnnotation.getTags();
 
-        // metamodel URI
-        String metamodelUri = definition.getMetamodelUri();
+        boolean requiredStart = ModelerCore.startTxn(true, true, Util.getString(I18N_PREFIX + "updateModelExtensionDefinition"), //$NON-NLS-1$
+                                                     modelResource);
+        boolean succeeded = false;
 
-        if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.METAMODEL), metamodelUri)) {
-            definitionTags.put(DefinitionTagKeys.METAMODEL, metamodelUri);
-        }
+        try {
+            Annotation definitionAnnotation = getDefinitionAnnotation(modelResource, true, namespacePrefix);
+            EMap<String, String> definitionTags = definitionAnnotation.getTags();
 
-        // namespace prefix
-        if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.NAMESPACE_PREFIX), namespacePrefix)) {
-            definitionTags.put(DefinitionTagKeys.NAMESPACE_PREFIX, namespacePrefix);
-        }
+            // metamodel URI
+            String metamodelUri = definition.getMetamodelUri();
 
-        // namespace URI
-        String namespaceUri = definition.getNamespaceUri();
+            if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.METAMODEL), metamodelUri)) {
+                definitionTags.put(DefinitionTagKeys.METAMODEL, metamodelUri);
+            }
 
-        if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.NAMESPACE_URI), namespaceUri)) {
-            definitionTags.put(DefinitionTagKeys.NAMESPACE_URI, namespaceUri);
-        }
+            // namespace prefix
+            if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.NAMESPACE_PREFIX), namespacePrefix)) {
+                definitionTags.put(DefinitionTagKeys.NAMESPACE_PREFIX, namespacePrefix);
+            }
 
-        // version
-        int version = definition.getVersion();
+            // namespace URI
+            String namespaceUri = definition.getNamespaceUri();
 
-        if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.VERSION), Integer.toString(version))) {
-            definitionTags.put(DefinitionTagKeys.VERSION, Integer.toString(version));
-        }
+            if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.NAMESPACE_URI), namespaceUri)) {
+                definitionTags.put(DefinitionTagKeys.NAMESPACE_URI, namespaceUri);
+            }
 
-        // description
-        String description = definition.getDescription();
+            // version
+            int version = definition.getVersion();
 
-        if (CoreStringUtil.isEmpty(description)) {
-            definitionTags.remove(DefinitionTagKeys.DESCRIPTION);
-        } else if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.DESCRIPTION), description)) {
-            definitionTags.put(DefinitionTagKeys.DESCRIPTION, description);
-        }
+            if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.VERSION), Integer.toString(version))) {
+                definitionTags.put(DefinitionTagKeys.VERSION, Integer.toString(version));
+            }
 
-        // properties
-        for (String extendedMetaclassName : definition.getExtendedMetaclasses()) {
-            String metaclassKey = constructKey(EXTENDED_METACLASS_PREFIX, extendedMetaclassName);
-            Annotation metaclassAnnotation = getAnnotation(modelResource, definitionAnnotation, metaclassKey,
-                                                           extendedMetaclassName, true);
+            // description
+            String description = definition.getDescription();
 
-            // find the tag entry associated with the extended metaclass
-            for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(extendedMetaclassName)) {
-                String propKey = constructKey(PROP_DEFN_PREFIX, propDefn.getSimpleId());
-                Annotation propDefAnnotation = getAnnotation(modelResource, metaclassAnnotation, propKey, propDefn.getSimpleId(),
-                                                             true);
-                EMap<String, String> propDefTags = propDefAnnotation.getTags();
-                String value = null;
+            if (CoreStringUtil.isEmpty(description)) {
+                definitionTags.remove(DefinitionTagKeys.DESCRIPTION);
+            } else if (!CoreStringUtil.equals(definitionTags.get(DefinitionTagKeys.DESCRIPTION), description)) {
+                definitionTags.put(DefinitionTagKeys.DESCRIPTION, description);
+            }
 
-                // advanced
-                value = Boolean.toString(propDefn.isAdvanced());
+            // properties
+            for (String extendedMetaclassName : definition.getExtendedMetaclasses()) {
+                String metaclassKey = constructKey(EXTENDED_METACLASS_PREFIX, extendedMetaclassName);
+                Annotation metaclassAnnotation = getAnnotation(modelResource, definitionAnnotation, metaclassKey,
+                                                               extendedMetaclassName, true);
 
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.ADVANCED), value)) {
-                    propDefTags.put(PropertyTagKeys.ADVANCED, value);
+                // find the tag entry associated with the extended metaclass
+                for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(extendedMetaclassName)) {
+                    String propKey = constructKey(PROP_DEFN_PREFIX, propDefn.getSimpleId());
+                    Annotation propDefAnnotation = getAnnotation(modelResource, metaclassAnnotation, propKey,
+                                                                 propDefn.getSimpleId(), true);
+                    EMap<String, String> propDefTags = propDefAnnotation.getTags();
+                    String value = null;
+
+                    // advanced
+                    value = Boolean.toString(propDefn.isAdvanced());
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.ADVANCED), value)) {
+                        propDefTags.put(PropertyTagKeys.ADVANCED, value);
+                    }
+
+                    // allowed values
+                    String[] allowedValues = propDefn.getAllowedValues();
+
+                    // don't save if no allowed values or if a boolean
+                    if ((allowedValues == null) || (allowedValues.length == 0)
+                            || ModelExtensionPropertyDefinition.Type.BOOLEAN.getRuntimeType().equals(propDefn.getRuntimeType())) {
+                        propDefTags.removeKey(PropertyTagKeys.ALLOWED_VALUES);
+                    } else {
+                        Annotation allowedValuesAnnotation = getAnnotation(modelResource, propDefAnnotation,
+                                                                           PropertyTagKeys.ALLOWED_VALUES,
+                                                                           CoreStringUtil.Constants.EMPTY_STRING, true);
+                        EMap<String, String> allowedValuesTags = allowedValuesAnnotation.getTags();
+
+                        // add each value
+                        for (String allowedValue : allowedValues) {
+                            allowedValuesTags.put(allowedValue, CoreStringUtil.Constants.EMPTY_STRING);
+                        }
+                    }
+
+                    // display name
+                    value = propDefn.getDisplayName();
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DISPLAY_NAME), value)) {
+                        if (CoreStringUtil.isEmpty(value)) {
+                            propDefTags.removeKey(PropertyTagKeys.DISPLAY_NAME);
+                        } else {
+                            propDefTags.put(PropertyTagKeys.DISPLAY_NAME, value);
+                        }
+                    }
+
+                    // default value
+                    value = propDefn.getDefaultValue();
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DEFAULT_VALUE), value)) {
+                        if (CoreStringUtil.isEmpty(value)) {
+                            propDefTags.removeKey(PropertyTagKeys.DEFAULT_VALUE);
+                        } else {
+                            propDefTags.put(PropertyTagKeys.DEFAULT_VALUE, value);
+                        }
+                    }
+
+                    // description
+                    value = propDefn.getDescription();
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DESCRIPTION), value)) {
+                        if (CoreStringUtil.isEmpty(value)) {
+                            propDefTags.removeKey(PropertyTagKeys.DESCRIPTION);
+                        } else {
+                            propDefTags.put(PropertyTagKeys.DESCRIPTION, value);
+                        }
+                    }
+
+                    // id
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.ID), propDefn.getSimpleId())) {
+                        propDefTags.put(PropertyTagKeys.ID, propDefn.getSimpleId());
+                    }
+
+                    // modifiable
+                    value = Boolean.toString(propDefn.isModifiable());
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.MODIFIABLE), value)) {
+                        propDefTags.put(PropertyTagKeys.MODIFIABLE, value);
+                    }
+
+                    // masked
+                    value = Boolean.toString(propDefn.isMasked());
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.MASKED), value)) {
+                        propDefTags.put(PropertyTagKeys.MASKED, value);
+                    }
+
+                    // required
+                    value = Boolean.toString(propDefn.isRequired());
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.REQUIRED), value)) {
+                        propDefTags.put(PropertyTagKeys.REQUIRED, value);
+                    }
+
+                    // runtimeType
+                    value = propDefn.getRuntimeType();
+
+                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.RUNTIME_TYPE), value)) {
+                        propDefTags.put(PropertyTagKeys.RUNTIME_TYPE, value);
+                    }
                 }
-
-                // allowed values
-                String[] allowedValues = propDefn.getAllowedValues();
-
-                // don't save if no allowed values or if a boolean
-                if ((allowedValues == null) || (allowedValues.length == 0)
-                        || ModelExtensionPropertyDefinition.Type.BOOLEAN.getRuntimeType().equals(propDefn.getRuntimeType())) {
-                    propDefTags.removeKey(PropertyTagKeys.ALLOWED_VALUES);
+            }
+        } finally {
+            // if we started the transaction, commit it.
+            if (requiredStart) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
                 } else {
-                    Annotation allowedValuesAnnotation = getAnnotation(modelResource, propDefAnnotation,
-                                                                       PropertyTagKeys.ALLOWED_VALUES,
-                                                                       CoreStringUtil.Constants.EMPTY_STRING, true);
-                    EMap<String, String> allowedValuesTags = allowedValuesAnnotation.getTags();
-
-                    // add each value
-                    for (String allowedValue : allowedValues) {
-                        allowedValuesTags.put(allowedValue, CoreStringUtil.Constants.EMPTY_STRING);
-                    }
-                }
-
-                // display name
-                // TODO implement to localize display name
-                value = propDefn.getDisplayName();
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DISPLAY_NAME), value)) {
-                    if (CoreStringUtil.isEmpty(value)) {
-                        propDefTags.removeKey(PropertyTagKeys.DISPLAY_NAME);
-                    } else {
-                        propDefTags.put(PropertyTagKeys.DISPLAY_NAME, value);
-                    }
-                }
-
-                // default value
-                value = propDefn.getDefaultValue();
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DEFAULT_VALUE), value)) {
-                    if (CoreStringUtil.isEmpty(value)) {
-                        propDefTags.removeKey(PropertyTagKeys.DEFAULT_VALUE);
-                    } else {
-                        propDefTags.put(PropertyTagKeys.DEFAULT_VALUE, value);
-                    }
-                }
-
-                // description
-                // TODO implement to localize description
-                value = propDefn.getDescription();
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DESCRIPTION), value)) {
-                    if (CoreStringUtil.isEmpty(value)) {
-                        propDefTags.removeKey(PropertyTagKeys.DESCRIPTION);
-                    } else {
-                        propDefTags.put(PropertyTagKeys.DESCRIPTION, value);
-                    }
-                }
-
-                // id
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.ID), propDefn.getSimpleId())) {
-                    propDefTags.put(PropertyTagKeys.ID, propDefn.getSimpleId());
-                }
-
-                // modifiable
-                value = Boolean.toString(propDefn.isModifiable());
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.MODIFIABLE), value)) {
-                    propDefTags.put(PropertyTagKeys.MODIFIABLE, value);
-                }
-
-                // masked
-                value = Boolean.toString(propDefn.isMasked());
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.MASKED), value)) {
-                    propDefTags.put(PropertyTagKeys.MASKED, value);
-                }
-
-                // required
-                value = Boolean.toString(propDefn.isRequired());
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.REQUIRED), value)) {
-                    propDefTags.put(PropertyTagKeys.REQUIRED, value);
-                }
-
-                // runtimeType
-                value = propDefn.getRuntimeType();
-
-                if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.RUNTIME_TYPE), value)) {
-                    propDefTags.put(PropertyTagKeys.RUNTIME_TYPE, value);
+                    ModelerCore.rollbackTxn();
                 }
             }
         }
