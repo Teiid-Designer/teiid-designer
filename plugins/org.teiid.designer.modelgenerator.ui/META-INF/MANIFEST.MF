@@ -7,30 +7,11 @@ Bundle-Activator: com.metamatrix.modeler.modelgenerator.ui.ModelerModelGenerator
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Export-Package: com.metamatrix.modeler.modelgenerator.ui
-Require-Bundle: org.eclipse.ui.ide,
- org.eclipse.ui.views,
- org.eclipse.jface.text,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.editors,
- org.eclipse.core.resources,
- org.eclipse.ui,
+Require-Bundle: org.eclipse.core.resources,
  org.teiid.designer.ui.common,
- org.teiid.designer.ui,
- org.teiid.designer.metamodels.relational,
- org.teiid.designer.core,
- org.teiid.designer.modelgenerator,
- org.teiid.designer.compare,
  teiid_embedded_query,
- org.teiid.designer.metamodels.relationship,
- org.teiid.designer.compare.ui,
- org.eclipse.emf.common.ui,
- org.teiid.designer.modelgenerator.uml2,
  org.teiid.core.designer,
- org.eclipse.uml2.uml,
  org.eclipse.core.runtime,
- org.eclipse.emf.mapping,
- org.eclipse.emf.edit.ui,
- org.teiid.designer.metamodels.core,
- org.jdom
+ org.eclipse.emf.edit.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

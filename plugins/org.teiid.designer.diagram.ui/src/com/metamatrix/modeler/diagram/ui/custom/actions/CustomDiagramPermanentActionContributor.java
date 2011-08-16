@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
@@ -125,6 +126,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramAction);
         }
     }
@@ -135,8 +137,10 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramAction);
         } else {
+        	theMenuMgr.add(new Separator());
             theMenuMgr.add(createDiagramAction);
         }
     }
@@ -147,6 +151,7 @@ public class CustomDiagramPermanentActionContributor implements IModelObjectActi
         IMenuManager mm = theMenuMgr.findMenuUsingPath(menuPath);
                 
         if( mm != null ) {
+        	mm.add(new Separator());
             mm.add(createDiagramSiblingAction);
         }
     }
