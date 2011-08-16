@@ -46,8 +46,8 @@ import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.util.FileUtils;
-import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -82,10 +82,7 @@ import com.metamatrix.ui.internal.wizard.IPersistentWizardPage;
 /**
  * @since 4.0
  */
-public class JdbcImportOptionsPage extends WizardPage implements
-                                                     InternalUiConstants.Widgets,
-                                                     IPersistentWizardPage,
-                                                     UiConstants {
+public class JdbcImportOptionsPage extends WizardPage implements InternalUiConstants.Widgets, IPersistentWizardPage, UiConstants {
 
     // ===========================================================================================================================
     // Constants
@@ -129,15 +126,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
     /**
      * @since 4.0
      */
-    private static String getString(final String id) {
+    private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
     }
 
     /**
      * @since 4.0
      */
-    private static String getString(final String id,
-                                    final Object parameter) {
+    private static String getString( final String id,
+                                     final Object parameter ) {
         return Util.getString(I18N_PREFIX + id, parameter);
     }
 
@@ -148,7 +145,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private JdbcImportSettings importSettings;
     private Text nameText, folderText;
     private Button updateCheckBox, catalogCheckBox, schemaCheckBox, noneButton, uppercaseButton, lowercaseButton, emptyButton,
-                    unqualifiedButton, qualifiedButton;
+    unqualifiedButton, qualifiedButton;
     private boolean initd;
     private IContainer folder;
     private boolean usesHiddenProject = false;
@@ -172,7 +169,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      * @since 4.0
      */
-    public void createControl(final Composite parent) {
+    public void createControl( final Composite parent ) {
         usesHiddenProject = ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric();
 
         // Create page
@@ -184,7 +181,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         this.nameText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL);
         this.nameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            public void modifyText( final ModifyEvent event ) {
                 nameModified();
             }
         });
@@ -195,7 +192,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         btn.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent event) {
+            public void widgetSelected( final SelectionEvent event ) {
                 browseModelSelected();
             }
         });
@@ -213,7 +210,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
         this.folderText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(final ModifyEvent event) {
+            public void modifyText( final ModifyEvent event ) {
                 folderModified();
             }
         });
@@ -223,7 +220,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             WidgetFactory.createButton(pg, BROWSE_BUTTON).addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     browseButtonSelected();
                 }
             });
@@ -233,7 +230,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         this.updateCheckBox.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent event) {
+            public void widgetSelected( final SelectionEvent event ) {
                 updateCheckBoxSelected();
             }
         });
@@ -244,7 +241,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.catalogCheckBox.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     catalogCheckBoxSelected();
                 }
             });
@@ -252,7 +249,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.schemaCheckBox.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     schemaCheckBoxSelected();
                 }
             });
@@ -267,7 +264,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.noneButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     noneButtonSelected();
                 }
             });
@@ -275,7 +272,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.uppercaseButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     uppercaseButtonSelected();
                 }
             });
@@ -283,7 +280,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.lowercaseButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     lowercaseButtonSelected();
                 }
             });
@@ -298,7 +295,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.emptyButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     emptyButtonSelected();
                 }
             });
@@ -306,7 +303,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.unqualifiedButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     unqualifiedButtonSelected();
                 }
             });
@@ -314,7 +311,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             this.qualifiedButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void widgetSelected(final SelectionEvent event) {
+                public void widgetSelected( final SelectionEvent event ) {
                     qualifiedButtonSelected();
                 }
             });
@@ -360,7 +357,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     @Override
-    public void setVisible(final boolean visible) {
+    public void setVisible( final boolean visible ) {
         if (visible) {
             // Wrap in transaction so it doesn't result in Significant Undoable
             boolean started = ModelerCore.startTxn(false, false, "Initializing Optioin Settings", this); //$NON-NLS-1$
@@ -408,26 +405,26 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 // Check if supports catalogs....
                 boolean supportsCatalogs = false;
                 ResultSet resultSet = metadata.getCatalogs();
-                while( resultSet.next() ) {
+                while (resultSet.next()) {
                     final String catalogName = resultSet.getString(1);
-                    if( catalogName.length() > 0 ) {
+                    if (catalogName.length() > 0) {
                         supportsCatalogs = true;
                     }
                 }
 
                 Composite parent = null;
-                if (this.catalogCheckBox != null && !this.catalogCheckBox.isDisposed())
-                    parent = this.catalogCheckBox.getParent();
-                else if (this.schemaCheckBox != null && !this.schemaCheckBox.isDisposed())
-                    parent = this.schemaCheckBox.getParent();
+                if (this.catalogCheckBox != null && !this.catalogCheckBox.isDisposed()) parent = this.catalogCheckBox.getParent();
+                else if (this.schemaCheckBox != null && !this.schemaCheckBox.isDisposed()) parent = this.schemaCheckBox.getParent();
                 if (parent != null) {
-                    // check if supports catalogs.  (i.e. catalog name == NULL or empty);
+                    // check if supports catalogs. (i.e. catalog name == NULL or empty);
                     String finalCatalogTerm = catalogTerm;
-                    if( !supportsCatalogs ) {
+                    if (!supportsCatalogs) {
                         finalCatalogTerm = CoreStringUtil.Constants.EMPTY_STRING;
                     }
 
-                    initializeIncludeCheckBox(this.catalogCheckBox, finalCatalogTerm, this.importSettings.isCreateCatalogsInModel());
+                    initializeIncludeCheckBox(this.catalogCheckBox,
+                                              finalCatalogTerm,
+                                              this.importSettings.isCreateCatalogsInModel());
                     initializeIncludeCheckBox(this.schemaCheckBox, schemaTerm, this.importSettings.isCreateSchemasInModel());
                     if (this.catalogCheckBox.isDisposed() && this.schemaCheckBox.isDisposed()) {
                         parent.dispose();
@@ -466,7 +463,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         } catch (final Exception err) {
             JdbcUiUtil.showAccessError(err);
         }
-        validatePage();
+        validatePage(true);
         if (isPageComplete()) {
             if (usesHiddenProject) {
                 setMessage(getString(INITIAL_MESSAGE_HIDDEN_PROJECT_ID, name));
@@ -497,7 +494,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                                                                            ((JdbcImportWizard)getWizard()).getFolder(),
                                                                            new ModelWorkspaceViewerFilter(true),
                                                                            new ModelResourceSelectionValidator(descriptor, false),
-        																   new ModelExplorerLabelProvider());
+                                                                           new ModelExplorerLabelProvider());
 
         if ((resources != null) && (resources.length > 0)) {
             IFile model = (IFile)resources[0];
@@ -506,11 +503,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
 
             this.nameText.setText(model.getName());
             this.folderText.setText((folder == null) ? "" //$NON-NLS-1$
-                            : folder.getFullPath().makeRelative().toString());
+            : folder.getFullPath().makeRelative().toString());
             this.updateCheckBox.setSelection(true);
             updateCheckBoxSelected(); // to get handler activated
         } else {
-        	this.selectedModel = null;
+            this.selectedModel = null;
         }
     }
 
@@ -521,9 +518,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
         final ViewerFilter filter = new ViewerFilter() {
 
             @Override
-            public boolean select(final Viewer viewer,
-                                  final Object parent,
-                                  final Object element) {
+            public boolean select( final Viewer viewer,
+                                   final Object parent,
+                                   final Object element ) {
                 try {
                     return (((IContainer)element).getProject().getNature(ModelerCore.NATURE_ID) != null);
                 } catch (final CoreException err) {
@@ -537,7 +534,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                                                                        new ModelProjectSelectionStatusValidator());
         if (folder != null) {
             this.folderText.setText(folder.getFullPath().makeRelative().toString());
-            validatePage();
+            validatePage(false);
         }
     }
 
@@ -550,7 +547,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
 
         if (folder != null) {
             this.folderText.setText(folder.getFullPath().makeRelative().toString());
-            validatePage();
+            validatePage(false);
         }
     }
 
@@ -583,9 +580,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
         final ViewerFilter filter = new ViewerFilter() {
 
             @Override
-            public boolean select(final Viewer viewer,
-                                  final Object parent,
-                                  final Object element) {
+            public boolean select( final Viewer viewer,
+                                   final Object parent,
+                                   final Object element ) {
 
                 boolean result = false;
 
@@ -612,15 +609,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     void catalogCheckBoxSelected() {
-        boolean requiredStart = ModelerCore.startTxn(false,false,"Set Catalog Option",this); //$NON-NLS-1$
+        boolean requiredStart = ModelerCore.startTxn(false, false, "Set Catalog Option", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
             this.importSettings.setCreateCatalogsInModel(this.catalogCheckBox.getSelection());
             succeeded = true;
         } finally {
             // If we start txn, commit it
-            if(requiredStart) {
-                if(succeeded) {
+            if (requiredStart) {
+                if (succeeded) {
                     ModelerCore.commitTxn();
                 } else {
                     ModelerCore.rollbackTxn();
@@ -634,15 +631,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void emptyButtonSelected() {
         if (this.emptyButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set Empty Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set Empty Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setGenerateSourceNamesInModel(SourceNames.NONE_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -656,7 +653,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     void folderModified() {
-        validatePage();
+        validatePage(false);
     }
 
     /**
@@ -664,15 +661,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void lowercaseButtonSelected() {
         if (this.lowercaseButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set Lower Case Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set Lower Case Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setConvertCaseInModel(CaseConversion.TO_LOWERCASE_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -686,14 +683,14 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     void nameModified() {
-        validatePage();
+        validatePage(false);
     }
 
     /**
      * @since 4.0
      */
-    protected void newFolderButtonSelected(final TreeViewer viewer,
-                                           final IContainer folder) {
+    protected void newFolderButtonSelected( final TreeViewer viewer,
+                                            final IContainer folder ) {
         final NewFolderDialog dlg = new NewFolderDialog(getShell(), folder);
         if (dlg.open() == Window.OK) {
             viewer.refresh(folder);
@@ -707,15 +704,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void noneButtonSelected() {
         if (this.noneButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set None Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set None Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setConvertCaseInModel(CaseConversion.NONE_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -730,15 +727,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void qualifiedButtonSelected() {
         if (this.qualifiedButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set Qualified Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set Qualified Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setGenerateSourceNamesInModel(SourceNames.FULLY_QUALIFIED_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -752,15 +749,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     void schemaCheckBoxSelected() {
-        boolean requiredStart = ModelerCore.startTxn(false,false,"Set Schema Option",this); //$NON-NLS-1$
+        boolean requiredStart = ModelerCore.startTxn(false, false, "Set Schema Option", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
             this.importSettings.setCreateSchemasInModel(this.schemaCheckBox.getSelection());
             succeeded = true;
         } finally {
             // If we start txn, commit it
-            if(requiredStart) {
-                if(succeeded) {
+            if (requiredStart) {
+                if (succeeded) {
                     ModelerCore.commitTxn();
                 } else {
                     ModelerCore.rollbackTxn();
@@ -774,15 +771,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void unqualifiedButtonSelected() {
         if (this.unqualifiedButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set Unqualified Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set Unqualified Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setGenerateSourceNamesInModel(SourceNames.UNQUALIFIED_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -796,7 +793,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * @since 4.0
      */
     void updateCheckBoxSelected() {
-    	final ModelResource model;
+        final ModelResource model;
         /*
          * jhTODO: when checkbox is true, disable finish, enable next
          */
@@ -816,25 +813,26 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 WidgetUtil.showError(err.getLocalizedMessage());
             }
         }
-        validatePage();
+        validatePage(false);
     }
 
     /**
-     * Get the selected ModelResource.  This method will check the selectedModel field - if it is
-     * not null it will be returned.  Otherwise, the original selection is returned.
+     * Get the selected ModelResource. This method will check the selectedModel field - if it is not null it will be returned.
+     * Otherwise, the original selection is returned.
+     * 
      * @return the ModelResource selection
      */
     private ModelResource getSelectedModelResource() throws ModelWorkspaceException {
-    	ModelResource model = null;
-    	if(this.selectedModel!=null) {
-    		model = ModelUtil.getModel(this.selectedModel);
-    	} else {
+        ModelResource model = null;
+        if (this.selectedModel != null) {
+            model = ModelUtil.getModel(this.selectedModel);
+        } else {
             final IStructuredSelection selection = UiUtil.getStructuredSelection();
-            if(selection.size() == 1) {
-            	model = ModelUtil.getModel(selection.getFirstElement());
+            if (selection.size() == 1) {
+                model = ModelUtil.getModel(selection.getFirstElement());
             }
-    	}
-    	return model;
+        }
+        return model;
     }
 
     /**
@@ -842,15 +840,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     void uppercaseButtonSelected() {
         if (this.uppercaseButton.getSelection()) {
-            boolean requiredStart = ModelerCore.startTxn(false,false,"Set Uppercase Option",this); //$NON-NLS-1$
+            boolean requiredStart = ModelerCore.startTxn(false, false, "Set Uppercase Option", this); //$NON-NLS-1$
             boolean succeeded = false;
             try {
                 this.importSettings.setConvertCaseInModel(CaseConversion.TO_UPPERCASE_LITERAL);
                 succeeded = true;
             } finally {
                 // If we start txn, commit it
-                if(requiredStart) {
-                    if(succeeded) {
+                if (requiredStart) {
+                    if (succeeded) {
                         ModelerCore.commitTxn();
                     } else {
                         ModelerCore.rollbackTxn();
@@ -866,9 +864,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
     /**
      * @since 4.0
      */
-    private void initializeIncludeCheckBox(final Button checkBox,
-                                           final String term,
-                                           final boolean selected) {
+    private void initializeIncludeCheckBox( final Button checkBox,
+                                            final String term,
+                                            final boolean selected ) {
         if (term.length() == 0) {
             checkBox.dispose();
             ((Composite)getControl()).layout();
@@ -881,7 +879,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     /**
      * @since 4.0
      */
-    private void validatePage() {
+    private void validatePage( boolean firstTime ) {
         final boolean updating = this.updateCheckBox.getSelection();
         try {
             // making 'folder' an instance var so that canFlipToNextPage() can use it w/o recreating it
@@ -937,16 +935,22 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 wizard.setFolder(folder);
                 if (model != wizard.getUpdatedModel()) {
                     List newlySelectedNodes = new ArrayList();
-                    //collect newly selected nodes
+                    // collect newly selected nodes
                     collectNewlySelectedNodes(db.getChildren(), newlySelectedNodes, getOriginalImportSettings(model));
-                    //reset the model to be updated. this reset the import setting
+                    // reset the model to be updated. this reset the import setting
                     wizard.setUpdatedModel(model);
                     // Removed previously excluded nodes that have now been selected for import
                     removeExcludedNodes(newlySelectedNodes);
                 }
                 getContainer().updateButtons();
             } else if (folder != null) {
-                WizardUtil.setPageComplete(this, getMessage() + '\n' + FILE_EXISTS_MESSAGE, getMessageType());
+                // During initialization (firstTime) auto-set the update-check-box for the user
+                if (firstTime) {
+                    this.updateCheckBox.setSelection(true);
+                    updateCheckBoxSelected();
+                } else {
+                    WizardUtil.setPageComplete(this, getMessage() + '\n' + FILE_EXISTS_MESSAGE, getMessageType());
+                }
             }
         } catch (final CoreException err) {
             Util.log(err);
@@ -954,8 +958,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
     }
 
-    private void collectNewlySelectedNodes(JdbcNode[] children, List newlySelectedNodes, JdbcImportSettings settings) throws CoreException{
-        if(children == null) {
+    private void collectNewlySelectedNodes( JdbcNode[] children,
+                                            List newlySelectedNodes,
+                                            JdbcImportSettings settings ) throws CoreException {
+        if (children == null) {
             return;
         }
 
@@ -963,7 +969,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             for (int ndx = children.length; --ndx >= 0;) {
                 final JdbcNode child = children[ndx];
 
-                if(child.getSelectionMode() == JdbcNode.SELECTED) {
+                if (child.getSelectionMode() == JdbcNode.SELECTED) {
                     for (final Iterator objIter = settings.getExcludedObjectPaths().iterator(); objIter.hasNext();) {
                         final IPath path = new Path((String)objIter.next());
                         if (child.equals(((JdbcImportWizard)getWizard()).findNode(path, this.db))) {
@@ -972,15 +978,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
                         }
                     }
                 }
-                if(child.getSelectionMode() == JdbcNode.SELECTED || child.getSelectionMode() == JdbcNode.PARTIALLY_SELECTED) {
+                if (child.getSelectionMode() == JdbcNode.SELECTED || child.getSelectionMode() == JdbcNode.PARTIALLY_SELECTED) {
                     collectNewlySelectedNodes(child.getChildren(), newlySelectedNodes, settings);
                 }
             }
         }
     }
 
-    private JdbcImportSettings getOriginalImportSettings(ModelResource model) throws CoreException{
-        if(model != null) {
+    private JdbcImportSettings getOriginalImportSettings( ModelResource model ) throws CoreException {
+        if (model != null) {
             for (Iterator modelIter = model.getAllRootEObjects().iterator(); modelIter.hasNext();) {
                 final Object obj = modelIter.next();
                 if (obj instanceof JdbcSource) {
@@ -989,18 +995,18 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         }
 
-        return((JdbcImportWizard)getWizard()).getSource().getImportSettings();
+        return ((JdbcImportWizard)getWizard()).getSource().getImportSettings();
     }
 
-    private void removeExcludedNodes(List nodes) throws CoreException{
-        if(nodes.isEmpty()) {
+    private void removeExcludedNodes( List nodes ) throws CoreException {
+        if (nodes.isEmpty()) {
             return;
         }
 
         final JdbcImportSettings settings = ((JdbcImportWizard)getWizard()).getSource().getImportSettings();
         if (settings != null) {
             Iterator iter = nodes.iterator();
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 final JdbcNode node = (JdbcNode)iter.next();
                 node.setSelected(true);
                 for (final Iterator objIter = settings.getExcludedObjectPaths().iterator(); objIter.hasNext();) {
@@ -1037,11 +1043,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
     }
 
     /**
-     * @param initd
-     *            The initd to set.
+     * @param initd The initd to set.
      * @since 4.3
      */
-    public void setInitd(boolean initd) {
+    public void setInitd( boolean initd ) {
         this.initd = initd;
     }
 }
