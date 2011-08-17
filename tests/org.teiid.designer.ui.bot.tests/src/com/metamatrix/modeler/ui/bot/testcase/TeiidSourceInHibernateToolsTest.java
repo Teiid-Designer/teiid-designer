@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.jboss.tools.ui.bot.ext.config.Annotations.SWTBotTestRequires;
+import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Seam;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Server;
 import org.jboss.tools.ui.bot.ext.config.Annotations.ServerType;
@@ -25,7 +25,7 @@ import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
  * @author psrna
  *
  */
-@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1")/*, seam=@Seam()*/)
+@Require(server=@Server(type=ServerType.SOA,version="5.1")/*, seam=@Seam()*/)
 public class TeiidSourceInHibernateToolsTest extends TeiidDesignerTest{
 
 	@BeforeClass

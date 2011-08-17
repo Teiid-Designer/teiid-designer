@@ -3,7 +3,7 @@ package com.metamatrix.modeler.ui.bot.testcase;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.jboss.tools.ui.bot.ext.config.Annotations.SWTBotTestRequires;
+import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
 import org.jboss.tools.ui.bot.ext.types.IDELabel;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
  * @author psrna
  *
  */
-@SWTBotTestRequires(perspective="Teiid Designer")
+@Require(perspective="Teiid Designer")
 public class ModelWizardTest extends TeiidDesignerTest{
 	
 	public SWTBotShell getModelWizardShell(){

@@ -184,7 +184,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 		entity.setInstanceName("Oracle Thin Driver");
 		entity.setProfileName(Properties.ORACLE_CONNPROFILE_NAME);
 		entity.setProfileDescription("PartsSupplier Oracle database");
-		entity.setJdbcString("jdbc:oracle:thin:@englxdbs11.mm.atl2.redhat.com:1521:ORCL");
+		entity.setJdbcString("jdbc:oracle:thin:@englxdbs11.mw.lab.eng.bos.redhat.com:1521:ORCL");
 		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.oracle.10.driverTemplate");
 		entity.setDriverDefId("Oracle DB");
 		entity.setUser("partssupplier");
@@ -212,7 +212,7 @@ public class TeiidDesignerTest extends SWTTestExt {
 		entity.setInstanceName("Microsoft SQL Server 2008 JDBC Driver");
 		entity.setProfileName(Properties.SQLSERVER_CONNPROFILE_NAME);
 		entity.setProfileDescription("PartsSupplier SQL Server database");
-		entity.setJdbcString("jdbc:sqlserver://slntdb02.mm.atl2.redhat.com:1433;databaseName=PartsSupplier");
+		entity.setJdbcString("jdbc:sqlserver://slntdb02.mw.lab.eng.bos.redhat.com:1433;databaseName=PartsSupplier");
 		entity.setDriverTemplateDescId("org.eclipse.datatools.enablement.msft.sqlserver.2008.driverTemplate");
 		entity.setDriverDefId("SQL Server DB");
 		entity.setUser("PartsSupplier");

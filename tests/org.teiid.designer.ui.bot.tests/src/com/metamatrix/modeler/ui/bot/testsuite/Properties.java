@@ -36,7 +36,7 @@ public class Properties {
 	public static final String VDB_NAME = "MyFirstVDB";
 	
 	public static final String TEIID_SQL = "SELECT\n\t\t"           +
-	
+			
 	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_ID, "      +
 	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_NAME, "    +
 	             "PartsSupplier_Oracle.SUPPLIER.SUPPLIER_STATUS, "  +
@@ -61,6 +61,7 @@ public class Properties {
 	                      "PartsSupplier_Oracle.SUPPLIER."          +
 	                                           "SUPPLIER_ID";
 
+
 	public static final String PROCEDURE_SQL = "CREATE VIRTUAL PROCEDURE\n"                +
 	                                           "BEGIN\n\t"                                 +
 	                                           "SELECT * FROM PartsVirtual.OnHand "        +
@@ -75,16 +76,18 @@ public class Properties {
 	public static final String TESTSQL_3 = "SELECT * FROM PartsVirtual.OnHand WHERE QUANTITY > 200"; //should return 126 rows
 	public static final int    TESTSQL3_ROW_COUNT = 126;
 	public static final String TESTSQL_4 = "SELECT " + 
-	                                               "O.SUPPLIER_NAME, "                  + 
-	                                               "O.PART_ID, "                        +
-	                                               "P.PART_NAME "                       + 
-	                                       "FROM "                                      + 
-	                                               "PartsSupplier_Oracle.PARTS AS P, "  + 
-	                                               "PartsVirtual.OnHand AS O "          + 
-	                                       "WHERE "                                     + 
-	                                               "(P.PART_ID = O.PART_ID) and "       + 
-	                                               "(O.SUPPLIER_NAME LIKE '%la%') "     + 
-	                                       "ORDER BY PART_NAME"; //it should return 30 rows
+				"O.SUPPLIER_NAME, "                  + 
+				"O.PART_ID, "                        +
+				"P.PART_NAME "                       + 
+				
+		"FROM "                                      + 
+				"PartsSupplier_Oracle.PARTS AS P, "  + 
+				"PartsVirtual.OnHand AS O "          + 
+		"WHERE "                                     + 
+				"(P.PART_ID = O.PART_ID) and "       + 
+				"(O.SUPPLIER_NAME LIKE '%la%') "     + 
+				"ORDER BY PART_NAME"; //it should return 30 rows
+
 	public static final int    TESTSQL4_ROW_COUNT = 30;
 	
 	public static final String TESTSQL_5 = "EXEC PartsVirtual.getOnHandByQuantity( 200 )"; //it should return 30 rows

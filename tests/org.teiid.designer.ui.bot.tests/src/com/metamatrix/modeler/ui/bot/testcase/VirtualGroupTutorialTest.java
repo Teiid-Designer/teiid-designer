@@ -10,7 +10,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.jboss.tools.ui.bot.ext.SWTEclipseExt;
-import org.jboss.tools.ui.bot.ext.config.Annotations.SWTBotTestRequires;
+import org.jboss.tools.ui.bot.ext.config.Annotations.Require;
 import org.jboss.tools.ui.bot.ext.config.Annotations.Server;
 import org.jboss.tools.ui.bot.ext.config.Annotations.ServerState;
 import org.jboss.tools.ui.bot.ext.config.Annotations.ServerType;
@@ -27,7 +27,7 @@ import org.teiid.designer.ui.bot.ext.teiid.SWTTeiidBot;
 import com.metamatrix.modeler.ui.bot.testsuite.Properties;
 import com.metamatrix.modeler.ui.bot.testsuite.TeiidDesignerTest;
 
-@SWTBotTestRequires(server=@Server(type=ServerType.SOA,version="5.1", state=ServerState.Running), perspective="Teiid Designer")
+@Require(server=@Server(type=ServerType.SOA,version="5.1", state=ServerState.Running), perspective="Teiid Designer")
 public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 
 	private static final String CONNERR_MSG = "Unable to connect using the specified server properties." +
@@ -197,7 +197,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		canvas.tFigure().doubleClick();
 
 		
-		final SWTBot editorBot = bot.editorByTitle(Properties.PARTSVIRTUAL_MODEL_NAME).bot();
+		SWTBot editorBot = bot.editorByTitle(Properties.PARTSVIRTUAL_MODEL_NAME).bot();
 		
 		//set caret to the end
 		int lineCount = editorBot.styledText(0).getLineCount();
@@ -205,24 +205,24 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		int column = lastLine.length();
 		
 		editorBot.styledText(0).navigateTo(lineCount-1, column);
-		final StyledText textWidget = editorBot.styledText(0).widget;
 		
+		final StyledText textWidget = editorBot.styledText(0).widget;
 		StyledTextHelper.mouseClickOnCaret(textWidget);
 				
-		
-		
+				
 		editorBot.toolbarButtonWithTooltip("Criteria Builder").click();
-		
-		
+
 		SWTBotShell shell = bot.shell("Criteria Builder");
 		shell.activate();
 		
 		shell.bot().tree(1).expandNode(Properties.SQLSERVER_SUPPLIER_PARTS)
-						       .select(Properties.SQLSERVER_SUPPLIER_PARTS + ".SUPPLIER_ID");
+								.select(Properties.SQLSERVER_SUPPLIER_PARTS + ".SUPPLIER_ID");
 		
+		shell.bot().tree(2).setFocus();
 		shell.bot().tree(2).expandNode(Properties.ORACLE_SUPPLIER)
-	       				       .select(Properties.ORACLE_SUPPLIER + ".SUPPLIER_ID");
+								.select(Properties.ORACLE_SUPPLIER + ".SUPPLIER_ID");
 		
+	
 		shell.bot().button("Apply").click();
 		
 		//Assert
@@ -282,7 +282,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), oracle_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Select Connection Profile");
+		SWTBotShell shell = bot.shell("Set Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.ORACLE_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -294,7 +294,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.ORACLE_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Password");
+		shell = bot.shell("Data Source Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -319,7 +319,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), sql_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Set Connection Profile");
 		
-		SWTBotShell shell = bot.shell("Select Connection Profile");
+		SWTBotShell shell = bot.shell("Set Connection Profile");
 		shell.activate();
 		shell.bot().tree(0).expandNode("Database Connections").select(Properties.SQLSERVER_CONNPROFILE_NAME);
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -331,7 +331,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		shell.bot().textWithLabel("Data Source Name:").setText(Properties.SQLSERVER_TEIID_SOURCE);
 		open.finish(shell.bot());
 		
-		shell = bot.shell("Password");
+		shell = bot.shell("Data Source Password");
 		shell.activate();
 		shell.bot().textWithLabel("Password:").setText("mm");
 		open.finish(shell.bot(), IDELabel.Button.OK);
@@ -396,7 +396,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		ContextMenuHelper.prepareTreeItemForContextMenu(viewBot.tree(), vdb_node);
 		ContextMenuHelper.clickContextMenu(viewBot.tree(), "Modeling", "Deploy");
 		
-		bot.sleep(TIME_1S);
+		bot.sleep(TIME_5S);
 		
 		SWTBot teiidBot = bot.viewByTitle("Teiid").bot();
 		assertTrue("VDB deployment error!", 
@@ -406,7 +406,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void procedureDefinition(){
 		openPerspective("Teiid Designer");
 		
@@ -501,7 +501,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void deployChanges(){
 		
 		bot.editorByTitle(Properties.VDB_NAME + ".vdb").show();
@@ -579,7 +579,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
 		assertTrue("SQL result rows:" + res.getRows(), res.getRows() == Properties.TESTSQL4_ROW_COUNT);
 		
-		
+		/*
 		// TESTSQL_5
 		scrapbookBot = bot.editorByTitle("SQL Scrapbook 0").bot();
 		scrapbookBot.styledText().setText(Properties.TESTSQL_5);
@@ -590,7 +590,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		res = getQueryResult(Properties.TESTSQL_5);
 		assertTrue("SQL query status:" + res.getStatus(), res.getStatus().equals("Succeeded"));
 		assertTrue("SQL result rows:" + res.getRows(), res.getRows() == Properties.TESTSQL5_ROW_COUNT);
-		
+		*/
 		bot.editorByTitle("SQL Scrapbook 0").close();
 	}
 
