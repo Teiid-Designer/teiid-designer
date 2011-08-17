@@ -179,12 +179,21 @@
       </decorator>
    </extension>
    <extension
-         id="applyRestWarExtensionPropertiesAction"
-         name="%applyRestWarExtensionPropertiesAction.name"
+         id="applyRestWarPropertiesAction"
+         name="%applyRestWarPropertiesAction.name"
          point="org.teiid.designer.ui.modelObjectSpecialAction">
       <specialAction
-         name="org.teiid.designer.runtime.ui.extension.ApplyRestWarExtensionPropertiesAction"
-         label="%applyRestWarExtensionPropertiesAction.label">
+         name="org.teiid.designer.runtime.ui.extension.ApplyRestWarPropertiesAction"
+         label="%applyRestWarPropertiesAction.label">
+      </specialAction>
+   </extension>
+   <extension
+         id="removeRestWarPropertiesAction"
+         name="%removeRestWarPropertiesAction.name"
+         point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.runtime.ui.extension.RemoveRestWarPropertiesAction"
+         label="%removeRestWarPropertiesAction.label">
       </specialAction>
    </extension>
 </plugin>
