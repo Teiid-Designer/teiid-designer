@@ -286,13 +286,25 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
 
     /**
      * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
+     * @throws IllegalArgumentException if the model object is not an {@link EObject}
+     */
+    @Override
+    public boolean isModelExtensionDefinitionRelated( Object modelObject ) throws Exception {
+        CoreArgCheck.isInstanceOf(EObject.class, modelObject);
+        return ModelExtensionUtils.isModelExtensionDefinitionRelated((EObject)modelObject);
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeModelExtensionDefinition(java.lang.Object,
      *      java.lang.String)
      */
     @Override
-    protected void removeModelExtensionDefinition( Object modelObject,
-                                                   String namespacePrefix ) throws Exception {
+    public void removeModelExtensionDefinition( Object modelObject,
+                                                String namespacePrefix ) throws Exception {
         ModelExtensionUtils.removeModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
     }
 

@@ -7,9 +7,11 @@
  */
 package com.metamatrix.modeler.internal.ui.properties;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -36,9 +38,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.teiid.designer.extension.ExtensionPlugin;
 
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
+import com.metamatrix.metamodels.core.Annotation;
+import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.modeler.core.notification.util.NotificationUtilities;
 import com.metamatrix.modeler.core.notification.util.SourcedNotificationUtilities;
@@ -110,6 +115,37 @@ public class ModelObjectPropertySheetPage
 
     }
 
+    private boolean isModelExtensionDefinitionRelated( Notification notification ) {
+        Object notifier = notification.getNotifier();
+
+        // model extension framework uses annotations
+        if ((notifier instanceof AnnotationContainer)  || (notifier instanceof Annotation)) {
+            List<Notification> notifications = new ArrayList<Notification>();
+
+            if (notification instanceof SourcedNotification) {
+                notifications.addAll(((SourcedNotification)notification).getNotifications());
+            } else {
+                notifications.add(notification);
+            }
+
+            for (Notification event : notifications) {
+                Object modelObject = null;
+
+                if (event.getEventType() == Notification.ADD) {
+                    modelObject = event.getNewValue();
+                } else if (event.getEventType() == Notification.REMOVE) {
+                    modelObject = event.getOldValue();
+                }
+
+                if (ExtensionPlugin.getInstance().isModelExtensionDefinitionRelated(modelObject)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /* (non-Javadoc)
      * Listens to notifications that change the currently displayed object so that the panel can be refreshed.
      * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
@@ -134,7 +170,7 @@ public class ModelObjectPropertySheetPage
             Set affectedObjects = SourcedNotificationUtilities.gatherNotifiers(notification, true);
 
             if ( selectedObject != null ) {                
-                if (affectedObjects.contains(selectedObject)) {
+                if (affectedObjects.contains(selectedObject) || isModelExtensionDefinitionRelated(notification)) {
                     handlingNotification = true;
                     try {
                         this.refresh();

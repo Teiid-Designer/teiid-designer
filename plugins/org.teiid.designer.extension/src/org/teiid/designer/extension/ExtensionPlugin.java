@@ -53,6 +53,27 @@ public class ExtensionPlugin extends Plugin {
         return this.registry;
     }
 
+    /**
+     * @param modelObject the model object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object is related to a model extension definition
+     * @throws Exception if there is a problem accessing the model object
+     */
+    public boolean isModelExtensionDefinitionRelated( Object modelObject ) {
+        for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
+            ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
+
+            try {
+                if (assistant.isModelExtensionDefinitionRelated(modelObject)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                Util.log(e);
+            }
+        }
+
+        return false;
+    }
+
     private void loadRegistry() {
         final String EXT_PT = PLUGIN_ID + ".modelExtensionProvider"; //$NON-NLS-1$
         final String PATH = "path"; //$NON-NLS-1$

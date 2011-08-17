@@ -208,6 +208,13 @@ public abstract class ModelExtensionAssistant {
     public abstract boolean hasExtensionProperties( Object modelObject ) throws Exception;
 
     /**
+     * @param modelObject the model object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object is related to a model extension definition
+     * @throws Exception if there is a problem accessing the model object
+     */
+    public abstract boolean isModelExtensionDefinitionRelated( Object modelObject ) throws Exception;
+
+    /**
      * Removes the model extension definition and it's associated properties from the model object.
      * 
      * @param modelObject the model object whose resource the model extension definition is being removed from (cannot be
@@ -215,8 +222,8 @@ public abstract class ModelExtensionAssistant {
      * @param namespacePrefix the namespace prefix of the model extension definition being deleted (cannot be <code>null</code>)
      * @throws Exception if the model extension definition could not be removed
      */
-    protected abstract void removeModelExtensionDefinition( Object modelObject,
-                                                            String namespacePrefix ) throws Exception;
+    public abstract void removeModelExtensionDefinition( Object modelObject,
+                                                         String namespacePrefix ) throws Exception;
 
     /**
      * @param modelObject the model object whose property is being removed (cannot be <code>null</code>)

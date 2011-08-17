@@ -244,6 +244,25 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * @param modelObject the model object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object is related to a model extension definition
+     */
+    public static boolean isModelExtensionDefinitionRelated( EObject modelObject ) {
+        if (modelObject instanceof EStringToStringMapEntryImpl) {
+            String key = ((EStringToStringMapEntryImpl)modelObject).getKey();
+
+            if (key.startsWith(DEFN_PREFIX + DELIM)) {
+                return true;
+            }
+        } else if (modelObject instanceof Annotation) {
+            return isModelExtensionDefinitionRelated(((Annotation)modelObject).getAnnotatedObject());
+        }
+
+        return false;
+
+    }
+
+    /**
      * @param modelResource the model resource where the model extension definition is being removed (cannot be <code>null</code>)
      * @param namespacePrefix the namespace prefix of the model extension definition being removed (cannot be <code>null</code> or
      *            empty)
