@@ -18,7 +18,6 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
-     * 
      */
     public ModelerCoreRuntimeException() {
         super();
@@ -26,46 +25,55 @@ public class ModelerCoreRuntimeException extends TeiidRuntimeException {
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
+     * 
      * @param message
      */
-    public ModelerCoreRuntimeException(String message) {
+    public ModelerCoreRuntimeException( String message ) {
         super(message);
     }
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
+     * 
      * @param code
      * @param message
      */
-    public ModelerCoreRuntimeException(int code, String message) {
-        super(code, message);
+    public ModelerCoreRuntimeException( int code,
+                                        String message ) {
+        super(Integer.toString(code), message);
     }
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
+     * 
      * @param e
      */
-    public ModelerCoreRuntimeException(Throwable e) {
+    public ModelerCoreRuntimeException( Throwable e ) {
         super(e);
     }
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
+     * 
      * @param e
      * @param message
      */
-    public ModelerCoreRuntimeException(Throwable e, String message) {
+    public ModelerCoreRuntimeException( Throwable e,
+                                        String message ) {
         super(e, message);
     }
 
     /**
      * Construct an instance of ModelerCoreRuntimeException.
+     * 
      * @param e
      * @param code
      * @param message
      */
-    public ModelerCoreRuntimeException(Throwable e, int code, String message) {
-        super(e, code, message);
+    public ModelerCoreRuntimeException( Throwable e,
+                                        int code,
+                                        String message ) {
+        super(e, Integer.toString(code), message);
     }
 
 }

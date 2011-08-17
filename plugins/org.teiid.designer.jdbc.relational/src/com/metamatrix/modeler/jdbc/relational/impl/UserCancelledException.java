@@ -22,7 +22,6 @@ public class UserCancelledException extends TeiidRuntimeException {
 
     /**
      * Construct an instance of UserCancelledException.
-     * 
      */
     public UserCancelledException() {
         super(msg);
@@ -30,46 +29,55 @@ public class UserCancelledException extends TeiidRuntimeException {
 
     /**
      * Construct an instance of UserCancelledException.
+     * 
      * @param message
      */
-    public UserCancelledException(String message) {
+    public UserCancelledException( String message ) {
         super(message);
     }
 
     /**
      * Construct an instance of UserCancelledException.
+     * 
      * @param code
      * @param message
      */
-    public UserCancelledException(int code, String message) {
-        super(code, message);
+    public UserCancelledException( int code,
+                                   String message ) {
+        super(Integer.toString(code), message);
     }
 
     /**
      * Construct an instance of UserCancelledException.
+     * 
      * @param e
      */
-    public UserCancelledException(Throwable e) {
+    public UserCancelledException( Throwable e ) {
         super(e);
     }
 
     /**
      * Construct an instance of UserCancelledException.
+     * 
      * @param e
      * @param message
      */
-    public UserCancelledException(Throwable e, String message) {
+    public UserCancelledException( Throwable e,
+                                   String message ) {
         super(e, message);
     }
 
     /**
      * Construct an instance of UserCancelledException.
+     * 
      * @param e
      * @param code
      * @param message
      */
-    public UserCancelledException(Throwable e, int code, String message) {
-        super(e, code, message);
+    public UserCancelledException( Throwable e,
+                                   int code,
+                                   String message ) {
+        super(e, Integer.toString(code), message);
     }
 
 }
