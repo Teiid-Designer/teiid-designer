@@ -183,5 +183,11 @@
             category="Relational">
       </preference>
    </extension>
-
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="com.metamatrix.metamodels.relational.extension.SourceFunctionModelExtensionAssistant"
+            path="sourcefunction.mxd">
+      </extensionDefinition>
+   </extension>
 </plugin>

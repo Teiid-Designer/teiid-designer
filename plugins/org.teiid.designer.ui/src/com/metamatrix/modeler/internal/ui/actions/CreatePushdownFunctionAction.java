@@ -41,10 +41,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.udf.UdfManager;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.metamodels.relational.extension.SourceFunctionModelExtensionConstants;
 import com.metamatrix.metamodels.relational.util.ParameterData;
 import com.metamatrix.metamodels.relational.util.PushdownFunctionData;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -71,7 +76,7 @@ import com.metamatrix.ui.text.StyledTextEditor;
  * Basically, this provides users the ability to model functions defined in databases and use the function call within
  * virtual table or procedure SQL statements/transformations. (see {@link UdfManager})
  */
-public class CreatePushdownFunctionAction extends Action implements INewChildAction, INewSiblingAction { // ISelectionListener, Comparable, ISelectionAction, 
+public class CreatePushdownFunctionAction extends Action implements INewChildAction, INewSiblingAction, SourceFunctionModelExtensionConstants {
 	private IFile selectedModel;
 	public static ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 	public static final String TITLE = UiConstants.Util.getString("CreatePushdownFunctionAction.title"); //$NON-NLS-1$
@@ -152,6 +157,25 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
 		
 	}
 
+	private void injectSourceFunctionModelExtension(ModelResource modelResource, EObject procedure, boolean deterministic) throws Exception {
+		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        ModelExtensionAssistant assistant = registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+
+        if (assistant == null) {
+            // should not happen
+        	UiConstants.Util.log(IStatus.ERROR, UiConstants.Util.getString("CreatePushdownFunctionAction.missingSourceFunctionModelExtensionAssistant")); //$NON-NLS-1$
+        } else {
+            ModelExtensionDefinition definition = registry.getDefinition(NAMESPACE_PREFIX);
+
+            if (definition == null) {
+                // should not happen
+            	UiConstants.Util.log(IStatus.ERROR, UiConstants.Util.getString("CreatePushdownFunctionAction.missingSourceFunctionModelExtensionDefinition")); //$NON-NLS-1$
+            } else {
+                assistant.saveModelExtensionDefinition(procedure, definition);
+                assistant.setPropertyValue(procedure, PropertyIds.DETERMINISTIC, Boolean.toString(deterministic));
+            }
+        }
+	}
 	
     private void createProcedureInTxn(ModelResource modelResource, PushdownFunctionData data) {
         boolean requiredStart = ModelerCore.startTxn(true, true, "Create Pushdown Function", this); //$NON-NLS-1$
@@ -180,7 +204,10 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
     	        	pfd.setNameInSource(data.getNameInSource());
     	        }
     	        // Set extended properties
-    	        ANNOTATION_HELPER.addProperty(pfd, PushdownFunctionData.DETERMINISTIC_PROPERTY_KEY, Boolean.toString(data.getDeterministic()));
+    	        
+    	        injectSourceFunctionModelExtension(modelResource, pfd, data.getDeterministic());
+    	        
+
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());

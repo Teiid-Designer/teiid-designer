@@ -12,6 +12,7 @@ Export-Package: com.metamatrix.metamodels.relational,
  com.metamatrix.metamodels.relational.aspects.validation,
  com.metamatrix.metamodels.relational.aspects.validation.rules,
  com.metamatrix.metamodels.relational.compare,
+ com.metamatrix.metamodels.relational.extension,
  com.metamatrix.metamodels.relational.impl,
  com.metamatrix.metamodels.relational.provider,
  com.metamatrix.metamodels.relational.util
@@ -24,6 +25,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.core.designer,
  org.eclipse.emf.mapping,
  org.teiid.designer.legacy,
- teiid_embedded_query
+ teiid_embedded_query,
+ org.teiid.designer.extension
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
