@@ -155,7 +155,7 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
                 // System.out.println("Delete Notifier Count = " + deleteNotificationsToProcess.size());
                 // long start = System.currentTimeMillis();
                 if (nonDeleteNotificationsToProcess.size() > 0) {
-                    for (int i = 0; i < nonDeleteNotificationsToProcess.size(); i++) {
+                    for (int i = nonDeleteNotificationsToProcess.size() - 1; i >= 0; i--) {
                         handleSingleNotification((Notification)nonDeleteNotificationsToProcess.get(i));
                     }
                 }
