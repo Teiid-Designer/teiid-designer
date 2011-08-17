@@ -44,13 +44,13 @@ import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.lang.SetQuery;
-import org.teiid.query.sql.lang.SetQuery.Operation;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
+import org.teiid.query.sql.lang.SetQuery.Operation;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CommandStatement;
@@ -380,31 +380,32 @@ public class TestDisplayNodeFactory extends TestCase {
 
         helpTest(jp, "m.g2 INNER JOIN m.g3 ON NOT (m.g2.e1 = m.g3.e1)"); //$NON-NLS-1$
     }
-    
+
     public void testJoinPredicate6() {
-	    ArrayList crits = new ArrayList();
-	    CompareCriteria comprCrit1 = new CompareCriteria(new ElementSymbol("m.g2.e1"), CompareCriteria.EQ, new ElementSymbol("m.g3.e1")); //$NON-NLS-1$ //$NON-NLS-2$
-	    CompareCriteria comprCrit2 = new CompareCriteria(new ElementSymbol("m.g2.e2"), CompareCriteria.EQ, new ElementSymbol("m.g3.e2")); //$NON-NLS-1$ //$NON-NLS-2$
-  		IsNullCriteria inc = new IsNullCriteria();
-  		inc.setExpression(new ElementSymbol("m.g.e1")); //$NON-NLS-1$
-	    
-  		crits.add(inc);
-  		crits.add(comprCrit2);
-  		
+        ArrayList crits = new ArrayList();
+        CompareCriteria comprCrit1 = new CompareCriteria(
+                                                         new ElementSymbol("m.g2.e1"), CompareCriteria.EQ, new ElementSymbol("m.g3.e1")); //$NON-NLS-1$ //$NON-NLS-2$
+        CompareCriteria comprCrit2 = new CompareCriteria(
+                                                         new ElementSymbol("m.g2.e2"), CompareCriteria.EQ, new ElementSymbol("m.g3.e2")); //$NON-NLS-1$ //$NON-NLS-2$
+        IsNullCriteria inc = new IsNullCriteria();
+        inc.setExpression(new ElementSymbol("m.g.e1")); //$NON-NLS-1$
+
+        crits.add(inc);
+        crits.add(comprCrit2);
+
         CompoundCriteria compCrit = new CompoundCriteria(CompoundCriteria.OR, crits);
 
         ArrayList crits2 = new ArrayList();
         crits2.add(comprCrit1);
         crits2.add(compCrit);
-        
-        JoinPredicate jp = new JoinPredicate(
-    		new UnaryFromClause(new GroupSymbol("m.g2")), //$NON-NLS-1$
-    		new UnaryFromClause(new GroupSymbol("m.g3")), //$NON-NLS-1$
-    		JoinType.JOIN_LEFT_OUTER,
-    		crits2 );
-    		
-    	helpTest(jp, "m.g2 LEFT OUTER JOIN m.g3 ON m.g2.e1 = m.g3.e1 AND ((m.g.e1 IS NULL) OR (m.g2.e2 = m.g3.e2))"); //$NON-NLS-1$
-	}
+
+        JoinPredicate jp = new JoinPredicate(new UnaryFromClause(new GroupSymbol("m.g2")), //$NON-NLS-1$
+                                             new UnaryFromClause(new GroupSymbol("m.g3")), //$NON-NLS-1$
+                                             JoinType.JOIN_LEFT_OUTER, crits2);
+
+        helpTest(jp, "m.g2 LEFT OUTER JOIN m.g3 ON m.g2.e1 = m.g3.e1 AND ((m.g.e1 IS NULL) OR (m.g2.e2 = m.g3.e2))"); //$NON-NLS-1$
+    }
+
     public void testJoinType1() {
         helpTest(JoinType.JOIN_CROSS, "CROSS JOIN"); //$NON-NLS-1$
     }
@@ -1612,8 +1613,7 @@ public class TestDisplayNodeFactory extends TestCase {
         Block b = new Block();
         b.addStatement(assigStmt);
         CreateUpdateProcedureCommand cup = new CreateUpdateProcedureCommand(b);
-        helpTest(cup,
-                 "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = INSERT INTO m.g1 (e1, e2) VALUES (5, 'abc');\nEND"); //$NON-NLS-1$
+        helpTest(cup, "CREATE PROCEDURE\nBEGIN\n\tVARIABLES.ROWS_UPDATED = INSERT INTO m.g1 (e1, e2) VALUES (5, 'abc');\nEND"); //$NON-NLS-1$
     }
 
     public void testSubqueryCompareCriteria1() {
@@ -1816,7 +1816,7 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(fromClause));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKEDEP"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\t/*+ MAKEDEP */ a"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithJoinPredicateMakeDep() {
@@ -1829,34 +1829,35 @@ public class TestDisplayNodeFactory extends TestCase {
         From from = new From(Arrays.asList(new JoinPredicate(fromClause, fromClause1, JoinType.JOIN_CROSS)));
         query.setSelect(select);
         query.setFrom(from);
-        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\ta MAKENOTDEP CROSS JOIN b MAKEDEP"); //$NON-NLS-1$ 
+        helpTest(query, "SELECT\n\t\t*\n\tFROM\n\t\t/*+ MAKENOTDEP */ a CROSS JOIN /*+ MAKEDEP */ b"); //$NON-NLS-1$ 
     }
 
     public void testQueryWithNestedJoinPredicateMakeDep() throws Exception {
         Query query = (Query)QueryParser.getQueryParser().parseCommand("Select a From (db.g1 JOIN db.g2 ON a = b) makedep LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
-        helpTest(query, "SELECT\n\t\ta\n\tFROM\n\t\t(db.g1 INNER JOIN db.g2 ON a = b) MAKEDEP LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
+        helpTest(query,
+                 "SELECT\n\t\ta\n\tFROM\n\t\t/*+ MAKEDEP */ (db.g1 INNER JOIN db.g2 ON a = b) LEFT OUTER JOIN db.g3 ON a = c"); //$NON-NLS-1$
     }
-    
+
     public void testCast() throws Exception {
         Expression ex = QueryParser.getQueryParser().parseExpression("cast(x as integer)"); //$NON-NLS-1$
         helpTest(ex, "cast(x AS integer)"); //$NON-NLS-1$
     }
-    
+
     public void testXMLPi() throws Exception {
         Expression ex = QueryParser.getQueryParser().parseExpression("xmlpi(name foo, 'bar')"); //$NON-NLS-1$
         helpTest(ex, "xmlpi(NAME foo, 'bar')"); //$NON-NLS-1$
     }
-    
+
     public void testXMLPi1() throws Exception {
         Expression ex = QueryParser.getQueryParser().parseExpression("xmlpi(name \"table\", 'bar')"); //$NON-NLS-1$
         helpTest(ex, "xmlpi(NAME \"table\", 'bar')"); //$NON-NLS-1$
     }
-    
+
     public void testTimestampAdd() throws Exception {
         Expression ex = QueryParser.getQueryParser().parseExpression("timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
         helpTest(ex, "timestampadd(SQL_TSI_DAY, x, y)"); //$NON-NLS-1$
     }
-    
+
     public void testXMLAgg() throws Exception {
         LanguageObject ex = QueryParser.getQueryParser().parseCommand("select xmlagg(x order by y)"); //$NON-NLS-1$
         helpTest(ex, "SELECT\n\t\tXMLAGG(x ORDER BY y)"); //$NON-NLS-1$
@@ -1866,12 +1867,12 @@ public class TestDisplayNodeFactory extends TestCase {
         LanguageObject ex = QueryParser.getQueryParser().parseExpression("xmlelement(name y, xmlattributes('x' as foo), q)"); //$NON-NLS-1$
         helpTest(ex, "XMLELEMENT(NAME y, XMLATTRIBUTES('x' AS foo), q)"); //$NON-NLS-1$
     }
-    
+
     public void testCacheHint() throws Exception {
         LanguageObject ex = QueryParser.getQueryParser().parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
         helpTest(ex, "/*+ cache(pref_mem) */\nSELECT\n\t\t*\n\tFROM\n\t\tdb.g2"); //$NON-NLS-1$
     }
-    
+
     // ################################## TEST SUITE ################################
 
     /**
