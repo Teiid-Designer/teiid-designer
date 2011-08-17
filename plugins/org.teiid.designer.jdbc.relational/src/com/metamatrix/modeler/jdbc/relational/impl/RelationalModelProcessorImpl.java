@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -33,7 +32,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.mapping.Mapping;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.Stopwatch;
@@ -76,7 +74,6 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.TransactionRunnable;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
@@ -150,6 +147,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     DifferenceProcessor diffProc;
     DifferenceReport drDifferenceReport;
     private boolean moveRatherThanCopyAdds;
+    private boolean includeIncompleteFKs;
     private boolean debugTimingEnabled = false;
 
     /**
@@ -558,6 +556,20 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     }
 
     /**
+     * @see com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor#setIncludeIncompleteFKs(boolean)
+     */
+    public void setIncludeIncompleteFKs( final boolean includeIncompleteFKs ) {
+        this.includeIncompleteFKs = includeIncompleteFKs;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor#getIncludeIncompleteFKs
+     */
+    public boolean getIncludeIncompleteFKs() {
+        return this.includeIncompleteFKs;
+    }
+
+    /**
      * Perform any pre-processing of the difference report prior to {@link #performMerge(Context, WorkingArea, List) merging}.
      * 
      * @param differences the difference report; never null
@@ -903,7 +915,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         String subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_foreign_keys", tabParams); //$NON-NLS-1$
                         monitor.subTask(subtaskMsg);
                         if (entity instanceof BaseTable) {
-                            createForeignKey(tableNode, (BaseTable)entity, context, nodesToModelObjects, problems);
+                            boolean includeIncompleteFKs = getIncludeIncompleteFKs();
+                            // final boolean includeIncompleteFKs = context.getJdbcImportSettings().includeIncompleteFKs();
+                            createForeignKey(tableNode,
+                                             (BaseTable)entity,
+                                             context,
+                                             nodesToModelObjects,
+                                             includeIncompleteFKs,
+                                             problems);
                         }
                         ++count;
                         monitor.worked(unitsPerForeignKey);
@@ -1549,6 +1568,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                      final Table table,
                                      final Context context,
                                      final Map nodesToModelObjects,
+                                     final boolean includeIncompleteFKs,
                                      final List problems ) {
         // Can't add a foreign key to a view ...
         if (!(table instanceof BaseTable)) {
@@ -1655,17 +1675,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final List columnNamesForPk = (List)columnNamesForPkIter.next();
                 final ForeignKeySpec fkSpec = (ForeignKeySpec)fkSpecs.get(fkSpecIter.next());
 
-                // Find or create the foreign key ...
-                final ForeignKey fk = factory.createForeignKey();
-                fk.setTable((BaseTable)table);
-                setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context, true, problems);
-                // Put the columns into the foreign key ...
-                fk.getColumns().addAll(columnsForKey);
-
-                // Set the FK and PK multiplicities to unspecified (defect 13226)
-                fk.setPrimaryKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
-                fk.setForeignKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
-
                 // Find or create the primary key ...
                 final UniqueKey ukey = findUniqueKey(tableNode.getJdbcDatabase(),
                                                      nodesToModelObjects,
@@ -1673,7 +1682,17 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                                      fkSpec.pkSchema,
                                                      fkSpec.pkTable,
                                                      columnNamesForPk);
-                if (ukey != null) {
+                if (ukey != null || includeIncompleteFKs) {
+                    final ForeignKey fk = factory.createForeignKey();
+                    fk.setTable((BaseTable)table);
+                    setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context, true, problems);
+                    // Put the columns into the foreign key ...
+                    fk.getColumns().addAll(columnsForKey);
+
+                    // Set the FK and PK multiplicities to unspecified (defect 13226)
+                    fk.setPrimaryKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
+                    fk.setForeignKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
+
                     fk.setUniqueKey(ukey);
                 }
             }

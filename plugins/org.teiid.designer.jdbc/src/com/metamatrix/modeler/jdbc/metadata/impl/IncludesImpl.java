@@ -21,6 +21,7 @@ public class IncludesImpl implements Includes {
     private final JdbcDatabase database;
     private String[] includedTableTypes;
     private boolean fks         = DEFAULT_INCLUDE_FOREIGN_KEYS;
+    private boolean incompleteFKs = DEFAULT_INCLUDE_INCOMPLETE_FKS;
     private boolean indexes     = DEFAULT_INCLUDE_INDEXES;
     private boolean procedures  = DEFAULT_INCLUDE_PROCEDURES;
     private boolean approximateIndexes = DEFAULT_APPROXIMATE_INDEXES;
@@ -72,6 +73,13 @@ public class IncludesImpl implements Includes {
     }
 
     /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.metadata.Includes#setIncludeForeignKeys(boolean)
+     */
+    public void setIncludeForeignKeys( boolean include ) {
+        fks = include;
+    }
+
+    /* (non-Javadoc)
      * @see com.metamatrix.modeler.jdbc.metadata.Includes#includeForeignKeys()
      */
     public boolean includeForeignKeys() {
@@ -79,10 +87,17 @@ public class IncludesImpl implements Includes {
     }
 
     /* (non-Javadoc)
-     * @see com.metamatrix.modeler.jdbc.metadata.Includes#setIncludeForeignKeys(boolean)
+     * @see com.metamatrix.modeler.jdbc.metadata.Includes#setIncludeIncompleteFKs(boolean)
      */
-    public void setIncludeForeignKeys(boolean include) {
-        fks = include;
+    public void setIncludeIncompleteFKs( boolean include ) {
+        incompleteFKs = include;
+    }
+
+    /* (non-Javadoc)
+     * @see com.metamatrix.modeler.jdbc.metadata.Includes#includeIncompleteFKs()
+     */
+    public boolean includeIncompleteFKs() {
+        return incompleteFKs;
     }
 
     /* (non-Javadoc)

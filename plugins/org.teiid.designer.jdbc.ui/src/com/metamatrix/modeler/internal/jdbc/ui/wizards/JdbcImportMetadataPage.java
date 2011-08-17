@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,7 +29,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.internal.jdbc.ui.util.JdbcUiUtil;
@@ -64,6 +62,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 
     private static final String APPROXIMATIONS_BUTTON = getString("approximationsButton"); //$NON-NLS-1$
     private static final String FOREIGN_KEYS_BUTTON   = getString("foreignKeysButton"); //$NON-NLS-1$
+    private static final String INCOMPLETE_FK_BUTTON = getString("incompleteFKButton"); //$NON-NLS-1$
     private static final String INDEXES_BUTTON        = getString("indexesButton"); //$NON-NLS-1$
     private static final String PROCEDURES_BUTTON     = getString("proceduresButton"); //$NON-NLS-1$
     private static final String UNIQUE_BUTTON         = getString("uniqueButton"); //$NON-NLS-1$
@@ -102,7 +101,8 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 
     private Includes incls;
     private JdbcImportSettings importSettings;
-    private Button foreignKeysCheckBox, indexesCheckBox, uniqueCheckBox, approximationsCheckBox, proceduresCheckBox;
+    private Button foreignKeysCheckBox, incompleteFKCheckBox, indexesCheckBox, uniqueCheckBox, approximationsCheckBox,
+    proceduresCheckBox;
     private ListPanel listPanel;
     private Map enableMap;
     private boolean initd;
@@ -135,13 +135,23 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         // Add widgets to page
         final Composite checkBoxPanel = WidgetFactory.createPanel(pg, SWT.NO_TRIM, GridData.VERTICAL_ALIGN_BEGINNING);
         {
-            this.foreignKeysCheckBox = WidgetFactory.createCheckBox(checkBoxPanel, FOREIGN_KEYS_BUTTON);
+            this.foreignKeysCheckBox = WidgetFactory.createCheckBox(checkBoxPanel);
             this.foreignKeysCheckBox.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(final SelectionEvent event) {
                     foreignKeysCheckBoxSelected();
                 }
             });
+            final int fkIndent = this.foreignKeysCheckBox.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x + CHECKBOX_TEXT_GAP;
+            this.foreignKeysCheckBox.setText(FOREIGN_KEYS_BUTTON);
+            this.incompleteFKCheckBox = createNestedCheckbox(checkBoxPanel, INCOMPLETE_FK_BUTTON, fkIndent);
+            this.incompleteFKCheckBox.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                    incompleteFKsCheckBoxSelected();
+                }
+            });
+
             this.indexesCheckBox = WidgetFactory.createCheckBox(checkBoxPanel);
             this.indexesCheckBox.addSelectionListener(new SelectionAdapter() {
                 @Override
@@ -200,6 +210,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         final Includes incls = ((JdbcImportWizard)getWizard()).getDatabase().getIncludes();
         dlgSettings.put(APPROXIMATIONS_BUTTON, incls.getApproximateIndexes());
         dlgSettings.put(FOREIGN_KEYS_BUTTON, incls.includeForeignKeys());
+        dlgSettings.put(INCOMPLETE_FK_BUTTON, incls.includeIncompleteFKs());
         dlgSettings.put(INDEXES_BUTTON, incls.includeIndexes());
         dlgSettings.put(PROCEDURES_BUTTON, incls.includeProcedures());
         dlgSettings.put(UNIQUE_BUTTON, incls.getUniqueIndexesOnly());
@@ -257,6 +268,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             this.initd = true;
             this.incls.setApproximateIndexes(dlgSettings.getBoolean(APPROXIMATIONS_BUTTON));
             this.incls.setIncludeForeignKeys(dlgSettings.getBoolean(FOREIGN_KEYS_BUTTON));
+            this.incls.setIncludeIncompleteFKs(dlgSettings.getBoolean(INCOMPLETE_FK_BUTTON));
             this.incls.setIncludeIndexes(dlgSettings.getBoolean(INDEXES_BUTTON));
             this.incls.setIncludeProcedures(dlgSettings.getBoolean(PROCEDURES_BUTTON));
             this.incls.setUniqueIndexesOnly(dlgSettings.getBoolean(UNIQUE_BUTTON));
@@ -275,6 +287,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         } else {
             this.incls.setApproximateIndexes(false);
             this.incls.setIncludeForeignKeys(true);
+            this.incls.setIncludeIncompleteFKs(true);
             this.incls.setIncludeIndexes(false);
             this.incls.setIncludeProcedures(false);
             this.incls.setUniqueIndexesOnly(false);
@@ -362,7 +375,14 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         boolean requiredStart = ModelerCore.startTxn(false,false,"Set Foreign Keys Option",this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
+            final boolean enabled = this.foreignKeysCheckBox.getSelection();
+
+            // Include incomplete selection stays in sync with Foreign keys selection
+            this.incompleteFKCheckBox.setSelection(enabled);
+            this.incompleteFKCheckBox.setEnabled(enabled);
+
             this.incls.setIncludeForeignKeys(this.foreignKeysCheckBox.getSelection());
+            this.incls.setIncludeIncompleteFKs(this.incompleteFKCheckBox.getSelection());
             this.importSettings.setIncludeForeignKeys(this.incls.includeForeignKeys());
             succeeded = true;
         } finally {
@@ -376,6 +396,32 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             }
         }
 	}
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param event
+     * @since 4.0
+     */
+    void incompleteFKsCheckBoxSelected() {
+        boolean requiredStart = ModelerCore.startTxn(false, false, "Set Include Incomplete FKs Option", this); //$NON-NLS-1$
+        boolean succeeded = false;
+        try {
+            this.incls.setIncludeIncompleteFKs(this.incompleteFKCheckBox.getSelection());
+            succeeded = true;
+        } finally {
+            // If we start txn, commit it
+            if (requiredStart) {
+                if (succeeded) {
+                    ModelerCore.commitTxn();
+                } else {
+                    ModelerCore.rollbackTxn();
+                }
+            }
+        }
+
+    }
 
     /**<p>
      * </p>
