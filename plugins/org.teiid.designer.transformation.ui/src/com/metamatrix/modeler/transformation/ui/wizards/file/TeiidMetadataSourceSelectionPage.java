@@ -252,13 +252,12 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         dataFileFolder = new Label(folderContentsGroup, SWT.NONE);
         dataFileFolder.setText(getString("dataFileFolderText")); //$NON-NLS-1$
         GridData gdFF = new GridData();
-        gdFF.horizontalSpan = 2;
+        gdFF.horizontalSpan = 1;
         dataFileFolder.setLayoutData(gdFF); //new GridData(GridData.FILL_HORIZONTAL));
-        
-        createFileTableViewer(folderContentsGroup);
         
         configureButton = WidgetFactory.createButton(folderContentsGroup, SWT.PUSH);
         configureButton.setText(getString("configureButton")); //$NON-NLS-1$
+        configureButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         configureButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -268,7 +267,10 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         });
         configureButton.setEnabled(false);
         configureButton.setToolTipText(getString("configureButtonTooltip")); //$NON-NLS-1$
-    }
+
+        createFileTableViewer(folderContentsGroup);
+        
+     }
     
     private void createFileTableViewer(Composite parent) {
     	Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
@@ -309,6 +311,24 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
  				validatePage();
  			}
  		});
+        
+        // Check events can occur separate from selection events.
+        // In this case move the selected node.
+        // Also trigger selection of node in model.
+        this.fileViewer.getTable().addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected( SelectionEvent e ) {
+            	if (e.detail == SWT.CHECK) {
+            		TableItem tableItem = (TableItem)e.item;
+            		if( tableItem.getData() instanceof File ) {
+            			fileViewer.getTable().setSelection(new TableItem[] {tableItem});
+     					info.setDoProcess((File)tableItem.getData(), tableItem.getChecked());
+     				}
+            	}
+            }
+            public void widgetDefaultSelected( SelectionEvent e ) {
+            }
+        });
         
      // create columns
         TableViewerColumn column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
@@ -435,7 +455,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	        	TableItem[] items = fileViewer.getTable().getItems();
 	        	for( TableItem item : items) {
 	        		Object data = item.getData();
-	        		if( data != null && data instanceof File ) {
+	        		if( data != null && data instanceof File && !((File)data).isDirectory()) {
 	        			TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo((File)data);
 	        			this.info.addFileInfo(fileInfo);
 	        			this.info.validate();
@@ -708,10 +728,26 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	     */
 	    public Object[] getElements(Object theInput) {
 	    	if( theInput instanceof File ) {
-	    		return ((File)theInput).listFiles();
+	    		File[] allFiles = ((File)theInput).listFiles();
+	    		Collection<File> goodFilesList = new ArrayList<File>();
+		    	
+		    	for( File theFile : allFiles) {
+		    		if( !theFile.isDirectory()) {
+		    			goodFilesList.add(theFile);
+		    		}
+		    	}
+		        return goodFilesList.toArray(new File[0]);
 	    	}
 	    	
-	        return File.listRoots();
+	    	File[] roots = File.listRoots();
+	    	Collection<File> goodFilesList = new ArrayList<File>();
+	    	
+	    	for( File theFile : roots) {
+	    		if( !theFile.isDirectory()) {
+	    			goodFilesList.add(theFile);
+	    		}
+	    	}
+	        return goodFilesList.toArray(new File[0]);
 	    }
 
 	    /** 

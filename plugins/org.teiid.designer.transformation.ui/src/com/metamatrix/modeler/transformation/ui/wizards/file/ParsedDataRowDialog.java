@@ -97,7 +97,7 @@ public class ParsedDataRowDialog extends TitleAreaDialog {
         TeiidColumnInfo[] infos = fileInfo.getColumnInfoList();
         int i=0;
         for( String row : parsedColumns ) {
-        	if( row != null ) {
+        	if( row != null && i < infos.length) {
         		String value = infos[i++].getName() + "  :  " + row;  //$NON-NLS-1$
         		this.columnDataViewer.add(value);
         	}

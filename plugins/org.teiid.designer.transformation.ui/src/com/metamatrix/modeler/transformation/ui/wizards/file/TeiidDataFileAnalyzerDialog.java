@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.ui.internal.util.WidgetFactory;
@@ -57,12 +58,12 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidDataFileAnalyzerDialog.class);
     private static final String TITLE = getString("title"); //$NON-NLS-1$
-    private static final String TWELVE_SPACES = "            "; //$NON-NLS-1$
-    private static final String THIRTY_SPACES = "                              "; //$NON-NLS-1$
-    private static final String SIX_SPACES = "      "; //$NON-NLS-1$
     private static final String EMPTY = ""; //$NON-NLS-1$
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
+    }
+    private static String getString( final String id , Object param) {
+        return Util.getString(I18N_PREFIX + id, param);
     }
     
 	private final TeiidMetadataFileInfo fileInfo;
@@ -72,7 +73,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 	ListViewer fileContentsViewer;
 	TableViewer columnsViewer;
 	Label headerLineNumberLabel, numberOfFixedWidthColumnsLabel;
-	Text headerLineNumberText, delimiterText, quoteText, escapeText, firstDataRowText;
+	Text numberOfCachedLinesText, headerLineNumberText, delimiterText, quoteText, escapeText, firstDataRowText;
 	Button useHeaderForColumnNamesCB;
 	Button commaRB, spaceRB, tabRB, semicolonRB, barRB, otherDelimiterRB;
 	Button delimitedColumnsRB, fixedWidthColumnsRB;
@@ -80,6 +81,8 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 	Button useHeaderInSQLCB, includeQuoteCB, includeEscapeCB, includeSkipCB;
 	Button parseRowButton;
 	Action parseRowAction;
+	
+	boolean synchronizing = false;
 
     
     /**
@@ -110,13 +113,13 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
     }
     
-    @Override
+	@Override
     protected Control createDialogArea( Composite parent ) {
     	setTitleImage(UiPlugin.getDefault().getImage(Images.IMPORT_TEIID_METADATA));
     	
         Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
 
-        this.setTitle(getString("messageTitle")); //$NON-NLS-1$
+        this.setTitle(getString("messageTitle",fileInfo.getDataFile().getName()) ); //$NON-NLS-1$
         this.setMessage(getString("initialMessage")); //$NON-NLS-1$
         
         mainPanel.setLayout(new GridLayout(1, false));
@@ -141,13 +144,17 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         synchronizeUI();
         
         validate();
-        
+        //LayoutDebugger.debugLayout(mainPanel);
         return mainPanel;
     }
     
     
     private void synchronizeUI() {
     	// This method takes the Business Object (TeiidMetadataFileInfo) and syncs all ui Objects
+    	this.synchronizing = true;
+    	
+    	this.numberOfCachedLinesText.setText(Integer.toString(this.fileInfo.getNumberOfCachedFileLines()));
+    	
     	this.delimitedColumnsRB.setSelection(this.fileInfo.doUseDelimitedColumns());
     	this.fixedWidthColumnsRB.setSelection(this.fileInfo.isFixedWidthColumns());
     	
@@ -184,11 +191,12 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	this.headerLineNumberLabel.setEnabled(this.fileInfo.doUseHeaderForColumnNames());
     	this.headerLineNumberText.setEnabled(this.fileInfo.doUseHeaderForColumnNames());
     	
+    	this.synchronizing = false;
     }
     
     private void createTextTableOptionsGroup(Composite parent) {
-    	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE, 1, 6); //$NON-NLS-1$
-    	textTableOptionsGroup.setLayout(new GridLayout(6, true));
+    	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE, 1); //$NON-NLS-1$
+    	textTableOptionsGroup.setLayout(new GridLayout(7, false));
     	textTableOptionsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
     	this.useHeaderInSQLCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeHeader"), 0, 1); //$NON-NLS-1$
@@ -196,52 +204,63 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setIncludeHeader(useHeaderInSQLCB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setIncludeHeader(useHeaderInSQLCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
         this.useHeaderInSQLCB.setToolTipText(getString("useHeaderTooltip")); //$NON-NLS-1$
+        this.useHeaderInSQLCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         
         this.includeSkipCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeSkip"), 0, 1); //$NON-NLS-1$
         this.includeSkipCB.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setIncludeSkip(includeSkipCB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setIncludeSkip(includeSkipCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
         this.includeSkipCB.setToolTipText(getString("includeSkipTooltip")); //$NON-NLS-1$
+        this.includeSkipCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        addSpacer(textTableOptionsGroup, 20);
         
         this.includeQuoteCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeQuote"), 0, 1); //$NON-NLS-1$
         this.includeQuoteCB.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setIncludeQuote(includeQuoteCB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setIncludeQuote(includeQuoteCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
+        
         this.quoteText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.minimumWidth = 10;
+    	GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+    	gd.minimumWidth = 50;
     	gd.horizontalSpan=1;
     	this.quoteText.setLayoutData(gd);
     	this.quoteText.setTextLimit(1);
     	this.quoteText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	if( !quoteText.getText().isEmpty()) {
-            		if( quoteText.getText().charAt(0) != fileInfo.getQuote() ) {
-            			fileInfo.setQuote(quoteText.getText().charAt(0));
-            			handleInfoChanged();
-            		}
-            		setErrorMessage(null);
-            	} else {
-            		setErrorMessage(getString("quoteCannotBeNull")); //$NON-NLS-1$
-            		return;
+            	if( !synchronizing ) {
+	            	if( !quoteText.getText().isEmpty()) {
+	            		if( quoteText.getText().charAt(0) != fileInfo.getQuote() ) {
+	            			fileInfo.setQuote(quoteText.getText().charAt(0));
+	            			handleInfoChanged(false);
+	            		}
+	            		setErrorMessage(null);
+	            	} else {
+	            		setErrorMessage(getString("quoteCannotBeNull")); //$NON-NLS-1$
+	            		return;
+	            	}
             	}
-            	
             }
         });
         
@@ -252,30 +271,35 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setIncludeEscape(includeEscapeCB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setIncludeEscape(includeEscapeCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
     	this.escapeText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
-    	gd = new GridData(GridData.FILL_BOTH);
-    	gd.minimumWidth = 10;
+    	gd.grabExcessHorizontalSpace = true;
+    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+    	gd.minimumWidth = 50;
     	gd.horizontalSpan=1;
+    	gd.grabExcessHorizontalSpace = true;
     	this.escapeText.setLayoutData(gd);
     	this.escapeText.setTextLimit(1);
     	this.escapeText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	if( !escapeText.getText().isEmpty()) {
-            		if( escapeText.getText().charAt(0) != fileInfo.getEscape() ) {
-            			fileInfo.setEscape(escapeText.getText().charAt(0));
-            			handleInfoChanged();
-            		}
-            		setErrorMessage(null);
-            	} else {
-            		setErrorMessage(getString("escapeCannotBeNull")); //$NON-NLS-1$
-            		return;
+            	if( !synchronizing ) {
+	            	if( !escapeText.getText().isEmpty()) {
+	            		if( escapeText.getText().charAt(0) != fileInfo.getEscape() ) {
+	            			fileInfo.setEscape(escapeText.getText().charAt(0));
+	            			handleInfoChanged(false);
+	            		}
+	            		setErrorMessage(null);
+	            	} else {
+	            		setErrorMessage(getString("escapeCannotBeNull")); //$NON-NLS-1$
+	            		return;
+	            	}
             	}
-            	
             }
         });
         
@@ -284,12 +308,57 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     }
     
     private void createFileContentsGroup(Composite parent) {
-    	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup") + SIX_SPACES + fileInfo.getDataFile().getName(), SWT.NONE, 1, 4); //$NON-NLS-1$
+    	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
     	fileContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 220;
+    	gd.heightHint = 270;
     	gd.widthHint = 500;
     	fileContentsGroup.setLayoutData(gd);
+    	
+    	Composite topPanel = WidgetFactory.createPanel(fileContentsGroup);
+    	topPanel.setLayout(new GridLayout(2, false));
+        GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
+        gd1.horizontalSpan=4;
+        topPanel.setLayoutData(gd1);
+        
+    	Label prefixLabel = new Label(topPanel, SWT.NONE);
+    	prefixLabel.setText(getString("numberOfLinesLabel",this.fileInfo.getNumberOfLinesInFile())); //$NON-NLS-1$
+    	GridData lgd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+        lgd.horizontalSpan=1;
+        prefixLabel.setLayoutData(lgd);
+        
+    	this.numberOfCachedLinesText = WidgetFactory.createTextField(topPanel, SWT.NONE);
+    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+    	gd.minimumWidth = 50;
+    	gd.horizontalSpan=1;
+    	gd.grabExcessHorizontalSpace = true;
+    	this.numberOfCachedLinesText.setLayoutData(gd);
+    	this.numberOfCachedLinesText.addModifyListener(new ModifyListener() {
+    		public void modifyText( final ModifyEvent event ) {
+    			if( !synchronizing ) {
+	    			if( !numberOfCachedLinesText.getText().isEmpty()) {
+	            		try {
+	        				int nLines = Integer.parseInt(numberOfCachedLinesText.getText());
+	        				if( nLines == 0 ) {
+	        					setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( nLines != fileInfo.getNumberOfCachedFileLines() ) {
+	        					fileInfo.setNumberOfCachedFileLines(nLines);
+	        					handleInfoChanged(true);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("numberOfLinesMustBeInteger", numberOfCachedLinesText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
+	            	} else {
+	            		setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
+	            		return;
+	            	}
+    			}
+    		}
+    	});
     	
     	this.fileContentsViewer = new ListViewer(fileContentsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridData data = new GridData(GridData.FILL_BOTH);
@@ -332,8 +401,10 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setDoUseHeaderForColumnNames(useHeaderForColumnNamesCB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setDoUseHeaderForColumnNames(useHeaderForColumnNamesCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
         
@@ -343,8 +414,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
             	parseSelectedDataRow();
             }
 		};
-		Label dummyLabel = new Label(fileContentsGroup, SWT.NONE);
-    	dummyLabel.setText(THIRTY_SPACES + THIRTY_SPACES);
+		addSpacer(fileContentsGroup, 32);
     	
         this.parseRowButton = WidgetFactory.createButton(fileContentsGroup, SWT.PUSH);
         this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
@@ -364,39 +434,41 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         headerLineNumberLabel = new Label(fileContentsGroup, SWT.NONE);
     	headerLineNumberLabel.setText(getString("headerLineNumber")); //$NON-NLS-1$
     	this.headerLineNumberText = WidgetFactory.createTextField(fileContentsGroup, SWT.NONE);
-    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd = new GridData(GridData.FILL_BOTH);
     	gd.minimumWidth = 100;
+    	gd.minimumHeight= 23;
     	this.headerLineNumberText.setLayoutData(gd);
     	this.headerLineNumberText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	if( !headerLineNumberText.getText().isEmpty()) {
-            		try {
-        				int lineNumber = Integer.parseInt(headerLineNumberText.getText());
-        				if( lineNumber == 0 ) {
-        					setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
-        					return;
-        				}
-        				if( lineNumber != fileInfo.getHeaderLineNumber() ) {
-        					fileInfo.setHeaderLineNumber(lineNumber);
-        					handleInfoChanged();
-        				}
-        			} catch (NumberFormatException ex) {
-        				setErrorMessage(Util.getString(I18N_PREFIX + "headerLineNumberMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
-        				return;
-        			}
-            	} else {
-            		setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
-            		return;
+            	if( !synchronizing ) {
+	            	if( !headerLineNumberText.getText().isEmpty()) {
+	            		try {
+	        				int lineNumber = Integer.parseInt(headerLineNumberText.getText());
+	        				if( lineNumber == 0 ) {
+	        					setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( lineNumber != fileInfo.getHeaderLineNumber() ) {
+	        					fileInfo.setHeaderLineNumber(lineNumber);
+	        					handleInfoChanged(false);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("headerLineNumberMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
+	            	} else {
+	            		setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
+	            		return;
+            	}
             	}
             }
         });
     	this.headerLineNumberLabel.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
     	this.headerLineNumberText.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
-    	dummyLabel = new Label(fileContentsGroup, SWT.NONE);
-    	dummyLabel.setText(THIRTY_SPACES + THIRTY_SPACES);
-    	dummyLabel = new Label(fileContentsGroup, SWT.NONE);
-    	dummyLabel.setText(THIRTY_SPACES + TWELVE_SPACES);
+    	addSpacer(fileContentsGroup, 32);
+    	addSpacer(fileContentsGroup, 32);
     	
     	Label firstDataRowLabel = new Label(fileContentsGroup, SWT.NONE);
     	firstDataRowLabel.setText(getString("firstRowLineNumber")); //$NON-NLS-1$
@@ -409,34 +481,35 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	this.firstDataRowText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	if( !firstDataRowText.getText().isEmpty()) {
-            		try {
-        				int nLines = Integer.parseInt(firstDataRowText.getText());
-        				if( nLines < 0 ) {
-        					setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
-        					return;
-        				}
-        				if( nLines != fileInfo.getFirstDataRow() ) {
-        					fileInfo.setFirstDataRow(nLines);
-        					handleInfoChanged();
-        				}
-        			} catch (NumberFormatException ex) {
-        				setErrorMessage(Util.getString(I18N_PREFIX + "firstDataRowMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
-        				return;
-        			}
-            	} else {
-            		setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
-            		return;
+            	if( !synchronizing ) {
+	            	if( !firstDataRowText.getText().isEmpty()) {
+	            		try {
+	        				int nLines = Integer.parseInt(firstDataRowText.getText());
+	        				if( nLines < 1 ) {
+	        					setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( nLines != fileInfo.getFirstDataRow() ) {
+	        					fileInfo.setFirstDataRow(nLines);
+	        					handleInfoChanged(false);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("firstDataRowMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
+	            	} else {
+	            		setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
+	            		return;
+	            	}
             	}
             }
         });
     	this.firstDataRowText.setToolTipText(getString("firstDataRowTooltip")); //$NON-NLS-1$
-    	dummyLabel = new Label(fileContentsGroup, SWT.NONE);
-    	dummyLabel.setText(THIRTY_SPACES + THIRTY_SPACES);
-    	dummyLabel = new Label(fileContentsGroup, SWT.NONE);
-    	dummyLabel.setText(THIRTY_SPACES + TWELVE_SPACES);
+    	addSpacer(fileContentsGroup, 32);
+    	addSpacer(fileContentsGroup, 32);
     	
-    	
+    	//LayoutDebugger.debugLayout(fileContentsGroup);
     }
     
     private void createColumnsFormatGroup(Composite parent) {
@@ -455,8 +528,10 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
     	
@@ -466,8 +541,10 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	fileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
-            	handleInfoChanged();
+            	if( !synchronizing ) {
+	            	fileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
+	            	handleInfoChanged(false);
+            	}
             }
         });
     	
@@ -482,27 +559,28 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	this.numberOfFixedWidthColumnsText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	
-            	if( !numberOfFixedWidthColumnsText.getText().isEmpty()) {
-            		try {
-        				int nColumns = Integer.parseInt(numberOfFixedWidthColumnsText.getText());
-        				if( nColumns < 0 ) {
-        					setErrorMessage(getString("numberOfFixedWidthColumnsCannotBeNegative")); //$NON-NLS-1$
-        					return;
-        				}
-        				if( nColumns != fileInfo.getNumberOfFixedWidthColumns() ) {
-	        				fileInfo.setNumberOfFixedWidthColumns(nColumns);
-	        				handleInfoChanged();
-        				}
-        			} catch (NumberFormatException ex) {
-        				setErrorMessage(Util.getString(I18N_PREFIX + "numberOfFixedWidthColumnsMustBeInteger", numberOfFixedWidthColumnsText.getText())); //$NON-NLS-1$
-        				return;
-        			}
-            	} else {
-            		setErrorMessage(getString("numberOfFixedWidthColumnsCannotBeNullOrZero")); //$NON-NLS-1$
-            		return;
+            	if( !synchronizing ) {
+	            	if( !numberOfFixedWidthColumnsText.getText().isEmpty()) {
+	            		try {
+	        				int nColumns = Integer.parseInt(numberOfFixedWidthColumnsText.getText());
+	        				if( nColumns < 0 ) {
+	        					setErrorMessage(getString("numberOfFixedWidthColumnsCannotBeNegative")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( nColumns != fileInfo.getNumberOfFixedWidthColumns() ) {
+		        				fileInfo.setNumberOfFixedWidthColumns(nColumns);
+		        				handleInfoChanged(false);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("numberOfFixedWidthColumnsMustBeInteger", numberOfFixedWidthColumnsText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
+	            	} else {
+	            		setErrorMessage(getString("numberOfFixedWidthColumnsCannotBeNullOrZero")); //$NON-NLS-1$
+	            		return;
+	            	}
             	}
-            	
             }
         });
     	
@@ -524,7 +602,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.spaceRB = WidgetFactory.createRadioButton(delimitersGroup, getString("spaceLabel"), SWT.NONE, 2, false); //$NON-NLS-1$
@@ -532,7 +610,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.tabRB = WidgetFactory.createRadioButton(delimitersGroup, getString("tabLabel"), SWT.NONE, 2, false); //$NON-NLS-1$
@@ -540,7 +618,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.semicolonRB = WidgetFactory.createRadioButton(delimitersGroup, getString("semicolonLabel"), SWT.NONE, 2, false); //$NON-NLS-1$
@@ -548,7 +626,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.barRB = WidgetFactory.createRadioButton(delimitersGroup, getString("barLabel"), SWT.NONE, 2, false); //$NON-NLS-1$
@@ -556,7 +634,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.otherDelimiterRB = WidgetFactory.createRadioButton(delimitersGroup, getString("otherLabel"), SWT.NONE, 1, false); //$NON-NLS-1$
@@ -564,14 +642,14 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
     	this.otherDelimiterText = WidgetFactory.createTextField(delimitersGroup, SWT.NONE);
     	this.otherDelimiterText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
-            	handleInfoChanged();
+            	handleInfoChanged(false);
             }
         });
 
@@ -597,19 +675,19 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-        column.getColumn().setText(getString("columnName") + TWELVE_SPACES + TWELVE_SPACES + TWELVE_SPACES); //$NON-NLS-1$
+        column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
         column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
         column.getColumn().pack();
 
         column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-        column.getColumn().setText(getString("datatype") + TWELVE_SPACES); //$NON-NLS-1$ 
+        column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(1));
         column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer));
         column.getColumn().pack();
         
         column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-        column.getColumn().setText(getString("width") + TWELVE_SPACES); //$NON-NLS-1$ 
+        column.getColumn().setText(getString("width") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(2));
         column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer));
         column.getColumn().pack();
@@ -623,9 +701,22 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
        
     }
     
+    private void addSpacer(Composite parent, int nSpaces) {
+    	Label label = new Label(parent, SWT.NONE);
+    	label.setText(getSpaces(nSpaces));
+    }
+    
+    private String getSpaces(int nSpaces) {
+    	StringBuffer sb = new StringBuffer(nSpaces);
+    	for( int i=0; i<nSpaces; i++ ) {
+    		sb.append(StringUtilities.SPACE);
+    	}
+    	return sb.toString();
+    }
+    
     private void setDelimiterValue() {
     	if( this.delimitedColumnsRB.getSelection()) {
-        	
+    		setErrorMessage(null);
         	if( this.otherDelimiterRB.getSelection() ) {
 	        	if( !this.otherDelimiterText.getText().isEmpty()) {
 		    		this.fileInfo.setDelimiter(this.delimiterText.getText().charAt(0));
@@ -663,12 +754,18 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	}
     }
     
-    private void handleInfoChanged() {
+    private void handleInfoChanged(boolean reloadFileContents) {
+    	if( synchronizing ) return;
+    	
     	this.infoChanged = true;
     	
     	setDelimiterValue();
     	
     	synchronizeUI();
+    	
+    	if( reloadFileContents ) {
+    		loadFileContentsViewer();
+    	}
 
     	this.columnsViewer.getTable().removeAll();
         for( TeiidColumnInfo row : fileInfo.getColumnInfoList() ) {
@@ -676,6 +773,15 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         }
         
         validate();
+    }
+    
+    private void loadFileContentsViewer() {
+    	fileContentsViewer.getList().removeAll();
+    	for( String row : this.fileInfo.getCachedFirstLines() ) {
+        	if( row != null ) {
+        		this.fileContentsViewer.add(row);
+        	}
+        }
     }
     
     public TeiidMetadataFileInfo getFileInfo() {
@@ -694,8 +800,8 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	}
     	setErrorMessage(fileInfo.getStatus().getMessage());
     }
-    
-    class ColumnDataLabelProvider extends ColumnLabelProvider {
+
+	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;
 

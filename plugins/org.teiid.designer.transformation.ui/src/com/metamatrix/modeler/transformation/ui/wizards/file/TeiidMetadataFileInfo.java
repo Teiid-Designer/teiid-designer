@@ -50,6 +50,16 @@ public class TeiidMetadataFileInfo implements UiConstants {
     }
     
     /**
+     * The number of cached lines of the data file for display
+     */
+    private int numberOfCachedLines = 20;
+    
+    /**
+     * The number of lines in data file
+     */
+    private int numberOfLinesInFile = 0;
+    
+    /**
      * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
      */
 	private File dataFile;
@@ -213,6 +223,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		this.includeQuote = info.doIncludeQuote();
 		this.includeSkip = info.doIncludeSkip();
 		this.cachedFirstLines = info.cachedFirstLines;
+		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), colInfo.getDatatype(), colInfo.getWidth()));
@@ -386,17 +397,21 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		if( cachedFirstLines.length == 0 ) {
 			return null;
 		}
-		return this.cachedFirstLines[this.headerLineNumber-1];
+		if( headerLineNumber <= this.cachedFirstLines.length) {
+			return this.cachedFirstLines[this.headerLineNumber-1];
+		}
+		
+		return null;
 	}
 
 	private void loadHeader() {
 		this.cachedFirstLines = new String[0];
 		Collection<String> lines = new ArrayList<String>(7);
 		
-        if(this.doUseHeaderForColumnNames() && this.dataFile != null && this.dataFile.exists()){
+        if(this.dataFile != null && this.dataFile.exists()){
             FileReader fr=null;
             BufferedReader in=null;
-            
+
             try{
             	int iLines = 0;
                 fr=new FileReader(this.dataFile);
@@ -404,25 +419,14 @@ public class TeiidMetadataFileInfo implements UiConstants {
                 String str;
                 while ((str = in.readLine()) != null) {
                 	iLines++;
-                	lines.add(str);
-                	if( iLines > 19 ) {
-                		break;
+
+                	if( iLines <= numberOfCachedLines ) {
+                		lines.add(str);
                 	}
                 }
+                this.numberOfLinesInFile = iLines;
                 
                 this.cachedFirstLines = lines.toArray(new String[0]);
-                lines.clear();
-                
-                int i=0;
-                for( String line : cachedFirstLines ) {
-                	if( i< 6 ) {
-                		lines.add(line);
-                	}
-                }
-                if( cachedFirstLines.length > 6 ) {
-                	lines.add("... more ..."); //$NON-NLS-1$
-                }
-
             }catch(Exception e){
             	Util.log(IStatus.ERROR, e, 
                 		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", this.dataFile.getName())); //$NON-NLS-1$
@@ -694,6 +698,31 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	 */
 	public boolean doUseDelimitedColumns() {
 		return this.delimitedColumns;
+	}
+	
+	/**
+	 * 
+	 * @param nLines the number of cached lines from data file
+	 */
+	public void setNumberOfCachedFileLines(int nLines) {
+		this.numberOfCachedLines = nLines;
+		loadHeader();
+	}
+	
+	/**
+	 * 
+	 * @return numberOfCachedLines the number of cached lines from data file
+	 */
+	public int getNumberOfCachedFileLines() {
+		return this.numberOfCachedLines;
+	}
+	
+	/**
+	 * 
+	 * @return numberOfCachedLines the total number of lines from data file
+	 */
+	public int getNumberOfLinesInFile() {
+		return this.numberOfLinesInFile;
 	}
 	
 	/**
