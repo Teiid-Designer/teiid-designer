@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -24,7 +23,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.id.ObjectID;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.internal.core.index.WordEntry;
@@ -625,9 +623,9 @@ public class RuntimeAdapter extends RecordFactory {
         final boolean isMaterialized = aspect.isMaterialized(eObject);
 
         // Append the UUIDs of the materialized table references
-        if (isMaterialized ) {
-        	// Check for an annotation for this EObject
-        	materializedTableID = aspect.getMaterializedTableId(eObject);
+        if (isMaterialized) {
+            // Check for an annotation for this EObject
+            materializedTableID = aspect.getMaterializedTableId(eObject);
         }
 
         addTableWord(objectID,
@@ -1344,6 +1342,10 @@ public class RuntimeAdapter extends RecordFactory {
                 }
 
                 String propName = key.toString();
+                String extPrefix = "ext-custom:";//$NON-NLS-1$
+                if (propName.startsWith(extPrefix)) {
+                    propName = propName.substring(extPrefix.length(), propName.length());
+                }
                 String propValue = value.toString();
 
                 if (CoreStringUtil.isEmpty(propName) || CoreStringUtil.isEmpty(propValue)) {
