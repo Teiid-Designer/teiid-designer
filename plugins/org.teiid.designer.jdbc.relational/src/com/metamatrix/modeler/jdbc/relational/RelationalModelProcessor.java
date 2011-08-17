@@ -89,4 +89,19 @@ public interface RelationalModelProcessor {
      * @since 4.3
      */
     boolean getDebugLogTiming();
+
+    /**
+     * Set whether to include incomplete foreign keys
+     * 
+     * @param includeIncompleteFKs
+     */
+    void setIncludeIncompleteFKs( boolean includeIncompleteFKs );
+
+    /**
+     * Gets the boolean flag for inclusion of incomplete FKs
+     * 
+     * @return 'true' if including incomplete FKs, 'false' if not.
+     */
+    boolean getIncludeIncompleteFKs();
+
 }

@@ -71,7 +71,6 @@ import com.metamatrix.modeler.core.ModelerCoreRuntimeException;
 import com.metamatrix.modeler.core.TransactionRunnable;
 import com.metamatrix.modeler.core.container.Container;
 import com.metamatrix.modeler.core.transaction.UnitOfWork;
-import com.metamatrix.modeler.core.types.DatatypeConstants;
 import com.metamatrix.modeler.core.types.DatatypeManager;
 import com.metamatrix.modeler.core.util.ModelContents;
 import com.metamatrix.modeler.core.util.ModelResourceContainerFactory;
@@ -145,6 +144,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     DifferenceProcessor diffProc;
     DifferenceReport drDifferenceReport;
     private boolean moveRatherThanCopyAdds;
+    private boolean includeIncompleteFKs;
     private boolean debugTimingEnabled = false;
 
     /**
@@ -553,6 +553,20 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     }
 
     /**
+     * @see com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor#setIncludeIncompleteFKs(boolean)
+     */
+    public void setIncludeIncompleteFKs( final boolean includeIncompleteFKs ) {
+        this.includeIncompleteFKs = includeIncompleteFKs;
+    }
+
+    /**
+     * @see com.metamatrix.modeler.jdbc.relational.RelationalModelProcessor#getIncludeIncompleteFKs
+     */
+    public boolean getIncludeIncompleteFKs() {
+        return this.includeIncompleteFKs;
+    }
+
+    /**
      * Perform any pre-processing of the difference report prior to {@link #performMerge(Context, WorkingArea, List) merging}.
      * 
      * @param differences the difference report; never null
@@ -898,7 +912,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                         String subtaskMsg = ModelerJdbcRelationalConstants.Util.getString("RelationalModelProcessorImpl.Creating_foreign_keys", tabParams); //$NON-NLS-1$
                         monitor.subTask(subtaskMsg);
                         if (entity instanceof BaseTable) {
-                            createForeignKey(tableNode, (BaseTable)entity, context, nodesToModelObjects, problems);
+                            boolean includeIncompleteFKs = getIncludeIncompleteFKs();
+                            // final boolean includeIncompleteFKs = context.getJdbcImportSettings().includeIncompleteFKs();
+                            createForeignKey(tableNode,
+                                             (BaseTable)entity,
+                                             context,
+                                             nodesToModelObjects,
+                                             includeIncompleteFKs,
+                                             problems);
                         }
                         ++count;
                         monitor.worked(unitsPerForeignKey);
@@ -1276,15 +1297,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         }
 
         if (defaultValue != null) {
-            if(type == Types.BIT) {
+            if (type == Types.BIT) {
                 if (columnSize <= 1) {
                     // Set boolean true or false, depending on incoming bit value for MySQL case
-                    if(defaultValue.length() == 1) {
+                    if (defaultValue.length() == 1) {
                         int charIntVal = defaultValue.charAt(0);
                         // Set boolean FALse for incoming 0, TRUE for 1
-                        if(charIntVal==0) {
+                        if (charIntVal == 0) {
                             column.setDefaultValue(Boolean.FALSE.toString());
-                        } else if(charIntVal==1) {
+                        } else if (charIntVal == 1) {
                             column.setDefaultValue(Boolean.TRUE.toString());
                         }
                     } else {
@@ -1296,7 +1317,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                     }
                 }
             } else if (type != Types.BINARY) {
-                //TODO: writing a binary string creates an invalid .xmi
+                // TODO: writing a binary string creates an invalid .xmi
                 column.setDefaultValue(defaultValue);
             }
         }
@@ -1353,10 +1374,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // If the type is NUMERIC and precision is non-zero, then look at the length of the column ...
         // (assume zero length means the length isn't known)
         EObject result = null;
-        
+
         if (jdbcType == Types.BIT && precision > 1) {
-            //BINARY is the closest type,
-            //for mysql a long may also be a valid representation
+            // BINARY is the closest type,
+            // for mysql a long may also be a valid representation
             jdbcType = Types.BINARY;
         }
 
@@ -1536,6 +1557,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                      final Table table,
                                      final Context context,
                                      final Map nodesToModelObjects,
+                                     final boolean includeIncompleteFKs,
                                      final List problems ) {
         // Can't add a foreign key to a view ...
         if (!(table instanceof BaseTable)) {
@@ -1630,17 +1652,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final List columnNamesForPk = (List)columnNamesForPkIter.next();
                 final ForeignKeySpec fkSpec = (ForeignKeySpec)fkSpecs.get(fkSpecIter.next());
 
-                // Find or create the foreign key ...
-                final ForeignKey fk = factory.createForeignKey();
-                fk.setTable((BaseTable)table);
-                setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context);
-                // Put the columns into the foreign key ...
-                fk.getColumns().addAll(columnsForKey);
-
-                // Set the FK and PK multiplicities to unspecified (defect 13226)
-                fk.setPrimaryKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
-                fk.setForeignKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
-
                 // Find or create the primary key ...
                 final UniqueKey ukey = findUniqueKey(tableNode.getJdbcDatabase(),
                                                      nodesToModelObjects,
@@ -1648,7 +1659,17 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                                      fkSpec.pkSchema,
                                                      fkSpec.pkTable,
                                                      columnNamesForPk);
-                if (ukey != null) {
+                if (ukey != null || includeIncompleteFKs) {
+                    final ForeignKey fk = factory.createForeignKey();
+                    fk.setTable((BaseTable)table);
+                    setNameAndNameInSource(fk, fkSpec.fkName, tableNode, context);
+                    // Put the columns into the foreign key ...
+                    fk.getColumns().addAll(columnsForKey);
+
+                    // Set the FK and PK multiplicities to unspecified (defect 13226)
+                    fk.setPrimaryKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
+                    fk.setForeignKeyMultiplicity(MultiplicityKind.UNSPECIFIED_LITERAL);
+
                     fk.setUniqueKey(ukey);
                 }
             }
@@ -2371,10 +2392,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     }
 
     private void setNameAndNameInSource( final RelationalEntity entity,
-                                           final String name,
-                                           final JdbcNode node,
-                                           final Context context,
-                                           final StringNameValidator validator ) {
+                                         final String name,
+                                         final JdbcNode node,
+                                         final Context context,
+                                         final StringNameValidator validator ) {
         // If the name is null, create a new replacement name ...
         String theName = name;
         if (theName == null || theName.trim().length() == 0) {

@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -41,7 +40,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.util.FileUtils;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-
 import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -322,6 +320,10 @@ public class JdbcImportWizard extends AbstractWizard
                         final JdbcSource src = getSource();
                         final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
                         processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
+
+                        // set property on processor for Inclusion of incomplete FKs.
+                        final boolean includeIncompleteFKs = getDatabase().getIncludes().includeIncompleteFKs();
+                        processor.setIncludeIncompleteFKs(includeIncompleteFKs);
 
                         final IFile modelFile = getFolder().getFile(new Path(getModelName()));
                         final ModelResource resrc = ModelerCore.create(modelFile);
@@ -644,6 +646,11 @@ public class JdbcImportWizard extends AbstractWizard
             if (ppProcessorPack == null) {
                 final JdbcSource src = getSource();
                 final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(src, srcPg.getMetadataProcessor());
+
+                // set property on processor for Inclusion of incomplete FKs.
+                final boolean includeIncompleteFKs = getDatabase().getIncludes().includeIncompleteFKs();
+                processor.setIncludeIncompleteFKs(includeIncompleteFKs);
+
                 // Added for debug performance logging purposes
                 processor.setMoveRatherThanCopyAdds(!isUpdatedModel());
                 final IFile modelFile = getFolder().getFile(new Path(getModelName()));

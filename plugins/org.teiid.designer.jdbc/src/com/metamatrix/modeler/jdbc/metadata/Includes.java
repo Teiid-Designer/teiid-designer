@@ -17,7 +17,12 @@ public interface Includes {
      * The default is to include foreign keys.
      */
     public final boolean DEFAULT_INCLUDE_FOREIGN_KEYS = true;
-    
+
+    /**
+     * The default is to include incomplete foreign keys.
+     */
+    public final boolean DEFAULT_INCLUDE_INCOMPLETE_FKS = true;
+
     /**
      * The default is to include indexes.
      */
@@ -83,6 +88,20 @@ public interface Includes {
      * @param include true if foreign keys should be included, or false otherwise.
      */
     public void setIncludeForeignKeys( boolean include );
+
+    /**
+     * Return whether incomplete foreign keys should be included.
+     * 
+     * @return true if incomplete foreign keys should be included, or false otherwise.
+     */
+    public boolean includeIncompleteFKs();
+
+    /**
+     * Set whether incomplete foreign keys should be included.
+     * 
+     * @param include true if incomplete foreign keys should be included, or false otherwise.
+     */
+    public void setIncludeIncompleteFKs( boolean include );
 
     /**
      * Return whether indexes should be included.
