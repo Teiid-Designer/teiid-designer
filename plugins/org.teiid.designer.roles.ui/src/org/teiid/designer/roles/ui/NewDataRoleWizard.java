@@ -342,13 +342,19 @@ public class NewDataRoleWizard extends AbstractWizard {
         treeViewerColumn.getColumn().setText(getString("columnLabel.update")); //$NON-NLS-1$
         treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.LEFT | SWT.CHECK);
         treeViewerColumn.getColumn().setText(getString("columnLabel.delete")); //$NON-NLS-1$
+        treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.LEFT | SWT.CHECK);
+        treeViewerColumn.getColumn().setText(getString("columnLabel.execute")); //$NON-NLS-1$
+        treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.LEFT | SWT.CHECK);
+        treeViewerColumn.getColumn().setText(getString("columnLabel.alter")); //$NON-NLS-1$
 
         TableLayout layout = new TableLayout();
         layout.addColumnData(new ColumnWeightData(60));
         layout.addColumnData(new ColumnWeightData(10));
+        layout.addColumnData(new ColumnWeightData(8));
         layout.addColumnData(new ColumnWeightData(10));
         layout.addColumnData(new ColumnWeightData(10));
-        layout.addColumnData(new ColumnWeightData(10));
+        layout.addColumnData(new ColumnWeightData(11));
+        layout.addColumnData(new ColumnWeightData(8));
 
         tree.setLayout(layout);
 
@@ -462,7 +468,7 @@ public class NewDataRoleWizard extends AbstractWizard {
             dataRole.setDescription(this.description);
             dataRole.setPermissions(permissionsMap.values());
             if (allowSystemTables) {
-                dataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET, false, true, false, false));
+                dataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET, false, true, false, false, false, false));
             }
             if (!this.anyAuthentication && !mappedRoleNames.isEmpty()) {
                 dataRole.setRoleNames(mappedRoleNames);

@@ -34,16 +34,23 @@ public class Permission {
 		this.crud = permission.getCRUD();
 	}
 	
-	public Permission(String targetName, Boolean createAllowed, Boolean readAllowed, Boolean updateAllowed, Boolean deleteAllowed ) {
+	public Permission(
+				String targetName, 
+				Boolean createAllowed, 
+				Boolean readAllowed, 
+				Boolean updateAllowed, 
+				Boolean deleteAllowed,
+				Boolean executeAllowed,
+				Boolean alterAllowed) {
 		super();
 		this.targetName = targetName;
-		this.crud = new Crud(createAllowed, readAllowed, updateAllowed, deleteAllowed);
+		this.crud = new Crud(createAllowed, readAllowed, updateAllowed, deleteAllowed, executeAllowed, alterAllowed);
 	}
 	
 	public Permission(String targetName, Crud crud ) {
 		super();
 		this.targetName = targetName;
-		this.crud = new Crud(crud.c, crud.r, crud.u, crud.d);
+		this.crud = new Crud(crud.c, crud.r, crud.u, crud.d, crud.e, crud.a);
 	}
 
 
@@ -88,12 +95,28 @@ public class Permission {
 		this.crud.d = deleteAllowed;
 	}
 	
+	public Boolean isExecuteAllowed() {
+		return this.crud.e;
+	}
+	
+	public void setExecuteAllowed(Boolean executeAllowed) {
+		this.crud.e = executeAllowed;
+	}
+	
+	public Boolean isAlterAllowed() {
+		return this.crud.a;
+	}
+	
+	public void setAlterAllowed(Boolean alterAllowed) {
+		this.crud.a = alterAllowed;
+	}
+	
 	public Crud getCRUD() {
 		return new Crud(this.crud);
 	}
 	
-	public void setCRUD(Boolean c, Boolean r, Boolean u, Boolean d) {
-		this.crud = new Crud(c,r,u,d);
+	public void setCRUD(Boolean c, Boolean r, Boolean u, Boolean d, Boolean e, Boolean a) {
+		this.crud = new Crud(c,r,u,d,e,a);
 	}
 	
 	public void setCRUDValue(Boolean value, Crud.Type type) {
@@ -102,6 +125,8 @@ public class Permission {
 			case READ: setReadAllowed(value); break;
 			case UPDATE: setUpdateAllowed(value); break;
 			case DELETE: setDeleteAllowed(value); break;
+			case EXECUTE: setExecuteAllowed(value); break;
+			case ALTER: setAlterAllowed(value); break;
 		}
 	}
 	
@@ -111,6 +136,8 @@ public class Permission {
 			case READ: return isReadAllowed();
 			case UPDATE: return isUpdateAllowed();
 			case DELETE: return isDeleteAllowed();
+			case EXECUTE: return isExecuteAllowed();
+			case ALTER: return isAlterAllowed();
 		}
 		
 		return null;
@@ -132,11 +159,13 @@ public class Permission {
 	}
 	
 	public boolean isNullCrud() {
-		return this.crud.c == null && this.crud.r == null && this.crud.u == null && this.crud.d == null;
+		return this.crud.c == null && this.crud.r == null && this.crud.u == null && this.crud.d == null && this.crud.e == null && this.crud.a == null;
 	}
 	
 	public boolean isFalseCrud() {
-		return this.crud.c == Boolean.FALSE && this.crud.r == Boolean.FALSE && this.crud.u == Boolean.FALSE && this.crud.d == Boolean.FALSE;
+		return this.crud.c == Boolean.FALSE && this.crud.r == Boolean.FALSE && 
+			   this.crud.u == Boolean.FALSE && this.crud.d == Boolean.FALSE && 
+			   this.crud.e == Boolean.FALSE && this.crud.a == Boolean.FALSE;
 	}
 
 	@Override
@@ -170,6 +199,8 @@ public class Permission {
 		sb.append("\n\t").append(this.crud.r.booleanValue()); //$NON-NLS-1$
 		sb.append("\n\t").append(this.crud.u.booleanValue()); //$NON-NLS-1$
 		sb.append("\n\t").append(this.crud.d.booleanValue()); //$NON-NLS-1$
+		sb.append("\n\t").append(this.crud.e.booleanValue()); //$NON-NLS-1$
+		sb.append("\n\t").append(this.crud.a.booleanValue()); //$NON-NLS-1$
 		return super.toString();
 	}
 

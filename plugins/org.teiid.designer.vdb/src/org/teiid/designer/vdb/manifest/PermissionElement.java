@@ -41,6 +41,12 @@ public class PermissionElement implements Serializable {
     @XmlElement( name = "allow-delete")
     private Boolean delete;
     
+    @XmlElement( name = "allow-execute")
+    private Boolean execute;
+    
+    @XmlElement( name = "allow-alter")
+    private Boolean alter;
+    
     /**
      * Used by JAXB when loading a VDB
      */
@@ -58,6 +64,8 @@ public class PermissionElement implements Serializable {
         this.read = permission.isReadAllowed();
         this.update = permission.isUpdateAllowed();
         this.delete = permission.isDeleteAllowed();
+        this.execute = permission.isExecuteAllowed();
+        this.alter = permission.isAlterAllowed();
     }
     
     
@@ -95,6 +103,20 @@ public class PermissionElement implements Serializable {
 	 */
 	public Boolean isDelete() {
 		return delete;
+	}
+	
+	/**
+	 * @return if permission allows execute
+	 */
+	public Boolean isExecute() {
+		return execute;
+	}
+	
+	/**
+	 * @return if permission allows alter
+	 */
+	public Boolean isAlter() {
+		return alter;
 	}
 }
 

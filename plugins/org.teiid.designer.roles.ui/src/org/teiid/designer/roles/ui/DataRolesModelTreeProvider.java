@@ -369,7 +369,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 
         for (Resource res : resources) {
             String resPath = getTargetName(res);
-            Permission perm = new Permission(resPath, false, true, false, false);
+            Permission perm = new Permission(resPath, false, true, false, false, false, false);
             perm.setPrimary(true);
             handler.addPermission(res, perm);
         }

@@ -71,7 +71,8 @@ public class VdbDataRole {
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 
          for( PermissionElement perm : element.getPermissions()) {
-    		 permissions.add(new Permission(perm.getResourceName(), perm.isCreate(), perm.isRead(), perm.isUpdate(), perm.isDelete()));
+    		 permissions.add(new Permission(perm.getResourceName(), 
+    				 	perm.isCreate(), perm.isRead(), perm.isUpdate(), perm.isDelete(), perm.isExecute(), perm.isAlter()));
     	 }
     	 
     	 mappedRoleNames = new ArrayList(element.getMappedRoleNames());

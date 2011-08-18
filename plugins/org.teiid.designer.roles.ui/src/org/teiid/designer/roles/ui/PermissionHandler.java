@@ -53,6 +53,9 @@ public class PermissionHandler {
             boolean sameRead = false;
             boolean sameUpdate = false;
             boolean sameDelete = false;
+            boolean sameExecute = false;
+            boolean sameAlter = false;
+            
             // look at all 4 CRUD values and their Parent Perms and if they are the same as the CRUD value
             Permission parentPerm = getFirstParentPermission(changedElement, Crud.Type.CREATE);
             if (parentPerm != null) {
@@ -88,8 +91,23 @@ public class PermissionHandler {
                     sameDelete = true;
                 }
             }
+            
+            parentPerm = getFirstParentPermission(changedElement, Crud.Type.EXECUTE);
+            if (parentPerm != null) {
+				if( (perm.getCRUDValue(Crud.Type.EXECUTE) == parentPerm.getCRUDValue(Crud.Type.EXECUTE)) ||
+					(perm.getCRUDValue(Crud.Type.EXECUTE) == null && parentPerm.getCRUDValue(Crud.Type.EXECUTE) != null) ) {
+                    sameExecute = true;
+                }
+            }
+            parentPerm = getFirstParentPermission(changedElement, Crud.Type.ALTER);
+            if (parentPerm != null) {
+				if( (perm.getCRUDValue(Crud.Type.ALTER) == parentPerm.getCRUDValue(Crud.Type.ALTER)) ||
+					(perm.getCRUDValue(Crud.Type.ALTER) == null && parentPerm.getCRUDValue(Crud.Type.ALTER) != null) ) {
+                    sameAlter = true;
+                }
+            }
 
-            if (sameCreate && sameRead && sameUpdate && sameDelete) {
+            if (sameCreate && sameRead && sameUpdate && sameDelete && sameExecute && sameAlter) {
                 // System.out.println(" Removing Stale Permission for: " + perm.getTargetName());
                 permissionsMap.remove(changedElement);
                 // stalePermissionKeys.add(changedElement);
@@ -212,7 +230,7 @@ public class PermissionHandler {
             Permission parentPermission = getExistingPermission(element, crudType);
 
             // Now create New permission with NULL values
-            Crud targetCrud = new Crud(null, null, null, null);
+            Crud targetCrud = new Crud(null, null, null, null, null, null);
             targetPermission = new Permission(tree.getTargetName(element), targetCrud);
 
             // Set the target permission crud value to parent permission crud value
@@ -272,7 +290,7 @@ public class PermissionHandler {
                 Boolean elementStatus = elementPerm.getCRUDValue(crudType);
                 // Paren permission is null means the crud was inherited, so add an override
                 if (parentPerm == null) {
-                    Crud targetCrud = new Crud(null, null, null, null);
+                    Crud targetCrud = new Crud(null, null, null, null, null, null);
                     Permission newParentPermission = new Permission(tree.getTargetName(parent), targetCrud);
                     newParentPermission.setCRUDValue(elementStatus, crudType);
                     this.permissionsMap.put(parent, newParentPermission);

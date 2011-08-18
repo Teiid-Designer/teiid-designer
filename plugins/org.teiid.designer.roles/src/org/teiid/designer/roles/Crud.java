@@ -10,7 +10,7 @@ package org.teiid.designer.roles;
 public class Crud {
 	public enum Type
 	{
-	  CREATE, READ, UPDATE, DELETE 
+	  CREATE, READ, UPDATE, DELETE, EXECUTE, ALTER
 	}
 
 //	public static final int CREATE = 1;
@@ -22,17 +22,21 @@ public class Crud {
 	public Boolean r;
 	public Boolean u;
 	public Boolean d;
+	public Boolean e;
+	public Boolean a;
 	
-	public Crud(Boolean c, Boolean r, Boolean u, Boolean d) {
+	public Crud(Boolean c, Boolean r, Boolean u, Boolean d, Boolean e, Boolean a) {
 		super();
 		this.c = c;
 		this.r = r;
 		this.u = u;
 		this.d = d;
+		this.e = e;
+		this.a = a;
 	}
 	
 	public Crud(Crud crud) {
-		this(crud.c, crud.r, crud.u, crud.d);
+		this(crud.c, crud.r, crud.u, crud.d, crud.e, crud.a);
 	}
 
 	public boolean equivalent(Object obj) {
@@ -42,6 +46,8 @@ public class Crud {
 			if( !areSameState(this.r, target.r) ) return false; 
 			if( !areSameState(this.u, target.u) ) return false; 
 			if( !areSameState(this.d, target.d) ) return false; 
+			if( !areSameState(this.e, target.e) ) return false; 
+			if( !areSameState(this.a, target.a) ) return false; 
 		}
 		return super.equals(obj);
 	}
@@ -70,7 +76,9 @@ public class Crud {
 		if( areSameBooleanValues(this.c, target.c) &&
 			areSameBooleanValues(this.r, target.r) &&
 			areSameBooleanValues(this.u, target.u) &&
-			areSameBooleanValues(this.d, target.d) ) {
+			areSameBooleanValues(this.d, target.d) &&
+			areSameBooleanValues(this.e, target.e) &&
+			areSameBooleanValues(this.a, target.a) ) {
 			return true;
 		}
 		return false;
@@ -88,6 +96,12 @@ public class Crud {
 		}
 		if( value == 4 ) {
 			return Crud.Type.DELETE;
+		}
+		if( value == 5 ) {
+			return Crud.Type.EXECUTE;
+		}
+		if( value == 6 ) {
+			return Crud.Type.ALTER;
 		}
 		return null;
 	}
