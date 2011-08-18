@@ -416,10 +416,17 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         			setConnectionProfile(profile);
         			Properties props = profile.getBaseProperties();
         			String home = (String)props.get(HOME);
-        			if( home != null ) {
-        				this.dataFileFolder.setText(Util.getString(I18N_PREFIX + "sourceLocation", home)); //$NON-NLS-1$
-        				this.dataFileFolder.pack(true);
-        			}
+                    if (home != null) {
+                        String location = home;
+                        if (location.length() > 40) {
+                            int len = location.length();
+                            location = "..." + location.substring(len - 40, len); //$NON-NLS-1$
+                        }
+                        this.dataFileFolder.setText(Util.getString(I18N_PREFIX + "sourceLocation", location)); //$NON-NLS-1$
+                        this.dataFileFolder.setToolTipText(home);
+                        this.dataFileFolder.pack(true);
+                    }
+
         			clearFileListViewer();
         			loadFileListViewer();
         			break;
