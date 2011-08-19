@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<DBDefinition:DatabaseVendorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:DBDefinition="http:///org/eclipse/datatools/modelbase/dbdefinition/dbdefinition.ecore" vendor="Teiid" version="7.1" maximumIdentifierLength="64" triggerSupported="false" joinSupported="true" tablespacesSupported="false" maximumCommentLength="64" mQTSupported="true" aliasSupported="true" quotedDMLSupported="false" quotedDDLSupported="false" xmlSupported="true">
+<DBDefinition:DatabaseVendorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:DBDefinition="http:///org/eclipse/datatools/modelbase/dbdefinition/dbdefinition.ecore" vendor="Teiid" version="7.5" maximumIdentifierLength="64" triggerSupported="false" joinSupported="true" tablespacesSupported="false" maximumCommentLength="64" mQTSupported="true" aliasSupported="true" quotedDMLSupported="false" quotedDDLSupported="false" xmlSupported="true">
   <predefinedDataTypeDefinitions xmi:id="STRING_1" lengthSupported="true" keyConstraintSupported="true" maximumLength="4000" jdbcEnumType="12" javaClassName="java.lang.String" lengthUnit="DOUBLE_BYTE" displayName="">
     <defaultValueTypes>CURRENT_USER</defaultValueTypes>
     <defaultValueTypes>NULL</defaultValueTypes>
