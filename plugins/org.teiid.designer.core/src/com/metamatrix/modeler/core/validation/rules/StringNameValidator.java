@@ -40,7 +40,7 @@ public class StringNameValidator {
     private final boolean caseSensitive;
     private final char replacementCharacter;
     private final char[] validNonLetterOrDigitChars;
-    
+
     private final ExistingNames existingNames;
 
     /**
@@ -61,10 +61,10 @@ public class StringNameValidator {
             throw new IllegalArgumentException(msg);
         }
         if (validNonLetterOrDigitChars == null) {
-        	this.validNonLetterOrDigitChars = DEFAULT_VALID_NON_LETTER_OR_DIGIT_CHARS;
+            this.validNonLetterOrDigitChars = DEFAULT_VALID_NON_LETTER_OR_DIGIT_CHARS;
         } else {
-	        this.validNonLetterOrDigitChars = validNonLetterOrDigitChars;
-	        Arrays.sort(this.validNonLetterOrDigitChars);
+            this.validNonLetterOrDigitChars = validNonLetterOrDigitChars;
+            Arrays.sort(this.validNonLetterOrDigitChars);
         }
 
         this.existingNames = new ExistingNames(this.caseSensitive);
@@ -73,7 +73,7 @@ public class StringNameValidator {
     /**
      * @param name the name to add to the existing name collection (should not be <code>null</code>)
      */
-    public boolean addExistingName(String name) {
+    public boolean addExistingName( String name ) {
         return this.existingNames.add(name);
     }
 
@@ -105,7 +105,7 @@ public class StringNameValidator {
     public StringNameValidator( final int maxLength,
                                 final char[] validNonLetterOrDigitChars ) {
         this(DEFAULT_MINIMUM_LENGTH, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER,
-        		validNonLetterOrDigitChars);
+             validNonLetterOrDigitChars);
     }
 
     /**
@@ -114,7 +114,8 @@ public class StringNameValidator {
     public StringNameValidator( final int minLength,
                                 final int maxLength,
                                 final char[] validNonLetterOrDigitChars ) {
-        this(minLength, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER, validNonLetterOrDigitChars);
+        this(minLength, maxLength, DEFAULT_CASE_SENSITIVE_NAME_COMPARISON, DEFAULT_REPLACEMENT_CHARACTER,
+             validNonLetterOrDigitChars);
     }
 
     /**
@@ -223,26 +224,26 @@ public class StringNameValidator {
         CoreArgCheck.isNotNull(name);
 
         // Go through the string and ensure that each character is valid ...
-        
+
         int length = name.length();
-        
+
         if (length == 0) {
-        	return null;
+            return null;
         }
-        
+
         char c = name.charAt(0);
 
         String msg = isValidInitialChar(c);
-        
+
         if (msg != null) {
-        	return msg;
+            return msg;
         }
-        
+
         for (int index = 1; index < length; index++) {
-        	c = name.charAt(index);
+            c = name.charAt(index);
             msg = isValidChar(c, index);
             if (msg != null) {
-            	return msg;
+                return msg;
             }
         }
 
@@ -250,38 +251,40 @@ public class StringNameValidator {
         return null;
     }
 
-	protected String isValidChar(char c, int index) {
-		if ( isValidInitialChar(c) != null ) {
-			if (!Character.isDigit(c) && !isValidNonLetterOrDigit(c) ) {
-			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
-			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
-			} 
-		} 
-		return null;
-	}
-    
-    protected String isValidInitialChar(char c) {
-    	if (!Character.isLetter(c)) {
+    protected String isValidChar( char c,
+                                  int index ) {
+        if (isValidInitialChar(c) != null) {
+            if (!Character.isDigit(c) && !isValidNonLetterOrDigit(c)) {
+                final Object[] params = new Object[] {new Character(c), new Integer(index),
+                    getValidNonLetterOrDigitMessageSuffix()};
+                return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
+            }
+        }
+        return null;
+    }
+
+    protected String isValidInitialChar( char c ) {
+        if (!Character.isLetter(c)) {
             final Object[] params = new Object[] {new Character(c)};
             final String msg = ModelerCore.Util.getString("StringNameValidator.The_first_character_of_the_name_({0})_must_be_an_alphabetic_character", params); //$NON-NLS-1$
             return msg;
         }
         return null;
     }
-    
-    
+
     /**
-     * Allows additional non-letter or non-digit characters to be valid. Subclasses should override this method to add
-     * additional valid characters.
+     * Allows additional non-letter or non-digit characters to be valid. Subclasses should override this method to add additional
+     * valid characters.
+     * 
      * @param c
      * @return true if valid character
      */
-    public boolean isValidNonLetterOrDigit(char c) {
-    	return Arrays.binarySearch(validNonLetterOrDigitChars, c) >= 0;
+    public boolean isValidNonLetterOrDigit( char c ) {
+        return Arrays.binarySearch(validNonLetterOrDigitChars, c) >= 0;
     }
-    
+
     public String getValidNonLetterOrDigitMessageSuffix() {
-    	return ModelerCore.Util.getString("StringNameValidator.or_other_valid_characters"); //$NON-NLS-1$
+        return ModelerCore.Util.getString("StringNameValidator.or_other_valid_characters"); //$NON-NLS-1$
     }
 
     /**
@@ -560,72 +563,71 @@ public class StringNameValidator {
 
         int actualLength = 0;
         if (initLength > 0) {
-	        // Go through the string and ensure that each character is valid ...
-	        boolean foundInitialChar = false;
-	        int index = 0;
-	        for( char nextChar : name.toCharArray()) {
-	        	index++;
-	        	if( !foundInitialChar ) {
-		        	String msg = isValidInitialChar(nextChar);
-		            
-		    	    if (msg == null) {
-		    	    	foundInitialChar = true;
-		    	    	changed = true;
-		    	    	actualLength++;
-		        		newName.append(nextChar);
-		        	} else {
-		        		changed = true;
-		        	}
-	        	} else {
-	        		if( actualLength < maxLength ) {
-	                    String msg = isValidChar(nextChar, index);
-	                    if (msg != null) {
-	               	    	changed = true;
-	               	    	actualLength++;
-	                    	newName.append(this.getReplacementCharacter());
-	                    } else {
-	                    	actualLength++;
-	                    	newName.append(nextChar);
-	                    }
-	        		} else {
-	        			break;
-	        		}
-	        	}
-	        }
+            // Go through the string and ensure that each character is valid ...
+            boolean foundInitialChar = false;
+            int index = 0;
+            for (char nextChar : name.toCharArray()) {
+                index++;
+                if (!foundInitialChar) {
+                    String msg = isValidInitialChar(nextChar);
+
+                    if (msg == null) {
+                        foundInitialChar = true;
+                        changed = true;
+                        actualLength++;
+                        newName.append(nextChar);
+                    } else {
+                        changed = true;
+                    }
+                } else {
+                    if (actualLength < maxLength) {
+                        String msg = isValidChar(nextChar, index);
+                        if (msg != null) {
+                            changed = true;
+                            actualLength++;
+                            newName.append(this.getReplacementCharacter());
+                        } else {
+                            actualLength++;
+                            newName.append(nextChar);
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
-        
-        
-//        if (length > 0) {
-//        	char c = name.charAt(0);
-//
-//	        String msg = isValidInitialChar(c);
-//        
-//    	    if (msg != null) {
-//    	    	changed = true;
-//        		newName.setCharAt(0, this.getReplacementCharacter());
-//        	}
-//    	    for (int index = 1; index < maxLength; index++) {
-//            	c = name.charAt(index);
-//                msg = isValidChar(c, index);
-//                if (msg != null) {
-//           	    	changed = true;
-//                	newName.setCharAt(index, this.getReplacementCharacter());
-//                }
-//            }
-//        }
+
+        // if (length > 0) {
+        // char c = name.charAt(0);
+        //
+        // String msg = isValidInitialChar(c);
+        //        
+        // if (msg != null) {
+        // changed = true;
+        // newName.setCharAt(0, this.getReplacementCharacter());
+        // }
+        // for (int index = 1; index < maxLength; index++) {
+        // c = name.charAt(index);
+        // msg = isValidChar(c, index);
+        // if (msg != null) {
+        // changed = true;
+        // newName.setCharAt(index, this.getReplacementCharacter());
+        // }
+        // }
+        // }
 
         while (newName.length() < getMinimumLength()) {
             changed = true;
-        	newName.append(this.getReplacementCharacter());
+            newName.append(this.getReplacementCharacter());
         }
-        
+
         if (newName.length() > maxLength) {
-        	changed = true;
-        	newName.delete(maxLength, newName.length());
+            changed = true;
+            newName.delete(maxLength, newName.length());
         }
-        
+
         if (changed) {
-        	return newName.toString();
+            return newName.toString();
         }
 
         // Valid, so return no error message
@@ -662,7 +664,7 @@ public class StringNameValidator {
      * @param name the name to be made valid; may not be null
      * @return the new name, or null if the name was already unique (i.e., would be unchanged by this method)
      */
-    public String createUniqueName(final String name) {
+    public String createUniqueName( final String name ) {
         CoreArgCheck.isNotNull(name);
 
         // Compute the counter at which we have to start taking away characters ...
@@ -832,6 +834,7 @@ public class StringNameValidator {
             if (added || (current.marker == false)) {
                 // set marker to indicate end of a name
                 current.marker = true;
+                added = true;
             }
 
             return added;
