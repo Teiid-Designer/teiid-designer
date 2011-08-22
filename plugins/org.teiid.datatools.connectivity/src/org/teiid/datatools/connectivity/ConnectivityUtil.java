@@ -36,8 +36,8 @@ public class ConnectivityUtil {
     public static final String TEIID_DRIVER_NAME = "org.teiid.jdbc.TeiidDriver"; //$NON-NLS-1$
     public static final String TEIID_DATABASE_VENDOR_NAME = "Teiid"; //$NON-NLS-1$
 
-    public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Preview Driver"; //$NON-NLS-1$
-    public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Preview Driver"; //$NON-NLS-1$
+    public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Driver Default"; //$NON-NLS-1$
+    public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Driver (default)"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
 	public static final String TEIID_DATABASE_VERSION = "7.5"; //$NON-NLS-1$
 	public static final String TEIID_DRIVER_DEFINITION_ID_BASE = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate."; //$NON-NLS-1$
@@ -121,43 +121,43 @@ public class ConnectivityUtil {
 
     }
     
-	private static void createTeiidVDBDriverInstance(String jarList,
-			String driverURL, String username, String password, String vdbName,
-			String profileName) {
-		IPropertySet pset = new PropertySetImpl(profileName + " Driver", //$NON-NLS-1$
-				TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
-		Properties baseProperties = new Properties();
-		baseProperties.setProperty(
-				IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID,
-				TEIID_DRIVER_NAME);
-		baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID,
-				driverURL);
-		if (null != username) {
-			baseProperties.setProperty(
-					IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
-		}
-		if (null != password) {
-			baseProperties.setProperty(
-					IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, password);
-		}
-		baseProperties.setProperty(
-				IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID,
-				TEIID_DATABASE_VENDOR_NAME);
-		baseProperties.setProperty(
-				IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID,
-				TEIID_DATABASE_VERSION);
-		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
-				jarList);
-		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE,
-				TEIID_PREVIEW_DRIVER_DEFN_TYPE);
-		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_CLASS,
-				TEIID_DRIVER_NAME);
-
-		pset.setBaseProperties(baseProperties);
-
-		DriverManager.getInstance().addDriverInstance(pset);
-
-	}
+//	private static void createTeiidVDBDriverInstance(String jarList,
+//			String driverURL, String username, String password, String vdbName,
+//			String profileName) {
+//		IPropertySet pset = new PropertySetImpl(profileName + " Driver", //$NON-NLS-1$
+//				TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
+//		Properties baseProperties = new Properties();
+//		baseProperties.setProperty(
+//				IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID,
+//				TEIID_DRIVER_NAME);
+//		baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID,
+//				driverURL);
+//		if (null != username) {
+//			baseProperties.setProperty(
+//					IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
+//		}
+//		if (null != password) {
+//			baseProperties.setProperty(
+//					IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, password);
+//		}
+//		baseProperties.setProperty(
+//				IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID,
+//				TEIID_DATABASE_VENDOR_NAME);
+//		baseProperties.setProperty(
+//				IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID,
+//				TEIID_DATABASE_VERSION);
+//		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
+//				jarList);
+//		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE,
+//				TEIID_PREVIEW_DRIVER_DEFN_TYPE);
+//		baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_CLASS,
+//				TEIID_DRIVER_NAME);
+//
+//		pset.setBaseProperties(baseProperties);
+//
+//		DriverManager.getInstance().addDriverInstance(pset);
+//
+//	}
     
     public static void deleteTransientTeiidProfile(IConnectionProfile profile) {
           ProfileManager.getInstance().deleteTransientProfile(profile);
