@@ -24,7 +24,8 @@ import com.metamatrix.modeler.jdbc.metadata.JdbcTableType;
  * JdbcTableTypeImpl
  */
 public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
-
+    static final String SQL_SERVER_DB_METADATA = "SQLServerDatabaseMetaData"; //$NON-NLS-1$
+    
     /**
      * Construct an instance of JdbcTableTypeImpl.
      * 
@@ -45,12 +46,15 @@ public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
         final String schemaName = getSchemaName(this);
         final String catalogName = getCatalogName(this);
         
+        boolean isSqlServer = metadata.getClass().getName().endsWith(SQL_SERVER_DB_METADATA);
+
         // Get the tables for this type ...
         ResultSet resultSet = null;
         try {
             final String[] tableTypes = new String[]{getName()};
+
             resultSet = metadata.getTables(catalogName,schemaName,WILDCARD_PATTERN,tableTypes);
-            while( resultSet.next() ) {
+            while (resultSet != null && resultSet.next()) {
                 final String tableName = resultSet.getString(3);
                 final String remarks = resultSet.getString(5);
                 final JdbcTableImpl table = new JdbcTableImpl(this,tableName);
@@ -58,9 +62,11 @@ public class JdbcTableTypeImpl extends JdbcNodeImpl implements JdbcTableType {
                 children.add(table);
             }
         } catch (Throwable t) {
-            final Object[] params = new Object[]{metadata.getClass().getName(),getJdbcDatabase()};
-            final String msg = JdbcPlugin.Util.getString("JdbcTableTypeImpl.Unexpected_exception_while_calling_getTables()_and_processing_results",params); //$NON-NLS-1$
-            JdbcPlugin.Util.log(IStatus.WARNING,t,msg);
+            if (!isSqlServer) {
+                final Object[] params = new Object[] {metadata.getClass().getName(), getJdbcDatabase()};
+                final String msg = JdbcPlugin.Util.getString("JdbcTableTypeImpl.Unexpected_exception_while_calling_getTables()_and_processing_results", params); //$NON-NLS-1$
+                JdbcPlugin.Util.log(IStatus.WARNING, t, msg);
+            }
         } finally {
             if ( resultSet != null ) {
                 try {

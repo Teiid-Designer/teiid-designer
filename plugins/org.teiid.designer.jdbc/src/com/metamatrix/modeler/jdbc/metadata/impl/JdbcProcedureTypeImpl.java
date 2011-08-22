@@ -24,7 +24,8 @@ import com.metamatrix.modeler.jdbc.metadata.JdbcProcedureType;
  * JdbcProcedureTypeImpl
  */
 public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedureType {
-
+    static final String SQL_SERVER_DB_METADATA = "SQLServerDatabaseMetaData"; //$NON-NLS-1$
+    
     /**
      * Construct an instance of JdbcProcedureTypeImpl.
      * 
@@ -45,6 +46,8 @@ public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedure
         final String schemaName = getSchemaName(this);
         final String catalogName = getCatalogName(this);
         
+        boolean isSqlServer = metadata.getClass().getName().endsWith(SQL_SERVER_DB_METADATA);
+        
         // Get the procedures ...
         ResultSet resultSet = null;
         try {
@@ -59,9 +62,11 @@ public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedure
                 children.add(proc);
             }
         } catch (Throwable t) {
-            final Object[] params = new Object[]{metadata.getClass().getName(),getJdbcDatabase()};
-            final String msg = JdbcPlugin.Util.getString("JdbcProcedureTypeImpl.Unexpected_exception_while_calling_getProcedures()_and_processing_results",params); //$NON-NLS-1$
-            JdbcPlugin.Util.log(IStatus.WARNING,t,msg);
+            if (!isSqlServer) {
+                final Object[] params = new Object[]{metadata.getClass().getName(),getJdbcDatabase()};
+                final String msg = JdbcPlugin.Util.getString("JdbcProcedureTypeImpl.Unexpected_exception_while_calling_getProcedures()_and_processing_results",params); //$NON-NLS-1$
+                JdbcPlugin.Util.log(IStatus.WARNING,t,msg);
+            }
         } finally {
             if ( resultSet != null ) {
                 try {
