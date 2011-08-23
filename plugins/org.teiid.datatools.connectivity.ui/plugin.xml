@@ -56,7 +56,7 @@
    <extension
          point="org.eclipse.datatools.sqltools.plan.planService">
       <planService
-            databaseVendorDefinitionId="Teiid_7.4"
+            databaseVendorDefinitionId="Teiid_7.x"
             serviceClass="org.teiid.datatools.connectivity.ui.plan.TeiidPlanService">
       </planService>
    </extension>
@@ -67,7 +67,7 @@
             configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
             default="false"
             product="Teiid"
-            version="7.5">
+            version="7.x">
       </dbUIConfiguration>
    </extension>
    <extension
@@ -77,7 +77,7 @@
             default="false"
             product="Teiid"
             supportsDebugging="false"
-            version="7.5">
+            version="7.x">
       </dbConfiguration>
    </extension> 
    <extension

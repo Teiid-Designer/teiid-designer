@@ -39,7 +39,7 @@ public class ConnectivityUtil {
     public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Driver Default"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Driver (default)"; //$NON-NLS-1$
     public static final String TEIID_PREVIEW_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
-	public static final String TEIID_DATABASE_VERSION = "7.5"; //$NON-NLS-1$
+	public static final String TEIID_DATABASE_VERSION = "7.x"; //$NON-NLS-1$
 	public static final String TEIID_DRIVER_DEFINITION_ID_BASE = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate."; //$NON-NLS-1$
 
     public static Properties createDriverProps( String jarList,

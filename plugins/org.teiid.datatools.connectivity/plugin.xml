@@ -33,7 +33,7 @@
 					value="Teiid" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.version" name="Version"
-					value="7.5" required="true" visible="true" />
+					value="7.x" required="true" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.URL" name="Connection URL"
 					value="jdbc:teiid:vdb-name@mms://localhost:31000" required="false"
@@ -43,7 +43,7 @@
 					value="" required="false" visible="true" />
 				<property generated="false"
 					id="org.eclipse.datatools.connectivity.db.password" name="Password"
-					required="false" visible="true" />
+					value="" required="false" visible="true" />
 			</properties>
 		</driverTemplate>
 
@@ -56,8 +56,8 @@
           file="src/org/teiid/datatools/connectivity/database/teiidDB.xmi"
           product="Teiid"
           productDisplayString="Teiid"
-          version="7.5"
-          versionDisplayString="7.5">
+          version="7.x"
+          versionDisplayString="7.x">
     </definition>
  </extension>
  <extension
@@ -93,7 +93,7 @@
             provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
             eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
             product="Teiid"
-            version="7.5"/>
+            version="7.x"/>
    </extension>
    
       <extension
