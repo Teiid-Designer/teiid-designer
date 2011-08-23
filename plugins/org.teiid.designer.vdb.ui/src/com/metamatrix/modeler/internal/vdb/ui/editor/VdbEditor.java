@@ -408,6 +408,15 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
 
         modelsGroup.getTable().getViewer().refresh();
+        packModelsGroup();
+    }
+    
+    private void packModelsGroup() {
+        modelsGroup.getTable().getColumn(0).getColumn().pack();
+        modelsGroup.getTable().getColumn(1).getColumn().pack();
+        modelsGroup.getTable().getColumn(4).getColumn().pack();
+        modelsGroup.getTable().getColumn(5).getColumn().pack();
+        modelsGroup.getTable().getColumn(6).getColumn().pack();
     }
     
     private void createDataRolesControl( Composite parent ) {
@@ -1854,6 +1863,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         modelsGroup.getTable().getColumn(6).setEditingSupport(editor);
 
         modelsGroup.setInput(vdb);
+        packModelsGroup();
     }
 
     /**
