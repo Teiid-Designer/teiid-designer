@@ -10,6 +10,7 @@ package com.metamatrix.modeler.transformation.ui.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -28,6 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
+
 import com.metamatrix.metamodels.diagram.Diagram;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
 import com.metamatrix.modeler.diagram.ui.actions.DiagramGlobalActionsMap;
@@ -52,7 +54,6 @@ import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.modeler.ui.actions.ModelerActionService;
-import com.metamatrix.modeler.ui.actions.ModelerSpecialActionManager;
 import com.metamatrix.modeler.ui.editors.ModelEditorPage;
 import com.metamatrix.ui.actions.AbstractAction;
 import com.metamatrix.ui.actions.ControlledPopupMenuExtender;
@@ -88,6 +89,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     private AbstractAction lockAction;
     private RefreshAction refreshDiagramAction;
     private ShowParentDiagramAction upPackageDiagramAction;
+    private ShowDependencyTargetDiagramAction showDependencyTargetDiagramAction;
     private AbstractAction saveDiagramAction;
     private AbstractAction diagramPageSetupAction;
     private AbstractAction showPageGridAction;
@@ -263,6 +265,12 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         if (this.upPackageDiagramAction == null) {
             this.upPackageDiagramAction = new ShowParentDiagramAction();
             registerAction(this.upPackageDiagramAction);
+        }
+        // ----- ShowParentDiagramAction -----//
+        this.showDependencyTargetDiagramAction = (ShowDependencyTargetDiagramAction)getRegisteredAction(ShowDependencyTargetDiagramAction.class.getName());
+        if (this.showDependencyTargetDiagramAction == null) {
+            this.showDependencyTargetDiagramAction = new ShowDependencyTargetDiagramAction();
+            registerAction(this.showDependencyTargetDiagramAction);
         }
 
         // ----- SaveDiagramAction -----//
@@ -684,6 +692,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         if (theMenuMgr.find(this.lockAction.getId()) != null) theMenuMgr.remove(this.lockAction.getId());
         if (theMenuMgr.find(this.refreshDiagramAction.getId()) != null) theMenuMgr.remove(this.refreshDiagramAction.getId());
         if (theMenuMgr.find(this.upPackageDiagramAction.getId()) != null) theMenuMgr.remove(this.upPackageDiagramAction.getId());
+        if (theMenuMgr.find(this.showDependencyTargetDiagramAction.getId()) != null) theMenuMgr.remove(this.showDependencyTargetDiagramAction.getId());
         if (theMenuMgr.find(this.saveDiagramAction.getId()) != null) theMenuMgr.remove(this.saveDiagramAction.getId());
         if (theMenuMgr.find(this.diagramPageSetupAction.getId()) != null) theMenuMgr.remove(this.diagramPageSetupAction.getId());
         if (theMenuMgr.find(this.showPageGridAction.getId()) != null) theMenuMgr.remove(this.showPageGridAction.getId());
@@ -707,6 +716,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
             theMenuMgr.add(new Separator());
             theMenuMgr.add(new GroupMarker(D_MARKER));
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
+            theMenuMgr.appendToGroup(D_MARKER, this.showDependencyTargetDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
             theMenuMgr.appendToGroup(D_MARKER, this.showPageGridAction);
@@ -741,14 +751,12 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         tbm.removeAll();
 
         tbm.add(this.refreshDiagramAction);
-        tbm.add(this.upPackageDiagramAction);
-        tbm.add(new Separator());
-
-        IAction previewAction = ModelerSpecialActionManager.getAction(com.metamatrix.modeler.ui.UiConstants.Extensions.PREVIEW_DATA_ACTION_ID);
-        if (previewAction != null) {
-            tbm.add(previewAction);
-            tbm.add(new Separator());
+        if (isDependencyDiagram()) {
+        	tbm.add(this.showDependencyTargetDiagramAction);
+        } else {
+        	tbm.add(this.upPackageDiagramAction);
         }
+        tbm.add(new Separator());
 
         resetTransformationActions();
 
@@ -773,6 +781,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
 
         this.refreshDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
         this.upPackageDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
+        this.showDependencyTargetDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
 
         if (!isDependencyDiagram()) {
             // Special wiring is needed to help this action determine if it's diagram toolbar button
@@ -810,6 +819,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     @Override
     public void enableDiagramToolbarActions() {
         if (this.upPackageDiagramAction != null) this.upPackageDiagramAction.determineEnablement();
+        if (this.showDependencyTargetDiagramAction != null ) this.showDependencyTargetDiagramAction.determineEnablement();
     }
 
     /**
