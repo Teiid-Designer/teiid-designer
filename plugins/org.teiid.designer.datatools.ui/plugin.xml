@@ -92,7 +92,7 @@
    <newWizard
          class="org.teiid.designer.datatools.profiles.modeshape.ConnectionProfileWizard"
          description="Create a ModeShape connection profile."
-         icon="icons/modeshape_icon_16px.png"
+         icon="icons/full/obj16/modeshape_icon_16px.png"
          id="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfileWizard"
          name="ModeShape"
          profile="org.teiid.designer.datatools.profiles.modeshape.ModeShapeConnectionProfile"/>
