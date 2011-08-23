@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
@@ -92,9 +93,6 @@ public class ModelExtensionUtils {
 
                 if ((annotation == null) && forceCreate) {
                     annotation = getModelObjectAnnotation(entry, true);
-                    ModelContents contents = ModelerCore.getModelEditor().getModelContents(modelResource);
-                    AnnotationContainer ac = contents.getAnnotationContainer(false);
-                    annotation.setAnnotationContainer(ac);
                 }
 
                 break;
@@ -140,7 +138,8 @@ public class ModelExtensionUtils {
             boolean succeeded = false;
 
             try {
-                return getModelObjectAnnotationImpl(modelObject, true);
+                Annotation annotation = getModelObjectAnnotationImpl(modelObject, true);
+                return annotation;
             } finally {
                 // if we started the transaction, commit it.
                 if (requiredStart) {
@@ -262,6 +261,66 @@ public class ModelExtensionUtils {
 
     }
 
+    private static void removeMetaclassAnnotation( ModelResource modelResource,
+                                                   EStringToStringMapEntryImpl metaclassTag ) throws Exception {
+        Annotation metaclassAnnotation = getModelObjectAnnotation(metaclassTag, false);
+
+        if (metaclassAnnotation == null) {
+            throw new Exception(Util.getString(I18N_PREFIX + "metaclassAnnotationNotFound", metaclassTag.getKey())); //$NON-NLS-1$
+        }
+
+        EMap<String, String> tags = metaclassAnnotation.getTags();
+
+        for (Object object : tags.entrySet()) {
+            if (!(object instanceof EStringToStringMapEntryImpl)) {
+                throw new Exception(Util.getString(I18N_PREFIX + "metaclassEntryUnexpectedClass", object.getClass())); //$NON-NLS-1$
+            }
+
+            if (((EStringToStringMapEntryImpl)object).getKey().startsWith(PROP_DEFN_PREFIX)) {
+                removePropertyDefinition(modelResource, (EStringToStringMapEntryImpl)object);
+            }
+        }
+
+        // delete annotation
+        ModelResourceContainerFactory.deleteAnnotation(metaclassAnnotation);
+    }
+
+    private static void removePropertyDefinition( ModelResource modelResource,
+                                                  EStringToStringMapEntryImpl propertyDefinitionTag ) throws Exception {
+        Annotation propertyDefinitionAnnotation = getModelObjectAnnotation(propertyDefinitionTag, false);
+
+        if (propertyDefinitionAnnotation == null) {
+            throw new Exception(Util.getString(I18N_PREFIX + "propertyDefinitionAnnotationNotFound", propertyDefinitionTag.getKey())); //$NON-NLS-1$
+        }
+
+        // delete property definition
+        EMap<String, String> tags = propertyDefinitionAnnotation.getTags();
+
+        for (Object object : tags.entrySet()) {
+            if (!(object instanceof EStringToStringMapEntryImpl)) {
+                Util.log(IStatus.ERROR, Util.getString(I18N_PREFIX + "propertyDefinitionEntryUnexpectedClass", object.getClass())); //$NON-NLS-1$
+            }
+
+            String key = ((EStringToStringMapEntryImpl)object).getKey();
+
+            if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
+                Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
+
+                if (allowedValuesAnnotation == null) {
+                    throw new Exception(Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
+                                                       propertyDefinitionTag.getKey()));
+                }
+
+                // delete annotation
+                ModelResourceContainerFactory.deleteAnnotation(allowedValuesAnnotation);
+                break;
+            }
+        }
+
+        // delete annotation
+        ModelResourceContainerFactory.deleteAnnotation(propertyDefinitionAnnotation);
+    }
+
     /**
      * @param modelResource the model resource where the model extension definition is being removed (cannot be <code>null</code>)
      * @param namespacePrefix the namespace prefix of the model extension definition being removed (cannot be <code>null</code> or
@@ -274,34 +333,48 @@ public class ModelExtensionUtils {
         Annotation annotation = getResourceAnnotation(modelResource, false);
 
         if (annotation != null) {
-            EMap<String, String> tags = annotation.getTags();
+            Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
 
-            for (String key : tags.keySet()) {
-                if (key.equals(constructKey(DEFN_PREFIX, namespacePrefix))) {
-                    boolean requiredStart = ModelerCore.startTxn(true, true,
-                                                                 Util.getString(I18N_PREFIX + "removeModelExtensionDefinition"), //$NON-NLS-1$
-                                                                 modelResource);
-                    boolean succeeded = false;
+            if (defnAnnotation == null) {
+                throw new Exception(Util.getString(I18N_PREFIX + "defnAnnotationNotFound", namespacePrefix)); //$NON-NLS-1$
+            }
 
-                    try {
-                        succeeded = tags.remove(key);
-                    } finally {
-                        // if we started the transaction, commit it.
-                        if (requiredStart) {
-                            if (succeeded) {
-                                ModelerCore.commitTxn();
-                            } else {
-                                ModelerCore.rollbackTxn();
-                            }
-                        }
+            boolean requiredStart = ModelerCore.startTxn(true, true,
+                                                         Util.getString(I18N_PREFIX + "removeModelExtensionDefinition"), //$NON-NLS-1$
+                                                         modelResource);
+            boolean succeeded = false;
+
+            try {
+                // find extended metaclass annotations
+                EMap<String, String> tags = defnAnnotation.getTags();
+
+                for (Object object : tags.entrySet()) {
+                    if (!(object instanceof EStringToStringMapEntryImpl)) {
+                        throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
+                                                           object.getClass()));
                     }
 
-                    break;
+                    EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
+
+                    if (entry.getKey().startsWith(EXTENDED_METACLASS_PREFIX)) {
+                        removeMetaclassAnnotation(modelResource, entry);
+                    }
+                }
+
+                // delete annotation
+                ModelResourceContainerFactory.deleteAnnotation(defnAnnotation);
+                annotation.getTags().removeKey(constructKey(DEFN_PREFIX, namespacePrefix));
+            } finally {
+                // if we started the transaction, commit it.
+                if (requiredStart) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
                 }
             }
         }
-
-        // TODO does deleting the definition annotation delete the referencing annotations
     }
 
     /**
@@ -312,7 +385,6 @@ public class ModelExtensionUtils {
     public static void updateModelExtensionDefinition( ModelResource modelResource,
                                                        ModelExtensionDefinition definition ) throws Exception {
         // TODO need to remove things from model that no longer exist in definition
-        // TODO transaction needed if changes were made
 
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(definition, "definition is null"); //$NON-NLS-1$

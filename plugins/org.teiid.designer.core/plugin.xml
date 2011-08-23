@@ -278,4 +278,12 @@
             name="com.metamatrix.modeler.internal.core.refactor.ModelImportReferenceUpdator">
       </class>
    </extension>   
+
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant"
+            path="src/org/teiid/designer/core/extension/deprecated/deprecated.mxd">
+      </extensionDefinition>
+   </extension>
 </plugin>

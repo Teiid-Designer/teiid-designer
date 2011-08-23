@@ -32,6 +32,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * The <code>ModelObjectExtensionAssistant</code> is a model extension assistant that knows how to work with {@link EObject}s.
@@ -197,7 +198,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         // if no overridden value then return default value
         if (CoreStringUtil.isEmpty(value)) {
             PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
-            assert propDefn != null : "propDefn should not be null because getOverriddenValue checks this"; //$NON-NLS-1$
+            assert propDefn != null : "propDefn '" + propId + "' should not be null because getOverriddenValue checks this"; //$NON-NLS-1$ //$NON-NLS-2$
             return propDefn.getDefaultValue();
         }
 
@@ -266,7 +267,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         IPath location = Path.fromOSString(file.getAbsolutePath());
         IFile modelFile = workspace.getRoot().getFileForLocation(location);
 
-        if (modelFile != null) {
+        if ((modelFile != null) && ModelUtil.isModelFile(modelFile.getFullPath())) {
             return getSupportedNamespaces(modelFile).contains(getNamespacePrefix());
         }
 
@@ -355,14 +356,28 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         }
 
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
-        Annotation annotation = ModelerCore.getModelEditor().getAnnotation((EObject)modelObject, true);
 
-        // only set value if different than the default
-        if (CoreStringUtil.equals(propDefn.getDefaultValue(), newValue)) {
-            // remove existing value from model object
-            annotation.getTags().removeKey(propId);
+        boolean valueIsDefault = CoreStringUtil.equals(propDefn.getDefaultValue(), newValue);
+        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
+
+        // default values are not saved in the model object annotation
+        if (valueIsDefault) {
+            if (annotation != null) {
+                annotation.getTags().removeKey(propId);
+            }
         } else {
-            annotation.getTags().put(propId, newValue);
+            // only save if new value is different than old value
+            String oldValue = (String)annotation.getTags().get(propId);
+
+            // only set value if different than the default
+            if (!CoreStringUtil.equals(oldValue, newValue)) {
+                // remove key if empty value
+                if (CoreStringUtil.isEmpty(newValue)) {
+                    annotation.getTags().removeKey(propId);
+                } else {
+                    annotation.getTags().put(propId, newValue);
+                }
+            }
         }
     }
 

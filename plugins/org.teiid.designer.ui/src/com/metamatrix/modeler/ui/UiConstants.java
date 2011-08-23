@@ -8,8 +8,10 @@
 package com.metamatrix.modeler.ui;
 
 import java.util.ResourceBundle;
+
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IPageLayout;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
@@ -88,6 +90,8 @@ public interface UiConstants {
         String SQL_RESERVED_WORDS_VIEW = "views.sqlReservedWordsView"; //$NON-NLS-1$
         String ECLIPSE_CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView";//$NON-NLS-1$
 
+        String MODEL_EDITOR = "modelEditor"; //$NON-NLS-1$
+        
         // Model Editor Pages
         String TABLE_EDITOR = "tableEditorPage"; //$NON-NLS-1$
         String TEXT_EDITOR = "textEditorPage"; //$NON-NLS-1$

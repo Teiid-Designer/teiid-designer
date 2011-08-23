@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -70,6 +71,11 @@ public class ModelExtensionPropertySource implements IPropertySource {
                     }
                 }
             }
+
+            // TODO remove this code when the "ext-custom" prefix is no longer supported
+            // add in these manually as the MED will not have been saved in the model
+            DeprecatedModelExtensionAssistant assistant = (DeprecatedModelExtensionAssistant)registry.getModelExtensionAssistant(DeprecatedModelExtensionAssistant.NAMESPACE_PREFIX);
+            propDefns.addAll(assistant.getPropertyDefinitions(this.eObject));
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.errorCreatingPropertyDescriptors, metaclassName));
         }

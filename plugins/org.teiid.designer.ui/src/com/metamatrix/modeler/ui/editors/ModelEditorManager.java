@@ -9,6 +9,7 @@ package com.metamatrix.modeler.ui.editors;
 
 import static com.metamatrix.modeler.internal.ui.PluginConstants.Prefs.General.AUTO_OPEN_EDITOR_IF_NEEDED;
 import static com.metamatrix.modeler.ui.UiConstants.Util;
+import static com.metamatrix.modeler.ui.UiConstants.Extensions.MODEL_EDITOR;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -631,10 +632,10 @@ abstract public class ModelEditorManager {
                         UiUtil.runInSwtThread(new Runnable() {
                             @Override
                             public void run() {
-                                // there is no editor open for this object. Open one and hand it the double-click target.
+                                // there is no model editor open for this object. Open one and hand it the double-click target.
                                 try {
 
-                                    IEditorPart editor = IDE.openEditor(page, file);
+                                    IEditorPart editor = IDE.openEditor(page, file, MODEL_EDITOR);
                                     if (editor instanceof ModelEditor) {
                                         staticEditor = editor;
                                     }
