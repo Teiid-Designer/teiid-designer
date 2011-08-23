@@ -89,6 +89,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     private AbstractAction lockAction;
     private RefreshAction refreshDiagramAction;
     private ShowParentDiagramAction upPackageDiagramAction;
+    private ShowDependencyTargetDiagramAction showDependencyTargetDiagramAction;
     private AbstractAction saveDiagramAction;
     private AbstractAction diagramPageSetupAction;
     private AbstractAction showPageGridAction;
@@ -264,6 +265,12 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         if (this.upPackageDiagramAction == null) {
             this.upPackageDiagramAction = new ShowParentDiagramAction();
             registerAction(this.upPackageDiagramAction);
+        }
+        // ----- ShowParentDiagramAction -----//
+        this.showDependencyTargetDiagramAction = (ShowDependencyTargetDiagramAction)getRegisteredAction(ShowDependencyTargetDiagramAction.class.getName());
+        if (this.showDependencyTargetDiagramAction == null) {
+            this.showDependencyTargetDiagramAction = new ShowDependencyTargetDiagramAction();
+            registerAction(this.showDependencyTargetDiagramAction);
         }
 
         // ----- SaveDiagramAction -----//
@@ -685,6 +692,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         if (theMenuMgr.find(this.lockAction.getId()) != null) theMenuMgr.remove(this.lockAction.getId());
         if (theMenuMgr.find(this.refreshDiagramAction.getId()) != null) theMenuMgr.remove(this.refreshDiagramAction.getId());
         if (theMenuMgr.find(this.upPackageDiagramAction.getId()) != null) theMenuMgr.remove(this.upPackageDiagramAction.getId());
+        if (theMenuMgr.find(this.showDependencyTargetDiagramAction.getId()) != null) theMenuMgr.remove(this.showDependencyTargetDiagramAction.getId());
         if (theMenuMgr.find(this.saveDiagramAction.getId()) != null) theMenuMgr.remove(this.saveDiagramAction.getId());
         if (theMenuMgr.find(this.diagramPageSetupAction.getId()) != null) theMenuMgr.remove(this.diagramPageSetupAction.getId());
         if (theMenuMgr.find(this.showPageGridAction.getId()) != null) theMenuMgr.remove(this.showPageGridAction.getId());
@@ -708,6 +716,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
             theMenuMgr.add(new Separator());
             theMenuMgr.add(new GroupMarker(D_MARKER));
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
+            theMenuMgr.appendToGroup(D_MARKER, this.showDependencyTargetDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
             theMenuMgr.appendToGroup(D_MARKER, this.showPageGridAction);
@@ -742,7 +751,11 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         tbm.removeAll();
 
         tbm.add(this.refreshDiagramAction);
-        tbm.add(this.upPackageDiagramAction);
+        if (isDependencyDiagram()) {
+        	tbm.add(this.showDependencyTargetDiagramAction);
+        } else {
+        	tbm.add(this.upPackageDiagramAction);
+        }
         tbm.add(new Separator());
 
         resetTransformationActions();
@@ -768,6 +781,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
 
         this.refreshDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
         this.upPackageDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
+        this.showDependencyTargetDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
 
         if (!isDependencyDiagram()) {
             // Special wiring is needed to help this action determine if it's diagram toolbar button
@@ -805,6 +819,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     @Override
     public void enableDiagramToolbarActions() {
         if (this.upPackageDiagramAction != null) this.upPackageDiagramAction.determineEnablement();
+        if (this.showDependencyTargetDiagramAction != null ) this.showDependencyTargetDiagramAction.determineEnablement();
     }
 
     /**
