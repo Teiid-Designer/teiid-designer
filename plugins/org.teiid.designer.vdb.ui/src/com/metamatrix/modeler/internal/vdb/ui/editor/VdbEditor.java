@@ -167,9 +167,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     private Vdb vdb;
     StyledTextEditor textEditor;
-    TableAndToolBar modelsGroup;
-    TableAndToolBar otherFilesGroup;
-    TableAndToolBar dataRolesGroup;
+    TableAndToolBar<VdbModelEntry> modelsGroup;
+    TableAndToolBar<VdbEntry> otherFilesGroup;
+    TableAndToolBar<VdbDataRole> dataRolesGroup;
     private Button synchronizeAllButton;
     private PropertyChangeListener vdbListener;
 
@@ -400,9 +400,19 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
 
         modelsGroup.getTable().getViewer().refresh();
+        packModelsGroup();
+    }
+    
+    private void packModelsGroup() {
+        modelsGroup.getTable().getColumn(0).getColumn().pack();
+        modelsGroup.getTable().getColumn(1).getColumn().pack();
+        modelsGroup.getTable().getColumn(4).getColumn().pack();
+        modelsGroup.getTable().getColumn(5).getColumn().pack();
+        modelsGroup.getTable().getColumn(6).getColumn().pack();
     }
 
-    private void createDataRolesControl( Composite parent ) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void createDataRolesControl( Composite parent ) {
         final String DATA_POLICY_COLUMN_NAME = i18n("dataPolicyName"); //$NON-NLS-1$
 
         final ButtonProvider editProvider = new ButtonProvider() {
@@ -918,7 +928,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         tabFolder.setSelection(0);
     }
 
-    private void createOtherFilesControl( Composite parent ) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void createOtherFilesControl( Composite parent ) {
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
         otherFilesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbEntry>() {
                                                   /**
@@ -1313,7 +1324,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         tabFolder.setSelection(0);
     }
 
-    private void createModelsSection( Composite parent ) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void createModelsSection( Composite parent ) {
         modelsGroup = new TableAndToolBar(parent, 1,
                                           new DefaultTableProvider<VdbModelEntry>() {
                                               /**
@@ -1839,6 +1851,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         modelsGroup.getTable().getColumn(6).setEditingSupport(editor);
 
         modelsGroup.setInput(vdb);
+        packModelsGroup();
     }
 
     /**
