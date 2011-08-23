@@ -109,7 +109,13 @@ public class ModelObjectAnnotationHelper {
         CoreArgCheck.isNotNull(namespacePrefix, "namespacePrefix"); //$NON-NLS-1$
         Properties props = new Properties();
 
-        Annotation annotation = getModelObjectAnnotation(modelObject, false);
+        Annotation annotation;
+
+        if (modelObject instanceof Annotation) {
+            annotation = (Annotation)modelObject;
+        } else {
+            annotation = getModelObjectAnnotation(modelObject, false);
+        }
 
         if (annotation != null) {
             EMap tags = annotation.getTags();
