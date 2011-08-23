@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.teiid.core.TeiidRuntimeException;
 import org.teiid.core.id.InvalidIDException;
-import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
+
+import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 
 /**
  * DatatypeConstants
@@ -49,29 +51,31 @@ public class DatatypeConstants {
     public static final String URI_REFERENCE_DELIMITER = "#"; //$NON-NLS-1$
 
     /** UUID of the built-in datatype model */
-    public static ObjectID BUILTIN_DATATYPES_MODEL_UUID = null;
+    public static UUID BUILTIN_DATATYPES_MODEL_UUID = null;
+    
+    public static final String PROTOCOL = "mmuuid"; //$NON-NLS-1$
 
 
     /**
      * UUIDs of the XMLSchema.xsd, MagicXMLSchema.xsd, and xml.xsd <code>http://www.w3.org/1999/XMLSchema"</code>.
      */
-    public static ObjectID XML_SCHEMA_UUID_1999          = null;
-    public static ObjectID XML_MAGIC_SCHEMA_UUID_1999    = null;
-    public static ObjectID XML_SCHEMA_INSTANCE_UUID_1999 = null;
+    public static UUID XML_SCHEMA_UUID_1999          = null;
+    public static UUID XML_MAGIC_SCHEMA_UUID_1999    = null;
+    public static UUID XML_SCHEMA_INSTANCE_UUID_1999 = null;
 
     /**
      * UUIDs of the XMLSchema.xsd, MagicXMLSchema.xsd, and xml.xsd <code>"http://www.w3.org/2000/10/XMLSchema"</code> schema.
      */
-    public static ObjectID XML_SCHEMA_UUID_2000_10          = null;
-    public static ObjectID XML_MAGIC_SCHEMA_UUID_2000_10    = null;
-    public static ObjectID XML_SCHEMA_INSTANCE_UUID_2000_10 = null;
+    public static UUID XML_SCHEMA_UUID_2000_10          = null;
+    public static UUID XML_MAGIC_SCHEMA_UUID_2000_10    = null;
+    public static UUID XML_SCHEMA_INSTANCE_UUID_2000_10 = null;
 
     /**
      * UUIDs of the XMLSchema.xsd, MagicXMLSchema.xsd, and XMLSchema-instance.xsd <code>"http://www.w3.org/2001/XMLSchema"</code> schema.
      */
-    public static ObjectID XML_SCHEMA_UUID_2001          = null;
-    public static ObjectID XML_MAGIC_SCHEMA_UUID_2001    = null;
-    public static ObjectID XML_SCHEMA_INSTANCE_UUID_2001 = null;
+    public static UUID XML_SCHEMA_UUID_2001          = null;
+    public static UUID XML_MAGIC_SCHEMA_UUID_2001    = null;
+    public static UUID XML_SCHEMA_INSTANCE_UUID_2001 = null;
 
 
     // Conversion map between the runtime datatype names that appear in older
@@ -98,20 +102,20 @@ public class DatatypeConstants {
         loadPrimitiveBuiltInTypeNames();
         Collections.sort(RUNTIME_TYPE_NAMES,String.CASE_INSENSITIVE_ORDER);
         try {
-            BUILTIN_DATATYPES_MODEL_UUID = UUID.stringToObject("6b862080-3019-1e20-921b-eeee28353879"); //$NON-NLS-1$
+            BUILTIN_DATATYPES_MODEL_UUID = DatatypeConstants.stringToObject("6b862080-3019-1e20-921b-eeee28353879"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
             throw new TeiidRuntimeException(e);
         }
         try {
-            XML_SCHEMA_UUID_1999             = UUID.stringToObject("1da96d2e-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
-            XML_MAGIC_SCHEMA_UUID_1999       = UUID.stringToObject("2343c130-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
-            XML_SCHEMA_INSTANCE_UUID_1999    = UUID.stringToObject("26f5d0c4-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
-            XML_SCHEMA_UUID_2000_10          = UUID.stringToObject("60624ce0-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
-            XML_MAGIC_SCHEMA_UUID_2000_10    = UUID.stringToObject("624a93b9-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
-            XML_SCHEMA_INSTANCE_UUID_2000_10 = UUID.stringToObject("632f7658-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
-            XML_SCHEMA_UUID_2001             = UUID.stringToObject("b017498c-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
-            XML_MAGIC_SCHEMA_UUID_2001       = UUID.stringToObject("a8a3ee88-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
-            XML_SCHEMA_INSTANCE_UUID_2001    = UUID.stringToObject("ac653e49-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
+            XML_SCHEMA_UUID_1999             = DatatypeConstants.stringToObject("1da96d2e-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
+            XML_MAGIC_SCHEMA_UUID_1999       = DatatypeConstants.stringToObject("2343c130-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
+            XML_SCHEMA_INSTANCE_UUID_1999    = DatatypeConstants.stringToObject("26f5d0c4-fc8c-1f0b-aa25-a4ec5e156765"); //$NON-NLS-1$
+            XML_SCHEMA_UUID_2000_10          = DatatypeConstants.stringToObject("60624ce0-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
+            XML_MAGIC_SCHEMA_UUID_2000_10    = DatatypeConstants.stringToObject("624a93b9-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
+            XML_SCHEMA_INSTANCE_UUID_2000_10 = DatatypeConstants.stringToObject("632f7658-fc7a-1f0b-a813-96dd78086d7a"); //$NON-NLS-1$
+            XML_SCHEMA_UUID_2001             = DatatypeConstants.stringToObject("b017498c-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
+            XML_MAGIC_SCHEMA_UUID_2001       = DatatypeConstants.stringToObject("a8a3ee88-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
+            XML_SCHEMA_INSTANCE_UUID_2001    = DatatypeConstants.stringToObject("ac653e49-fc82-1f0b-9301-8cc12cf53072"); //$NON-NLS-1$
         } catch (InvalidIDException e) {
         	throw new TeiidRuntimeException(e);
         }
@@ -449,5 +453,21 @@ public class DatatypeConstants {
     {
       return
         PREFIX_FOR_ENTERPRISE_DATATYPES_URI_2005.equals(prefix);
+    }
+    
+    /**
+     * Attempt to convert the specified string to the appropriate ObjectID instance.
+     * @param value the stringified id with the protocol and ObjectID.DELIMITER already
+     * removed, and which is never null or zero length
+     * @return the ObjectID instance for the stringified ID if this factory is able
+     * to parse the string, or null if the factory is unaware of the specified format.
+     */
+    public static UUID stringToObject(String value) throws InvalidIDException {
+        try {
+            return new UUID(java.util.UUID.fromString(value));
+        } catch ( IllegalArgumentException e ) {
+            throw new InvalidIDException(
+            		RuntimeMetadataPlugin.Util.getString("UUID.InvalidFormatForProtocol",value,PROTOCOL)); //$NON-NLS-1$
+        }
     }
 }

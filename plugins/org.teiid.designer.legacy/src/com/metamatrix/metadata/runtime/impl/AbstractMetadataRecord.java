@@ -23,6 +23,7 @@ import com.metamatrix.metadata.runtime.RuntimeMetadataPlugin;
 import com.metamatrix.modeler.core.container.EObjectFinder;
 import com.metamatrix.modeler.core.index.IndexConstants;
 import com.metamatrix.modeler.core.metadata.runtime.MetadataRecord;
+import com.metamatrix.modeler.core.types.DatatypeConstants;
 
 /**
  * AbstractMetadataRecord
@@ -219,7 +220,8 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
     /* (non-Javadoc)
      * @see com.metamatrix.modeler.core.metadata.runtime.MetadataRecord#getEObject()
      */
-    public Object getEObject() {
+    @Override
+	public Object getEObject() {
         if (eObject != null) {
             return eObject;
         }
@@ -228,7 +230,7 @@ public abstract class AbstractMetadataRecord implements MetadataRecord {
             // get the Object ID given a UUID
             String uuid = getUUID();
             int delimitIndex = uuid.indexOf(ObjectID.DELIMITER);
-            ObjectID objID = UUID.stringToObject(uuid.substring(delimitIndex + 1));
+            UUID objID = DatatypeConstants.stringToObject(uuid.substring(delimitIndex + 1));
             // Return the EObject instance found in the ModelContainer ...
             return this.finder.find(objID);
         } catch (Exception e) {

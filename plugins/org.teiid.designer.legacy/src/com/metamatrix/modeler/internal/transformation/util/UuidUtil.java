@@ -12,6 +12,8 @@ import org.teiid.core.id.InvalidIDException;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
 
+import com.metamatrix.modeler.core.types.DatatypeConstants;
+
 public class UuidUtil {
 
 	/** Delimiter character used when specifying fully qualified entity names */
@@ -56,7 +58,7 @@ public class UuidUtil {
 			if(index != -1) {
 				index = index + DELIMITED_PROTOCOL_LENGTH;
 				string = string.substring(index);
-				UUID.stringToObject(string);
+				DatatypeConstants.stringToObject(string);
 				result = true;                
 			} else {
 				result = false;
