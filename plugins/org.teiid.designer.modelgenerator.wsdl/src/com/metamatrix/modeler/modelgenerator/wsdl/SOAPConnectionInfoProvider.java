@@ -8,12 +8,10 @@
 package com.metamatrix.modeler.modelgenerator.wsdl;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
@@ -22,20 +20,20 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
  */
 public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
-	/*
-	 * Teiid Data Source property key.
-	 * 
-	 * Currently only EndPoint is the only property provided by Data Tools connection profile that matches up.
-	 */
-    public static final String DS_ENDPOINT = "EndPoint"; //$NON-NLS-1$
+    /*
+     * Teiid Data Source property key.
+     * 
+     * Currently only EndPoint is the only property provided by Data Tools connection profile that matches up.
+     */
+    public static final String DS_ENDPOINT = "wsdlURI"; //$NON-NLS-1$
     public static final String DS_SECURITY_TYPE = "SecurityType"; //$NON-NLS-1$";
     public static final String DS_AUTH_USER_NAME = "AuthUserName"; //$NON-NLS-1$
     public static final String DS_AUTH_PASSWORD = "AuthPassword"; //$NON-NLS-1$
     public static final String DS_WS_SECURITY_CONFIG_URL = "WsSecurityConfigURL"; //$NON-NLS-1$
     public static final String DS_WS_SECURITY_CONFIG_NAME = "WsSecurityConfigName"; //$NON-NLS-1$
-    
-    public static final String SOURCE_ENDPOINT = "sourceEndPoint"; //$NON-NLS-1$
-    
+
+    public static final String SOURCE_ENDPOINT = "EndPoint"; //$NON-NLS-1$
+
     /*
      * The Web Services Data Source object contains the following properties
      * 
@@ -47,7 +45,7 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
      * 
      */
     public static final String SOAP_ENDPOINT_KEY = "soapEndPoint"; //$NON-NLS-1$
-    public static final String WSDL_URI_KEY = "wsdlURI"; //$NON-NLS-1$
+    public static final String WSDL_URI_KEY = "EndPoint"; //$NON-NLS-1$
     public static final String CONNECTION_CLASS_KEY = "connectionClass"; //$NON-NLS-1$
     public static final String DRIVER_CLASS_PATH_KEY = "driverClassPath"; //$NON-NLS-1$
 
@@ -65,20 +63,20 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         Properties props = connectionProfile.getBaseProperties();
 
         connectionProps.put(CONNECTION_NAMESPACE + SOURCE_ENDPOINT, modelResource.getModelAnnotation().getNameInSource());
-        
-        if( props.getProperty(SOAP_ENDPOINT_KEY) != null ) {
-        	connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, props.getProperty(SOAP_ENDPOINT_KEY));
+
+        if (props.getProperty(SOAP_ENDPOINT_KEY) != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, props.getProperty(SOAP_ENDPOINT_KEY));
         }
-        if( props.getProperty(WSDL_URI_KEY) != null ) {
-        	connectionProps.put(CONNECTION_NAMESPACE + WSDL_URI_KEY, props.getProperty(WSDL_URI_KEY));
+        if (props.getProperty(WSDL_URI_KEY) != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + WSDL_URI_KEY, props.getProperty(WSDL_URI_KEY));
         }
-        if(  props.getProperty(CONNECTION_CLASS_KEY) != null ) {
-        	connectionProps.put(CONNECTION_NAMESPACE + CONNECTION_CLASS_KEY, props.getProperty(CONNECTION_CLASS_KEY));
+        if (props.getProperty(CONNECTION_CLASS_KEY) != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + CONNECTION_CLASS_KEY, props.getProperty(CONNECTION_CLASS_KEY));
         }
-        if( props.getProperty(DRIVER_CLASS_PATH_KEY) != null ) {
-        	connectionProps.put(CONNECTION_NAMESPACE + DRIVER_CLASS_PATH_KEY, props.getProperty(DRIVER_CLASS_PATH_KEY));
+        if (props.getProperty(DRIVER_CLASS_PATH_KEY) != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + DRIVER_CLASS_PATH_KEY, props.getProperty(DRIVER_CLASS_PATH_KEY));
         }
-        
+
         // get the name in source, it's the Endpoint that teiid needs
 
         getHelper().removeProperties(modelResource, CONNECTION_PROFILE_NAMESPACE);
@@ -88,28 +86,25 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, DataSourceConnectionConstants.Translators.WS);
         getHelper().setProperties(modelResource, connectionProps);
     }
-    
+
     /**
-	 * {@inheritDoc}
-	 *
-	 * @see org.teiid.designer.datatools.connection.ConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
-	 */
-	@Override
-	public Properties getConnectionProperties(ModelResource modelResource)
-			throws ModelWorkspaceException {
-		Properties rawConnectionProps = removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_NAMESPACE));
-		Properties connectionProps = new Properties();
-		
-		if( rawConnectionProps.get(SOURCE_ENDPOINT) != null ) {
-			connectionProps.put(DS_ENDPOINT, rawConnectionProps.get(SOURCE_ENDPOINT));
-		}
-		
-		return connectionProps;
-	}
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.datatools.connection.ConnectionInfoHelper#getConnectionProperties(com.metamatrix.modeler.core.workspace.ModelResource)
+     */
+    @Override
+    public Properties getConnectionProperties( ModelResource modelResource ) throws ModelWorkspaceException {
+        Properties rawConnectionProps = removeNamespaces(getHelper().getProperties(modelResource, CONNECTION_NAMESPACE));
+        Properties connectionProps = new Properties();
 
+        if (rawConnectionProps.get(SOURCE_ENDPOINT) != null) {
+            connectionProps.put(DS_ENDPOINT, rawConnectionProps.get(SOURCE_ENDPOINT));
+        }
 
+        return connectionProps;
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.datatools.connection.IConnectionInfoProvider#getTeiidRelatedProperties(org.eclipse.datatools.connectivity.IConnectionProfile)
@@ -117,11 +112,11 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     @Override
     public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
         Properties connectionProps = new Properties();
-        //connectionProps.put(IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
-        
+        // connectionProps.put(IConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY, connectionProfile.getProviderId());
+
         Properties props = connectionProfile.getBaseProperties();
-        if( props.get(SOURCE_ENDPOINT) != null ) {
-        	connectionProps.put(DS_ENDPOINT, props.get(SOURCE_ENDPOINT));
+        if (props.get(DS_ENDPOINT) != null) {
+            connectionProps.put(SOURCE_ENDPOINT, props.get(DS_ENDPOINT));
         }
 
         return connectionProps;
@@ -136,7 +131,7 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     public String getPasswordPropertyKey() {
         return null;
     }
-    
+
     /**
      * {@inheritDoc}
      * 
