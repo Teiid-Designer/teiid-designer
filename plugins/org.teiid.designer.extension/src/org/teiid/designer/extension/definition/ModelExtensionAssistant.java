@@ -227,11 +227,11 @@ public abstract class ModelExtensionAssistant {
 
     /**
      * @param modelObject the model object whose property is being removed (cannot be <code>null</code>)
-     * @param id the extension property full identifier (cannot be <code>null</code>)
+     * @param propId the extension property full identifier (cannot be <code>null</code>)
      * @throws Exception if the extension property could not be removed
      */
     protected abstract void removeProperty( Object modelObject,
-                                            String id ) throws Exception;
+                                            String propId ) throws Exception;
 
     /**
      * @param modelResource the model object or resource where the specified definition will be saved to (cannot be

@@ -68,7 +68,7 @@ public final class ModelExtensionRegistry {
     /**
      * @param definitionStream the model extension input stream (cannot be <code>null</code>)
      * @param assistant the model extension assistant (cannot be <code>null</code>)
-     * @return the model extension definition (<code>null</code> if file could not be parsed)
+     * @return the model extension definition (never <code>null</code>)
      * @throws Exception if the definition file is <code>null</code> or if there is a problem parsing the file
      */
     public ModelExtensionDefinition addDefinition( InputStream definitionStream,

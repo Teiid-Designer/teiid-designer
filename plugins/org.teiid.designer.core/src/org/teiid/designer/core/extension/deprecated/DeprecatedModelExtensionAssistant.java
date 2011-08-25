@@ -10,12 +10,14 @@ package org.teiid.designer.core.extension.deprecated;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -49,6 +51,28 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     private ModelExtensionDefinition sourceFunctionMed;
 
     /**
+     * Converts old REST properties to new ones and saves the REST model extension definition (MED) in the model resource.
+     * 
+     * @param modelObject the model object whose properties are being converted (cannot be <code>null</code>)
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public void convertOldRestProperties( Object modelObject ) throws Exception {
+        // get current values
+        String restMethodValue = getPropertyValue(modelObject, OLD_REST_METHOD);
+        String uri1Value = getPropertyValue(modelObject, OLD_URI_1);
+        String uri2Value = getPropertyValue(modelObject, OLD_URI_2);
+        String uriValue = ((uri2Value == null) ? uri1Value : uri2Value);
+
+        // remove all old properties
+        removeOldRestProperties(modelObject);
+
+        // save new
+        getRestAssistant().saveModelExtensionDefinition(modelObject, getRestMed());
+        getRestAssistant().setPropertyValue(modelObject, NEW_REST_METHOD, restMethodValue);
+        getRestAssistant().setPropertyValue(modelObject, NEW_URI, uriValue);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
@@ -78,6 +102,12 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         return super.getPropertyDefinition(modelObject, propId);
     }
 
+    /**
+     * @param modelObject the model object whose extension property property definitions for this namespace is being requested
+     *            (never <code>null</code>)
+     * @return the property definitions (never <code>null</code> but can be empty)
+     * @throws Exception if there is a problem accessing the model resource
+     */
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( EObject modelObject ) throws Exception {
         CoreArgCheck.isNotNull(modelObject, "modelObject"); //$NON-NLS-1$
         String metaclassName = modelObject.getClass().getName();
@@ -137,6 +167,35 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     }
 
     /**
+     * @param modelObject the model object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object's model resource contains 7.4 pushdown extension properties
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public boolean hasOldPushdownProperties( EObject modelObject ) throws Exception {
+        return !CoreStringUtil.isEmpty(getOverriddenValue(modelObject, OLD_PUSH_DOWN));
+    }
+
+    /**
+     * @param modelObject the model object being checked (cannot be <code>null</code>)
+     * @return <code>true</code> if the model object's model resource contains 7.4 REST extension properties
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public boolean hasOldRestProperties( EObject modelObject ) throws Exception {
+        // need to only check if one of the properties is present
+        return !CoreStringUtil.isEmpty(getOverriddenValue(modelObject, OLD_REST_METHOD));
+    }
+
+    /**
+     * @param modelObject the model object whose old REST extension properties (cannot be <code>null</code>)
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public void removeOldRestProperties( Object modelObject ) throws Exception {
+        removeProperty(modelObject, OLD_REST_METHOD);
+        removeProperty(modelObject, OLD_URI_1);
+        removeProperty(modelObject, OLD_URI_2);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.core.extension.ModelObjectExtensionAssistant#setPropertyValue(java.lang.Object, java.lang.String,
@@ -158,34 +217,19 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
             getSourceFunctionAssistant().saveModelExtensionDefinition(modelObject, getSourceFunctionMed());
             getSourceFunctionAssistant().setPropertyValue(modelObject, NEW_PUSH_DOWN, newValue);
         } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId) || OLD_REST_METHOD.equals(propId)) {
-            // get current values
-            String oldRestMethodValue = getPropertyValue(modelObject, OLD_REST_METHOD);
-            String oldUri1Value = getPropertyValue(modelObject, OLD_URI_1);
-            String oldUri2Value = getPropertyValue(modelObject, OLD_URI_2);
-            String oldUriValue = (oldUri1Value != null) ? oldUri1Value : oldUri2Value;
+            // convert all properties
+            convertOldRestProperties(modelObject);
 
-            // remove all old properies
-            removeProperty(modelObject, OLD_REST_METHOD);
-            removeProperty(modelObject, OLD_URI_1);
-            removeProperty(modelObject, OLD_URI_2);
-
-            // save new
-            String newRestMethodValue = null;
-            String newUriValue = null;
-
+            // set new value
             if (OLD_REST_METHOD.equals(propId)) {
-                newRestMethodValue = newValue;
-                newUriValue = oldUriValue;
+                propId = NEW_REST_METHOD;
             } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
-                newUriValue = newValue;
-                newRestMethodValue = oldRestMethodValue;
+                propId = NEW_URI;
             } else {
                 assert false : "an unexpected property ID was found: " + propId; //$NON-NLS-1$
             }
 
-            getRestAssistant().saveModelExtensionDefinition(modelObject, getRestMed());
-            getRestAssistant().setPropertyValue(modelObject, NEW_REST_METHOD, newRestMethodValue);
-            getRestAssistant().setPropertyValue(modelObject, NEW_URI, newUriValue);
+            getRestAssistant().setPropertyValue(modelObject, propId, newValue);
         }
     }
 }

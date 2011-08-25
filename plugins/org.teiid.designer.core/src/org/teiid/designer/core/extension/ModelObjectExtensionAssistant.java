@@ -287,7 +287,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#isModelExtensionDefinitionRelated(java.lang.Object)
      * @throws IllegalArgumentException if the model object is not an {@link EObject}
      */
@@ -307,6 +307,11 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     public void removeModelExtensionDefinition( Object modelObject,
                                                 String namespacePrefix ) throws Exception {
         ModelExtensionUtils.removeModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
+
+        // TODO remove any other model objects overridden properties
+        for (String propId : getOverriddenValues(modelObject).stringPropertyNames()) {
+            removeProperty(modelObject, propId);
+        }
     }
 
     /**
@@ -316,15 +321,9 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      */
     @Override
     protected void removeProperty( Object modelObject,
-                                   String id ) throws Exception {
+                                   String propId ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
-        CoreArgCheck.isNotEmpty(id, "id is empty"); //$NON-NLS-1$
-
-        Annotation annotation = ModelerCore.getModelEditor().getAnnotation((EObject)modelObject, false);
-
-        if (annotation != null) {
-            annotation.getTags().remove(id);
-        }
+        ModelExtensionUtils.removeProperty((EObject)modelObject, propId, true);
     }
 
     /**
@@ -366,6 +365,11 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
                 annotation.getTags().removeKey(propId);
             }
         } else {
+            // value is not equal to default so create annotation if necessary
+            if (annotation == null) {
+                annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, true);
+            }
+
             // only save if new value is different than old value
             String oldValue = (String)annotation.getTags().get(propId);
 

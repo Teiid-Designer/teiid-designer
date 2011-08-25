@@ -285,6 +285,30 @@ public class ModelExtensionUtils {
         ModelResourceContainerFactory.deleteAnnotation(metaclassAnnotation);
     }
 
+    /**
+     * @param modelObject the model object whose property is being removed (cannot be <code>null</code>)
+     * @param propId the property ID being removed (cannot be <code>null</code> or empty)
+     * @param deleteModelObjectAnnotation <code>true</code> if the model object annotation should be deleted if there is no other
+     *            remaining information remaining
+     * @throws Exception if there is a problem accessing the model object's model resource
+     */
+    public static void removeProperty( EObject modelObject,
+                                       String propId,
+                                       boolean deleteModelObjectAnnotation ) throws Exception {
+        CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
+
+        Annotation annotation = getModelObjectAnnotation(modelObject, deleteModelObjectAnnotation);
+
+        if (annotation != null) {
+            annotation.getTags().remove(propId);
+
+            if (deleteModelObjectAnnotation && annotation.getTags().isEmpty()) {
+                ModelResourceContainerFactory.deleteAnnotation(annotation);
+            }
+        }
+    }
+
     private static void removePropertyDefinition( ModelResource modelResource,
                                                   EStringToStringMapEntryImpl propertyDefinitionTag ) throws Exception {
         Annotation propertyDefinitionAnnotation = getModelObjectAnnotation(propertyDefinitionTag, false);
@@ -364,6 +388,11 @@ public class ModelExtensionUtils {
                 // delete annotation
                 ModelResourceContainerFactory.deleteAnnotation(defnAnnotation);
                 annotation.getTags().removeKey(constructKey(DEFN_PREFIX, namespacePrefix));
+
+                // delete resource annotation if no more tags
+                if (annotation.getTags().isEmpty()) {
+                    ModelResourceContainerFactory.deleteAnnotation(annotation);
+                }
             } finally {
                 // if we started the transaction, commit it.
                 if (requiredStart) {

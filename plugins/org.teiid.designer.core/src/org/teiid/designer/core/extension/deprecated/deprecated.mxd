@@ -20,7 +20,7 @@
             <p:allowedValue>POST</p:allowedValue>
             <p:allowedValue>DELETE</p:allowedValue>
         </p:property>
-        <p:property name="URI" type="string" required="true" index="false">
+        <p:property name="URI" type="string" index="false">
             <p:description locale="en_US">The relative URI to map this procedure to.</p:description>
             <p:display locale="en_US">URI</p:display>
         </p:property>
