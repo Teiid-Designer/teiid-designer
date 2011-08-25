@@ -10,14 +10,12 @@ package org.teiid.designer.core.extension.deprecated;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -59,26 +57,26 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     public String getNamespacePrefix() {
         return NAMESPACE_PREFIX;
     }
-//
-//    /**
-//     * {@inheritDoc}
-//     * 
-//     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getPropertyDefinition(java.lang.Object,
-//     *      java.lang.String)
-//     */
-//    @Override
-//    public ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
-//                                                                   String propId ) {
-//        if (OLD_PUSH_DOWN.equals(propId)) {
-//            propId = NEW_PUSH_DOWN;
-//        } else if (OLD_REST_METHOD.equals(propId)) {
-//            propId = NEW_REST_METHOD;
-//        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
-//            propId = NEW_URI;
-//        }
-//
-//        return super.getPropertyDefinition(modelObject, propId);
-//    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getPropertyDefinition(java.lang.Object,
+     *      java.lang.String)
+     */
+    @Override
+    public ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
+                                                                   String propId ) {
+        if (OLD_PUSH_DOWN.equals(propId)) {
+            propId = NEW_PUSH_DOWN;
+        } else if (OLD_REST_METHOD.equals(propId)) {
+            propId = NEW_REST_METHOD;
+        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
+            propId = NEW_URI;
+        }
+
+        return super.getPropertyDefinition(modelObject, propId);
+    }
 
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( EObject modelObject ) throws Exception {
         CoreArgCheck.isNotNull(modelObject, "modelObject"); //$NON-NLS-1$
@@ -151,6 +149,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
 
+        // Change to old pushdown property will remove it - and re-save as new property
         if (OLD_PUSH_DOWN.equals(propId)) {
             // remove old
             removeProperty(modelObject, OLD_PUSH_DOWN);
@@ -158,20 +157,17 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
             // save new
             getSourceFunctionAssistant().saveModelExtensionDefinition(modelObject, getSourceFunctionMed());
             getSourceFunctionAssistant().setPropertyValue(modelObject, NEW_PUSH_DOWN, newValue);
-        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
+        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId) || OLD_REST_METHOD.equals(propId)) {
             // get current values
             String oldRestMethodValue = getPropertyValue(modelObject, OLD_REST_METHOD);
-            String oldUriValue = OLD_URI_1.equals(propId) ? getPropertyValue(modelObject, OLD_URI_1)
-                                                         : getPropertyValue(modelObject, OLD_URI_2);
+            String oldUri1Value = getPropertyValue(modelObject, OLD_URI_1);
+            String oldUri2Value = getPropertyValue(modelObject, OLD_URI_2);
+            String oldUriValue = (oldUri1Value != null) ? oldUri1Value : oldUri2Value;
 
-            // remove old
+            // remove all old properies
             removeProperty(modelObject, OLD_REST_METHOD);
-
-            if (OLD_URI_1.equals(propId)) {
-                removeProperty(modelObject, OLD_URI_1);
-            } else {
-                removeProperty(modelObject, OLD_URI_2);
-            }
+            removeProperty(modelObject, OLD_URI_1);
+            removeProperty(modelObject, OLD_URI_2);
 
             // save new
             String newRestMethodValue = null;
@@ -180,7 +176,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
             if (OLD_REST_METHOD.equals(propId)) {
                 newRestMethodValue = newValue;
                 newUriValue = oldUriValue;
-            } else if (OLD_URI_1.equals(propId) || OLD_URI_1.equals(propId)) {
+            } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
                 newUriValue = newValue;
                 newRestMethodValue = oldRestMethodValue;
             } else {

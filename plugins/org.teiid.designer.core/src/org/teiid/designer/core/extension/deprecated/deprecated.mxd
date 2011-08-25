@@ -7,11 +7,11 @@
 
     <!-- Pushdown and REST Extension Properties -->
     <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
-        <p:property name="deterministic" type="boolean" defaultValue="false" index="true">
+        <p:property name="deterministic" type="boolean" index="true">
             <p:description locale="en_US">Specifies that the source function will always returns the same result for a specific input value</p:description>
             <p:display locale="en_US">Deterministic</p:display>
         </p:property>
-        <p:property name="REST-METHOD" type="string" defaultValue="GET" index="false">
+        <p:property name="REST-METHOD" type="string" index="false">
             <p:description locale="en_US">The REST method to map this procedure to. Supported methods are
                 GET/PUT/POST/DELETE.</p:description>
             <p:display locale="en_US">Rest Method</p:display>
