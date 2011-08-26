@@ -17,9 +17,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -40,7 +40,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
     private static final String PREFIX = I18nUtil.getPropertyPrefix(RestWarPropertiesAction.class);
 
     // assistant responsible for new extension properties
-    private final ModelExtensionAssistant assistant;
+    private final RestModelExtensionAssistant assistant;
 
     // assistant responsible for old 7.4 extension properties
     private final DeprecatedModelExtensionAssistant deprecatedAssistant;
@@ -53,7 +53,7 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(EXTENSION_PROPS_ICON));
 
         ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        this.assistant = registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
+        this.assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(NAMESPACE_PREFIX);
 
         // should not happen
         if (this.assistant == null) {
@@ -69,18 +69,40 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         }
     }
 
+    /**
+     * @return an internationalized message explaining why the action failed (never <code>null</code>)
+     */
     protected abstract String getErrorMessage();
 
+    /**
+     * @return the old, 7.4 model extension's framework REST assistant (never <code>null</code>)
+     */
     protected DeprecatedModelExtensionAssistant getOldAssistant() {
         return this.deprecatedAssistant;
     }
 
-    protected ModelExtensionAssistant getNewAssistant() {
+    /**
+     * @return the model resource or <code>null</code> if current selection is not a virtual model procedure
+     */
+    protected ModelResource getModelResource() {
+        return this.modelResource;
+    }
+
+    /**
+     * @return the current model extension's framework REST assistant (never <code>null</code>)
+     */
+    protected RestModelExtensionAssistant getNewAssistant() {
         return this.assistant;
     }
 
+    /**
+     * @return an internationalized message saying the action was successful (never <code>null</code>)
+     */
     protected abstract String getSuccessfulMessage();
 
+    /**
+     * @return an internationalized transaction name (never <code>null</code>)
+     */
     protected abstract String getTransactionName();
 
     /**
@@ -93,6 +115,10 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         return isValidSelection(selection);
     }
 
+    /**
+     * @param procedure the selected virtual procedure (never <code>null</code>)
+     * @return <code>true</code> if the action should be enabled
+     */
     protected abstract boolean isValidSelection( Procedure procedure );
 
     /**
@@ -164,7 +190,12 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         }
     }
 
+    /**
+     * @param procedure the virtual procedure whose model resource should be
+     * @param definition the model extension definition that the action should use
+     * @throws Exception if there is a problem accessing the procedure's model resource
+     */
     protected abstract void runImpl( Procedure procedure,
-                                        ModelExtensionDefinition definition ) throws Exception;
+                                     ModelExtensionDefinition definition ) throws Exception;
 
 }

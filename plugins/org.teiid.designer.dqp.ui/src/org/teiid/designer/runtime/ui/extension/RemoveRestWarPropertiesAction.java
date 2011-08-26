@@ -10,10 +10,14 @@ package org.teiid.designer.runtime.ui.extension;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
 
+import java.util.Collection;
+
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
 
 /**
  * 
@@ -26,7 +30,7 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#getErrorMessage()
      */
     @Override
@@ -46,14 +50,14 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#getTransactionName()
      */
     @Override
     protected String getTransactionName() {
         return UTIL.getString(PREFIX + "removeRestfulTransactionName"); //$NON-NLS-1$
     }
-    
+
     /**
      * {@inheritDoc}
      * 
@@ -89,13 +93,22 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     @Override
     protected void runImpl( Procedure procedure,
                             ModelExtensionDefinition definition ) throws Exception {
-        if (this.hasDeprecatedProperties) {
-            getOldAssistant().removeOldRestProperties(procedure);
-            // TODO need to find and remove any old extension properties from other Procedure objects
-        } else {
-            // remove REST MED from model
-            getNewAssistant().removeModelExtensionDefinition(procedure, NAMESPACE_PREFIX);            
-            // TODO need to find and remove any extension properties from Procedure objects
+        // delete MED if necessary
+        if (!this.hasDeprecatedProperties) {
+            getNewAssistant().removeModelExtensionDefinition(procedure, NAMESPACE_PREFIX);
+        }
+
+        // delete REST extension properties from all procedures
+        Collection<EObject> eObjects = getModelResource().getEObjects();
+
+        for (EObject eObject : eObjects) {
+            if (SqlAspectHelper.isProcedure(eObject)) {
+                if (this.hasDeprecatedProperties) {
+                    getOldAssistant().removeOldRestProperties(eObject);
+                } else {
+                    getNewAssistant().removeRestProperties(eObject);
+                }
+            }
         }
     }
 

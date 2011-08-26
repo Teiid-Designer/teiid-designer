@@ -7,8 +7,7 @@
  */
 package org.teiid.designer.runtime.extension.rest;
 
-import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
-
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 
 /**
@@ -23,7 +22,16 @@ public class RestModelExtensionAssistant extends ModelObjectExtensionAssistant {
      */
     @Override
     public String getNamespacePrefix() {
-        return NAMESPACE_PREFIX;
+        return RestModelExtensionConstants.NAMESPACE_PREFIX;
+    }
+
+    /**
+     * @param modelObject the model object whose REST extension properties are being removed from (cannot be <code>null</code>)
+     * @throws Exception if there is a problem accessing the model object's model resource
+     */
+    public void removeRestProperties( EObject modelObject ) throws Exception {
+        removeProperty(modelObject, RestModelExtensionConstants.PropertyIds.REST_METHOD);
+        removeProperty(modelObject, RestModelExtensionConstants.PropertyIds.URI);
     }
 
 }
