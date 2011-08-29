@@ -177,8 +177,9 @@ public class SalesforceImportWizardManager {
             // Find the SF assistant in the registry...
             ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
             
-            // If assistant is not yet supported, add the MED
-            if (assistant != null) {
+            boolean supportsNamespace = assistant.supportsMyNamespace(this.updateModel);
+            // If namespace is not yet supported, add the MED
+            if (!supportsNamespace) {
                 // Get the SF definition - should be found in the registry
                 ModelExtensionDefinition definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
 
