@@ -67,7 +67,7 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     protected boolean isValidSelection( Procedure procedure ) {
         try {
             // check for existence of new extension framework properties
-            if (getNewAssistant().supports(procedure, NAMESPACE_PREFIX)) {
+            if (getNewAssistant().supportsMyNamespace(procedure)) {
                 return true;
             }
 

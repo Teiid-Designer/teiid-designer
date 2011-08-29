@@ -8,11 +8,9 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,7 +23,6 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -44,15 +41,11 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#containsModelExtensionDefinition(java.lang.Object,
-     *      java.lang.String)
-     * @throws IllegalArgumentException if the model object is not an {@link EObject} or {@link ModelResource} or if the model
-     *             resource cannot be found
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMyNamespace(java.lang.Object)
      */
     @Override
-    protected boolean containsModelExtensionDefinition( Object modelObject,
-                                                        String namespacePrefix ) throws Exception {
-        return ModelExtensionUtils.containsModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
+    public boolean supportsMyNamespace( Object modelObject ) throws Exception {
+        return ModelExtensionUtils.isSupportedNamespace(getModelResource(modelObject), getNamespacePrefix());
     }
 
     /**
@@ -227,10 +220,9 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         }
 
         // just take first assistant
-        ModelExtensionAssistant assistant = assistants.iterator().next();
         String metaclassName = modelObject.getClass().getName();
 
-        for (String savedNamespacePrefix : assistant.getSupportedNamespaces(modelObject)) {
+        for (String savedNamespacePrefix : ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject))) {
             for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(savedNamespacePrefix, metaclassName)) {
                 if (!props.containsKey(propDefn.getId())) {
                     String defaultValue = propDefn.getDefaultValue();
@@ -249,16 +241,6 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getSupportedNamespaces(java.lang.Object)
-     */
-    @Override
-    public Collection<String> getSupportedNamespaces( Object modelObject ) throws Exception {
-        return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject));
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#hasExtensionProperties(java.io.File)
      */
     @Override
@@ -268,7 +250,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         IFile modelFile = workspace.getRoot().getFileForLocation(location);
 
         if ((modelFile != null) && ModelUtil.isModelFile(modelFile.getFullPath())) {
-            return getSupportedNamespaces(modelFile).contains(getNamespacePrefix());
+            return ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelFile)).contains(getNamespacePrefix());
         }
 
         // none found
@@ -383,23 +365,6 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
                 }
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supports(java.lang.Object, java.lang.String)
-     */
-    @Override
-    public boolean supports( Object modelObject,
-                             String namespacePrefix ) throws Exception {
-        for (String supportedNamespacePrefix : getSupportedNamespaces(modelObject)) {
-            if (supportedNamespacePrefix.equals(namespacePrefix)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

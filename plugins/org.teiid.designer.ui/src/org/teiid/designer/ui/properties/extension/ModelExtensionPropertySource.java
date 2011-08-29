@@ -8,22 +8,20 @@
 package org.teiid.designer.ui.properties.extension;
 
 import static com.metamatrix.modeler.ui.UiConstants.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
 /**
  * 
@@ -61,14 +59,10 @@ public class ModelExtensionPropertySource implements IPropertySource {
         Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
 
         try {
-            // use first assistant to get the supported namespaces persisted in the model resource
-            Collection<ModelExtensionAssistant> assistants = registry.getModelExtensionAssistants(metaclassName);
-
-            if (!assistants.isEmpty()) {
-                for (String namespacePrefix : assistants.iterator().next().getSupportedNamespaces(this.eObject)) {
-                    for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(namespacePrefix, metaclassName)) {
-                        propDefns.add(propDefn);
-                    }
+            Collection<String> supportedNamespaces = ModelExtensionUtils.getSupportedNamespaces(ModelUtilities.getModelResource(this.eObject));
+            for (String namespacePrefix : supportedNamespaces) {
+                for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(namespacePrefix, metaclassName)) {
+                    propDefns.add(propDefn);
                 }
             }
 

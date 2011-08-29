@@ -8,18 +8,15 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -240,6 +237,26 @@ public class ModelExtensionUtils {
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * @param modelResource the model resource whose namespaces are being checked (cannot be <code>null</code>)
+     * @param namespace the namespace being verified (cannot be <code>null</code>)
+     * @return 'true' if the supplied namespace is supported by the modelResource
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public static boolean isSupportedNamespace( ModelResource modelResource,
+                                                String namespace ) throws Exception {
+        CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(namespace, "namespace is null"); //$NON-NLS-1$
+
+        Collection<String> namespaces = getSupportedNamespaces(modelResource);
+        for (String ns : namespaces) {
+            if (namespace.equals(ns)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
