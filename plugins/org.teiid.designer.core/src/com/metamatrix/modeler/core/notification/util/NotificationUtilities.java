@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
+import com.metamatrix.metamodels.core.Annotation;
 
 
 /**
@@ -338,7 +339,13 @@ public class NotificationUtilities {
             //If the parent is no longer in a resource (it has also been removed) return false
             //This replaces the notifier not null parent check logic that was incorrect
             if(parent instanceof EObject){
-                if( ((EObject)parent).eResource() == null){
+                Resource resource = null;
+                if( parent instanceof Annotation ) {
+                    resource = ((Annotation)parent).getAnnotatedObject().eResource();
+                } else {
+                    resource = ((EObject)parent).eResource();
+                }
+                if(resource == null) {
                     return false;
                 }
             }

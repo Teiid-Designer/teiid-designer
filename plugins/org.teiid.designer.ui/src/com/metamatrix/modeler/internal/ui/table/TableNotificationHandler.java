@@ -9,6 +9,7 @@ package com.metamatrix.modeler.internal.ui.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.metamatrix.modeler.core.transaction.SourcedNotification;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.wizards.NewModelWizard;
 import com.metamatrix.modeler.ui.UiConstants;
+import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
  * TableNotificationHandler
@@ -108,10 +110,13 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
                 if (notifier instanceof Resource) {
                     resource = (Resource)notifier;
                 } else if (notifier instanceof EObject) {
-                    resource = ((EObject)notifier).eResource();
+                    if (notifier instanceof Annotation) {
+                        resource = ((Annotation)notifier).getAnnotatedObject().eResource();
+                    } else {
+                        resource = ((EObject)notifier).eResource();
+                    }
                 }
             }
-
             return ((resource != null) && resource.equals(this.emfResource));
         }
         return false;
@@ -389,6 +394,12 @@ public class TableNotificationHandler implements INotifyChangedListener, UiConst
         if (viewer != null) {
             if (!viewer.getTable().isDisposed()) {
                 ModelObjectTableModel model = (ModelObjectTableModel)modelsByClass.get(annotatedEObject.eClass());
+                model.refreshProperties();
+                EObjectPropertiesOrderPreferences modelTableColumnUtils = UiPlugin.getDefault().getEObjectPropertiesOrderPreferences();
+                if (modelTableColumnUtils != null) {
+                    modelTableColumnUtils.firePropertiesChanged(Collections.singletonList(annotatedEObject.eClass().getName()));
+                }
+
                 Object row = model.getRowElementForInstance(annotatedEObject);
                 if (row != null) {
                     viewer.refresh(row);

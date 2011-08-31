@@ -73,18 +73,7 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
         this.eObject = eObject;
         this.instanceList = instanceList;
         this.supportsDescription = supportsDescription;
-        if ( instanceList.size() > 0 ) {
-            IPropertySource propertySource = getPropertySource((EObject) instanceList.get(0));
-            properties = propertySource.getPropertyDescriptors();
-            for ( int i=0 ; i<properties.length ; ++i ) {
-                if ( properties[i] instanceof ModelObjectPropertyDescriptor ) {
-                    ((ModelObjectPropertyDescriptor) properties[i]).setShowReadOnlyDialog(false);
-                    ((ModelObjectPropertyDescriptor) properties[i]).setLazyLoadValues(true);
-                } else if ( properties[i] instanceof ExtensionPropertyDescriptor ) {
-                    ((ExtensionPropertyDescriptor) properties[i]).setShowReadOnlyDialog(false);
-                }
-            }
-        }
+        refreshProperties();
         buildPropertyIdMap();
     }
 
@@ -158,6 +147,21 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
         propertyList = newList;
 	}
     
+    public void refreshProperties() {
+        if (instanceList.size() > 0) {
+            IPropertySource propertySource = getPropertySource((EObject)instanceList.get(0));
+            properties = propertySource.getPropertyDescriptors();
+            for (int i = 0; i < properties.length; ++i) {
+                if (properties[i] instanceof ModelObjectPropertyDescriptor) {
+                    ((ModelObjectPropertyDescriptor)properties[i]).setShowReadOnlyDialog(false);
+                    ((ModelObjectPropertyDescriptor)properties[i]).setLazyLoadValues(true);
+                } else if (properties[i] instanceof ExtensionPropertyDescriptor) {
+                    ((ExtensionPropertyDescriptor)properties[i]).setShowReadOnlyDialog(false);
+                }
+            }
+        }
+    }
+
     public boolean isLocationColumn(Object object) {
         return LOCATION_KEY.equals(object);
     }

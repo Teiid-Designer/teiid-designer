@@ -10,10 +10,10 @@ package com.metamatrix.modeler.internal.ui.properties;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -39,7 +39,6 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.PropertySheetEntry;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.teiid.designer.extension.ExtensionPlugin;
-
 import com.metamatrix.core.event.EventObjectListener;
 import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.metamodels.core.Annotation;
@@ -167,10 +166,13 @@ public class ModelObjectPropertySheetPage
         
         if ( currentSelection != null ) {
             EObject selectedObject = SelectionUtilities.getSelectedEObject(currentSelection);
-            Set affectedObjects = SourcedNotificationUtilities.gatherNotifiers(notification, true);
 
-            if ( selectedObject != null ) {                
-                if (affectedObjects.contains(selectedObject) || isModelExtensionDefinitionRelated(notification)) {
+            if (selectedObject != null) {
+                // Get the affectedObjects. And the annotated objects, if any affected objects are annotations.
+                Set affectedObjects = SourcedNotificationUtilities.gatherNotifiers(notification, true);
+                Set annotatedObjects = getAnnotatedObjects(affectedObjects);
+                if (affectedObjects.contains(selectedObject) || annotatedObjects.contains(selectedObject)
+                    || isModelExtensionDefinitionRelated(notification)) {
                     handlingNotification = true;
                     try {
                         this.refresh();
@@ -216,6 +218,24 @@ public class ModelObjectPropertySheetPage
         }
     }
 
+    /* 
+     * For any Annotation objects in the supplied set, get its annotated object and add it to the returned set of annotated objects.
+     * @param objects the supplied set of objects
+     * @return the set of annotated objects
+     */
+    private Set getAnnotatedObjects( Set objects ) {
+        Set annotatedObjects = new HashSet();
+        if (objects != null) {
+            for (final Iterator it = objects.iterator(); it.hasNext();) {
+                Object obj = it.next();
+                if (obj instanceof Annotation) {
+                    Object annotatedObject = ((Annotation)obj).getAnnotatedObject();
+                    if (annotatedObject != null) annotatedObjects.add(annotatedObject);
+                }
+            }
+        }
+        return annotatedObjects;
+    }
 
     /* (non-Javadoc)
      * Overridden to hook this page up as a notification listener.
