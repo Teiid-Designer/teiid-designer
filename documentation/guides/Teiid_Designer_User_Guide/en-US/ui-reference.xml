@@ -1,0 +1,2948 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<chapter id="ui-reference-chapter">
+	<title>Teiid Designer Ui Reference</title>
+	<section id="teiid-designer-perspectives-section">
+		<title>Teiid Designer Perspectives</title>
+		
+		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+		
+		<para>Teiid Designer utilizes <ulink url="http://www.eclipse.org">Eclipse's</ulink> Workbench environment
+			which controls visual layout via perspectives. A perspective defines
+			the initial set and layout of views and editors. Within the
+			application window, each perspective shares the same set of editors.
+			Each perspective provides a set of functionality aimed at
+			accomplishing a specific set of tasks.</para>
+		<para> Perspectives also control what appears in certain menus and toolbars.
+			They define visible action sets, which you can change to customize a
+			perspective. You can save a perspective that you build in this manner,
+			making your own custom perspective that you can open again later.
+		</para>
+		
+		<section id="teiid-perpective-section">
+			<title>Teiid Designer Perspective</title>
+			<para>The Teiid Designer perspective provides access to fundamental 
+				model editing and management capabilities. This perspective includes 
+				5 main UI components or groups of components as shown below. They include:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis><xref linkend="model-explorer-view" /></emphasis></para>
+				</listitem>
+				<listitem>
+					<para><emphasis><xref linkend="teiid-view" /></emphasis> - Teiid 
+						instance view. Provides view of contents for connected instances of 
+						installed Teiid runtime.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis><xref linkend="model-editors-section" /></emphasis> - Custom 
+						editors targeted for ".xmi" metadata model files.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis><xref linkend="properties-view" /></emphasis> - Standard 
+						property values for selected workbench objects.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Miscellaneous Views</emphasis> - Includes Problems view, Message 
+						Log view and the Data Tools SQL Results view (opened if Preview Data action is performed)</para>
+				</listitem>
+			</itemizedlist>
+			<figure id="designer-perspective-image">
+				<title>Teiid Designer Perspective Layout</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/teiid-designer-perspective.png"
+							align="center" scale="100" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>	
+		<section id="opening-perspective-section">
+			<title>Opening a Perspective</title>
+			<para>There are two ways to open a perspective:</para>
+			<itemizedlist>
+				<listitem>
+					<para>Using the Open Perspective button <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/select-perspective.png"/>
+								</imageobject>
+							</inlinemediaobject> on the shortcut bar.</para>
+				</listitem>
+				<listitem>
+					<para>Choosing a perspective from the <emphasis role="bold">Window > Open Perspective</emphasis> menu.</para>
+				</listitem>
+			</itemizedlist>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						To open a perspective by using the shortcut bar button:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Click on the Open Perspective button <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/select-perspective.png"/>
+										</imageobject>
+									</inlinemediaobject> </para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - A menu appears showing the same 
+									choices as shown on the <emphasis role="bold">Window > Open Perspective</emphasis> menu. 
+									Choose Other from the menu.</para>
+								<figure>
+									<title>Perspectives Menu</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/open-perspective-menu.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Select Perspective</emphasis> dialog 
+									choose Teiid Designer and click <emphasis role="bold">OK</emphasis>.</para>
+								<figure>
+									<title>Select Perspective Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/open-teiid-perspective.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>The Teiid Designer perspective is now displayed.  </para>
+			
+			<para>There are few additional features of perspectives to take note of.</para>
+			<itemizedlist>
+				<listitem>
+					<para>The title of the window will indicate which perspective is in use.</para>
+					<figure>
+						<title>Workbench Window Title Bar</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/designer-main-menu-bar.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</listitem>
+				<listitem>
+					<para>The shortcut bar may contain multiple perspectives. The perspective button which is pressed in, 
+						indicates that it is the current perspective.</para>
+				</listitem>
+				<listitem>
+					<para>To display the full name of the perspectives, right click the perspective bar and select 
+						<emphasis role="bold">Show Text</emphasis> and conversely select <emphasis role="bold">Hide Text</emphasis> to 
+						only show icons.</para>
+				</listitem>
+				<listitem>
+					<para>To quickly switch between open perspectives, select the desired  perspective button. Notice that the set
+						 of views is different for each of the perspectives.</para>
+					<figure>
+						<title>Workbench Window Title Bar</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/show-perspective-text.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</listitem>
+			</itemizedlist>
+		</section>
+		<section>
+		   <title>Further information</title>
+		   <para>For more details on perspectives, views and other Eclipse workbench details, see formal
+		      <ulink url="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</ulink>.</para>
+		</section>
+	</section>
+	<section id="teiid-designer-views-section">
+	<title>Teiid Designer Views</title>
+	
+		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+		
+		<para>Views are dockable windows which present data from your models or your 
+			modeling session in various forms. Some views support particular 
+			<xref linkend="editors-chapter" /> and 
+			their content is dependent on workspace selection. This section summarizes most 
+			of the views used and available in Teiid Designer. The full list is presented in 
+			the main menu's <emphasis>Window > Show View > Other...</emphasis> dialog 
+			under the <emphasis role="bold">Teiid Designer</emphasis> category.
+		</para>
+		<figure id="show-view-dialog-image">
+			<title>Eclipse Show View Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/show-view-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+			
+		<!-- ####### MODEL EXPLORER VIEW ######################################### -->
+	  
+		<section id="model-explorer-view">
+			<title>Model Explorer View</title>
+	
+					
+			<para>
+				<emphasis>Teiid Designer</emphasis> allows you manage multiple projects containing multiple models 
+				and any corresponding or dependent resources. The <emphasis>Model Explorer</emphasis> provides a 
+				simple file-structured view of these resources.
+			</para>
+			<para>
+				The
+				<emphasis role="bold">Model Explorer</emphasis>
+				(shown below) is comprised of a toolbar and a tree view.
+			</para>
+			<figure id="model-explorer-view-image">
+				<title>Model Explorer View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/model-explorer.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				The toolbar consists of nine common actions:
+				<itemizedlist>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/preview-data.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/alphab-sort.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Sort Model Contents</emphasis> - Sorts the contents of the models based on object type and
+							alphabetizing.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/refresh.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Refresh Markers</emphasis> - Refreshes error and warning markers for objects in tree.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/backward-nav.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Back</emphasis> - Displays the last "Go Into" location. (See Eclipse Help)
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/forward-nav.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Forward</emphasis> - Displays the next "Go Into" location. (See Eclipse Help)
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/up-nav.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Up</emphasis> - Navigates up one folder/container location. (See Eclipse Help)
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/collapse-all.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Collapse All</emphasis> - Collapses all projects.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/synced.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Link with Editor</emphasis> - When object is selected in an open editor, this option
+							auto-selects and reveals object in Model Explorer.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/select-cheat-sheet.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Additional Actions</emphasis>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				The additional actions are shown in the following figure:
+				<figure id="model-explorer-extra-options-image">
+					<title>Additional Actions</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/model-explorer-extra-options.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				If <emphasis role="bold">Show Model Imports</emphasis> is checked, the imports will be displayed
+				directly under a model resource as shown below.
+				<figure id="show-model-imports-action-image">
+					<title>Show Model Imports Action</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/sample-model-imports.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<section id="model-explorer-selection-menus">
+				<title>Selection-Based Action Menus</title>
+				<para> Selecting specific objects in the <emphasis role="bold">Model Explorer</emphasis> provides a
+					context from which the Teiid Designer presents a customized menu of
+					available actions.</para>
+				<para> Selecting a <emphasis role="bold">view model</emphasis>, for instance, results in a number of
+					high-level options to manage edit model content, perform various
+					operations and provides quick access to other important actions
+					available in Teiid Designer. These may include specialized actions based on
+					model type.
+					<figure id="context-menu-rel-view-model-image">
+						<title>Sample Context Menu</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/context-menu-relational-view-model.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+					
+			</section>
+		</section>
+		
+		<!-- ####### OUTLINE VIEW ######################################### -->
+		
+	    <section id="outline-view">
+	      	<title>Outline View</title>
+			<para>The Outline View is a utility view which provides both at tree
+				view dedicated to a specific model (open in an editor) and a scaled
+				thumbnail diagram representative of the diagram open in the
+				corresponding Diagram Editor.</para>
+			<para>You can show the Outline View by clicking on its tab. If
+			   there is no open editors, the view indicates that <errorname>Outline is not
+			      available</errorname>. If a Model Editor is open, then the root of the displayed
+				tree will be the model for the editor that is currently in focus in
+				Teiid Designer (tab on top).</para>
+	
+			<section id="outline-tree-view">
+				<title>Outline Tree View</title>
+				<para>This tree view provides the same basic editing and navigation
+					behavior as the Model Explorer. One additional capability is the drag
+					and drop feature which provides re-ordering and re-parenting of
+					objects in a model.</para>
+				<figure id="outline-view-image">
+					<title>Outline View</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/outline-view.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			<section id="outline-thumbnail-view">
+				<title>Outline Thumbnail View</title>
+				<para>The Outline View also offers you a way to view a thumbnail
+					sketch of your diagram regardless of its size. To view this diagram
+					thumbnail from the Outline panel, click the Diagram Overview button <inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/overview.png"/>
+					</imageobject>
+				</inlinemediaobject> at the top of the view. The diagram overview displays in the Outline View.</para>
+				<figure id="outline-view-thumbnail-image">
+					<title>Outline View</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/outline-view-thumbnail.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para> The view contains a thumbnail of your entire diagram. The
+					shaded portion represents the portion visible in the Diagram Editor
+					view.</para>
+				<para> To move to a specific portion of your diagram, click the shaded
+					area and drag to the position you want displayed in the Diagram
+					Editor view.</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/thumbnail-and-diagram-editor.png"/>
+						</imageobject>
+					</mediaobject>
+			</section>
+	    </section> 
+	    
+	    
+	    <!-- ####### TEIID VIEW ######################################### -->
+	    
+		<section id="teiid-view">
+			<title>Teiid View</title>
+			<para>
+				The Teiid View provides a means to display and manage Teiid server instances 
+				and their contents within Designer.
+			</para>
+			<para>To show the Teiid View click "<emphasis role="bold">Views > Show View > Other...</emphasis>" 
+			to display the Show View dialog. Choose "<emphasis role="bold">Teiid Designer > Teiid</emphasis>" 
+			view and hit <emphasis role="bold">OK</emphasis>.</para>
+			<figure id="teiid-view-image">
+				<title>Teiid View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/teiid-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>To create a new Teiid instance, either right-click select
+				 <emphasis role="bold">New Teiid Instance</emphasis> action or click the same action 
+				 button, <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/new-teiid-server.png"/>
+								</imageobject>
+							</inlinemediaobject> , in the toolbar.
+			</para>
+			
+			<para>
+				You'll get the <emphasis role="bold">New Teiid Instance</emphasis> dialog shown below.
+			</para>
+			<figure id="new-teiid-instance-dialog-image">
+				<title>New Teiid Instance Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-teiid-instance-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The dialog contains two
+				three sections. The top panel contains host name and an option to customize the new Teiid instance label
+				in the teiid view.  The second panel <emphasis role="bold">Teiid Admin Connection Info</emphasis>, pertains to the connection information required to connect to the admin
+				URL of your installed Teiid instance. The operations Designer exposes deal with deploying and undeploying VDBs
+				as well as managing your test data sources required by those VDBs to successfully connect and query data
+				through the Teiid runtime engine.
+			</para>
+			<para>The third panel, <emphasis role="bold">Teiid JDBC Connection Info</emphasis>, provides for entering the connection information for that
+				same Teiid instance. This information is required for Designer to make JDBC connections during execution of the
+				Preview Data feature.
+			</para>
+			<para>Enter valid <emphasis role="bold">Host, Port, User name</emphasis> and <emphasis role="bold">Password</emphasis> information, edit any options and click <emphasis>Finish</emphasis>.</para>
+			
+			<para>Actions available in this view include:</para>
+			<itemizedlist>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/new-teiid-server.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">New Teiid Instance</emphasis> - Create a new instance of a running Teiid server</para></listitem>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/edit-teiid-server.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Teiid Server Properties</emphasis> - View and edit properties of an existing Teiid instance</para></listitem>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/refresh.png"/>
+			 					</imageobject>
+							</inlinemediaobject><emphasis role="bold">Reconnect</emphasis> - Reconnect and refresh contents of the selected Teiid instance</para></listitem>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/delete-teiid-server.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Disconnect and delete the selected Teiid instance</para></listitem>
+			  </itemizedlist>
+			  <itemizedlist>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/run-vdb.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Execute VDB</emphasis> - Creates a JDBC Teiid connection profile and opens the Data Tools Database Development perspective</para></listitem>
+			  <listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/delete.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Undeploy VDB</emphasis> - Removes the selected VDB from the Teiid instance</para></listitem>
+			</itemizedlist>
+			<itemizedlist>
+				<listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/new-binding.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Create Data Source</emphasis> - Launches the New Data Source wizard</para></listitem>
+				<listitem><para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/delete.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Delete Data Source</emphasis> - Removes the selected Data Source from the Teiid instance</para></listitem>
+			</itemizedlist>
+			<para>
+				If you chose the <emphasis role="bold">Use a custom label</emphasis> option, the text entry field will enable as shown below.
+			</para>
+			<figure id="new-teiid-instance-dialog-custom-name-image">
+				<title>Use a Custom Label Option</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-teiid-instance-custom-name-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### PROPERTIES VIEW ######################################### -->
+		
+	    <section id="properties-view">
+		    <title>Properties View</title>
+			<para>
+				The
+				<emphasis role="bold">Properties View</emphasis>
+				provides editing capabilities for the currently selected object in
+				Teiid Designer. The selection provided by whichever view or editor is currently in
+				focus will determine the its contents.
+			</para>
+			<para> To edit a property, click a cell in the Value column. As in the
+				<emphasis role="bold">Table Editor</emphasis>, each cell provides a UI editor specific to the property
+				type.</para>
+	      	<figure id="properties-view-image">
+				<title>Properties View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/properties-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				If the model for the object being edited is not open in an editor, a dialog may appear 
+				confirming the attempt to modify the model and asking the user to confirm or cancel. 
+				   This dialog can be prevented by checking the preference <property>Always open editor without prompting</property>. 
+				You can re-set/uncheck this property via the Teiid Designer's main preference page. 
+				<figure id="properties-view-open-editor-image">
+					<title>Open Model Editor Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/properties-view-confirm-edit-check.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+			<para>
+				Properties can also be edited via a right-click menu presented below.
+				<figure id="properties-view-menu-image">
+						<title>Open Model Editor Dialog</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/properties-view-menu.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+			</para>
+			<para>
+				The
+				<emphasis role="bold">Properties</emphasis>
+				toolbar contains the following actions:
+				<itemizedlist>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/tree-mode.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Show Categories</emphasis> - toggles between categorized properties and flat alphabetical properties list.
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/filter-change.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Show Advanced Properties</emphasis> - shows/hide advanced properties (if available).
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/defaults-ps.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Restore Default Value</emphasis> - for a selected property, this action will reset the current to a default value (if available).
+						</para>
+					</listitem>
+				</itemizedlist>
+			</para>
+	    </section>
+	    
+	    <!-- ####### DESCRIPTION VIEW ######################################### -->
+	    
+		<section id="description-view">
+			<title>Description View</title>
+			<para>
+				The
+				<emphasis role="bold">Description View</emphasis>
+				provides a means to display and edit (add, change or remove) a
+				description for any model or model object. To show the Description
+				View click <emphasis role="bold">Views > Show View > Other...</emphasis> to display the
+				<emphasis role="bold"><xref linkend="show-view-dialog-image" /></emphasis>
+				dialog. Choose <emphasis role="bold">Teiid Designer > Description</emphasis> view and hit
+				<emphasis role="bold">OK</emphasis>
+				.
+			</para>
+			<figure id="description-view-image">
+				<title>Description View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/description-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para> You can click the edit description action in the toolbar or right-click select "Edit"
+			in the context menu to bring up the Edit Description dialog.
+				edit actions.</para>
+			<figure id="description-view-menu-image">
+				<title>Description View Context Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/description-view-context-menu.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<figure id="edit-description-dialog-image">
+				<title>Edit Description Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/edit-description-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### MODEL EDITORS VIEW ######################################### -->
+		<section id="editors-view">
+			<title>Editors</title>
+			<para><emphasis role="bold">Editors</emphasis> are the UI components designed to assist
+				editing your models and to maintain the state for a given model or
+				resource in your workspace. When editing a model, the model will be
+				opened in a <emphasis role="bold">Model Editor</emphasis>. Editing a property value, for instance,
+				will require an open editor prior to actually changing the property.
+			</para>
+			<para> Any number of editors can be open at once, but only one can be
+				active at a time. The main menu bar and toolbar for Teiid Designer may
+				contain operations that are applicable to the active editor (and
+				removed when editor becomes inactive).</para>
+			<para> Tabs in the editor area indicate the names of models that are
+				currently open for editing. An asterisk (*) indicates that an editor
+				has unsaved changes.</para>
+			<figure id="model-editor-tabs-image">
+				<title>Editor Tabs</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/model-editor-tabs.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>By default, editors are stacked in the editors area, but you can choose to tile them vertically, and or horizontally in order to view multiple models simultaneously.</para>
+			<figure id="multiple-model-editors-image">
+				<title>Viewing Multiple Editors</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/multiple-model-editors.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The Teiid Designer provides main editor views for XMI models and VDBs.</para>
+			<para>The Model Editor contains sub-editors which provide different views of the data or parts of data 
+				within an XMI model. These sub-editors, specific to model types are listed below.</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Diagram Editor</emphasis> - All models except XML Schema models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Table Editor</emphasis> - All models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Simple Datatypes Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Semantics Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Source Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+			</itemizedlist>
+			<para>The <emphasis>VDB Editor</emphasis> is a single page editor containing panels for editing description, 
+				model contents and data roles.</para>
+			<para> In addition to general Editors for models, there are detailed editors designed 
+				for editing specific model object types. These object editors include:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Web Service Operations.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Input Editor</emphasis> - Manages Input Set parameters used between Mapping Classes in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Recursion Editor</emphasis> - Manages recursion properties for recursive XML Elements in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Operation Editor</emphasis> - Manages SQL and Input Variables for Web Service Operations.</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	    
+		<!-- ####### PROBLEMS VIEW ######################################### -->
+	    
+		<section id="problems-view">
+			<title>Problems View</title>
+			<para>The <emphasis role="bold">Problems View</emphasis> displays validation errors, 
+				warnings, or information associated with a resource contained in open projects 
+				within your workspace.
+			</para>
+			<figure id="problems-view-image">
+				<title>Problems View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/problems-view.png"
+							align="center"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para> By default, the <emphasis role="bold">Problems View</emphasis> is included in the Teiid Designer
+				perspective. If the <emphasis role="bold">Problems View</emphasis> is not showing in the current
+				perspective click <emphasis role="bold">Views > Show View > Other > Teiid Designer > Problems</emphasis>.
+			</para>
+			<para> There are 5 columns in the view's table which include:</para>
+			<para>
+				<orderedlist>
+					<listitem>
+						<para> <emphasis role="bold">Description</emphasis> - A description of the problem preceded
+							 by a severity icon (i.e., error <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/problem-marker-error.png"/>
+								</imageobject>
+							</inlinemediaobject>, warning <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/problem-marker-warning.png"/>
+								</imageobject>
+							</inlinemediaobject>, or info <inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/problem-marker-info.png"/>
+								</imageobject></inlinemediaobject> ).
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Resource</emphasis>
+							- The name of the resource.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Path</emphasis>
+							- The project name.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Location</emphasis>
+							- The object within the resource that has a validation error.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">type</emphasis>
+							- Type of validation item.
+						</para>
+					</listitem>
+				</orderedlist>
+			</para>
+			
+			<section id="problems-view-toolbar-items">
+				<title>Toolbar Menu</title>
+				<para>Click the upside-down triangle 
+				<inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/select-cheat-sheet.png"/>
+					</imageobject>
+				</inlinemediaobject> icon to open the View Menu icon to see various options including 
+					sorting, filtering, displayed columns and much more.
+				</para>
+			</section>
+			<section id="problems-view-context-menu">
+				<title>Context Menu</title>
+				<para>Additional actions are available by selecting a
+					problem and right-click to open a context menu.</para>
+				<figure id="problems-view-menu-image">
+					<title>Problems View Context Menu</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/problems-view-context-menu.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<itemizedlist>
+					<listitem>
+						<para>
+							<emphasis role="bold">Go To</emphasis>
+							- will open the appropriate editor and select the
+							affected/referenced object.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Show In Navigator</emphasis>
+							- Opens the Basic > Navigator view (if not open) and expands file
+							system tree and reveals applicable resource.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Copy</emphasis>
+							- Copies the problem information to the system clipboard.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Paste</emphasis>
+							- Pastes the problem information located in the system clipboard (
+							if applicable ) into the curor location for a specified text
+							editor.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Delete</emphasis>
+							- Deletes the selected problem rows ( if applicable ).
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Select All</emphasis>
+							- selects all problems in the table.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Quick Fix</emphasis>
+							- (Not yet implemented in Teiid Designer).
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis role="bold">Properties</emphasis>
+							- displays a dialog containing additional information.
+						</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+		</section>
+		
+	    <!-- ####### SEARCH RESULTS VIEW  ############################################# -->
+	    
+		<section id="search-results-view">
+			<title>Search Results View</title>
+			<para>Below is an example set of search results. The view
+				contains rows representing matches for your search parameters. You
+				can double-click a entry and the object will be opened and selected
+				in an editor and/or the Model Explorer if applicable.</para>
+			<figure id="search-results-view-image">
+				<title>Search Results View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/search-results-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				The toolbar actions for the
+				<emphasis role="bold">Search Results</emphasis>
+				view are:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/search-next.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Show Next Match</emphasis> - Navigates down one row in the view.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/search-prev.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Show Previous Match</emphasis> - Navigates up one row in the view.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/search-rem.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Remove Selected Matches</emphasis> - Removes selected results from the view.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/search-remall.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Remove All Matches</emphasis> - Clears the view.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/metadata-search.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Search</emphasis> - Launches 
+							the <emphasis role="bold">MoTeiid Designerearch Dialog</emphasis>.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/search-history.png"/>
+							</imageobject>
+						</inlinemediaobject> <emphasis role="bold">Previous Search Results</emphasis> - Select 
+						previous search results from history.
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>
+				You can also perform some of these actions via the right-click menu:
+				<figure id="search-results-view-menu-image">
+					<title>Search Results Context Menu</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/search-results-view-menu.png"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</para>
+		</section>
+		
+		<!-- ####### DATATYPE HIERARCHY VIEW  ############################################# -->
+		
+		<section id="datatypes-view">
+			<title>Datatype Hierarchy View</title>
+			<para>
+				To open
+				<emphasis role="bold">Teiid Designer's Datatype Hierarchy
+				</emphasis>
+				view, select the main menu's
+				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				and select the
+				<emphasis role="bold">Teiid Designer > Datatypes</emphasis>
+				view in the dialog.
+			</para>
+			<figure id="datatypes-view-image">
+				<title>Datatype Hierarchy View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/datatypes-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### MODEL CLASSES VIEW  ############################################# -->
+		
+	    <section id="model-classes-view">
+	      <title>Teiid Model Classes View</title>
+	      <para>The Model Classes View provides a hiearchical EMF-centric view of the 
+	      	various metamodel classes available within Teiid Designer. This view is primarily
+	      	for informational purposes, but can be used as a reference if creating relationships
+	      	or searching your workspace for specific metamodel constructs.
+	      </para>
+			<figure id="model-classes-view-image">
+				<title>Datatype Hierarchy View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/model-classes-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+	    </section>
+	    
+	    <!-- ####### SYSTEM CATALOG VIEW  ############################################# -->
+	    
+		<section id="system-catalog-view">
+			<title>System Catalog View</title>
+			<para>
+				To open
+				<emphasis role="bold">Teiid Designer's System Catalog
+				</emphasis>
+				view, select the main menu's
+				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				and select the
+				<emphasis role="bold">Teiid Designer > System Catalog</emphasis>
+				view in the dialog..
+			</para>
+			<figure id="system-catalog-view-image">
+				<title>System Catalog View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/system-catalog-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		    <!-- ####### SQL RESERVED WORDS VIEW  ############################################# -->
+	    
+		<section id="sql-reserved-words-view">
+			<title>SQL Reserved Words View</title>
+			<para>
+				To open
+				<emphasis role="bold">Teiid Designer's SQL Reserved Words
+				</emphasis>
+				view, select the main menu's
+				<emphasis role="bold">Views > Show View > Other...</emphasis>
+				and select the
+				<emphasis role="bold">Teiid Designer > SQL Reserved Words</emphasis>
+				view in the dialog.
+			</para>
+			<figure id="sql-reserved-words-view-image">
+				<title>System Catalog View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/sql-reserved-words-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>You can also display the view by selecting the the main menu's
+				<emphasis role="bold">Metadata > Show SQL Reserved Words</emphasis> action as shown below.</para>
+			<figure>
+				<title>System Catalog View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/show-sql-reserved-words-action.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+	</section>
+	<section id="teiid-designer-editors-section">
+	  	<title>Editors</title>
+
+		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+		
+		<!--
+			####### MODEL EDITORS #########################################
+		-->
+			<para><emphasis role="bold">Editors</emphasis> are the UI components designed to assist
+				editing your models and to maintain the state for a given model or
+				resource in your workspace. When editing a model, the model will be
+				opened in a <emphasis role="bold">Model Editor</emphasis>. Editing a property value, for instance,
+				will require an open editor prior to actually changing the property.
+			</para>
+			<para> Any number of editors can be open at once, but only one can be
+				active at a time. The main menu bar and toolbar for Teiid Designer may
+				contain operations that are applicable to the active editor (and
+				removed when editor becomes inactive).</para>
+			<para> Tabs in the editor area indicate the names of models that are
+				currently open for editing. An asterisk (*) indicates that an editor
+				has unsaved changes.</para>
+			<figure id="model-editor-tabs-image-copy">
+				<title>Editor Tabs</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/model-editor-tabs.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>By default, editors are stacked in the editors area, but you can choose to tile them vertically, and or horizontally in order to view multiple models simultaneously.</para>
+			<figure id="multiple-model-editors-image-copy">
+				<title>Viewing Multiple Editors</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/multiple-model-editors.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The Teiid Designer provides main editor views for XMI models and VDBs.</para>
+			<para>The Model Editor contains sub-editors which provide different views of the data or parts of data 
+				within an XMI model. These sub-editors, specific to model types are listed below.</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Diagram Editor</emphasis> - All models except XML Schema models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Table Editor</emphasis> - All models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Simple Datatypes Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Semantics Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Source Editor</emphasis> - XML Schema models only.</para>
+				</listitem>
+			</itemizedlist>
+			<para>The <emphasis>VDB Editor</emphasis> is a single page editor containing panels for editing description, 
+				model contents and data roles.</para>
+			<para> In addition to general Editors for models, there are detailed editors designed 
+				for editing specific model object types. These "object" editors include:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Transformation Editor</emphasis> - Manages Transformation SQL for Relational View Base Tables, Procedures and XML Web Service Operations.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Choice Editor</emphasis> - Manages properties and criteria for XML choice elements in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Input Editor</emphasis> - Manages Input Set parameters used between Mapping Classes in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Recursion Editor</emphasis> - Manages recursion properties for recursive XML Elements in XML Document View models.</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Operation Editor</emphasis> - Manages SQL and Input Variables for Web Service Operations.</para>
+				</listitem>
+			</itemizedlist>
+		<!--
+			####### MODEL SUB_EDITORS #########################################
+		-->
+		<section id="model-editors-section">
+			<title>Model Editor</title>
+			<para>The Model Editor is comprised of sub-editors which provide multiple views of your data. The Diagram Editor provides 
+				a graphical while the Table Editor provides spreadsheet-like editing capabilities.  This section describes these various
+				sub-editors.</para>
+			<section id="diagram-editor-section">
+				<title>Diagram Editor</title>
+				<para>The Diagram Editor  provides a graphical view of the a set of model components and their relationships.</para>
+				
+				<para> 
+				Several types of diagrams are available depending on model type. They include:
+				<itemizedlist>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/diagram.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Package Diagram</emphasis>
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/custom-diagram.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Custom Diagram</emphasis>
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/transformation-diagram.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Transformation Diagram</emphasis>
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/mapping-diagram.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Mapping Diagram</emphasis>
+						</para>
+					</listitem>
+					<listitem>
+						<para><inlinemediaobject>
+								<imageobject>
+									<imagedata fileref="images/icons/transformation-diagram.png"/>
+								</imageobject>
+							</inlinemediaobject> <emphasis role="bold">Mapping Transformation Diagram</emphasis>
+						</para>
+					</listitem>
+	
+				</itemizedlist>
+				</para>
+				<para>You can customize various diagram visual properties via Diagram
+					Preferences.</para>
+				<para>Each diagram provides actions via the Main toolbar, diagram
+					toolbar and selection-based context menus. These actions will be
+					discussed below in detail for each diagram type.</para>
+				<para>
+					When a
+					<emphasis role="bold">Diagram Editor</emphasis>
+					is in focus, a set of common diagram actions is added to the
+					application's main toolbar.
+					<figure id="diagram-zoom-toolbar-image">
+						<title>Main Toolbar Diagram Actions</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/main-toolbar-diagram-actions.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>				
+				<itemizedlist>
+					<listitem>
+						<para> 
+							The actions include:
+							<itemizedlist>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/tb-zoom-in.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Zoom In</emphasis>
+									</para>
+								</listitem>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/zoom-level.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Zoom to Level</emphasis>
+									</para>
+								</listitem>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/tb-zoom-out.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Zoom Out</emphasis>
+									</para>
+								</listitem>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/tb-inc-font.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Increase Font Size</emphasis>
+									</para>
+								</listitem>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/tb-dec-font.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Decrease Font Size</emphasis>
+									</para>
+								</listitem>
+								<listitem>
+									<para><inlinemediaobject>
+											<imageobject>
+												<imagedata fileref="images/icons/tb-diagram-layout.png"/>
+											</imageobject>
+										</inlinemediaobject> <emphasis role="bold">Perform Diagram Layout</emphasis>
+									</para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+				<section id="package-diagram-section">
+					<title>Package Diagram</title>
+					<para>The Package Diagram provides a graphical view of the contents of a model container, be it the model itself, a relational catalog or schema.</para>
+					<figure id="package-diagram-image">
+						<title>Package Diagram Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/package-diagram.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<itemizedlist>
+						<listitem>
+							<para> 
+								Package Diagram toolbar actions include:
+								<itemizedlist>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/preview-data.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-save-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-page-setup.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-on.png"/>
+												</imageobject>
+											</inlinemediaobject> <inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-off.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
+										</para>
+									</listitem>
+								</itemizedlist>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para>Context menus provide a flexible means to edit model data,
+						especially from Package Diagrams. Each Package Diagram represents the
+						contents of some container (i.e. Model, Category, Schema, etc...), so
+						New Child, New Sibling and New Association actions are almost always available in addition to standard Edit actions (Delete, Cut, Copy, Paste, Rename, Clone).
+					</para>
+					<para>
+						A sample context menu for a relational base table is shown below. 
+					</para>
+					<figure id="package-diagram-context-menu-image">
+						<title>Package Diagram Context Menu</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/diagram-context-menu-base-table.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</section>
+				<section id="custom-diagram-section">
+					<title>Custom Diagram</title>
+					<para>The <emphasis role="bold">Custom Diagram</emphasis> represents a view of user-defined model
+						objects. Unlike <emphasis role="bold">Package Diagrams</emphasis>, <emphasis role="bold">Custom Diagrams</emphasis> 
+						can contain objects that are not only unrelated, but can be from different containers and even models.</para>
+					<figure id="custom-diagram-image">
+						<title>Package Diagram Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/custom-diagram.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<itemizedlist>
+						<listitem>
+							<para> 
+								Custom Diagram toolbar actions include:
+								<itemizedlist>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/preview-data.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Add To Diagram</emphasis> - Add objects selected in Model Explorer to diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Remove From Diagram</emphasis> - Removed objects selected in diagram from diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-clear-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Clear Diagram</emphasis> - Remove all objects from diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-save-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-page-setup.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-on.png"/>
+												</imageobject>
+											</inlinemediaobject> <inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-off.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
+										</para>
+									</listitem>
+								</itemizedlist>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para>Since <emphasis role="bold">Custom Diagrams</emphasis> do not represent represents the
+						contents of container objects(i.e. Model, Category, Schema, etc...)
+						its <emphasis role="bold">context menus</emphasis> are limited to adding/removing objects from diagram
+						and basic diagram-related display options.</para>
+				</section>
+				<section id="transformation-diagram-section">
+					<title>Transformation Diagram</title>
+					<para>The <emphasis role="bold">Transformation Diagram</emphasis> represents a view of the relationships defined by the 
+						source inputs described in a view table's SQL transformation.</para>
+					<figure id="transformation-diagram-image">
+						<title>Transformation Diagram Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/transformation-diagram.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<itemizedlist>
+						<listitem>
+							<para> 
+								Transformation Diagram toolbar actions include:
+								<itemizedlist>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/preview-data.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Add Transformation Sources</emphasis> - Add selected sources to transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-add-union-to-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Add Union Transformation Sources</emphasis> - Add selected sources as union sources.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Remove Transformation Sources</emphasis> - Removed sources selected in diagram from transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-clear-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Clear Transformation</emphasis> - Remove all sources from transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-reconcile-sql.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Open Transformation Reconciler dialog</emphasis>
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-save-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-page-setup.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-on.png"/>
+												</imageobject>
+											</inlinemediaobject> <inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-grid-off.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show/Hide Page Grid</emphasis> - Show current page boundaries as grid in diagram.
+										</para>
+									</listitem>
+								</itemizedlist>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para><emphasis role="bold">Context menus</emphasis> for the </para>
+				</section>
+				<section id="mapping-diagram-section">
+					<title>Mapping Diagram</title>
+					<para>The <emphasis role="bold">Mapping Diagram</emphasis> represents a view of the mapping between virtual mapping
+						class columns and XML document elements. This mapping defines how source data is transformed from row-based results into
+						XML formatted text.</para>
+					<figure id="mapping-diagram-image">
+						<title>Mapping Diagram Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/mapping-diagram.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<itemizedlist>
+						<listitem>
+							<para> 
+								Mapping Diagram toolbar actions include:
+								<itemizedlist>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-detailed-mapping.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Mapping Transformation Diagram</emphasis> - Show detailed mapping transformation diagram for selected mapping class.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/preview-data.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-gen-mapping-classes.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Generate Mapping Classes</emphasis> - Generate mapping classes for the selected XML document root element.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-new-mapping-class.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">New Mapping Class</emphasis> - Insert new mapping class referenced to the selected XML document element or attribute..
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-new-temp-table.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">New Staging Table</emphasis> - Insert new staging table referenced to the selected XML document element or attribute.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-merge-mapping-classes.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Merge Mapping Classes</emphasis> - Merge selected mapping classes.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-split-mapping-classes.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Split Mapping Class</emphasis> - Split selected mapping class.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/show-exposed-mapping-classes.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Display All Mapping Classes</emphasis>
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/expand-mapping-classes.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Mapping Class Columns</emphasis>
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/filter-change.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Filter Displayed Mapping Classes with Selection</emphasis>
+										</para>
+									</listitem>
+								</itemizedlist>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para><emphasis role="bold">Context menus</emphasis> for <emphasis role="bold">Mapping Diagrams</emphasis> provide Edit capability
+						to the mapping class in addition to mapping class manipulation actions
+						(i.e. Merge Mapping Classes, Split Mapping Class, etc..)</para>
+				</section>
+				<section id="mapping-transformation-diagram-section">
+					<title>Mapping Transformation Diagram</title>
+					<para>The <emphasis role="bold">Mapping Transformation Diagram</emphasis> is identical to a Transformation Diagram except for 
+						displaying an Input Set and possibly Staging Tables as sources for the Mapping Class's transformation.</para>
+					<figure id="mapping-transformation-diagram-image">
+						<title>Mapping Transformation Diagram Example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/mapping-transformation-diagram.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<itemizedlist>
+						<listitem>
+							<para> 
+								Mapping Transformation Diagram toolbar actions include:
+								<itemizedlist>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-refresh-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Refresh Diagram</emphasis> - Re-draws diagram.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-show-parent-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Show Parent Diagram</emphasis> - Navigates to diagram for parent object (if available).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/preview-data.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Preview Data</emphasis> - Executes a simple preview query (SELECT * FROM ).
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-new-mapping-link.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">New Mapping Link</emphasis> - Create a mapping link between selected mapping extent (i.e. XML element or attribute) and mapping class column.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-delete-mapping-link.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Remove Mapping Link</emphasis> - Delete mapping link between selected mapping extent (i.e. XML element or attribute) and mapping class column.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-add-to-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Add Transformation Sources</emphasis> - Add selected sources to transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-add-union-to-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Add Union Transformation Sources</emphasis> - Add selected sources as union sources.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-remove-from-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Remove Transformation Sources</emphasis> - Removed sources selected in diagram from transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-clear-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Clear Transformation</emphasis> - Remove all sources from transformation.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-reconcile-sql.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Open Transformation Reconciler dialog</emphasis>
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-save-diagram.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
+										</para>
+									</listitem>
+									<listitem>
+										<para><inlinemediaobject>
+												<imageobject>
+													<imagedata fileref="images/icons/tb-page-setup.png"/>
+												</imageobject>
+											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
+										</para>
+									</listitem>
+								</itemizedlist>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para><emphasis role="bold">Context menus</emphasis> for <emphasis role="bold">Mapping Transformation Diagrams</emphasis> identical
+						capabilities to the Transformation Diagram with the addition of managing and editing Input Sets.</para>
+				</section>
+			</section>
+			<section id="table-editor-section">
+				<title>Table Editor</title>
+				<para>The <emphasis role="bold">Table Editor</emphasis> provides a table-based object type
+				structured view of the contents of a model. The figure below shows a
+				relational model viewed in the <emphasis role="bold">Table Editor</emphasis>. Common object types are
+				displayed in individual folders/tables. All base tables, for instance,
+				are shown in one table independent of their parentage.</para>
+				<figure id="table-editor-image">
+					<title>Table Editor Example</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/table-editor.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>You can customize Table Editor properties via Table Editor Preferences. </para>
+				<para>These are the primary features of the Table Editor:
+					<itemizedlist>
+						<listitem>
+							<para>Edit existing properties.</para>
+						</listitem>
+						<listitem>
+							<para>Add, remove or edit objects, via the main Edit menu and context menu ( Cut, Copy, Paste, Clone, Delete, Rename, Insert Rows ).</para>
+						</listitem>
+						<listitem>
+							<para>Paste information from your clipboard into the table.</para>
+						</listitem>
+						<listitem>
+							<para>Print your tables.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+				<para>
+					When a
+					<emphasis role="bold">Table Editor</emphasis>
+					is in focus, the
+					<emphasis role="bold">Insert Table Rows</emphasis> action <inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/tb-table-insert.png"/>
+							</imageobject>
+						</inlinemediaobject> is added to the application's main toolbar.
+				</para>
+				<para>A few Table Editor actions are contributed to the right-click menu for selected table rows. 
+					These actions, described and shown below include:
+					<itemizedlist>
+						<listitem>
+							<para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/table-paste.png"/>
+							</imageobject>
+						</inlinemediaobject><emphasis role="bold">Table Paste</emphasis> - Paste common spreadsheet data (like Microsoft Excel) to set object properties.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Table Editor Preferences</emphasis> - Change table editor preferences, including customizing visible properties.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Insert Rows</emphasis> - Create multiple new sibling objects.</para>
+						</listitem>
+						<listitem>
+							<para><inlinemediaobject>
+							<imageobject>
+								<imagedata fileref="images/icons/refresh.png"/>
+							</imageobject>
+						</inlinemediaobject><emphasis role="bold">Refresh Table</emphasis> - Refreshes the contents of the current Table Editor to insure it is in sync with the model.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+				<figure id="table-editor-context-menu-image">
+					<title>Table Editor Example</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/table-editor-context-actions.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<section>
+					<title>Editing Properties</title>
+					<para>You can edit properties for an object by double-clicking a table cell.</para>
+					<para>For String properties, the table cell will become an in-place text editor field.</para>
+					<figure id="table-editor-string-edit-image">
+						<title>Editing String Property</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-string-value-property-edit.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<para>If a property is of a boolean (true or false) type or has multiple, selectable values, a combo box will be displayed to change the value.</para>
+					<figure id="table-editor-boolean-edit-image">
+						<title>Editing Boolean Value</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-boolean-value-property-edit.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<figure id="table-editor-multi-value-edit-image">
+						<title>Editing Multi-Value Property</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-multi-value-property-edit.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<para>For multi-valued properties where the available values are dynamic (i.e. can change based on available models or data), a picker-button ("....") will be displayed.</para>
+					<figure id="table-editor-picker-value-edit-image">
+						<title>Editing Multi-Value With Picker</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-picker-value-property-edit.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<para>An example of of this type is the relational column datatype property. Editing via the table cell and clicking the "..." button for datatype will display the following dialog.</para>
+					<figure id="table-editor-datatype-edit-image">
+						<title>Editing Datatype Values</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-picker-value-property-edit.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</section>
+				<section>
+					<title>Inserting Table Rows</title>
+					<para>The Insert Rows action provides an additional way to create objects in a model. Insert Rows action performs the same function as Insert Sibling action, but allows you to create multiple children at the same time. All new rows will correspond to an object of the same type as the selected object and be located under the same parent as the selected object.</para>
+					<para>To Insert Rows in a table: </para>
+					<para><emphasis role="bold">Step 1:</emphasis> Select a table row to insert rows after.</para>
+					<para><emphasis role="bold">Step 2:</emphasis> Right-click select "Insert Rows" action or select the Insert Rows action on the main toolbar. The following dialog will be displayed.</para>
+					<figure id="table-editor-insert-rows-image">
+						<title>Editing String Property</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/table-editor-insert-tables-rows-dialog.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+					<para><emphasis role="bold">Step 3:</emphasis> Edit the Number of Rows value in the dialog, or use the up/down buttons to change the value.</para>
+					<para><emphasis role="bold">Step 4:</emphasis> Select OK in dialog.</para>
+					<para>The desired number of rows (new model objects) will be added after the original selected table row. </para>
+				</section>
+			</section>
+			<section id="datatypes-editor-section">
+				<title>Simple Datatypes Editor</title>
+				<para>The Simple Datatype Editor  provides a form-based properties view of XML Schema data.</para>
+				<figure id="datatypes-editor-image">
+					<title>Editing String Property</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/simple-datatypes-editor.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			<section id="semantic-editor-section">
+				<title>Semantic Editor</title>
+				<para>The Semantic Editor is a tree based editor for XML Schema elements and attributes.</para>
+			</section>
+			<section id="source-editor-section">
+				<title>Source Editor</title>
+				<para>The Source Editor is a simple text editor which is aware of XML Schema formatting rules.</para>
+			</section>
+			<section id="model-object-editors-sub-section">
+				<title>Model Object Editors</title>
+				<para>The Model Object Editors represent specialized sub-editors which are available for specific
+					model object types.</para>
+				<itemizedlist>
+					<listitem>
+						<para>For details, select a specific editor listed below:
+							<itemizedlist>
+								<listitem>
+									<para><xref linkend="transformation-editor-section" /></para>
+									<para><xref linkend="input-set-editor-section" /></para>
+									<para><xref linkend="choice-editor-section" /></para>
+									<para><xref linkend="recursion-editor-section" /></para>
+									<para><xref linkend="operation-editor-section" /></para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+			
+		</section>
+		<section id="vdb-editor-section">
+			<title>VDB Editor</title>
+			<para>A <emphasis role="bold">VDB</emphasis>, or  <emphasis role="bold">virtual database</emphasis> is a container 
+				for components used to integrate data from multiple data sources, so that they can be accessed in a federated manner 
+				through a single, uniform API. A <emphasis role="bold">VDB</emphasis> contains models, which define the structural 
+				characteristics of data sources, views, and Web services. The <emphasis role="bold">VDB Editor</emphasis>, provides 
+				the means to manage the contents of the <emphasis role="bold">VDB</emphasis> as well as its deployable (validation) state.</para>
+			<para>The VDB Editor, shown below, contains a upper and lower panels. The upper panel contains the Models tab and an Other Files tab. The 
+			lower panel contains tabs for managing Data Roles, the VDB Description and Translator Overrides.</para>
+			<figure>
+				<title>VDB Editor</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/vdb-editor.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>You can manage your VDB contents by using the <emphasis>Add</emphasis> or <emphasis>Remove</emphasis> models 
+				via the buttons at the right.</para>
+			<para>Set individual model visibility via the <emphasis>Visibility</emphasis> checkbox for each model. 
+				This provides low level data access security by removing specific models and their metadata contents from schema exposed
+				in GUI tools.</para>
+			<para>In order for a VDB to be fully queryable the "Source Name", "Translator" and "JNDI Names" must 
+				have valid values and represent deployed artifacts on your Teiid server.</para>
+			<para>If you have Designer runtime plugins installed, and have a Teiid server running, you can 
+				select a source model in the VDB Editor and right-click select "Change Translator" or 
+				"Change JNDI Data Source" which will allow you to select any applicable artifacts on your server.</para>
+			<figure>
+				<title>Change Translator or Data Source Actions</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/vdb-editor-context-menu.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>If you have a default Teiid server instance defined and connected the translator and JNDI table cells will
+			 contain drop-down lists of available translator and JNDI names available on that server.</para>
+			
+			<section id="editing-data-roles-section">
+				<title>Editing Data Roles</title>
+				<para>Teiid Designer provides a means to create, edit and manage data roles specific 
+					to a VDB. Once deployed within a Teiid server with the security option turned on 
+					(by default) any query run against this VDB via a Teiid JDBC connection will adhere 
+					to the data access permissions defined by the VDB's data roles.</para>
+				<para>The <emphasis>VDB Editor</emphasis> contains a <emphasis>VDB Data Roles</emphasis> section 
+					consisting of a List of current data roles and <emphasis>New...</emphasis> , 
+					<emphasis>Edit...</emphasis> and <emphasis>Remove</emphasis> action buttons.</para>
+				<figure>
+					<title>VDB Data Roles Panel</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/vdb-data-roles-panel.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>Clicking <emphasis>New...</emphasis> or <emphasis>Edit...</emphasis> will launch 
+					the <emphasis>New VDB Data Role</emphasis> editor dialog. Speicify a unique data role name, 
+					add a optional description and modify the individual model element 
+					CRUD values by check or unchecking entries in the models section.</para>
+				<figure>
+					<title>VDB Data Roles Tab</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/vdb-data-roles-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+			<section id="editing-translator-overrides-section">
+				<title>Editing Translator Overrides</title>
+				<para>Teiid Designer provides a means to create, edit and manage translator override properties specific 
+					to a VDB via the Tranlator Overrides tab. A translator override is a set of non-default properties targeted for
+					a specific source model's data source. So each translator override requires a target translator name like "oracle",
+					db2, mysql, etc. and a set of non-default key-value property sets.</para>
+				<para>The <emphasis>VDB Editor</emphasis> contains a <emphasis>Tranlator Overrides</emphasis> section 
+					consisting of a List of current tranlator overrides on the left, a properties editor panel on the right 
+					and <emphasis>Add</emphasis> (+) and <emphasis>Remove</emphasis> (-) action buttons
+					on the lower part of the panel.</para>
+				<figure>
+					<title>VDB Translator Overrides Tab</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/translator-overrides-editor-tab.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>To override a specific translator type, select the add translator action (+). If a default Teiid server instance is
+				connected and available the Add Translator Override dialog (below) is presented, the user selects an existing tranlator type and clicks OK.
+				Note that the override is only applicable to sources within the VDB, so be sure and select a translator type that corresponds
+				to one of the VDB's source models. The properties panel on the right side of the panel will contain editiable cells for each property
+				type based on the data-type of the property. (i.e. boolean, integer, string, etc.).</para>
+				<figure>
+					<title>Add Translator Override Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/add-translator-override-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>If no default Teiid server instance is available, the "Add New Translator Override" dialog is presented. Enter a unique 
+				name for the tranlator override (i.e. "oracle_override"), a valid translator type name (i.e. "oracle") and click OK.
+				The properties panel on the right side of the panel will allow adding, editing and removing key-value string-based property sets.
+				When editing these properties all values will be treated as type string.</para>
+				<figure>
+					<title>Add New Translator Override Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/add-new-translator-override-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
+		</section>
+	</section>
+	<section id="teiid-designer-menus-section">
+		<title>Teiid Designer Main Menu</title>
+		
+		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
+	
+		<para>There are 8 categories of actions on Teiid Designer's main menu bar. </para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					These categories include:
+					<itemizedlist>
+						<listitem>
+							<para><xref linkend="file-menu-section" /> - Resource management actions.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="edit-menu-section" /> - Standard edit actions including undo/redo.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="refactor-menu-section" /> - Resource actions (i.e. Rename, Move, etc...).</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="search-menu-section" /> - Find data within your workspace.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="project-menu-section" /> - Model level actions.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="metadata-menu-section" /> - Custom metadata-related actions.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="window-menu-section" /> - Change perspectives or add/remove views to your perspective.</para>
+						</listitem>
+						<listitem>
+							<para><xref linkend="help-menu-section" /> - Access available Teiid Designer help documents, 
+								Teiid Designer SQL Support Guide and Eclipse Overview information.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<figure>
+			<title>Application Main Menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/designer-main-menu-bar.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<!-- ####### FILE MENU ######################################## -->
+	
+		<section id="file-menu-section">
+			<title>File Menu</title>
+			<para>The <emphasis role="bold">File</emphasis> menu provides actions to manage your workspace resources.</para>
+			<figure>
+				<title>File Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-file.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>The <emphasis role="bold">New > </emphasis> sub-menu provides specific actions to create various generic
+				workspace resources as well as Teiid Designer models and VDBs.</para>
+			<figure>
+				<title>File Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-file-new.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<itemizedlist>
+				<listitem>
+					<para>
+						The <emphasis role="bold">File</emphasis> menu contains the following actions:
+						<itemizedlist>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-project-wiz.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New > Model Project</emphasis> - Create user a new 
+									model project.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-folder.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New > Folder</emphasis> - Create new folder 
+									within an existing project or folder.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-model-wiz.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New > Model</emphasis> - Create a new model of
+									a specified model type and class using 
+									the <xref linkend="newmodels-chapter" />.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-vdb-wiz.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New > Virtual Database Definition</emphasis> - Create a new VDB, or
+									Virtual Database Definition.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Open File</emphasis> - Enables you to open a file 
+									for editing - including files that do not reside in the Workspace.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Close (Ctrl+W)</emphasis> - Closes the active editor. You are 
+									prompted to save changes before the file closes.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Close All (Shift+Ctrl+W)</emphasis> - Closes all open editors. You are 
+									prompted to save changes before the files close.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/save-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Save (Ctrl+S)</emphasis> - Saves the contents of 
+										the active editor.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/save-as-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Save As</emphasis> - Enables you to save the 
+										contents of the active editor under another file name or location. 
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/save-all-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Save All (Shift+Ctrl+S)</emphasis> - Saves the 
+										contents of all open editors.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Move…</emphasis> - Launches a Refactor > Move resource dialog..
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Rename… (F2)</emphasis> - Launches a Refactor > Rename resource dialog 
+									if resource selected, else in-line rename is preformed.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Refresh</emphasis> - Refreshes the resource with the 
+									contents in the file system.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Convert Line Delimiters To</emphasis> - Alters the 
+										line delimiters for the selected files. Changes are immediate and persist until you change 
+										the delimiter again - you do not need to save the file.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/print-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Print (Ctrl+P)</emphasis> - Prints the contents 
+										of the active editor. In the Teiid Designer, this action prints the diagram in the selected editor. 
+										Allows control over orientation (portrait or landscape), scaling, 
+										margins and page order. User can also specify a subset of the pages to 
+										print (i.e., 2 through 8).
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Switch Workspace</emphasis> - Opens the 
+										<emphasis role="bold">Workspace Launcher</emphasis>, from which you can switch to a 
+										different workspace. This restarts the <emphasis role="bold">Workbench</emphasis>.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Restart</emphasis> - Exits and restarts the <emphasis role="bold">Workbench</emphasis>.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/import.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Import</emphasis> - Launches the 
+										<emphasis role="bold">Import Wizard</emphasis> which provides several ways to 
+										construct or import models..
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/export.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Export</emphasis> - Launches the 
+										<emphasis role="bold">Export Wizard</emphasis> which provides options for exporting model data.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Properties (Alt+Enter)</emphasis> - Opens the 
+										<emphasis role="bold">Properties</emphasis> dialog for the currently selected resource.
+										These will include path to the resource on the file system, date of last modification and its
+										writable or executable state.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Most Recent Files List</emphasis> - Contains a list of the most 
+									recently accessed files in the <emphasis role="bold">Workbench</emphasis>. You can open 
+									any of these files from the <emphasis role="bold">File</emphasis> menu by simply selecting the file name.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Exit</emphasis> - Closes and exits the <emphasis role="bold">Workbench</emphasis>.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+		</section>
+		
+		<!-- ####### EDIT MENU ######################################## -->
+	
+		<section id="edit-menu-section">
+			<title>Edit Menu</title>
+			<para>The <emphasis role="bold">Edit</emphasis> menu provides actions to manage the content, structure and 
+				properties of your model and project resources. The figure below represents the Edit menu presented when
+				a metadata model is selected.</para>
+			
+			<figure>
+				<title>Edit Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-edit.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						The <emphasis role="bold">Edit</emphasis> menu contains the following actions:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">New > Child</emphasis> - This menu is created dynamically
+								 to support the creation of whatever types of child objects can be created under the selected object.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">New > Sibling</emphasis> - This menu is created dynamically
+									 to support the creation of whatever types of sibling objects can be created 
+									 under the same parent as the selected object
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">New > Association</emphasis> - This menu is created
+									 dynamically to support the creation of whatever types of associations can be created 
+									 with the selected object.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Modeling ></emphasis> - This menu is created dynamically. 
+								Various modeling operations are presented based on selected model object type. 
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/undo-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Undo</emphasis> - Reverses the effect of the 
+									most recent command.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/redo-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Redo</emphasis> - Reapplies the most recently
+									 undone command.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/cut-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Cut</emphasis> - Deletes the selected object(s) 
+									and copies it to the clipboard.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/copy-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Copy</emphasis> - Copies the selected 
+									object(s) to the clipboard.
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/paste-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Paste</emphasis> - Pastes the contents of the 
+									clipboard to the selected context.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Paste Special...</emphasis> - Provides additional paste 
+									capabilities for complex clipboard objects. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Clone</emphasis> - Duplicates the selected object in the same 
+									location with the same name. User is able to rename the new object right in the tree. 
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									<inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/delete-edit.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Delete</emphasis> - Deletes the selected object(s).
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Select All</emphasis> - Select All objects in current view. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Rename</emphasis> - Allows a user to rename an object in the tree. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Find/Replace</emphasis> - Launches dialog that can be used to search 
+									in the current text view, such as a <emphasis role="bold">Transformation Editor</emphasis>. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Open</emphasis> - Opens the selected object in the appropriate editor. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Edit</emphasis> - Opens the selected object in the appropriate 
+									specialized editor, such as the Choice Editor or Recursion Editor.. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Add Bookmark...</emphasis> - This command adds a bookmark in the 
+									active file on the line where the cursor is currently displayed. 
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Add Task...</emphasis> - This command adds a task in the active 
+									file on the line where the cursor is currently displayed. 
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+		</section>
+		
+		<!-- ####### REFACTOR MENU ######################################## -->
+	
+		<section id="refactor-menu-section">
+			<title>Refactor Menu</title>
+			<para>The <emphasis role="bold">Refactor</emphasis> menu provides Teiid Designer specific actions for file-level changes
+				to the models.</para>
+			
+			<figure>
+				<title>Refactor Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-refactor.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						The <emphasis role="bold">Refactor</emphasis> menu contains the following actions: 
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Undo</emphasis> - Undo the last refactor command.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Redo</emphasis> - Redo the last undone refactor command.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Move</emphasis> - Move a model from one container (folder or project) 
+									to another.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Rename</emphasis> - Rename a model.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+		</section>
+		<!-- ####### NAVIGATE MENU ######################################## -->
+	
+		<section id="navigate-menu-section">
+			<title>Navigate Menu</title>
+			<para>Teiid Designer currently does not contribute actions to the Navigate menu. See Eclipse documention for details.</para>
+			
+			<figure>
+				<title>Navigate Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-navigate.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### SEARCH MENU ######################################## -->
+	
+		<section id="search-menu-section">
+			<title>Search Menu</title>
+			<para>The <emphasis role="bold">Search</emphasis> menu presents several specific search options.</para>
+			
+			<figure>
+				<title>Search Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-search.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Teiid Designer contributes a sub-menu (i.e.  Teiid Designer > ) to the main search menu, as shown above.</para>
+			<figure>
+				<title>Search Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/teiid-designer-search-menu.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						The individual actions in the Teiid Designer sub-menu are described below:
+						<itemizedlist>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/relationship-search-page.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Relationship...</emphasis> - Launches the 
+									Search dialog and auto-selects the Relationships tab.  User can search for models in the workspace 
+									by specifying a relationship type, participant locations, and/or names containing sprcified
+									text.  Search results appear in 
+									the <xref linkend="search-results-view" /> view, 
+									and double-clicking a result will open that model in the appropriate editor.
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/search-transformation.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Transformations...</emphasis> - Launches the 
+									Transformation Search dialog.  User can search models in 
+									the workspace for matching SQL text.  Search results appear in the 
+									dialog and user can select and view SQL as well as open desired transformations for editing.
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/metadata-search.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Metadata...</emphasis> - Launches the 
+									Search dialog.  User can search for models in the workspace by 
+									specifying an Object Type, and/or a Data Type, and/or a property value.  
+									Search results appear in 
+									the <xref linkend="search-results-view" /> view, 
+									and double-clicking a result will open that model in the appropriate editor.
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/open-type.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Find Model Object</emphasis> - Launches the 
+									Find Model Object dialog, which can be used to find an object in the 
+									workspace by specifying all or part of its name.  Selecting the object 
+									will open it in the appropriate editor.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### PROJECT MENU ######################################## -->
+	
+		<section id="project-menu-section">
+			<title>Project Menu</title>
+			<figure>
+				<title>Project Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-project.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						The individual actions in the Project menu are described below:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Open Project</emphasis> - Launches the <emphasis role="bold">Open Project</emphasis> dialog.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Close Project</emphasis> - Closes the currently selected project(s).
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/build-exec.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Build All</emphasis> - Validates the contents of the entire workspace. 
+									Any errors or warnings will appear in the <emphasis role="bold">Problems View</emphasis>.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Project</emphasis> - Validates the contents of the selected 
+									project(s).  Any errors or warnings will appear in the 
+									<emphasis role="bold">Problems View</emphasis>.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Working Set</emphasis> - Validates the contents of the 
+									selected working set. Any errors or warnings will appear in the 
+									<emphasis role="bold">Problems View</emphasis>.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Clean..</emphasis> - Launches the Clean dialog.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Automatically</emphasis> - Sets the <emphasis role="bold">Build Automatically</emphasis> flag 
+									on or off.  When on, a check-mark appears to the left of this menu item.  When this is 
+									turned on, validation of changes is done automatically each time a <emphasis role="bold">Save</emphasis> is done.
+								</para>
+							</listitem>
+	
+							<listitem>
+								<para><emphasis role="bold">Clone Project</emphasis> - Launches the 
+									<emphasis role="bold">Clone Project</emphasis> dialog.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Project Imports</emphasis> - Reconciles all model import 
+									dependencies for models contained within the selected project.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build All Imports</emphasis> - Reconciles all model import 
+									dependencies for models contained within the workspace.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Packages</emphasis> - TBD
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Validate Model Transformations</emphasis> - Revalidates all 
+									transformations for the selected view model.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Properties</emphasis> - Displays the operating system’s file 
+									properties dialog for the selected file.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<!-- ####### METADATA MENU ######################################## -->
+	
+		<section id="metadata-menu-section">
+			<title>Metadata Menu</title>
+			<para>The <emphasis role="bold">Metadata</emphasis> menu provides Teiid Designer-specific actions.</para>
+			
+			<figure>
+				<title>Metadata Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-metadata.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<itemizedlist>
+				<listitem>
+					<para>
+						The <emphasis role="bold">Metadata</emphasis> menu contains the following actions:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Update Model from Source</emphasis> - If the selected model is a 
+									relational source model that was originally created via JDBC Import, then the model will be
+									updated based on changes in the database schema.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Show System Catalog</emphasis> - Opens the 
+									<xref linkend="system-catalog-view" />.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Show Datatype Hierarchy</emphasis> - Opens the 
+									<xref linkend="system-catalog-view" />.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Re-resolve References</emphasis> - Analyzes references within models to other
+									model components.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Convert to Enterprise Datatypes</emphasis> - Adds an additional 
+									property to simple datatypes within your selected schema model to label them as enterprise
+									datatypes.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Show Model Statistics</emphasis> - Opens the 
+									<emphasis role="bold">Model Statistics</emphasis> dialog for the selected model.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Build Model Imports</emphasis> - Reconciles all model import 
+									dependencies for the selected model.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	
+		<!-- ####### RUN MENU ######################################## -->
+	
+		<section id="run-menu-section">
+			<title>Run Menu</title>
+			<para>Teiid Designer currently does not contribute actions to the Run menu. See Eclipse documention for details.</para>
+			
+			<figure>
+				<title>Window Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-run.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>	
+		
+		<!-- ####### WINDOW MENU ######################################## -->
+	
+		<section id="window-menu-section">
+			<title>Window Menu</title>
+			<para>The <emphasis role="bold">Window</emphasis> menu shown below contains no Teiid Designer-specific actions. See
+				Eclipse Workbench documentation for details.</para>
+			
+			<figure>
+				<title>Window Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-windows.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>The Preferences...  action launches the Preferences dialog, which can be used 
+				to set preferences and default values for many features of Teiid Designer.</para>
+	
+			<para>Note that these menu items may vary depending on your set of installed Eclipse features and plugins.</para>
+	
+			<para>If you wish to customize a perspective to include one or more Teiid Designer views, 
+				select the Show View > Other...  action and expand the Teiid Designer category 
+				to show the available views.</para>
+			<figure>
+				<title>Show View Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/show-view-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		
+		<!-- ####### HELP MENU ######################################## -->
+	
+		<section id="help-menu-section">
+			<title>Help Menu</title>
+			<para>The <emphasis role="bold">Help Menu</emphasis> shown below contains no Teiid Designer-specific actions. See
+				Eclipse Workbench documentation for details.</para>
+			
+			<figure>
+				<title>Help Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/main-menu-help.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<itemizedlist>
+				<listitem>
+					<para>The individual actions are described below:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis>Welcome</emphasis> - Shifts to the Welcome perspective, which contains links to documentation, examples and ‘how-to’ starting points.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Help Contents</emphasis><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/help-contents.png"/>
+										</imageobject>
+									</inlinemediaobject> - Launches the Help Window.  All of Designer’s online documentation is accessible from there as well.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Search</emphasis><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/help-search.png"/>
+										</imageobject>
+									</inlinemediaobject>  - Launches the Help Search view, which can be used to search for phrases in the documentation.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Dynamic Help</emphasis> - Opens the  docked  dynamic help  view.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Key Assist</emphasis> (Ctrl-Shift-L) ... - Launches a dialog describing existing key assist bindings.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Tips and Tricks...</emphasis> - Launches a dialog to select one of any contributed "Tips and Tricks" help pages.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Cheat Sheets...</emphasis> - Launches a dialog to select one of any contributed Eclipse cheat sheets.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Project Examples..</emphasis>. - A JBoss contributed action which provides quick access to import various project examples into your workspace.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Report Problem</emphasis> - A JBoss contributed action which provides simple problem reporting.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Check for Updates...</emphasis> - provides access to retrieve updates to installed Eclipse software.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>Install New Software...</emphasis> - provides access to install new software into your workbench.
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis>About XXXXX</emphasis> - Launches the About dialog.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+
+</chapter>

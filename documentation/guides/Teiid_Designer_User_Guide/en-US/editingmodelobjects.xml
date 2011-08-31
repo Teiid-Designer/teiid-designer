@@ -1498,31 +1498,5 @@
 			</figure>
 		</section>
 	</section>
-	<section id="manage-extension-properties-section">
-		<title>Manage Extension Properties</title>
-		<para>In order to facilitate custom property usage for relational models and objects such as tables, columns, 
-		and procedures, a dialog to create extended properties was added. These properties are exposed 
-		in Teiid as indexed metadata and can be read by your custom translator.</para>
-		
-		<para>In 7.4, you can add, edit and delete these extended properties by selecting a relational model or model 
-		object using the <emphasis role="bold">Modeling > Manage Extended Properties</emphasis> action. 
-		The menu option and dialog is shown below</para>
-		<figure>
-			<title>Manage Extended Properties Menu Option</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/manage-extended-properties-menu.png" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-		<figure>
-			<title>Manage Extended Properties Dialog</title>
-			<mediaobject>
-				<imageobject>
-					<imagedata fileref="images/screencaps/manage-extended-properties-dialog.png" />
-				</imageobject>
-			</mediaobject>
-		</figure>
-	</section>
 	
 </chapter>

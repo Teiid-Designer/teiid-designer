@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### Metadata-specific Modeling Chapter ######################################## -->
+
+<chapter id="metadata-specific-modeling-chapter">
+	<title>Metadata-specific Modeling</title>
+	<para>This chapter discusses various features targeted at defining and managing metamodel-specific objects.</para>
+	
+	<!-- ####### Relational Source Modeling Section ######################################## -->
+	<section id="relational-source-modeling-section">
+		<title>Relational Source Modeling</title>
+		<section id="source-function-section">
+			<title>Source Function</title>
+			<para>To improve ability to utilize database functions within View transformations, a new 
+			 <emphasis role="bold"> New Child > Source Function</emphasis> action and wizard was added to assist in building a source 
+			 procedure that conforms to a function structure, including input and output parameters. 
+			 Prior to Teiid Designer 7.5, these functions were required to be modeled as User Defined functions.</para>
+	
+			<para>Running the action will display the <emphasis role="bold">Create New Source Function</emphasis> dialog. 
+			Enter your database function name, define input parameters including datatype and length, specify output parameter info, 
+			set options and click <emphasis role="bold">OK</emphasis>.</para>
+			
+			<figure>
+				<title>New Source Function Action</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/source-function-action.png"
+						/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>The resulting source function will be added to your model and will be represented
+				by the 
+				<inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/source-function.png"/>
+					</imageobject>
+				</inlinemediaobject> icon.
+			</para>
+			<figure>
+				<title>Generate a JBossWS-CXF War Web Service Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/create-source-function-dialog.png"
+						/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>When finished, the new source function will be displayed in your model's package diagram.</para>
+			<figure>
+				<title>New Source Function In Package Diagram</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/create-source-function-diagram.png"
+						/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+			
+	</section>
+	
+	<!-- ####### Relational View Modeling Section ######################################## -->
+	<section id="relational-view-modeling-section">
+		<title>Relational View Modeling</title>
+		<para>This section contains descriptions of various features related to creating and managing relational view 
+		model objects.</para>
+		
+		<!-- ####### MATERIALIZED VIEWS ######################################## -->
+		<section id="create-materialized-views-section">
+			<title>Create Materialized Views</title>
+			<para>For any relational view table you can enable it's materialized view option by setting the 
+			 <emphasis role="bold">Materialized</emphasis> property to TRUE and setting the 
+			 <emphasis role="bold">Materialized Table</emphasis> reference, as shown in the figure below. Note that 
+			 you are required to have already created your relational tables.
+			</para>
+			<figure>
+				<title>Materialized Table Properties</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/materialized-view-property.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Designer includes a feature to assist in quickly creating materialized relational tables based
+			on your existing view tables.</para>
+			<itemizedlist>
+				<listitem>
+					<para> To create materialized views: 
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - Right-click on one or more view tables
+								in the <xref linkend="model-explorer-view" /> and select the <emphasis
+									role="bold">Modeling > Create Materialized Views</emphasis>
+								action.</para>
+							<para>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/create-materialized-views-action.png"/>
+									</imageobject>
+								</mediaobject>
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - In the <emphasis role="bold">Create Materialized View Model</emphasis> dialog
+								specify or select a target relational model for your generated relational tables.</para>
+							<para>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/create-materialized-views-dialog.png"/>
+									</imageobject>
+								</mediaobject>
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2a </emphasis> - Selecting the browse '...' button displays
+							the <emphasis role="bold">Relational Model Selector dialog</emphasis> where you select an
+							existing relational model or specify a unique name for a new model.</para>
+							<para>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/create-materialized-views-select-model.png"/>
+									</imageobject>
+								</mediaobject>
+							</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis role="bold">OK</emphasis> to
+								create relational tables corresponding to your selected view tables and automatically set the 
+								<emphasis role="bold">Materialized</emphasis> property to TRUE and the 
+			 					<emphasis role="bold">Materialized Table</emphasis> reference value to your newly generated table.</para>
+						</listitem>
+					</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+			
+			<para>When finished your view tables will be configured with their new materialized properties and the 
+			corresponding relational tables will be shown in their package diagram.</para>
+			<figure>
+				<title>Materialized Table Properties</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/materialized-tables-diagram.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+		</section>
+	</section>
+	
+	<!-- ####### XML Document Modeling Section ######################################## -->
+	<section id="xml-document-modeling-section">
+		<title>XML Document Modeling</title>
+		<section id="create-xml-views-from-schema-section">
+			<title>Create XML View Documents from schema</title>
+			<para>You can create XML View Documents by selecting an element in the Model Explorer and selecting
+				the <emphasis role="bold">Modeling > Create XML View Documents</emphasis> action.
+			</para>
+			<figure>
+				<title>Create XML View Documents Action</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/create-xml-view-documents-action.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>The action will query you for a target XML Document model. You can either select an existing
+			XML Document model from your workspace, or enter a unique model name and the wizard will create
+			a new model for you.</para>
+			
+			<figure>
+				<title>Select or Create XML View Model Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/select-or-create-xml-view-model-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>After selecting or creating your new XML Document model, the XML Document builder page will be
+			displayed. This page is explained in greater detail in <xref linkend="xml-document-view-from-schema-section" />section.</para>
+			
+			<figure>
+				<title>Build XML Documents From XML Schema Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/build-xml-documents-wizard-page.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</section>
+		<!--
+		<section id="new-mapping-class-section">
+			<title>Create Mapping Class</title>
+		</section>
+		<section id="split-mapping-class-section">
+			<title>Split Mapping Class</title>
+		</section>
+		<section id="merge-mapping-classes-section">
+			<title>Merge Mapping Classes</title>
+		</section>
+		<section id="new-staging-table-section">
+			<title>Create Staging Table</title>
+		</section>
+		-->
+	</section>
+	
+	<!-- ####### User-defined Functions Modeling Section ######################################## -->
+	<!--
+	<section id="user-defined-functions-modeling-section">
+		<title>User-defined Function Modeling</title>
+	</section>
+	-->
+	
+	<!-- ####### Web Service Generators Section ######################################## -->
+	<section id="web-service-modeling-section">
+		<title>Web Services Modeling</title>
+		<section id="create-web-service-models">
+			<title>Create Web Service Action</title>
+
+			<para>This method is recommended for experienced users for consistent and rapid deployment of <emphasis role="bold">Web</emphasis> 
+				services designed to query relational sources. It provides detailed control of all 
+				<emphasis role="bold">Web</emphasis> service interfaces, operations and required transformations from 
+				<emphasis role="bold">XML Views</emphasis></para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						To create a Web service model from relational models or objects:
+						<itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Select any combination of relational 
+									models, tables and/or procedures in the <xref linkend="model-explorer-view" /> tree.</para>
+								<note>
+									<para>It is recommended that the user selects single source models, which 
+										enables auto-naming of input/output schema and Web service models in \
+										<emphasis role="bold">Step 3</emphasis>.</para>
+								</note>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Right-click select 
+									<emphasis role="bold">Modeling > Create Web Service</emphasis> action <inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/create-web-service.png"/>
+										</imageobject>
+									</inlinemediaobject>.</para>
+								<figure>
+									<title>Create Web Service Action</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/create-web-service-action.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - In the <emphasis role="bold">Create Web Service</emphasis> 
+									dialog, specify file names for the generated <emphasis role="bold">Input Schema</emphasis> file, 
+									<emphasis role="bold">Output Schema</emphasis> file and <emphasis role="bold">Web service</emphasis> model. 
+									Change options as desired. Click <emphasis role="bold">Finish</emphasis> when done.</para>
+								<figure>
+									<title>Create Web Service Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/create-web-service-dialog.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 4 </emphasis> - When model generation is complete, 
+									a confirmation dialog should appear. Click <emphasis role="bold">OK</emphasis>.</para>
+								<figure>
+									<title>Generation Completed Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/create-web-service-confirmation-dialog.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+		
+		<section id="war-generation-section">
+			<title>Web Services War Generation</title>
+			<para>Teiid Designer allows you to expose your VDBs via a SOAP or REST interface. JBossWS-CXF or
+				RESTEasy wars can be generated based on models within your VDBs. This section describes these 
+				wizards in detail.</para>
+			<section id="generate-jbossws-cxf-war-section">
+				<title>Generating a JBossWS-CXF War </title>
+				
+				<para>The Teiid Designer provides web service generation capabilities in the form of a JBossWS-CXF
+					war. Once you have added your <emphasis role="bold">Web Service Models</emphasis> as
+					described in <xref linkend="new-web-service-view-model"/> to your <emphasis role="bold"
+						>VDB</emphasis>, deployed the <emphasis role="bold">VDB</emphasis> to a running
+					Teiid instance and created your VDB's data source, you are ready to expose the web
+					service using the generated war.</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para> To generate a new JBossWS-CXF war using the VDB: <itemizedlist>
+							<listitem>
+								<para><emphasis role="bold">Step 1 </emphasis> - Right-click on the
+									VDB containing your web service model(s) and select the <emphasis
+										role="bold">Modeling > Generate JBossWS-CXF War</emphasis>
+									action.</para>
+								<para>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/generate-war-menu-option.png"/>
+										</imageobject>
+									</mediaobject>
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 2 </emphasis> - Fill in missing
+									properties in <emphasis role="bold">Web Service War Generation
+										Wizard</emphasis> shown below.</para>
+								<figure>
+									<title>Generate a JBossWS-CXF War Web Service Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/create-web-service-war.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+								<para>
+									<table frame="all">
+										<title>Field Descriptions</title>
+										<tgroup cols="2">
+											<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+											<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+											<thead>
+												<row>
+													<entry>Field Name</entry>
+													<entry>Description</entry>
+												</row>
+											</thead>
+											<tbody>
+												<row>
+													<entry>Name</entry>
+													<entry>The name of the generated war file.</entry>
+												</row>
+												<row>
+													<entry>Host</entry>
+													<entry>The server host name (or IP).</entry>
+												</row>
+												<row>
+													<entry>Port</entry>
+													<entry>The server port.</entry>
+												</row>
+												<row>
+													<entry>Connection JNDI Name</entry>
+													<entry>The JNDI connection name to the deployed
+														Teiid source VDB.</entry>
+												</row>
+												<row>
+													<entry>
+														<para>Security options </para>
+													</entry>
+													<entry>
+														<para>
+															<itemizedlist>
+																<listitem>
+																	<para><emphasis role="bold">None</emphasis> - no
+																		username/password required to connect to the VDB
+																		through the generated web service.</para>
+																</listitem>
+																<listitem>
+																	<para><emphasis role="bold">HTTP Basic</emphasis>
+																		- the specified security realm and role will be
+																		used. The default realm value is the realm that
+																		comes out-of-the-box with Teiid (<emphasis
+																			role="bold"><emphasis role="italic"
+																				>teiid-security</emphasis></emphasis>). The role
+																		needs to be defined in the appropriate security
+																		mechanism. In the case of Teiid, use the
+																		teiid-security-roles.properties file. When using
+																		HTTPBasic, a local Teiid connection using the
+																		PassthroughAuthentication property is required.
+																		See the Teiid user's manual for details on
+																		PassthroughAuthentication.</para>
+																</listitem>
+																<listitem>
+																	<para><emphasis role="bold">WS-Security</emphasis>
+																		- a password callback class will be generated for
+																		you which will validate that the username/password
+																		values you specified in the war generator dialog
+																		are passed in. This is meant to be a testing
+																		mechanism for your WS-Security enabled web service
+																		and your own security mechanism should be
+																		implemented in this class. All source code is
+																		included in the generated war along with the
+																		compiled class files.</para>
+																</listitem>
+															</itemizedlist>
+														</para>
+													</entry>
+												</row>
+												<row>
+													<entry>Target namespace</entry>
+													<entry>This is the target namespace that will be
+														used in the generated WSDL and subsequent
+														generated web service classes.</entry>
+												</row>
+												<row>
+													<entry>War File Save Location</entry>
+													<entry>The folder where the generated WAR file
+														should be saved.</entry>
+												</row>
+											</tbody>
+										</tgroup>
+									</table>
+								</para>
+							</listitem>
+							<listitem>
+								<para><emphasis role="bold">Step 3 </emphasis> - Click <emphasis
+									role="bold">OK</emphasis> to generate the web service war.
+									When war generation is complete, a confirmation dialog should
+									appear. Click <emphasis role="bold">OK</emphasis>.</para>
+								<figure>
+									<title>Generation Completed Dialog</title>
+									<mediaobject>
+										<imageobject>
+											<imagedata fileref="images/screencaps/generate-war-wizard-confirmation-dialog.png"/>
+										</imageobject>
+									</mediaobject>
+								</figure>
+							</listitem>
+						</itemizedlist>
+						</para>
+					</listitem>
+				</itemizedlist>
+			</section>
+			<section id="generate-resteasy-war-section">
+				<title>Generating a RESTEasy War </title>
+				
+				<para>In Teiid Designer, it is also possible to expose your VDBs over REST using a generated
+					RESTEasy war. Also, if your target virtual model has update, insert and delete SQL
+					defined, you can easily provide CRUD capabilities via REST. Accepted inputs into the
+					generated REST operations are URI path parameters and/or XML. The only output at this
+					time is an XML document.</para>
+				
+				<itemizedlist>
+					<listitem>
+						<para><emphasis role="bold">Step 1 </emphasis>In a virtual model, add a procedure(s) that
+							returns an XMLLiteral object. The target of your procedure can be any models in
+							your VDB. Here is an example procedure that selects from a virtual table
+							(VirtualBooks) and returns the results as an XMLLiteral: </para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/sql-transformation-for-get-procedure.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+						<para>Notice the syntax used to convert the relation table result of the select from
+							VirtualBooks, to an XMLLiteral. All XML functions are documented in the
+								<emphasis role="bold">Scalar Functions</emphasis> chapter of the <emphasis
+								role="bold">Teiid Reference Guide</emphasis>.</para>
+						
+						<para>Here is an example of an update procedure that will insert a row and return an XMLLiteral
+							object:</para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/sql-transformation-for-put-procedure.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+						<para>The input format for the REST procedure could be URI parameters, an XML document, or some
+							combination of both. When using an XML document your root node should be
+								<emphasis role="bold">&lt;input&gt;</emphasis> and the XML nodes should
+							correspond to order of the procedure's input parameters. For example, here is
+							the input for the above insert procedure:</para>
+						<figure>
+							<title>Sample XML Input</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/xml-input-example.png"/>
+								</imageobject>
+							</mediaobject>
+						</figure>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 2 </emphasis> - Now we need to identify our procedure as REST
+							eligible. To do this we add two extended properties to the procedure via the
+								<emphasis role="bold">Modeling->Manage Extended Properties</emphasis>
+							context menu option. </para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/manage-extended-properties-menu.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+						<para> The two required properties are defined in the table below: <table frame="all">
+								<title>Required Extended Properties for RESTful Procedures</title>
+								<tgroup cols="2">
+									<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+									<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+									<thead>
+										<row>
+											<entry>Property Name</entry>
+											<entry>Description</entry>
+										</row>
+									</thead>
+									<tbody>
+										<row>
+											<entry>REST-METHOD</entry>
+											<entry>The HTTP method that will determine the REST mapping of
+												this procedure. Supported methods are: GET, PUT, POST and
+												DELETE</entry>
+										</row>
+										<row>
+											<entry>URI</entry>
+											<entry>The resource path to the procedure. For example, if you use “books/{isbn}” as your
+												URI value for a procedure,
+												http://{host}:{port}/{war_context}/{model_name}/books/123
+												would execute this procedure and pass 123 in as a parameter. </entry>
+										</row>
+									</tbody>
+								</tgroup>
+						</table>
+						</para>
+						<para>Here's what the above example would look like in the Extended Properties dialog: </para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/procedure-rest-extended-properties.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+						<para>Note that the generated URI will have the model name included as part of the path, so full
+							URL would look like this: <emphasis role="bold"
+								>http://{host}:{port}/{war_context}/{model_name}/books/123</emphasis>. If
+							you wanted a REST service to return all books, you would write your procedure
+							just as it is above, but remove the input parameter. The URI property would then
+							just be <emphasis role="bold">'books'</emphasis> (or whatever you want) and the
+							URL would be<emphasis role="bold">
+								http://{host}:{port}/{war_context}/{model_name}/books</emphasis>.</para> 
+						<para>Once you have added all of your procedures along with the required extended properties, be
+							sure and add the model to your VDB or synchronize if it's already included in
+							the VDB. You will then need to re-deploy the VDB. </para>
+							<important><para><emphasis>If you redeploy your VDB during development, you may receive an <emphasis
+										role="bold">"Invalid Session Exception" </emphasis>due to a stale
+									connection obtained for the pool. This can be corrected by flushing the
+									data source or, alternatively, you could add a test query to your VDB
+									connection's -ds.xml file. This will insure you get a valid connection
+									after redeploying your VDB. The syntax for the test query is as follows:
+										<emphasis role="bold"><emphasis role="italic"
+											>&lt;check-valid-connection-sql&gt;some arbitrary
+											sql&lt;/check-valid-connection-sql&gt;</emphasis></emphasis>"
+								</emphasis></para></important>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - 3. If you have not already done so, you will
+							need to create a data source for your VDB. This can be done in the Teiid View of
+							Designer. Right-click on your deployed VDB and select Create Data Source. The
+							Generate REST WAR dialog will ask you for the <emphasis role="bold">JNDI
+								name</emphasis> for your created source so that it can connect to your
+							VDB.</para>
+					</listitem>			
+					<listitem>
+						<para><emphasis role="bold">Step 4 </emphasis> - Right-click on the VDB containing your virtual
+							model(s) with REST eligible procedures and select the <emphasis role="bold"
+								>Modeling > Generate RESTEasy War</emphasis> action. If there are no
+							procedures that are REST eligible, the <emphasis role="bold">"Generate RESTEasy
+								War"</emphasis> option will not be enabled. </para>
+						<para>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/create-resteasy-war-menu.png"/>
+								</imageobject>
+							</mediaobject>
+						</para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 5 </emphasis> - Fill in missing properties in the <emphasis
+								role="bold">REST War Generation Wizard</emphasis> shown below.</para>
+						<figure>
+							<title>Generate a REST WAR War File Dialog</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/screencaps/generate-resteasy-war-dialog.png"/>
+								</imageobject>
+							</mediaobject>
+						</figure>
+									<para>
+										<table frame="all">
+											<title>Field Descriptions</title>
+											<tgroup cols="2">
+												<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+												<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+												<thead>
+													<row>
+														<entry>Field Name</entry>
+														<entry>Description</entry>
+													</row>
+												</thead>
+												<tbody>
+													<row>
+														<entry>Name</entry>
+														<entry>The name of the generated war file.</entry>
+													</row>
+													<row>
+														<entry>Connection JNDI Name</entry>
+														<entry>The JNDI connection name to the deployed
+														Teiid source VDB.</entry>
+													</row>
+													<row>
+														<entry>War File Save Location</entry>
+														<entry>The folder where the generated WAR file
+														should be saved.</entry>
+													</row>
+										<row>
+											<entry>Include RESTEasy Jars in lib Folder of WAR</entry>
+											<entry>If selected, the RESTEasy jars and there dependent jars
+												will be included in the lib foled of the generated WAR. If
+												not selected, the jars will not be included. This should be
+												de-selected in environments where RESTEasy is installed in
+												the classpath of the server installation to avoid
+												conflicts.</entry>
+										</row>
+												</tbody>
+											</tgroup>
+										</table>
+									</para>
+								</listitem>
+								<listitem>
+									<para><emphasis role="bold">Step 6 </emphasis> - Click <emphasis role="bold">OK</emphasis> to
+							generate the REST war. When war generation is complete, a confirmation dialog
+							should appear. Click <emphasis role="bold">OK</emphasis>.</para>
+									<figure>
+										<title>Generation Completed Dialog</title>
+										<mediaobject>
+											<imageobject>
+												<imagedata fileref="images/screencaps/generate-rest-war-wizard-confirmation-dialog.png"/>
+											</imageobject>
+										</mediaobject>
+									</figure>
+								</listitem>
+				</itemizedlist>
+			</section>
+		</section>
+	</section>
+</chapter>

@@ -476,209 +476,206 @@
 		</section>
 	</section>
 	<section id="models-101-section">
-		<title>Models 101</title>
-		<para>
+		<title>It's all in the Modeling...</title>
+		
+		<para><emphasis role="bold">What Are Models?</emphasis></para>
+		
+		<para> A model is a representation of a set of information constructs.
+			A familiar model is the relational model, which defines tables
+			composed of columns and containing records of data. Another familiar
+			model is the XML model, which defines hierarchical data sets.</para>
+		<para> In Teiid Designer, models are used to define the entities, and
+			relationships between those entities, required to fully define the
+			integration of information sets so that they may be accessed in a
+			uniform manner, using a single API and access protocol. The file
+			   extension used for these models is <filename>.xmi</filename> ( Example:
+			NorthwindOracle.xmi ) which adheres to the XMI syntax defined by the
+			OMG.</para>
+		<para> Below is an example of the partial contents of a model file.
 		</para>
-		<section id="intro-what-are-models">
-			<title>What Are Models</title>
-			<para> A model is a representation of a set of information constructs.
-				A familiar model is the relational model, which defines tables
-				composed of columns and containing records of data. Another familiar
-				model is the XML model, which defines hierarchical data sets.</para>
-			<para> In Teiid Designer, models are used to define the entities, and
-				relationships between those entities, required to fully define the
-				integration of information sets so that they may be accessed in a
-				uniform manner, using a single API and access protocol. The file
-				   extension used for these models is <filename>.xmi</filename> ( Example:
-				NorthwindOracle.xmi ) which adheres to the XMI syntax defined by the
-				OMG.</para>
-			<para> Below is an example of the partial contents of a model file.
-			</para>
-			<figure>
-				<title>Sample Model File</title>
-				<mediaobject><imageobject>
-					<imagedata fileref="images/screencaps/sample-model-file.png"/>
-				</imageobject></mediaobject>
-			</figure>
-			<para> Model files should never be modified "by hand". While it is
-				possible to do so, there is the possibility that you may corrupt the
-				file such that it cannot be used within the Teiid Designer system.</para>
-			<para> The fundamental models in Teiid Designer define the structural and
-				data characteristics of the information contained in data sources.
-				These are referred to as source models (represented by <inlinemediaobject>
-					<imageobject>
-						<imagedata fileref="images/icons/model.png"/>
-					</imageobject>
-				</inlinemediaobject> ). Teiid Designer
-				uses the information in source models to federate the information in
-				multiple sources, so that from a user's viewpoint these all appear to
-				be in a single source.</para>
-			<figure>
-				<title>Model Internals</title>
-				<mediaobject><imageobject>
-					<imagedata fileref="images/screencaps/model-internals.png"/>
-				</imageobject></mediaobject>
-			</figure>
-			<para> In addition to source models, Teiid Designer provides the ability to
-				define a variety of view models(represented by <inlinemediaobject>
-					<imageobject>
-						<imagedata fileref="images/icons/view-model.png"/>
-					</imageobject>
-				</inlinemediaobject> ). These can be used to
-				define a layer of abstraction above the physical (or source) layer, so
-				that information can be presented to end users and consuming
-				applications in business terms rather than as it is physically stored.
-				Views are mapped to sources using transformations between models.
-				These business views can be in a variety of forms:</para>
-			<itemizedlist>
-				<listitem> <para>Relational Tables and Views</para> </listitem>
-				<listitem> <para>XML</para> </listitem>
-				<listitem> <para>Web services</para> </listitem>
-				<listitem> <para>Functions</para> </listitem>
-			</itemizedlist>
-			<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
-			<para> A third model type, logical, provides the ability to define
-				models from a logical or structural perspective.</para>
-		</section>
-		<section id="intro-how-is-a-model-defined">
-			<title>How is a Model Defined?</title>
+		<figure>
+			<title>Sample Model File</title>
+			<mediaobject><imageobject>
+				<imagedata fileref="images/screencaps/sample-model-file.png"/>
+			</imageobject></mediaobject>
+		</figure>
+		<para> Model files should never be modified "by hand". While it is
+			possible to do so, there is the possibility that you may corrupt the
+			file such that it cannot be used within the Teiid Designer system.</para>
+		<para> The fundamental models in Teiid Designer define the structural and
+			data characteristics of the information contained in data sources.
+			These are referred to as source models (represented by <inlinemediaobject>
+				<imageobject>
+					<imagedata fileref="images/icons/model.png"/>
+				</imageobject>
+			</inlinemediaobject> ). Teiid Designer
+			uses the information in source models to federate the information in
+			multiple sources, so that from a user's viewpoint these all appear to
+			be in a single source.</para>
+		<figure>
+			<title>Model Internals</title>
+			<mediaobject><imageobject>
+				<imagedata fileref="images/screencaps/model-internals.png"/>
+			</imageobject></mediaobject>
+		</figure>
+		<para> In addition to source models, Teiid Designer provides the ability to
+			define a variety of view models(represented by <inlinemediaobject>
+				<imageobject>
+					<imagedata fileref="images/icons/view-model.png"/>
+				</imageobject>
+			</inlinemediaobject> ). These can be used to
+			define a layer of abstraction above the physical (or source) layer, so
+			that information can be presented to end users and consuming
+			applications in business terms rather than as it is physically stored.
+			Views are mapped to sources using transformations between models.
+			These business views can be in a variety of forms:</para>
+		<itemizedlist>
+			<listitem> <para>Relational Tables and Views</para> </listitem>
+			<listitem> <para>XML</para> </listitem>
+			<listitem> <para>Web services</para> </listitem>
+			<listitem> <para>Functions</para> </listitem>
+		</itemizedlist>
+		<para>For full list of supported model types see <xref linkend="newmodels-chapter" /></para>
+		<para> A third model type, logical, provides the ability to define
+			models from a logical or structural perspective.</para>
 
-			<para>
-			    Models are defined using Teiid Designer in various ways:
-			</para>
-			<itemizedlist>
-				<listitem> 
-					<para>Created via importing source data characteristics. 
-						(see <xref linkend="importers-chapter" />)</para> 
-				</listitem>
-				<listitem> 
-					<para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
-				</listitem>
-				<listitem> 
-					<para>Transforming or copying from one model into another
-						 (see <xref linkend="newmodels-chapter" /> options)</para> 
-				</listitem>
-				<listitem> <para>Various custom actions</para></listitem>
-			</itemizedlist>
-		</section>
-		<section id="intro-model-classes-and-types">
-			<title>Model Classes and Types</title>
+		<para><emphasis role="bold">How is a Model Defined?</emphasis></para>
+
+		<para>
+		    Models are defined using Teiid Designer in various ways:
+		</para>
+		<itemizedlist>
+			<listitem> 
+				<para>Created via importing source data characteristics. 
+					(see <xref linkend="importers-chapter" />)</para> 
+			</listitem>
+			<listitem> 
+				<para>Manual creation via <xref linkend="newmodels-chapter" /></para> 
+			</listitem>
+			<listitem> 
+				<para>Transforming or copying from one model into another
+					 (see <xref linkend="newmodels-chapter" /> options)</para> 
+			</listitem>
+			<listitem> <para>Various custom actions</para></listitem>
+		</itemizedlist>
+
+		<para><emphasis role="bold">Model Classes and Types</emphasis></para>
+		
+		<para>Teiid Designer can be used to model a variety of classes of
+			models. Each of these represent a conceptually different
+			classification of models.</para>
+		<itemizedlist>
+			<listitem> 
+				<para><emphasis role="bold">Relational</emphasis> - Model data that can be represented in table –
+					columns and records – form. Relational models can represent structures
+					found in relational databases, spreadsheets, text files, or simple Web
+					services.</para>
+			</listitem>
+			<listitem> 
+				<para><emphasis role="bold">XML</emphasis> - Model that represents the basic structures of XML documents.
+					These can be “backed” by XML Schemas. XML models represent nested
+					structures, including recursive hierarchies.</para>
+			</listitem>
+			<listitem> 
+				<para><emphasis role="bold">XML Schema</emphasis> - W3C
+					standard for formally defining the structure and constraints of XML
+					documents, as well as the datatypes defining permissible values in XML
+					documents.</para>
+			</listitem>
+			<listitem> 
+				<para><emphasis role="bold">Web Services</emphasis> - which define Web service
+					interfaces, operations, and operation input and output parameters (in
+					the form of XML Schemas).</para>
+			</listitem>
+			<listitem> 
+				<para><emphasis role="bold">Model Extensions</emphasis> - for defining property
+					name/value extensions to other model classes.</para>
+			</listitem>
+			<listitem> 
+				<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
+					user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
+			</listitem>
+		</itemizedlist>
+
+		<para><emphasis role="bold">Models and VDBs</emphasis></para>
+
+		<para>Models used for data integration are packaged into a virtual
+			database (VDB). The models must be in a complete and consistent state
+			when used for data integration. That is, the VDB must contain all the
+			models and all resources they depend upon. VDB's are the transport mechanism to expose
+			both the metadata to query against on a server and the corresponding references to the data sources
+			and connections required to perform the actual DB queries. (See the 
+			<xref linkend="vdb-editor-section" /> section)</para>
 			
-			<para>Teiid Designer can be used to model a variety of classes of
-				models. Each of these represent a conceptually different
-				classification of models.</para>
-			<itemizedlist>
-				<listitem> 
-					<para><emphasis role="bold">Relational</emphasis> - Model data that can be represented in table –
-						columns and records – form. Relational models can represent structures
-						found in relational databases, spreadsheets, text files, or simple Web
-						services.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">XML</emphasis> - Model that represents the basic structures of XML documents.
-						These can be “backed” by XML Schemas. XML models represent nested
-						structures, including recursive hierarchies.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">XML Schema</emphasis> - W3C
-						standard for formally defining the structure and constraints of XML
-						documents, as well as the datatypes defining permissible values in XML
-						documents.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">Web Services</emphasis> - which define Web service
-						interfaces, operations, and operation input and output parameters (in
-						the form of XML Schemas).</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">Model Extensions</emphasis> - for defining property
-						name/value extensions to other model classes.</para>
-				</listitem>
-				<listitem> 
-					<para><emphasis role="bold">Function</emphasis> - The Function metamodel supports the capability to provide
-						user-defined functions, including binary source jars, to use in custom transformation SQL statements.</para>
-				</listitem>
-			</itemizedlist>
-		</section>
-		<section id="intro-models-and-vdbs">
-			<title>Models and VDBs</title>
-			<para>Models used for data integration are packaged into a virtual
-				database (VDB). The models must be in a complete and consistent state
-				when used for data integration. That is, the VDB must contain all the
-				models and all resources they depend upon. VDB's are the transport mechanism to expose
-				both the metadata to query against on a server and the corresponding references to the data sources
-				and connections required to perform the actual DB queries. (See the 
-				<xref linkend="vdb-editor-section" /> section)</para>
-		</section>
-		<section id="intro-models-and-connector-profiles">
-			<title>Models and Connection Profiles</title>
+		<para><emphasis role="bold">Models and Connection Profiles</emphasis></para>
 
-			<para>A connection profile  provides the connectivity to a data source and is 
-				defined by the DTP framework. Designer utilizes this framework from withing 
-				it's JDBC Importer.
-			</para>
-				
-		</section>
-		<section id="intro-model-validation">
-			<title>Model Validation</title>
-			<para>Models must be in a valid state in order to be used for data access. 
-				Validation of a single model means that it must be in a self-consistent and 
-				complete state, meaning that there are no "missing pieces" and 
-				no references to non-existent entities. Validation of multiple models 
-				checks that all inter-model dependencies are present and resolvable.</para>
-			<para>Models must always be validated when they are deployed in a VDB for data 
-				access purposes.</para>
-			<para>Teiid Designer will automatically validate your models 
-				whenever the user Saves ( Note: the "Models > Validate Automatically" option 
-				must be checked). When editing models, the editor tabs will display a "*" 
-				to indicate that the model has unsaved changes.
-			</para>
-		</section>
-		<section id="intro-testing-your-models">
-			<title>Testing Your Models</title>
-			<para> Designing and working with data is often much easier when you can
-				see the information you're working with. The Teiid Designer's 
-				<emphasis role="bold">Preview Data</emphasis>
-				feature makes this possible and allows you to instantly preview the
-				information described by any object, whether it's a physical table or a
-				virtual view. In other words, you can test the views with actual data
-				by simply selecting the table, view, procedure or XML document. The
-				preview functionality insures that data access behavior in the Teiid Designer will
-				reliably match when the VDB is deployed to the Server. Previewing
-				information is a fast and easy way to sample the data. Of course, to
-				run more complicated queries like what your application likely uses,
-				simply execute the VDB in the Teiid Designer and type in any query or SQL
-				statement.</para>
-			<para> After creating your models, you can test them by using the
-				<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/preview-data.png"/>
-						</imageobject>
-					</inlinemediaobject>. By selecting a desired table object and
-				executing the action, the results of a simple query will be displayed
-				in the Data Tools SQL Results view. This action is accessible throughout the
-				Teiid Designer in various view toolbars and context menus.</para>
-			<para> Previewable objects include:</para>
-			<itemizedlist>
-				<listitem>
-					<para>Relational table or view, including tables involving
-						access patterns.</para>
-				</listitem>
-				<listitem>
-					<para>Relational procedure.</para>
-				</listitem>
-				<listitem>
-					<para>Web Service operation.</para>
-				</listitem>
-				<listitem>
-					<para>XML Document staging table.</para>
-				</listitem>
-			</itemizedlist>
-			<note>
-				<para>If attempting to preview a relational access pattern, a web service operation or a relational procedure
-					with input parameters, a dialog will request values for required parameters.</para>
-			</note>
-		</section>
+
+		<para>A connection profile  provides the connectivity to a data source and is 
+			defined by the DTP framework. Designer utilizes this framework from withing 
+			it's JDBC Importer.
+		</para>
+			
+
+		<para><emphasis role="bold">Model Validation</emphasis></para>
+		
+		<para>Models must be in a valid state in order to be used for data access. 
+			Validation of a single model means that it must be in a self-consistent and 
+			complete state, meaning that there are no "missing pieces" and 
+			no references to non-existent entities. Validation of multiple models 
+			checks that all inter-model dependencies are present and resolvable.</para>
+		<para>Models must always be validated when they are deployed in a VDB for data 
+			access purposes.</para>
+		<para>Teiid Designer will automatically validate your models 
+			whenever the user Saves ( Note: the "Models > Validate Automatically" option 
+			must be checked). When editing models, the editor tabs will display a "*" 
+			to indicate that the model has unsaved changes.
+		</para>
+
+		<para><emphasis role="bold">Testing Your Models</emphasis></para>
+		
+		<para> Designing and working with data is often much easier when you can
+			see the information you're working with. The Teiid Designer's 
+			<emphasis role="bold">Preview Data</emphasis>
+			feature makes this possible and allows you to instantly preview the
+			information described by any object, whether it's a physical table or a
+			virtual view. In other words, you can test the views with actual data
+			by simply selecting the table, view, procedure or XML document. The
+			preview functionality insures that data access behavior in the Teiid Designer will
+			reliably match when the VDB is deployed to the Server. Previewing
+			information is a fast and easy way to sample the data. Of course, to
+			run more complicated queries like what your application likely uses,
+			simply execute the VDB in the Teiid Designer and type in any query or SQL
+			statement.</para>
+		<para> After creating your models, you can test them by using the
+			<emphasis role="bold">Preview Data</emphasis> action <inlinemediaobject>
+					<imageobject>
+						<imagedata fileref="images/icons/preview-data.png"/>
+					</imageobject>
+				</inlinemediaobject>. By selecting a desired table object and
+			executing the action, the results of a simple query will be displayed
+			in the Data Tools SQL Results view. This action is accessible throughout the
+			Teiid Designer in various view toolbars and context menus.</para>
+		<para> Previewable objects include:</para>
+		<itemizedlist>
+			<listitem>
+				<para>Relational table or view, including tables involving
+					access patterns.</para>
+			</listitem>
+			<listitem>
+				<para>Relational procedure.</para>
+			</listitem>
+			<listitem>
+				<para>Web Service operation.</para>
+			</listitem>
+			<listitem>
+				<para>XML Document staging table.</para>
+			</listitem>
+		</itemizedlist>
+		<note>
+			<para>If attempting to preview a relational access pattern, a web service operation or a relational procedure
+				with input parameters, a dialog will request values for required parameters.</para>
+		</note>
+
 	</section>
 
 

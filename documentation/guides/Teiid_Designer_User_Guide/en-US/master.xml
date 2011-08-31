@@ -20,9 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-    <releaseinfo>7.4.0
+    <releaseinfo>7.5.0
     </releaseinfo>
-    <productnumber>7.4.0
+    <productnumber>7.5.0
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -44,15 +44,13 @@
   
 
   <xi:include href="intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="perspectives.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="mainmenu.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="views.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="editors.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="newmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="editingmodelobjects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="metadataspecificmodeling.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="ui-reference.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
