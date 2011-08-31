@@ -1340,12 +1340,13 @@ public class RuntimeAdapter extends RecordFactory {
 
                     String propValue = extensionProperties.getProperty(propName);
 
+                    // don't index if there is no value
                     if (CoreStringUtil.isEmpty(propValue)) {
                         continue;
                     }
 
                     if (!propertyNames.contains(propName)) {
-                        addPropertyWord(objectID, name, propName, propValue, true, modelPath, wordEntries);
+                        addPropertyWord(objectID, name, propDefn.getSimpleId(), propValue, true, modelPath, wordEntries);
                         propertyNames.add(propName);
                     }
                 }
