@@ -21,7 +21,7 @@ Visit the project home page at:  http://www.teiid.org  for details.
    <feature url="features/org.teiid.datatools.connectivity.feature_0.0.0.jar" id="org.teiid.datatools.connectivity.feature" version="0.0.0">
     <category name="DataTools"/>
    </feature>
-   <feature id="org.teiid.designer.test.feature" version="0.0.0">
+   <feature url="features/org.teiid.designer.test.feature_0.0.0.jar" id="org.teiid.designer.test.feature" version="0.0.0">
     <category name="DataTools"/>
    </feature>
    <category-def name="DataTools" label="Data Services">
