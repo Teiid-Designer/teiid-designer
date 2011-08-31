@@ -41,7 +41,7 @@
 				</inlinemediaobject> icon.
 			</para>
 			<figure>
-				<title>Generate a JBossWS-CXF War Web Service Dialog</title>
+				<title>Create New Source Function Dialog</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata
@@ -57,6 +57,20 @@
 					<imageobject>
 						<imagedata
 							fileref="images/screencaps/create-source-function-diagram.png"
+						/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>After saving your model, your new source function will be available for use in your transformations.
+			If you open the Expression builder, your source functions will be selectable in the Function drop-down selector
+			for a Category named for the model as shown in the example below.
+			</para>
+			<figure>
+				<title>Source Function In Expression Builder</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							fileref="images/screencaps/source-function-in-expression-builder.png"
 						/>
 					</imageobject>
 				</mediaobject>
