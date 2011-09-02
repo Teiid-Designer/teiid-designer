@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -357,7 +358,7 @@ public class ModelExplorerLabelProvider extends LabelProvider
                     }
                 }
             } catch (Exception e) {
-                Util.log(e);
+                Util.log(IStatus.INFO, e, Util.getString("ModelExplorerLabelProvider.modelExtensionError", file.getName())); //$NON-NLS-1$
             }
         }
 
