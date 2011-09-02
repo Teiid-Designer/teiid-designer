@@ -7,10 +7,16 @@
  */
 package org.teiid.designer.core.extension.deprecated;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -20,6 +26,8 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
+import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * 
@@ -164,6 +172,32 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         }
 
         return this.sourceFunctionMed;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.core.extension.ModelObjectExtensionAssistant#hasExtensionProperties(java.io.File)
+     */
+    @Override
+    public boolean hasExtensionProperties( File file ) throws Exception {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IPath location = Path.fromOSString(file.getAbsolutePath());
+        IFile modelFile = workspace.getRoot().getFileForLocation(location);
+
+        if ((modelFile != null) && ModelUtil.isModelFile(modelFile.getFullPath())) {
+            // since there is no MED saved in the file, the only way to check is to see if any model object has a 7.4 property
+            Collection<EObject> eObjects = getModelResource(modelFile).getEObjects();
+
+            for (EObject modelObject : eObjects) {
+                if (SqlAspectHelper.isProcedure(modelObject) && hasExtensionProperties(modelObject)) {
+                    return true;
+                }
+            }
+        }
+
+        // none found
+        return false;
     }
 
     /**
