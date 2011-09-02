@@ -216,7 +216,7 @@
 			<itemizedlist>
 				<listitem>
 					<para>
-						To create a new relational model containing file translator procedures, 
+						To create a new relational model containing web-service-based translator procedures, 
 						complete <xref linkend="create-empty-relational-source-model-section" /> above 
 						and continue with these additional steps:
 						<itemizedlist>
@@ -224,7 +224,7 @@
 								<para><emphasis role="bold">Step 5 </emphasis> - Select the model builder labeled
 								<emphasis role="bold">Generate Web Service Translator Procedures</emphasis> and 
 								click <emphasis role="bold">Next ></emphasis>.  
-								The <emphasis role="bold">Generate File Translator Procedures</emphasis> dialog
+								The <emphasis role="bold">Generate Web Service Translator Procedures</emphasis> dialog
 								will be displayed.</para>
 							</listitem>
 							<listitem>
@@ -234,7 +234,7 @@
 									<title>Generate Web Service Translator Procedures Dialog</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/new-model-wizard-generate-file-procedures.png"/>
+											<imagedata fileref="images/screencaps/new-model-wizard-generate-web-service-procedures.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
