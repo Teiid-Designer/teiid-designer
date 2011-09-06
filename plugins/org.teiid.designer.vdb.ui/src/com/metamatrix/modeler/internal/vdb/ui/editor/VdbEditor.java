@@ -13,7 +13,6 @@ import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -98,7 +96,6 @@ import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
-
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
@@ -1993,7 +1990,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     void openEditor( final VdbEntry entry ) {
         try {
-            IDE.openEditor(UiUtil.getWorkbenchPage(), entry.findFileInWorkspace());
+            IFile model = entry.findFileInWorkspace();
+
+            // make sure model is found in workspace
+            if (model != null) {
+                IDE.openEditor(UiUtil.getWorkbenchPage(), model);
+            }
         } catch (final Exception error) {
             throw new RuntimeException(error);
         }
