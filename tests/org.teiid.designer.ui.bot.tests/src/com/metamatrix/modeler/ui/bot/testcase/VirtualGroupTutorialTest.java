@@ -54,7 +54,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		SWTBotShell shell = bot.shell("Import");
 		shell.activate();
-		shell.bot().tree(0).expandNode("Teiid Designer").select("Metadata from JDBC Database");
+		shell.bot().tree(0).expandNode("Teiid Designer").select("JDBC Database >> Source Model");
 		shell.bot().button(IDELabel.Button.NEXT).click();
 		shell.bot().comboBox(0).setSelection(Properties.ORACLE_CONNPROFILE_NAME);
 		shell.bot().button(IDELabel.Button.NEXT).click();
@@ -65,7 +65,9 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		assertTrue(shell.bot().tree(0).getTreeItem("PARTSSUPPLIER").isSelected());
 		
 		shell.bot().button(IDELabel.Button.NEXT).click();
-		shell.bot().checkBoxInGroup("Include In Model").deselect();
+		/*shell.bot().checkBoxInGroup("Include In Model").deselect();*/
+		log.info("Uncheck Fully Qualified Names");
+		shell.bot().checkBoxInGroup ("Model Object Names (Tables, Procedures, Columns, etc...)", 0).deselect();
 		shell.bot().textWithLabel("Model Name:").setText(Properties.ORACLE_MODEL_NAME);
 		shell.bot().button(1).click();
 		
@@ -88,7 +90,7 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		SWTBotShell shell = bot.shell("Import");
 		shell.activate();
-		shell.bot().tree(0).expandNode("Teiid Designer").select("Metadata from JDBC Database");
+		shell.bot().tree(0).expandNode("Teiid Designer").select("JDBC Database >> Source Model");
 		shell.bot().button(IDELabel.Button.NEXT).click();
 		shell.bot().comboBoxInGroup("Connection Profile").setSelection(Properties.SQLSERVER_CONNPROFILE_NAME);
 		shell.bot().button(IDELabel.Button.NEXT).click();
@@ -100,8 +102,10 @@ public class VirtualGroupTutorialTest extends TeiidDesignerTest {
 		
 		shell.bot().button(IDELabel.Button.NEXT).click();
 		
-		shell.bot().checkBoxInGroup("Database", "Include In Model").deselect();
-		shell.bot().checkBoxInGroup("Schema", "Include In Model").deselect();
+		/*shell.bot().checkBoxInGroup("Database", "Include In Model").deselect();*/
+		/*shell.bot().checkBoxInGroup("Schema", "Include In Model").deselect();*/
+		log.info("Uncheck Fully Qualified Names");
+		shell.bot().checkBoxInGroup ("Model Object Names (Tables, Procedures, Columns, etc...)", 0).deselect();
 		shell.bot().textWithLabel("Model Name:").setText(Properties.SQLSERVER_MODEL_NAME);
 		shell.bot().button(1).click();
 		
