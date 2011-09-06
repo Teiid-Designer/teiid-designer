@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.ExecutionAdmin;
+import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
 import com.metamatrix.core.util.CoreArgCheck;
@@ -317,7 +318,20 @@ public class VdbDeployer {
         }
 
         // make sure server has translator with that name
-        return (this.admin.getTranslator(translatorName) != null);
+        boolean isValid = (this.admin.getTranslator(translatorName) != null);
+        
+        // Check for overridden translator names
+        if( !isValid && !this.vdb.getTranslators().isEmpty()) {
+        	for( TranslatorOverride override : this.vdb.getTranslators() ) {
+        		if( override.getName().equalsIgnoreCase(translatorName) ) {
+        			isValid = (this.admin.getTranslator(override.getType()) != null);
+        			break;
+        		}
+        	}
+        }
+
+        
+        return isValid;
     }
 
     /**
