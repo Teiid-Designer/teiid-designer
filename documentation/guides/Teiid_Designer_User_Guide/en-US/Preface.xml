@@ -1,8 +1,4 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<preface id="pref-Teiid_Designer_User_Guide-Preface">
-	<title>Preface</title>
-	<para>
-		This manual uses several conventions to highlight certain words and phrases and draw attention to specific pieces of information. To get more information on these conventions please refer to the <guilabel>Document Conventions</guilabel> manual, which can be found on the <ulink url="http://docs.redhat.com/docs/en-US/JBoss_Developer_Studio/index.html">Red Hat Documentation</ulink> website under the <guilabel>JBoss Developer Studio</guilabel> section.
-	</para>
-</preface>
-
+<!DOCTYPE Book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<preface><title>Preface</title><xi:include href="Common_Content/Conventions.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include><xi:include href="Feedback.xml" xmlns:xi="http://www.w3.org/2001/XInclude"><xi:fallback xmlns:xi="http://www.w3.org/2001/XInclude"><xi:include href="Common_Content/Feedback.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include></xi:fallback></xi:include></preface>

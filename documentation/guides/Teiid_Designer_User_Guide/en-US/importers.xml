@@ -22,10 +22,10 @@
 		</mediaobject>
 	</figure>
 
-	<!-- ####### JDBC IMPORTER ######################################### -->
+	<!-- ####### DDL IMPORTER ######################################### -->
 	
 	<section id="ddl-import-section">
-		<title>Import DDL into Relational Model</title>
+		<title>Import DDL</title>
 		<para>Source relational models can be created by importing DDL.</para>
 		<itemizedlist>
 			<listitem>
@@ -43,9 +43,9 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > DDL into Relational Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+								<emphasis role="bold">Teiid Designer > DDL File >> Source or View Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import DDL into Relational Model</title>
+								<title>Import DDL</title>
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/import-ddl-selection-dialog.png"/>
@@ -88,7 +88,7 @@
 	<!-- ####### JDBC IMPORTER ######################################### -->
 	
 	<section id="jdbc-import-section">
-		<title>Import From JDBC</title>
+		<title>Import From JDBC Database</title>
 		<itemizedlist>
 			<listitem>
 			   <para>You can create relational source models from your JDBC source schema data using the steps below.</para>
@@ -109,21 +109,22 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Metadata from JDBC Database</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+								<emphasis role="bold">Metadata Modeling > JDBC Database >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import Metadata from JDBC Database</title>
+								<title>Import from JDBC Database</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/jdbc-importer-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-jdbc-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
-								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
-								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
-								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.</para>
+								connection profile from the drop-down selector or press <emphasis role="bold">New...</emphasis> button to launch 
+								the <emphasis role="bold">New Connection Profile</emphasis> dialog (See Eclispe Data Tools documentation) 
+								or <emphasis role="bold">Edit...</emphasis> to modify/change an existing connection profile prior to selection.
+								Note that the Connection Profile selection list will be populated with only JDBC Database connections.</para>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
@@ -132,6 +133,12 @@
 									</imageobject>
 								</mediaobject>
 							</figure>
+							<para>Because JDBC databases are different, special processing of your metadata to be
+								required in order to convert datatypes or to interpret your metadata. 
+								The <emphasis role="bold">JDBC Metadata Processor</emphasis> drop-down selector will be 
+								auto-selected based on your selected connection profile. Special processors are available
+								for DB2, Modeshape, ODBC, Oracle, PostgeSQL, SQL Server and Sybase. For all other DB's
+								ajdefault JDBC processor is available.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>, 
@@ -176,7 +183,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 7 </emphasis> - On the <emphasis role="bold">Specify Import Options</emphasis>
 							page, specify desired <emphasis role="bold">Model Name</emphasis> as well as any other options used to 
-							customize the constructed relational objects. Press <emphasis role="bold">Finish></emphasis> to complete. </para>
+							customize the naming of your relational objects. Press <emphasis role="bold">Finish></emphasis> to complete. </para>
 							<figure>
 								<title>Specify Import Options Dialog</title>
 								<mediaobject>
@@ -201,6 +208,287 @@
 		</figure>
 	</section>
 	
+	<!-- ####### FLAT FILE IMPORTER ######################################### -->
+	
+	<section id="flat-file-import-section">
+		<title>Import From Flat File Source</title>
+		<itemizedlist>
+			<listitem>
+			   <para>You can import metadata from your flat file data sources and create the metmodels required to query your data in 
+			         minutes. Using the steps below you will define your flat file data source, configure your parsing paramaters for the
+			         flat file, generate a source model containing the standard Teiid flat file procedures and create view tables 
+			         containing the SQL defining the column data in your flat file.</para>
+			         
+			    <para>Teiid supports Flat Files as data sources.  In release 7.5, Teiid Designer introduces a new Import
+			     wizard designed to assist in creating the metadata models required to access the data in your flat files. 
+			     As with Designer's JDBC, Salesforce and WSDL importers, the Flat File importer is based on utilizing a
+			      specific Data Tools Connection Profile.</para>
+			      
+				<para>The results of the importer will include a source model containing the three Flat File procedures 
+				supported by Teiid. Namely:
+					<itemizedlist>
+						<listitem>
+							<para>getFiles()</para>
+						</listitem>
+						<listitem>
+							<para>getTextFiles()</para>
+						</listitem>
+						<listitem>
+							<para>saveFile()</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+
+				<para>The importer will also create a new view model containing a view table for each of your selected 
+				flat file source files. Within these view tables will be generated SQL transformations containing 
+				the "getTextFiles()" procedure from your source model as well as the column definitions and parameters 
+				required for the Teiid TEXTTABLE() function used to query the data file. You can also choose to update 
+				an existing view model instead of creating a new view model.</para>
+
+				<para>The TEXTTABLE function, as defined in the Teiid documentation, processes character input to 
+				produce tabular ouptut. It supports both fixed and delimited file format parsing. The function itself 
+				defines what columns it projects. The TEXTTABLE function is implicitly a nested table and may be 
+				correlated to preceeding FROM clause entries.</para>
+ 
+		
+				
+				<synopsis>TEXTTABLE(expression COLUMNS &lt;COLUMN&gt;, ... [DELIMITER char] [(QUOTE|ESCAPE) char] 
+[HEADER [integer]] [SKIP integer]) AS name</synopsis>
+
+				<para>Teiid Designer will construct the full SQL statement for each view table in the form:
+<synopsis>
+SELECT
+	A.Name, A.Sport, A.Position, A.Team, A.City, A.StateCode, A.AnnualSalary
+FROM
+	(EXEC PlayerDataSource.getTextFiles('PlayerData.txt')) AS f, 
+	 TEXTTABLE(f.file COLUMNS Name string, Sport string, Position string, 
+	 Team string, City string, StateCode string, AnnualSalary string 
+	 HEADER 2 SKIP 3) AS A</synopsis></para>
+			         
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import-wiz.png"/>
+									</imageobject>
+								</inlinemediaobject> in the toolbar or select a project, folder or 
+							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
+								<emphasis role="bold">Teiid Designer > Flat File Source >> Source and View Model</emphasis>  and 
+								 click <emphasis role="bold">Next></emphasis></para>
+							<figure>
+								<title>Import from Flat File Source</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-selection-dialog.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
+								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
+								Note that the Flat File Source selection list will be populated with only Flat File connection
+								profiles.</para>
+							<figure>
+								<title>Flat File Source Selection Page</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-page-1.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3a </emphasis> - After selecting a <emphasis role="bold">Connection Profile</emphasis>, 
+								the file contents of the folder defined in the connection profile will be displayed in the <emphasis role="bold">Available Data Files</emphasis> panel. 
+								Check each data file you wish to process. Each file will be used to construct a view table containing 
+								the required SQL transformation for retrieving your data and returning a result set.</para>
+								
+							<para>Each data file will analized and validated based on a set of parser settings. You can 
+								view the details via the <emphasis role="bold">Edit Parser Settings...</emphasis> button.  If the validation fails, an Error 
+								Status will be displayed instead of OK and you will be required to fix the errors in order to 
+								proceed with importing that data file. You are encouraged to view the parser settings for ALL 
+								your data files to insure that header information, column names etc. are what you expect.</para>
+							
+							<para>The <emphasis role="bold">Teiid Data File Parser Settings</emphasis> dialog, shown below, contains the various parser settings 
+								and TEXTTABLE() method and parameter options.  The <emphasis role="bold">File Contents Preview</emphasis> section displays a 
+								portion of the raw file contents. If your data is character delimited (default), choose the 
+								delimiter character in Delimiter Options section.  If <emphasis role="bold">User header for column names</emphasis> check-box 
+								is selected, the dialog will attempt to parse the header line and extract your column names. 
+								If <emphasis role="bold">Fixed Width</emphasis> option is selected, no header is expected and you are requried to specifiy 
+								the number of data columns, their names, data types and width of each column.</para>
+							<figure>
+								<title>Teiid Data File Parser Settings</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-parsing-config-dialog.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3b </emphasis> - To aid in determining if your parser settings are 
+								correct you can select a data row in your <emphasis role="bold">File Contents Preview</emphasis> section and click the 
+								<emphasis role="bold">Parse Selected Row</emphasis>  button. A dialog will be displayed 
+								showing the list of columns and the resulting column data. If your column data is not what 
+								you expected, you'll need to adjust your settings accordingly.</para>
+							<figure>
+								<title>Parse Column Data Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-parse-column-dialog.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem> 
+							<para><emphasis role="bold">Step 4 </emphasis> - On the <emphasis role="bold">Target Models Definition</emphasis>
+							page, select the target folder locations where your new source and view models will be created. In the case of the 
+							view model, you can also select an existing model for your new view tables. In this case the 
+							<emphasis role="bold">Update Existing Model</emphasis> option will be selected.
+							Press <emphasis role="bold">Finish></emphasis> to generate your models and finish the wizard.</para>
+							<figure>
+								<title>Select Database Options Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-page-2.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		<para>When your import is finished your source model will be opened in an editor and show a diagram containing the 
+			three generated flat file procedures.</para>
+		<figure>
+			<title>Generated Flat File Procedures</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/import-flat-file-generated-flat-file-diagram.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>In addition, the view model will be opened in an editor and will show the generated view tables containing 
+			the completed SQL required to access the data in your flat file using the "getFiles" procedure above and the Teiid TEXTTABLE() function.
+			The following figure is an example of a generated view table.</para>
+		<figure>
+			<title>Generated Flat File View Table</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/import-flat-file-generated-flat-file-view-table.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+	
+	<!-- ####### SALESFORCE IMPORTER ######################################### -->
+	
+	<section id="salesforce-import-section">
+		<title>Import From Salesforce</title>
+		<itemizedlist>
+			<listitem>
+			   <para>You can create relational source models from your Salesforce connection using the steps below.</para>
+					<note>
+						<para>Depending the detail provided in the database
+							connection url information and schema, Steps 5 through 7 may not be
+							required.</para>
+					</note>
+					<itemizedlist>
+						<listitem>
+							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Model Explorer</emphasis> 
+								choose the <emphasis role="bold">File > Import</emphasis> action <inlinemediaobject>
+									<imageobject>
+										<imagedata fileref="images/icons/import-wiz.png"/>
+									</imageobject>
+								</inlinemediaobject> in the toolbar or select a project, folder or 
+							 	model in the tree and choose <emphasis role="bold">Import...</emphasis></para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
+								<emphasis role="bold">Teiid Designer > Salesforce >> Source Model</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+							<figure>
+								<title>Import from Salesforce</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-salesforce-selection-dialog.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
+								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
+								the <guilabel>New Connection Profile</guilabel> dialog (See Eclispe Data Tools documentation) 
+								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
+								Note that the Connection Profile selection list will be populated with only Salesforce connection profiles.</para>
+							<figure>
+								<title>Select Salesforce Credentials Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-salesforce-page-2.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>, 
+								input password (if not provided). Press <emphasis role="bold">Next></emphasis> to display the
+								Salesforce Objects selection page.</para>
+							<figure>
+								<title>Select Salesforce Objects Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-salesforce-page-3.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5 </emphasis> - On the <emphasis role="bold">Target Model Selection</emphasis> page, 
+								specify the target folder location for your generated model, a unique model name and select desired
+								import options. Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled).</para>
+							<figure>
+								<title>Target Model Selection Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-salesforce-page-4.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 5a </emphasis> - If you are updating an existing relational model, the next page will be <emphasis role="bold">Review Model Updates</emphasis> page. 
+								Any differences. Press <emphasis role="bold">Finish></emphasis> to create your models and tables.</para>
+							<figure>
+								<title>Review Model Updates Dialog</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-salesforce-page-5.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+					</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		<para>When finished, the new or changed relational model's package diagram will be displayed showing your new tables.</para>
+		<figure>
+			<title>New Saleforce Tables Diagram</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/import-salesforce-page-6.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+	
 	<!-- ####### TEXT FILE SOURCE IMPORTER ######################################### -->
 	
 	<section id="text-file-import-section">
@@ -209,9 +497,9 @@
 		<itemizedlist>
 			<listitem>
 				<para>
-					The Teiid Designer provides various import options for translating 
-					specific text file metadata into models. This is accomplished via the 
-					<emphasis role="bold">Import > Metadata from Text Files on file system</emphasis> option. 
+					The Teiid Designer provides various import options for parsing comma delimited 
+					text file metadata into models. This is accomplished via the 
+					<emphasis role="bold">Import > Teiid Designer > Designer Text File >> Source or View Models</emphasis> option. 
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - In <emphasis role="bold">Designer</emphasis> 
@@ -224,13 +512,13 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > Metadata from Text Files on file system</emphasis> 
+								<emphasis role="bold">Teiid Designer > Designer Text File >> Source or View Models</emphasis> 
 								and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import Metadata From Text Files</title>
+								<title>Import From Designer Text File</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-from-text-file-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-from-text-file-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -272,7 +560,7 @@
 		<!-- ####### RELATIONAL TABLES TEXT IMPORTER ######################################### -->
 		
 		<section id="relational-tables-text-import-section">
-			<title>Import Relational Tables Text Importer</title>
+			<title>Import Relational Table Metadata From Text File</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -334,7 +622,7 @@
 		<!-- ####### RELATIONAL VIRTUAL TABLES TEXT IMPORTER ######################################### -->
 		
 		<section id="relational-virtual-tables-text-import-section">
-			<title>Import Relational Virtual Tables Text Importer</title>
+			<title>Import Relational View Table Metadata From Text File</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -395,7 +683,7 @@
 		<!-- ####### DATATYPES TEXT IMPORTER ######################################### -->
 		
 		<section id="datatypes-text-import-section">
-			<title>Import Datatypes Text Importer</title>
+			<title>Import Datatypes Metadata From Text File</title>
 			<para></para>
 			<itemizedlist>
 				<listitem>
@@ -498,13 +786,13 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Teiid Designer > WSDL into Relational Source Model</emphasis>  and 
+								<emphasis role="bold">Teiid Designer > WSDL File or URL >> Source Model</emphasis>  and 
 									click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import WSDL as Relational Source Model</title>
+								<title>Import from WSDL into Source Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-into-rel-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-to-source-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -640,13 +928,13 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL into Web Service Model </emphasis> option 
+									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis> option 
 									shown below and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
-									<title>WSDL File Into Web Service Dialog</title>
+									<title>Import WSDL File Into Web Service Model</title>
 									<mediaobject>
 										<imageobject>
-											<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
+											<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
 										</imageobject>
 									</mediaobject>
 								</figure>
@@ -798,12 +1086,12 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
-								<title>WSDL File Into Web Service Dialog</title>
+								<title>Import WSDL File Into Web Service Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -945,12 +1233,12 @@
 							</listitem>
 							<listitem>
 								<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-									<emphasis role="bold">Metadata Modeling > WSDL File into Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+									<emphasis role="bold">Teiid Designer > WSDL File or URL >> Web Service Model </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 								<figure>
-								<title>WSDL File Into Web Service Dialog</title>
+								<title>Import WSDL File Into Web Service Model</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-wsdl-ws-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-wsdl-to-ws-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -1096,12 +1384,12 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Select the import option 
-								<emphasis role="bold">Metadata Modeling > XSD Schema files on file system</emphasis>  and click <emphasis role="bold">Next></emphasis></para>
+								<emphasis role="bold">Metadata Modeling > XSD Schemas </emphasis>  and click <emphasis role="bold">Next></emphasis></para>
 							<figure>
-								<title>Import XSD Schemas Dialog</title>
+								<title>Import XSD Schemas</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/import-xml-schema-page-1.png"/>
+										<imagedata fileref="images/screencaps/import-xml-schemas-selection-dialog.png"/>
 									</imageobject>
 								</mediaobject>
 							</figure>

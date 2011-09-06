@@ -5,6 +5,13 @@
 	<author>
 		<firstname>Barry</firstname>
 		<surname>LaFond</surname>
+		<!-- 
+		<affiliation>
+			<orgname>Red Hat</orgname>
+			<orgdiv>Engineering Content Services</orgdiv>
+		</affiliation>
+		 -->
+		<email>blafond@redhat.com</email>
 	</author>
 	<author>
 		<firstname>Dan</firstname>
@@ -18,8 +25,8 @@
 		<firstname>Ted</firstname>
 		<surname>Jones</surname>
 	</author>
-	<editor>
-		<firstname>Isaac</firstname>
-		<surname>Rooskov</surname>
-	</editor>
+	<author>
+        <firstname>Mark</firstname>
+        <surname>Drilling</surname>
+    </author>
 </authorgroup>

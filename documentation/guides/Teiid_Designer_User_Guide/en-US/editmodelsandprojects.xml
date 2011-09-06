@@ -19,7 +19,7 @@
 					To rename a model in your workspace:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view-image" />.</para>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
@@ -67,7 +67,7 @@
 					To move a model in your workspace:
 					<itemizedlist>
 						<listitem>
-							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view-image" />.</para>
+							<para><emphasis role="bold">Step 1 </emphasis> - Select a model in the <xref linkend="model-explorer-view" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
@@ -117,7 +117,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Open the model you wish to copy in a 
 								<emphasis role="bold">Model Editor</emphasis> by 
-								double-clicking the model in <xref linkend="model-explorer-view-image" /> or right-click select 
+								double-clicking the model in <xref linkend="model-explorer-view" /> or right-click select 
 								<emphasis role="bold">Open</emphasis> action.</para>
 						</listitem>
 						<listitem>
@@ -213,7 +213,7 @@
 					<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1 </emphasis> - Select an existing model 
-								project in the <xref linkend="model-explorer-view-image" />.</para>
+								project in the <xref linkend="model-explorer-view" />.</para>
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 2 </emphasis> - Right-click select the 
