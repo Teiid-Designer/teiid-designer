@@ -32,13 +32,13 @@ public class SalesforceFieldImplTest extends TestCase {
         axisFieldID.setDigits(5);
         axisFieldID.setPrecision(5);
 
-        FieldType type = FieldType.fromString("id"); //$NON-NLS-1$
+        FieldType type = FieldType.fromValue("id"); //$NON-NLS-1$
         axisFieldID.setType(type);
 
         test = new SalesforceFieldImpl(axisFieldID);
 
         Field axisFieldNonID = new Field();
-        FieldType type2 = FieldType.fromString("int"); //$NON-NLS-1$
+        FieldType type2 = FieldType.fromValue("int"); //$NON-NLS-1$
         axisFieldNonID.setType(type2);
         test2 = new SalesforceFieldImpl(axisFieldNonID);
     }
