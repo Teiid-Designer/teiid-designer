@@ -8,11 +8,11 @@
 package com.metamatrix.modeler.modelgenerator.salesforce.connection;
 
 import java.net.URL;
-import com.sforce.soap.partner.SoapBindingStub;
+import com.sforce.soap.partner.Soap;
 
 public interface SalesforceConnection {
 
-	public abstract SoapBindingStub getBinding();
+    public abstract Soap getBinding();
 
 	public void login(String username, String password, URL connectionURL) throws Exception;
 

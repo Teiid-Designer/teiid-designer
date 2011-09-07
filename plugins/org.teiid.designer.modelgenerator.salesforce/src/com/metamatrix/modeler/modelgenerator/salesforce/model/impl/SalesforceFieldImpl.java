@@ -38,12 +38,12 @@ public class SalesforceFieldImpl implements SalesforceField {
 
     @Override
     public String getType() {
-        return salesforceField.getType().getValue();
+        return salesforceField.getType().value();
     }
 
     @Override
     public boolean isPrimaryKey() {
-        return salesforceField.getType().getValue() == "id"; //$NON-NLS-1$
+        return salesforceField.getType().value() == "id"; //$NON-NLS-1$
     }
 
     @Override
@@ -85,10 +85,10 @@ public class SalesforceFieldImpl implements SalesforceField {
     @Override
     public List<String> getAllowedValues() {
         List<String> result = new ArrayList<String>();
-        PicklistEntry[] entries = salesforceField.getPicklistValues();
+        List<PicklistEntry> entries = salesforceField.getPicklistValues();
         if (null != entries) {
-            for (int i = 0; i < entries.length; i++) {
-                PicklistEntry entry = entries[i];
+            for (int i = 0; i < entries.size(); i++) {
+                PicklistEntry entry = entries.get(i);
                 result.add(entry.getValue());
             }
         }

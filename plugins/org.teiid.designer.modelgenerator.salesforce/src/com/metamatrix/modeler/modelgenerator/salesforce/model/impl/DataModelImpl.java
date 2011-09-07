@@ -7,7 +7,8 @@
  */
 package com.metamatrix.modeler.modelgenerator.salesforce.model.impl;
 
-import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,8 +16,10 @@ import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceCon
 import com.metamatrix.modeler.modelgenerator.salesforce.model.DataModel;
 import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;
 import com.sforce.soap.partner.DescribeGlobalResult;
+import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.soap.partner.DescribeSObjectResult;
-import com.sforce.soap.partner.SoapBindingStub;
+import com.sforce.soap.partner.Soap;
+import com.sforce.soap.partner.UnexpectedErrorFault;
 
 public class DataModelImpl implements DataModel {
 
@@ -35,40 +38,45 @@ public class DataModelImpl implements DataModel {
     public void load( SalesforceConnection conn,
                       IProgressMonitor monitor ) throws Exception {
         monitor.beginTask(Messages.getString("DataModelImpl.gathering.metadata"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-        SoapBindingStub binding = conn.getBinding();
+        Soap binding = conn.getBinding();
         DescribeGlobalResult describeGlobalResult;
         try {
             describeGlobalResult = binding.describeGlobal();
-        } catch (RemoteException e) {
+        } catch (UnexpectedErrorFault e) {
             Exception ce = new Exception(e.getCause().getMessage());
             ce.initCause(e.getCause());
             throw ce;
         }
 
-        String[] types = describeGlobalResult.getTypes();
+        List<DescribeGlobalSObjectResult> sObjects = describeGlobalResult.getSobjects();
+        String[] types = new String[(sObjects.size())];
+        for (int i = 0; i < sObjects.size(); i++) {
+            types[i] = sObjects.get(i).getName();
+        }
+
         int i = 0;
         while (i < types.length) {
             int arrayLength = i + 100 > types.length ? types.length - i : 100;
-            String[] typesBatch = new String[arrayLength];
+            List<String> typesBatch = new ArrayList(arrayLength);
             for (int j = 0; j < arrayLength; j++) {
-                typesBatch[j] = types[i + j];
+                typesBatch.add(types[i + j]);
             }
 
-            DescribeSObjectResult[] describeSObjectResults;
+            List<DescribeSObjectResult> describeSObjectResults;
             try {
                 describeSObjectResults = binding.describeSObjects(typesBatch);
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 Exception ce = new Exception(e.getCause().getMessage());
                 ce.initCause(e.getCause());
                 throw ce;
             }
 
-            for (int x = 0; x < describeSObjectResults.length; x++) {
-                DescribeSObjectResult describeSObjectResult = describeSObjectResults[x];
+            for (int x = 0; x < describeSObjectResults.size(); x++) {
+                DescribeSObjectResult describeSObjectResult = describeSObjectResults.get(x);
                 SalesforceObjectImpl object = new SalesforceObjectImpl();
                 monitor.subTask(Messages.getString("DataModelImpl.gathering.metadata.table") + describeSObjectResult.getLabel()); //$NON-NLS-1$
                 object.setObjectMetadata(describeSObjectResult, this);
-                addSalesforceObject(typesBatch[x], object);
+                addSalesforceObject(typesBatch.get(x), object);
                 monitor.worked(1);
             }
             i = i + arrayLength;

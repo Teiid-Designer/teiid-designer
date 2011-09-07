@@ -45,9 +45,9 @@ public class SalesforceObjectImplTest extends TestCase {
         testField = new Field();
 
         metadata2 = new DescribeSObjectResult();
-        metadata2.setFields(new Field[] {testField});
+        metadata2.getFields().add(testField);
         ChildRelationship relationship = new ChildRelationship();
-        metadata2.setChildRelationships(new ChildRelationship[] {relationship});
+        metadata2.getChildRelationships().add(relationship);
         test2 = new SalesforceObjectImpl();
         test2.setObjectMetadata(metadata2, mockDataModel);
         test2.setSelected(false);

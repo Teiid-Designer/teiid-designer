@@ -9,16 +9,12 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column.PICKLIST_VALUES;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +23,6 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -58,7 +53,6 @@ import com.metamatrix.modeler.modelgenerator.salesforce.model.SalesforceObject;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.NameUtil;
 import com.sforce.soap.partner.QueryResult;
-import com.sforce.soap.partner.sobject.SObject;
 
 public class RelationalModelgenerator {
 
@@ -302,7 +296,7 @@ public class RelationalModelgenerator {
 
     private int getDistinctValueCount( String objectName,
                                        String columnName ) {
-        Set values = new HashSet();
+        int resultSize = 0;
         try {
             StringBuffer query = new StringBuffer();
             query.append("SELECT "); //$NON-NLS-1$
@@ -311,11 +305,7 @@ public class RelationalModelgenerator {
             query.append(objectName);
             QueryResult queryResult;
             queryResult = wizardManager.getConnection().getBinding().query(query.toString());
-            getUniqueValues(queryResult, values);
-            while (!queryResult.isDone()) {
-                queryResult = wizardManager.getConnection().getBinding().queryMore(queryResult.getQueryLocator());
-                getUniqueValues(queryResult, values);
-            }
+            resultSize = queryResult.getSize();
         } catch (Throwable t) {
             // Failure here should not stop the model from being created.
             String pattern = Messages.getString("RelationalModelgenerator.error.calculating.column.distinct"); //$NON-NLS-1$
@@ -323,23 +313,23 @@ public class RelationalModelgenerator {
             IStatus status = new org.eclipse.core.runtime.Status(IStatus.INFO, Activator.PLUGIN_ID, message);
             Activator.getDefault().getLog().log(status);
         }
-        return values.size();
+        return resultSize;
     }
 
     /**
      * @param queryResult
      * @param values
      */
-    private void getUniqueValues( QueryResult queryResult,
-                                  Set values ) {
-        SObject[] results = queryResult.getRecords();
-        if (null != results) {
-            for (int i = 0; i < results.length; i++) {
-                SObject object = results[i];
-                values.add(object.get_any()[0].getValue());
-            }
-        }
-    }
+    // private void getUniqueValues( QueryResult queryResult,
+    // Set values ) {
+    // SObject[] results = queryResult.getRecords();
+    // if (null != results) {
+    // for (int i = 0; i < results.length; i++) {
+    // SObject object = results[i];
+    // values.add(object.get_any()[0].getValue());
+    // }
+    // }
+    // }
 
     private String createPickListString( List<String> allowedValues ) {
         StringBuilder picklistValues = new StringBuilder();

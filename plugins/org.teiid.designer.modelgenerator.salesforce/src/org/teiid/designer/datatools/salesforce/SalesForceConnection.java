@@ -22,6 +22,7 @@ public class SalesForceConnection implements IConnection {
     private IConnectionProfile savedProfile;
     private Connection connection;
     private Throwable connectException;
+    private final String DEFAULT_SF_URL = "http://login.salesforce.com/services/Soap/u/22.0"; //$NON-NLS-1$
 
     /**
      * @param profile
@@ -37,16 +38,12 @@ public class SalesForceConnection implements IConnection {
 
                 // If the user did not supply a sandbox URL, then URL_PROP_ID should be empty
                 URL connectionURL = null;
-                String stringUrl = props.getProperty(ISalesForceProfileConstants.URL_PROP_ID);
-                if (null != stringUrl) {
-
-                    try {
-                        connectionURL = new URL(stringUrl);
-                    } catch (MalformedURLException e) {
-                        connectException = e;
-                        connection = null;
-                        return;
-                    }
+                try {
+                    connectionURL = getURL(props);
+                } catch (MalformedURLException e) {
+                    connectException = e;
+                    connection = null;
+                    return;
                 }
                 connection.login(username, password, connectionURL);
             } catch (Exception e) {
@@ -70,10 +67,10 @@ public class SalesForceConnection implements IConnection {
             connection = new Connection();
             try {
                 Properties props = profile.getBaseProperties();
-                String stringUrl = props.getProperty(ISalesForceProfileConstants.URL_PROP_ID);
-                URL connectionURL;
+
+                URL connectionURL = null;
                 try {
-                    connectionURL = new URL(stringUrl);
+                    connectionURL = getURL(props);
                 } catch (MalformedURLException e) {
                     connectException = e;
                     connection = null;
@@ -86,6 +83,17 @@ public class SalesForceConnection implements IConnection {
             }
 
         }
+    }
+
+    private URL getURL( Properties props ) throws MalformedURLException {
+        String stringUrl = props.getProperty(ISalesForceProfileConstants.URL_PROP_ID);
+
+        // If the user did not supply a sandbox URL, user the default salesforce URL
+        if (stringUrl == null || stringUrl.trim().length() == 0) {
+            stringUrl = DEFAULT_SF_URL;
+        }
+
+        return new URL(stringUrl);
     }
 
     /**

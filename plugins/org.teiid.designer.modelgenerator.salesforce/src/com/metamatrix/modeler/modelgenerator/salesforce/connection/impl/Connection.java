@@ -8,32 +8,31 @@
 package com.metamatrix.modeler.modelgenerator.salesforce.connection.impl;
 
 import java.net.URL;
-import javax.xml.rpc.Stub;
-import org.apache.axis.EngineConfiguration;
-import org.apache.axis.Handler;
-import org.apache.axis.SimpleChain;
-import org.apache.axis.SimpleTargetedChain;
-import org.apache.axis.client.AxisClient;
-import org.apache.axis.configuration.SimpleProvider;
-import org.apache.axis.handlers.SimpleSessionHandler;
-import org.apache.axis.transport.http.CommonsHTTPSender;
-import org.apache.axis.transport.http.HTTPTransport;
+import javax.xml.ws.BindingProvider;
+import org.teiid.logging.LogConstants;
+import org.teiid.logging.LogManager;
 import com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection;
 import com.sforce.soap.partner.CallOptions;
+import com.sforce.soap.partner.InvalidIdFault;
+import com.sforce.soap.partner.LoginFault;
 import com.sforce.soap.partner.LoginResult;
 import com.sforce.soap.partner.SessionHeader;
-import com.sforce.soap.partner.SforceServiceLocator;
-import com.sforce.soap.partner.SoapBindingStub;
+import com.sforce.soap.partner.SforceService;
+import com.sforce.soap.partner.Soap;
+import com.sforce.soap.partner.UnexpectedErrorFault;
 
 public class Connection implements SalesforceConnection {
 
-    public SoapBindingStub binding;
+    private SforceService sfService;
+    private Soap sfSoap;
+    private SessionHeader sh;
+    private CallOptions co;
 
     String getUserName() throws Exception {
         try {
-            return binding.getUserInfo().getUserName();
-        } catch (Exception ex) {
-            throw new Exception(ex);
+            return sfSoap.getUserInfo().getUserName();
+        } catch (UnexpectedErrorFault e) {
+            throw new Exception(e);
         }
     }
 
@@ -41,63 +40,79 @@ public class Connection implements SalesforceConnection {
      * @see com.metamatrix.modeler.modelgenerator.salesforce.connection.SalesforceConnection#getBinding()
      */
     @Override
-    public SoapBindingStub getBinding() {
-        return binding;
+    public Soap getBinding() {
+        return sfSoap;
     }
 
     @Override
     public void login( String username,
                        String password,
-                       URL connectionURL ) throws Exception {
-        LoginResult loginResult = null;
-        binding = null;
-        SforceServiceLocator locator = new SforceServiceLocator();
-        EngineConfiguration myConfig = getStaticConnectionConfig();
-        locator.setEngineConfiguration(myConfig);
-        locator.setEngine(new AxisClient(myConfig));
-        try {
-            if (null == connectionURL) {
-                binding = (SoapBindingStub)locator.getSoap();
-            } else {
-                binding = (SoapBindingStub)locator.getSoap(connectionURL);
-            }
-            CallOptions co = new CallOptions();
+                       URL url ) throws Exception {
+        if (!isValid()) {
+            LoginResult loginResult = null;
+            sfSoap = null;
+            sfService = null;
+            co = new CallOptions();
+            // This value identifies Teiid as a SF certified solution.
+            // It was provided by SF and should not be changed.
             co.setClient("RedHat/MetaMatrix/"); //$NON-NLS-1$
-            binding.setHeader("SforceService", "CallOptions", co); //$NON-NLS-1$ //$NON-NLS-2$
-            loginResult = binding.login(username, password);
-        } catch (Exception ex) {
-            throw new Exception(ex);
-        }
 
-        // Reset the SOAP endpoint to the returned server URL
-        binding._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, loginResult.getServerUrl());
+            if (url == null) {
+                throw new Exception("SalesForce URL is not specified, please provide a valid URL"); //$NON-NLS-1$
+            }
 
-        // Create a new session header object
-        // add the session ID returned from the login
-        SessionHeader sh = new SessionHeader();
-        sh.setSessionId(loginResult.getSessionId());
-        // Set the session header for subsequent call authentication
-        binding.setHeader(new SforceServiceLocator().getServiceName().getNamespaceURI(), Messages.getString("Connection.0"), sh); //$NON-NLS-1$
+            try {
+                sfService = new SforceService();
+                sh = new SessionHeader();
 
-        try {
-            binding.getUserInfo();
-        } catch (Exception ex) {
-            System.out.println(Messages.getString("Connection.unexpected.error") + ex.getMessage()); //$NON-NLS-1$
-            throw new Exception(ex);
+                // Session Id must be passed in soapHeader - add the handler
+                sfService.setHandlerResolver(new SalesforceHandlerResolver(sh));
+
+                sfSoap = sfService.getSoap();
+                ((BindingProvider)sfSoap).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url.toExternalForm());
+                loginResult = sfSoap.login(username, password);
+
+                // Set the SessionId after login, for subsequent calls
+                sh.setSessionId(loginResult.getSessionId());
+            } catch (LoginFault e) {
+                throw new Exception(e);
+            } catch (InvalidIdFault e) {
+                throw new Exception(e);
+            } catch (com.sforce.soap.partner.UnexpectedErrorFault e) {
+                throw new Exception(e);
+            }
+            LogManager.logTrace(LogConstants.CTX_CONNECTOR, "Login was successful for username " + username); //$NON-NLS-1$
+
+            // Reset the SOAP endpoint to the returned server URL
+            ((BindingProvider)sfSoap).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                                                              loginResult.getServerUrl());
+            // or maybe org.apache.cxf.message.Message.ENDPOINT_ADDRESS
+            ((BindingProvider)sfSoap).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, Boolean.TRUE);
+            // Set the timeout.
+            // ((BindingProvider)sfSoap).getRequestContext().put(JAXWSProperties.CONNECT_TIMEOUT, timeout);
+
+            // Test the connection.
+            try {
+                sfSoap.getUserInfo();
+            } catch (com.sforce.soap.partner.UnexpectedErrorFault e) {
+                throw new Exception(e);
+            }
         }
     }
 
-    // Replace the non-static Axis connection with the static HTTP Commons connection.
-    private EngineConfiguration getStaticConnectionConfig() {
-        SimpleProvider clientConfig = new SimpleProvider();
-        Handler sessionHandler = new SimpleSessionHandler();
-        SimpleChain reqHandler = new SimpleChain();
-        SimpleChain respHandler = new SimpleChain();
-        reqHandler.addHandler(sessionHandler);
-        respHandler.addHandler(sessionHandler);
-        Handler pivot = new CommonsHTTPSender();
-        Handler transport = new SimpleTargetedChain(reqHandler, pivot, respHandler);
-        clientConfig.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME, transport);
-        return clientConfig;
+    public boolean isValid() {
+        boolean result = true;
+        if (sfSoap == null) {
+            result = false;
+        } else {
+            try {
+                sfSoap.getServerTimestamp();
+            } catch (Throwable t) {
+                LogManager.logTrace(LogConstants.CTX_CONNECTOR, "Caught Throwable in isAlive", t); //$NON-NLS-1$
+                result = false;
+            }
+        }
+        return result;
     }
+
 }
