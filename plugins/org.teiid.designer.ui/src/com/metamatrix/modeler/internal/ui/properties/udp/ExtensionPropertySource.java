@@ -148,7 +148,7 @@ public class ExtensionPropertySource implements IPropertySource {
             final ExtensionPropertyDescriptor extensionDescriptor = (ExtensionPropertyDescriptor)id;
             return modelAnnotationExtensionSource.getPropertyValue(extensionDescriptor.getDelegateId());
         }
-        if (id instanceof ExtensionPropertyDescriptor) {
+        if (id instanceof ExtensionPropertyDescriptor && itemSource != null) {
             // the user edited an Extension property
             final ExtensionPropertyDescriptor extensionDescriptor = (ExtensionPropertyDescriptor)id;
             Object value = itemSource.getPropertyDescriptor(this.extension, extensionDescriptor.getDelegateId()).getPropertyValue(this.extension);
