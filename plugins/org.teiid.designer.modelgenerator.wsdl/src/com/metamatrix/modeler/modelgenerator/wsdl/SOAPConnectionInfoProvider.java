@@ -62,7 +62,10 @@ public class SOAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
         Properties props = connectionProfile.getBaseProperties();
 
-        connectionProps.put(CONNECTION_NAMESPACE + SOURCE_ENDPOINT, modelResource.getModelAnnotation().getNameInSource());
+        String nameInSource = modelResource.getModelAnnotation().getNameInSource();
+        if (nameInSource != null) {
+            connectionProps.put(CONNECTION_NAMESPACE + SOURCE_ENDPOINT, nameInSource);
+        }
 
         if (props.getProperty(SOAP_ENDPOINT_KEY) != null) {
             connectionProps.put(CONNECTION_NAMESPACE + DS_ENDPOINT, props.getProperty(SOAP_ENDPOINT_KEY));
