@@ -60,7 +60,7 @@ public class SalesforceObjectImpl implements SalesforceObject {
     public int getFieldCount() {
         int result = 0;
         if (null != objectMetadata && null != objectMetadata.getFields()) {
-            result = objectMetadata.getFields().length;
+            result = objectMetadata.getFields().size();
         }
         return result;
     }
@@ -80,11 +80,11 @@ public class SalesforceObjectImpl implements SalesforceObject {
     }
 
     private SalesforceField[] getFields( DescribeSObjectResult objectMetadata ) {
-        Object[] fields = objectMetadata.getFields();
-        SalesforceField[] result = new SalesforceField[fields.length];
+        List<Field> fields = objectMetadata.getFields();
+        SalesforceField[] result = new SalesforceField[fields.size()];
 
-        for (int i = 0; i < fields.length; i++) {
-            result[i] = new SalesforceFieldImpl((Field)fields[i]);
+        for (int i = 0; i < fields.size(); i++) {
+            result[i] = new SalesforceFieldImpl((Field)fields.get(i));
         }
 
         return result;
@@ -107,11 +107,11 @@ public class SalesforceObjectImpl implements SalesforceObject {
 
     private List getRelationships( boolean includeUnselected ) {
         List result;
-        ChildRelationship[] children = objectMetadata.getChildRelationships();
-        if (children != null && children.length != 0) {
+        List<ChildRelationship> children = objectMetadata.getChildRelationships();
+        if (children != null && children.size() != 0) {
             result = new ArrayList();
-            for (int i = 0; i < children.length; i++) {
-                ChildRelationship childRelation = children[i];
+            for (int i = 0; i < children.size(); i++) {
+                ChildRelationship childRelation = children.get(i);
                 String childTable = childRelation.getChildSObject();
                 if (includeUnselected || dataModel.getSalesforceObject(childTable).isSelected()) {
                     Relationship newRelation = new RelationshipImpl();

@@ -10,16 +10,12 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.metamatrix.metamodels.core.CoreFactory;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
@@ -47,10 +43,9 @@ import com.metamatrix.modeler.modelgenerator.salesforce.modelextension.Extension
 import com.metamatrix.modeler.modelgenerator.salesforce.util.ModelBuildingException;
 import com.metamatrix.modeler.modelgenerator.salesforce.util.NameUtil;
 import com.sforce.soap.partner.QueryResult;
-import com.sforce.soap.partner.sobject.SObject;
 
 public class RelationalModelgenerator {
-	public static final String SCHEMA_NAME = "salesforce"; //$NON-NLS-1$
+    public static final String SCHEMA_NAME = "salesforce"; //$NON-NLS-1$
 
     private IProgressMonitor monitor;
 
@@ -82,7 +77,7 @@ public class RelationalModelgenerator {
      * 
      * @param resource the file to contain the relational model.
      * @throws ModelBuildingException
-     * @throws ModelerCoreException 
+     * @throws ModelerCoreException
      */
     public void createRelationalModel( ModelResource modelResource, Resource resource ) throws ModelBuildingException, ModelerCoreException {
         // Get the salesforce extension model and create it in the target directory
@@ -137,7 +132,7 @@ public class RelationalModelgenerator {
      * @param sfo metadata about a salesforce object to be modeled as a table
      * @param schema the relational schema that contains the tables
      * @throws ModelBuildingException
-     * @throws ModelerCoreException 
+     * @throws ModelerCoreException
      */
     private void addTableToModel( SalesforceObject sfo,
                                   Schema schema ) throws ModelBuildingException, ModelerCoreException {
@@ -159,7 +154,7 @@ public class RelationalModelgenerator {
         }
 
         newTable.setSupportsUpdate(sfo.isUpdateable());
-        
+
         // Extensions
         if (sfo.isQueryable()) {
             exManager.setTableQueryable(newTable, Boolean.TRUE);
@@ -210,7 +205,7 @@ public class RelationalModelgenerator {
      * @param sfo metadata about a salesforce object to be modeled as a table
      * @param newTable
      * @throws ModelBuildingException
-     * @throws ModelerCoreException 
+     * @throws ModelerCoreException
      */
     private void addColumnsToTable( SalesforceObject sfo,
                                     BaseTable newTable ) throws ModelBuildingException, ModelerCoreException {
@@ -254,7 +249,7 @@ public class RelationalModelgenerator {
                 PrimaryKey pKey = RelationalFactory.eINSTANCE.createPrimaryKey();
                 newTable.setPrimaryKey(pKey);
                 pKey.getColumns().add(column);
-//              this.exHandler.setAllowedColumnValues(column, field.getAllowedValues());
+                // this.exHandler.setAllowedColumnValues(column, field.getAllowedValues());
                 pKey.setName(NameUtil.normalizeName(field.getName()) + "_PK"); //$NON-NLS-1$
             }
 
@@ -262,7 +257,7 @@ public class RelationalModelgenerator {
                 int distinctValues = getDistinctValueCount(sfo.getName(), field.getName());
                 column.setDistinctValueCount(distinctValues);
             }
-            
+
         }
 
         // A salesforceobject might say it supports updates,
@@ -274,7 +269,7 @@ public class RelationalModelgenerator {
 
     private int getDistinctValueCount( String objectName,
                                        String columnName ) {
-        Set values = new HashSet();
+        int resultSize = 0;
         try {
             StringBuffer query = new StringBuffer();
             query.append("SELECT "); //$NON-NLS-1$
@@ -283,11 +278,7 @@ public class RelationalModelgenerator {
             query.append(objectName);
             QueryResult queryResult;
             queryResult = wizardManager.getConnection().getBinding().query(query.toString());
-            getUniqueValues(queryResult, values);
-            while (!queryResult.isDone()) {
-                queryResult = wizardManager.getConnection().getBinding().queryMore(queryResult.getQueryLocator());
-                getUniqueValues(queryResult, values);
-            }
+            resultSize = queryResult.getSize();
         } catch (Throwable t) {
             // Failure here should not stop the model from being created.
             String pattern = Messages.getString("RelationalModelgenerator.error.calculating.column.distinct"); //$NON-NLS-1$
@@ -295,23 +286,23 @@ public class RelationalModelgenerator {
             IStatus status = new org.eclipse.core.runtime.Status(IStatus.INFO, Activator.PLUGIN_ID, message);
             Activator.getDefault().getLog().log(status);
         }
-        return values.size();
+        return resultSize;
     }
 
     /**
      * @param queryResult
      * @param values
      */
-    private void getUniqueValues( QueryResult queryResult,
-                                  Set values ) {
-        SObject[] results = queryResult.getRecords();
-        if (null != results) {
-            for (int i = 0; i < results.length; i++) {
-                SObject object = results[i];
-                values.add(object.get_any()[0].getValue());
-            }
-        }
-    }
+//    private void getUniqueValues( QueryResult queryResult,
+//                                  Set values ) {
+//        SObject[] results = queryResult.getRecords();
+//        if (null != results) {
+//            for (int i = 0; i < results.length; i++) {
+//                SObject object = results[i];
+//                values.add(object.get_any()[0].getValue());
+//            }
+//        }
+//    }
 
     private void setColumnType( SalesforceField field,
                                 Column column ) throws ModelBuildingException {

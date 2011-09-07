@@ -35,8 +35,7 @@ Export-Package: com.metamatrix.modeler.modelgenerator.salesforce;uses:="junit.fr
  com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test",
  org.teiid.designer.datatools.salesforce
 Bundle-ClassPath: .,
- axis.jar,
- salesforce.jar,
+ salesforce-api-7.4.1.jar,
  commons-httpclient-3.0.1.jar,
  saaj.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
