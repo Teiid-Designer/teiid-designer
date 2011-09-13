@@ -294,7 +294,7 @@ public class ModelExtensionDefinitionParser {
                     System.err.println("allowedValues=" + valuesString.subSequence(0, valuesString.length() - DELIM.length())); //$NON-NLS-1$
                 }
             } else if (Tags.Elements.MODEL_EXTENSION.equals(localName)) {
-                saveModelExtensionDefinition();
+                saveModelExtensionDefinitionProperties();
 
                 if (DEBUG_MODE) {
                     System.err.println("reset: namespacePrefix=" + this.namespacePrefix + ", namespaceUri=" + this.namespaceUri //$NON-NLS-1$ //$NON-NLS-2$
@@ -404,17 +404,15 @@ public class ModelExtensionDefinitionParser {
         /**
          * Saves the model extension definition that was just parsed.
          */
-        private void saveModelExtensionDefinition() {
-            this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
-                                                                            this.metamodelUri);
-            this.assistant.setDescription(this.definition, this.description);
-            this.assistant.setVersion(this.definition, this.version);
+        private void saveModelExtensionDefinitionProperties() {
+            this.assistant.setDefinitionDescription(this.description);
+            this.assistant.setDefinitionVersion(this.version);
 
             for (Map.Entry<String, Collection<ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) {
                 String extendedMetaclassName = entry.getKey();
 
                 for (ModelExtensionPropertyDefinition propDefn : entry.getValue()) {
-                    this.assistant.addPropertyDefinition(this.definition, extendedMetaclassName, propDefn);
+                    this.assistant.addPropertyDefinition(extendedMetaclassName, propDefn);
                 }
             }
         }
@@ -479,6 +477,9 @@ public class ModelExtensionDefinitionParser {
 
                 this.version = attributes.getValue(Tags.Attributes.VERSION);
                 assert !CoreStringUtil.isEmpty(this.version) : "version is empty"; //$NON-NLS-1$
+
+                this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
+                                                                                this.metamodelUri);
             } else if (Tags.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
                 this.metaclassName = attributes.getValue(Tags.Attributes.NAME);
                 assert !CoreStringUtil.isEmpty(this.metaclassName) : "metaclassName is empty"; //$NON-NLS-1$

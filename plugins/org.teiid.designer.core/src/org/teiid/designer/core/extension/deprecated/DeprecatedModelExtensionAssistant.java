@@ -7,37 +7,28 @@
  */
 package org.teiid.designer.core.extension.deprecated;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.core.metamodel.aspect.sql.SqlAspectHelper;
-import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 
 /**
  * 
  */
 public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssistant {
 
+    public static final String NAMESPACE_PREFIX = "ext-custom"; //$NON-NLS-1$
     public static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
     public static final String SOURCE_FUNCTION_NAMESPACE_PREFIX = "sourcefunction"; //$NON-NLS-1$
-
-    public static final String NAMESPACE_PREFIX = "ext-custom"; //$NON-NLS-1$
+    
     private static final String NEW_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(SOURCE_FUNCTION_NAMESPACE_PREFIX,
                                                                                                      "deterministic"); //$NON-NLS-1$
     private static final String NEW_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(REST_NAMESPACE_PREFIX,
@@ -53,10 +44,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     private static final String OLD_URI_2 = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PREFIX, "uri"); //$NON-NLS-1$
 
     private ModelExtensionAssistant restAssistant;
-    private ModelExtensionDefinition restMed;
-
     private ModelExtensionAssistant sourceFunctionAssistant;
-    private ModelExtensionDefinition sourceFunctionMed;
 
     /**
      * Converts old REST properties to new ones and saves the REST model extension definition (MED) in the model resource.
@@ -75,19 +63,9 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         removeOldRestProperties(modelObject);
 
         // save new
-        getRestAssistant().saveModelExtensionDefinition(modelObject, getRestMed());
+        getRestAssistant().saveModelExtensionDefinition(modelObject);
         getRestAssistant().setPropertyValue(modelObject, NEW_REST_METHOD, restMethodValue);
         getRestAssistant().setPropertyValue(modelObject, NEW_URI, uriValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
-     */
-    @Override
-    public String getNamespacePrefix() {
-        return NAMESPACE_PREFIX;
     }
 
     /**
@@ -148,14 +126,6 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         return this.restAssistant;
     }
 
-    private ModelExtensionDefinition getRestMed() {
-        if (this.restMed == null) {
-            this.restMed = ExtensionPlugin.getInstance().getRegistry().getDefinition(REST_NAMESPACE_PREFIX);
-        }
-
-        return this.restMed;
-    }
-
     private ModelExtensionAssistant getSourceFunctionAssistant() {
         if (this.sourceFunctionAssistant == null) {
             this.sourceFunctionAssistant = ExtensionPlugin.getInstance()
@@ -164,40 +134,6 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         }
 
         return this.sourceFunctionAssistant;
-    }
-
-    private ModelExtensionDefinition getSourceFunctionMed() {
-        if (this.sourceFunctionMed == null) {
-            this.sourceFunctionMed = ExtensionPlugin.getInstance().getRegistry().getDefinition(SOURCE_FUNCTION_NAMESPACE_PREFIX);
-        }
-
-        return this.sourceFunctionMed;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.core.extension.ModelObjectExtensionAssistant#hasExtensionProperties(java.io.File)
-     */
-    @Override
-    public boolean hasExtensionProperties( File file ) throws Exception {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IPath location = Path.fromOSString(file.getAbsolutePath());
-        IFile modelFile = workspace.getRoot().getFileForLocation(location);
-
-        if ((modelFile != null) && ModelUtil.isModelFile(modelFile.getFullPath())) {
-            // since there is no MED saved in the file, the only way to check is to see if any model object has a 7.4 property
-            Collection<EObject> eObjects = getModelResource(modelFile).getEObjects();
-
-            for (EObject modelObject : eObjects) {
-                if (SqlAspectHelper.isProcedure(modelObject) && hasExtensionProperties(modelObject)) {
-                    return true;
-                }
-            }
-        }
-
-        // none found
-        return false;
     }
 
     /**
@@ -248,7 +184,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
             removeProperty(modelObject, OLD_PUSH_DOWN);
 
             // save new
-            getSourceFunctionAssistant().saveModelExtensionDefinition(modelObject, getSourceFunctionMed());
+            getSourceFunctionAssistant().saveModelExtensionDefinition(modelObject);
             getSourceFunctionAssistant().setPropertyValue(modelObject, NEW_PUSH_DOWN, newValue);
         } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId) || OLD_REST_METHOD.equals(propId)) {
             // convert all properties

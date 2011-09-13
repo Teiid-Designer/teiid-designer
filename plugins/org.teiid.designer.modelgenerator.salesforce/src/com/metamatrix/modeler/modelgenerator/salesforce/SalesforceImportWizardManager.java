@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,6 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+
 import com.metamatrix.modeler.compare.DifferenceProcessor;
 import com.metamatrix.modeler.compare.DifferenceReport;
 import com.metamatrix.modeler.compare.MergeProcessor;
@@ -176,16 +178,15 @@ public class SalesforceImportWizardManager {
 
             // Find the SF assistant in the registry...
             ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
-            
-            boolean supportsNamespace = assistant.supportsMyNamespace(this.updateModel);
+
             // If namespace is not yet supported, add the MED
-            if (!supportsNamespace) {
+            if (!assistant.supportsMyNamespace(this.updateModel)) {
                 // Get the SF definition - should be found in the registry
-                ModelExtensionDefinition definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
+                ModelExtensionDefinition definition = assistant.getModelExtensionDefinition();
 
                 // add Salesforce MED
                 if (this.updateModel != null && definition != null) {
-                    assistant.saveModelExtensionDefinition(this.updateModel, definition);
+                    assistant.saveModelExtensionDefinition(this.updateModel);
                 }
             }
 

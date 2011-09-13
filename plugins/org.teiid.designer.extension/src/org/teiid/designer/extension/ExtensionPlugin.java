@@ -47,7 +47,13 @@ public class ExtensionPlugin extends Plugin {
         return plugin;
     }
 
+    private ModelExtensionAssistantAggregator assistantAggregator;
+
     private ModelExtensionRegistry registry;
+
+    public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {
+        return this.assistantAggregator;
+    }
 
     public ModelExtensionRegistry getRegistry() {
         return this.registry;
@@ -180,6 +186,7 @@ public class ExtensionPlugin extends Plugin {
 
         try {
             this.registry = new ModelExtensionRegistry();
+            this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
 
             // load model extension registry
             loadRegistry();

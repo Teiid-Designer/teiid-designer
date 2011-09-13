@@ -9,12 +9,14 @@ package com.metamatrix.modeler.modelgenerator.salesforce;
 
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
 import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column.PICKLIST_VALUES;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +25,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -120,8 +123,7 @@ public class RelationalModelgenerator {
         resource.getContents().add(schema);
         
         // add Salesforce MED
-        ModelExtensionDefinition definition = ExtensionPlugin.getInstance().getRegistry().getDefinition(NAMESPACE_PREFIX);
-        this.assistant.saveModelExtensionDefinition(modelResource, definition);
+        this.assistant.saveModelExtensionDefinition(modelResource);
 
         // Loop over the salesforce metadata creating tables and columns
         Object[] objects = wizardManager.getDataModel().getSalesforceObjects();

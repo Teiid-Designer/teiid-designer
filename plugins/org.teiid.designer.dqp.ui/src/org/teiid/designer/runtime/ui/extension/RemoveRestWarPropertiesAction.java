@@ -8,12 +8,10 @@
 package org.teiid.designer.runtime.ui.extension;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
 
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.EObject;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -87,15 +85,13 @@ public class RemoveRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure,
-     *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure)
      */
     @Override
-    protected void runImpl( Procedure procedure,
-                            ModelExtensionDefinition definition ) throws Exception {
+    protected void runImpl( Procedure procedure ) throws Exception {
         // delete MED if necessary
         if (!this.hasDeprecatedProperties) {
-            getNewAssistant().removeModelExtensionDefinition(procedure, NAMESPACE_PREFIX);
+            getNewAssistant().removeModelExtensionDefinition(procedure);
         }
 
         // delete REST extension properties from all procedures

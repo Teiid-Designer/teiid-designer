@@ -8,9 +8,10 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
+
 import java.io.File;
-import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,7 +23,7 @@ import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -41,7 +42,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#supportsMyNamespace(java.lang.Object)
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#namespaceSupportedBy(java.lang.Object)
      */
     @Override
     public boolean supportsMyNamespace( Object modelObject ) throws Exception {
@@ -73,19 +74,11 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     }
 
     /**
-     * @param propId the property identifier whose namespace is being requested (cannot be <code>null</code> or empty)
-     * @return the namespace prefix or <code>null</code> if not found
-     */
-    protected String getNamespacePrefix( String propId ) {
-        CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
-        return ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
-    }
-
-    /**
      * {@inheritDoc}
      * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValue(java.lang.Object, java.lang.String)
-     * @throws IllegalArgumentException if the model object is not an {@link EObject}
+     * @throws IllegalArgumentException if the model object is not an {@link EObject}, if property is from a different namespace, or
+     *             if the associated property definition can't be found
      */
     @Override
     public String getOverriddenValue( Object modelObject,
@@ -112,25 +105,16 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     protected String getOverriddenValue( Object modelObject,
                                          String propId,
                                          String currentValue ) throws Exception {
-        CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
-
-        String namespacePrefix = getNamespacePrefix(propId);
-
-        // make sure there is a namespace
-        if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            throw new Exception(Util.getString(PREFIX + "emptyNamespacePrefix", propId)); //$NON-NLS-1$
-        }
-
-        // make sure namespace is registered
-        if (!getRegistry().isRegistered(namespacePrefix)) {
-            throw new Exception(Util.getString(PREFIX + "namespacePrefixUnregistered", propId)); //$NON-NLS-1$
+        // make sure right namespace
+        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+            throw new Exception(Util.getString(PREFIX + "wrongNamespacePrefix", propId, getNamespacePrefix())); //$NON-NLS-1$
         }
 
         // make sure the property definition is found
         PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
 
         if (propDefn == null) {
-            throw new Exception(Util.getString(PREFIX + "propertyDefinitiontNotFound", propId)); //$NON-NLS-1$
+            throw new Exception(Util.getString(PREFIX + "propertyDefinitionNotFound", propId)); //$NON-NLS-1$
         }
 
         String defaultValue = propDefn.getDefaultValue();
@@ -162,14 +146,17 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
             EMap<String, String> tags = annotation.getTags();
 
             for (String propId : tags.keySet()) {
-                try {
-                    String overridenValue = getOverriddenValue(modelObject, propId, tags.get(propId));
+                // only get properties of my namespace
+                if (getNamespacePrefix().equals(ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId))) {
+                    try {
+                        String overridenValue = getOverriddenValue(modelObject, propId, tags.get(propId));
 
-                    if (!CoreStringUtil.isEmpty(overridenValue)) {
-                        props.put(propId, overridenValue);
+                        if (!CoreStringUtil.isEmpty(overridenValue)) {
+                            props.put(propId, overridenValue);
+                        }
+                    } catch (Exception e) {
+                        Util.log(e);
                     }
-                } catch (Exception e) {
-                    Util.log(e);
                 }
             }
         }
@@ -208,29 +195,18 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     public Properties getPropertyValues( Object modelObject ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
-        ModelExtensionRegistry registry = getRegistry();
+        // get properties with overridden values
         Properties props = getOverriddenValues(modelObject);
 
-        // need to add in properties that have default values so see what MEDs are contained in the model
-        Collection<ModelExtensionAssistant> assistants = registry.getModelExtensionAssistants(modelObject.getClass().getName());
+        // add properties using default value
+        for (ModelExtensionPropertyDefinition propDefn : getModelExtensionDefinition().getPropertyDefinitions(modelObject.getClass()
+                                                                                                                         .getName())) {
+            if (!props.containsKey(propDefn.getId())) {
+                String defaultValue = propDefn.getDefaultValue();
 
-        // just return props if no assistants found
-        if (assistants.isEmpty()) {
-            return props;
-        }
-
-        // just take first assistant
-        String metaclassName = modelObject.getClass().getName();
-
-        for (String savedNamespacePrefix : ModelExtensionUtils.getSupportedNamespaces(getModelResource(modelObject))) {
-            for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(savedNamespacePrefix, metaclassName)) {
-                if (!props.containsKey(propDefn.getId())) {
-                    String defaultValue = propDefn.getDefaultValue();
-
-                    // add only if there is a default value
-                    if (!CoreStringUtil.isEmpty(defaultValue)) {
-                        props.put(propDefn.getId(), defaultValue);
-                    }
+                // add only if there is a default value
+                if (!CoreStringUtil.isEmpty(defaultValue)) {
+                    props.put(propDefn.getId(), defaultValue);
                 }
             }
         }
@@ -282,17 +258,27 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeModelExtensionDefinition(java.lang.Object,
-     *      java.lang.String)
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeModelExtensionDefinition(java.lang.Object)
      */
     @Override
-    public void removeModelExtensionDefinition( Object modelObject,
-                                                String namespacePrefix ) throws Exception {
-        ModelExtensionUtils.removeModelExtensionDefinition(getModelResource(modelObject), namespacePrefix);
+    public void removeModelExtensionDefinition( Object modelObject ) throws Exception {
+        ModelResource modelResource = getModelResource(modelObject);
+        ModelExtensionUtils.removeModelExtensionDefinition(modelResource, getNamespacePrefix());
 
-        // TODO remove any other model objects overridden properties
-        for (String propId : getOverriddenValues(modelObject).stringPropertyNames()) {
-            removeProperty(modelObject, propId);
+        // remove any other model objects overridden properties
+        ModelExtensionDefinition definition = getModelExtensionDefinition();
+
+        for (Object eObject : modelResource.getEObjects()) {
+            assert eObject instanceof EObject;
+            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
+
+            if (annotation != null) {
+                String metaclassName = eObject.getClass().getName();
+
+                for (ModelExtensionPropertyDefinition propDefn : definition.getPropertyDefinitions(metaclassName)) {
+                    removeProperty(eObject, propDefn.getId());
+                }
+            }
         }
     }
 
@@ -302,22 +288,26 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#removeProperty(java.lang.Object, java.lang.String)
      */
     @Override
-    protected void removeProperty( Object modelObject,
-                                   String propId ) throws Exception {
+    public void removeProperty( Object modelObject,
+                                String propId ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
+
+        // make sure right namespace
+        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+            throw new Exception(Util.getString(PREFIX + "wrongNamespacePrefix", propId, getNamespacePrefix())); //$NON-NLS-1$
+        }
+
         ModelExtensionUtils.removeProperty((EObject)modelObject, propId, true);
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#saveModelExtensionDefinition(java.lang.Object,
-     *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#saveModelExtensionDefinition(java.lang.Object)
      */
     @Override
-    public void saveModelExtensionDefinition( Object modelObject,
-                                              ModelExtensionDefinition definition ) throws Exception {
-        ModelExtensionUtils.updateModelExtensionDefinition(getModelResource(modelObject), definition);
+    public void saveModelExtensionDefinition( Object modelObject ) throws Exception {
+        ModelExtensionUtils.updateModelExtensionDefinition(getModelResource(modelObject), getModelExtensionDefinition());
     }
 
     /**

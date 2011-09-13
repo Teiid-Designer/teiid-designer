@@ -8,20 +8,22 @@
 package org.teiid.designer.ui.properties.extension;
 
 import static com.metamatrix.modeler.ui.UiConstants.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 
 /**
  * 
@@ -59,12 +61,8 @@ public class ModelExtensionPropertySource implements IPropertySource {
         Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
 
         try {
-            Collection<String> supportedNamespaces = ModelExtensionUtils.getSupportedNamespaces(ModelUtilities.getModelResource(this.eObject));
-            for (String namespacePrefix : supportedNamespaces) {
-                for (ModelExtensionPropertyDefinition propDefn : registry.getPropertyDefinitions(namespacePrefix, metaclassName)) {
-                    propDefns.add(propDefn);
-                }
-            }
+            ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
+            propDefns.addAll(aggregator.getPropertyDefinitions(this.eObject));
 
             // TODO remove this code when the "ext-custom" prefix is no longer supported
             // add in these manually as the MED will not have been saved in the model

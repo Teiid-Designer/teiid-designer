@@ -17,7 +17,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.teiid.designer.core.extension.deprecated.DeprecatedModelExtensionAssistant;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
 
@@ -163,17 +162,9 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
         try {
             if (ModelEditorManager.autoOpen(null, this.procedure, true)) {
                 // store REST MED in model
-                ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-                ModelExtensionDefinition definition = registry.getDefinition(NAMESPACE_PREFIX);
-
-                if (definition == null) {
-                    // should not happen
-                    UTIL.log(IStatus.ERROR, UTIL.getString(PREFIX + "missingRestModelExtensionDefinition")); //$NON-NLS-1$
-                } else {
-                    runImpl(this.procedure, definition);
-                    succeeded = true;
-                    MessageDialog.openInformation(null, null, getSuccessfulMessage());
-                }
+                runImpl(this.procedure);
+                succeeded = true;
+                MessageDialog.openInformation(null, null, getSuccessfulMessage());
             }
         } catch (Exception e) {
             UTIL.log(e);
@@ -192,10 +183,8 @@ public abstract class RestWarPropertiesAction extends SortableSelectionAction {
 
     /**
      * @param procedure the virtual procedure whose model resource should be
-     * @param definition the model extension definition that the action should use
      * @throws Exception if there is a problem accessing the procedure's model resource
      */
-    protected abstract void runImpl( Procedure procedure,
-                                     ModelExtensionDefinition definition ) throws Exception;
+    protected abstract void runImpl( Procedure procedure ) throws Exception;
 
 }

@@ -45,7 +45,6 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.udf.UdfManager;
 
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -171,7 +170,7 @@ public class CreatePushdownFunctionAction extends Action implements INewChildAct
                 // should not happen
             	UiConstants.Util.log(IStatus.ERROR, UiConstants.Util.getString("CreatePushdownFunctionAction.missingSourceFunctionModelExtensionDefinition")); //$NON-NLS-1$
             } else {
-                assistant.saveModelExtensionDefinition(procedure, definition);
+                assistant.saveModelExtensionDefinition(procedure);
                 assistant.setPropertyValue(procedure, PropertyIds.DETERMINISTIC, Boolean.toString(deterministic));
             }
         }

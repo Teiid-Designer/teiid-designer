@@ -8,7 +8,7 @@
 package org.teiid.designer.runtime.ui.extension;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.Procedure;
 
@@ -71,13 +71,11 @@ public class ApplyRestWarPropertiesAction extends RestWarPropertiesAction {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure,
-     *      org.teiid.designer.extension.definition.ModelExtensionDefinition)
+     * @see org.teiid.designer.runtime.ui.extension.RestWarPropertiesAction#runImpl(com.metamatrix.metamodels.relational.Procedure)
      */
     @Override
-    protected void runImpl( Procedure procedure,
-                            ModelExtensionDefinition definition ) throws Exception {
-        getNewAssistant().saveModelExtensionDefinition(procedure, definition);
+    protected void runImpl( Procedure procedure ) throws Exception {
+        getNewAssistant().saveModelExtensionDefinition(procedure);
     }
 
 }

@@ -8,16 +8,16 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.File;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
-import org.teiid.designer.extension.properties.ModelExtensionProperty;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -26,20 +26,23 @@ import com.metamatrix.core.util.CoreArgCheck;
  */
 public abstract class ModelExtensionAssistant {
 
+    private ModelExtensionDefinition definition;
+
     /**
-     * @param modelExtensionDefinition the model extension defintion where the property definition is being added (cannot be
-     *            <code>null</code>)
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param metaclassName the metaclass name being extended (cannot be <code>null</code> or empty)
      * @param propertyDefinition the property definition being added (cannot be <code>null</code>)
      */
-    public void addPropertyDefinition( ModelExtensionDefinition modelExtensionDefinition,
-                                       String metaclassName,
+    public void addPropertyDefinition( String metaclassName,
                                        ModelExtensionPropertyDefinition propertyDefinition ) {
-        CoreArgCheck.isNotNull(modelExtensionDefinition, "modelExtensionDefinition is null"); //$NON-NLS-1$
-        modelExtensionDefinition.addPropertyDefinition(metaclassName, propertyDefinition);
+        assert this.definition != null : "model extension definition is null"; //$NON-NLS-1$
+        this.definition.addPropertyDefinition(metaclassName, propertyDefinition);
     }
 
     /**
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param namespacePrefix the unique namespace prefix (never <code>null</code> or empty)
      * @param namespaceUri the unique namespace URI (never <code>null</code> or empty)
      * @param metamodelUri the metamodel URI this definition is extending (never <code>null</code> or empty)
@@ -48,18 +51,13 @@ public abstract class ModelExtensionAssistant {
     public ModelExtensionDefinition createModelExtensionDefinition( String namespacePrefix,
                                                                     String namespaceUri,
                                                                     String metamodelUri ) {
-        return new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri);
+        this.definition = new ModelExtensionDefinition(this, namespacePrefix, namespaceUri, metamodelUri);
+        return this.definition;
     }
 
     /**
-     * @param propDefn the property definition for the new property (cannot be <code>null</code>)
-     * @return the new property set to the default value (never <code>null</code>)
-     */
-    public ModelExtensionProperty createProperty( ModelExtensionPropertyDefinition propDefn ) {
-        return new ModelExtensionProperty(propDefn);
-    }
-
-    /**
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param simpleId the property identifier without the namespace prefix (cannot be <code>null</code> or empty)
      * @param displayName the display name (may be <code>null</code> or empty)
      * @param runtimeType the Teiid runtime type (cannot be <code>null</code> or empty)
@@ -96,9 +94,18 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
+     * @return the model extension definition (MED) (never <code>null</code>)
+     */
+    public ModelExtensionDefinition getModelExtensionDefinition() {
+        return this.definition;
+    }
+
+    /**
      * @return the namespace prefix (never <code>null</code> or empty)
      */
-    public abstract String getNamespacePrefix();
+    public final String getNamespacePrefix() {
+        return this.definition.getNamespacePrefix();
+    }
 
     /**
      * Obtains from the model object, the overridden property value of the specified property definition identifier. If the current
@@ -134,10 +141,13 @@ public abstract class ModelExtensionAssistant {
     protected ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
                                                                       String propId ) {
         CoreArgCheck.isNotNull(modelObject, "modelObject is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
 
-        ModelExtensionRegistry registry = getRegistry();
-        return registry.getPropertyDefinition(modelObject.getClass().getName(), propId);
+        // make sure right namespace
+        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+            return this.definition.getPropertyDefinition(modelObject.getClass().getName(), propId);
+        }
+
+        return null;
     }
 
     /**
@@ -161,15 +171,6 @@ public abstract class ModelExtensionAssistant {
      * @throws Exception if there is a problem obtaining the extension properties
      */
     public abstract Properties getPropertyValues( Object modelObject ) throws Exception;
-
-    /**
-     * Must be called only within the Eclipse runtime.
-     * 
-     * @return the model extension registry (never <code>null</code>)
-     */
-    protected ModelExtensionRegistry getRegistry() {
-        return ExtensionPlugin.getInstance().getRegistry();
-    }
 
     /**
      * @param file the file being checked for extension properties (cannot be <code>null</code>)
@@ -197,30 +198,28 @@ public abstract class ModelExtensionAssistant {
      * 
      * @param modelObject the model object whose resource the model extension definition is being removed from (cannot be
      *            <code>null</code>)
-     * @param namespacePrefix the namespace prefix of the model extension definition being deleted (cannot be <code>null</code>)
      * @throws Exception if the model extension definition could not be removed
      */
-    public abstract void removeModelExtensionDefinition( Object modelObject,
-                                                         String namespacePrefix ) throws Exception;
+    public abstract void removeModelExtensionDefinition( Object modelObject ) throws Exception;
 
     /**
      * @param modelObject the model object whose property is being removed (cannot be <code>null</code>)
      * @param propId the extension property full identifier (cannot be <code>null</code>)
      * @throws Exception if the extension property could not be removed
      */
-    protected abstract void removeProperty( Object modelObject,
-                                            String propId ) throws Exception;
+    public abstract void removeProperty( Object modelObject,
+                                         String propId ) throws Exception;
 
     /**
-     * @param modelResource the model object or resource where the specified definition will be saved to (cannot be
+     * @param modelObject the model object or resource where the model extension definition will be saved to (cannot be
      *            <code>null</code>)
-     * @param definition the model extension definition that needs to be saved (cannot be <code>null</code>)
      * @throws Exception if there is a problem saving the definition
      */
-    public abstract void saveModelExtensionDefinition( Object modelObject,
-                                                       ModelExtensionDefinition definition ) throws Exception;
+    public abstract void saveModelExtensionDefinition( Object modelObject ) throws Exception;
 
     /**
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param propertyDefinition the property definition (cannot be <code>null</code>)
      * @param allowedValues the new allowed values (can be <code>null</code>)
      */
@@ -231,17 +230,18 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
-     * @param modelExtensionDefinition the model extension definition whose description is being changed (cannot be
-     *            <code>null</code>)
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param newDescription the new definition description (can be <code>null</code> or empty)
      */
-    public void setDescription( ModelExtensionDefinition modelExtensionDefinition,
-                                String newDescription ) {
-        CoreArgCheck.isNotNull(modelExtensionDefinition, "modelExtensionDefinition is null"); //$NON-NLS-1$
-        modelExtensionDefinition.setDescription(newDescription);
+    public void setDefinitionDescription( String newDescription ) {
+        assert this.definition != null : "model extension definition is null"; //$NON-NLS-1$
+        this.definition.setDescription(newDescription);
     }
 
     /**
+     * This method should only be called by the {@link ModelExtensionDefinitionParser}.
+     * 
      * @param propertyDefinition the property definition whose description is being changed (cannot be <code>null</code>)
      * @param newDescription the new property definition description (can be <code>null</code> or empty)
      */
@@ -262,30 +262,28 @@ public abstract class ModelExtensionAssistant {
                                            String newValue ) throws Exception;
 
     /**
-     * If the version string is not parsable into an integer the default version is used.
+     * If the version string is not parsable into an integer the default version is used. This method should only be called by the
+     * {@link ModelExtensionDefinitionParser}.
      * 
-     * @param modelExtensionDefinition the model extension definition whose version is being changed (cannot be <code>null</code>)
      * @param versionString the version string (must be a string that can be parsed into an integer)
      * @see ModelExtensionDefinition#DEFAULT_VERSION
      */
-    public void setVersion( ModelExtensionDefinition modelExtensionDefinition,
-                            String versionString ) {
-        CoreArgCheck.isNotNull(modelExtensionDefinition, "modelExtensionDefinition is null"); //$NON-NLS-1$
+    public void setDefinitionVersion( String versionString ) {
+        assert this.definition != null : "model extension definition is null"; //$NON-NLS-1$
 
         try {
             int version = Integer.parseInt(versionString);
-            modelExtensionDefinition.setVersion(version);
+            this.definition.setVersion(version);
         } catch (NumberFormatException e) {
-            Util.log(IStatus.ERROR, e, NLS.bind(Messages.invalidDefinitionFileVersion,
-                                                modelExtensionDefinition.getNamespacePrefix(),
+            Util.log(IStatus.ERROR, e, NLS.bind(Messages.invalidDefinitionFileVersion, this.definition.getNamespacePrefix(),
                                                 ModelExtensionDefinition.DEFAULT_VERSION));
-            modelExtensionDefinition.setVersion(ModelExtensionDefinition.DEFAULT_VERSION);
+            this.definition.setVersion(ModelExtensionDefinition.DEFAULT_VERSION);
         }
     }
 
     /**
-     * @param modelObject the model object whose resource is being checked to see if it has the specified model extension
-     *        definition saved (cannot be <code>null</code>)
+     * @param modelObject the model object whose resource is being checked to see if it has the specified model extension definition
+     *            saved (cannot be <code>null</code>)
      * @return <code>true</code> if the model object's resource contains the namespace prefix
      * @throws Exception if there is a problem checking the model object's resource
      */

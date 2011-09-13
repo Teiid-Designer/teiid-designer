@@ -7,8 +7,6 @@
  */
 package org.teiid.designer.modelgenerator.salesforce.extension;
 
-import static com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PREFIX;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,16 +69,6 @@ public final class SalesforceModelExtensionAssistant extends ModelObjectExtensio
         }
 
         return super.createPropertyDefinition(id, displayName, type, required, defaultValue, fixedValue, advanced, masked, index);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
-     */
-    @Override
-    public String getNamespacePrefix() {
-        return NAMESPACE_PREFIX;
     }
 
 }

@@ -9,6 +9,7 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -194,6 +197,25 @@ public class ModelExtensionDefinition {
      */
     public String getNamespaceUri() {
         return this.namespaceUri;
+    }
+
+    /**
+     * @param metaclassName the metaclass name whose extended property is being requested (cannot be <code>null</code> or empty)
+     * @param propId the identifier of the property definition being requested (cannot be <code>null</code> or empty)
+     * @return the property definition or <code>null</code> if not found
+     */
+    public ModelExtensionPropertyDefinition getPropertyDefinition( String metaclassName,
+                                                                   String propId ) {
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propId, "propId is null"); //$NON-NLS-1$
+
+        Map<String, ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
+
+        if (props == null) {
+            return null;
+        }
+
+        return props.get(propId);
     }
 
     /**

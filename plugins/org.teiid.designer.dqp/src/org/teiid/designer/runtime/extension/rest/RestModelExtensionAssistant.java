@@ -16,16 +16,6 @@ import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 public class RestModelExtensionAssistant extends ModelObjectExtensionAssistant {
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
-     */
-    @Override
-    public String getNamespacePrefix() {
-        return RestModelExtensionConstants.NAMESPACE_PREFIX;
-    }
-
-    /**
      * @param modelObject the model object whose REST extension properties are being removed from (cannot be <code>null</code>)
      * @throws Exception if there is a problem accessing the model object's model resource
      */

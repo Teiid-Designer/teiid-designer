@@ -7,20 +7,8 @@
  */
 package com.metamatrix.metamodels.relational.extension;
 
-import static com.metamatrix.metamodels.relational.extension.SourceFunctionModelExtensionConstants.NAMESPACE_PREFIX;
-
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 
 public class SourceFunctionModelExtensionAssistant extends ModelObjectExtensionAssistant {
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getNamespacePrefix()
-     */
-    @Override
-    public String getNamespacePrefix() {
-        return NAMESPACE_PREFIX;
-    }
 
 }
