@@ -55,6 +55,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
+import com.metamatrix.modeler.internal.ui.util.DiagramProxy;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiConstants;
@@ -431,7 +432,7 @@ public class DescriptionView extends ModelerView
         Runnable work = new Runnable() {
             public void run() {
                 setText(getCurrentObjectDescription());
-                updateReadOnlyState();
+                updateActions();
             }
         };
 
@@ -478,7 +479,7 @@ public class DescriptionView extends ModelerView
                                   ISelection selection ) {
         if ((part != this) && !(part instanceof PropertySheet)) {
             setCurrentObject(SelectionUtilities.getSelectedObject(selection));
-            updateReadOnlyState();
+            updateActions();
         }
     }
 
@@ -585,20 +586,26 @@ public class DescriptionView extends ModelerView
     }
 
 
-    void updateReadOnlyState() {
+    void updateActions() {
 
-        boolean readOnly = false;
+        boolean enable = true;
 
+        // Check Read-only state
         if (this.currentModel != null) {
-            readOnly = this.currentModel.isReadOnly();//ModelUtilities.isReadOnly(this.currentModel);
+        	enable = !this.currentModel.isReadOnly();//ModelUtilities.isReadOnly(this.currentModel);
         } else if (this.currentObject != null) {
         	// TODO: - support selection of a VDB
         } else {
-        	readOnly = true;
+        	enable = false;
+        }
+        
+        // Check for Transient Diagrams
+        if( enable && this.currentObject instanceof DiagramProxy) {
+        	enable = false;
         }
 
-        this.editDescriptionAction.setEnabled(!readOnly);
-        this.clearDescriptionAction.setEnabled(!readOnly);
+        this.editDescriptionAction.setEnabled(enable);
+        this.clearDescriptionAction.setEnabled(enable);
     }
 
     /**
