@@ -2,3 +2,6 @@
 <!ENTITY BOOKID "Teiid_Designer_User_Guide">
 <!ENTITY YEAR "2011">
 <!ENTITY HOLDER "Red Hat">
+<!ENTITY BZPRODUCT "JBoss Developer Studio">
+<!ENTITY BZCOMPONENT "Teiid Designer User Guide">
+<!ENTITY BZURL "<ulink url='https://bugzilla.redhat.com/enter_bug.cgi?product=JBoss&percnt;20Developer&percnt;20Studio&percnt;204&amp;component=Teiid&percnt;20Designer&percnt;20User&percnt;20Guide&amp;version=4.1.0&amp;short_desc=Error&percnt;20in&percnt;20Teiid&percnt;20Designer&percnt;20User&percnt;20Guide'>http://bugzilla.redhat.com/</ulink>">

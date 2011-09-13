@@ -164,8 +164,8 @@
 		<!-- <para><emphasis role="bold">Go To:  <ulink url="index.html">Table of Contents</ulink></emphasis></para>  -->
 		
 		<para>Views are dockable windows which present data from your models or your 
-			modeling session in various forms. Some views support particular 
-			<xref linkend="editors-chapter" /> and 
+			modeling session in various forms. Some views support particular editors
+			<xref linkend="editors-view" /> and 
 			their content is dependent on workspace selection. This section summarizes most 
 			of the views used and available in Teiid Designer. The full list is presented in 
 			the main menu's <emphasis>Window > Show View > Other...</emphasis> dialog 

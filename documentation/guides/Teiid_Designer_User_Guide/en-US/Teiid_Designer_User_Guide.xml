@@ -5,17 +5,19 @@
 <xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 <xi:include href="Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 <xi:include href="intro.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="perspectives.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="mainmenu.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="views.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="editors.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
+<!--<xi:include href="perspectives.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>-->
+	<!--<xi:include href="mainmenu.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>-->
+		<!--<xi:include href="views.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>-->
+			<!--<xi:include href="editors.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>-->
 <xi:include href="newmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
+<xi:include href="importers.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 <xi:include href="editingmodelobjects.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
+<xi:include href="metadataspecificmodeling.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
-<xi:include href="relationships.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
+<!--<xi:include href="relationships.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>-->
 <xi:include href="preferences.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
+<xi:include href="ui-reference.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 <xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude"></xi:include>
 </book>

@@ -534,7 +534,6 @@
               <imagedata fileref="images/screencaps/json-input-example.png"/></imageobject></mediaobject>
             </figure>
           </listitem>
-          <listitem/>
           <listitem>
             <para><emphasis role="bold">Step 2</emphasis> - Now we need 
             to identify our procedure as REST eligible. To do this we 
@@ -699,7 +698,7 @@
               <imagedata fileref="images/screencaps/generate-rest-war-wizard-confirmation-dialog.png"/></imageobject></mediaobject>
             </figure>
           </listitem>
-        </itemizedlist>
+	  </itemizedlist>
       </section>
 		</section>
 	</section>
