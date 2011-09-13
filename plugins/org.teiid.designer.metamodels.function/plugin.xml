@@ -85,4 +85,13 @@
             name="com.metamatrix.metamodels.function.compare.FunctionMatcherFactory">
       </class>
    </extension>
+   
+<!-- Designates valid extensible metamodel -->
+   <extension
+         point="org.teiid.designer.extension.extensibleMetamodelProvider">
+      <definition 
+            metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction">
+      </definition>
+   </extension>
+   
 </plugin>

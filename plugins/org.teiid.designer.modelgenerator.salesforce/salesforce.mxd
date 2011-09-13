@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Salesforce" namespaceUri="org.teiid.designer.extension.salesforce"
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/relational" namespaceUri="org.teiid.designer.extension.salesforce"
 	namespacePrefix="salesforce" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1"
 >

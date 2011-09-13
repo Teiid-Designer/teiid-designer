@@ -95,5 +95,13 @@
             name="com.metamatrix.metamodels.webservice.compare.WebServiceMatcherFactory">
       </class>
    </extension>
+   
+<!-- Designates valid extensible metamodel -->
+   <extension
+         point="org.teiid.designer.extension.extensibleMetamodelProvider">
+      <definition 
+            metamodelUri="http://www.metamatrix.com/metamodels/WebService">
+      </definition>
+   </extension>
 
 </plugin>

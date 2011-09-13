@@ -190,4 +190,13 @@
             path="sourcefunction.mxd">
       </extensionDefinition>
    </extension>
+   
+<!-- Designates valid extensible metamodel -->
+   <extension
+         point="org.teiid.designer.extension.extensibleMetamodelProvider">
+      <definition 
+            metamodelUri="http://www.metamatrix.com/metamodels/Relational">
+      </definition>
+   </extension>
+   
 </plugin>

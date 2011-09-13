@@ -32,6 +32,7 @@ public class Messages extends NLS {
     public static String modelExtensionAssistantSetIdCalled;
     public static String namespacePrefixAlreadyRegistered;
     public static String namespaceUriAlreadyRegistered;
+    public static String invalidMetamodelUriExtension;
     public static String problemConstructingModelExtensionAssistantClass;
     public static String unknownPropertyType;
     public static String unknownRegistryQueryType;

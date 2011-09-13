@@ -16,7 +16,7 @@
    	eNS_URI value defined in the EPackage class for that metamodel.
    -->
    <extension
-         id="xmldoc"
+         id="xmldocxmldoc"
          name="%metamodelName"
          point="org.teiid.designer.core.metamodel">
       <uri>
@@ -192,4 +192,13 @@
          point="org.teiid.designer.core.pasteContributor">
       <class name="com.metamatrix.metamodels.xml.PasteContributor"/>
    </extension>
+   
+<!-- Designates valid extensible metamodel -->
+   <extension
+         point="org.teiid.designer.extension.extensibleMetamodelProvider">
+      <definition 
+            metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument">
+      </definition>
+   </extension>
+   
 </plugin>
