@@ -193,14 +193,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.designer.modelgenerator.uml2.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.teiid.designer.modelgenerator.wsdl.test"
          download-size="0"
          install-size="0"
