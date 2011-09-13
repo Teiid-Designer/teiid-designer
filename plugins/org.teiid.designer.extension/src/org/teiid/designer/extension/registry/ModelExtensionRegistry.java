@@ -17,12 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -35,10 +30,6 @@ import com.metamatrix.core.util.CoreStringUtil;
  * 
  */
 public final class ModelExtensionRegistry {
-
-    public final static String EXTENSIBLE_METAMODEL_EXT_ID = "extensibleMetamodelProvider"; //$NON-NLS-1$
-    public final static String METAMODEL_URI_ELEMENT = "definition"; //$NON-NLS-1$
-    public final static String METAMODEL_URI_ATTR = "metamodelUri"; //$NON-NLS-1$
 
     /**
      * Key is namespace prefix, value is model extension definition. Never <code>null</code>.
@@ -60,8 +51,6 @@ public final class ModelExtensionRegistry {
      */
     private ModelExtensionDefinitionParser parser;
 
-    private final Set<String> extensibleMetamodelUris;
-
     /**
      * @throws IllegalStateException if there is a problem with the model extension XSD
      */
@@ -70,8 +59,6 @@ public final class ModelExtensionRegistry {
         this.listeners = new CopyOnWriteArrayList<RegistryListener>();
         this.namespaces = new HashMap<String, String>();
         this.parser = new ModelExtensionDefinitionParser();
-        // The set of valid metamodel URIs which can be extended
-        this.extensibleMetamodelUris = loadExtensibleMetamodelUris();
     }
 
     /**
@@ -81,7 +68,8 @@ public final class ModelExtensionRegistry {
      * @throws Exception if the definition file is <code>null</code> or if there is a problem parsing the file
      */
     public ModelExtensionDefinition addDefinition( InputStream definitionStream,
-                                                   ModelExtensionAssistant assistant ) throws Exception {
+                                                   ModelExtensionAssistant assistant,
+                                                   Set<String> extensibleMetamodelUris ) throws Exception {
         ModelExtensionDefinition definition = this.parser.parse(definitionStream, assistant);
         assert definition != null : "parser should not return a null model extension definition"; //$NON-NLS-1$
 
@@ -101,7 +89,7 @@ public final class ModelExtensionRegistry {
 
         // Determine if the definition extends a valid Metamodel
         String metamodelUri = definition.getMetamodelUri();
-        if (!this.extensibleMetamodelUris.contains(metamodelUri.toUpperCase())) {
+        if (!extensibleMetamodelUris.contains(metamodelUri.toUpperCase())) {
             throw new Exception(NLS.bind(Messages.invalidMetamodelUriExtension, metamodelUri));
         }
 
@@ -262,36 +250,5 @@ public final class ModelExtensionRegistry {
         return this.listeners.remove(listener);
     }
 
-    /**
-     * Loads the extension point contributors which indicate the valid extensible metamodel URIs.
-     * 
-     * @return the set of valid extensible URIs (never <code>null</code>)
-     */
-    private Set<String> loadExtensibleMetamodelUris() {
-        Set<String> metamodelUris = new HashSet<String>();
-
-        IExtensionPoint epExtensionPoint = Platform.getExtensionRegistry().getExtensionPoint(ExtensionPlugin.PLUGIN_ID,
-                                                                                             EXTENSIBLE_METAMODEL_EXT_ID);
-        IExtension[] extensions = epExtensionPoint.getExtensions();
-        // process each extension
-        for (int iExtensionIndex = 0; iExtensionIndex < extensions.length; iExtensionIndex++) {
-
-            IConfigurationElement[] elements = extensions[iExtensionIndex].getConfigurationElements();
-
-            // process each element within this extension
-            for (int iElementIndex = 0; iElementIndex < elements.length; iElementIndex++) {
-                String sElementName = elements[iElementIndex].getName();
-
-                if (sElementName.equals(METAMODEL_URI_ELEMENT)) {
-                    String metamodelUri = elements[iElementIndex].getAttribute(METAMODEL_URI_ATTR);
-                    if (metamodelUri != null && metamodelUri.trim().length() != 0) {
-                        metamodelUris.add(metamodelUri.toUpperCase());
-                    }
-                }
-
-            }
-        }
-        return metamodelUris;
-    }
 
 }

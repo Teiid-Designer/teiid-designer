@@ -10,7 +10,8 @@ package org.teiid.designer.extension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -24,7 +25,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -80,7 +80,7 @@ public class ExtensionPlugin extends Plugin {
         return false;
     }
 
-    private void loadRegistry() {
+    private void loadRegistry( final Set<String> allowedMetamodelUris ) {
         final String EXT_PT = PLUGIN_ID + ".modelExtensionProvider"; //$NON-NLS-1$
         final String PATH = "path"; //$NON-NLS-1$
         final String CLASS_NAME = "className"; //$NON-NLS-1$
@@ -157,7 +157,9 @@ public class ExtensionPlugin extends Plugin {
                          */
                         @Override
                         public void run() throws Exception {
-                            getRegistry().addDefinition(new FileInputStream(defnFile), (ModelExtensionAssistant)assistant);
+                            getRegistry().addDefinition(new FileInputStream(defnFile),
+                                                        (ModelExtensionAssistant)assistant,
+                                                        allowedMetamodelUris);
                         }
                     };
 
@@ -169,6 +171,33 @@ public class ExtensionPlugin extends Plugin {
         } catch (Exception e) {
             Util.log(IStatus.ERROR, e, Messages.errorProcessingExtensionPoint);
         }
+    }
+
+    /**
+     * Loads the extension point contributors which indicate the valid extensible metamodel URIs.
+     * 
+     * @return the set of valid extensible URIs (never <code>null</code>)
+     */
+    private Set<String> loadExtensibleMetamodelUris() {
+        final String EXT_PT = PLUGIN_ID + ".extensibleMetamodelProvider"; //$NON-NLS-1$
+        final String METAMODEL_URI_ELEMENT = "definition"; //$NON-NLS-1$
+        final String METAMODEL_URI_ATTR = "metamodelUri"; //$NON-NLS-1$
+
+        Set<String> metamodelUris = new HashSet<String>();
+
+        IConfigurationElement[] configElements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_PT);
+
+        for (IConfigurationElement configElement : configElements) {
+            String sElementName = configElement.getName();
+
+            if (METAMODEL_URI_ELEMENT.equals(sElementName)) {
+                String metamodelUri = configElement.getAttribute(METAMODEL_URI_ATTR);
+                if (metamodelUri != null && metamodelUri.trim().length() != 0) {
+                    metamodelUris.add(metamodelUri.toUpperCase());
+                }
+            }
+        }
+        return metamodelUris;
     }
 
     /**
@@ -188,8 +217,9 @@ public class ExtensionPlugin extends Plugin {
             this.registry = new ModelExtensionRegistry();
             this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
 
+            Set<String> extensibleMetamodelUris = loadExtensibleMetamodelUris();
             // load model extension registry
-            loadRegistry();
+            loadRegistry(extensibleMetamodelUris);
         } catch (Exception e) {
             Util.log(e);
             throw e;
