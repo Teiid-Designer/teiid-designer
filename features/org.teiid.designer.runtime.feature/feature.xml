@@ -27,39 +27,38 @@ Some portions may be licensed to Red Hat, Inc. under one or more contributor lic
          name="Teiid Designer Design-time"/>
 
    <requires>
-      <import feature="org.eclipse.datatools.common.doc.user" 					version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.connectivity.doc.user" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.connectivity.feature" 				version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.common.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.connectivity.oda.designer.feature" version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.connectivity.oda.feature" 			version="1.7.1" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.doc.user" 							version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.apache.derby.feature" 	version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.feature" 				version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.hsqldb.feature"			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.ibm.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.ingres.feature" 		version="1.9.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.jdbc.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.jdt.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.msft.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.mysql.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.oda.designer.feature" 	version="1.7.1" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.oda.feature" 			version="1.7.1" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.oracle.feature" 		version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.postgresql.feature" 	version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.sap.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.sqlite.feature" 		version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.enablement.sybase.feature" 		version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.intro" 							version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.modelbase.feature" 				version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.data.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.ddl.feature" 			version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.ddlgen.feature" 		version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.feature" 				version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.parsers.feature" 		version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.results.feature" 		version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.connectivity.oda.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.doc.user" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.apache.derby.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.hsqldb.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.ibm.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.ingres.feature" version="1.9.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.jdbc.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.jdt.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.msft.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.mysql.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oda.designer.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oda.feature" version="1.7.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.oracle.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.postgresql.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sap.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sqlite.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.modelbase.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.data.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddl.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.ddlgen.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.parsers.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.results.feature" version="1.7.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.datatools.sqldevtools.schemaobjecteditor.feature" version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" 	version="1.7.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.datatools.sqltools.doc.user" 				version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqldevtools.sqlbuilder.feature" version="1.7.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.datatools.sqltools.doc.user" version="1.7.0" match="greaterOrEqual"/>
       <import plugin="org.jdom"/>
    </requires>
 
