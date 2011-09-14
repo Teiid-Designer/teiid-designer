@@ -8,6 +8,28 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor"
+            default="true"
+            extensions="mxd"
+            id="org.teiid.designer.extension.ui.modelDefinitionEditor"
+            name="Model Extension Definition">
+      </editor>
+   </extension>
+
+<!-- Model Extension Registry View -->
+   <extension
+      point="org.eclipse.ui.views">
+      <view
+         name="%modelExtensionRegistryView"
+         icon="icons/full/cview16/model-extension-registry-view.png"
+         category="com.metamatrix.modeler.ui"
+         class="org.teiid.designer.extension.ui.views.ModelExtensionRegistryView"
+         id="org.teiid.designer.extension.ui.views.modelExtensionRegistryView">
+      </view>
+   </extension>
 <!--
 	<extension
 		id="EditExtensionPropertiesAction"

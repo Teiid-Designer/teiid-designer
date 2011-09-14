@@ -7,3 +7,10 @@ Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.teiid.designer.extension,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.teiid.designer.ui.common;bundle-version="7.5.0"
