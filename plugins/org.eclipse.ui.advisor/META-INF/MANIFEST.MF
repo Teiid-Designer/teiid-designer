@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Advisor
+Bundle-SymbolicName: org.eclipse.ui.advisor
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.jface,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.forms
+Export-Package: org.eclipse.ui.advisor,
+ org.eclipse.ui.advisor.core

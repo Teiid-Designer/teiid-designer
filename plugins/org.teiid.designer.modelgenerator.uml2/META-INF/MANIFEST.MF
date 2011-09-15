@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.uml2
-Bundle-Version: 7.5.0.qualifier
+Bundle-Version: 7.6.0.qualifier
 Bundle-Activator: com.metamatrix.modeler.modelgenerator.uml2.Uml2ModelGeneratorPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
