@@ -37,6 +37,11 @@ public class ModelExtensionDefinition {
     public static final int DEFAULT_VERSION = 1;
 
     /**
+     * Indicates if this MED is a built-in and therefore should not be unregistered. Defaults to {@value} .
+     */
+    private boolean builtIn;
+
+    /**
      * The model extension assistant (never <code>null</code>).
      */
     private final ModelExtensionAssistant assistant;
@@ -250,6 +255,13 @@ public class ModelExtensionDefinition {
     }
 
     /**
+     * @return <code>true</code> if this MED is a built-in and therefore should not be unregistered
+     */
+    public boolean isBuiltIn() {
+        return this.builtIn;
+    }
+
+    /**
      * Broadcasts the property change to all registered listeners.
      * 
      * @param property the property that has been changed (cannot be <code>null</code>)
@@ -278,6 +290,13 @@ public class ModelExtensionDefinition {
     public boolean removeListener( PropertyChangeListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
         return this.listeners.remove(listener);
+    }
+
+    /**
+     * Marks this MED as being a built-in and therefore cannot be unregistered.
+     */
+    public void markAsBuiltIn() {
+        this.builtIn = true;
     }
 
     /**

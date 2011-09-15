@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/relational" namespaceUri="org.teiid.designer.extension.sourcefunction"
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.sourcefunction"
 	namespacePrefix="sourcefunction" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
 	<p:description>Source Function properties</p:description>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/relational" namespaceUri="org.teiid.designer.extension.rest"
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.rest"
 	namespacePrefix="rest" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
 	<p:description>REST extended virtual procedure properties</p:description>

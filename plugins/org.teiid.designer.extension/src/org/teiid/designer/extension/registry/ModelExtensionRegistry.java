@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,12 +18,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -30,6 +33,10 @@ import com.metamatrix.core.util.CoreStringUtil;
  * 
  */
 public final class ModelExtensionRegistry {
+    /**
+     * The metamodel URIs that can have extension properties associated with them.
+     */
+    private Set<String> extensibleMetamodelUris;
 
     /**
      * Key is namespace prefix, value is model extension definition. Never <code>null</code>.
@@ -68,8 +75,7 @@ public final class ModelExtensionRegistry {
      * @throws Exception if the definition file is <code>null</code> or if there is a problem parsing the file
      */
     public ModelExtensionDefinition addDefinition( InputStream definitionStream,
-                                                   ModelExtensionAssistant assistant,
-                                                   Set<String> extensibleMetamodelUris ) throws Exception {
+                                                   ModelExtensionAssistant assistant ) throws Exception {
         ModelExtensionDefinition definition = this.parser.parse(definitionStream, assistant);
         assert definition != null : "parser should not return a null model extension definition"; //$NON-NLS-1$
 
@@ -89,7 +95,8 @@ public final class ModelExtensionRegistry {
 
         // Determine if the definition extends a valid Metamodel
         String metamodelUri = definition.getMetamodelUri();
-        if (!extensibleMetamodelUris.contains(metamodelUri.toUpperCase())) {
+
+        if ((this.extensibleMetamodelUris == null) || !this.extensibleMetamodelUris.contains(metamodelUri)) {
             throw new Exception(NLS.bind(Messages.invalidMetamodelUriExtension, metamodelUri));
         }
 
@@ -250,5 +257,18 @@ public final class ModelExtensionRegistry {
         return this.listeners.remove(listener);
     }
 
+    /**
+     * <strong>This method is only called at startup by the {@link org.teiid.designer.extension.ExtensionPlugin}.</strong>
+     * 
+     * @param allowedMetamodelUris the metamodel URIs that can have extension properties (cannot be <code>null</code>)
+     * @throws Exception if this method is call more than once
+     */
+    public void setMetamodelUris( Set<String> extensibleMetamodelUris ) throws Exception {
+        CoreArgCheck.isNotNull(extensibleMetamodelUris, "extensibleMetamodelUris"); //$NON-NLS-1$
+
+        // this will be set at plugin startup and should not be set again
+        assert (this.extensibleMetamodelUris == null) : "Extendable metamodel URIs being set for second time"; //$NON-NLS-1$
+        this.extensibleMetamodelUris = extensibleMetamodelUris;
+    }
 
 }
