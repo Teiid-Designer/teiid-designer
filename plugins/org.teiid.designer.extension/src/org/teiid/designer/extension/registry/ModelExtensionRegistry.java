@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,14 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -246,6 +243,15 @@ public final class ModelExtensionRegistry {
      */
     public boolean isRegistered( String namespacePrefix ) {
         return this.definitions.containsKey(namespacePrefix);
+    }
+
+    /**
+     * @param metamodelURI the metamodel URI being checked (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if the provided URI is included in the list of extendable metamodel URIs
+     */
+    public boolean isExtendable( String metamodelUri ) {
+        CoreArgCheck.isNotEmpty(metamodelUri, "metamodelUri is empty"); //$NON-NLS-1$
+        return this.extensibleMetamodelUris.contains(metamodelUri);
     }
 
     /**

@@ -30,6 +30,18 @@ public class Messages extends NLS {
     public static String unregisterMedActionText;
     public static String unregisterMedActionToolTip;
     
+    public static String newMedWizardTitle;
+    public static String newMedWizardPageTitle;
+    public static String newMedWizardNameLabel;
+    public static String newMedWizardFolderLabel;
+    public static String newMedWizardInitialMsg;
+    public static String newMedWizardCreateFileErrorMsg;
+    public static String newMedWizardNotModelProjMsg;
+    public static String newMedWizardSelectFolderMsg;
+    public static String newMedWizardMedNameErrorMsg;
+
+    public static String manageModelExtensionDefnsActionTitle;
+
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }

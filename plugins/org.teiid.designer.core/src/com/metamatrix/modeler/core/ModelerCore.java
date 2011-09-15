@@ -187,6 +187,13 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
     public static final String VDB_FILE_EXTENSION = ".vdb"; //$NON-NLS-1$
 
     /**
+     * The file extension of Model Extension Definition (MED) files.
+     * 
+     * @since 7.6
+     */
+    public static final String MED_FILE_EXTENSION = ".mxd"; //$NON-NLS-1$
+
+    /**
      * The file extension of the Eclipse <code>.project</code> file.
      * 
      * @since 6.0.0

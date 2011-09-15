@@ -182,6 +182,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
         theLayout.addNewWizardShortcut(NEW_FOLDER_WIZARD);
         theLayout.addNewWizardShortcut(NEW_MODEL_WIZARD);
         theLayout.addNewWizardShortcut(NEW_VDB_WIZARD);
+        theLayout.addNewWizardShortcut(NEW_MED_WIZARD);
 
 
     }

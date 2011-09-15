@@ -8,10 +8,8 @@
 package com.metamatrix.modeler.ui;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IPageLayout;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.PluginUtilImpl;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
@@ -73,6 +71,7 @@ public interface UiConstants {
         String NEW_MODEL_WIZARD = "newModel"; //$NON-NLS-1$
         String NEW_PROJECT_WIZARD = "newModelProject"; //$NON-NLS-1$
         String NEW_VDB_WIZARD = "newVdbWizard"; //$NON-NLS-1$
+        String NEW_MED_WIZARD = "newMedWizard"; //$NON-NLS-1$
         String NEW_FOLDER_WIZARD = "org.eclipse.ui.wizards.new.folder"; //$NON-NLS-1$
 
         // Views

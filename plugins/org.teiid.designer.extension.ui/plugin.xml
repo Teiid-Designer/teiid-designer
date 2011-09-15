@@ -30,6 +30,37 @@
          id="org.teiid.designer.extension.ui.views.modelExtensionRegistryView">
       </view>
    </extension>
+
+<!-- New wizards -->
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="%modelCategory"
+            id="com.metamatrix.modeler.ui">
+      </category>
+<!-- New Model Extension Definition wizard -->
+      <wizard
+            name="%newMedWizard"
+            icon="icons/full/ctool16/newvdb_wiz.gif"
+            category="com.metamatrix.modeler.ui"
+            class="org.teiid.designer.extension.ui.wizards.NewMedWizard"
+            id="newMedWizard">
+         <description>
+            %newMedWizardDescription
+         </description>
+      </wizard>
+   </extension> 
+   
+   <extension
+        id="ManageModelExtensionDefnsAction"
+        name="%manageModelExtensionDefnsAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.extension.ui.actions.ManageModelExtensionDefnsAction"
+         label="%manageModelExtensionDefnsAction.label">
+      </resourceAction>
+   </extension>
+
 <!--
 	<extension
 		id="EditExtensionPropertiesAction"
