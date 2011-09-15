@@ -12,6 +12,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
+    public static String builtInColumnText;
     public static String descriptionColumnText;
     public static String extendedMetamodelUriColumnText;
     public static String namespacePrefixColumnText;

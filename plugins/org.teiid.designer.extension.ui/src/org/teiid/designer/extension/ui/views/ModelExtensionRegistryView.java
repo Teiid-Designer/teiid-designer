@@ -7,6 +7,10 @@
  */
 package org.teiid.designer.extension.ui.views;
 
+import static org.teiid.designer.extension.ui.UiConstants.UTIL;
+import static org.teiid.designer.extension.ui.UiConstants.Images.CHECK_MARK;
+
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -17,6 +21,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -33,24 +38,32 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.extension.registry.RegistryEvent;
+import org.teiid.designer.extension.registry.RegistryListener;
+import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
  */
-public class ModelExtensionRegistryView extends ViewPart {
+public final class ModelExtensionRegistryView extends ViewPart {
 
     private IAction cloneMedAction;
 
@@ -68,6 +81,42 @@ public class ModelExtensionRegistryView extends ViewPart {
 
     public ModelExtensionRegistryView() {
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
+        this.registry.addListener(new RegistryListener() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.teiid.designer.extension.registry.RegistryListener#process(org.teiid.designer.extension.registry.RegistryEvent)
+             */
+            @Override
+            public void process( RegistryEvent event ) {
+                handleRegistryChanged(event);
+            }
+        });
+    }
+
+    private void configureColumn( TableViewerColumn viewerColumn,
+                                  int columnIndex,
+                                  String headerText,
+                                  boolean resizable ) {
+        viewerColumn.setLabelProvider(new MedLabelProvider(columnIndex));
+
+        TableColumn column = viewerColumn.getColumn();
+        column.setText(headerText);
+        column.setMoveable(false);
+        column.setResizable(resizable);
+    }
+
+    private void configureMenu( IMenuManager menuMgr ) {
+        menuMgr.add(this.findMedReferencesAction);
+    }
+
+    private void configureToolBar( IToolBarManager toolBarMgr ) {
+        toolBarMgr.add(this.registerMedAction);
+        toolBarMgr.add(this.unregisterMedAction);
+        toolBarMgr.add(this.openMedEditorAction);
+        toolBarMgr.add(this.cloneMedAction);
+        toolBarMgr.update(true);
     }
 
     private void createActions() {
@@ -84,6 +133,9 @@ public class ModelExtensionRegistryView extends ViewPart {
         };
         this.cloneMedAction.setToolTipText(Messages.cloneMedActionToolTip);
         this.cloneMedAction.setEnabled(false);
+        this.cloneMedAction.setImageDescriptor(PlatformUI.getWorkbench()
+                                                         .getSharedImages()
+                                                         .getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 
         this.findMedReferencesAction = new Action(Messages.findMedReferencesActionText, SWT.BORDER) {
             /**
@@ -99,6 +151,13 @@ public class ModelExtensionRegistryView extends ViewPart {
         this.findMedReferencesAction.setToolTipText(Messages.findMedReferencesActionToolTip);
         this.findMedReferencesAction.setEnabled(false);
 
+        try {
+            URL imageUrl = new URL("platform:/plugin/org.eclipse.search/icons/full/etool16/search.gif"); //$NON-NLS-1$
+            this.findMedReferencesAction.setImageDescriptor(ImageDescriptor.createFromURL(imageUrl));
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
         this.openMedEditorAction = new Action(Messages.openMedActionText, SWT.BORDER) {
             /**
              * {@inheritDoc}
@@ -112,6 +171,9 @@ public class ModelExtensionRegistryView extends ViewPart {
         };
         this.openMedEditorAction.setToolTipText(Messages.openMedActionToolTip);
         this.openMedEditorAction.setEnabled(false);
+        this.openMedEditorAction.setImageDescriptor(PlatformUI.getWorkbench()
+                                                              .getSharedImages()
+                                                              .getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
 
         this.registerMedAction = new Action(Messages.registerMedActionText, SWT.BORDER) {
             /**
@@ -125,6 +187,9 @@ public class ModelExtensionRegistryView extends ViewPart {
             }
         };
         this.registerMedAction.setToolTipText(Messages.registerMedActionToolTip);
+        this.registerMedAction.setImageDescriptor(PlatformUI.getWorkbench()
+                                                            .getSharedImages()
+                                                            .getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
 
         this.unregisterMedAction = new Action(Messages.unregisterMedActionText, SWT.BORDER) {
             /**
@@ -139,32 +204,34 @@ public class ModelExtensionRegistryView extends ViewPart {
         };
         this.unregisterMedAction.setToolTipText(Messages.unregisterMedActionToolTip);
         this.unregisterMedAction.setEnabled(false);
+        this.unregisterMedAction.setImageDescriptor(PlatformUI.getWorkbench()
+                                                              .getSharedImages()
+                                                              .getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
     }
 
     private void createColumns( final Table table ) {
-        // must create in the order in ColumnIndexes
-        // TODO add builtin column
-        TableViewerColumn column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        column.getColumn().setText(ColumnHeaders.NAMESPACE_PREFIX);
-        column.setLabelProvider(new MedLabelProvider(ColumnIndexes.NAMESPACE_PREFIX));
+        // NOTE: create in the order in ColumnIndexes
+        TableViewerColumn column = new TableViewerColumn(this.viewer, SWT.CENTER);
+        configureColumn(column, ColumnIndexes.BUILT_IN, ColumnHeaders.BUILT_IN, false);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        column.getColumn().setText(ColumnHeaders.NAMESPACE_URI);
-        column.setLabelProvider(new MedLabelProvider(ColumnIndexes.NAMESPACE_URI));
+        configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, true);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
-        column.getColumn().setText(ColumnHeaders.METAMODEL_URI);
-        column.setLabelProvider(new MedLabelProvider(ColumnIndexes.METAMODEL_URI));
+        configureColumn(column, ColumnIndexes.NAMESPACE_URI, ColumnHeaders.NAMESPACE_URI, true);
+
+        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        configureColumn(column, ColumnIndexes.METAMODEL_URI, ColumnHeaders.METAMODEL_URI, true);
 
         column = new TableViewerColumn(this.viewer, SWT.RIGHT);
-        column.getColumn().setText(ColumnHeaders.VERSION);
-        column.setLabelProvider(new MedLabelProvider(ColumnIndexes.VERSION));
+        configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, true);
 
         final TableViewerColumn lastColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
-        lastColumn.getColumn().setText(ColumnHeaders.DESCRIPTION);
-        lastColumn.setLabelProvider(new MedLabelProvider(ColumnIndexes.DESCRIPTION));
+        configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
 
+        // size the last column to be equal to it's packed size or the outer width of the table
         table.addControlListener(new ControlAdapter() {
+
             /**
              * {@inheritDoc}
              * 
@@ -172,9 +239,30 @@ public class ModelExtensionRegistryView extends ViewPart {
              */
             @Override
             public void controlResized( ControlEvent e ) {
-                lastColumn.getColumn().setWidth(table.getSize().x);
+                TableColumn descriptionColumn = lastColumn.getColumn();
+                descriptionColumn.pack();
+
+                int total = 0;
+
+                for (TableColumn column : table.getColumns()) {
+                    if (column != descriptionColumn) {
+                        total += column.getWidth();
+                    }
+                }
+
+                lastColumn.getColumn().setWidth(Math.max(descriptionColumn.getWidth(), (table.getSize().x - total)));
             }
         });
+    }
+
+    private MenuManager createContextMenu() {
+        MenuManager mgr = new MenuManager();
+        mgr.add(this.registerMedAction);
+        mgr.add(this.unregisterMedAction);
+        mgr.add(this.openMedEditorAction);
+        mgr.add(this.cloneMedAction);
+
+        return mgr;
     }
 
     /**
@@ -271,31 +359,38 @@ public class ModelExtensionRegistryView extends ViewPart {
             }
         });
 
-        createActions();
-
-        // populate the view
-        this.viewer.setInput(this);
-        WidgetUtil.pack(this.viewer);
-
-        MenuManager mgr = initContextMenu();
-        Menu menu = mgr.createContextMenu(this.viewer.getControl());
-        this.viewer.getControl().setMenu(menu);
-        //
-        // getSite().registerContextMenu(mgr, this.selectionProvider);
-        // getSite().setSelectionProvider(this.selectionProvider);
-
-        IActionBars actionBars = getViewSite().getActionBars();
-        initMenu(actionBars.getMenuManager());
-        initToolBar(actionBars.getToolBarManager());
-
-        registerGlobalActions(getViewSite().getActionBars());
-
+        // double-click will open an editor
         this.viewer.addOpenListener(new IOpenListener() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.viewers.IOpenListener#open(org.eclipse.jface.viewers.OpenEvent)
+             */
             @Override
             public void open( OpenEvent event ) {
                 handleOpenMed();
             }
         });
+
+        // populate the view
+        this.viewer.setInput(this);
+        WidgetUtil.pack(this.viewer);
+
+        createActions();
+
+        MenuManager mgr = createContextMenu();
+        Menu menu = mgr.createContextMenu(this.viewer.getControl());
+        this.viewer.getControl().setMenu(menu);
+        // TODO need MXD path stored somewhere so selection can find in explorer tree
+        // getSite().registerContextMenu(mgr, this.selectionProvider);
+        // getSite().setSelectionProvider(this.selectionProvider);
+
+        IActionBars actionBars = getViewSite().getActionBars();
+        configureMenu(actionBars.getMenuManager());
+        configureToolBar(actionBars.getToolBarManager());
+
+        registerGlobalActions(getViewSite().getActionBars());
     }
 
     Collection<ModelExtensionDefinition> getModelExtensionDefinitions() {
@@ -306,23 +401,39 @@ public class ModelExtensionRegistryView extends ViewPart {
         return Collections.emptyList();
     }
 
-    TableViewer getViewer() {
-        return this.viewer;
+    private ModelExtensionDefinition getSelectedMed() {
+        IStructuredSelection selection = (IStructuredSelection)this.viewer.getSelection();
+
+        if (selection.isEmpty()) {
+            return null;
+        }
+
+        // selection must be one MED
+        assert (selection.size() == 1) : "selection size is not zero or one"; //$NON-NLS-1$
+        assert (selection.getFirstElement() instanceof ModelExtensionDefinition) : "selected object is not a MED"; //$NON-NLS-1$
+
+        return (ModelExtensionDefinition)selection.getFirstElement();
     }
 
     void handleCloneMed() {
         // TODO implement handleSaveAsMed
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
+
         MessageDialog.openInformation(null, null, "Clone MED not implemented");
     }
 
     void handleFindMedReferences() {
         // TODO implement handleFindMedReferences
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        assert (selectedMed != null) : "Find MED references action should not be enabled if there is no selection"; //$NON-NLS-1$
+
         MessageDialog.openInformation(null, null, "Find MED references not implemented");
     }
 
     void handleMedSelected() {
-        IStructuredSelection selection = (IStructuredSelection)this.viewer.getSelection();
-        boolean enable = (selection.size() == 1);
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        boolean enable = (selectedMed != null);
 
         if (this.cloneMedAction.isEnabled() != enable) {
             this.cloneMedAction.setEnabled(enable);
@@ -337,12 +448,19 @@ public class ModelExtensionRegistryView extends ViewPart {
         }
 
         if (this.unregisterMedAction.isEnabled() != enable) {
-            this.unregisterMedAction.setEnabled(enable);
+            if (enable && !selectedMed.isBuiltIn()) {
+                this.unregisterMedAction.setEnabled(true);
+            } else {
+                this.unregisterMedAction.setEnabled(false);
+            }
         }
     }
 
     void handleOpenMed() {
         // TODO implement handleOpenMed
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        assert (selectedMed != null) : "Open MED editor action should not be enabled if there is no selection"; //$NON-NLS-1$
+
         MessageDialog.openInformation(null, null, "Open MED not implemented");
     }
 
@@ -351,31 +469,24 @@ public class ModelExtensionRegistryView extends ViewPart {
         MessageDialog.openInformation(null, null, "Register MED not implemented");
     }
 
+    void handleRegistryChanged( RegistryEvent event ) {
+        ModelExtensionDefinition med = event.getDefinition();
+
+        if (event.isAdd()) {
+            this.viewer.add(med);
+        } else if (event.isChange()) {
+            this.viewer.refresh(med);
+        } else if (event.isRemove()) {
+            this.viewer.remove(med);
+        }
+    }
+
     void handleUnregisterMed() {
         // TODO implement handleDeleteMed
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        assert (selectedMed != null) : "Unregister MED action should not be enabled if there is no selection"; //$NON-NLS-1$
+
         MessageDialog.openInformation(null, null, "Unregister MED not implemented");
-    }
-
-    private MenuManager initContextMenu() {
-        MenuManager mgr = new MenuManager();
-        mgr.add(this.registerMedAction);
-        mgr.add(this.unregisterMedAction);
-        mgr.add(this.openMedEditorAction);
-        mgr.add(this.cloneMedAction);
-
-        return mgr;
-    }
-
-    private void initMenu( IMenuManager menuMgr ) {
-        menuMgr.add(this.findMedReferencesAction);
-    }
-
-    private void initToolBar( IToolBarManager toolBarMgr ) {
-        toolBarMgr.add(this.registerMedAction);
-        toolBarMgr.add(this.unregisterMedAction);
-        toolBarMgr.add(this.openMedEditorAction);
-        toolBarMgr.add(this.cloneMedAction);
-        toolBarMgr.update(true);
     }
 
     private void registerGlobalActions( IActionBars actionBars ) {
@@ -395,6 +506,7 @@ public class ModelExtensionRegistryView extends ViewPart {
     }
 
     interface ColumnHeaders {
+        String BUILT_IN = Messages.builtInColumnText;
         String DESCRIPTION = Messages.descriptionColumnText;
         String METAMODEL_URI = Messages.extendedMetamodelUriColumnText;
         String NAMESPACE_PREFIX = Messages.namespacePrefixColumnText;
@@ -403,11 +515,12 @@ public class ModelExtensionRegistryView extends ViewPart {
     }
 
     interface ColumnIndexes {
-        int DESCRIPTION = 4;
-        int METAMODEL_URI = 2;
-        int NAMESPACE_PREFIX = 0;
-        int NAMESPACE_URI = 1;
-        int VERSION = 3;
+        int BUILT_IN = 0;
+        int DESCRIPTION = 5;
+        int METAMODEL_URI = 3;
+        int NAMESPACE_PREFIX = 1;
+        int NAMESPACE_URI = 2;
+        int VERSION = 4;
     }
 
     class MedLabelProvider extends ColumnLabelProvider {
@@ -421,12 +534,35 @@ public class ModelExtensionRegistryView extends ViewPart {
         /**
          * {@inheritDoc}
          * 
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+         */
+        @Override
+        public Image getImage( Object element ) {
+            if (this.columnIndex == ColumnIndexes.BUILT_IN) {
+                assert element instanceof ModelExtensionDefinition;
+                ModelExtensionDefinition med = (ModelExtensionDefinition)element;
+
+                if (med.isBuiltIn()) {
+                    return Activator.getDefault().getImage(CHECK_MARK);
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
          */
         @Override
         public String getText( Object element ) {
             assert element instanceof ModelExtensionDefinition;
             ModelExtensionDefinition med = (ModelExtensionDefinition)element;
+
+            if (this.columnIndex == ColumnIndexes.BUILT_IN) {
+                return CoreStringUtil.Constants.EMPTY_STRING;
+            }
 
             if (this.columnIndex == ColumnIndexes.NAMESPACE_PREFIX) {
                 return med.getNamespacePrefix();

@@ -24,7 +24,7 @@
       point="org.eclipse.ui.views">
       <view
          name="%modelExtensionRegistryView"
-         icon="icons/full/cview16/model-extension-registry-view.png"
+         icon="icons/model-extension-registry-view.png"
          category="com.metamatrix.modeler.ui"
          class="org.teiid.designer.extension.ui.views.ModelExtensionRegistryView"
          id="org.teiid.designer.extension.ui.views.modelExtensionRegistryView">
