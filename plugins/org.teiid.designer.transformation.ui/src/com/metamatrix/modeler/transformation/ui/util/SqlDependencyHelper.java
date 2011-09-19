@@ -13,7 +13,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.metamodels.transformation.TransformationMappingRoot;
@@ -24,6 +27,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.internal.transformation.util.TransformationHelper;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.actions.TransformationSourceManager;
 
 /**
@@ -107,11 +111,35 @@ public class SqlDependencyHelper {
         // walk through sources and add dependencies if "virtual"
         while (sourceIter.hasNext()) {
             nextSourceEObject = (EObject)sourceIter.next();
-            addSourceTable(nextSourceEObject);
-            if (ModelObjectUtilities.isVirtual(nextSourceEObject)) addDependencies(nextSourceEObject);
+            if( nextSourceEObject.eIsProxy() ) {
+                nextSourceEObject = getRealEObjectFromProxy(nextSourceEObject);
+            } 
+            if(nextSourceEObject!=null) {
+                addSourceTable(nextSourceEObject);
+                if (ModelObjectUtilities.isVirtual(nextSourceEObject)) addDependencies(nextSourceEObject);
+            }
         }
     }
-
+ 
+    /*
+     * If the EObject is a proxy, use the uuid to lookup the real EObject
+     * @param proxyEObj the proxied EObject
+     * @return the real EObject, 'null' if not found
+     */
+    private EObject getRealEObjectFromProxy(EObject proxyEObj) {
+        EObject eObjectResult = null;
+        if(proxyEObj.eIsProxy() && proxyEObj instanceof EObjectImpl) {
+            try {
+                String sUUIDFrag = ((EObjectImpl)proxyEObj).eProxyURI().fragment();
+                eObjectResult = (EObject)ModelerCore.getModelContainer().getEObjectFinder().find(sUUIDFrag);
+            } catch (CoreException e) {
+                String message = UiConstants.Util.getString("SqlDependencyHelper.getRealEObjectFromProxyError");  //$NON-NLS-1$
+                UiConstants.Util.log(IStatus.ERROR, e, message);
+            }
+        }
+        return eObjectResult;
+    }
+        
     private void addSourceTable( EObject sourceTable ) {
         if (sourceTables.get(sourceTable) == null) {
             sourceTables.put(sourceTable, "x"); //$NON-NLS-1$
@@ -132,11 +160,15 @@ public class SqlDependencyHelper {
             // Get Source Tables for this transformation
             Iterator sourceIter = getSources(transformationEObject).iterator();
             EObject nextSourceEObject = null;
-
             while (sourceIter.hasNext()) {
                 nextSourceEObject = (EObject)sourceIter.next();
-                if (ModelObjectUtilities.isVirtual(nextSourceEObject)) virtualSources.add(nextSourceEObject);
-                addSourceTable(nextSourceEObject);
+                if( nextSourceEObject.eIsProxy() ) {
+                    nextSourceEObject = getRealEObjectFromProxy(nextSourceEObject);
+                } 
+                if(nextSourceEObject!=null) {
+                    if (ModelObjectUtilities.isVirtual(nextSourceEObject)) virtualSources.add(nextSourceEObject);
+                    addSourceTable(nextSourceEObject);
+                }
             }
         }
 
