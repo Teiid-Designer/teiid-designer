@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,12 +18,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -114,6 +117,23 @@ public final class ModelExtensionRegistry {
     public boolean addListener( RegistryListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
         return this.listeners.add(listener);
+    }
+
+    /**
+     * @param path the resource path of the model extension definition is being requested (cannot be <code>null</code> or empty)
+     * @return the model extension definition or <code>null</code> if not found
+     */
+    public ModelExtensionDefinition findDefinition( String path ) {
+        CoreArgCheck.isNotEmpty(path, "path is empty"); //$NON-NLS-1$
+
+        for (ModelExtensionDefinition med : getAllDefinitions()) {
+            if (path.equals(med.getResourcePath())) {
+                return med;
+            }
+        }
+
+        // not found
+        return null;
     }
 
     /**

@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.ui.actions;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -17,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -94,7 +96,7 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
                 result = false;
                 try {
                     ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObj, false);
-                    if (isMetamodelExtendable(modelResource) && ModelUtilities.isPhysical(modelResource)) {
+                    if ((modelResource != null) && isMetamodelExtendable(modelResource) && ModelUtilities.isPhysical(modelResource)) {
                         result = true;
                     }
                 } catch (final ModelWorkspaceException theException) {

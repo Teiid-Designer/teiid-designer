@@ -29,7 +29,9 @@ public class Messages extends NLS {
     public static String registerMedActionToolTip;
     public static String unregisterMedActionText;
     public static String unregisterMedActionToolTip;
-    
+
+    public static String registryViewToolTip;
+
     public static String newMedWizardTitle;
     public static String newMedWizardPageTitle;
     public static String newMedWizardNameLabel;
@@ -41,6 +43,32 @@ public class Messages extends NLS {
     public static String newMedWizardMedNameErrorMsg;
 
     public static String manageModelExtensionDefnsActionTitle;
+
+    public static String errorOpeningMedEditor;
+
+    public static String medEditorOverviewPageTitle;
+    public static String medEditorOverviewPageToolTip;
+    public static String overviewPageExtendedMetaclassDescription;
+    public static String overviewPageExtendedMetaclassTitle;
+
+    public static String medEditorPropertiesPageTitle;
+    public static String medEditorPropertiesPageToolTip;
+    public static String propertiesPageExtensionPropertiesDescription;
+    public static String propertiesPageExtensionPropertiesTitle;
+
+    public static String medEditorSourcePageTitle;
+    public static String medEditorSourcePageToolTip;
+
+    public static String namespacePrefixLabel;
+    public static String namespaceUriLabel;
+    public static String extendedMetamodelUriLabel;
+    public static String resourcePathLabel;
+    public static String versionLabel;
+    public static String descriptionLabel;
+
+    public static String addButton;
+    public static String editButton;
+    public static String removeButton;
 
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$

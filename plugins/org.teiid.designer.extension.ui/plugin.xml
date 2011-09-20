@@ -15,6 +15,7 @@
             default="true"
             extensions="mxd"
             id="org.teiid.designer.extension.ui.modelDefinitionEditor"
+            icon="icons/model-extension-definition-editor.png"
             name="Model Extension Definition">
       </editor>
    </extension>

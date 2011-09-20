@@ -15,7 +15,10 @@ Require-Bundle: org.teiid.designer.extension,
  org.eclipse.core.resources,
  org.teiid.designer.ui.common,
  org.teiid.core.designer,
- org.teiid.designer.core;bundle-version="7.5.0",
- org.teiid.core.designer;bundle-version="7.5.0",
- org.teiid.designer.ui;bundle-version="7.5.0"
+ org.teiid.designer.core,
+ org.teiid.core.designer,
+ org.teiid.designer.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.views,
+ org.eclipse.jface.text
 Bundle-Activator: org.teiid.designer.extension.ui.Activator

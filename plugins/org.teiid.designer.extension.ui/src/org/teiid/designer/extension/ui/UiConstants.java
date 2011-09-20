@@ -19,10 +19,19 @@ public interface UiConstants {
 
     PluginUtil UTIL = new LoggingUtil(PLUGIN_ID);
 
-    interface Images {
+    interface EditorIds {
+        String MED_EDITOR = "org.teiid.designer.extension.ui.modelDefinitionEditor"; //$NON-NLS-1$
+        String MED_OVERVIEW_PAGE = "org.teiid.designer.extension.ui.overviewPage"; //$NON-NLS-1$
+        String MED_PROPERTIES_PAGE = "org.teiid.designer.extension.ui.propertiesPage"; //$NON-NLS-1$
+    }
+
+    interface ImageIds {
         String FOLDER = "icons/"; //$NON-NLS-1$
         String CHECK_MARK = FOLDER + "checkmark.gif"; //$NON-NLS-1$
         String REGISTRY_VIEW = FOLDER + "model-extension-registry-view.png"; //$NON-NLS-1$
     }
 
+    interface ViewIds {
+        String REGISTRY_VIEW = "org.teiid.designer.extension.ui.views.modelExtensionRegistryView"; //$NON-NLS-1$
+    }
 }

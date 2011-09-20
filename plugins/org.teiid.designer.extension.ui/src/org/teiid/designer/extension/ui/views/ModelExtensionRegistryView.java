@@ -8,12 +8,16 @@
 package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
-import static org.teiid.designer.extension.ui.UiConstants.Images.CHECK_MARK;
+import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_EDITOR;
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -35,6 +39,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -47,7 +52,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -415,8 +425,18 @@ public final class ModelExtensionRegistryView extends ViewPart {
         return (ModelExtensionDefinition)selection.getFirstElement();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#getTitleToolTip()
+     */
+    @Override
+    public String getTitleToolTip() {
+        return NLS.bind(Messages.registryViewToolTip, this.registry.getAllDefinitions().size());
+    }
+
     void handleCloneMed() {
-        // TODO implement handleSaveAsMed
+        // TODO implement handleCloneMed
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
@@ -457,15 +477,30 @@ public final class ModelExtensionRegistryView extends ViewPart {
     }
 
     void handleOpenMed() {
-        // TODO implement handleOpenMed
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Open MED editor action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        MessageDialog.openInformation(null, null, "Open MED not implemented");
+        String path = selectedMed.getResourcePath();
+
+        if (CoreStringUtil.isEmpty(path)) {
+            MessageDialog.openInformation(null, null, "The selected Model Extension Definition's resource (*.mxd) cannot be found.");
+        } else {
+            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+
+            if (file != null) {
+                try {
+                    IWorkbenchWindow window = Activator.getDefault().getCurrentWorkbenchWindow();
+                    IWorkbenchPage page = window.getActivePage();
+                    IDE.openEditor(page, new FileEditorInput(file), MED_EDITOR);
+                } catch (Exception e) {
+                    UTIL.log(e);
+                }
+            }
+        }
     }
 
     void handleRegisterMed() {
-        // TODO implement handleCreateMed
+        // TODO implement handleRegisterMed
         MessageDialog.openInformation(null, null, "Register MED not implemented");
     }
 
@@ -490,7 +525,29 @@ public final class ModelExtensionRegistryView extends ViewPart {
     }
 
     private void registerGlobalActions( IActionBars actionBars ) {
-        // TODO implement registerGlobalActions
+        actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), this.cloneMedAction);
+        actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), this.unregisterMedAction);
+
+        // properties and select all should always be disabled
+        IAction unsupportedAction = new Action() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.action.Action#setEnabled(boolean)
+             */
+            @Override
+            public void setEnabled( boolean theEnabled ) {
+                super.setEnabled(false);
+            }
+        };
+        unsupportedAction.setEnabled(false);
+
+        actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), unsupportedAction);
+        actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), unsupportedAction);
+
+        // save these changes
+        actionBars.updateActionBars();
     }
 
     /**

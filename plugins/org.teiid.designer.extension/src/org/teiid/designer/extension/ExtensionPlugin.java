@@ -134,9 +134,9 @@ public class ExtensionPlugin extends Plugin {
                     }
 
                     // make sure path represents a file in workspace and on the filesystem
-                    Bundle bundle = Platform.getBundle(pluginId);
+                    final Bundle bundle = Platform.getBundle(pluginId);
                     final IPath path = new Path(tempPath);
-                    URL url = FileLocator.find(bundle, path, null);
+                    final URL url = FileLocator.find(bundle, path, null);
 
                     if (url == null) {
                         Util.log(IStatus.ERROR, NLS.bind(Messages.definitionFileNotFoundInWorkspace, path, pluginId));
@@ -192,6 +192,7 @@ public class ExtensionPlugin extends Plugin {
                             ModelExtensionDefinition definition = getRegistry().addDefinition(new FileInputStream(defnFile),
                                                                                               (ModelExtensionAssistant)assistant);
                             definition.markAsBuiltIn();
+                            definition.setResourcePath(FileLocator.resolve(url).getPath());
                         }
                     };
 

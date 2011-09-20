@@ -37,14 +37,14 @@ public class ModelExtensionDefinition {
     public static final int DEFAULT_VERSION = 1;
 
     /**
-     * Indicates if this MED is a built-in and therefore should not be unregistered. Defaults to {@value} .
-     */
-    private boolean builtIn;
-
-    /**
      * The model extension assistant (never <code>null</code>).
      */
     private final ModelExtensionAssistant assistant;
+
+    /**
+     * Indicates if this MED is a built-in and therefore should not be unregistered. Defaults to {@value} .
+     */
+    private boolean builtIn;
 
     /**
      * The definition description (can be <code>null</code> or empty).
@@ -70,6 +70,11 @@ public class ModelExtensionDefinition {
      * The unique namespace URI of this definition (never <code>null</code> or empty).
      */
     private final String namespaceUri;
+
+    /**
+     * A resource path (can be <code>null</code> or empty).
+     */
+    private String path;
 
     /**
      * Key is metaclass name, value is a collection of property definitions key by property name.
@@ -239,6 +244,13 @@ public class ModelExtensionDefinition {
     }
 
     /**
+     * @return the resource path (can be <code>null</code> or empty)
+     */
+    public String getResourcePath() {
+        return path;
+    }
+
+    /**
      * @return the version (a positive integer)
      */
     public int getVersion() {
@@ -259,6 +271,13 @@ public class ModelExtensionDefinition {
      */
     public boolean isBuiltIn() {
         return this.builtIn;
+    }
+
+    /**
+     * Marks this MED as being a built-in and therefore cannot be unregistered.
+     */
+    public void markAsBuiltIn() {
+        this.builtIn = true;
     }
 
     /**
@@ -293,13 +312,6 @@ public class ModelExtensionDefinition {
     }
 
     /**
-     * Marks this MED as being a built-in and therefore cannot be unregistered.
-     */
-    public void markAsBuiltIn() {
-        this.builtIn = true;
-    }
-
-    /**
      * @param newDescription the new description (can be <code>null</code> or empty)
      */
     public void setDescription( String newDescription ) {
@@ -310,6 +322,13 @@ public class ModelExtensionDefinition {
             // alert listeners
             notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.description);
         }
+    }
+
+    /**
+     * @param path the resource path (can be <code>null</code> or empty)
+     */
+    public void setResourcePath( String path ) {
+        this.path = path;
     }
 
     /**
