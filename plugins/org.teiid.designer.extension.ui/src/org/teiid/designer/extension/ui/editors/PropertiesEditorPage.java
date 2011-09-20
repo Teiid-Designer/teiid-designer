@@ -17,12 +17,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.FormColors;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -46,7 +45,7 @@ public class PropertiesEditorPage extends FormPage {
 
     private SectionPart createExtendedMetaclassSection( Composite parent,
                                                         FormToolkit toolkit ) {
-        Section section = new Section(parent, Section.DESCRIPTION);
+        Section section = toolkit.createSection(parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR);
         section.setText(Messages.overviewPageExtendedMetaclassTitle);
         section.setDescription(Messages.overviewPageExtendedMetaclassDescription);
         section.setLayout(FormUtil.createClearGridLayout(false, 1));
@@ -87,6 +86,7 @@ public class PropertiesEditorPage extends FormPage {
 
         ScrolledForm scrolledForm = managedForm.getForm();
         scrolledForm.setText(medEditorPropertiesPageTitle);
+        toolkit.decorateFormHeading(scrolledForm.getForm());
 
         Composite body = scrolledForm.getBody();
         body.setLayout(FormUtil.createFormGridLayout(false, 2));
@@ -99,16 +99,10 @@ public class PropertiesEditorPage extends FormPage {
         right.setLayout(FormUtil.createFormPaneGridLayout(false, 1));
         right.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        FormColors colors = toolkit.getColors();
-
         SectionPart part = createExtendedMetaclassSection(left, toolkit);
-        Section section = part.getSection();
-        section.getDescriptionControl().setBackground(colors.getColor(IFormColors.H_BOTTOM_KEYLINE1));
         managedForm.addPart(part);
 
         part = createPropertiesSection(right, toolkit);
-        section = part.getSection();
-        section.getDescriptionControl().setBackground(colors.getColor(IFormColors.H_HOVER_LIGHT));
         managedForm.addPart(part);
     }
 
@@ -120,7 +114,7 @@ public class PropertiesEditorPage extends FormPage {
      */
     private SectionPart createPropertiesSection( Composite parent,
                                                  FormToolkit toolkit ) {
-        Section section = new Section(parent, Section.DESCRIPTION);
+        Section section = toolkit.createSection(parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR);
         section.setDescription(Messages.propertiesPageExtensionPropertiesDescription);
         section.setText(Messages.propertiesPageExtensionPropertiesTitle);
         section.setLayout(FormUtil.createClearGridLayout(false, 1));

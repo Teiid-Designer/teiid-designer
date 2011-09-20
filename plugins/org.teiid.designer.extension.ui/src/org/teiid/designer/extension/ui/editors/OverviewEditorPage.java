@@ -49,11 +49,12 @@ public final class OverviewEditorPage extends FormPage {
 
         ScrolledForm scrolledForm = managedForm.getForm();
         scrolledForm.setText(Messages.medEditorOverviewPageTitle);
+        toolkit.decorateFormHeading(scrolledForm.getForm());
 
         Composite body = scrolledForm.getBody();
         body.setLayout(FormUtil.createFormGridLayout(false, 2));
 
-        Section section = new Section(body, ExpandableComposite.NO_TITLE);
+        Section section = toolkit.createSection(body, ExpandableComposite.NO_TITLE | ExpandableComposite.TITLE_BAR);
         section.setLayout(FormUtil.createClearGridLayout(false, 1));
         section.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
