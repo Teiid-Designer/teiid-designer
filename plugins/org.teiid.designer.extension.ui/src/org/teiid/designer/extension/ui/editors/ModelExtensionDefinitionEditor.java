@@ -35,8 +35,6 @@ public final class ModelExtensionDefinitionEditor extends FormEditor {
      */
     @Override
     protected void addPages() {
-        //        assert (this.med != null) : "MED is null"; //$NON-NLS-1$
-
         // NOTE: pages are added in reverse order
         try {
             // last page is a readonly text editor

@@ -36,7 +36,7 @@ public final class ModelExtensionRegistry {
     /**
      * The metamodel URIs that can have extension properties associated with them.
      */
-    private Set<String> extensibleMetamodelUris;
+    private Set<String> extendableMetamodelUris;
 
     /**
      * Key is namespace prefix, value is model extension definition. Never <code>null</code>.
@@ -96,7 +96,7 @@ public final class ModelExtensionRegistry {
         // Determine if the definition extends a valid Metamodel
         String metamodelUri = definition.getMetamodelUri();
 
-        if ((this.extensibleMetamodelUris == null) || !this.extensibleMetamodelUris.contains(metamodelUri)) {
+        if ((this.extendableMetamodelUris == null) || !this.extendableMetamodelUris.contains(metamodelUri)) {
             throw new Exception(NLS.bind(Messages.invalidMetamodelUriExtension, metamodelUri));
         }
 
@@ -168,9 +168,9 @@ public final class ModelExtensionRegistry {
     }
 
     /**
-     * @return a collection of all model extension definition namespaces (never <code>null</code>)
+     * @return a collection of all model extension definition namespace URIs (never <code>null</code>)
      */
-    public Set<String> getAllNamespaces() {
+    public Set<String> getAllNamespaceUris() {
         return this.namespaces.keySet();
     }
 
@@ -182,6 +182,17 @@ public final class ModelExtensionRegistry {
     public ModelExtensionDefinition getDefinition( String namespacePrefix ) {
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         return this.definitions.get(namespacePrefix);
+    }
+
+    /**
+     * @return a non-modifiable set of metamodel URIs that can have extension properties (never <code>null</code>)
+     */
+    public Set<String> getExtendableMetamodelUris() {
+        if (this.extendableMetamodelUris == null) {
+            return Collections.emptySet();
+        }
+
+        return this.extendableMetamodelUris;
     }
 
     /**
@@ -261,8 +272,18 @@ public final class ModelExtensionRegistry {
      * @param namespacePrefix the namespace prefix being checked (cannot be <code>null</code> or empty)
      * @return <code>true</code> if there is a model extension definition with that namespace prefix registered
      */
-    public boolean isRegistered( String namespacePrefix ) {
+    public boolean isNamespacePrefixRegistered( String namespacePrefix ) {
+        CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
         return this.definitions.containsKey(namespacePrefix);
+    }
+
+    /**
+     * @param namespaceUri the namespace URI being checked (cannot be <code>null</code> or empty)
+     * @return <code>true</code> if there is a model extension definition with that namespace URI registered
+     */
+    public boolean isNamespaceUriRegistered( String namespaceUri ) {
+        CoreArgCheck.isNotEmpty(namespaceUri, "namespaceUri is empty"); //$NON-NLS-1$
+        return this.definitions.containsKey(this.namespaces.containsKey(namespaceUri));
     }
 
     /**
@@ -271,7 +292,7 @@ public final class ModelExtensionRegistry {
      */
     public boolean isExtendable( String metamodelUri ) {
         CoreArgCheck.isNotEmpty(metamodelUri, "metamodelUri is empty"); //$NON-NLS-1$
-        return this.extensibleMetamodelUris.contains(metamodelUri);
+        return this.extendableMetamodelUris.contains(metamodelUri);
     }
 
     /**
@@ -284,17 +305,17 @@ public final class ModelExtensionRegistry {
     }
 
     /**
-     * <strong>This method is only called at startup by the {@link org.teiid.designer.extension.ExtensionPlugin}.</strong>
+     * <strong>This method should only be called at startup by the {@link org.teiid.designer.extension.ExtensionPlugin}.</strong>
      * 
-     * @param allowedMetamodelUris the metamodel URIs that can have extension properties (cannot be <code>null</code>)
-     * @throws Exception if this method is call more than once
+     * @param extendableMetamodelUris the metamodel URIs that can have extension properties (cannot be <code>null</code>)
+     * @throws Exception if this method is called more than once
      */
-    public void setMetamodelUris( Set<String> extensibleMetamodelUris ) throws Exception {
-        CoreArgCheck.isNotNull(extensibleMetamodelUris, "extensibleMetamodelUris"); //$NON-NLS-1$
+    public void setMetamodelUris( Set<String> extendableMetamodelUris ) throws Exception {
+        CoreArgCheck.isNotNull(extendableMetamodelUris, "extendableMetamodelUris"); //$NON-NLS-1$
 
         // this will be set at plugin startup and should not be set again
-        assert (this.extensibleMetamodelUris == null) : "Extendable metamodel URIs being set for second time"; //$NON-NLS-1$
-        this.extensibleMetamodelUris = extensibleMetamodelUris;
+        assert (this.extendableMetamodelUris == null) : "Extendable metamodel URIs being set for second time"; //$NON-NLS-1$
+        this.extendableMetamodelUris = Collections.unmodifiableSet(extendableMetamodelUris);
     }
 
 }

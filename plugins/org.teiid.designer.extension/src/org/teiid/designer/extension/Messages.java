@@ -40,6 +40,22 @@ public class Messages extends NLS {
     public static String unknownRegistryQueryType;
     public static String valueDoesNotMatchAnAllowedValue;
 
+    public static String description;
+    public static String metamodelUri;
+    public static String namespacePrefix;
+    public static String namespaceUri;
+    public static String resourcePath;
+    public static String version;
+    
+    public static String metamodelUriNotExtendableValidationMsg;
+    public static String namespacePrefixExistsValidationMsg;
+    public static String namespaceUriExistsValidationMsg;
+    public static String propertyIsEmptyValidationMsg;
+    public static String valueContainsSpacesValidationMsg;
+    public static String uriInvalidValidationMsg;
+    public static String versionIsNotAnIntegerValidationMsg;
+    public static String versionLessThanDefaultValidationMsg;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.extension.messages", Messages.class); //$NON-NLS-1$
     }

@@ -8,10 +8,12 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -55,6 +57,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -126,20 +129,21 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * Get the current ModelExtensionDefinitionHeader list
      */
-    private List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
+    List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
         return this.currentMedHeaderList;
     }
 
     /*
      * Get the ModelExtensionRegistry
      */
-    private ModelExtensionRegistry getRegistry() {
+    ModelExtensionRegistry getRegistry() {
         return this.registry;
     }
 
     /**
      * @see IDialogPage#createControl(Composite)
      */
+    @Override
     public void createControl( Composite parent ) {
         Composite container = new Composite(parent, SWT.NULL);
 
@@ -165,6 +169,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         gd.horizontalSpan = 2;
         locationText.setLayoutData(gd);
         locationText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText( ModifyEvent e ) {
                 updateStatus();
             }
@@ -181,6 +186,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         gd = new GridData(GridData.FILL_HORIZONTAL);
         modelNameText.setLayoutData(gd);
         modelNameText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText( ModifyEvent e ) {
                 updateStatus();
             }
@@ -231,6 +237,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     private void updateModelDisplay() {
         this.getControl().getDisplay().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 if (modelResource == null) {
                     return;
@@ -342,15 +349,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         }
     };
 
-    /**
-     * Determine if the selection is allowed to have a Model Extension Definition. Asks the registry if the metamodel URI is a
-     * valid extendable URI.
-     * 
-     * @param modelResource the model resource
-     * @return 'true' if the models metamodel URI is extendable.
-     * @since 7.6
-     */
-    private boolean isMetamodelExtendable( ModelResource modelResource ) {
+    boolean isMetamodelExtendable( ModelResource modelResource ) {
         if (this.registry != null && modelResource != null) {
             String selectedModelURI = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
             return registry.isExtendable(selectedModelURI);
@@ -555,7 +554,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
                 String namespacePrefix = med.getNamespacePrefix();
 
-                if (getRegistry().isRegistered(namespacePrefix)) {
+                if (getRegistry().isNamespacePrefixRegistered(namespacePrefix)) {
                     return Activator.getDefault().getImage(CHECK_MARK);
                 }
             }
@@ -631,14 +630,14 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * handler for Add Med Button
      */
-    private void handleAddMed() {
+    void handleAddMed() {
         MessageDialog.openInformation(null, null, "Add MED not implemented"); //$NON-NLS-1$
     }
 
     /*
      * handler for Remove Med Button
      */
-    private void handleRemoveMed() {
+    void handleRemoveMed() {
         MessageDialog.openInformation(null, null, "Remove MED not implemented"); //$NON-NLS-1$
     }
 
