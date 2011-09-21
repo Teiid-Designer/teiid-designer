@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -61,6 +62,33 @@ public class ModelExtensionUtils {
         // transaction logic not needed as this is a readonly operation
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         return (getDefinitionAnnotation(modelResource, false, namespacePrefix) != null);
+    }
+
+    /**
+     * @param modelResource the model resource being checked (cannot be <code>null</code>)
+     * @param namespacePrefix the namespace prefix of the model extension definition being looked for (cannot be <code>null</code>
+     *        or empty)
+     * @return the ModelExtensionDefinitionHeader
+     * @throws Exception if there is a problem accessing the model resource
+     */
+    public static ModelExtensionDefinitionHeader getModelExtensionDefinitionHeader( ModelResource modelResource,
+                                                                                    String namespacePrefix ) throws Exception {
+        // transaction logic not needed as this is a readonly operation
+        CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
+
+        ModelExtensionDefinitionHeader header = null;
+        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
+        if (defnAnnotation != null) {
+            EMap<String, String> definitionTags = defnAnnotation.getTags();
+            String metamodelUri = definitionTags.get(DefinitionTagKeys.METAMODEL);
+            String namespacePrfx = definitionTags.get(DefinitionTagKeys.NAMESPACE_PREFIX);
+            String namespaceUri = definitionTags.get(DefinitionTagKeys.NAMESPACE_URI);
+            String description = definitionTags.get(DefinitionTagKeys.DESCRIPTION);
+            String versionStr = definitionTags.get(DefinitionTagKeys.VERSION);
+            int version = Integer.parseInt(versionStr);
+            header = new ModelExtensionDefinitionHeader(namespacePrfx, namespaceUri, metamodelUri, description, version);
+        }
+        return header;
     }
 
     private static Annotation getAnnotation( ModelResource modelResource,

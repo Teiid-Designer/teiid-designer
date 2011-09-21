@@ -8,16 +8,13 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.io.File;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
-
 import com.metamatrix.core.util.CoreArgCheck;
 
 /**
@@ -276,8 +273,8 @@ public abstract class ModelExtensionAssistant {
             this.definition.setVersion(version);
         } catch (NumberFormatException e) {
             Util.log(IStatus.ERROR, e, NLS.bind(Messages.invalidDefinitionFileVersion, this.definition.getNamespacePrefix(),
-                                                ModelExtensionDefinition.DEFAULT_VERSION));
-            this.definition.setVersion(ModelExtensionDefinition.DEFAULT_VERSION);
+                                                ModelExtensionDefinitionHeader.DEFAULT_VERSION));
+            this.definition.setVersion(ModelExtensionDefinitionHeader.DEFAULT_VERSION);
         }
     }
 

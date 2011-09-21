@@ -18,6 +18,7 @@ public class Messages extends NLS {
     public static String namespacePrefixColumnText;
     public static String namespaceUriColumnText;
     public static String versionColumnText;
+    public static String registeredColumnText;
 
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;
@@ -43,6 +44,22 @@ public class Messages extends NLS {
     public static String newMedWizardMedNameErrorMsg;
 
     public static String manageModelExtensionDefnsActionTitle;
+    public static String manageMedsWizardTitle;
+    public static String manageMedsWizardInitError;
+    public static String manageMedsWizardResult;
+    public static String currentMedsPageTitle;
+    public static String currentMedsPageDescription;
+    public static String currentMedsPageDone;
+    public static String currentMedsPageModelLocationLabel;
+    public static String currentMedsPageModelNameLabel;
+    public static String currentMedsPageBrowseButton;
+    public static String currentMedsPageNoModelLocationMsg;
+    public static String currentMedsPageNoModelNameMsg;
+    public static String currentMedsPageBrowseDialogTitle;
+    public static String currentMedsPageBrowseDialogMsg;
+    public static String currentMedsPageAddMedButton;
+    public static String currentMedsPageRemoveMedButton;
+    public static String currentMedsPageTableLabel;
 
     public static String errorOpeningMedEditor;
 

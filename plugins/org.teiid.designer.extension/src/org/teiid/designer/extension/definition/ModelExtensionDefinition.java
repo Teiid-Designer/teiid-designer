@@ -9,7 +9,6 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -18,11 +17,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -30,11 +27,6 @@ import com.metamatrix.core.util.CoreStringUtil;
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.
  */
 public class ModelExtensionDefinition {
-
-    /**
-     * The default version number. Value is {@value} .
-     */
-    public static final int DEFAULT_VERSION = 1;
 
     /**
      * The model extension assistant (never <code>null</code>).
@@ -47,29 +39,9 @@ public class ModelExtensionDefinition {
     private boolean builtIn;
 
     /**
-     * The definition description (can be <code>null</code> or empty).
-     */
-    private String description;
-
-    /**
      * The registered property change listeners (never <code>null</code>).
      */
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners;
-
-    /**
-     * The metamodel URI that this definition is extended.
-     */
-    private final String metamodelUri;
-
-    /**
-     * The unique namespace prefix of this definition (never <code>null</code> or empty).
-     */
-    private final String namespacePrefix;
-
-    /**
-     * The unique namespace URI of this definition (never <code>null</code> or empty).
-     */
-    private final String namespaceUri;
 
     /**
      * A resource path (can be <code>null</code> or empty).
@@ -82,9 +54,9 @@ public class ModelExtensionDefinition {
     private final Map<String, Map<String, ModelExtensionPropertyDefinition>> properties;
 
     /**
-     * The version number. Defaults to {@value} .
+     * The ModelExtensionDefinitionHeader of this definition (never <code>null</code> or empty).
      */
-    private int version = DEFAULT_VERSION;
+    private ModelExtensionDefinitionHeader header;
 
     /**
      * @param assistant the model extension assist (cannot be <code>null</code>)
@@ -102,9 +74,7 @@ public class ModelExtensionDefinition {
         CoreArgCheck.isNotEmpty(metamodelUri, "metamodelUri is null"); //$NON-NLS-1$
 
         this.assistant = assistant;
-        this.namespacePrefix = namespacePrefix;
-        this.namespaceUri = namespaceUri;
-        this.metamodelUri = metamodelUri;
+        this.header = new ModelExtensionDefinitionHeader(namespacePrefix, namespaceUri, metamodelUri);
         this.properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
     }
@@ -171,7 +141,7 @@ public class ModelExtensionDefinition {
      * @return the description (can be <code>null</code> or empty)
      */
     public String getDescription() {
-        return this.description;
+        return this.header.getDescription();
     }
 
     /**
@@ -185,7 +155,7 @@ public class ModelExtensionDefinition {
      * @return the metamodel URI (never <code>null</code> or empty)
      */
     public String getMetamodelUri() {
-        return this.metamodelUri;
+        return this.header.getMetamodelUri();
     }
 
     /**
@@ -199,14 +169,14 @@ public class ModelExtensionDefinition {
      * @return the namespace prefix (never <code>null</code> or empty)
      */
     public String getNamespacePrefix() {
-        return this.namespacePrefix;
+        return this.header.getNamespacePrefix();
     }
 
     /**
      * @return the namespace URI (never <code>null</code> or empty)
      */
     public String getNamespaceUri() {
-        return this.namespaceUri;
+        return this.header.getNamespaceUri();
     }
 
     /**
@@ -254,7 +224,7 @@ public class ModelExtensionDefinition {
      * @return the version (a positive integer)
      */
     public int getVersion() {
-        return this.version;
+        return this.header.getVersion();
     }
 
     /**
@@ -315,12 +285,13 @@ public class ModelExtensionDefinition {
      * @param newDescription the new description (can be <code>null</code> or empty)
      */
     public void setDescription( String newDescription ) {
-        if (!CoreStringUtil.equals(this.description, newDescription)) {
-            Object oldValue = this.description;
-            this.description = newDescription;
+        String currentDescription = this.header.getDescription();
+        if (!CoreStringUtil.equals(currentDescription, newDescription)) {
+            Object oldValue = currentDescription;
+            this.header.setDescription(newDescription);
 
             // alert listeners
-            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.description);
+            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, newDescription);
         }
     }
 
@@ -337,18 +308,20 @@ public class ModelExtensionDefinition {
      * @param newVersion the new version
      */
     public void setVersion( int newVersion ) {
-        if (this.version != newVersion) {
-            if (newVersion < DEFAULT_VERSION) {
+        int currentVersion = this.header.getVersion();
+        if (currentVersion != newVersion) {
+            if (newVersion < ModelExtensionDefinitionHeader.DEFAULT_VERSION) {
                 Util.log(IStatus.ERROR,
-                         NLS.bind(invalidDefinitionFileNewVersion, new Object[] { getNamespacePrefix(), newVersion, this.version }));
+ NLS.bind(invalidDefinitionFileNewVersion, new Object[] {getNamespacePrefix(), newVersion,
+                    currentVersion}));
                 return;
             }
 
-            Object oldValue = this.version;
-            this.version = newVersion;
+            Object oldValue = currentVersion;
+            this.header.setVersion(newVersion);
 
             // alert listeners
-            notifyChangeListeners(PropertyName.VERSION, oldValue, this.description);
+            notifyChangeListeners(PropertyName.VERSION, oldValue, newVersion);
         }
     }
 
