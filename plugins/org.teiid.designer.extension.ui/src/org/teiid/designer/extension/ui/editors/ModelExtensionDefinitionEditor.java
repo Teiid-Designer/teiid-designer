@@ -211,18 +211,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.part.MultiPageEditorPart#initializePageSwitching()
-     */
-    @Override
-    protected void initializePageSwitching() {
-        super.initializePageSwitching();
-        this.overviewPage.updateAllMessages();
-        this.propertiesPage.updateAllMessages();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
      * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
      */
     @Override

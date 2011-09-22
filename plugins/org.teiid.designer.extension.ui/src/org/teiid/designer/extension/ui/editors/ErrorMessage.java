@@ -36,31 +36,11 @@ final class ErrorMessage implements IMessage {
     /**
      * {@inheritDoc}
      *
-     * @see org.eclipse.jface.dialogs.IMessageProvider#getMessage()
+     * @see org.eclipse.ui.forms.IMessage#getControl()
      */
     @Override
-    public String getMessage() {
-        return this.message;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.eclipse.jface.dialogs.IMessageProvider#getMessageType()
-     */
-    @Override
-    public int getMessageType() {
-        return IMessageProvider.ERROR;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.eclipse.ui.forms.IMessage#getKey()
-     */
-    @Override
-    public Object getKey() {
-        return this;
+    public Control getControl() {
+        return this.widget;
     }
 
     /**
@@ -76,11 +56,31 @@ final class ErrorMessage implements IMessage {
     /**
      * {@inheritDoc}
      *
-     * @see org.eclipse.ui.forms.IMessage#getControl()
+     * @see org.eclipse.ui.forms.IMessage#getKey()
      */
     @Override
-    public Control getControl() {
-        return this.widget;
+    public Object getKey() {
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.jface.dialogs.IMessageProvider#getMessage()
+     */
+    @Override
+    public String getMessage() {
+        return this.message;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.jface.dialogs.IMessageProvider#getMessageType()
+     */
+    @Override
+    public int getMessageType() {
+        return IMessageProvider.ERROR;
     }
 
     /**

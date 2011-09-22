@@ -76,6 +76,11 @@ public class Messages extends NLS {
     public static String medEditorPropertiesPageToolTip;
     public static String propertiesPageExtensionPropertiesDescription;
     public static String propertiesPageExtensionPropertiesTitle;
+    public static String propertiesPageAddMetaclassButtonToolTip;
+    public static String propertiesPageRemoveMetaclassButtonToolTip;
+    public static String propertiesPageAddPropertyButtonToolTip;
+    public static String propertiesPageEditPropertyButtonToolTip;
+    public static String propertiesPageRemovePropertyButtonToolTip;
 
     public static String medEditorSourcePageTitle;
     public static String medEditorSourcePageToolTip;
@@ -94,7 +99,19 @@ public class Messages extends NLS {
     public static String errorDialogTitle;
 
     public static String errorOpeningRegistryViewMsg;
-    
+
+    public static String advancedPropertyAttributeColumnHeader;
+    public static String allowedValuesPropertyAttributeColumnHeader;
+    public static String defaultValuePropertyAttributeColumnHeader;
+    public static String descriptionPropertyAttributeColumnHeader;
+    public static String displayNamePropertyAttributeColumnHeader;
+    public static String indexedPropertyAttributeColumnHeader;
+    public static String maskedPropertyAttributeColumnHeader;
+    public static String modifiablePropertyAttributeColumnHeader;
+    public static String requiredPropertyAttributeColumnHeader;
+    public static String runtimeTypePropertyAttributeColumnHeader;
+    public static String simpleIdPropertyAttributeColumnHeader;
+
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }

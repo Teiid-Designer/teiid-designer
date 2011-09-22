@@ -219,7 +219,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             });
         }
 
-        // setup error messages
+        // set error message controls
         this.descriptionError.widget = this.txtDescription;
         this.metamodelUriError.widget = this.cbxMetamodelUris;
         this.namespacePrefixError.widget = this.txtNamespacePrefix;

@@ -44,6 +44,7 @@ public abstract class MedEditorPage extends FormPage {
     @Override
     protected final void createFormContent( IManagedForm managedForm ) {
         createBody(managedForm.getForm().getBody(), managedForm.getToolkit());
+        updateAllMessages();
     }
 
     protected IMessageManager getMessageManager() {
