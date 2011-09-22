@@ -28,8 +28,12 @@ public class Messages extends NLS {
     public static String openMedActionToolTip;
     public static String registerMedActionText;
     public static String registerMedActionToolTip;
+    public static String showRegistryViewActionText;
+    public static String showRegistryViewActionToolTip;
     public static String unregisterMedActionText;
     public static String unregisterMedActionToolTip;
+    public static String updateMedInRegistryActionText;
+    public static String updateMedInRegistryActionToolTip;
 
     public static String registryViewToolTip;
 
@@ -87,6 +91,10 @@ public class Messages extends NLS {
     public static String editButton;
     public static String removeButton;
 
+    public static String errorDialogTitle;
+
+    public static String errorOpeningRegistryViewMsg;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }

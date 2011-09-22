@@ -28,7 +28,10 @@ public interface UiConstants {
     interface ImageIds {
         String FOLDER = "icons/"; //$NON-NLS-1$
         String CHECK_MARK = FOLDER + "checkmark.gif"; //$NON-NLS-1$
+        String MED_EDITOR = FOLDER + "med-editor.png"; //$NON-NLS-1$
+        String REGISTERY_MED_UPDATE_ACTION = FOLDER + "registry-med-update.png"; //$NON-NLS-1$
         String REGISTRY_VIEW = FOLDER + "model-extension-registry-view.png"; //$NON-NLS-1$
+        String SHOW_REGISTRY_VIEW_ACTION = REGISTRY_VIEW;
     }
 
     interface ViewIds {

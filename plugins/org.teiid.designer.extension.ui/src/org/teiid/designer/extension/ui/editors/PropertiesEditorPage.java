@@ -17,15 +17,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -33,14 +29,38 @@ import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 /**
  * 
  */
-public class PropertiesEditorPage extends FormPage {
+public class PropertiesEditorPage extends MedEditorPage {
 
-    private final ModelExtensionDefinition med;
-
-    public PropertiesEditorPage( FormEditor medEditor,
-                                 ModelExtensionDefinition med ) {
+    public PropertiesEditorPage( FormEditor medEditor ) {
         super(medEditor, MED_PROPERTIES_PAGE, medEditorPropertiesPageTitle);
-        this.med = med;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#createBody(org.eclipse.swt.widgets.Composite,
+     *      org.eclipse.ui.forms.widgets.FormToolkit)
+     */
+    @Override
+    protected void createBody( Composite body,
+                               FormToolkit toolkit ) {
+        body.setLayout(FormUtil.createFormGridLayout(false, 2));
+
+        Composite left = toolkit.createComposite(body, SWT.NONE);
+        left.setLayout(FormUtil.createFormPaneGridLayout(false, 1));
+        left.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite right = toolkit.createComposite(body, SWT.NONE);
+        right.setLayout(FormUtil.createFormPaneGridLayout(false, 1));
+        right.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        createExtendedMetaclassSection(left, toolkit);
+//        SectionPart part = createExtendedMetaclassSection(left, toolkit);
+//        managedForm.addPart(part);
+
+        createPropertiesSection(right, toolkit);
+//        part = createPropertiesSection(right, toolkit);
+//        managedForm.addPart(part);
     }
 
     private SectionPart createExtendedMetaclassSection( Composite parent,
@@ -73,37 +93,6 @@ public class PropertiesEditorPage extends FormPage {
         // initialize();
 
         return new SectionPart(section);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.ui.forms.editor.FormPage#createFormContent(org.eclipse.ui.forms.IManagedForm)
-     */
-    @Override
-    protected void createFormContent( IManagedForm managedForm ) {
-        FormToolkit toolkit = managedForm.getToolkit();
-
-        ScrolledForm scrolledForm = managedForm.getForm();
-        scrolledForm.setText(medEditorPropertiesPageTitle);
-        toolkit.decorateFormHeading(scrolledForm.getForm());
-
-        Composite body = scrolledForm.getBody();
-        body.setLayout(FormUtil.createFormGridLayout(false, 2));
-
-        Composite left = toolkit.createComposite(body, SWT.NONE);
-        left.setLayout(FormUtil.createFormPaneGridLayout(false, 1));
-        left.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        Composite right = toolkit.createComposite(body, SWT.NONE);
-        right.setLayout(FormUtil.createFormPaneGridLayout(false, 1));
-        right.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        SectionPart part = createExtendedMetaclassSection(left, toolkit);
-        managedForm.addPart(part);
-
-        part = createPropertiesSection(right, toolkit);
-        managedForm.addPart(part);
     }
 
     /**
@@ -153,6 +142,15 @@ public class PropertiesEditorPage extends FormPage {
     @Override
     public String getTitleToolTip() {
         return medEditorPropertiesPageToolTip;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#updateAllMessages()
+     */
+    @Override
+    protected void updateAllMessages() {
     }
 
 }

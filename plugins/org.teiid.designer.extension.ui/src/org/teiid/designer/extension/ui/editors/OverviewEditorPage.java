@@ -11,7 +11,6 @@ import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW
 
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ControlAdapter;
@@ -23,19 +22,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -44,54 +36,42 @@ import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 /**
  * 
  */
-public final class OverviewEditorPage extends FormPage {
+public final class OverviewEditorPage extends MedEditorPage {
+
+    private final ErrorMessage descriptionError;
+    private final ErrorMessage metamodelUriError;
+    private final ErrorMessage namespacePrefixError;
+    private final ErrorMessage namespaceUriError;
+    private final ErrorMessage resourcePathError;
+    private final ErrorMessage versionError;
 
     private CCombo cbxMetamodelUris;
-
-    private String descriptionValidationMsg;
-
-    private Form form;
-    private ModelExtensionDefinition med;
-    private String metamodelUriValidationMsg;
-    private String namespacePrefixValidationMsg;
-    private String namespaceUriValidationMsg;
-    private String resourcePathValidationMsg;
-
     private Text txtDescription;
-    private Text txtMetamodelUri;
     private Text txtNamespacePrefix;
     private Text txtNamespaceUri;
     private Text txtResourcePath;
     private Text txtVersion;
-    private String versionValidationMsg;
 
     public OverviewEditorPage( FormEditor medEditor ) {
         super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
-    }
-
-    public OverviewEditorPage( FormEditor medEditor,
-                               ModelExtensionDefinition med ) {
-        this(medEditor);
-        this.med = med;
+        this.descriptionError = new ErrorMessage();
+        this.metamodelUriError = new ErrorMessage();
+        this.namespacePrefixError = new ErrorMessage();
+        this.namespaceUriError = new ErrorMessage();
+        this.resourcePathError = new ErrorMessage();
+        this.versionError = new ErrorMessage();
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.eclipse.ui.forms.editor.FormPage#createFormContent(org.eclipse.ui.forms.IManagedForm)
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#createBody(org.eclipse.swt.widgets.Composite,
+     *      org.eclipse.ui.forms.widgets.FormToolkit)
      */
     @SuppressWarnings("unused")
     @Override
-    protected void createFormContent( IManagedForm managedForm ) {
-        FormToolkit toolkit = managedForm.getToolkit();
-
-        ScrolledForm scrolledForm = managedForm.getForm();
-        scrolledForm.setText(Messages.medEditorOverviewPageTitle);
-
-        this.form = scrolledForm.getForm();
-        toolkit.decorateFormHeading(this.form);
-
-        Composite body = scrolledForm.getBody();
+    protected void createBody( Composite body,
+                               FormToolkit toolkit ) {
         body.setLayout(FormUtil.createFormGridLayout(false, 2));
 
         Section section = toolkit.createSection(body, ExpandableComposite.NO_TITLE | ExpandableComposite.TITLE_BAR);
@@ -117,7 +97,6 @@ public final class OverviewEditorPage extends FormPage {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     validateNamespacePrefix();
-                    updateMessage();
                 }
             });
         }
@@ -140,7 +119,6 @@ public final class OverviewEditorPage extends FormPage {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     validateNamespaceUri();
-                    updateMessage();
                 }
             });
         }
@@ -197,7 +175,6 @@ public final class OverviewEditorPage extends FormPage {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     validateResourcePath();
-                    updateMessage();
                 }
             });
         }
@@ -217,15 +194,8 @@ public final class OverviewEditorPage extends FormPage {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     validateVersion();
-                    updateMessage();
                 }
             });
-
-            if (this.med == null) {
-                this.txtVersion.setText(Integer.toString(ModelExtensionDefinitionHeader.DEFAULT_VERSION));
-            } else {
-                this.txtVersion.setText(Integer.toString(this.med.getVersion()));
-            }
         }
 
         DESCRIPTION: {
@@ -245,14 +215,17 @@ public final class OverviewEditorPage extends FormPage {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     validateDescription();
-                    updateMessage();
                 }
             });
         }
-    }
 
-    private ModelExtensionRegistry getRegistry() {
-        return ExtensionPlugin.getInstance().getRegistry();
+        // setup error messages
+        this.descriptionError.widget = this.txtDescription;
+        this.metamodelUriError.widget = this.cbxMetamodelUris;
+        this.namespacePrefixError.widget = this.txtNamespacePrefix;
+        this.namespaceUriError.widget = this.txtNamespaceUri;
+        this.resourcePathError.widget = this.txtResourcePath;
+        this.versionError.widget = this.txtVersion;
     }
 
     /**
@@ -277,35 +250,13 @@ public final class OverviewEditorPage extends FormPage {
         }
     }
 
-    void updateMessage() {
-        String message = null;
-        int messageType = IMessageProvider.NONE;
-
-        if (!CoreStringUtil.isEmpty(this.resourcePathValidationMsg)) {
-            message = this.resourcePathValidationMsg;
-        } else if (!CoreStringUtil.isEmpty(this.namespacePrefixValidationMsg)) {
-            message = this.namespacePrefixValidationMsg;
-        } else if (!CoreStringUtil.isEmpty(this.namespaceUriValidationMsg)) {
-            message = this.namespaceUriValidationMsg;
-        } else if (!CoreStringUtil.isEmpty(this.metamodelUriValidationMsg)) {
-            message = this.metamodelUriValidationMsg;
-        } else if (!CoreStringUtil.isEmpty(this.versionValidationMsg)) {
-            message = this.versionValidationMsg;
-        } else if (!CoreStringUtil.isEmpty(this.descriptionValidationMsg)) {
-            message = this.descriptionValidationMsg;
-        }
-
-        if (!CoreStringUtil.isEmpty(message)) {
-            messageType = IMessageProvider.ERROR;
-        }
-
-        // only set message if different than current message
-        if ((this.form.getMessageType() != messageType) || !CoreStringUtil.equals(message, this.form.getMessage())) {
-            this.form.setMessage(message, messageType);
-        }
-    }
-
-    private void validateAll() {
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#updateAllMessages()
+     */
+    @Override
+    protected void updateAllMessages() {
         validateDescription();
         validateMetamodelUri();
         validateNamespacePrefix();
@@ -315,28 +266,34 @@ public final class OverviewEditorPage extends FormPage {
     }
 
     void validateDescription() {
-        this.descriptionValidationMsg = ModelExtensionDefinitionValidator.validateDescription(this.txtDescription.getText());
+        this.descriptionError.message = ModelExtensionDefinitionValidator.validateDescription(this.txtDescription.getText());
+        updateMessage(this.descriptionError);
     }
 
     void validateMetamodelUri() {
-        this.metamodelUriValidationMsg = ModelExtensionDefinitionValidator.validateMetamodelUri(this.cbxMetamodelUris.getText(),
+        this.metamodelUriError.message = ModelExtensionDefinitionValidator.validateMetamodelUri(this.cbxMetamodelUris.getText(),
                                                                                                 getRegistry());
+        updateMessage(this.metamodelUriError);
     }
 
     void validateNamespacePrefix() {
-        this.namespacePrefixValidationMsg = ModelExtensionDefinitionValidator.validateNamespacePrefix(this.txtNamespacePrefix.getText());
+        this.namespacePrefixError.message = ModelExtensionDefinitionValidator.validateNamespacePrefix(this.txtNamespacePrefix.getText());
+        updateMessage(this.namespacePrefixError);
     }
 
     void validateNamespaceUri() {
-        this.namespaceUriValidationMsg = ModelExtensionDefinitionValidator.validateNamespaceUri(this.txtNamespaceUri.getText());
+        this.namespaceUriError.message = ModelExtensionDefinitionValidator.validateNamespaceUri(this.txtNamespaceUri.getText());
+        updateMessage(this.namespaceUriError);
     }
 
     void validateResourcePath() {
-        this.resourcePathValidationMsg = ModelExtensionDefinitionValidator.validateResourcePath(this.txtResourcePath.getText());
+        this.resourcePathError.message = ModelExtensionDefinitionValidator.validateResourcePath(this.txtResourcePath.getText());
+        updateMessage(this.resourcePathError);
     }
 
     void validateVersion() {
-        this.resourcePathValidationMsg = ModelExtensionDefinitionValidator.validateVersion(this.txtVersion.getText());
+        this.versionError.message = ModelExtensionDefinitionValidator.validateVersion(this.txtVersion.getText());
+        updateMessage(this.versionError);
     }
 
 }
