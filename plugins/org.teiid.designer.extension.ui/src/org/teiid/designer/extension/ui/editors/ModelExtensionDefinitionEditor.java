@@ -77,12 +77,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             // add properties editor
             this.propertiesPage = new PropertiesEditorPage(this);
             addPage(0, this.propertiesPage);
-            this.propertiesPage.updateAllMessages();
 
             // add overview editor
             this.overviewPage = new OverviewEditorPage(this);
             addPage(0, this.overviewPage);
-            this.overviewPage.updateAllMessages();
 
             // set text editor title and initialize header text to first page
             setPageText((getPageCount() - 1), medEditorSourcePageTitle);
@@ -208,6 +206,18 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         } catch (Exception e) {
             throw new PartInitException(errorOpeningMedEditor, e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.part.MultiPageEditorPart#initializePageSwitching()
+     */
+    @Override
+    protected void initializePageSwitching() {
+        super.initializePageSwitching();
+        this.overviewPage.updateAllMessages();
+        this.propertiesPage.updateAllMessages();
     }
 
     /**
