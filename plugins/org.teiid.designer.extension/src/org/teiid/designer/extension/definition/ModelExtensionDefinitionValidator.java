@@ -8,6 +8,8 @@
 package org.teiid.designer.extension.definition;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.HashSet;
 
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
@@ -61,6 +63,45 @@ public final class ModelExtensionDefinitionValidator {
     public static String validateDescription( String description ) {
         // any value is valid
         return null;
+    }
+
+    public static String validateMetaclassName( String metaclassName ) {
+        String errorMsg = emptyCheck(Messages.metamodelUri, metaclassName);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            // check for invalid characters
+            for (char c : metaclassName.toCharArray()) {
+                if ((c != '.') && !Character.isJavaIdentifierPart(c)) {
+                    errorMsg = Messages.metaclassNameHasInvalidCharactersValidationMsg;
+                }
+            }
+        }
+
+        return errorMsg;
+    }
+
+    public static String validateMetaclassNames( Collection<String> metaclassNames ) {
+        String errorMsg = null;
+
+        if ((metaclassNames == null) || metaclassNames.isEmpty()) {
+            errorMsg = Messages.medHasNoMetaclassesValidationMsg;
+        } else {
+            // make sure no duplicates
+            if (metaclassNames.size() != new HashSet<String>(metaclassNames).size()) {
+                errorMsg = Messages.medHasDuplicateMetaclassesValidationMsg;
+            } else {
+                // make sure all metaclass names are valid
+                for (String metaclassName : metaclassNames) {
+                    errorMsg = validateMetaclassName(metaclassName);
+
+                    if (!CoreStringUtil.isEmpty(errorMsg)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return errorMsg;
     }
 
     public static String validateMetamodelUri( String metamodelUri ) {
@@ -147,51 +188,6 @@ public final class ModelExtensionDefinitionValidator {
 
         // good value
         return null;
-    }
-
-    public static String validate( ModelExtensionDefinition med ) {
-        String errorMsg = validateResourcePath(med.getResourcePath());
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = validateNamespacePrefix(med.getNamespacePrefix());
-
-            if (CoreStringUtil.isEmpty(errorMsg)) {
-                errorMsg = validateNamespaceUri(med.getNamespaceUri());
-
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = validateMetamodelUri(med.getMetamodelUri());
-
-                    if (CoreStringUtil.isEmpty(errorMsg)) {
-                        errorMsg = validateVersion(String.valueOf(med.getVersion()));
-
-                        if (CoreStringUtil.isEmpty(errorMsg)) {
-                            errorMsg = validateDescription(med.getDescription());
-                        }
-                    }
-                }
-            }
-        }
-
-        return errorMsg;
-    }
-
-    public static String validate( ModelExtensionDefinition med,
-                                   ModelExtensionRegistry registry ) {
-        String errorMsg = validate(med);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = validateNamespacePrefix(med.getNamespacePrefix(), registry);
-
-            if (CoreStringUtil.isEmpty(errorMsg)) {
-                errorMsg = validateNamespaceUri(med.getNamespaceUri(), registry);
-
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = validateMetamodelUri(med.getMetamodelUri(), registry);
-                }
-            }
-        }
-
-        return errorMsg;
     }
 
 }

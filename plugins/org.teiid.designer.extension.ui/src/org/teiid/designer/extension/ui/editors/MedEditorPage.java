@@ -18,6 +18,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
+import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
@@ -25,12 +26,15 @@ import com.metamatrix.core.util.CoreStringUtil;
  */
 public abstract class MedEditorPage extends FormPage {
 
-    private ModelExtensionDefinition med;
+    private final ModelExtensionDefinition med;
 
     protected MedEditorPage( FormEditor medEditor,
                              String id,
-                             String title ) {
+                             String title,
+                             ModelExtensionDefinition med ) {
         super(medEditor, id, title);
+        CoreArgCheck.isNotNull(med, "MED is null"); //$NON-NLS-1$
+        this.med = med;
     }
 
     protected abstract void createBody( Composite body,
@@ -57,10 +61,6 @@ public abstract class MedEditorPage extends FormPage {
 
     protected ModelExtensionRegistry getRegistry() {
         return ExtensionPlugin.getInstance().getRegistry();
-    }
-
-    protected void setModelExtensionDefinition( ModelExtensionDefinition med ) {
-        this.med = med;
     }
 
     protected abstract void updateAllMessages();

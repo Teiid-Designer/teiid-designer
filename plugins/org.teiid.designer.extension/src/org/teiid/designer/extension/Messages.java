@@ -46,7 +46,10 @@ public class Messages extends NLS {
     public static String namespaceUri;
     public static String resourcePath;
     public static String version;
-    
+
+    public static String medHasNoMetaclassesValidationMsg;
+    public static String medHasDuplicateMetaclassesValidationMsg;
+    public static String metaclassNameHasInvalidCharactersValidationMsg;
     public static String metamodelUriNotExtendableValidationMsg;
     public static String namespacePrefixExistsValidationMsg;
     public static String namespaceUriExistsValidationMsg;

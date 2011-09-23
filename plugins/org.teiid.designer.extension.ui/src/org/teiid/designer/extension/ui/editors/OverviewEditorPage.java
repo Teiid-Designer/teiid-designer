@@ -7,10 +7,12 @@
  */
 package org.teiid.designer.extension.ui.editors;
 
+import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW_PAGE;
 
 import java.util.Set;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ControlAdapter;
@@ -27,6 +29,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Messages;
 
@@ -52,8 +55,9 @@ public final class OverviewEditorPage extends MedEditorPage {
     private Text txtResourcePath;
     private Text txtVersion;
 
-    public OverviewEditorPage( FormEditor medEditor ) {
-        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
+    public OverviewEditorPage( FormEditor medEditor,
+                               ModelExtensionDefinition med ) {
+        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, med);
         this.descriptionError = new ErrorMessage();
         this.metamodelUriError = new ErrorMessage();
         this.namespacePrefixError = new ErrorMessage();
@@ -82,11 +86,14 @@ public final class OverviewEditorPage extends MedEditorPage {
         container.setLayout(FormUtil.createSectionClientGridLayout(false, 2));
         section.setClient(container);
 
+        ModelExtensionDefinition med = getModelExtensionDefinition();
+
         NAMESPACE_PREFIX: {
             toolkit.createLabel(container, Messages.namespacePrefixLabel);
 
             this.txtNamespacePrefix = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
             this.txtNamespacePrefix.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+            this.txtNamespacePrefix.setText(med.getNamespacePrefix());
             this.txtNamespacePrefix.addModifyListener(new ModifyListener() {
 
                 /**
@@ -109,6 +116,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtNamespaceUri = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
             txtNamespaceUri = this.txtNamespaceUri;
             this.txtNamespaceUri.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+            this.txtNamespaceUri.setText(med.getNamespaceUri());
             this.txtNamespaceUri.addModifyListener(new ModifyListener() {
 
                 /**
@@ -132,6 +140,17 @@ public final class OverviewEditorPage extends MedEditorPage {
             // populate URIs
             Set<String> items = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
             this.cbxMetamodelUris.setItems(items.toArray(new String[items.size()]));
+
+            // set value based on MED
+            String metamodelUri = med.getMetamodelUri();
+            int index = this.cbxMetamodelUris.indexOf(metamodelUri);
+
+            if (index == -1) {
+                UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
+            } else {
+                this.cbxMetamodelUris.select(index);
+            }
+
             this.cbxMetamodelUris.addModifyListener(new ModifyListener() {
 
                 /**
@@ -164,6 +183,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtResourcePath = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | SWT.BORDER);
             this.txtResourcePath.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+            this.txtResourcePath.setText(med.getResourcePath());
             ((GridData)this.txtResourcePath.getLayoutData()).verticalIndent += ((GridLayout)container.getLayout()).verticalSpacing;
             this.txtResourcePath.addModifyListener(new ModifyListener() {
 
@@ -184,6 +204,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtVersion = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
             this.txtVersion.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+            this.txtVersion.setText(String.valueOf(med.getVersion()));
             this.txtVersion.addModifyListener(new ModifyListener() {
 
                 /**
@@ -205,6 +226,7 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtDescription = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            this.txtDescription.setText(med.getDescription());
             this.txtDescription.addModifyListener(new ModifyListener() {
 
                 /**
@@ -252,7 +274,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.extension.ui.editors.MedEditorPage#updateAllMessages()
      */
     @Override

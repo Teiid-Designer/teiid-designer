@@ -30,7 +30,9 @@ import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
@@ -75,11 +77,11 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             addPage(0, sourceEditor, getEditorInput());
 
             // add properties editor
-            this.propertiesPage = new PropertiesEditorPage(this);
+            this.propertiesPage = new PropertiesEditorPage(this, this.med);
             addPage(0, this.propertiesPage);
 
             // add overview editor
-            this.overviewPage = new OverviewEditorPage(this);
+            this.overviewPage = new OverviewEditorPage(this, this.med);
             addPage(0, this.overviewPage);
 
             // set text editor title and initialize header text to first page
@@ -139,9 +141,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
-    private ModelExtensionDefinition createMed( IFile medFile ) {
-        // TODO implement createMed
-        return null;
+    private void createMed( IFile medFile ) throws Exception {
+        ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser();
+        this.med = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
+        this.med.setResourcePath(medFile.getLocation().toPortableString());
     }
 
     /**

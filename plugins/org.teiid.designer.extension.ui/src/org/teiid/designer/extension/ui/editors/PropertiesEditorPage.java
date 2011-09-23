@@ -8,12 +8,14 @@
 package org.teiid.designer.extension.ui.editors;
 
 import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_PROPERTIES_PAGE;
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 
-import org.eclipse.jface.viewers.CellLabelProvider;
+import java.util.Arrays;
+
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -21,8 +23,10 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -36,11 +40,15 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
+import com.metamatrix.ui.internal.util.WidgetUtil;
 
 /**
  * 
@@ -53,14 +61,16 @@ public class PropertiesEditorPage extends MedEditorPage {
     private Button btnEditProperty;
     private Button btnRemoveMetaclass;
     private Button btnRemoveProperty;
-    private final ErrorMessage metaclassError;
-    private StructuredViewer metaclassViewer;
 
-    private final ErrorMessage propertyError;
+    private StructuredViewer metaclassViewer;
     private TableViewer propertyViewer;
 
-    public PropertiesEditorPage( FormEditor medEditor ) {
-        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
+    private final ErrorMessage metaclassError;
+    private final ErrorMessage propertyError;
+
+    public PropertiesEditorPage( FormEditor medEditor,
+                                 ModelExtensionDefinition med ) {
+        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle, med);
         this.metaclassError = new ErrorMessage();
         this.propertyError = new ErrorMessage();
     }
@@ -91,13 +101,16 @@ public class PropertiesEditorPage extends MedEditorPage {
         // set error message controls
         this.metaclassError.widget = this.metaclassViewer.getControl();
         this.propertyError.widget = this.propertyViewer.getControl();
+
+        // populate UI
+        this.metaclassViewer.setInput(this);
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
                                   int columnIndex,
                                   String headerText,
                                   boolean resizable ) {
-        viewerColumn.setLabelProvider(new PropertyLabelProvider());
+        viewerColumn.setLabelProvider(new PropertyLabelProvider(columnIndex));
 
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
@@ -227,7 +240,7 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         // configure viewer
         this.propertyViewer = new TableViewer(container, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER);
-        Table table = this.propertyViewer.getTable();
+        final Table table = this.propertyViewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
@@ -273,7 +286,6 @@ public class PropertiesEditorPage extends MedEditorPage {
                 // nothing to do
             }
         });
-        this.propertyViewer.setLabelProvider(new PropertyLabelProvider());
         this.propertyViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             /**
@@ -318,8 +330,21 @@ public class PropertiesEditorPage extends MedEditorPage {
         column = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
         configureColumn(column, ColumnIndexes.DISPLAY_NAME, ColumnHeaders.DISPLAY_NAME, true);
 
-        column = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
-        configureColumn(column, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
+        final TableViewerColumn lastColumn = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
+        configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
+
+        // size last column to stretch to the width of the table
+        table.addControlListener(new ControlAdapter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+             */
+            @Override
+            public void controlResized( ControlEvent e ) {
+                lastColumn.getColumn().setWidth(table.getSize().x);
+            }
+        });
 
         // configure buttons
         Button[] buttons = FormUtil.createButtonsContainer(container, toolkit, new String[] { Messages.addButton,
@@ -384,7 +409,7 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     ModelExtensionPropertyDefinition getSelectedProperty() {
-        IStructuredSelection selection = (IStructuredSelection)this.metaclassViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)this.propertyViewer.getSelection();
         return (selection.isEmpty() ? null : (ModelExtensionPropertyDefinition)selection.getFirstElement());
     }
 
@@ -399,7 +424,15 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     void handleAddMetaclass() {
-        // TODO implement handleAddMetaclass
+        ModelExtensionDefinition med = getModelExtensionDefinition();
+        AddMetaclassDialog dialog = new AddMetaclassDialog(null, Arrays.asList(med.getExtendedMetaclasses()));
+
+        if (dialog.open() == Window.OK) {
+            // TODO add to med
+            // TODO add to metaclass table
+            String metaclassName = dialog.getMetaclassName();
+//            med.addPropertyDefinition(metaclassName, propDefn);
+        }
     }
 
     void handleAddProperty() {
@@ -419,6 +452,7 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         // alert property viewer the selection changed
         this.propertyViewer.setInput(this);
+        WidgetUtil.pack(this.propertyViewer);
     }
 
     void handlePropertySelected() {
@@ -453,7 +487,8 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     void validateMetaclasses() {
-        // TODO implement validateMetaclasses
+        String[] metaclassNames = getModelExtensionDefinition().getExtendedMetaclasses();
+        this.metaclassError.message = ModelExtensionDefinitionValidator.validateMetaclassNames(Arrays.asList(metaclassNames));
         updateMessage(this.metaclassError);
     }
 
@@ -490,40 +525,69 @@ public class PropertiesEditorPage extends MedEditorPage {
         int SIMPLE_ID = 0;
     }
 
-    class PropertyLabelProvider extends CellLabelProvider implements ITableLabelProvider {
+    class PropertyLabelProvider extends ColumnLabelProvider {
 
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-         */
-        @Override
-        public Image getColumnImage( Object element,
-                                     int columnIndex ) {
-            // TODO add checkbox for boolean columns
-            return null;
+        private final int columnIndex;
+
+        public PropertyLabelProvider( final int columnIndex ) {
+            this.columnIndex = columnIndex;
         }
 
         /**
          * {@inheritDoc}
          * 
-         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
          */
         @Override
-        public String getColumnText( Object element,
-                                     int columnIndex ) {
+        public Image getImage( Object element ) {
             ModelExtensionPropertyDefinition propDefn = (ModelExtensionPropertyDefinition)element;
-            // TODO implement getColumnText
-            return null;
+            boolean enabled = false;
+
+            if ((ColumnIndexes.ADVANCED == this.columnIndex) && propDefn.isAdvanced()) {
+                enabled = true;
+            } else if ((ColumnIndexes.INDEXED == this.columnIndex) && propDefn.shouldBeIndexed()) {
+                enabled = true;
+            } else if ((ColumnIndexes.MASKED == this.columnIndex) && propDefn.isMasked()) {
+                enabled = true;
+            } else if ((ColumnIndexes.MODIFIABLE == this.columnIndex) && propDefn.isModifiable()) {
+                enabled = true;
+            } else if ((ColumnIndexes.REQUIRED == this.columnIndex) && propDefn.isRequired()) {
+                enabled = true;
+            }
+
+            return (enabled ? Activator.getDefault().getImage(CHECK_MARK) : null);
         }
 
         /**
          * {@inheritDoc}
          * 
-         * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
          */
         @Override
-        public void update( ViewerCell cell ) {
+        public String getText( Object element ) {
+            ModelExtensionPropertyDefinition propDefn = (ModelExtensionPropertyDefinition)element;
+
+            if (ColumnIndexes.SIMPLE_ID == this.columnIndex) {
+                return propDefn.getSimpleId();
+            }
+
+            if (ColumnIndexes.DEFAULT_VALUE == this.columnIndex) {
+                return propDefn.getDefaultValue();
+            }
+
+            if (ColumnIndexes.DESCRIPTION == this.columnIndex) {
+                return propDefn.getDescription();
+            }
+
+            if (ColumnIndexes.RUNTIME_TYPE == this.columnIndex) {
+                return propDefn.getRuntimeType();
+            }
+
+            if (ColumnIndexes.DISPLAY_NAME == this.columnIndex) {
+                return propDefn.getDisplayName();
+            }
+
+            return null;
         }
 
     }

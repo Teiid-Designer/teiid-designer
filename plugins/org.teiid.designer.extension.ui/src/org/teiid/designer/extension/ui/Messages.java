@@ -71,6 +71,7 @@ public class Messages extends NLS {
     public static String medEditorOverviewPageToolTip;
     public static String overviewPageExtendedMetaclassDescription;
     public static String overviewPageExtendedMetaclassTitle;
+    public static String overviewPageInvalidMetamodelUriMsg;
 
     public static String medEditorPropertiesPageTitle;
     public static String medEditorPropertiesPageToolTip;
@@ -111,6 +112,12 @@ public class Messages extends NLS {
     public static String requiredPropertyAttributeColumnHeader;
     public static String runtimeTypePropertyAttributeColumnHeader;
     public static String simpleIdPropertyAttributeColumnHeader;
+
+    public static String addMetaclassDialogTitle;
+    public static String addMetaclassDialogMessage;
+    public static String metaclassLabel;
+    public static String metaclassToolTip;
+    public static String metaclassExistsInMedMsg;
 
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
