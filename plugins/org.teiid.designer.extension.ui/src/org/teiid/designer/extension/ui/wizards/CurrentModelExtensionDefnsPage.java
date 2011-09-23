@@ -698,8 +698,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             this.tableViewer.refresh();
         }
 
-        System.out.println("State after ADD MED(s) : "); //$NON-NLS-1$
-        System.out.println(this.editManager.toString());
+        //System.out.println("State after ADD MED(s) : "); //$NON-NLS-1$
+        // System.out.println(this.editManager.toString());
 
     }
 
@@ -719,8 +719,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             this.editManager.removeModelExtensionDefinition(namespacePrefix);
             this.tableViewer.refresh();
         }
-        System.out.println("State after REMOVE MED(s) : "); //$NON-NLS-1$
-        System.out.println(this.editManager.toString());
+        //System.out.println("State after REMOVE MED(s) : "); //$NON-NLS-1$
+        // System.out.println(this.editManager.toString());
 
     }
 
