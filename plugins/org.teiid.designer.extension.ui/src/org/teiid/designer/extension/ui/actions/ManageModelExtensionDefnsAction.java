@@ -153,11 +153,14 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
      * @since 7.6
      */
     private boolean isMetamodelExtendable( ModelResource modelResource ) {
-        if (this.registry != null) {
-            String selectedModelURI = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
-            return registry.isExtendable(selectedModelURI);
+        boolean isExtendable = false;
+        if (this.registry != null && modelResource != null) {
+            String selectedModelUri = ModelIdentifier.getPrimaryMetamodelURI(modelResource);
+            if (selectedModelUri != null) {
+                isExtendable = this.registry.isExtendable(selectedModelUri);
+            }
         }
-        return false;
+        return isExtendable;
     }
 
 }

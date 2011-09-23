@@ -7,19 +7,25 @@
  */
 package org.teiid.designer.extension.ui.wizards;
 
+import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.designer.core.extension.ModelExtensionUtils;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -101,7 +107,68 @@ public class ManageModelExtensionDefnsWizard extends AbstractWizard {
             return;
         }
 
-        // TODO: Perform update here
+        // Get the currently selected ModelResource.
+        ModelResource modelResource = currentModelExtensionDefnsPage.getSelectedModelResource();
+        if (modelResource == null) {
+            addStatus(IStatus.ERROR, Messages.manageMedsWizardInitError, null);
+            return;
+        }
+
+        // Remove Selected Namespaces
+        List<String> namespacesToRemove = currentModelExtensionDefnsPage.getNamespacesToRemove();
+        if (namespacesToRemove.size() > 0) {
+            boolean success = true;
+            for (String namespacePrefix : namespacesToRemove) {
+                try {
+                    ModelExtensionUtils.removeModelExtensionDefinition(modelResource, namespacePrefix);
+                } catch (Exception e) {
+                    ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+                    success = false;
+                }
+            }
+            if (success) {
+                MessageDialog.openInformation(getShell(),
+                                              Messages.currentMedsPageRemoveDialogTitle,
+                                              Messages.currentMedsPageRemoveSuccessDialogMsg);
+            } else {
+                MessageDialog.openError(getShell(),
+                                        Messages.currentMedsPageRemoveDialogTitle,
+                                        Messages.currentMedsPageRemoveFailedDialogMsg);
+            }
+        }
+
+        // Add Selected ModelExtensionDefinitions
+        List<ModelExtensionDefinition> medsToAdd = currentModelExtensionDefnsPage.getModelExtensionDefnsToAdd();
+        if (medsToAdd.size() > 0) {
+            boolean success = true;
+            // Add the Meds to the model
+            for (ModelExtensionDefinition med : medsToAdd) {
+                try {
+                    ModelExtensionUtils.updateModelExtensionDefinition(modelResource, med);
+                } catch (Exception e) {
+                    ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+                    success = false;
+                }
+            }
+            // If any add/update failed, notify the user
+            if (success) {
+                MessageDialog.openInformation(getShell(),
+                                              Messages.currentMedsPageAddDialogTitle,
+                                              Messages.currentMedsPageAddSuccessDialogMsg);
+            } else {
+                MessageDialog.openError(getShell(),
+                                        Messages.currentMedsPageAddDialogTitle,
+                                        Messages.currentMedsPageAddFailedDialogMsg);
+            }
+        }
+
+        // Save the ModelResource
+        try {
+            modelResource.save(new NullProgressMonitor(), true);
+        } catch (ModelWorkspaceException e) {
+            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+        }
+
     }
 
     public MultiStatus getStatus() {

@@ -180,6 +180,13 @@ public class ModelExtensionDefinition {
     }
 
     /**
+     * @return the header (never <code>null</code> or empty)
+     */
+    public ModelExtensionDefinitionHeader getHeader() {
+        return this.header;
+    }
+
+    /**
      * @param metaclassName the metaclass name whose extended property is being requested (cannot be <code>null</code> or empty)
      * @param propId the identifier of the property definition being requested (cannot be <code>null</code> or empty)
      * @return the property definition or <code>null</code> if not found

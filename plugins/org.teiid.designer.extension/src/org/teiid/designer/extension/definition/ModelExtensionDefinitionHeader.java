@@ -122,4 +122,54 @@ public class ModelExtensionDefinitionHeader {
         return namespaceUri;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public final boolean equals( final Object object ) {
+        if (this == object) return true;
+        if (object == null) return false;
+        if (getClass() != object.getClass()) return false;
+        final ModelExtensionDefinitionHeader other = (ModelExtensionDefinitionHeader)object;
+
+        if (this.namespacePrefix == null) {
+            if (other.namespacePrefix != null) return false;
+        } else if (!this.namespacePrefix.equals(other.namespacePrefix)) return false;
+
+        if (this.namespaceUri == null) {
+            if (other.namespaceUri != null) return false;
+        } else if (!this.namespaceUri.equals(other.namespaceUri)) return false;
+
+        if (this.metamodelUri == null) {
+            if (other.metamodelUri != null) return false;
+        } else if (!this.metamodelUri.equals(other.metamodelUri)) return false;
+
+        if (this.description == null) {
+            if (other.description != null) return false;
+        } else if (!this.description.equals(other.description)) return false;
+
+        if (this.version != other.version) return false;
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder text = new StringBuilder();
+        text.append("Model Extension Definition Header: "); //$NON-NLS-1$
+        text.append("namespacePrefix=").append(getNamespacePrefix()); //$NON-NLS-1$
+        text.append(", namespaceUri=").append(getNamespaceUri()); //$NON-NLS-1$
+        text.append(", metamodelUri=").append(getMetamodelUri()); //$NON-NLS-1$
+        text.append(", version=").append(getVersion()); //$NON-NLS-1$
+
+        return text.toString();
+    }
+
 }

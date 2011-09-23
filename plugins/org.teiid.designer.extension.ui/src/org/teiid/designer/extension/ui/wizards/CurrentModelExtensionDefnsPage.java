@@ -8,12 +8,11 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -33,6 +32,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -53,11 +53,11 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -78,11 +78,14 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private static final int STATUS_NO_LOCATION = 1;
     private static final int STATUS_NO_MODELNAME = 2;
 
-    ModelResource modelResource; // Current ModelResource selection
-    Text locationText, modelNameText; // Text widgets for ModelName and Location
+    private ModelResource modelResource; // Current ModelResource selection
+    private Text locationText, modelNameText; // Text widgets for ModelName and Location
 
-    TableViewer tableViewer;
-    List<ModelExtensionDefinitionHeader> currentMedHeaderList = new ArrayList<ModelExtensionDefinitionHeader>();
+    private TableViewer tableViewer;
+    private MedHeadersEditManager editManager;
+
+    private int selectedMedIndex = -1; // Index of the current Med Selection
+    private Button addMedButton, removeMedButton; // Buttons for adding or removing MED
 
     protected int currentStatus = STATUS_OK; // Current status of wizard
 
@@ -99,7 +102,9 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
 
         this.modelResource = rsrc;
-        this.currentMedHeaderList = getModelExtensionDefnHeaders(this.modelResource);
+
+        // Edit Manager maintains the Add/Remove State.
+        this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
     }
 
     /**
@@ -109,8 +114,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * @return the list of current ModelExtensionDefinitionHeaders for the supplied ModelResource
      */
     private List<ModelExtensionDefinitionHeader> getModelExtensionDefnHeaders( ModelResource modelResource ) {
-        ModelExtensionAssistantAggregator aggregator = new ModelExtensionAssistantAggregator(this.registry);
         List<ModelExtensionDefinitionHeader> headers = new ArrayList<ModelExtensionDefinitionHeader>();
+        ModelExtensionAssistantAggregator aggregator = new ModelExtensionAssistantAggregator(this.registry);
         try {
             Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
 
@@ -129,14 +134,35 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * Get the current ModelExtensionDefinitionHeader list
      */
-    List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
-        return this.currentMedHeaderList;
+    private List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
+        return this.editManager.getCurrentHeaders();
+    }
+
+    /*
+     * Get the list of ModelExtensionDefinitions to add.
+     */
+    public List<ModelExtensionDefinition> getModelExtensionDefnsToAdd() {
+        return this.editManager.getModelExtensionDefnsToAdd();
+    }
+
+    /*
+     * Get the list of Namespaces to remove.
+     */
+    public List<String> getNamespacesToRemove() {
+        return this.editManager.getNamespacesToRemove();
+    }
+
+    /*
+     * Get the selected ModelResource
+     */
+    public ModelResource getSelectedModelResource() {
+        return this.modelResource;
     }
 
     /*
      * Get the ModelExtensionRegistry
      */
-    ModelExtensionRegistry getRegistry() {
+    private ModelExtensionRegistry getRegistry() {
         return this.registry;
     }
 
@@ -306,11 +332,11 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             if (!exceptionOccurred) {
                 this.modelResource = selectedModel;
                 updateModelDisplay();
-                this.currentMedHeaderList = getModelExtensionDefnHeaders(this.modelResource);
+                this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
                 this.tableViewer.refresh();
             } else {
                 this.modelResource = null;
-                this.currentMedHeaderList.clear();
+                this.editManager = new MedHeadersEditManager(Collections.EMPTY_LIST);
                 this.tableViewer.refresh();
             }
         }
@@ -377,7 +403,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Create a TableViewer for the models current ModelExtensionDefinitions
      */
     private TableViewer createTableViewer( Composite composite ) {
-        TableViewer viewer = new TableViewer(composite, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        TableViewer viewer = new TableViewer(composite, (SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
         ColumnViewerToolTipSupport.enableFor(viewer);
 
         // configure table
@@ -455,15 +481,27 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
              */
             @Override
             public void selectionChanged( SelectionChangedEvent event ) {
-                // handleMedSelected();
+                handleMedSelectionChanged();
             }
         });
 
         // populate the view
-        viewer.setInput(this.currentMedHeaderList);
+        viewer.setInput(this.editManager.getCurrentHeaders());
         WidgetUtil.pack(viewer);
 
         return viewer;
+    }
+
+    private void handleMedSelectionChanged() {
+        // Update the selected Med
+        int[] selectedMeds = this.tableViewer.getTable().getSelectionIndices();
+        if (selectedMeds.length > 0) {
+            this.selectedMedIndex = selectedMeds[0];
+        } else {
+            this.selectedMedIndex = -1;
+        }
+        // Update the button states
+        setButtonStates();
     }
 
     private void createColumns( final TableViewer viewer,
@@ -605,40 +643,85 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         buttonComposite.setLayout(buttonLayout);
 
         // Add Med Button
-        Button addMedButton = new Button(buttonComposite, SWT.PUSH);
-        addMedButton.setText(Messages.currentMedsPageAddMedButton);
-        addMedButton.addSelectionListener(new SelectionAdapter() {
+        this.addMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.addMedButton.setText(Messages.currentMedsPageAddMedButton);
+        this.addMedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
                 handleAddMed();
             }
         });
+        this.addMedButton.setEnabled(true);
 
         // Remove Med Button
-        Button removeMedButton = new Button(buttonComposite, SWT.PUSH);
-        removeMedButton.setText(Messages.currentMedsPageRemoveMedButton);
-        removeMedButton.addSelectionListener(new SelectionAdapter() {
+        this.removeMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.removeMedButton.setText(Messages.currentMedsPageRemoveMedButton);
+        this.removeMedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
                 handleRemoveMed();
             }
         });
+        this.removeMedButton.setEnabled(false);
 
         return buttonComposite;
+    }
+
+    /*
+     * Set the Add/Remove MED buttons states based on the current table selection
+     */
+    private void setButtonStates() {
+        // Remove Button - only enable if something is selected
+        boolean removeEnabled = (this.selectedMedIndex >= 0) ? true : false;
+        this.removeMedButton.setEnabled(removeEnabled);
+
+        // Add Button - always enabled
+        this.addMedButton.setEnabled(true);
     }
 
     /*
      * handler for Add Med Button
      */
     void handleAddMed() {
-        MessageDialog.openInformation(null, null, "Add MED not implemented"); //$NON-NLS-1$
+        AvailableModelExtensionDefinitionsDialog dialog = new AvailableModelExtensionDefinitionsDialog(getShell(),
+                                                                                                       this.modelResource,
+                                                                                                       this.editManager.getCurrentHeaders());
+        dialog.open();
+
+        if (dialog.getReturnCode() == Window.OK) {
+            // Get the MEDs which were selected to be added from the dialog
+            List<ModelExtensionDefinition> dialogMeds = dialog.getSelectedModelExtensionDefinitions();
+
+            this.editManager.addModelExtensionDefinitions(dialogMeds);
+
+            // Update the table
+            this.tableViewer.refresh();
+        }
+
+        System.out.println("State after ADD MED(s) : "); //$NON-NLS-1$
+        System.out.println(this.editManager.toString());
+
     }
 
     /*
      * handler for Remove Med Button
      */
     void handleRemoveMed() {
-        MessageDialog.openInformation(null, null, "Remove MED not implemented"); //$NON-NLS-1$
+        // Warn user that removal will remove all properties
+        boolean confirmed = MessageDialog.openConfirm(getShell(),
+                                                      Messages.currentMedsPageRemoveDialogTitle,
+                                                      Messages.currentMedsPageRemoveDialogMsg);
+
+        // If user confirms, proceed
+        if (confirmed) {
+            // put selected prefix in the remove list
+            String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+            this.editManager.removeModelExtensionDefinition(namespacePrefix);
+            this.tableViewer.refresh();
+        }
+        System.out.println("State after REMOVE MED(s) : "); //$NON-NLS-1$
+        System.out.println(this.editManager.toString());
+
     }
 
 }
