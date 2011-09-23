@@ -264,7 +264,9 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
         messageLabel.setFont(parent.getFont());
 
         expectedFormatListViewer = new ListViewer(parent);
-        GridData data = new GridData(GridData.FILL_BOTH);
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 600;
+        data.heightHint = 400;
         expectedFormatListViewer.getControl().setLayoutData(data);
     }
 

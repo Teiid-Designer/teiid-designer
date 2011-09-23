@@ -8,7 +8,14 @@
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
 <plugin>
-
+   <extension
+         id="relationalModelTextImporter"
+         name="%relationalModelTextImporter"
+         point="org.teiid.designer.tools.textimport.ui.textImportContributor">
+      <class
+        name="com.metamatrix.modeler.internal.relational.ui.wizards.RelationalModelTextImporterMainPage">
+      </class>
+   </extension>
      <!-- Text Importer Contribution -->
       <extension
          id="relationalUiTextImporter"
