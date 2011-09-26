@@ -28,6 +28,7 @@ import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.DirectionKind;
 import com.metamatrix.metamodels.relational.ForeignKey;
 import com.metamatrix.metamodels.relational.Index;
+import com.metamatrix.metamodels.relational.MultiplicityKind;
 import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.PrimaryKey;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -36,6 +37,7 @@ import com.metamatrix.metamodels.relational.ProcedureResult;
 import com.metamatrix.metamodels.relational.RelationalFactory;
 import com.metamatrix.metamodels.relational.RelationalPackage;
 import com.metamatrix.metamodels.relational.SearchabilityType;
+import com.metamatrix.metamodels.relational.Table;
 import com.metamatrix.metamodels.relational.UniqueConstraint;
 import com.metamatrix.metamodels.relational.UniqueKey;
 import com.metamatrix.metamodels.relational.View;
@@ -193,26 +195,18 @@ public class RelationalModelFactory implements RelationalConstants {
         
         // Add Columns
         for( RelationalColumn column : viewRef.getColumns()) {
-            createColumn(column, (BaseTable)view, modelResource);
+            createColumn(column, view, modelResource);
         }
-        
-        for( RelationalUniqueConstraint uc : viewRef.getUniqueContraints()) {
-            createUniqueConstraint(uc, (BaseTable)view, modelResource);
-        }
+  
         
         for( RelationalAccessPattern uc : viewRef.getAccessPatterns()) {
-            createAccessPattern(uc, (BaseTable)view, modelResource);
-        }
-        
-        for( RelationalForeignKey fk : viewRef.getForeignKeys()) {
-            fkTableMap.put(fk, (BaseTable)view);
-            //createForeignKey(fk, view, modelResource);
+            createAccessPattern(uc, view, modelResource);
         }
 
         return view;
     }
     
-    public EObject createColumn( RelationalReference ref, BaseTable baseTable, ModelResource modelResource) {
+    public EObject createColumn( RelationalReference ref, Table baseTable, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalColumn.class, ref);
         
         RelationalColumn columnRef = (RelationalColumn)ref;
@@ -370,6 +364,8 @@ public class RelationalModelFactory implements RelationalConstants {
         foreignKey.setTable(baseTable);
         foreignKey.setName(fkRef.getName());
         foreignKey.setNameInSource(fkRef.getNameInSource());
+        foreignKey.setForeignKeyMultiplicity(getMultiplictyKind(fkRef.getForeignKeyMultiplicity()));
+        foreignKey.setPrimaryKeyMultiplicity(getMultiplictyKind(fkRef.getPrimaryKeyMultiplicity()));
         
         // Add the columns in the correct order
         final List keyColumns = foreignKey.getColumns();
@@ -398,7 +394,7 @@ public class RelationalModelFactory implements RelationalConstants {
         
     }
     
-    private void createAccessPattern( RelationalReference ref, BaseTable baseTable, ModelResource modelResource) {
+    private void createAccessPattern( RelationalReference ref, Table baseTable, ModelResource modelResource) {
         CoreArgCheck.isInstanceOf(RelationalAccessPattern.class, ref);
         
         RelationalAccessPattern apRef = (RelationalAccessPattern)ref;
@@ -444,7 +440,7 @@ public class RelationalModelFactory implements RelationalConstants {
         
     }
     
-    private Column getColumn(String name, BaseTable baseTable) {
+    private Column getColumn(String name, Table baseTable) {
         for( Object column : baseTable.getColumns()) {
             if( column instanceof Column && ((Column)column).getName().equalsIgnoreCase(name) ) {
                 return (Column)column;
@@ -595,6 +591,23 @@ public class RelationalModelFactory implements RelationalConstants {
         }
         
         return DirectionKind.UNKNOWN_LITERAL;
+    }
+    
+    private MultiplicityKind getMultiplictyKind(String value) {
+        if( MultiplicityKind.MANY_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return MultiplicityKind.MANY_LITERAL;
+        }
+        if( MultiplicityKind.ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return MultiplicityKind.ONE_LITERAL;
+        }
+        if( MultiplicityKind.ZERO_TO_ONE_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return MultiplicityKind.ZERO_TO_ONE_LITERAL;
+        }
+        if( MultiplicityKind.ZERO_TO_MANY_LITERAL.getName().equalsIgnoreCase(value) ) {
+            return MultiplicityKind.ZERO_TO_MANY_LITERAL;
+        }
+        
+        return MultiplicityKind.UNSPECIFIED_LITERAL;
     }
     
     public void createAnnotation( EObject eObject, String description, ModelResource modelResource ) {

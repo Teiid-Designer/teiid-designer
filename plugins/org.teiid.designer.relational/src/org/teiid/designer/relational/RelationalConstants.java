@@ -63,7 +63,6 @@ public interface RelationalConstants {
         public static final String NO_NULLS = "NO_NULLS"; //$NON-NLS-1$
         public static final String NULLABLE = "NULLABLE"; //$NON-NLS-1$
         public static final String NULLABLE_UNKNOWN = "NULLABLE_UNKNOWN"; //$NON-NLS-1$
-        public static final String WIZARDS = ""; //$NON-NLS-1$
     }
     
     // MANY, ONE, UNSPECIFICIED, ZERO_TO_MANY, ZERO_TO_ONE

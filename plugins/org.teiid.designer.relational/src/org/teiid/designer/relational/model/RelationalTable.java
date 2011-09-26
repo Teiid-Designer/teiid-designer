@@ -17,9 +17,16 @@ import java.util.Properties;
 public class RelationalTable extends RelationalReference {
     public static final String KEY_CARDINALITY = "CARDINALITY"; //$NON-NLS-1$
     public static final String KEY_MATERIALIZED = "MATERIALIZED"; //$NON-NLS-1$
-    public static final String MATERIALIZED_TABLE = "MATERIALIZEDTABLE"; //$NON-NLS-1$
+    public static final String KEY_MATERIALIZED_TABLE = "MATERIALIZEDTABLE"; //$NON-NLS-1$
     public static final String KEY_SUPPORTS_UPDATE = "SUPPORTSUPDATE"; //$NON-NLS-1$
     public static final String KEY_SYSTEM = "SYSTEM"; //$NON-NLS-1$
+    
+    public static final String DEFAULT_CARDINALITY = null;
+    public static final boolean DEFAULT_MATERIALIZED = false;
+    public static final String DEFAULT_MATERIALIZED_TABLE = null; 
+    public static final boolean DEFAULT_SUPPORTS_UPDATE = true; 
+    public static final boolean DEFAULT_SYSTEM = false; 
+    
 
     private int  cardinality;
     private boolean materialized;

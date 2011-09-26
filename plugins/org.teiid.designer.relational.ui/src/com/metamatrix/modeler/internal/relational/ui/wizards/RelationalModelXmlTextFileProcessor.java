@@ -34,6 +34,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalView;
+import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -131,6 +132,13 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
 
             //parse using builder to get DOM representation of the XML file
             Document document = db.parse(xmlFileUrl);
+            
+            DOMConfiguration config = document.getDomConfig();
+            //config.setParameter("error-handler",new MyErrorHandler());
+//            config.setParameter("schema-type", "http://www.w3.org/2001/XMLSchema");
+//            config.setParameter("validate", Boolean.TRUE);
+//            document.normalizeDocument();
+            
             //get the root element
             Element root = document.getDocumentElement();
             
@@ -209,10 +217,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                 view.setProperties(props);
                                 relModel.addChild(view);
                                 
-                                Node primaryKeyElement = null;
-                                Node uniqueConstraintElement = null;
                                 Node accessPatternElement = null;
-                                Node foreignKeyElement = null;
                                 
                                 // Create Table Children. Do not process KEYS until done with children
                                 // DO NOT PROCESS FK's until ALL tables are complete
@@ -231,29 +236,14 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                                 column.setProperties(columnProps);
                                                 view.addColumn(column);
                                             } break;
-                                            case TYPES.PK: {
-                                                primaryKeyElement = tableChild;
-                                            } break;
-                                            case TYPES.UC: {
-                                                uniqueConstraintElement = tableChild;
-                                            } break;
                                             case TYPES.AP: {
                                                 accessPatternElement = tableChild;
-                                            } break;
-                                            case TYPES.FK: {
-                                                foreignKeyElement = tableChild;
                                             } break;
                                         }
                                     }
                                 }
-                                
-                                processPrimaryKey(primaryKeyElement, view); 
 
-                                processUniqueConstraint(uniqueConstraintElement, view);
-                                
                                 processAccessPattern( accessPatternElement, view);
-                                
-                                processForeignKey(foreignKeyElement, view);
                                 
                             } break;
                             case TYPES.PROCEDURE: {

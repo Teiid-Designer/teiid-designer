@@ -19,6 +19,9 @@ public class RelationalProcedure extends RelationalReference {
     public static final String KEY_FUNCTION = "FUNCTION"; //$NON-NLS-1$
     public static final String KEY_UPDATE_COUNT = "UPDATECOUNT"; //$NON-NLS-1$
     
+    public static final boolean DEFAULT_FUNCTION = false;
+    public static final String DEFAULT_UPDATE_COUNT = "AUTO"; //$NON-NLS-1$
+    
     private boolean function;
     private String  updateCount;
     private Collection<RelationalParameter> parameters;

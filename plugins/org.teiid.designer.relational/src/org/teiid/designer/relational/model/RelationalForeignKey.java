@@ -16,10 +16,15 @@ import java.util.Properties;
  * 
  */
 public class RelationalForeignKey extends RelationalReference {
-    public static final String KEY_FOREIGN_KEY_MULTIPLICITY = "FOREIGNKEYMULTIPLICITY"; //$NON-NLS-1$
-    public static final String KEY_PRIMARY_KEYMULTIPLICITY = "PRIMARYKEYMULTIPLICITY"; //$NON-NLS-1$
+    public static final String KEY_FOREIGN_KEY_MULTIPLICITY = "FKMULTIPLICITY"; //$NON-NLS-1$
+    public static final String KEY_PRIMARY_KEY_MULTIPLICITY = "PKMULTIPLICITY"; //$NON-NLS-1$
     public static final String KEY_UNIQUE_KEY_NAME = "UNIQUEKEYNAME"; //$NON-NLS-1$
     public static final String KEY_UNIQUE_KEY_TABLE_NAME = "UNIQUEKEYTABLENAME"; //$NON-NLS-1$
+    
+    public static final String DEFAULT_FOREIGN_KEY_MULTIPLICITY = MULTIPLICITY.ZERO_TO_MANY;
+    public static final String DEFAULT_PRIMARY_KEY_MULTIPLICITY = MULTIPLICITY.ONE;
+    public static final String DEFAULT_UNIQUE_KEY_NAME = null;
+    public static final String DEFAULT_UNIQUE_KEY_TABLE_NAME = null;
     
     
     private Collection<RelationalColumn> columns;
@@ -115,7 +120,7 @@ public class RelationalForeignKey extends RelationalReference {
                 setDescription(value);
             } else if(keyStr.equalsIgnoreCase(KEY_FOREIGN_KEY_MULTIPLICITY) ) {
                 setForeignKeyMultiplicity(value);
-            } else if(keyStr.equalsIgnoreCase(KEY_PRIMARY_KEYMULTIPLICITY) ) {
+            } else if(keyStr.equalsIgnoreCase(KEY_PRIMARY_KEY_MULTIPLICITY) ) {
                 setPrimaryKeyMultiplicity(value);
             } else if(keyStr.equalsIgnoreCase(KEY_UNIQUE_KEY_NAME) ) {
                 setUniqueKeyName(value);

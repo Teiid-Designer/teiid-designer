@@ -38,6 +38,30 @@ public class RelationalColumn extends RelationalReference {
     public static final String KEY_SELECTABLE = "SELECTABLE"; //$NON-NLS-1$
     public static final String KEY_UPDATEABLE = "UPDATEABLE"; //$NON-NLS-1$
     
+    public static final int DEFAULT_DISTINCT_VALUE_COUNT = -1;
+    public static final int DEFAULT_NULL_VALUE_COUNT = -1;
+    public static final String DEFAULT_DATATYPE = null;
+    public static final String DEFAULT_NATIVE_TYPE = null;
+    public static final String DEFAULT_NULLABLE = NULLABLE.NULLABLE;
+    public static final boolean DEFAULT_AUTO_INCREMENTED = false;
+    public static final boolean DEFAULT_CASE_SENSITIVE = true;
+    public static final String DEFAULT_CHARACTER_SET_NAME = null;
+    public static final String DEFAULT_COLLATION_NAME = null;
+    public static final boolean DEFAULT_CURRENCY = false;
+    public static final String DEFAULT_DEFAULT_VALUE = null;
+    public static final String DEFAULT_FORMAT = null;
+    public static final int DEFAULT_LENGTH = 0;
+    public static final boolean DEFAULT_LENGTH_FIXED = false;
+    public static final String DEFAULT_MAXIMUM_VALUE = null;
+    public static final String DEFAULT_MINIMUM_VALUE = null;
+    public static final int DEFAULT_PRECISION = 0;
+    public static final int DEFAULT_RADIX = 0;
+    public static final int DEFAULT_SCALE = 10;
+    public static final boolean DEFAULT_SIGNED = true;
+    public static final String DEFAULT_SEARCHABILITY = SEARCHABILITY.SEARCHABLE;
+    public static final boolean DEFAULT_SELECTABLE = true;
+    public static final boolean DEFAULT_UPDATEABLE = true;
+    
     private int distinctValueCount;
     private int nullValueCount;
     private String  datatype;

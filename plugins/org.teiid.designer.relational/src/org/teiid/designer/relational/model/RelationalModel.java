@@ -21,6 +21,7 @@ public class RelationalModel extends RelationalReference {
     public RelationalModel( String name ) {
         super(name);
         setType(TYPES.MODEL);
+        this.children = new ArrayList<RelationalReference>();
     }
     
     public Collection<RelationalReference> getChildren() {

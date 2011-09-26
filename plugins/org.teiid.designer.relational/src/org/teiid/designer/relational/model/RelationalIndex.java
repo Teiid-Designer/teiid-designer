@@ -21,6 +21,11 @@ public class RelationalIndex extends RelationalReference {
     public static final String KEY_NULLABLE = "NULLABLE"; //$NON-NLS-1$
     public static final String KEY_UNIQUE = "UNIQUE"; //$NON-NLS-1$
     
+    public static final boolean DEFAULT_AUTO_UPDATE = false;
+    public static final String DEFAULT_FILTER_CONDITION = null;
+    public static final boolean DEFAULT_NULLABLE = false;
+    public static final boolean DEFAULT_UNIQUE = false;
+    
     private Collection<RelationalColumn> columns;
     private boolean autoUpdate;
     private String  filterCondition;

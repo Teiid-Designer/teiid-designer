@@ -24,6 +24,16 @@ public class RelationalParameter extends RelationalReference {
     public static final String KEY_RADIX = "RADIX"; //$NON-NLS-1$
     public static final String KEY_SCALE = "SCALE"; //$NON-NLS-1$
     
+    public static final String DEFAULT_DATATYPE = null;
+    public static final String DEFAULT_NATIVE_TYPE = null;
+    public static final String DEFAULT_NULLABLE = NULLABLE.NULLABLE;
+    public static final String DEFAULT_DIRECTION = DIRECTION.UNKNOWN;
+    public static final String DEFAULT_DEFAULT_VALUE = null;
+    public static final int DEFAULT_LENGTH = 0;
+    public static final int DEFAULT_PRECISION = 0;
+    public static final int DEFAULT_RADIX = 0;
+    public static final int DEFAULT_SCALE = 10;
+    
     private String  datatype;
     private String  nativeType;
     private String  nullable;
