@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.window.Window;
@@ -462,7 +463,11 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     boolean setCompletionStatus() {
         if (validateSource() && validateProcessor() && validateDestination()) {
             setErrorMessage(null);
-            setMessage(INITIAL_MESSAGE);
+            if( this.relationalProcessor.getStatusInfo().isOK() ) {
+                setMessage(INITIAL_MESSAGE);
+            } else if( this.relationalProcessor.getStatusInfo().isWarning() ) {
+                setMessage(this.relationalProcessor.getStatusInfo().getMessage(), IMessageProvider.WARNING);
+            }
             setPageComplete(true);
             return true;
         }
@@ -489,9 +494,13 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     }
     
     private boolean validateProcessor() {
-        if( relationalProcessor.getRelationalModel() == null ) {
-            setErrorMessage(getString("selectedXmlFileIsInvalidMessage", sourceNameField.getText())); //$NON-NLS-1$
+        if( relationalProcessor.getStatusInfo().isError() ) {
+            setErrorMessage(relationalProcessor.getStatusInfo().getMessage());
             return false;
+        } else if( relationalProcessor.getStatusInfo().isWarning() ) {
+            setErrorMessage(null);
+            setMessage(relationalProcessor.getStatusInfo().getMessage());
+            return true;
         }
         
         return true;

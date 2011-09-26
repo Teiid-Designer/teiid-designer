@@ -15,11 +15,13 @@ import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.relational.RelationalConstants;
+import org.teiid.designer.relational.RelationalPlugin;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -34,7 +36,6 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalView;
-import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -46,6 +47,7 @@ import com.metamatrix.modeler.internal.relational.ui.textimport.RelationalRowFac
 import com.metamatrix.modeler.relational.ui.UiConstants;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.AbstractObjectProcessor;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.IRowObject;
+import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
  * Creates relational model contents based on an input <code>RelationalModel</code> and a target <code>ModelResource</code>
@@ -76,6 +78,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
     
     public static final String KEY_NAME  = "name";  //$NON-NLS-1$
     public static final String KEY_TABLE_NAME  = "tableName";  //$NON-NLS-1$
+    
+    public StatusInfo statusInfo;
 
     //============================================================================================================================
     // Static Methods
@@ -91,6 +95,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
      */
     public RelationalModelXmlTextFileProcessor() {
         super();
+        statusInfo = new StatusInfo(RelationalPlugin.PLUGIN_ID);
     }
     
     /**
@@ -122,8 +127,11 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
     }
     
     private RelationalModel parseFile(String xmlFileUrl) {
+        IPath filePath = new Path(xmlFileUrl);
+        String fileName = filePath.lastSegment();
+            
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
+        statusInfo = new StatusInfo(RelationalPlugin.PLUGIN_ID);
         RelationalModel relModel = new RelationalModel("bogus"); //$NON-NLS-1$
         try {
 
@@ -133,7 +141,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
             //parse using builder to get DOM representation of the XML file
             Document document = db.parse(xmlFileUrl);
             
-            DOMConfiguration config = document.getDomConfig();
+            //DOMConfiguration config = document.getDomConfig();
             //config.setParameter("error-handler",new MyErrorHandler());
 //            config.setParameter("schema-type", "http://www.w3.org/2001/XMLSchema");
 //            config.setParameter("validate", Boolean.TRUE);
@@ -306,7 +314,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                             default: {
                                 if( !name.equalsIgnoreCase("#text")) { //$NON-NLS-1$
                                     String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelHasBugsElement", name); //$NON-NLS-1$
-                                    UiConstants.Util.log(IStatus.WARNING, message);
+                                    statusInfo.setWarning(message);
                                 }
                             }
                         }
@@ -349,18 +357,21 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
 
         }catch(ParserConfigurationException pce) {
             String title = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError.title"); //$NON-NLS-1$
-            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", xmlFileUrl) + pce.getMessage(); //$NON-NLS-1$
+            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", fileName) + pce.getMessage(); //$NON-NLS-1$
             MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
+            statusInfo.setError(message);
             relModel = null;
         }catch(SAXException se) {
             String title = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError.title"); //$NON-NLS-1$
-            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", xmlFileUrl) + se.getMessage(); //$NON-NLS-1$
+            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", fileName) + se.getMessage(); //$NON-NLS-1$
             MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
+            statusInfo.setError(message);
             relModel = null;
         }catch(IOException ioe) {
             String title = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError.title"); //$NON-NLS-1$
-            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", xmlFileUrl) + ioe.getMessage(); //$NON-NLS-1$
+            String message = UiConstants.Util.getString("RelationalModelXmlTextFileProcessor.importRelationalModelXmlParsingError", fileName) + ioe.getMessage(); //$NON-NLS-1$
             MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
+            statusInfo.setError(message);
             relModel = null;
         }
         
@@ -553,5 +564,9 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
 
     public void setProgressMonitor(IProgressMonitor monitor) {
         this.monitor = monitor;
+    }
+    
+    public StatusInfo getStatusInfo() {
+        return this.statusInfo;
     }
 }
