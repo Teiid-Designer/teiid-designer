@@ -35,8 +35,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -46,6 +44,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -63,11 +62,14 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class CurrentModelExtensionDefnsPage extends WizardPage implements InternalUiConstants.Widgets {
@@ -77,6 +79,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private static final int STATUS_OK = 0;
     private static final int STATUS_NO_LOCATION = 1;
     private static final int STATUS_NO_MODELNAME = 2;
+    private static final int STATUS_EDITOR_DIRTY = 3;
 
     private ModelResource modelResource; // Current ModelResource selection
     private Text locationText, modelNameText; // Text widgets for ModelName and Location
@@ -121,6 +124,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
             for (String namespace : supportedNamespaces) {
                 ModelExtensionDefinitionHeader header = ModelExtensionUtils.getModelExtensionDefinitionHeader(modelResource,
+                                                                                                              true,
                                                                                                               namespace);
                 headers.add(header);
             }
@@ -171,12 +175,10 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     @Override
     public void createControl( Composite parent ) {
-        Composite container = new Composite(parent, SWT.NULL);
-
         GridLayout layout = new GridLayout();
-        container.setLayout(layout);
+        parent.setLayout(layout);
         // -----------------
-        Composite topComposite = new Composite(container, SWT.NULL);
+        Composite topComposite = new Composite(parent, SWT.NULL);
         GridData topCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
         topComposite.setLayoutData(topCompositeGridData);
         GridLayout topLayout = new GridLayout();
@@ -234,24 +236,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // -----------------------------------------------
         // Bottom Composite for Table and Buttons
         // -----------------------------------------------
-        Composite bottomComposite = new Composite(container, SWT.NULL);
-        GridData bottomCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
-        bottomComposite.setLayoutData(bottomCompositeGridData);
+        Composite bottomComposite = new Composite(parent, SWT.NULL);
+        bottomComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         GridLayout bottomLayout = new GridLayout();
         bottomLayout.numColumns = 2;
         bottomComposite.setLayout(bottomLayout);
 
-        // Table Label
-        Label tableLabel = new Label(bottomComposite, SWT.NULL);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        tableLabel.setLayoutData(gd);
-        tableLabel.setText(Messages.currentMedsPageTableLabel);
         // Table and Buttons
         this.tableViewer = createTableViewer(bottomComposite);
         createTableButtonComposite(bottomComposite);
 
-        setControl(container);
+        setControl(parent);
 
         updateModelDisplay();
 
@@ -285,6 +280,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Update the current status of the wizard
      */
     void updateStatus() {
+        if (this.modelResource != null) {
+            IFile file = (IFile)this.modelResource.getResource();
+            ModelEditor editor = ModelEditorManager.getModelEditorForFile(file, true);
+            if (editor != null && editor.isDirty()) {
+                setMessage(Messages.currentMedsPageModelEditorDirtyMsg, IMessageProvider.ERROR);
+                currentStatus = STATUS_EDITOR_DIRTY;
+                setPageComplete(false);
+                return;
+            }
+        }
+
         String location = getModelLocation();
         if (CoreStringUtil.isEmpty(location)) {
             setMessage(Messages.currentMedsPageNoModelLocationMsg, IMessageProvider.ERROR);
@@ -403,7 +409,9 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Create a TableViewer for the models current ModelExtensionDefinitions
      */
     private TableViewer createTableViewer( Composite composite ) {
-        TableViewer viewer = new TableViewer(composite, (SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        Group tableGroup = WidgetFactory.createGroup(composite, Messages.currentMedsPageTableLabel);
+        tableGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        TableViewer viewer = new TableViewer(tableGroup, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER));
         ColumnViewerToolTipSupport.enableFor(viewer);
 
         // configure table
@@ -518,31 +526,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
         final TableViewerColumn lastColumn = new TableViewerColumn(viewer, SWT.LEFT);
         configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
-
-        // size the last column to be equal to it's packed size or the outer width of the table
-        table.addControlListener(new ControlAdapter() {
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-             */
-            @Override
-            public void controlResized( ControlEvent e ) {
-                TableColumn descriptionColumn = lastColumn.getColumn();
-                descriptionColumn.pack();
-
-                int total = 0;
-
-                for (TableColumn column : table.getColumns()) {
-                    if (column != descriptionColumn) {
-                        total += column.getWidth();
-                    }
-                }
-
-                lastColumn.getColumn().setWidth(Math.max(descriptionColumn.getWidth(), (table.getSize().x - total)));
-            }
-        });
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
@@ -636,8 +619,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     private Composite createTableButtonComposite( Composite composite ) {
         Composite buttonComposite = new Composite(composite, SWT.NULL);
-        GridData buttonCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
-        buttonComposite.setLayoutData(buttonCompositeGridData);
         GridLayout buttonLayout = new GridLayout();
         buttonLayout.numColumns = 1;
         buttonComposite.setLayout(buttonLayout);

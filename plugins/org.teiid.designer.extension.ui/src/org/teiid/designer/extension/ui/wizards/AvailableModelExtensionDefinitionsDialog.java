@@ -25,8 +25,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -100,8 +98,9 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         // -----------------------------------------------
         // Table
         // -----------------------------------------------
-        Group propsGroup = WidgetFactory.createGroup(composite, Messages.availableMedsDialogTableLabel);
-        this.tableViewer = createTableViewer(propsGroup);
+        Group tableGroup = WidgetFactory.createGroup(composite, Messages.availableMedsDialogTableLabel);
+        tableGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        this.tableViewer = createTableViewer(tableGroup);
 
         return composite;
     }
@@ -319,31 +318,6 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
 
         final TableViewerColumn lastColumn = new TableViewerColumn(viewer, SWT.LEFT);
         configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
-
-        // size the last column to be equal to it's packed size or the outer width of the table
-        table.addControlListener(new ControlAdapter() {
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-             */
-            @Override
-            public void controlResized( ControlEvent e ) {
-                TableColumn descriptionColumn = lastColumn.getColumn();
-                descriptionColumn.pack();
-
-                int total = 0;
-
-                for (TableColumn column : table.getColumns()) {
-                    if (column != descriptionColumn) {
-                        total += column.getWidth();
-                    }
-                }
-
-                lastColumn.getColumn().setWidth(Math.max(descriptionColumn.getWidth(), (table.getSize().x - total)));
-            }
-        });
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,

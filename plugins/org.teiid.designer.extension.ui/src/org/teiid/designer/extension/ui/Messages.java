@@ -51,6 +51,16 @@ public class Messages extends NLS {
     public static String manageMedsWizardTitle;
     public static String manageMedsWizardInitError;
     public static String manageMedsWizardResult;
+    public static String manageMedsWizardUpdateMedsMsg;
+    public static String manageMedsWizardAddMedsMsg;
+    public static String manageMedsWizardRemoveMedsMsg;
+    public static String manageMedsWizardSaveModelMsg;
+    public static String manageMedsWizardAddMedsError;
+    public static String manageMedsWizardRemoveMedsError;
+    public static String manageMedsWizardSaveModelError;
+    public static String manageMedsWizardSuccessMsg;
+    public static String manageMedsWizardErrorMsg;
+
     public static String currentMedsPageTitle;
     public static String currentMedsPageDescription;
     public static String currentMedsPageDone;
@@ -59,6 +69,7 @@ public class Messages extends NLS {
     public static String currentMedsPageBrowseButton;
     public static String currentMedsPageNoModelLocationMsg;
     public static String currentMedsPageNoModelNameMsg;
+    public static String currentMedsPageModelEditorDirtyMsg;
     public static String currentMedsPageBrowseDialogTitle;
     public static String currentMedsPageBrowseDialogMsg;
     public static String currentMedsPageAddMedButton;
@@ -66,11 +77,6 @@ public class Messages extends NLS {
     public static String currentMedsPageTableLabel;
     public static String currentMedsPageRemoveDialogTitle;
     public static String currentMedsPageRemoveDialogMsg;
-    public static String currentMedsPageRemoveSuccessDialogMsg;
-    public static String currentMedsPageRemoveFailedDialogMsg;
-    public static String currentMedsPageAddDialogTitle;
-    public static String currentMedsPageAddSuccessDialogMsg;
-    public static String currentMedsPageAddFailedDialogMsg;
 
     public static String availableMedsDialogTitle;
     public static String availableMedsDialogMsg;
