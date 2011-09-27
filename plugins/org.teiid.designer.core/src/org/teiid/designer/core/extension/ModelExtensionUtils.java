@@ -72,12 +72,13 @@ public class ModelExtensionUtils {
      * @throws Exception if there is a problem accessing the model resource
      */
     public static ModelExtensionDefinitionHeader getModelExtensionDefinitionHeader( ModelResource modelResource,
+                                                                                    boolean forceCreate,
                                                                                     String namespacePrefix ) throws Exception {
         // transaction logic not needed as this is a readonly operation
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
 
         ModelExtensionDefinitionHeader header = null;
-        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
+        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, forceCreate, namespacePrefix);
         if (defnAnnotation != null) {
             EMap<String, String> definitionTags = defnAnnotation.getTags();
             String metamodelUri = definitionTags.get(DefinitionTagKeys.METAMODEL);
