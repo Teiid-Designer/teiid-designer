@@ -74,9 +74,12 @@ public class Messages extends NLS {
     public static String currentMedsPageBrowseDialogMsg;
     public static String currentMedsPageAddMedButton;
     public static String currentMedsPageRemoveMedButton;
+    public static String currentMedsPageRegisterMedButton;
     public static String currentMedsPageTableLabel;
     public static String currentMedsPageRemoveDialogTitle;
     public static String currentMedsPageRemoveDialogMsg;
+    public static String currentMedsPageRegisterDialogTitle;
+    public static String currentMedsPageRegisterDialogMsg;
 
     public static String availableMedsDialogTitle;
     public static String availableMedsDialogMsg;

@@ -88,7 +88,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private MedHeadersEditManager editManager;
 
     private int selectedMedIndex = -1; // Index of the current Med Selection
-    private Button addMedButton, removeMedButton; // Buttons for adding or removing MED
+    private Button addMedButton, removeMedButton, registerMedButton; // Buttons for adding/removing/registering MED
 
     protected int currentStatus = STATUS_OK; // Current status of wizard
 
@@ -129,7 +129,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                 headers.add(header);
             }
         } catch (Exception e) {
-            // TODO: Log the exception
+            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
 
         return headers;
@@ -571,11 +571,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         public Image getImage( Object element ) {
             if (this.columnIndex == ColumnIndexes.REGISTERED) {
                 assert element instanceof ModelExtensionDefinitionHeader;
-                ModelExtensionDefinitionHeader med = (ModelExtensionDefinitionHeader)element;
-
-                String namespacePrefix = med.getNamespacePrefix();
-
-                if (getRegistry().isNamespacePrefixRegistered(namespacePrefix)) {
+                ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)element;
+                if (isRegistered(medHeader)) {
                     return Activator.getDefault().getImage(CHECK_MARK);
                 }
             }
@@ -645,6 +642,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         });
         this.removeMedButton.setEnabled(false);
 
+        // Remove Med Button
+        this.registerMedButton = new Button(buttonComposite, SWT.PUSH);
+        this.registerMedButton.setText(Messages.currentMedsPageRegisterMedButton);
+        this.registerMedButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleRegisterMed();
+            }
+        });
+        this.registerMedButton.setEnabled(false);
+
         return buttonComposite;
     }
 
@@ -656,8 +664,34 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         boolean removeEnabled = (this.selectedMedIndex >= 0) ? true : false;
         this.removeMedButton.setEnabled(removeEnabled);
 
+        // Register Button - enabled if an unregistered MED is selected
+        if (this.selectedMedIndex >= 0) {
+            ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
+            if (!isRegistered(medHeader)) {
+                this.registerMedButton.setEnabled(true);
+            } else {
+                this.registerMedButton.setEnabled(false);
+            }
+        } else {
+            this.registerMedButton.setEnabled(false);
+        }
+
         // Add Button - always enabled
         this.addMedButton.setEnabled(true);
+    }
+
+    /*
+     * Determine if the header namespace is registered
+     */
+    private boolean isRegistered( ModelExtensionDefinitionHeader medHeader ) {
+        boolean isRegistered = false;
+        if (medHeader != null) {
+            String namespacePrefix = medHeader.getNamespacePrefix();
+            if (getRegistry().isNamespacePrefixRegistered(namespacePrefix)) {
+                isRegistered = true;
+            }
+        }
+        return isRegistered;
     }
 
     /*
@@ -678,10 +712,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             // Update the table
             this.tableViewer.refresh();
         }
-
-        //System.out.println("State after ADD MED(s) : "); //$NON-NLS-1$
-        // System.out.println(this.editManager.toString());
-
     }
 
     /*
@@ -700,9 +730,29 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             this.editManager.removeModelExtensionDefinition(namespacePrefix);
             this.tableViewer.refresh();
         }
-        //System.out.println("State after REMOVE MED(s) : "); //$NON-NLS-1$
-        // System.out.println(this.editManager.toString());
+    }
 
+    /*
+     * handler for Register Med Button
+     */
+    void handleRegisterMed() {
+        // Warn user that removal will remove all properties
+        boolean confirmed = MessageDialog.openConfirm(getShell(),
+                                                      Messages.currentMedsPageRegisterDialogTitle,
+                                                      Messages.currentMedsPageRegisterDialogMsg);
+
+        // If user confirms, proceed
+        if (confirmed) {
+            // Get the namespace of the selected MED
+            // String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+
+            // TODO Implement register MED
+            MessageDialog.openInformation(getShell(), "Register MED", "Register MED is not yet implemented..."); //$NON-NLS-1$ //$NON-NLS-2$
+
+            // Reset manager to update states
+            this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
+            this.tableViewer.refresh();
+        }
     }
 
 }
