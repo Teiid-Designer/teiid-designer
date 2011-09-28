@@ -341,14 +341,27 @@ public class RelationalModelFactory implements RelationalConstants {
         column.setSelectable(columnRef.isSelectable());
         column.setSigned(columnRef.isSigned());
         column.setUpdateable(columnRef.isUpdateable());
+        
+        String dType = columnRef.getDatatype();
+        if( dType == null || dType.length() == 0) {
+            dType = DatatypeProcessor.DEFAULT_DATATYPE;
+
+        }
         EObject datatype = this.datatypeProcessor.findType(
-                        columnRef.getDatatype(), 
+                        dType, 
                         columnRef.getLength(),
                         columnRef.getPrecision(), 
                         columnRef.getScale(), 
                         new ArrayList());
         if( datatype != null ) {
             column.setType(datatype);
+            
+            String dTypeName = ModelerCore.getModelEditor().getName(datatype);
+            
+            int paramLength = columnRef.getLength();
+            if( paramLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+                columnRef.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+            }
         }
         
         // Set Description
@@ -509,7 +522,7 @@ public class RelationalModelFactory implements RelationalConstants {
         try {
             for (EObject eObj : modelResource.getEmfResource().getContents() ) {
                 String eObjName = ModelerCore.getModelEditor().getName(eObj);
-                if( eObj instanceof BaseTable && eObjName != null && eObjName.equals(tableName)) {
+                if( eObj instanceof BaseTable && eObjName != null && eObjName.equalsIgnoreCase(tableName)) {
                     return (BaseTable)eObj;
                 }
             }
@@ -560,22 +573,32 @@ public class RelationalModelFactory implements RelationalConstants {
         parameter.setNameInSource(parameterRef.getNameInSource());
         parameter.setDefaultValue(parameterRef.getDefaultValue());
         parameter.setDirection(getDirectionKind(parameterRef.getDirection()));
-        parameter.setLength(parameterRef.getLength());
         parameter.setNativeType(parameterRef.getNativeType());
         parameter.setNullable(getNullableType(parameterRef.getNullable()));
         parameter.setPrecision(parameterRef.getPrecision());
         parameter.setRadix(parameterRef.getRadix());
         parameter.setScale(parameterRef.getScale());
+        String dType = parameterRef.getDatatype();
+        if( dType == null || dType.length() == 0) {
+            dType = DatatypeProcessor.DEFAULT_DATATYPE;
+
+        }
         EObject datatype = this.datatypeProcessor.findType(
-                                                           parameterRef.getDatatype(), 
+                                                           dType, 
                                                            parameterRef.getLength(),
                                                            parameterRef.getPrecision(), 
                                                            parameterRef.getScale(), 
                                                            new ArrayList());
-       if( datatype != null ) {
-           parameter.setType(datatype);
-       }
-        
+        if( datatype != null ) {
+            parameter.setType(datatype);
+            String dTypeName = ModelerCore.getModelEditor().getName(datatype);
+            
+            int paramLength = parameterRef.getLength();
+            if( paramLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+                parameter.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
+            }
+        }
+       
         
         return parameter;
     }

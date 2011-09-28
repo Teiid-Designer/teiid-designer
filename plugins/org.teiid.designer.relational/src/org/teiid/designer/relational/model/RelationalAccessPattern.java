@@ -50,6 +50,11 @@ public class RelationalAccessPattern extends RelationalReference {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
             String value = props.getProperty(keyStr);
+
+            if( value != null && value.length() == 0 ) {
+                continue;
+            }
+            
             if( keyStr.equalsIgnoreCase(KEY_NAME) ) {
                 setName(value);
             } else if(keyStr.equalsIgnoreCase(KEY_NAME_IN_SOURCE) ) {

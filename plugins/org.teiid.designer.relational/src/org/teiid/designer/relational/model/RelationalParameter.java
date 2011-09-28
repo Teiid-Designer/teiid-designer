@@ -27,7 +27,7 @@ public class RelationalParameter extends RelationalReference {
     public static final String DEFAULT_DATATYPE = null;
     public static final String DEFAULT_NATIVE_TYPE = null;
     public static final String DEFAULT_NULLABLE = NULLABLE.NULLABLE;
-    public static final String DEFAULT_DIRECTION = DIRECTION.UNKNOWN;
+    public static final String DEFAULT_DIRECTION = DIRECTION.IN;
     public static final String DEFAULT_DEFAULT_VALUE = null;
     public static final int DEFAULT_LENGTH = 0;
     public static final int DEFAULT_PRECISION = 0;
@@ -37,7 +37,7 @@ public class RelationalParameter extends RelationalReference {
     private String  datatype;
     private String  nativeType;
     private String  nullable;
-    private String  direction;
+    private String  direction = DEFAULT_DIRECTION;
     private String  defaultValue;
     private int length;
     private int precision;
@@ -170,6 +170,11 @@ public class RelationalParameter extends RelationalReference {
         for( Object key : props.keySet() ) {
             String keyStr = (String)key;
             String value = props.getProperty(keyStr);
+
+            if( value != null && value.length() == 0 ) {
+                continue;
+            }
+            
             if( keyStr.equalsIgnoreCase(KEY_NAME) ) {
                 setName(value);
             } else if(keyStr.equalsIgnoreCase(KEY_NAME_IN_SOURCE) ) {

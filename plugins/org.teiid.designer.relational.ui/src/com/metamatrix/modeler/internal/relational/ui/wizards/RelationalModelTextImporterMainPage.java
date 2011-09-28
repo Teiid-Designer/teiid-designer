@@ -861,6 +861,8 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
                     @Override
                     public void widgetSelected( final SelectionEvent event ) {
                         processWidgetSelected();
+                        
+                        checkStatus();
                     }
                 });
                 this.createOptionButton = WidgetFactory.createRadioButton(optionsGroup, OVERWRITE_CREATE, false);
@@ -869,6 +871,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
                     @Override
                     public void widgetSelected( final SelectionEvent event ) {
                         processWidgetSelected();
+                        checkStatus();
                     }
                 });
 //                this.appendNameOptionButton = WidgetFactory.createRadioButton(optionsGroup, "Make all names unique (i.e. ProductsID_1", false);
@@ -885,6 +888,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
                     @Override
                     public void widgetSelected( final SelectionEvent event ) {
                         processWidgetSelected();
+                        checkStatus();
                     }
                 });
             }

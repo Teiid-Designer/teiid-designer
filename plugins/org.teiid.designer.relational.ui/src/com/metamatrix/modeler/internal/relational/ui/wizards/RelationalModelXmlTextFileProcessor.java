@@ -58,21 +58,24 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
     //============================================================================================================================
     // Static Constants
     
-    public static final String TAG_RELATIONAL_MODEL  = "relational-model";  //$NON-NLS-1$
-    public static final String TAG_TABLE  = "table";  //$NON-NLS-1$
-    public static final String TAG_COLUMN  = "column";  //$NON-NLS-1$
-    public static final String TAG_VIEW  = "view";  //$NON-NLS-1$
-    public static final String TAG_PRIMARY_KEY  = "primary-key";  //$NON-NLS-1$
-    public static final String TAG_UNIQUE_CONSTRAINT  = "unique-constraint";  //$NON-NLS-1$
-    public static final String TAG_FOREIGN_KEY  = "foreign-key";  //$NON-NLS-1$
-    public static final String TAG_ACCESS_PATTERN  = "access-pattern";  //$NON-NLS-1$
-    public static final String TAG_PROCEDURE  = "procedure";  //$NON-NLS-1$
-    public static final String TAG_PARAMETER  = "parameter";  //$NON-NLS-1$
-    public static final String TAG_RESULT_SET  = "result-set";  //$NON-NLS-1$
-    public static final String TAG_INDEX  = "index";  //$NON-NLS-1$
+    static final String TAG_RELATIONAL_MODEL  = "relational-model";  //$NON-NLS-1$
+    static final String TAG_TABLE  = "table";  //$NON-NLS-1$
+    static final String TAG_COLUMN  = "column";  //$NON-NLS-1$
+    static final String TAG_VIEW  = "view";  //$NON-NLS-1$
+    static final String TAG_PRIMARY_KEY  = "primary-key";  //$NON-NLS-1$
+    static final String TAG_UNIQUE_CONSTRAINT  = "unique-constraint";  //$NON-NLS-1$
+    static final String TAG_FOREIGN_KEY  = "foreign-key";  //$NON-NLS-1$
+    static final String TAG_ACCESS_PATTERN  = "access-pattern";  //$NON-NLS-1$
+    static final String TAG_PROCEDURE  = "procedure";  //$NON-NLS-1$
+    static final String TAG_PARAMETER  = "parameter";  //$NON-NLS-1$
+    static final String TAG_RESULT_SET  = "result-set";  //$NON-NLS-1$
+    static final String TAG_INDEX  = "index";  //$NON-NLS-1$
+    static final String TAG_COLUMN_REFERENCE  = "column-reference";  //$NON-NLS-1$
+    static final String TAG_COLUMN_TABLE_REFERENCE  = "column-table-reference";  //$NON-NLS-1$
     
-    public static final String KEY_NAME  = "name";  //$NON-NLS-1$
-    public static final String KEY_TABLE_NAME  = "tableName";  //$NON-NLS-1$
+    
+    private static final String KEY_NAME  = "name";  //$NON-NLS-1$
+    private static final String KEY_TABLE_NAME  = "tableName";  //$NON-NLS-1$
     
     public StatusInfo statusInfo;
 
@@ -145,7 +148,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
             //get the root element
             Element root = document.getDocumentElement();
             
-            if( root.getNodeName().equalsIgnoreCase(TAG_RELATIONAL_MODEL)) {
+            if( getTagWithoutPrefix(root.getTagName()).equalsIgnoreCase(TAG_RELATIONAL_MODEL)) {
 
                 //get a nodelist of elements
                 NodeList children = root.getChildNodes();
@@ -157,7 +160,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                     for(int i = 0 ; i < children.getLength();i++) {
     
                         Node child = children.item(i);
-                        String name = child.getNodeName();
+                        String name = getTagWithoutPrefix(child.getNodeName());
                         
                         int type = getType(name);
                         switch(type) {
@@ -179,7 +182,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                     for(int j = 0 ; j < tableChildren.getLength();j++) {
                                       //get the employee element
                                         Node tableChild = tableChildren.item(j);
-                                        String tableChildName = tableChild.getNodeName();
+                                        String tableChildName = getTagWithoutPrefix(tableChild.getNodeName());
                                         
                                         int tableChildType = getType(tableChildName);
                                         switch(tableChildType) {
@@ -229,7 +232,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                     for(int j = 0 ; j < tableChildren.getLength();j++) {
                                       //get the employee element
                                         Node tableChild = tableChildren.item(j);
-                                        String tableChildName = tableChild.getNodeName();
+                                        String tableChildName = getTagWithoutPrefix(tableChild.getNodeName());
                                         
                                         int tableChildType = getType(tableChildName);
                                         switch(tableChildType) {
@@ -260,7 +263,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                     for(int j = 0 ; j < procChildren.getLength();j++) {
                                       //get the employee element
                                         Node procChild = procChildren.item(j);
-                                        String tableChildName = procChild.getNodeName();
+                                        String tableChildName = getTagWithoutPrefix(procChild.getNodeName());
                                         
                                         int tableChildType = getType(tableChildName);
                                         switch(tableChildType) {
@@ -281,7 +284,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                                     for(int k = 0 ; k < rsChildren.getLength();k++) {
                                                       //get the employee element
                                                         Node rsChild = rsChildren.item(k);
-                                                        String rsChildName = rsChild.getNodeName();
+                                                        String rsChildName = getTagWithoutPrefix(rsChild.getNodeName());
                                                         
                                                         int rsChildType = getType(rsChildName);
                                                         switch(rsChildType) {
@@ -329,8 +332,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                     if(indexChildren != null && indexChildren.getLength() > 0) {
                         for(int j = 0 ; j < indexChildren.getLength();j++) {
                             Node indexChild = indexChildren.item(j);
-                            String indexChildName = indexChild.getNodeName();
-                            if( indexChildName.equalsIgnoreCase(TAG_COLUMN) ) {
+                            String indexChildName = getTagWithoutPrefix(indexChild.getNodeName());
+                            if( indexChildName.equalsIgnoreCase(TAG_COLUMN_TABLE_REFERENCE) ) {
                                 String tableName = indexChild.getAttributes().getNamedItem(KEY_TABLE_NAME).getNodeValue();
                                 String colName = indexChild.getAttributes().getNamedItem(KEY_NAME).getNodeValue();
                                 
@@ -386,8 +389,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         if(pkChildren != null && pkChildren.getLength() > 0) {
             for(int j = 0 ; j < pkChildren.getLength();j++) {
                 Node pkChild = pkChildren.item(j);
-                String pkChildName = pkChild.getNodeName();
-                if( pkChildName.equalsIgnoreCase(TAG_COLUMN) ) {
+                String pkChildName = getTagWithoutPrefix(pkChild.getNodeName());
+                if( pkChildName.equalsIgnoreCase(TAG_COLUMN_REFERENCE) ) {
                     String colName = pkChild.getAttributes().getNamedItem(KEY_NAME).getNodeValue();
                     for( RelationalColumn column : table.getColumns()) {
                         if( column.getName().equalsIgnoreCase(colName) ) {
@@ -412,8 +415,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         if(fkChildren != null && fkChildren.getLength() > 0) {
             for(int j = 0 ; j < fkChildren.getLength();j++) {
                 Node fkChild = fkChildren.item(j);
-                String pkChildName = fkChild.getNodeName();
-                if( pkChildName.equalsIgnoreCase(TAG_COLUMN) ) {
+                String pkChildName = getTagWithoutPrefix(fkChild.getNodeName());
+                if( pkChildName.equalsIgnoreCase(TAG_COLUMN_REFERENCE) ) {
                     String colName = fkChild.getAttributes().getNamedItem(KEY_NAME).getNodeValue();
                     for( RelationalColumn column : table.getColumns()) {
                         if( column.getName().equalsIgnoreCase(colName) ) {
@@ -438,8 +441,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         if(acChildren != null && acChildren.getLength() > 0) {
             for(int j = 0 ; j < acChildren.getLength();j++) {
                 Node acChild = acChildren.item(j);
-                String acChildName = acChild.getNodeName();
-                if( acChildName.equalsIgnoreCase(TAG_COLUMN) ) {
+                String acChildName = getTagWithoutPrefix(acChild.getNodeName());
+                if( acChildName.equalsIgnoreCase(TAG_COLUMN_REFERENCE) ) {
                     String colName = acChild.getAttributes().getNamedItem(KEY_NAME).getNodeValue();
                     for( RelationalColumn column : table.getColumns()) {
                         if( column.getName().equalsIgnoreCase(colName) ) {
@@ -464,8 +467,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         if(ucChildren != null && ucChildren.getLength() > 0) {
             for(int j = 0 ; j < ucChildren.getLength();j++) {
                 Node ucChild = ucChildren.item(j);
-                String ucChildName = ucChild.getNodeName();
-                if( ucChildName.equalsIgnoreCase(TAG_COLUMN) ) {
+                String ucChildName = getTagWithoutPrefix(ucChild.getNodeName());
+                if( ucChildName.equalsIgnoreCase(TAG_COLUMN_REFERENCE) ) {
                     String colName = ucChild.getAttributes().getNamedItem(KEY_NAME).getNodeValue();
                     for( RelationalColumn column : table.getColumns()) {
                         if( column.getName().equalsIgnoreCase(colName) ) {
@@ -555,6 +558,15 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
         }
         
         return TYPES.UNDEFINED;
+    }
+    
+    private String getTagWithoutPrefix(String tagStr) {
+        int indexOfColon = tagStr.indexOf(':');
+        if( indexOfColon < 0 ) {
+            return tagStr;
+        }
+        
+        return tagStr.substring(indexOfColon+1);
     }
 
     public void setProgressMonitor(IProgressMonitor monitor) {

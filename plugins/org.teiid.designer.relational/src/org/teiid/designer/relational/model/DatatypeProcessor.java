@@ -23,6 +23,9 @@ import com.metamatrix.modeler.core.types.DatatypeManager;
  * Handles basic datatype conversion from JDBC-type and native types to Teiid-supported Runtime types
  */
 public class DatatypeProcessor {
+    public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
+    public static final int DEFAULT_DATATYPE_LENGTH = 255;
+    
     //private static final String NUMBER = "NUMBER"; //$NON-NLS-1$
     private static final String VARCHAR2_TYPE_NAME = "VARCHAR2"; //$NON-NLS-1$
     private static final String NVARCHAR2_TYPE_NAME = "NVARCHAR2"; //$NON-NLS-1$

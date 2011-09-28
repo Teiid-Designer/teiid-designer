@@ -5,25 +5,32 @@
     targetNamespace="http://org.teiid.relationalModel/2011">
     
     <xs:element name="relational-model" type="relationalModelType"/>
-        
+   
+    
     <xs:complexType name="relationalModelType">
-        <xs:sequence>
-           <xs:element maxOccurs="unbounded" minOccurs="0" name="table" type="tableType"/>
-           <xs:element maxOccurs="unbounded" minOccurs="0" name="view" type="tableType"/>
-           <xs:element maxOccurs="unbounded" minOccurs="0" name="procedure" type="procedureType"/>
-           <xs:element maxOccurs="unbounded" minOccurs="0" name="procedure" type="indexType"/>
-        </xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        	<xs:element maxOccurs="unbounded" minOccurs="0" name="table" type="tableType" />
+        	<xs:element maxOccurs="unbounded" minOccurs="0" name="view" type="tableType" />
+        	<xs:element maxOccurs="unbounded" minOccurs="0" name="procedure" type="procedureType" />
+        	<xs:element maxOccurs="unbounded" minOccurs="0" name="index" type="indexType" />
+        </xs:choice>
     </xs:complexType>
     
     <xs:complexType name="tableType">
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element maxOccurs="unbounded" minOccurs="0" name="column" type="columnType"/>
             <xs:element maxOccurs="1" minOccurs="0" name="primary-key" type="primaryKeyType"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="foreign-key" type="foreignKeyType"/>
             <xs:element maxOccurs="1" minOccurs="0" name="unique-constraint" type="uniqueConstraintType"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="access-pattern" type="accessPatternType"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:choice>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
         <xs:attribute name="cardinality" type="xs:int" use="optional" default="0"/>
@@ -33,11 +40,17 @@
     </xs:complexType>
     
     <xs:complexType name="procedureType">
-        <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
             <xs:element maxOccurs="unbounded" minOccurs="0" name="parameter" type="parameterType"/>
             <xs:element maxOccurs="1" minOccurs="0" name="result-set" type="resultSetType"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:choice>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
         <xs:attribute name="function" type="xs:boolean" use="optional" default="false"/>
@@ -54,21 +67,39 @@
     </xs:complexType>
     
     <xs:complexType name="indexType">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="column" type="columnType"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="column-table-reference" type="columnAndTableReferenceType"/>
+        </xs:choice>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
     </xs:complexType>
     
      <xs:complexType name="columnType">
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
         <xs:attribute name="distinctValueCount" type="xs:int" use="optional" default="-1"/>
         <xs:attribute name="nullValueCount" type="xs:int" use="optional" default="-1"/>
-        <xs:attribute name="datatype" type="xs:string" use="optional"/>
+        <xs:attribute name="datatype" use="required">
+        	<xs:simpleType>
+        		<xs:restriction base="xs:string">
+        			<xs:minLength value="1"></xs:minLength>
+        		</xs:restriction>
+        	</xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nativeType" type="xs:string" use="optional"/>
         <xs:attribute name="nullable" use="optional" default="NULLABLE">
           <xs:simpleType>
@@ -110,27 +141,45 @@
     
     <xs:complexType name="primaryKeyType">
         <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="1" name="column" type="columnReferenceType"/>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="column-reference" type="columnReferenceType"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
     </xs:complexType>
     
     <xs:complexType name="uniqueConstraintType">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="1" name="column" type="columnReferenceType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="column-reference" type="columnReferenceType"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
     </xs:complexType>
     
     <xs:complexType name="foreignKeyType">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="1" name="column" type="columnReferenceType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="column-reference" type="columnReferenceType"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
         <xs:attribute name="fkMultiplicity" use="optional" default="ZERO_TO_MANY">
@@ -155,25 +204,69 @@
               </xs:restriction>
           </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="uniqueKeyName" type="xs:string" use="required"/>
+        <xs:attribute name="uniqueKeyTableName" type="xs:string" use="required"/>
     </xs:complexType>
     
     <xs:complexType name="accessPatternType">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="1" name="column" type="columnReferenceType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="column-reference" type="columnReferenceType"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
-    </xs:complexType>   
+    </xs:complexType>  
+     
     <xs:complexType name="columnReferenceType">
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="columnAndTableReferenceType">
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+         <xs:attribute name="tableName" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
 
      <xs:complexType name="parameterType">
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
-        <xs:attribute name="datatype" type="xs:string" use="optional"/>
+        <xs:attribute name="datatype" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="direction" use="optional" default="IN">
           <xs:simpleType>
               <xs:restriction base="xs:string">
@@ -206,7 +299,13 @@
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="column" type="columnType"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="name" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"></xs:minLength>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="nameInSource" type="xs:string" use="optional"/>
         <xs:attribute name="description" type="xs:string" use="optional"/>
     </xs:complexType>
