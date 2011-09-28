@@ -57,11 +57,6 @@ import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor implements RelationalConstants {
     //============================================================================================================================
     // Static Constants
-
-    //private static final String XMI_EXTENSION           = "xmi";//$NON-NLS-1$
-    
-    //private static final String I18N_PREFIX             = "RelationalModelTextFileProcessor"; //$NON-NLS-1$
-    //private static final String SEPARATOR               = "."; //$NON-NLS-1$
     
     public static final String TAG_RELATIONAL_MODEL  = "relational-model";  //$NON-NLS-1$
     public static final String TAG_TABLE  = "table";  //$NON-NLS-1$
@@ -102,10 +97,10 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
      * 
      * @param targetResource
      */
-    public void buildModel(ModelResource targetResource) {
+    public void buildModel(ModelResource targetResource, IProgressMonitor progressMonitor) {
         RelationalModelFactory factory = new RelationalModelFactory();
         
-        factory.build(targetResource, this.relationalModel);
+        factory.build(targetResource, this.relationalModel, progressMonitor);
     }
     
     public RelationalModel getRelationalModel() {

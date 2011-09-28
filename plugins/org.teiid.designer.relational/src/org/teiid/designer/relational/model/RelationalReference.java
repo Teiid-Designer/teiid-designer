@@ -17,15 +17,25 @@ public class RelationalReference implements RelationalConstants {
     public static final String KEY_NAME_IN_SOURCE = "NAMEINSOURCE"; //$NON-NLS-1$
     public static final String KEY_DESCRIPTION = "DESCRIPTION"; //$NON-NLS-1$
     
+    public static final int IGNORE = -1;
+    public static final int CREATE_ANYWAY = 0;
+    public static final int REPLACE = 1;
+    public static final int CREATE_UNIQUE_NAME = 2;
+    
+    
+    
     private int type = TYPES.UNDEFINED;
     private RelationalReference parent;
     private String  name;
     private String  nameInSource;
     private String  description;
     
+    private int processType;
+    
     
     public RelationalReference() {
         super();
+        this.processType = CREATE_ANYWAY;
     }
     /**
      * @param name
@@ -33,6 +43,7 @@ public class RelationalReference implements RelationalConstants {
     public RelationalReference( String name ) {
         super();
         this.name = name;
+        this.processType = CREATE_ANYWAY;
     }
 
     /**
@@ -96,5 +107,13 @@ public class RelationalReference implements RelationalConstants {
      */
     protected void setType( int type ) {
         this.type = type;
+    }
+    
+    public int getProcessType() {
+        return this.processType;
+    }
+    
+    public void setDoProcessType(int value) {
+        this.processType = value;
     }
 }

@@ -13,12 +13,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.RelationalPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.core.Annotation;
 import com.metamatrix.metamodels.core.AnnotationContainer;
 import com.metamatrix.metamodels.core.CoreFactory;
@@ -42,58 +44,111 @@ import com.metamatrix.metamodels.relational.UniqueConstraint;
 import com.metamatrix.metamodels.relational.UniqueKey;
 import com.metamatrix.metamodels.relational.View;
 import com.metamatrix.modeler.core.ModelerCore;
+import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 
 /**
- * 
+ * Class provides building EMF Relational Metamodel objects from Relational Model objects
  */
 public class RelationalModelFactory implements RelationalConstants {
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalModelFactory.class);
     public static final String RELATIONAL_PACKAGE_URI = RelationalPackage.eNS_URI;
     public static final RelationalFactory FACTORY = RelationalFactory.eINSTANCE;
    
+    
+    static String getString( final String id ) {
+        return RelationalPlugin.Util.getString(I18N_PREFIX + id);
+    }
+    
+    static String getString( final String id , final Object param) {
+        return RelationalPlugin.Util.getString(I18N_PREFIX + id, param);
+    }
     
     private DatatypeProcessor datatypeProcessor;
     
     private Map<RelationalForeignKey, BaseTable> fkTableMap = new HashMap<RelationalForeignKey, BaseTable>();
     private Collection<RelationalIndex> indexes = new ArrayList<RelationalIndex>();
-    
+
     public RelationalModelFactory() {
         super();
         this.datatypeProcessor = new DatatypeProcessor();
     }
     
-    public void build(ModelResource modelResource, RelationalModel model) {
+    public void build(ModelResource modelResource, RelationalModel model, IProgressMonitor progressMonitor) {
 
         try {
             RelationalModelFactory builder = new RelationalModelFactory();
             
-            builder.buildFullModel(model, modelResource);
+            builder.buildFullModel(model, modelResource, progressMonitor);
             
             modelResource.save(new NullProgressMonitor(), true);
-        } catch (ModelWorkspaceException e) {
+        } catch (ModelerCoreException e) {
             RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
         }
     }
     
     
-    public void buildFullModel(RelationalModel model, ModelResource modelResource ) throws ModelWorkspaceException {
+    public void buildFullModel(RelationalModel model, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelerCoreException {
+        
+        progressMonitor.setTaskName(getString("creatingModelChildren")); //$NON-NLS-1$
         for( RelationalReference child : model.getChildren() ) {
-            buildObject(child, modelResource);
+            int processType = child.getProcessType();
+            
+            switch(processType) {
+                case RelationalReference.IGNORE : {
+                    // Do nothing
+                } break;
+                case RelationalReference.CREATE_ANYWAY : {
+                     buildObject(child, modelResource, progressMonitor);     
+                } break;
+                case RelationalReference.CREATE_UNIQUE_NAME : {
+                    // Currently NOT implemented
+                } break;
+                case RelationalReference.REPLACE : {
+                    deleteChildWithName(modelResource, child, progressMonitor);
+                    buildObject(child, modelResource, progressMonitor);
+                } break;
+            }
+            progressMonitor.worked(1);
         }
         
+        progressMonitor.setTaskName(getString("creatingForeigneKeys")); //$NON-NLS-1$
+        progressMonitor.worked(1);
         for( RelationalForeignKey fkRef : fkTableMap.keySet()) {
             createForeignKey(fkRef, fkTableMap.get(fkRef), modelResource);
         }
         
+        progressMonitor.setTaskName(getString("creatingIndexes")); //$NON-NLS-1$
+        progressMonitor.worked(1);
         for( RelationalIndex indexRef : indexes ) {
             EObject index = createIndex(indexRef, modelResource);
             modelResource.getEmfResource().getContents().add(index);
         }
     }
     
-    public EObject buildObject( RelationalReference obj, ModelResource modelResource) throws ModelWorkspaceException {
+    private void deleteChildWithName(ModelResource targetResource, RelationalReference ref, IProgressMonitor progressMonitor) throws ModelerCoreException {
+        progressMonitor.setTaskName(getString("replacingModelObject",ref.getName())); //$NON-NLS-1$
+        
+        Collection<EObject> existingChildren = targetResource.getEmfResource().getContents();
+        EObject childToDelete = null;
+        for( EObject child : existingChildren ) {
+            String name = ModelerCore.getModelEditor().getName(child);
+            
+            if( name != null && name.equalsIgnoreCase(ref.getName()) ) {
+                childToDelete = child;
+                break;
+            }
+        }
+        if( childToDelete != null ) {
+            ModelerCore.getModelEditor().delete(childToDelete);
+        }
+    }
+    
+    public EObject buildObject( RelationalReference obj, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelWorkspaceException {
         EObject newEObject = null;
+        
+        progressMonitor.setTaskName(getString("creatingModelChild", obj.getName())); //$NON-NLS-1$
         switch (obj.getType()) {
             case TYPES.MODEL: {
                 // NOOP. Shouldn't get here
@@ -641,12 +696,5 @@ public class RelationalModelFactory implements RelationalConstants {
             }
 
         }
-    }
-
-
-
-    
-    class ForeignKeyTracker {
-        
     }
 }

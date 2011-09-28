@@ -7,38 +7,63 @@
  */
 package com.metamatrix.modeler.internal.relational.ui.wizards;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.dialogs.WizardDataTransferPage;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.teiid.designer.relational.RelationalPlugin;
+import org.teiid.designer.relational.model.RelationalReference;
+import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -49,7 +74,10 @@ import com.metamatrix.modeler.relational.ui.UiPlugin;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.AbstractObjectProcessor;
 import com.metamatrix.modeler.tools.textimport.ui.wizards.ITextImportMainPage;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
+import com.metamatrix.ui.internal.InternalUiConstants;
+import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.internal.viewsupport.ListContentProvider;
 import com.metamatrix.ui.internal.widget.IListPanelController;
 
 /**
@@ -57,6 +85,8 @@ import com.metamatrix.ui.internal.widget.IListPanelController;
  */
 public class RelationalModelTextImporterMainPage extends WizardDataTransferPage implements IListPanelController, ITextImportMainPage {
 
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(RelationalModelTextImporterMainPage.class);
+    
     public static final String IMPORT_ID = getString("textImport.comboText"); //$NON-NLS-1$
     public static final String IMPORT_DESC = getString("textImport.descriptionText"); //$NON-NLS-1$
     public static final String IMPORT_DATA = getString("textImport.sampleData"); //$NON-NLS-1$
@@ -87,18 +117,24 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     private static final String FILE_IMPORT_MASK = "*.xml"; //$NON-NLS-1$
 
     // dialog store id constants
-    private static final String I18N_PREFIX = "RelationalModelTextImporterMainPage"; //$NON-NLS-1$
-    private static final String SEPARATOR = "."; //$NON-NLS-1$
+
     private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
     private static final String PAGE_TITLE = getString("pageTitle"); //$NON-NLS-1$
     private final static String STORE_SOURCE_NAMES_ID = getString("storeSourceNamesId");//$NON-NLS-1$
+    
+    static final String OVERWRITE_TITLE = UiConstants.Util.getString("OverwriteObjectsDialog.duplicateObjectsExistTitle"); //$NON-NLS-1$
+    static final String OVERWRITE_OPTIONS = UiConstants.Util.getString("OverwriteObjectsDialog.optionsGroup"); //$NON-NLS-1$
+    static final String OVERWRITE_REPLACE = UiConstants.Util.getString("OverwriteObjectsDialog.replaceExistingObjectsButton"); //$NON-NLS-1$
+    static final String OVERWRITE_CREATE = UiConstants.Util.getString("OverwriteObjectsDialog.createNewObjectsButton"); //$NON-NLS-1$
+    static final String OVERWRITE_CANCEL = UiConstants.Util.getString("OverwriteObjectsDialog.cancelImportButton"); //$NON-NLS-1$
+    static final String OVERWRITE_DUPLICATE_OBJECTS = UiConstants.Util.getString("OverwriteObjectsDialog.duplicateObjectsGroup"); //$NON-NLS-1$
 
     static String getString( final String id ) {
-        return UiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id);
+        return UiConstants.Util.getString(I18N_PREFIX + id);
     }
     
     static String getString( final String id , final Object param) {
-        return UiConstants.Util.getString(I18N_PREFIX + SEPARATOR + id, param);
+        return UiConstants.Util.getString(I18N_PREFIX + id, param);
     }
 
     /**
@@ -515,10 +551,68 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     public boolean finish() {
 
         saveWidgetValues();
+        
+        // Check if model has existing objects that might be overridden, then warn user?
+        boolean doGenerate = checkModelForExistingChildren();
 
         //Process the rows of data
-        generateWithJob();
+        if( doGenerate ) {
+            generateWithJob();
+        }
 
+        return true;
+    }
+    
+    private boolean checkModelForExistingChildren() {
+        Collection<EObject> existingChildren = new ArrayList<EObject>();
+        List existingChildrenNames = new ArrayList<String>();
+        Collection<RelationalReference> existingChildrenRefs = new ArrayList<RelationalReference>();
+        
+        try {
+            Collection<EObject> children = targetResource.getEmfResource().getContents();
+            
+            if( children.isEmpty() || this.relationalProcessor.getRelationalModel() == null) {
+                return false;
+            }
+            
+            for( EObject child : children ) {
+                String name = ModelerCore.getModelEditor().getName(child);
+                
+                if( name != null && this.relationalProcessor.getRelationalModel().hasChild(name) ) {
+                    existingChildrenRefs.add(this.relationalProcessor.getRelationalModel().getChildWithName(name));
+                    existingChildren.add(child);
+                    existingChildrenNames.add(name);
+                }
+            }
+            
+        } catch (ModelWorkspaceException e) {
+        }
+        
+        if( !existingChildren.isEmpty() ) {
+//            final List messgs = existingChildrenNames;
+//            
+//            final String title = "Duplicate Objects In Model";
+//            final String message = "Duplicate named objects exist in selected model.\n\n" +
+//                "Choose option to replace existing objects, or add duplicates.";
+            
+            OverwriteObjectsDialog depDialog = new OverwriteObjectsDialog(
+                                  Display.getCurrent().getActiveShell(), 
+                                  existingChildrenRefs, this.relationalProcessor);
+            int result = depDialog.open();
+            
+            if (result == Window.OK) {
+//                Object[] relRefs = depDialog.getResult();
+//                for( int i=0; i< relRefs.length; i++ ) {
+//                    RelationalReference ref = (RelationalReference)relRefs[i];
+//                    
+//                }
+                
+                return true;
+            }
+            
+            return false; 
+        }
+        
         return true;
     }
 
@@ -526,7 +620,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
         boolean requiredStart = ModelerCore.startTxn(false, false, getString("transactionTitle"), this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
-            this.relationalProcessor.buildModel(targetResource);
+            this.relationalProcessor.buildModel(targetResource, monitor);
             succeeded = true;
         } catch (Exception ex) {
             UiConstants.Util.log(IStatus.ERROR, ex, getString("importError")); //$NON-NLS-1$
@@ -553,7 +647,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
             @Override
             protected IStatus run( IProgressMonitor monitor ) {
                 try {
-                    monitor.beginTask(message, relationalProcessor.getRelationalModel().getChildren().size());
+                    monitor.beginTask(message, relationalProcessor.getRelationalModel().getChildren().size() + 2);
 
                     if (!monitor.isCanceled()) {
                         relationalProcessor.setProgressMonitor(monitor);
@@ -616,7 +710,9 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     }
 
     public void upButtonSelected( IStructuredSelection selection ) {
-    }
+    }        
+    // the root element to populate the viewer with
+//  private Object inputElement;
 
     /**
      * Use the dialog store to restore widget values to the values that they held last time this wizard was used to completion
@@ -680,4 +776,391 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
     public String getType() {
         return IMPORT_ID;
     }
+    
+    /**
+     * Inner class to display dialog showing objects to be created that have names of objects that aleady exist in the target
+     * model. This dialog should not be displayed if there are no duplicate names.
+     */
+    class OverwriteObjectsDialog extends SelectionDialog {
+        //============================================================================================================================
+        // Constants
+        // sizing constants
+        private final static int SIZING_SELECTION_WIDGET_HEIGHT = 250;
+        private final static int SIZING_SELECTION_WIDGET_WIDTH = 350;
+        
+        //============================================================================================================================
+        // Variables
+        
+        RelationalModelXmlTextFileProcessor processor;
+
+        // providers for populating this dialog
+        private ILabelProvider labelProvider;
+
+        // the visual selection widget group
+        CheckboxTableViewer listViewer;
+
+        private CLabel statusLine;
+        
+        Collection<RelationalReference> duplicateObjs;
+        
+        private int proccessType = RelationalReference.REPLACE;
+        
+        //============================================================================================================================
+        // Widgets
+        private Button replaceOptionButton, createOptionButton, cancelOptionButton; // appendNameOptionButton, 
+        
+        //============================================================================================================================
+        // Constructors
+            
+        /**
+         * 
+         * @param parent
+         * @param title
+         * @since 4.0
+         */
+        public OverwriteObjectsDialog(final Shell shell, 
+                                      Collection<RelationalReference> duplicateObjs, 
+                                      RelationalModelXmlTextFileProcessor processor) {
+            super(shell);
+            this.setTitle(OVERWRITE_TITLE);
+            this.labelProvider = new RelationalReferenceLabelProvider();
+            this.processor = processor;
+            this.duplicateObjs = new ArrayList<RelationalReference>(duplicateObjs);
+        }
+        
+        //============================================================================================================================
+        // Overridden Methods
+
+        /**<p>
+         * </p>
+         * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+         * @since 4.0
+         */
+        @Override
+        protected Control createDialogArea(final Composite parent) {
+         // page group
+            Composite composite = (Composite)super.createDialogArea(parent);
+            composite.setLayout(new GridLayout());
+            composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+            
+            Font font = parent.getFont();
+            composite.setFont(font);
+
+            createMessageArea(composite);
+            
+            Group optionsGroup = WidgetFactory.createGroup(parent, OVERWRITE_OPTIONS, SWT.BORDER | SWT.FILL);   
+            optionsGroup.setLayout(new GridLayout());
+            optionsGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+            
+            { // ========================= OPTIONS ============================
+                //WidgetFactory.createLabel(optionsGroup, GridData.FILL_HORIZONTAL, MODEL_OBJECT_NAMES_DESCRIPTION, SWT.WRAP);
+                this.replaceOptionButton = WidgetFactory.createRadioButton(optionsGroup, OVERWRITE_REPLACE, true);
+                
+                this.replaceOptionButton.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected( final SelectionEvent event ) {
+                        processWidgetSelected();
+                    }
+                });
+                this.createOptionButton = WidgetFactory.createRadioButton(optionsGroup, OVERWRITE_CREATE, false);
+                this.createOptionButton.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected( final SelectionEvent event ) {
+                        processWidgetSelected();
+                    }
+                });
+//                this.appendNameOptionButton = WidgetFactory.createRadioButton(optionsGroup, "Make all names unique (i.e. ProductsID_1", false);
+//                this.appendNameOptionButton.addSelectionListener(new SelectionAdapter() {
+//
+//                    @Override
+//                    public void widgetSelected( final SelectionEvent event ) {
+//                        processWidgetSelected();
+//                    }
+//                });
+                this.cancelOptionButton = WidgetFactory.createRadioButton(optionsGroup, OVERWRITE_CANCEL, false);
+                this.cancelOptionButton.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected( final SelectionEvent event ) {
+                        processWidgetSelected();
+                    }
+                });
+            }
+            
+            Group duplicateObjectsGroup = WidgetFactory.createGroup(parent, OVERWRITE_DUPLICATE_OBJECTS, SWT.FILL);
+            duplicateObjectsGroup.setLayout(new GridLayout());
+            duplicateObjectsGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+            
+            listViewer = CheckboxTableViewer.newCheckList(duplicateObjectsGroup, SWT.BORDER);
+            GridData data = new GridData(GridData.FILL_BOTH);
+            data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
+            data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
+            listViewer.getTable().setLayoutData(data);
+
+            listViewer.setLabelProvider(labelProvider);
+            listViewer.setContentProvider(new ListContentProvider());
+            listViewer.getControl().setFont(font);
+            listViewer.setSorter(new ViewerSorter() {});
+
+            addSelectionButtons(duplicateObjectsGroup);
+
+            initializeViewer();
+
+            // initialize page
+            checkInitialSelections();
+
+            getViewer().addCheckStateListener(new ICheckStateListener() {
+                public void checkStateChanged( CheckStateChangedEvent event ) {
+                    checkStatus();
+                }
+            });
+
+            statusLine = new CLabel(duplicateObjectsGroup, SWT.LEFT);
+            statusLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            statusLine.setText(""); //$NON-NLS-1$   
+            statusLine.setImage(null);
+            statusLine.setFont(parent.getFont());
+
+            return composite;
+        }
+
+        /**
+         * Add the selection and deselection buttons to the dialog.
+         * 
+         * @param composite org.eclipse.swt.widgets.Composite
+         */
+        private void addSelectionButtons( Composite composite ) {
+
+            Composite buttonComposite = new Composite(composite, SWT.RIGHT);
+            buttonComposite.setFont(composite.getFont());
+            GridLayout layout = new GridLayout();
+            layout.numColumns = 2;
+            buttonComposite.setLayout(layout);
+            GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
+            data.grabExcessHorizontalSpace = true;
+            composite.setData(data);
+
+            Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, InternalUiConstants.Widgets.SELECT_ALL_BUTTON, false);
+
+            SelectionListener listener = new SelectionAdapter() {
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    listViewer.setAllChecked(true);
+                    checkStatus();
+                }
+            };
+            selectButton.addSelectionListener(listener);
+
+            Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, InternalUiConstants.Widgets.DESELECT_ALL_BUTTON, false);
+
+            listener = new SelectionAdapter() {
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    listViewer.setAllChecked(false);
+                    checkStatus();
+                }
+            };
+            deselectButton.addSelectionListener(listener);
+
+        }
+        
+        void processWidgetSelected() {
+            if( replaceOptionButton.getSelection() ) {
+                this.proccessType = RelationalReference.REPLACE;
+            } else if( createOptionButton.getSelection() ) {
+                this.proccessType = RelationalReference.CREATE_ANYWAY;
+            } 
+//            else if( appendNameOptionButton.getSelection() ) {
+//                this.proccessType = RelationalReference.CREATE_UNIQUE_NAME;
+//            } 
+            else {
+                this.proccessType = RelationalReference.IGNORE;
+            }
+        }
+        
+        /**
+         * Visually checks the previously-specified elements in this dialog's list viewer.
+         */
+        private void checkInitialSelections() {
+            int nItems = this.listViewer.getTable().getItemCount();
+            for( int i=0; i<nItems; i++ ) {
+                listViewer.setChecked(this.listViewer.getElementAt(i), true);
+            }
+            
+            processWidgetSelected();
+            
+            checkStatus();
+        }
+        
+        void checkStatus() {
+            int nItemsChecked = 0;
+            int nItems = this.listViewer.getTable().getItemCount();
+            for( int i=0; i<nItems; i++ ) {
+                RelationalReference element = ((RelationalReference)this.listViewer.getElementAt(i));
+                if( this.listViewer.getChecked(element) ) {
+                    nItemsChecked++;
+                    element.setDoProcessType(this.proccessType);
+                } else {
+                    element.setDoProcessType(RelationalReference.IGNORE);
+                }
+                
+            }
+            if( nItemsChecked == 0 ) {
+                setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, getString("noDuplicateObjectsWillBeProcessed"))); //$NON-NLS-1$
+            }
+        }
+
+        /**
+         * Returns the viewer used to show the list.
+         * 
+         * @return the viewer, or <code>null</code> if not yet created
+         */
+        protected CheckboxTableViewer getViewer() {
+            return listViewer;
+        }
+
+        /**
+         * Initializes this dialog's viewer after it has been laid out.
+         */
+        private void initializeViewer() {
+            listViewer.setInput(duplicateObjs);
+        }
+
+        /**
+         * The <code>ListSelectionDialog</code> implementation of this <code>Dialog</code> method builds a list of the selected
+         * elements for later retrieval by the client and closes this dialog.
+         */
+        @Override
+        protected void okPressed() {
+
+            // Get the input children.
+            Object[] children = ((IStructuredContentProvider)this.listViewer.getContentProvider()).getElements(duplicateObjs);
+
+            // Build a list of selected children.
+            if (children != null) {
+                ArrayList list = new ArrayList();
+                for (int i = 0; i < children.length; ++i) {
+                    Object element = children[i];
+                    if (listViewer.getChecked(element)) list.add(element);
+                }
+                setResult(list);
+            }
+
+            super.okPressed();
+        }
+
+        /* (non-Javadoc)
+         * @see org.eclipse.jface.window.Window#create()
+         */
+        @Override
+        public void create() {
+            setShellStyle(getShellStyle() | SWT.RESIZE);
+            super.create();
+        }
+
+        private void setStatus( IStatus status ) {
+            if (status != null) {
+                String message = status.getMessage();
+                if (message != null && message.length() > 0) {
+                    statusLine.setText(message);
+                    statusLine.setImage(findImage(status));
+                    statusLine.setBackground(JFaceColors.getErrorBackground(
+                            statusLine.getDisplay()));
+                }
+            } else {
+                statusLine.setText(""); //$NON-NLS-1$   
+                statusLine.setImage(null);
+            }
+
+            if (status == null || status.isOK()) {
+                getButton(Window.OK).setEnabled(true);
+            } else {
+                getButton(Window.OK).setEnabled(false);
+            }
+        }
+        
+        private Image findImage(IStatus status) {
+            if (status.isOK()) {
+                return null;
+            } else if (status.matches(IStatus.ERROR)) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(
+                        ISharedImages.IMG_OBJS_ERROR_TSK);
+            } else if (status.matches(IStatus.WARNING)) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(
+                        ISharedImages.IMG_OBJS_WARN_TSK);
+            } else if (status.matches(IStatus.INFO)) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(
+                        ISharedImages.IMG_OBJS_INFO_TSK);
+            }
+            return null;
+        }
+    }
+    
+    class RelationalReferenceLabelProvider implements ILabelProvider {
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+         */
+        @Override
+        public Image getImage( Object element ) {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+         */
+        @Override
+        public String getText( Object element ) {
+            if( element instanceof RelationalReference ) {
+                return ((RelationalReference)element).getName();
+            }
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+         */
+        @Override
+        public void addListener( ILabelProviderListener listener ) {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+         */
+        @Override
+        public void dispose() {
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+         */
+        @Override
+        public boolean isLabelProperty( Object element,
+                                        String property ) {
+            return false;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+         */
+        @Override
+        public void removeListener( ILabelProviderListener listener ) {
+        }
+        
+    }
+
 }

@@ -9,6 +9,7 @@ package org.teiid.designer.relational.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import com.metamatrix.core.util.CoreArgCheck;
 
 /**
  * 
@@ -50,5 +51,27 @@ public class RelationalModel extends RelationalReference {
         }
         
         return false;
+    }
+    
+    public boolean hasChild(String name) {
+        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        for( RelationalReference child : this.children ) {
+            if( name.equalsIgnoreCase( child.getName())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public RelationalReference getChildWithName(String name) {
+        CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
+        for( RelationalReference child : this.children ) {
+            if( name.equalsIgnoreCase( child.getName())) {
+                return child;
+            }
+        }
+        
+        return null;
     }
 }
