@@ -578,7 +578,7 @@ public class RelationalModelTextImporterMainPage extends WizardDataTransferPage 
             for( EObject child : children ) {
                 String name = ModelerCore.getModelEditor().getName(child);
                 
-                if( name != null && this.relationalProcessor.getRelationalModel().hasChild(name) ) {
+                if( name != null && this.relationalProcessor.getRelationalModel().hasChild(name) && !existingChildrenNames.contains(name)) {
                     existingChildrenRefs.add(this.relationalProcessor.getRelationalModel().getChildWithName(name));
                     existingChildren.add(child);
                     existingChildrenNames.add(name);
