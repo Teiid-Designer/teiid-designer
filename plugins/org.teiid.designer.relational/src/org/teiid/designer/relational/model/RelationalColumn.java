@@ -56,7 +56,7 @@ public class RelationalColumn extends RelationalReference {
     public static final String DEFAULT_MINIMUM_VALUE = null;
     public static final int DEFAULT_PRECISION = 0;
     public static final int DEFAULT_RADIX = 0;
-    public static final int DEFAULT_SCALE = 10;
+    public static final int DEFAULT_SCALE = 0;
     public static final boolean DEFAULT_SIGNED = true;
     public static final String DEFAULT_SEARCHABILITY = SEARCHABILITY.SEARCHABLE;
     public static final boolean DEFAULT_SELECTABLE = true;
@@ -82,9 +82,9 @@ public class RelationalColumn extends RelationalReference {
     private int scale;
     private int radix;
     private boolean signed;
-    private String  searchability;
-    private boolean selectable;
-    private boolean updateable;
+    private String  searchability = DEFAULT_SEARCHABILITY;
+    private boolean selectable = DEFAULT_SELECTABLE;
+    private boolean updateable = DEFAULT_UPDATEABLE;
     
     public RelationalColumn() {
         super();

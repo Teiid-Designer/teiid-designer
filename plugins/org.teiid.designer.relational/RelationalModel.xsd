@@ -96,8 +96,24 @@
         <xs:attribute name="datatype" use="required">
         	<xs:simpleType>
         		<xs:restriction base="xs:string">
-        			<xs:minLength value="1"></xs:minLength>
-        		</xs:restriction>
+        			<xs:enumeration value="STRING"/>
+                    <xs:enumeration value="CHAR"/>
+                    <xs:enumeration value="BOOLEAN"/>
+                    <xs:enumeration value="BYTE"/>
+                    <xs:enumeration value="SHORT"/>
+                    <xs:enumeration value="INTEGER"/>
+                    <xs:enumeration value="LONG"/>
+                    <xs:enumeration value="BIGINTEGER"/>
+                    <xs:enumeration value="FLOAT"/>
+                    <xs:enumeration value="DECIMAL"/>
+                    <xs:enumeration value="BIGDECIMAL"/>
+                    <xs:enumeration value="DATE"/>
+                    <xs:enumeration value="TIME"/>
+                    <xs:enumeration value="TIMESTAMP"/>
+                    <xs:enumeration value="OBJECT"/>
+                    <xs:enumeration value="BLOB"/>
+                    <xs:enumeration value="CLOB"/>
+        		 </xs:restriction>
         	</xs:simpleType>
         </xs:attribute>
         <xs:attribute name="nativeType" type="xs:string" use="optional"/>

@@ -172,8 +172,8 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                 
                                 Node primaryKeyElement = null;
                                 Node uniqueConstraintElement = null;
-                                Node accessPatternElement = null;
-                                Node foreignKeyElement = null;
+                                Collection<Node> accessPatternNodes = new ArrayList<Node>();
+                                Collection<Node>  foreignKeyNodes = new ArrayList<Node>();
                                 
                                 // Create Table Children. Do not process KEYS until done with children
                                 // DO NOT PROCESS FK's until ALL tables are complete
@@ -199,10 +199,10 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                                 uniqueConstraintElement = tableChild;
                                             } break;
                                             case TYPES.AP: {
-                                                accessPatternElement = tableChild;
+                                                accessPatternNodes.add(tableChild);
                                             } break;
                                             case TYPES.FK: {
-                                                foreignKeyElement = tableChild;
+                                                foreignKeyNodes.add(tableChild);
                                             } break;
                                         }
                                     }
@@ -212,9 +212,13 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                 
                                 processUniqueConstraint(uniqueConstraintElement, table);
                                 
-                                processAccessPattern( accessPatternElement, table);
+                                for( Node apNode : accessPatternNodes) {
+                                    processAccessPattern( apNode, table);
+                                }
                                 
-                                processForeignKey(foreignKeyElement, table);
+                                for( Node fkNode : foreignKeyNodes) {
+                                    processForeignKey(fkNode, table);
+                                }
                                 
                             } break;
                             case TYPES.VIEW: {
@@ -223,7 +227,7 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                 view.setProperties(props);
                                 relModel.addChild(view);
                                 
-                                Node accessPatternElement = null;
+                                Collection<Node> accessPatternNodes = new ArrayList<Node>();
                                 
                                 // Create Table Children. Do not process KEYS until done with children
                                 // DO NOT PROCESS FK's until ALL tables are complete
@@ -243,13 +247,15 @@ public class RelationalModelXmlTextFileProcessor extends AbstractObjectProcessor
                                                 view.addColumn(column);
                                             } break;
                                             case TYPES.AP: {
-                                                accessPatternElement = tableChild;
+                                                accessPatternNodes.add(tableChild);
                                             } break;
                                         }
                                     }
                                 }
 
-                                processAccessPattern( accessPatternElement, view);
+                                for( Node apNode : accessPatternNodes) {
+                                    processAccessPattern( apNode, view);
+                                }
                                 
                             } break;
                             case TYPES.PROCEDURE: {

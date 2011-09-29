@@ -292,12 +292,12 @@ public class RelationalModelFactory implements RelationalConstants {
         column.setSelectable(columnRef.isSelectable());
         column.setSigned(columnRef.isSigned());
         column.setUpdateable(columnRef.isUpdateable());
-        EObject datatype = this.datatypeProcessor.findType(
-                        columnRef.getDatatype(), 
-                        columnRef.getLength(),
-                        columnRef.getPrecision(), 
-                        columnRef.getScale(), 
-                        new ArrayList());
+        EObject datatype = this.datatypeProcessor.findDatatype(columnRef.getDatatype());
+//                        columnRef.getDatatype(), 
+//                        columnRef.getLength(),
+//                        columnRef.getPrecision(), 
+//                        columnRef.getScale(), 
+//                        new ArrayList());
         if( datatype != null ) {
             column.setType(datatype);
         }
@@ -347,12 +347,12 @@ public class RelationalModelFactory implements RelationalConstants {
             dType = DatatypeProcessor.DEFAULT_DATATYPE;
 
         }
-        EObject datatype = this.datatypeProcessor.findType(
-                        dType, 
-                        columnRef.getLength(),
-                        columnRef.getPrecision(), 
-                        columnRef.getScale(), 
-                        new ArrayList());
+        EObject datatype = this.datatypeProcessor.findDatatype(dType);
+//                        dType, 
+//                        columnRef.getLength(),
+//                        columnRef.getPrecision(), 
+//                        columnRef.getScale(), 
+//                        new ArrayList());
         if( datatype != null ) {
             column.setType(datatype);
             
@@ -583,12 +583,12 @@ public class RelationalModelFactory implements RelationalConstants {
             dType = DatatypeProcessor.DEFAULT_DATATYPE;
 
         }
-        EObject datatype = this.datatypeProcessor.findType(
-                                                           dType, 
-                                                           parameterRef.getLength(),
-                                                           parameterRef.getPrecision(), 
-                                                           parameterRef.getScale(), 
-                                                           new ArrayList());
+        EObject datatype = this.datatypeProcessor.findDatatype(dType);
+//                                                           dType, 
+//                                                           parameterRef.getLength(),
+//                                                           parameterRef.getPrecision(), 
+//                                                           parameterRef.getScale(), 
+//                                                           new ArrayList());
         if( datatype != null ) {
             parameter.setType(datatype);
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
