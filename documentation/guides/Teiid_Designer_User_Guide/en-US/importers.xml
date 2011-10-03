@@ -57,7 +57,9 @@
 							<para><emphasis role="bold">Step 3 </emphasis> - Select existing DDL from either 
 							   <guimenuitem>Choose from file system...</guimenuitem> or <guimenuitem>Choose from workspace...</guimenuitem>. set the Model 
 								folder location, enter or select valid model name, set Model type (Source Model or View Model), 
-								set desired options and click <emphasis>NEXT></emphasis> (or <emphasis>FINISH></emphasis> if enabled)</para>
+								set desired options and click <guibutton>Next&gt;
+                                </guibutton> (or <guibutton>Finish&gt;
+							</guibutton> if enabled)</para>
 							<figure>
 								<title>DDL Import Options</title>
 								<mediaobject>
@@ -68,9 +70,12 @@
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - If <emphasis>NEXT></emphasis> is pressed, 
+						<para>
+                                <emphasis role="bold">Step 4 </emphasis> - If <guibutton>Next&gt;
+							</guibutton> is pressed, 
 								a difference report is presented for viewing or de-selecting individual 
-								relational entities. Press <emphasis>FINISH></emphasis> to complete.</para>
+								relational entities. Press <guibutton>Finish&gt;
+							</guibutton> to complete.</para>
 							<figure>
 								<title>Review DDL Updates Dialog</title>
 								<mediaobject>
@@ -142,8 +147,8 @@
 						</listitem>
 						<listitem>
 							<para><emphasis role="bold">Step 4 </emphasis> - After selecting a <emphasis>Connection Profile</emphasis>, 
-								input password (if not provided). Press <emphasis role="bold">Next></emphasis>
-								 (or <emphasis role="bold">Finish></emphasis> if enabled)</para>
+								input password (if not provided). Press <emphasis role="bold">Next&gt;</emphasis>
+								 (or <emphasis role="bold">Finish&gt;</emphasis> if enabled)</para>
 							<figure>
 								<title>Select JDBC Source Configuration Dialog</title>
 								<mediaobject>
@@ -156,7 +161,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 5 </emphasis> - On the <emphasis role="bold">Select Database Metadata</emphasis> page, 
 								select the types of objects in the database to import. 
-								Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled).</para>
+								Press <emphasis role="bold">Next&gt;</emphasis> (or <emphasis role="bold">Finish&gt;</emphasis> if enabled).</para>
 							<figure>
 								<title>Select Database Metadata Dialog</title>
 								<mediaobject>
@@ -170,7 +175,7 @@
 							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">Select Database Objects</emphasis>
 							page, view the contents of the schema, or change selections. Select which database schema objects will 
 							be used to construct relational objects.
-							Press <emphasis role="bold">Next></emphasis> (or <emphasis role="bold">Finish></emphasis> if enabled)</para>
+							Press <emphasis role="bold">Next&gt;</emphasis> (or <emphasis role="bold">Finish&gt;</emphasis> if enabled)</para>
 							<figure>
 								<title>Select Database Options Dialog</title>
 								<mediaobject>
@@ -183,7 +188,7 @@
 						<listitem>
 							<para><emphasis role="bold">Step 7 </emphasis> - On the <emphasis role="bold">Specify Import Options</emphasis>
 							page, specify desired <emphasis role="bold">Model Name</emphasis> as well as any other options used to 
-							customize the naming of your relational objects. Press <emphasis role="bold">Finish></emphasis> to complete. </para>
+							customize the naming of your relational objects. Press <emphasis role="bold">Finish&gt;</emphasis> to complete. </para>
 							<figure>
 								<title>Specify Import Options Dialog</title>
 								<mediaobject>
