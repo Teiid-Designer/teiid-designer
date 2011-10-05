@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -24,10 +25,12 @@ import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
+import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
+import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 
 public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
@@ -68,39 +71,23 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
         if (modelResource != null) {
             IStructuredSelection structuredSelection = new StructuredSelection(modelResource);
             final ManageModelExtensionDefnsWizard wizard = new ManageModelExtensionDefnsWizard();
+
+            // Warn User and do not allow Wizard to open with a 'dirty' model.
+            IFile file = (IFile)modelResource.getResource();
+            ModelEditor editor = ModelEditorManager.getModelEditorForFile(file, true);
+            if (editor != null && editor.isDirty()) {
+                boolean doContinue = MessageDialog.openQuestion(wizard.getShell(),
+                                                                Messages.manageModelExtensionDefnsActionModelDirtyTitle,
+                                                                Messages.manageModelExtensionDefnsActionModelDirtyMsg);
+                if (!doContinue) {
+                    return;
+                }
+                ModelEditorManager.save(file);
+            }
+
             wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), structuredSelection);
             final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
-            int rc = dialog.open();
-
-// if (rc != Window.CANCEL) {
-            // final MultiStatus result = wizard.getResult();
-            // final int severity = result.getSeverity();
-            // if (severity == IStatus.ERROR) {
-            //                    final String errTitle = UiConstants.Util.getString("GenerateXsdSchemaAction.errTitle"); //$NON-NLS-1$
-            //                    final String err = UiConstants.Util.getString("GenerateXsdSchemaAction.errFinish"); //$NON-NLS-1$
-            // ErrorDialog.openError(wizard.getShell(), errTitle, err, result);
-            // } else if (severity == IStatus.WARNING) {
-            //                    final String warnTitle = UiConstants.Util.getString("GenerateXsdSchemaAction.warnTitle"); //$NON-NLS-1$
-            //                    final String warn = UiConstants.Util.getString("GenerateXsdSchemaAction.warnFinish"); //$NON-NLS-1$
-            // ErrorDialog.openError(wizard.getShell(), warnTitle, warn, result);
-            // } else {
-            //                    final String okTitle = UiConstants.Util.getString("GenerateXsdSchemaAction.successTitle"); //$NON-NLS-1$
-            //                    final String ok = UiConstants.Util.getString("GenerateXsdSchemaAction.successFinish"); //$NON-NLS-1$
-            //
-            // List msgs = new ArrayList(result.getChildren().length);
-            // for (int i = 0; i < result.getChildren().length; i++) {
-            // msgs.add(result.getChildren()[i].getMessage());
-            // }
-            // // Defect 20589 - Thread off this dialog, so it shows up AFTER auto-build and other jobs which are
-            // // causing more Progress monitors to appear (lots of flashing).
-            // final List messgs = msgs;
-            // Display.getCurrent().asyncExec(new Runnable() {
-            // public void run() {
-            // ListMessageDialog.openInformation(wizard.getShell(), okTitle, null, ok, messgs, null);
-            // }
-            // });
-            // }
-            // }
+            dialog.open();
         }
     }
 

@@ -8,10 +8,8 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
-
 import java.io.File;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -23,7 +21,6 @@ import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -253,6 +250,17 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     public boolean isModelExtensionDefinitionRelated( Object modelObject ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         return ModelExtensionUtils.isModelExtensionDefinitionRelated((EObject)modelObject);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
+     */
+    @Override
+    public ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception {
+        ModelResource modelResource = getModelResource(modelObject);
+        return ModelExtensionUtils.getModelExtensionDefinition(this, modelResource, false);
     }
 
     /**

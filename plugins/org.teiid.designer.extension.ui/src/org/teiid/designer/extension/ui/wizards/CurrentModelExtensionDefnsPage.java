@@ -9,6 +9,7 @@ package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,9 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -33,6 +36,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -49,11 +53,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbench;
+import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
 import org.teiid.designer.core.extension.ModelExtensionUtils;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
@@ -66,6 +72,7 @@ import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -79,7 +86,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private static final int STATUS_OK = 0;
     private static final int STATUS_NO_LOCATION = 1;
     private static final int STATUS_NO_MODELNAME = 2;
-    private static final int STATUS_EDITOR_DIRTY = 3;
 
     private ModelResource modelResource; // Current ModelResource selection
     private Text locationText, modelNameText; // Text widgets for ModelName and Location
@@ -118,10 +124,12 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      */
     private List<ModelExtensionDefinitionHeader> getModelExtensionDefnHeaders( ModelResource modelResource ) {
         List<ModelExtensionDefinitionHeader> headers = new ArrayList<ModelExtensionDefinitionHeader>();
-        ModelExtensionAssistantAggregator aggregator = new ModelExtensionAssistantAggregator(this.registry);
-        try {
-            Collection<String> supportedNamespaces = aggregator.getSupportedNamespacePrefixes(modelResource);
 
+        try {
+            // Get the namespaces which are currently persisted on the model
+            Collection<String> supportedNamespaces = ModelExtensionUtils.getSupportedNamespaces(modelResource);
+
+            // Get the associated Headers
             for (String namespace : supportedNamespaces) {
                 ModelExtensionDefinitionHeader header = ModelExtensionUtils.getModelExtensionDefinitionHeader(modelResource,
                                                                                                               true,
@@ -280,17 +288,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Update the current status of the wizard
      */
     void updateStatus() {
-        if (this.modelResource != null) {
-            IFile file = (IFile)this.modelResource.getResource();
-            ModelEditor editor = ModelEditorManager.getModelEditorForFile(file, true);
-            if (editor != null && editor.isDirty()) {
-                setMessage(Messages.currentMedsPageModelEditorDirtyMsg, IMessageProvider.ERROR);
-                currentStatus = STATUS_EDITOR_DIRTY;
-                setPageComplete(false);
-                return;
-            }
-        }
-
         String location = getModelLocation();
         if (CoreStringUtil.isEmpty(location)) {
             setMessage(Messages.currentMedsPageNoModelLocationMsg, IMessageProvider.ERROR);
@@ -366,9 +363,18 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                     } else if (theElement instanceof IFile) {
                         try {
                             ModelResource modelResource = ModelUtil.getModelResource((IFile)theElement, false);
-                            if (modelResource != null && isMetamodelExtendable(modelResource)
-                                && ModelUtilities.isPhysical(modelResource)) {
-                                result = true;
+                            if (modelResource != null) {
+                                // Check whether the model file is open and dirty
+                                ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)theElement, false);
+                                boolean isDirty = false;
+                                if (editor != null && editor.isDirty()) {
+                                    isDirty = true;
+                                }
+                                // Check whether model is not dirty and is extendable
+                                if (!isDirty && isMetamodelExtendable(modelResource) && ModelUtilities.isPhysical(modelResource)) {
+                                    result = true;
+                                }
+
                             }
                         } catch (final ModelWorkspaceException theException) {
                             ModelerCore.Util.log(IStatus.ERROR, theException, theException.getMessage());
@@ -733,26 +739,62 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     }
 
     /*
-     * handler for Register Med Button
+     * handler for Register Med Button.  This launches the NewMedWizard, providing the ModelExtensionDefinition which
+     * needs to be saved.
      */
     void handleRegisterMed() {
-        // Warn user that removal will remove all properties
-        boolean confirmed = MessageDialog.openConfirm(getShell(),
-                                                      Messages.currentMedsPageRegisterDialogTitle,
-                                                      Messages.currentMedsPageRegisterDialogMsg);
+        final IWorkbench workbench = UiPlugin.getDefault().getWorkbench();
 
-        // If user confirms, proceed
-        if (confirmed) {
-            // Get the namespace of the selected MED
-            // String namespacePrefix = this.editManager.getCurrentHeaders().get(this.selectedMedIndex).getNamespacePrefix();
+        // New ModelExtensionDefinitions Wizard
+        NewMedWizard newMedWizard = new NewMedWizard();
+        IStructuredSelection structuredSelection = new StructuredSelection(modelResource.getResource());
+        newMedWizard.init(workbench, structuredSelection);
 
-            // TODO Implement register MED
-            MessageDialog.openInformation(getShell(), "Register MED", "Register MED is not yet implemented..."); //$NON-NLS-1$ //$NON-NLS-2$
+        // Get the selected Med Header
+        ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
 
-            // Reset manager to update states
-            this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
-            this.tableViewer.refresh();
+        // Create DefaultMedAssistant
+        DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(medHeader);
+        // Get unregistered MED contents from the Model
+        ModelExtensionDefinition unregisteredMed = null;
+        try {
+            unregisteredMed = defaultAssistant.getModelExtensionDefinition(modelResource);
+        } catch (Exception e) {
+            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
+
+        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+        InputStream unregisteredMedStream = null;
+        try {
+            unregisteredMedStream = medWriter.write(unregisteredMed);
+        } catch (Exception e) {
+            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+        }
+
+        newMedWizard.setMedInput(unregisteredMedStream);
+
+        // Launch NewMedWizard, prompts for the location to save the med.
+        final WizardDialog dialog = new WizardDialog(newMedWizard.getShell(), newMedWizard);
+        // After OK, get the saved MED and register it
+        if (dialog.open() == Window.OK) {
+            IFile createdMed = newMedWizard.getCreatedMedFile();
+            if (createdMed != null && createdMed.exists()) {
+                try {
+                    InputStream fileStream = createdMed.getContents();
+                    getRegistry().addDefinition(fileStream, defaultAssistant);
+                } catch (Exception e) {
+                    ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
+                }
+            }
+        }
+
+        // Deselect the original med
+        this.tableViewer.getTable().deselectAll();
+        setButtonStates();
+
+        // Reset manager to update states
+        this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
+        this.tableViewer.refresh();
     }
 
 }

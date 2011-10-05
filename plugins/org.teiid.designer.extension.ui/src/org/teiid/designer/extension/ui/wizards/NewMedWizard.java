@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.extension.ui.wizards;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -36,7 +37,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
+import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.ui.Messages;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
@@ -66,6 +71,8 @@ public final class NewMedWizard extends AbstractWizard
 
     private String medName; // name of MED to create
     private IContainer folderLocation; // location to create the MED
+    private InputStream medInputStream; // supplied InputStream
+    private IFile createdMedFile; // the file that was saved
 
     private WizardPage pg;
     private Text nameText, folderText;
@@ -96,16 +103,21 @@ public final class NewMedWizard extends AbstractWizard
 			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
                     // Target File
-                    final IFile medFile = NewMedWizard.this.folderLocation.getFile(new Path(NewMedWizard.this.medName));
+                    createdMedFile = NewMedWizard.this.folderLocation.getFile(new Path(NewMedWizard.this.medName));
 
-                    ModelExtensionDefinitionParser medParser = new ModelExtensionDefinitionParser();
-                    medFile.create(medParser.getModelExtensionDefinitionTemplate(), false, monitor);
+                    // if medInputStream is null, Create a default Med
+                    if (medInputStream == null) {
+                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+                        medInputStream = medWriter.write(createDefaultMed());
+                    }
+
+                    createdMedFile.create(medInputStream, false, monitor);
 
                     NewMedWizard.this.folderLocation.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
                     // open editor
                     IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-                    IDE.openEditor(page, medFile);
+                    IDE.openEditor(page, createdMedFile);
 
                     // ModelExtensionDefinitionEditor medEditor = getMedEditor(medFile);
                     
@@ -123,10 +135,44 @@ public final class NewMedWizard extends AbstractWizard
             if (err instanceof InvocationTargetException) {
                 err = ((InvocationTargetException)err).getTargetException();
             }
-            // VdbUiConstants.Util.log(err);
+            ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
             WidgetUtil.showError(Messages.newMedWizardCreateFileErrorMsg);
             return false;
         }
+    }
+
+    /*
+     * Create a Default ModelObjectDefinition, with some preset values to make it a valid Med.
+     * @return a default ModelExtensionDefinition
+     */
+    private ModelExtensionDefinition createDefaultMed() {
+        // Default MED properties
+        String namespacePrefix = "namespacePrefix"; //$NON-NLS-1$
+        String namespaceUri = "namespaceUri"; //$NON-NLS-1$
+        String metamodelUri = "metamodelUri"; //$NON-NLS-1$
+
+        // Create a MED using the DefaultModelObjectExtensionAssistant
+        DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(namespacePrefix,
+                                                                                                         namespaceUri,
+                                                                                                         metamodelUri);
+        ModelExtensionDefinition newMed = defaultAssistant.getModelExtensionDefinition();
+        newMed.setDescription("description for the ModelExtensionDefinition"); //$NON-NLS-1$
+
+        // Create a Dummy Property
+        String propId = "propertyId"; //$NON-NLS-1$
+        String propName = "Property Name"; //$NON-NLS-1$
+        String type = "boolean"; //$NON-NLS-1$
+        String required = "false"; //$NON-NLS-1$
+        String advanced = "false"; //$NON-NLS-1$
+        String masked = "false"; //$NON-NLS-1$
+        String index = "false"; //$NON-NLS-1$
+        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(namespacePrefix, propId, propName,
+                                                                                             type, required,
+                                                                                             "", "", advanced, masked, index); //$NON-NLS-1$ //$NON-NLS-2$
+        // Add dummy property to the med, under a dummy metaclass name
+        newMed.addPropertyDefinition("metaclassName", propDefn); //$NON-NLS-1$ 
+
+        return newMed;
     }
 
     /**
@@ -172,6 +218,14 @@ public final class NewMedWizard extends AbstractWizard
         addPage(pg);
     }
 
+    public void setMedInput( InputStream medInputStream ) {
+        this.medInputStream = medInputStream;
+    }
+
+    public IFile getCreatedMedFile() {
+        return this.createdMedFile;
+    }
+
     private boolean folderInModelProject() {
         boolean result = false;
 
@@ -182,7 +236,7 @@ public final class NewMedWizard extends AbstractWizard
                     result = true;
                 }
             } catch (CoreException ex) {
-                // VdbUiConstants.Util.log(ex);
+                ModelerCore.Util.log(IStatus.ERROR, ex, ex.getMessage());
             }
         }
 
@@ -335,7 +389,7 @@ public final class NewMedWizard extends AbstractWizard
                 this.folderLocation = folder;
             }
         } catch (final CoreException err) {
-            // VdbUiConstants.Util.log(err);
+            ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
             WizardUtil.setPageComplete(this.pg, err.getLocalizedMessage(), IMessageProvider.ERROR);
         }
     }

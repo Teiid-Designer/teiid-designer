@@ -148,6 +148,16 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
+     * Obtains from the ModelResource, the ModelExtensionDefinition. If there is no ModelExtensionDefinition for this
+     * namespacePrefix, returns <code>null</code>
+     * 
+     * @param modelObject the model object whose ModelExtensionDefinition is being requested (cannot be <code>null</code>)
+     * @return the ModelExtensionDefinition for the requested namespacePrefix
+     * @throws Exception if there is a problem obtaining the ModelExtensionDefinition
+     */
+    public abstract ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception;
+
+    /**
      * Obtains from the model object, the property value of the specified property definition identifier. If the current value is
      * empty, the default value is returned.
      * 

@@ -30,6 +30,16 @@ public class ModelExtensionAssistantAdapter extends ModelExtensionAssistant {
     /**
      * {@inheritDoc}
      * 
+     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getModelExtensionDefinition(java.lang.Object)
+     */
+    @Override
+    public ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getOverriddenValues(java.lang.Object)
      */
     @Override

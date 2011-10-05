@@ -48,6 +48,9 @@ public class Messages extends NLS {
     public static String newMedWizardMedNameErrorMsg;
 
     public static String manageModelExtensionDefnsActionTitle;
+    public static String manageModelExtensionDefnsActionModelDirtyTitle;
+    public static String manageModelExtensionDefnsActionModelDirtyMsg;
+
     public static String manageMedsWizardTitle;
     public static String manageMedsWizardInitError;
     public static String manageMedsWizardResult;
@@ -69,7 +72,6 @@ public class Messages extends NLS {
     public static String currentMedsPageBrowseButton;
     public static String currentMedsPageNoModelLocationMsg;
     public static String currentMedsPageNoModelNameMsg;
-    public static String currentMedsPageModelEditorDirtyMsg;
     public static String currentMedsPageBrowseDialogTitle;
     public static String currentMedsPageBrowseDialogMsg;
     public static String currentMedsPageAddMedButton;

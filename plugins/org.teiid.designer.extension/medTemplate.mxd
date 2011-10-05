@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<p:modelExtension metamodelUri="[metamodelUri]" namespaceUri="[namespaceUri]"
-    namespacePrefix="[namespacePrefix]" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
-    <p:description>[description for model extension definition]</p:description>
-    <p:extendedMetaclass name="[extendedMetaclass]">
-    </p:extendedMetaclass>
-</p:modelExtension>
