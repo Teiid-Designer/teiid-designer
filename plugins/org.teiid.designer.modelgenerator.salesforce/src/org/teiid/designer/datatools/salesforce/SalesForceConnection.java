@@ -22,7 +22,7 @@ public class SalesForceConnection implements IConnection {
     private IConnectionProfile savedProfile;
     private Connection connection;
     private Throwable connectException;
-    private final String DEFAULT_SF_URL = "http://login.salesforce.com/services/Soap/u/22.0"; //$NON-NLS-1$
+    private final String DEFAULT_SF_URL = "https://login.salesforce.com/services/Soap/u/22.0"; //$NON-NLS-1$
 
     /**
      * @param profile
