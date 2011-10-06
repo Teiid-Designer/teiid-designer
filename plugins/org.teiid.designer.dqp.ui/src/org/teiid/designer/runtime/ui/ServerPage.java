@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -37,7 +36,6 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
-
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -446,10 +444,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
             label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
 
-            adminURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY);// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+            adminURLText = new Text(pnl, SWT.READ_ONLY);
             adminURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             adminURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
             adminURLText.setText(this.localAdminInfo.getUrl());
+            adminURLText.setBackground(pnl.getBackground());
 
             { // Secure SSL row
                 final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
@@ -671,10 +670,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
             label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
 
-            jdbcURLText = new Text(pnl, SWT.BORDER | SWT.READ_ONLY);// SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+            jdbcURLText = new Text(pnl, SWT.READ_ONLY);
             jdbcURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             jdbcURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
             jdbcURLText.setText(this.localJdbcInfo.getUrl());
+            jdbcURLText.setBackground(pnl.getBackground());
 
             { // Secure SSL row
                 final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
