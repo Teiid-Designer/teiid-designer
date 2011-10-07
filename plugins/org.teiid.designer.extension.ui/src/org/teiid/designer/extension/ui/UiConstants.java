@@ -35,11 +35,13 @@ public interface UiConstants {
         String ADD_DISPLAY_NAME = FOLDER + "add-display-name.png"; //$NON-NLS-1$
         String ADD_METACLASS = FOLDER + "add-metaclass.png"; //$NON-NLS-1$
         String ADD_PROPERTY = FOLDER + "add-property.png"; //$NON-NLS-1$
+        String ADD_VALUE = FOLDER + "add-value.png"; //$NON-NLS-1$
         String CHECK_MARK = FOLDER + "checkmark.gif"; //$NON-NLS-1$
         String EDIT_DESCRIPTION = FOLDER + "edit-description.png"; //$NON-NLS-1$
         String EDIT_DISPLAY_NAME = FOLDER + "edit-display-name.png"; //$NON-NLS-1$
         String EDIT_METACLASS = FOLDER + "edit-metaclass.png"; //$NON-NLS-1$
         String EDIT_PROPERTY = FOLDER + "edit-property.png"; //$NON-NLS-1$
+        String EDIT_VALUE = FOLDER + "edit-value.png"; //$NON-NLS-1$
         String MED_EDITOR = FOLDER + "med-editor.png"; //$NON-NLS-1$
         String REGISTERY_MED_UPDATE_ACTION = FOLDER + "registry-med-update.png"; //$NON-NLS-1$
         String REGISTRY_VIEW = FOLDER + "model-extension-registry-view.png"; //$NON-NLS-1$
@@ -47,7 +49,9 @@ public interface UiConstants {
         String REMOVE_DISPLAY_NAME = FOLDER + "remove-display-name.png"; //$NON-NLS-1$
         String REMOVE_METACLASS = FOLDER + "remove-metaclass.png"; //$NON-NLS-1$
         String REMOVE_PROPERTY = FOLDER + "remove-property.png"; //$NON-NLS-1$
+        String REMOVE_VALUE = FOLDER + "remove-value.png"; //$NON-NLS-1$
         String SHOW_REGISTRY_VIEW_ACTION = REGISTRY_VIEW;
+        String TOGGLE_DEFAULT_VALUE = FOLDER + "toggle-default-value.png"; //$NON-NLS-1$
     }
 
     interface Form {

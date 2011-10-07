@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
+import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
@@ -87,8 +88,17 @@ final class EditPropertyDialog extends FormDialog {
     private Button btnRemoveDescription;
     private Button btnRemoveDisplayName;
 
+    private Button btnFixedValue;
+    private Text txtFixedValue;
+    private Button btnVariableValue;
+    private Button btnAddValue;
+    private Button btnEditValue;
+    private Button btnRemoveValue;
+    private Button btnToggleDefaultValue;
+
     private TableViewer descriptionViewer;
     private TableViewer displayNameViewer;
+    private TableViewer valuesViewer;
 
     private final Collection<String> existingPropIds;
 
@@ -109,11 +119,11 @@ final class EditPropertyDialog extends FormDialog {
     private final ErrorMessage fixedValueError;
     private final ErrorMessage indexedError;
     private final ErrorMessage maskedError;
-    private final ErrorMessage modifiableError;
     private final ErrorMessage requiredError;
     private final ErrorMessage runtimeTypeError;
     private final ErrorMessage simpleIdError;
     private final ErrorMessage typeError;
+    private final ErrorMessage valuesError;
 
     public EditPropertyDialog( Shell shell,
                                String namespacePrefix,
@@ -137,11 +147,11 @@ final class EditPropertyDialog extends FormDialog {
         this.fixedValueError = new ErrorMessage();
         this.indexedError = new ErrorMessage();
         this.maskedError = new ErrorMessage();
-        this.modifiableError = new ErrorMessage();
         this.requiredError = new ErrorMessage();
         this.simpleIdError = new ErrorMessage();
         this.runtimeTypeError = new ErrorMessage();
         this.typeError = new ErrorMessage();
+        this.valuesError = new ErrorMessage();
     }
 
     public EditPropertyDialog( Shell shell,
@@ -178,12 +188,9 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
-                                  int columnIndex,
                                   String headerText,
                                   String headerToolTip,
                                   boolean resizable ) {
-        viewerColumn.setLabelProvider(new TranslationLabelProvider(columnIndex));
-
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
         column.setToolTipText(headerToolTip);
@@ -291,7 +298,7 @@ final class EditPropertyDialog extends FormDialog {
                     handleRemoveDescription();
                 }
             });
-            buttons[2].setToolTipText(Messages.propertiesPageRemoveMetaclassButtonToolTip);
+            buttons[2].setToolTipText(Messages.editPropertyDialogRemoveDescriptionButtonToolTip);
             this.btnRemoveDescription = buttons[2];
         }
 
@@ -380,13 +387,15 @@ final class EditPropertyDialog extends FormDialog {
 
             COLUMNS: {
                 final TableViewerColumn firstColumn = new TableViewerColumn(this.descriptionViewer, SWT.LEFT);
-                configureColumn(firstColumn, ColumnIndexes.LOCALE, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
+                configureColumn(firstColumn, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
+                firstColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.LOCALE));
 
                 final TableViewerColumn lastColumn = new TableViewerColumn(this.descriptionViewer, SWT.LEFT);
-                configureColumn(lastColumn, ColumnIndexes.TRANSLATION, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
+                lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
+                configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
 
                 // size last column to extend to width of table
-                lastColumn.getColumn().addControlListener(new ControlAdapter() {
+                finalContainer.addControlListener(new ControlAdapter() {
 
                     /**
                      * {@inheritDoc}
@@ -560,13 +569,15 @@ final class EditPropertyDialog extends FormDialog {
 
             COLUMNS: {
                 final TableViewerColumn firstColumn = new TableViewerColumn(this.displayNameViewer, SWT.LEFT);
-                configureColumn(firstColumn, ColumnIndexes.LOCALE, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
+                firstColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.LOCALE));
+                configureColumn(firstColumn, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
 
                 final TableViewerColumn lastColumn = new TableViewerColumn(this.displayNameViewer, SWT.LEFT);
-                configureColumn(lastColumn, ColumnIndexes.TRANSLATION, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
+                lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
+                configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
 
                 // size last column to extend to width of table
-                lastColumn.getColumn().addControlListener(new ControlAdapter() {
+                finalContainer.addControlListener(new ControlAdapter() {
 
                     /**
                      * {@inheritDoc}
@@ -789,23 +800,6 @@ final class EditPropertyDialog extends FormDialog {
                 }
             });
 
-            btn = toolkit.createButton(container, Messages.modifiablePropertyAttributeColumnHeader, SWT.CHECK);
-            this.modifiableError.widget = btn;
-            btn.setSelection(this.propDefn.isModifiable());
-            btn.setToolTipText(Messages.modifiablePropertyAttributeColumnHeaderToolTip);
-            btn.addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleModifiableChanged(((Button)e.widget).getSelection());
-                }
-            });
-
             btn = toolkit.createButton(container, Messages.advancedPropertyAttributeColumnHeader, SWT.CHECK);
             this.advancedError.widget = btn;
             btn.setSelection(this.propDefn.isAdvanced());
@@ -866,17 +860,256 @@ final class EditPropertyDialog extends FormDialog {
                                                 FormToolkit toolkit ) {
         // TODO implement createPropertyValueSection
         // TODO assign error widgets here
-        final Section finalSection;
 
-        SECTION: {
-            Section section = FormUtil.createSection(this.managedForm, toolkit, body,
-                                                     Messages.editPropertyDialogPropertyValueSectionTitle,
-                                                     Messages.editPropertyDialogPropertyValueSectionDescription, SECTION_STYLE,
-                                                     true);
-            finalSection = section;
+        Section section = FormUtil.createSection(this.managedForm, toolkit, body,
+                                                 Messages.editPropertyDialogPropertyValueSectionTitle,
+                                                 Messages.editPropertyDialogPropertyValueSectionDescription, SECTION_STYLE, true);
+
+        Composite container = toolkit.createComposite(section);
+        container.setLayout(new GridLayout());
+        container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        section.setClient(container);
+
+        TOP: {
+            Composite top = toolkit.createComposite(container);
+            top.setLayout(new GridLayout(2, false));
+            top.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            this.btnFixedValue = toolkit.createButton(top, Messages.editPropertyDialogFixedValueButtonText, SWT.RADIO);
+            this.btnFixedValue.setToolTipText(Messages.editPropertyDialogFixedValueButtonToolTip);
+            this.btnFixedValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleFixedValueSelected();
+                }
+            });
+
+            this.txtFixedValue = toolkit.createText(top, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            this.txtFixedValue.setEnabled(false);
+            this.txtFixedValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            this.txtFixedValue.addModifyListener(new ModifyListener() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleFixedValueChanged();
+                }
+            });
+
+            this.btnVariableValue = toolkit.createButton(top, Messages.editPropertyDialogVariableValueButtonText, SWT.RADIO);
+            this.btnVariableValue.setToolTipText(Messages.editPropertyDialogVariableValueButtonToolTip);
+            this.btnVariableValue.setSelection(true);
+            this.btnVariableValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleVariableValueSelected();
+                }
+            });
         }
 
-        return finalSection;
+        BOTTOM: {
+            Section valuesSection = toolkit.createSection(container, ExpandableComposite.TITLE_BAR
+                    | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
+            valuesSection.setText(Messages.editPropertyDialogAllowedValuesSectionTitle);
+            valuesSection.setLayout(new GridLayout());
+            valuesSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+            Button[] buttons = FormUtil.createSectionToolBar(valuesSection,
+                                                             toolkit,
+                                                             new Image[] { Activator.getDefault().getImage(ImageIds.ADD_VALUE),
+                                                                     Activator.getDefault().getImage(ImageIds.EDIT_VALUE),
+                                                                     Activator.getDefault().getImage(ImageIds.REMOVE_VALUE),
+                                                                     Activator.getDefault().getImage(ImageIds.TOGGLE_DEFAULT_VALUE) });
+
+            // configure add allowed value button
+            buttons[0].addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleAddAllowedValue();
+                }
+            });
+            buttons[0].setToolTipText(Messages.editPropertyDialogAddAllowedValueButtonToolTip);
+
+            // configure edit allowed value button
+            buttons[1].setEnabled(false);
+            buttons[1].addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleEditAllowedValue();
+                }
+            });
+            buttons[1].setToolTipText(Messages.editPropertyDialogEditAllowedValueButtonToolTip);
+            this.btnEditValue = buttons[1];
+
+            // configure remove allowed value button
+            buttons[2].setEnabled(false);
+            buttons[2].addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleRemoveAllowedValue();
+                }
+            });
+            buttons[2].setToolTipText(Messages.editPropertyDialogRemoveAllowedValueButtonToolTip);
+            this.btnRemoveValue = buttons[2];
+
+            // configure remove allowed value button
+            buttons[3].setEnabled(false);
+            buttons[3].addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleToggleDefaultValue();
+                }
+            });
+            buttons[3].setToolTipText(Messages.editPropertyDialogToggleDefaultValueButtonToolTip);
+            this.btnToggleDefaultValue = buttons[3];
+
+            final Composite bottom = toolkit.createComposite(valuesSection, SWT.NONE);
+            bottom.setLayout(new GridLayout());
+            bottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            valuesSection.setClient(bottom);
+
+            VIEWER: {
+                Table table = toolkit.createTable(bottom, VIEWER_STYLE);
+                this.valuesError.widget = table;
+                table.setHeaderVisible(true);
+                table.setLinesVisible(true);
+                table.setLayout(new GridLayout());
+                table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+                ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
+
+                this.valuesViewer = new TableViewer(table);
+                this.valuesViewer.setContentProvider(new IStructuredContentProvider() {
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+                     */
+                    @Override
+                    public void dispose() {
+                        // nothing to do
+                    }
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+                     */
+                    @Override
+                    public Object[] getElements( Object inputElement ) {
+                        return new Object[0]; // TODO implement
+                    }
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+                     *      java.lang.Object, java.lang.Object)
+                     */
+                    @Override
+                    public void inputChanged( Viewer viewer,
+                                              Object oldInput,
+                                              Object newInput ) {
+                        // nothing to do
+                    }
+                });
+                this.valuesViewer.setLabelProvider(new LabelProvider());
+                this.valuesViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
+                     */
+                    @Override
+                    public void doubleClick( DoubleClickEvent event ) {
+                        handleEditAllowedValue();
+                    }
+                });
+                this.valuesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+                     */
+                    @Override
+                    public void selectionChanged( SelectionChangedEvent event ) {
+                        handleAllowedValueSelected();
+                    }
+                });
+
+                COLUMNS: {
+                    final TableViewerColumn firstColumn = new TableViewerColumn(this.valuesViewer, SWT.LEFT);
+                    firstColumn.setLabelProvider(new AllowedValueLabelProvider(ColumnIndexes.DEFAULT_VALUE));
+                    configureColumn(firstColumn, ColumnHeaders.DEFAULT_VALUE, ColumnToolTips.DEFAULT_VALUE, true);
+
+                    final TableViewerColumn lastColumn = new TableViewerColumn(this.valuesViewer, SWT.LEFT);
+                    lastColumn.setLabelProvider(new AllowedValueLabelProvider(ColumnIndexes.VALUE));
+                    configureColumn(lastColumn, ColumnHeaders.VALUE, ColumnToolTips.VALUE, true);
+
+                    // size last column to extend to width of table
+                    bottom.addControlListener(new ControlAdapter() {
+
+                        /**
+                         * {@inheritDoc}
+                         * 
+                         * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+                         */
+                        @Override
+                        public void controlResized( ControlEvent e ) {
+                            lastColumn.getColumn().setWidth(bottom.getClientArea().width - firstColumn.getColumn().getWidth());
+                        }
+                    });
+                }
+
+                // populate table
+                this.valuesViewer.setInput(this);
+                WidgetUtil.pack(this.valuesViewer);
+            }
+        }
+
+        return section;
     }
 
     Translation getSelectedDescription() {
@@ -887,6 +1120,10 @@ final class EditPropertyDialog extends FormDialog {
     Translation getSelectedDisplayName() {
         IStructuredSelection selection = (IStructuredSelection)this.displayNameViewer.getSelection();
         return (selection.isEmpty() ? null : (Translation)selection.getFirstElement());
+    }
+
+    void handleAddAllowedValue() {
+        // TODO implement handleAddAllowedValue
     }
 
     void handleAddDescription() {
@@ -919,6 +1156,24 @@ final class EditPropertyDialog extends FormDialog {
         this.propDefn.setAdvanced(newValue);
     }
 
+    void handleAllowedValueSelected() {
+        IStructuredSelection selection = (IStructuredSelection)this.valuesViewer.getSelection();
+        boolean enable = !selection.isEmpty();
+
+        if (this.btnEditValue.getEnabled() != enable) {
+            this.btnEditValue.setEnabled(enable);
+        }
+
+        if (this.btnRemoveValue.getEnabled() != enable) {
+            this.btnRemoveValue.setEnabled(enable);
+        }
+
+        if (this.btnToggleDefaultValue.getEnabled() != enable) {
+            this.btnToggleDefaultValue.setEnabled(enable);
+        }
+
+    }
+
     void handleDescriptionSelected() {
         IStructuredSelection selection = (IStructuredSelection)this.descriptionViewer.getSelection();
         boolean enable = !selection.isEmpty();
@@ -943,6 +1198,10 @@ final class EditPropertyDialog extends FormDialog {
         if (this.btnRemoveDisplayName.getEnabled() != enable) {
             this.btnRemoveDisplayName.setEnabled(enable);
         }
+    }
+
+    void handleEditAllowedValue() {
+        // TODO implement handleEditAllowedValue
     }
 
     void handleEditDescription() {
@@ -975,16 +1234,24 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
+    void handleFixedValueChanged() {
+        // TODO implement handleFixedValueChanged
+    }
+
+    void handleFixedValueSelected() {
+        boolean enable = this.btnFixedValue.getSelection();
+
+        if (this.txtFixedValue.getEnabled() != enable) {
+            this.txtFixedValue.setEnabled(enable);
+        }
+    }
+
     void handleIndexedChanged( boolean newValue ) {
         this.propDefn.setIndex(newValue);
     }
 
     void handleMaskedChanged( boolean newValue ) {
         this.propDefn.setMasked(newValue);
-    }
-
-    void handleModifiableChanged( boolean newValue ) {
-        // TODO implement handleModifiableChanged
     }
 
     void handlePropertyChanged( PropertyChangeEvent e ) {
@@ -1047,6 +1314,10 @@ final class EditPropertyDialog extends FormDialog {
         updateState();
     }
 
+    void handleRemoveAllowedValue() {
+        // TODO implement handleRemoveAllowedValue
+    }
+
     void handleRemoveDescription() {
         assert (getSelectedDescription() != null) : "Remove description button is enabled and shouldn't be"; //$NON-NLS-1$
 
@@ -1085,6 +1356,14 @@ final class EditPropertyDialog extends FormDialog {
         this.propDefn.setSimpleId(newValue);
     }
 
+    void handleToggleDefaultValue() {
+        // TODO implement handleToggleDefaultValue
+    }
+
+    void handleVariableValueSelected() {
+        // TODO implement handleVariableValueSelected
+    }
+
     private boolean isEditMode() {
         return (this.propDefnBeingEdited != null);
     }
@@ -1113,16 +1392,28 @@ final class EditPropertyDialog extends FormDialog {
     interface ColumnHeaders {
         String LOCALE = Messages.localeColumnText;
         String TRANSLATION = Messages.translationColumnText;
+
+        // allowed value tablew
+        String VALUE = Messages.allowedValueColumnText;
+        String DEFAULT_VALUE = Messages.defaultValueColumnText;
     }
 
     interface ColumnIndexes {
         int LOCALE = 0;
         int TRANSLATION = 1;
+
+        // allowed value tablew
+        int VALUE = 0;
+        int DEFAULT_VALUE = 1;
     }
 
     interface ColumnToolTips {
         String LOCALE = Messages.localeColumnToolTip;
         String TRANSLATION = Messages.translationColumnToolTip;
+
+        // allowed value tablew
+        String VALUE = Messages.allowedValueColumnHeaderToolTip;
+        String DEFAULT_VALUE = Messages.defaultValueColumnHeaderToolTip;
     }
 
     class TranslationLabelProvider extends ColumnLabelProvider {
@@ -1163,6 +1454,51 @@ final class EditPropertyDialog extends FormDialog {
             return super.getText(element);
         }
 
+    }
+
+    class AllowedValueLabelProvider extends ColumnLabelProvider {
+
+        private final int columnIndex;
+
+        public AllowedValueLabelProvider( final int columnIndex ) {
+            this.columnIndex = columnIndex;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+         */
+        @Override
+        public Image getImage( Object element ) {
+            if (ColumnIndexes.DEFAULT_VALUE == this.columnIndex) {
+                if (((AllowedValue)element).makeDefault) {
+                    return Activator.getDefault().getImage(ImageIds.CHECK_MARK);
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+         */
+        @Override
+        public String getText( Object element ) {
+            if (ColumnIndexes.VALUE == this.columnIndex) {
+                return ((AllowedValue)element).value;
+            }
+
+            return null;
+        }
+
+    }
+
+    class AllowedValue {
+        String value;
+        boolean makeDefault;
     }
 
 }

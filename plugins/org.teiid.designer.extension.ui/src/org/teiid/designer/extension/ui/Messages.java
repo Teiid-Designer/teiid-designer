@@ -165,6 +165,11 @@ public class Messages extends NLS {
     public static String requiredPropertyAttributeColumnHeaderToolTip;
     public static String runtimeTypePropertyAttributeColumnHeaderToolTip;
     public static String simpleIdPropertyAttributeColumnHeaderToolTip;
+    
+    public static String allowedValueColumnText;
+    public static String allowedValueColumnHeaderToolTip;
+    public static String defaultValueColumnText;
+    public static String defaultValueColumnHeaderToolTip;
 
     public static String addMetaclassDialogTitle;
     public static String metaclassDialogMessage;
@@ -177,7 +182,12 @@ public class Messages extends NLS {
     public static String removePropertyDialogMsg;
     
     public static String addPropertyDialogTitle;
+    public static String editPropertyDialogAllowedValuesSectionTitle;
     public static String editPropertyDialogDescriptionSectionDescription;
+    public static String editPropertyDialogFixedValueButtonText;
+    public static String editPropertyDialogFixedValueButtonToolTip;
+    public static String editPropertyDialogVariableValueButtonText;
+    public static String editPropertyDialogVariableValueButtonToolTip;
     public static String editPropertyDialogDescriptionSectionTitle;
     public static String editPropertyDialogAddDescriptionButtonToolTip;
     public static String editPropertyDialogEditDescriptionButtonToolTip;
@@ -187,6 +197,10 @@ public class Messages extends NLS {
     public static String editPropertyDialogAddDisplayNameButtonToolTip;
     public static String editPropertyDialogEditDisplayNameButtonToolTip;
     public static String editPropertyDialogRemoveDisplayNameButtonToolTip;
+    public static String editPropertyDialogAddAllowedValueButtonToolTip;
+    public static String editPropertyDialogEditAllowedValueButtonToolTip;
+    public static String editPropertyDialogRemoveAllowedValueButtonToolTip;
+    public static String editPropertyDialogToggleDefaultValueButtonToolTip;
     public static String editPropertyDialogInfoSectionDescription;
     public static String editPropertyDialogInfoSectionTitle;
     public static String editPropertyDialogInvalidRuntimeTypeMsg;
