@@ -482,8 +482,9 @@ public class TeiidMetadataFileInfo implements UiConstants {
 				if( nextTok.startsWith("" + getQuote()) ) { //$NON-NLS-1$
 					nextTok = nextTok.substring(1, nextTok.length()-1);
 				}
-				
-				this.columnInfoList.add(new TeiidColumnInfo(nextTok));
+				if( nextTok != null && nextTok.length() > 0 ) {
+					this.columnInfoList.add(new TeiidColumnInfo(nextTok));
+				}
 			}
 		} else {
 			for( int i=0; i<this.numberOfFixedWidthColumns; i++ ) {
