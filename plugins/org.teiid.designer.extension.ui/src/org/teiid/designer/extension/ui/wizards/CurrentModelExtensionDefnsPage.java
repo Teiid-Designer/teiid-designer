@@ -132,7 +132,6 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             // Get the associated Headers
             for (String namespace : supportedNamespaces) {
                 ModelExtensionDefinitionHeader header = ModelExtensionUtils.getModelExtensionDefinitionHeader(modelResource,
-                                                                                                              true,
                                                                                                               namespace);
                 headers.add(header);
             }
@@ -763,9 +762,12 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
 
-        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+        File schemaFile = null;
         InputStream unregisteredMedStream = null;
+
         try {
+            schemaFile = ExtensionPlugin.getInstance().getMedSchema();
+            ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter(schemaFile);
             unregisteredMedStream = medWriter.write(unregisteredMed);
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());

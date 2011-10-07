@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -28,7 +27,6 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -82,6 +80,37 @@ public class ExtensionPlugin extends Plugin {
         }
 
         return false;
+    }
+
+    /**
+     * Get the ModelExtensionDefinition Schema File
+     * 
+     * @return the MED Schema file
+     * @throws Exception
+     */
+    public File getMedSchema() throws Exception {
+        File schemaFile = null;
+        try {
+            // Model Extension Schema
+            final String SCHEMA_FILE = ExtensionConstants.SCHEMA_FILENAME;
+            Bundle bundle = Platform.getBundle(PLUGIN_ID);
+            URL url = bundle.getEntry(SCHEMA_FILE);
+
+            if (url == null) {
+                Util.log(IStatus.ERROR, NLS.bind(Messages.definitionSchemaFileNotFoundInWorkspace, PLUGIN_ID));
+            }
+
+            schemaFile = new File(FileLocator.toFileURL(url).getFile());
+
+            if (!schemaFile.exists()) {
+                Util.log(IStatus.ERROR, NLS.bind(Messages.definitionSchemaFileNotFoundInFilesystem, PLUGIN_ID));
+                schemaFile = null;
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+        return schemaFile;
     }
 
     /**

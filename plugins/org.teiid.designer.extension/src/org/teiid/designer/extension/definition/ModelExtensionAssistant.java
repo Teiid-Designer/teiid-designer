@@ -53,6 +53,21 @@ public abstract class ModelExtensionAssistant {
     }
 
     /**
+     * Create a ModelExtensionDefinition using the header info
+     * 
+     * @param medHeader the ModelExtensionDefinitionHeader
+     * @return the new model extension definition (never <code>null</code>)
+     */
+    public ModelExtensionDefinition createModelExtensionDefinition( ModelExtensionDefinitionHeader medHeader ) {
+        CoreArgCheck.isNotNull(medHeader, "ModelExtensionDefinitionHeader is null"); //$NON-NLS-1$
+        this.definition = new ModelExtensionDefinition(this, medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(),
+                                                       medHeader.getMetamodelUri());
+        this.definition.setDescription(medHeader.getDescription());
+        this.definition.setVersion(medHeader.getVersion());
+        return this.definition;
+    }
+
+    /**
      * This method should only be called by the {@link ModelExtensionDefinitionParser}.
      * 
      * @param simpleId the property identifier without the namespace prefix (cannot be <code>null</code> or empty)
@@ -60,13 +75,13 @@ public abstract class ModelExtensionAssistant {
      * @param runtimeType the Teiid runtime type (cannot be <code>null</code> or empty)
      * @param required <code>true</code> string if this property must have a value (cannot be <code>null</code> or empty)
      * @param defaultValue a default value (can be <code>null</code> or empty)
-     * @param fixedValue a constant value, when non-<code>null</code> and non-empty, indicates the property value cannot be changed
-     *            (can be <code>null</code> or empty)
-     * @param advanced <code>true</code> string if this property should only be shown to advances users (cannot be <code>null</code>
-     *            or empty)
+     * @param fixedValue a constant value, when non-<code>null</code> and non-empty, indicates the property value cannot be
+     *        changed (can be <code>null</code> or empty)
+     * @param advanced <code>true</code> string if this property should only be shown to advances users (cannot be
+     *        <code>null</code> or empty)
      * @param masked <code>true</code> string if this property value must be masked (cannot be <code>null</code> or empty)
      * @param index <code>true</code> string if this property value must be indexed for use by the Teiid server (cannot be
-     *            <code>null</code> or empty)
+     *        <code>null</code> or empty)
      * @return the new extension property definition (never <code>null</code>)
      */
     public ModelExtensionPropertyDefinition createPropertyDefinition( String simpleId,

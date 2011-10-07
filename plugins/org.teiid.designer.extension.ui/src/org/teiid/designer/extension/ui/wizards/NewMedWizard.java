@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.extension.ui.wizards;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IContainer;
@@ -38,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -107,7 +109,8 @@ public final class NewMedWizard extends AbstractWizard
 
                     // if medInputStream is null, Create a default Med
                     if (medInputStream == null) {
-                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+                        File schemaFile = ExtensionPlugin.getInstance().getMedSchema();
+                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter(schemaFile);
                         medInputStream = medWriter.write(createDefaultMed());
                     }
 

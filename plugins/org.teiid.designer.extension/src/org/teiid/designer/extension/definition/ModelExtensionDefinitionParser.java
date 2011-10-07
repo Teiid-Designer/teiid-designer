@@ -7,10 +7,8 @@
  */
 package org.teiid.designer.extension.definition;
 
-import static org.teiid.designer.extension.ExtensionPlugin.PLUGIN_ID;
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,10 +17,8 @@ import java.util.Map;
 import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.osgi.util.NLS;
-import org.osgi.framework.Bundle;
+import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.xml.sax.Attributes;
@@ -68,19 +64,10 @@ public class ModelExtensionDefinitionParser {
             this.parser = factory.newSAXParser();
             this.parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            // set schema on parser
-            final String SCHEMA_FILE = "modelExtension.xsd"; //$NON-NLS-1$
-            Bundle bundle = Platform.getBundle(PLUGIN_ID);
-            URL url = bundle.getEntry(SCHEMA_FILE);
+            File definitionSchemaFile = ExtensionPlugin.getInstance().getMedSchema();
 
-            if (url == null) {
-                throw new IllegalStateException(NLS.bind(Messages.definitionSchemaFileNotFoundInWorkspace, SCHEMA_FILE));
-            }
-
-            File definitionSchemaFile = new File(FileLocator.toFileURL(url).getFile());
-
-            if (!definitionSchemaFile.exists()) {
-                throw new IllegalStateException(NLS.bind(Messages.definitionSchemaFileNotFoundInFilesystem, SCHEMA_FILE));
+            if (definitionSchemaFile == null || !definitionSchemaFile.exists()) {
+                throw new IllegalStateException(Messages.definitionSchemaFileNotFoundInFilesystem);
             }
 
             this.parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaSource", definitionSchemaFile); //$NON-NLS-1$
@@ -173,11 +160,11 @@ public class ModelExtensionDefinitionParser {
                                 int length ) throws SAXException {
             String value = new String(ch, start, length);
 
-            if (Tags.Elements.DESCRIPTION.equals(getCurrentElement())) {
-                if (Tags.Elements.MODEL_EXTENSION.equals(getPreviousElement())) {
+            if (ExtensionConstants.Elements.DESCRIPTION.equals(getCurrentElement())) {
+                if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(getPreviousElement())) {
                     // model extension definition is not localized
                     this.description = value;
-                } else if (Tags.Elements.PROPERTY.equals(getPreviousElement())) {
+                } else if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
                     if (this.updateDescription) {
                         this.displayDescription = value;
                     } else {
@@ -188,10 +175,10 @@ public class ModelExtensionDefinitionParser {
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
-                            + Tags.Elements.DESCRIPTION + " tag"; //$NON-NLS-1$
+                                   + ExtensionConstants.Elements.DESCRIPTION + " tag"; //$NON-NLS-1$
                 }
-            } else if (Tags.Elements.DISPLAY.equals(getCurrentElement())) {
-                if (Tags.Elements.PROPERTY.equals(getPreviousElement())) {
+            } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
+                if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
                     if (this.updateName) {
                         this.displayName = value;
                     } else {
@@ -202,9 +189,9 @@ public class ModelExtensionDefinitionParser {
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
-                            + Tags.Elements.DISPLAY + " tag"; //$NON-NLS-1$
+                                   + ExtensionConstants.Elements.DISPLAY + " tag"; //$NON-NLS-1$
                 }
-            } else if (Tags.Elements.ALLOWED_VALUE.equals(getCurrentElement())) {
+            } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(getCurrentElement())) {
                 this.allowedValues.add(value);
             } else {
                 if (DEBUG_MODE) {
@@ -228,18 +215,18 @@ public class ModelExtensionDefinitionParser {
                 System.err.println("endElement: localName=" + localName + ", qName=" + qName); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
-            if (Tags.Elements.DISPLAY.equals(localName)) {
+            if (ExtensionConstants.Elements.DISPLAY.equals(localName)) {
                 if (DEBUG_MODE) {
                     System.err.println("reset: nameLocaleMatch=" + this.nameLocaleMatch + ", nameLanguageCountryMatch=" //$NON-NLS-1$ //$NON-NLS-2$
                             + this.nameLanguageCountryMatch + ", nameLanguageMatch=" + this.nameLanguageMatch); //$NON-NLS-1$
                 }
-            } else if (Tags.Elements.DESCRIPTION.equals(localName)) {
+            } else if (ExtensionConstants.Elements.DESCRIPTION.equals(localName)) {
                 if (DEBUG_MODE) {
                     System.err.println("reset: descriptionLocaleMatch=" + this.descriptionLocaleMatch //$NON-NLS-1$
                             + ", descriptionLanguageCountryMatch=" + this.descriptionLanguageCountryMatch //$NON-NLS-1$
                             + ", descriptionLanguageMatch=" + this.descriptionLanguageMatch); //$NON-NLS-1$
                 }
-            } else if (Tags.Elements.PROPERTY.equals(localName)) {
+            } else if (ExtensionConstants.Elements.PROPERTY.equals(localName)) {
                 savePropertyDefinition();
 
                 if (DEBUG_MODE) {
@@ -272,13 +259,13 @@ public class ModelExtensionDefinitionParser {
                 this.nameLocaleMatch = false;
                 this.nameLanguageCountryMatch = false;
                 this.nameLanguageMatch = false;
-            } else if (Tags.Elements.EXTENDED_METACLASS.equals(localName)) {
+            } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(localName)) {
                 if (DEBUG_MODE) {
                     System.err.println("reset: metaclassName=" + this.metaclassName); //$NON-NLS-1$
                 }
 
                 this.metaclassName = null;
-            } else if (Tags.Elements.ALLOWED_VALUE.equals(localName) && !this.allowedValues.isEmpty()) {
+            } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(localName) && !this.allowedValues.isEmpty()) {
                 if (DEBUG_MODE) {
                     String DELIM = ", "; //$NON-NLS-1$
                     StringBuilder valuesString = new StringBuilder();
@@ -289,7 +276,7 @@ public class ModelExtensionDefinitionParser {
 
                     System.err.println("allowedValues=" + valuesString.subSequence(0, valuesString.length() - DELIM.length())); //$NON-NLS-1$
                 }
-            } else if (Tags.Elements.MODEL_EXTENSION.equals(localName)) {
+            } else if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(localName)) {
                 saveModelExtensionDefinitionProperties();
 
                 if (DEBUG_MODE) {
@@ -461,50 +448,51 @@ public class ModelExtensionDefinitionParser {
 
             this.elements.push(localName);
 
-            if (Tags.Elements.MODEL_EXTENSION.equals(getCurrentElement())) {
-                this.namespacePrefix = attributes.getValue(Tags.Attributes.NAMESPACE_PREFIX);
+            if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(getCurrentElement())) {
+                this.namespacePrefix = attributes.getValue(ExtensionConstants.Attributes.NAMESPACE_PREFIX);
                 assert !CoreStringUtil.isEmpty(this.namespacePrefix) : "namespacePrefix is empty"; //$NON-NLS-1$
 
-                this.namespaceUri = attributes.getValue(Tags.Attributes.NAMESPACE_URI);
+                this.namespaceUri = attributes.getValue(ExtensionConstants.Attributes.NAMESPACE_URI);
                 assert !CoreStringUtil.isEmpty(this.namespaceUri) : "namespaceUri is empty"; //$NON-NLS-1$
 
-                this.metamodelUri = attributes.getValue(Tags.Attributes.METAMODEL_URI);
+                this.metamodelUri = attributes.getValue(ExtensionConstants.Attributes.METAMODEL_URI);
                 assert !CoreStringUtil.isEmpty(this.metamodelUri) : "metamodelUri is empty"; //$NON-NLS-1$
 
-                this.version = attributes.getValue(Tags.Attributes.VERSION);
+                this.version = attributes.getValue(ExtensionConstants.Attributes.VERSION);
                 assert !CoreStringUtil.isEmpty(this.version) : "version is empty"; //$NON-NLS-1$
 
                 this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
                                                                                 this.metamodelUri);
-            } else if (Tags.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
-                this.metaclassName = attributes.getValue(Tags.Attributes.NAME);
+            } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
+                this.metaclassName = attributes.getValue(ExtensionConstants.Attributes.NAME);
                 assert !CoreStringUtil.isEmpty(this.metaclassName) : "metaclassName is empty"; //$NON-NLS-1$
-            } else if (Tags.Elements.PROPERTY.equals(getCurrentElement())) {
-                this.id = attributes.getValue(Tags.Attributes.NAME);
+            } else if (ExtensionConstants.Elements.PROPERTY.equals(getCurrentElement())) {
+                this.id = attributes.getValue(ExtensionConstants.Attributes.NAME);
                 assert !CoreStringUtil.isEmpty(this.id) : "id is empty"; //$NON-NLS-1$
 
-                this.type = attributes.getValue(Tags.Attributes.TYPE);
+                this.type = attributes.getValue(ExtensionConstants.Attributes.TYPE);
                 assert !CoreStringUtil.isEmpty(this.type) : "type is empty"; //$NON-NLS-1$
 
-                this.required = attributes.getValue(Tags.Attributes.REQUIRED);
+                this.required = attributes.getValue(ExtensionConstants.Attributes.REQUIRED);
                 assert !CoreStringUtil.isEmpty(this.required) : "required is empty"; //$NON-NLS-1$
 
                 // optional attributes
-                this.defaultValue = attributes.getValue(Tags.Attributes.DEFAULT_VALUE);
-                this.fixedValue = attributes.getValue(Tags.Attributes.FIXED_VALUE);
+                this.defaultValue = attributes.getValue(ExtensionConstants.Attributes.DEFAULT_VALUE);
+                this.fixedValue = attributes.getValue(ExtensionConstants.Attributes.FIXED_VALUE);
 
-                this.advanced = attributes.getValue(Tags.Attributes.ADVANCED);
+                this.advanced = attributes.getValue(ExtensionConstants.Attributes.ADVANCED);
                 assert !CoreStringUtil.isEmpty(this.advanced) : "advanced is empty"; //$NON-NLS-1$
 
-                this.masked = attributes.getValue(Tags.Attributes.MASKED);
+                this.masked = attributes.getValue(ExtensionConstants.Attributes.MASKED);
                 assert !CoreStringUtil.isEmpty(this.masked) : "masked is empty"; //$NON-NLS-1$
 
-                this.index = attributes.getValue(Tags.Attributes.INDEX);
+                this.index = attributes.getValue(ExtensionConstants.Attributes.INDEX);
                 assert !CoreStringUtil.isEmpty(this.index) : "index is empty"; //$NON-NLS-1$
-            } else if (Tags.Elements.DISPLAY.equals(getCurrentElement())) {
-                processLocaleString(attributes.getValue(Tags.Attributes.LOCALE), true);
-            } else if (Tags.Elements.DESCRIPTION.equals(getCurrentElement()) && Tags.Elements.PROPERTY.equals(getPreviousElement())) {
-                processLocaleString(attributes.getValue(Tags.Attributes.LOCALE), false);
+            } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
+                processLocaleString(attributes.getValue(ExtensionConstants.Attributes.LOCALE), true);
+            } else if (ExtensionConstants.Elements.DESCRIPTION.equals(getCurrentElement())
+                       && ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
+                processLocaleString(attributes.getValue(ExtensionConstants.Attributes.LOCALE), false);
             } else {
                 if (DEBUG_MODE) {
                     System.err.println("\n\nstartElement not being process: currentElement=" + getCurrentElement() //$NON-NLS-1$
@@ -516,40 +504,4 @@ public class ModelExtensionDefinitionParser {
         }
     }
 
-    /**
-     * The model extension definition schema tags.
-     */
-    private interface Tags {
-
-        /**
-         * The model extension definition schema attribute names.
-         */
-        interface Attributes {
-            String ADVANCED = "advanced"; //$NON-NLS-1$
-            String DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
-            String FIXED_VALUE = "fixedValue"; //$NON-NLS-1$
-            String INDEX = "index"; //$NON-NLS-1$
-            String LOCALE = "locale"; //$NON-NLS-1$
-            String MASKED = "masked"; //$NON-NLS-1$
-            String METAMODEL_URI = "metamodelUri"; //$NON-NLS-1$
-            String NAME = "name"; //$NON-NLS-1$
-            String NAMESPACE_PREFIX = "namespacePrefix"; //$NON-NLS-1$
-            String NAMESPACE_URI = "namespaceUri"; //$NON-NLS-1$
-            String REQUIRED = "required"; //$NON-NLS-1$
-            String TYPE = "type"; //$NON-NLS-1$
-            String VERSION = "version"; //$NON-NLS-1$
-        }
-
-        /**
-         * The model extension definition schema element names.
-         */
-        interface Elements {
-            String ALLOWED_VALUE = "allowedValue"; //$NON-NLS-1$
-            String DESCRIPTION = "description"; //$NON-NLS-1$
-            String DISPLAY = "display"; //$NON-NLS-1$
-            String EXTENDED_METACLASS = "extendedMetaclass"; //$NON-NLS-1$
-            String MODEL_EXTENSION = "modelExtension"; //$NON-NLS-1$
-            String PROPERTY = "property"; //$NON-NLS-1$
-        }
-    }
 }

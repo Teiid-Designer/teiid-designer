@@ -16,8 +16,6 @@ public class Messages extends NLS {
     public static String definitionFileNotFoundInWorkspace;
     public static String definitionSchemaFileNotFoundInFilesystem;
     public static String definitionSchemaFileNotFoundInWorkspace;
-    public static String medTemplateFileNotFoundInFilesystem;
-    public static String medTemplateFileNotFoundInWorkspace;
     public static String descriptorToolTip;
     public static String emptyPropertyValue;
     public static String errorProcessingDefinitionFile;

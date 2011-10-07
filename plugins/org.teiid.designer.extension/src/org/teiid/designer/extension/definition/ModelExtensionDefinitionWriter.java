@@ -7,12 +7,10 @@
  */
 package org.teiid.designer.extension.definition;
 
-import static org.teiid.designer.extension.ExtensionPlugin.PLUGIN_ID;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,11 +19,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.osgi.util.NLS;
-import org.osgi.framework.Bundle;
-import org.teiid.designer.extension.Messages;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMImplementation;
@@ -41,50 +35,9 @@ public class ModelExtensionDefinitionWriter {
 
     private File definitionSchemaFile;
 
-    public ModelExtensionDefinitionWriter() throws IllegalStateException {
-        try {
-            // Model Extension Schema
-            final String SCHEMA_FILE = "modelExtension.xsd"; //$NON-NLS-1$
-            Bundle bundle = Platform.getBundle(PLUGIN_ID);
-            URL url = bundle.getEntry(SCHEMA_FILE);
-
-            if (url == null) {
-                throw new IllegalStateException(NLS.bind(Messages.definitionSchemaFileNotFoundInWorkspace, SCHEMA_FILE));
-            }
-
-            this.definitionSchemaFile = new File(FileLocator.toFileURL(url).getFile());
-
-            if (!this.definitionSchemaFile.exists()) {
-                throw new IllegalStateException(NLS.bind(Messages.definitionSchemaFileNotFoundInFilesystem, SCHEMA_FILE));
-            }
-
-        } catch (Exception e) {
-            IllegalStateException error = null;
-
-            if (e instanceof IllegalStateException) {
-                error = (IllegalStateException)e;
-            } else {
-                error = new IllegalStateException(e);
-            }
-
-            throw error;
-        }
+    public ModelExtensionDefinitionWriter( File schemaFile ) {
+        this.definitionSchemaFile = schemaFile;
     }
-
-    // public InputStream write( ModelExtensionDefinition med ) throws IOException {
-    //        //CoreArgCheck.isNotNull(med, "ModelExtensionDefinition is null"); //$NON-NLS-1$
-    //
-    // // Write Med Data out
-    // ByteArrayOutputStream bout = new ByteArrayOutputStream(4096);
-    //
-    //        bout.write("dataOutput".getBytes()); //$NON-NLS-1$
-    //
-    // bout.close();
-    //
-    // ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-    //
-    // return bin;
-    // }
 
     /**
      * Create a Model Extension Definition template, based on the modelExtension.xsd
@@ -117,36 +70,42 @@ public class ModelExtensionDefinitionWriter {
 
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             DOMImplementation domImpl = documentBuilder.getDOMImplementation();
-            Document document = domImpl.createDocument("http://org.teiid.modelExtension/2011", "modelExtension", null); //$NON-NLS-1$ //$NON-NLS-2$
+            Document document = domImpl.createDocument(ExtensionConstants.Namespaces.NS_MED_VALUE,
+                                                       ExtensionConstants.Elements.MODEL_EXTENSION,
+                                                       null);
 
             Element modelExtensionElem = document.getDocumentElement();
-            modelExtensionElem.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            modelExtensionElem.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:p", "http://org.teiid.modelExtension/2011"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            modelExtensionElem.setAttributeNS(ExtensionConstants.Namespaces.NS_KEY,
+                                              "xmlns:" + ExtensionConstants.Namespaces.NS_XSI, ExtensionConstants.Namespaces.NS_XSI_VALUE); //$NON-NLS-1$  
+            modelExtensionElem.setAttributeNS(ExtensionConstants.Namespaces.NS_KEY,
+                                              "xmlns:" + ExtensionConstants.Namespaces.NS_MED, ExtensionConstants.Namespaces.NS_MED_VALUE); //$NON-NLS-1$ 
+
+            String NS_MED_COLON = ExtensionConstants.Namespaces.NS_MED + ":"; //$NON-NLS-1$
 
             // -----------------------------------------
             // modelExtension element
             // -----------------------------------------
             // Set the modelExtension element attributes
-            Attr attr = document.createAttribute("xsi:schemaLocation"); //$NON-NLS-1$
-            attr.setValue("http://org.teiid.modelExtension/2011 modelExtension.xsd "); //$NON-NLS-1$
+            Attr attr = document.createAttribute(ExtensionConstants.Namespaces.NS_SCHEMALOC);
+            attr.setValue(ExtensionConstants.Namespaces.NS_MED_VALUE + " " + ExtensionConstants.SCHEMA_FILENAME); //$NON-NLS-1$
             modelExtensionElem.setAttributeNode(attr);
-            attr = document.createAttribute("metamodelUri"); //$NON-NLS-1$
+            attr = document.createAttribute(ExtensionConstants.Attributes.METAMODEL_URI);
             attr.setValue(med.getMetamodelUri());
             modelExtensionElem.setAttributeNode(attr);
-            attr = document.createAttribute("namespaceUri"); //$NON-NLS-1$
+            attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_URI);
             attr.setValue(med.getNamespaceUri());
             modelExtensionElem.setAttributeNode(attr);
-            attr = document.createAttribute("namespacePrefix"); //$NON-NLS-1$
+            attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_PREFIX);
             attr.setValue(med.getNamespacePrefix());
             modelExtensionElem.setAttributeNode(attr);
-            attr = document.createAttribute("version"); //$NON-NLS-1$
+            attr = document.createAttribute(ExtensionConstants.Attributes.VERSION);
             attr.setValue(String.valueOf(med.getVersion()));
             modelExtensionElem.setAttributeNode(attr);
 
             // -----------------------------------------
             // Child - description element
             // -----------------------------------------
-            Element descriptionElem = document.createElement("p:description"); //$NON-NLS-1$
+            Element descriptionElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DESCRIPTION);
 
             Text descriptionText = document.createTextNode(med.getDescription());
             descriptionElem.appendChild(descriptionText);
@@ -159,24 +118,25 @@ public class ModelExtensionDefinitionWriter {
             for (int i = 0; i < extendedMetaclasses.length; i++) {
                 String extendedMetaclassName = extendedMetaclasses[i];
                 // Extended Metaclass Element
-                Element extendedMetaclassElem = document.createElement("p:extendedMetaclass"); //$NON-NLS-1$
-                attr = document.createAttribute("name"); //$NON-NLS-1$
+                Element extendedMetaclassElem = document.createElement(NS_MED_COLON
+                                                                       + ExtensionConstants.Elements.EXTENDED_METACLASS);
+                attr = document.createAttribute(ExtensionConstants.Attributes.NAME);
                 attr.setValue(extendedMetaclassName);
                 extendedMetaclassElem.setAttributeNode(attr);
                 modelExtensionElem.appendChild(extendedMetaclassElem);
                 Collection<ModelExtensionPropertyDefinition> properties = med.getPropertyDefinitions(extendedMetaclassName);
                 for (ModelExtensionPropertyDefinition propDefn : properties) {
-                    Element propertyElem = document.createElement("p:property"); //$NON-NLS-1$
+                    Element propertyElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.PROPERTY);
                     extendedMetaclassElem.appendChild(propertyElem);
 
                     // Attributes
                     String simpleId = propDefn.getSimpleId();
                     String type = propDefn.getRuntimeType();
 
-                    attr = document.createAttribute("name"); //$NON-NLS-1$
+                    attr = document.createAttribute(ExtensionConstants.Attributes.NAME);
                     attr.setValue(simpleId);
                     propertyElem.setAttributeNode(attr);
-                    attr = document.createAttribute("type"); //$NON-NLS-1$
+                    attr = document.createAttribute(ExtensionConstants.Attributes.TYPE);
                     attr.setValue(type);
                     propertyElem.setAttributeNode(attr);
 
@@ -184,13 +144,13 @@ public class ModelExtensionDefinitionWriter {
                     String displayName = propDefn.getDisplayName();
                     String descrip = propDefn.getDescription();
 
-                    Element descrElement = document.createElement("p:description"); //$NON-NLS-1$
+                    Element descrElement = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DESCRIPTION);
                     if (descrip != null) {
                         Text descripText = document.createTextNode(descrip);
                         descrElement.appendChild(descripText);
                         propertyElem.appendChild(descrElement);
                     }
-                    Element displayElement = document.createElement("p:display"); //$NON-NLS-1$
+                    Element displayElement = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DISPLAY);
                     if (displayName != null) {
                         Text displayText = document.createTextNode(displayName);
                         displayElement.appendChild(displayText);
