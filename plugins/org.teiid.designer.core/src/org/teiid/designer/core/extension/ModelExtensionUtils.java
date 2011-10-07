@@ -82,14 +82,13 @@ public class ModelExtensionUtils {
      * @throws Exception if there is a problem accessing the model resource
      */
     public static ModelExtensionDefinitionHeader getModelExtensionDefinitionHeader( ModelResource modelResource,
-                                                                                    boolean forceCreate,
                                                                                     String namespacePrefix ) throws Exception {
         // transaction logic not needed as this is a readonly operation
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
 
         ModelExtensionDefinitionHeader header = null;
-        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, forceCreate, namespacePrefix);
+        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
         if (defnAnnotation != null) {
             EMap<String, String> definitionTags = defnAnnotation.getTags();
             String metamodelUri = definitionTags.get(DefinitionTagKeys.METAMODEL);
@@ -106,150 +105,139 @@ public class ModelExtensionUtils {
     /**
      * @param assistant the ModelExtensionAssistant
      * @param modelResource the model resource (cannot be <code>null</code>)
-     * @param forceCreate whether to create the definition annotation if it does not exist
      * @return the ModelExtensionDefinition
      * @throws Exception if there is a problem accessing the model resource
      */
     public static ModelExtensionDefinition getModelExtensionDefinition( ModelExtensionAssistant assistant,
-                                                                        ModelResource modelResource,
-                                                                        boolean forceCreate ) throws Exception {
+                                                                        ModelResource modelResource ) throws Exception {
         // transaction logic not needed as this is a readonly operation
         CoreArgCheck.isNotNull(assistant, "assistant is null"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(modelResource, "modelResource is null"); //$NON-NLS-1$
 
         ModelExtensionDefinition med = null;
         String namespacePrefix = assistant.getNamespacePrefix();
-        Annotation defnAnnotation = getDefinitionAnnotation(modelResource, forceCreate, namespacePrefix);
-        if (defnAnnotation != null) {
-            EMap<String, String> definitionTags = defnAnnotation.getTags();
-            String metamodelUri = definitionTags.get(DefinitionTagKeys.METAMODEL);
-            String namespacePrfx = definitionTags.get(DefinitionTagKeys.NAMESPACE_PREFIX);
-            String namespaceUri = definitionTags.get(DefinitionTagKeys.NAMESPACE_URI);
-            String description = definitionTags.get(DefinitionTagKeys.DESCRIPTION);
-            String versionStr = definitionTags.get(DefinitionTagKeys.VERSION);
-            int version = Integer.parseInt(versionStr);
-
-            // Create the Med, set header properties
-            med = assistant.createModelExtensionDefinition(namespacePrfx, namespaceUri, metamodelUri);
-            med.setDescription(description);
-            med.setVersion(version);
-
-            // Get the extended metaclasses and set
-            for (Object object : definitionTags.entrySet()) {
-                if (!(object instanceof EStringToStringMapEntryImpl)) {
-                    throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
-                                                       object.getClass()));
-                }
-
-                EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
-
-                // Get the Annotation for each extended metaclass
-                if (entry.getKey().startsWith(EXTENDED_METACLASS_PREFIX)) {
-                    Annotation metaclassAnnotation = getModelObjectAnnotation(entry, false);
-
-                    if (metaclassAnnotation == null) {
-                        throw new Exception(Util.getString(I18N_PREFIX + "metaclassAnnotationNotFound", entry.getKey())); //$NON-NLS-1$
+        ModelExtensionDefinitionHeader medHeader = getModelExtensionDefinitionHeader(modelResource, namespacePrefix);
+        if (medHeader != null) {
+            med = assistant.createModelExtensionDefinition(medHeader);
+            Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
+            if (defnAnnotation != null) {
+                EMap<String, String> definitionTags = defnAnnotation.getTags();
+                // Get the extended metaclasses and set
+                for (Object object : definitionTags.entrySet()) {
+                    if (!(object instanceof EStringToStringMapEntryImpl)) {
+                        throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
+                                                           object.getClass()));
                     }
 
-                    String metaclassName = getKeyId(EXTENDED_METACLASS_PREFIX, entry.getKey());
+                    EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
 
-                    // For this metaclass annotation, get the associated Property Definitions
-                    EMap<String, String> metaclassTags = metaclassAnnotation.getTags();
-                    for (Object metaclassTagObj : metaclassTags.entrySet()) {
-                        if (!(metaclassTagObj instanceof EStringToStringMapEntryImpl)) {
-                            throw new Exception(
-                                                Util.getString(I18N_PREFIX + "metaclassEntryUnexpectedClass", metaclassTagObj.getClass())); //$NON-NLS-1$
+                    // Get the Annotation for each extended metaclass
+                    if (entry.getKey().startsWith(EXTENDED_METACLASS_PREFIX)) {
+                        Annotation metaclassAnnotation = getModelObjectAnnotation(entry, false);
+
+                        if (metaclassAnnotation == null) {
+                            throw new Exception(Util.getString(I18N_PREFIX + "metaclassAnnotationNotFound", entry.getKey())); //$NON-NLS-1$
                         }
 
-                        if (((EStringToStringMapEntryImpl)metaclassTagObj).getKey().startsWith(PROP_DEFN_PREFIX)) {
-                            Annotation propertyDefinitionAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)metaclassTagObj,
-                                                                                               false);
+                        String metaclassName = getKeyId(EXTENDED_METACLASS_PREFIX, entry.getKey());
 
-                            if (propertyDefinitionAnnotation == null) {
+                        // For this metaclass annotation, get the associated Property Definitions
+                        EMap<String, String> metaclassTags = metaclassAnnotation.getTags();
+                        for (Object metaclassTagObj : metaclassTags.entrySet()) {
+                            if (!(metaclassTagObj instanceof EStringToStringMapEntryImpl)) {
                                 throw new Exception(
-                                                    Util.getString(I18N_PREFIX + "propertyDefinitionAnnotationNotFound", ((EStringToStringMapEntryImpl)metaclassTagObj).getKey())); //$NON-NLS-1$
+                                                    Util.getString(I18N_PREFIX + "metaclassEntryUnexpectedClass", metaclassTagObj.getClass())); //$NON-NLS-1$
                             }
-                            // Get the values for this property Definition
-                            String simpleId = null;
-                            String displayName = null;
-                            String runtimeType = null;
-                            String required = null;
-                            String defaultValue = null;
-                            String fixedValue = null;
-                            String advanced = null;
-                            String masked = null;
-                            String index = null;
-                            String[] allowedValues = null;
-                            String defnDescrip = propertyDefinitionAnnotation.getDescription();
-                            EMap<String, String> propDefnTags = propertyDefinitionAnnotation.getTags();
-                            for (Object propDefnTagObj : propDefnTags.entrySet()) {
-                                if (!(propDefnTagObj instanceof EStringToStringMapEntryImpl)) {
-                                    Util.log(IStatus.ERROR,
-                                             Util.getString(I18N_PREFIX + "propertyDefinitionEntryUnexpectedClass", propDefnTagObj.getClass())); //$NON-NLS-1$
+
+                            if (((EStringToStringMapEntryImpl)metaclassTagObj).getKey().startsWith(PROP_DEFN_PREFIX)) {
+                                Annotation propertyDefinitionAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)metaclassTagObj,
+                                                                                                   false);
+
+                                if (propertyDefinitionAnnotation == null) {
+                                    throw new Exception(
+                                                        Util.getString(I18N_PREFIX + "propertyDefinitionAnnotationNotFound", ((EStringToStringMapEntryImpl)metaclassTagObj).getKey())); //$NON-NLS-1$
                                 }
-
-                                String key = ((EStringToStringMapEntryImpl)propDefnTagObj).getKey();
-                                String value = ((EStringToStringMapEntryImpl)propDefnTagObj).getValue();
-                                if (PropertyTagKeys.ID.equals(key)) {
-                                    simpleId = value;
-                                } else if (PropertyTagKeys.DISPLAY_NAME.equals(key)) {
-                                    displayName = value;
-                                } else if (PropertyTagKeys.RUNTIME_TYPE.equals(key)) {
-                                    runtimeType = value;
-                                } else if (PropertyTagKeys.REQUIRED.equals(key)) {
-                                    required = value;
-                                } else if (PropertyTagKeys.DEFAULT_VALUE.equals(key)) {
-                                    defaultValue = value;
-                                } else if (PropertyTagKeys.FIXED_VALUE.equals(key)) {
-                                    fixedValue = value;
-                                } else if (PropertyTagKeys.ADVANCED.equals(key)) {
-                                    advanced = value;
-                                } else if (PropertyTagKeys.MASKED.equals(key)) {
-                                    masked = value;
-                                } else if (PropertyTagKeys.INDEX.equals(key)) {
-                                    index = value;
-                                } else if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
-                                    Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
-                                                                                                  false);
-
-                                    if (allowedValuesAnnotation == null) {
-                                        throw new Exception(
-                                                            Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
-                                                                           ((EStringToStringMapEntryImpl)propDefnTagObj).getKey()));
+                                // Get the values for this property Definition
+                                String simpleId = null;
+                                String displayName = null;
+                                String runtimeType = null;
+                                String required = null;
+                                String defaultValue = null;
+                                String fixedValue = null;
+                                String advanced = null;
+                                String masked = null;
+                                String index = null;
+                                String[] allowedValues = null;
+                                String defnDescrip = propertyDefinitionAnnotation.getDescription();
+                                EMap<String, String> propDefnTags = propertyDefinitionAnnotation.getTags();
+                                for (Object propDefnTagObj : propDefnTags.entrySet()) {
+                                    if (!(propDefnTagObj instanceof EStringToStringMapEntryImpl)) {
+                                        Util.log(IStatus.ERROR,
+                                                 Util.getString(I18N_PREFIX + "propertyDefinitionEntryUnexpectedClass", propDefnTagObj.getClass())); //$NON-NLS-1$
                                     }
 
-                                    EMap<String, String> allowedValuesTags = allowedValuesAnnotation.getTags();
-                                    Object[] allowedValueObjs = allowedValuesTags.keySet().toArray();
-                                    allowedValues = new String[allowedValueObjs.length];
-                                    for (int i = 0; i < allowedValueObjs.length; i++) {
-                                        allowedValues[i] = (String)allowedValueObjs[i];
+                                    String key = ((EStringToStringMapEntryImpl)propDefnTagObj).getKey();
+                                    String value = ((EStringToStringMapEntryImpl)propDefnTagObj).getValue();
+                                    if (PropertyTagKeys.ID.equals(key)) {
+                                        simpleId = value;
+                                    } else if (PropertyTagKeys.DISPLAY_NAME.equals(key)) {
+                                        displayName = value;
+                                    } else if (PropertyTagKeys.RUNTIME_TYPE.equals(key)) {
+                                        runtimeType = value;
+                                    } else if (PropertyTagKeys.REQUIRED.equals(key)) {
+                                        required = value;
+                                    } else if (PropertyTagKeys.DEFAULT_VALUE.equals(key)) {
+                                        defaultValue = value;
+                                    } else if (PropertyTagKeys.FIXED_VALUE.equals(key)) {
+                                        fixedValue = value;
+                                    } else if (PropertyTagKeys.ADVANCED.equals(key)) {
+                                        advanced = value;
+                                    } else if (PropertyTagKeys.MASKED.equals(key)) {
+                                        masked = value;
+                                    } else if (PropertyTagKeys.INDEX.equals(key)) {
+                                        index = value;
+                                    } else if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
+                                        Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
+                                                                                                      false);
+
+                                        if (allowedValuesAnnotation == null) {
+                                            throw new Exception(
+                                                                Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
+                                                                               ((EStringToStringMapEntryImpl)propDefnTagObj).getKey()));
+                                        }
+
+                                        EMap<String, String> allowedValuesTags = allowedValuesAnnotation.getTags();
+                                        Object[] allowedValueObjs = allowedValuesTags.keySet().toArray();
+                                        allowedValues = new String[allowedValueObjs.length];
+                                        for (int i = 0; i < allowedValueObjs.length; i++) {
+                                            allowedValues[i] = (String)allowedValueObjs[i];
+                                        }
                                     }
                                 }
-                            }
-                            // TODO: Set indexed property value correctly
+                                // TODO: Set indexed property value correctly
 
-                            // Create a property definition based on the read in properties, then add it.
-                            ModelExtensionPropertyDefinition propertyDefn = assistant.createPropertyDefinition(simpleId,
-                                                                                                               displayName,
-                                                                                                               runtimeType,
-                                                                                                               required,
-                                                                                                               defaultValue,
-                                                                                                               fixedValue,
-                                                                                                               advanced,
-                                                                                                               masked,
-                                                                                                               "true"); //$NON-NLS-1$
-                            // Set the allowed Values
-                            if (allowedValues != null) {
-                                propertyDefn.setAllowedValues(allowedValues);
+                                // Create a property definition based on the read in properties, then add it.
+                                ModelExtensionPropertyDefinition propertyDefn = assistant.createPropertyDefinition(simpleId,
+                                                                                                                   displayName,
+                                                                                                                   runtimeType,
+                                                                                                                   required,
+                                                                                                                   defaultValue,
+                                                                                                                   fixedValue,
+                                                                                                                   advanced,
+                                                                                                                   masked,
+                                                                                                                   "true"); //$NON-NLS-1$
+                                // Set the allowed Values
+                                if (allowedValues != null) {
+                                    propertyDefn.setAllowedValues(allowedValues);
+                                }
+                                propertyDefn.setDescription(defnDescrip);
+                                // Add the property defn to the ModelExtensionDefinition
+                                assistant.addPropertyDefinition(metaclassName, propertyDefn);
                             }
-                            propertyDefn.setDescription(defnDescrip);
-                            // Add the property defn to the ModelExtensionDefinition
-                            assistant.addPropertyDefinition(metaclassName, propertyDefn);
                         }
                     }
                 }
             }
-
         }
         return med;
     }

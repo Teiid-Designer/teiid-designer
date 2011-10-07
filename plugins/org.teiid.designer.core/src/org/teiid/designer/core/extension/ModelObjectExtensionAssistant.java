@@ -260,7 +260,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     @Override
     public ModelExtensionDefinition getModelExtensionDefinition( Object modelObject ) throws Exception {
         ModelResource modelResource = getModelResource(modelObject);
-        return ModelExtensionUtils.getModelExtensionDefinition(this, modelResource, false);
+        return ModelExtensionUtils.getModelExtensionDefinition(this, modelResource);
     }
 
     /**
