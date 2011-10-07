@@ -108,6 +108,8 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
     private static final String HOME = "HOME"; //$NON-NLS-1$
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+    private static final String DOT_TXT = ".TXT"; //$NON-NLS-1$
+    private static final String DOT_CSV = ".CSV"; //$NON-NLS-1$
 
     private static final int COLUMN_FILE_NAME = 0;
     private static final int COLUMN_VIEW_TABLE_NAME = 1;
@@ -737,7 +739,9 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 
                 for (File theFile : allFiles) {
                     if (!theFile.isDirectory()) {
-                        goodFilesList.add(theFile);
+                        if(theFile.getName().toUpperCase().endsWith(DOT_CSV) || theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
+                            goodFilesList.add(theFile);
+                        }
                     }
                 }
                 return goodFilesList.toArray(new File[0]);
@@ -748,7 +752,9 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 
             for (File theFile : roots) {
                 if (!theFile.isDirectory()) {
-                    goodFilesList.add(theFile);
+                    if(theFile.getName().toUpperCase().endsWith(DOT_CSV) || theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
+                        goodFilesList.add(theFile);
+                    }
                 }
             }
             return goodFilesList.toArray(new File[0]);
