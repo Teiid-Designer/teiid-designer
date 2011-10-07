@@ -229,6 +229,8 @@ public class TeiidMetadataFileInfo implements UiConstants {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), colInfo.getDatatype(), colInfo.getWidth()));
 		}
 		
+		this.viewTableName = info.getViewTableName();
+		
 		this.status = info.getStatus();
 		
 		ignoreReload = false;
@@ -243,7 +245,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		loadHeader();
 		
 		String fileName = dataFile.getName();
-		if(fileName.endsWith(".txt")) { //$NON-NLS-1$
+		if(fileName.toLowerCase().endsWith(".txt")) { //$NON-NLS-1$
 			fileName = fileName.substring(0, fileName.length()-4);
 		}
 		setViewTableName(fileName + "View"); //$NON-NLS-1$

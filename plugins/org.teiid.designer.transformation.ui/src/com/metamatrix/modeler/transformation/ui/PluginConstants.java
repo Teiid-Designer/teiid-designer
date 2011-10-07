@@ -51,6 +51,9 @@ public interface PluginConstants {
         String SEARCH_TRANSFORMATION_ICON = "icons/full/cview16/search_transformation.gif"; //$NON-NLS-1$
         String PREVIEW_VIRTUAL_DATA_ICON = "icons/full/cview16/previewVirtualData.png"; //$NON-NLS-1$
         String CREATE_MATERIALIZED_VIEWS_ICON = "icons/full/cview16/materialized_views.png"; //$NON-NLS-1$
+        
+        String CHECKED_BOX_ICON = "icons/full/cview16/checked_box.png"; //$NON-NLS-1$
+        String UNCHECKED_BOX_ICON = "icons/full/cview16/unchecked_box.png"; //$NON-NLS-1$
     }
 
     interface Prefs {

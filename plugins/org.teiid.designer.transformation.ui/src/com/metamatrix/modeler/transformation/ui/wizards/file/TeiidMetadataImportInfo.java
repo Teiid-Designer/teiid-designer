@@ -20,6 +20,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 
 /**
  * Business object used to manage the Teiid Metadata File Import data
@@ -37,6 +38,11 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * The  <code>Map</code> of <code>TeiidMetadataFileInfo</code> objects to data <code>File</code>
 	 */
 	private Map<File, TeiidMetadataFileInfo> fileInfoMap;
+	
+	/**
+	 * The  <code>Map</code> of <code>TeiidXmlFileInfo</code> objects to data <code>File</code>
+	 */
+	private Map<File, TeiidXmlFileInfo> xmlFileInfoMap;
 	
     /**
      * The unique source model name (never <code>null</code> or empty).
@@ -90,6 +96,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	private IStatus NO_FILES_STATUS;
 	
+	private boolean isFlatFile = true;
+	
 	/**
 	 * Basic constructor
 	 */
@@ -100,6 +108,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	private void initialize() {
 		fileInfoMap = new HashMap<File, TeiidMetadataFileInfo>();
+		xmlFileInfoMap = new HashMap<File, TeiidXmlFileInfo>();
 		NO_FILES_STATUS = new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesInDataFolder")); //$NON-NLS-1$
 		status = NO_FILES_STATUS;
 	}
@@ -196,6 +205,15 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		return this.fileInfoMap.get(file);
 	}
 	
+	public void addXmlFileInfo(TeiidXmlFileInfo fileInfo) {
+		this.xmlFileInfoMap.put(fileInfo.getDataFile(), fileInfo);
+		validate();
+	}
+	
+	public TeiidXmlFileInfo getXmlFileInfo(File file) {
+		return this.xmlFileInfoMap.get(file);
+	}
+	
 	/**
 	 * Convenience method to allow setting doProcess on a cached <code>TeiidMetadataFileInfo</code> object
 	 * @param file
@@ -203,6 +221,19 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 */
 	public void setDoProcess(File file, boolean doProcess) {
 		TeiidMetadataFileInfo info = getFileInfo(file);
+		if( info != null ) {
+			info.setDoProcess(doProcess);
+		}
+		validate();
+	}
+	
+	/**
+	 * Convenience method to allow setting doProcess on a cached <code>TeiidMetadataFileInfo</code> object
+	 * @param file
+	 * @param doProcess
+	 */
+	public void setDoProcessXml(File file, boolean doProcess) {
+		TeiidXmlFileInfo info = getXmlFileInfo(file);
 		if( info != null ) {
 			info.setDoProcess(doProcess);
 		}
@@ -246,34 +277,73 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		return fileInfoMap.values();
 	}
 	
+	public Collection<TeiidXmlFileInfo> getXmlFileInfos() {
+		return xmlFileInfoMap.values();
+	}
+	
 	/**
 	 * Analyzes this object's data values and sets the current <code>IStatus</code>
 	 */
 	public void validate() {
-		if( this.fileInfoMap.isEmpty() ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
-			return;
-		}
-		boolean noneProcessed = true;
-		for( TeiidMetadataFileInfo info : fileInfoMap.values()) {
-			if( info.doProcess() ) {
-				noneProcessed = false;
-			}
-		}
-		if( noneProcessed ) {
-			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesSelected"))); //$NON-NLS-1$
-			return;
-		}
-		
-		for( TeiidMetadataFileInfo info : fileInfoMap.values()) {
-			if( info.doProcess() && info.getStatus().getSeverity() > IStatus.WARNING ) {
-				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
-						Util.getString(I18N_PREFIX + "errorInImportConfiguration", info.getDataFile().getName()) )); //$NON-NLS-1$
+		if(isFlatFile ) {
+			if( this.fileInfoMap.isEmpty() ) {
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
 				return;
 			}
+			boolean noneProcessed = true;
+			for( TeiidMetadataFileInfo info : fileInfoMap.values()) {
+				if( info.doProcess() ) {
+					noneProcessed = false;
+				}
+			}
+			if( noneProcessed ) {
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesSelected"))); //$NON-NLS-1$
+				return;
+			}
+			
+			for( TeiidMetadataFileInfo info : fileInfoMap.values()) {
+				if( info.doProcess() && info.getStatus().getSeverity() > IStatus.WARNING ) {
+					setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+							Util.getString(I18N_PREFIX + "errorInImportConfiguration", info.getDataFile().getName()) )); //$NON-NLS-1$
+					return;
+				}
+			}
+			
+			setStatus(Status.OK_STATUS);
+		} else {
+			if( this.xmlFileInfoMap.isEmpty() ) {
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
+				return;
+			}
+			boolean noneProcessed = true;
+			for( TeiidXmlFileInfo info : xmlFileInfoMap.values()) {
+				if( info.doProcess() ) {
+					noneProcessed = false;
+				}
+			}
+			if( noneProcessed ) {
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesSelected"))); //$NON-NLS-1$
+				return;
+			}
+			
+			for( TeiidXmlFileInfo info : xmlFileInfoMap.values()) {
+				if( info.doProcess() && info.getStatus().getSeverity() > IStatus.WARNING ) {
+					setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+							Util.getString(I18N_PREFIX + "errorInImportConfiguration", info.getDataFile().getName()) )); //$NON-NLS-1$
+					return;
+				}
+			}
+			
+			setStatus(Status.OK_STATUS);
 		}
-		
-		setStatus(Status.OK_STATUS);
+	}
+	
+	public boolean isFlatFileMode() {
+		return this.isFlatFile;
+	}
+	
+	public void setFlatFileMode(boolean value) {
+		this.isFlatFile = value;
 	}
 	
     /**

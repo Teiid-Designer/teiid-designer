@@ -74,12 +74,15 @@ import com.metamatrix.core.event.IChangeListener;
 import com.metamatrix.core.event.IChangeNotifier;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
+import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.transformation.ui.PluginConstants;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileDataAnalyzerDialog;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import com.metamatrix.ui.internal.InternalUiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -98,12 +101,14 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataSourceSelectionPage.class);
 	
+	
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
+	private static final String XML_TITLE = getString("xmlTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 	
 	private static final int PROFILE_COLUMN_COUNT = 3;
 	
-	private static final String SOURCE_LABEL = getString("sourceLabel"); //$NON-NLS-1$
+	private static final String FLAT_FILE_SOURCE_LABEL = getString("sourceLabel"); //$NON-NLS-1$
 	private static final String NEW_BUTTON = "New..."; //Util.getString("Widgets.newLabel"); //$NON-NLS-1$
 	private static final String EDIT_BUTTON = "Edit..."; //Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 	
@@ -126,6 +131,8 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	private Label dataFileFolder;
 	private Button editCPButton, configureButton;
 	private CheckboxTableViewer fileViewer;
+	private DataFolderContentProvider fileContentProvider;
+	private TableViewerColumn fileNameColumn;
 	
 	private Action configureDataFileAction;
 	private Action editViewTableNameAction;
@@ -168,7 +175,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         // ---------------------------------------------------------------------------
         // ----------- Connection Profile SOURCE Panel ---------------------------------
         // ---------------------------------------------------------------------------
-        Group profileGroup = WidgetFactory.createGroup(mainPanel, SOURCE_LABEL, SWT.NONE, 2);
+        Group profileGroup = WidgetFactory.createGroup(mainPanel, FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2);
         profileGroup.setLayout(new GridLayout(PROFILE_COLUMN_COUNT, false));
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
  
@@ -244,7 +251,12 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
      * @since 4.2
      */
     private void createFolderContentsListGroup( Composite parent ) {
-    	Group folderContentsGroup = WidgetFactory.createGroup(parent, getString("folderContentsGroup"), SWT.FILL, 3, 2); //$NON-NLS-1$
+    	String groupLabel = getString("folderContentsGroup"); //$NON-NLS-1$
+    	if( !info.isFlatFileMode() ) {
+    		groupLabel = getString("folderXmlContentsGroup"); //$NON-NLS-1$
+    	}
+    			
+    	Group folderContentsGroup = WidgetFactory.createGroup(parent, groupLabel, SWT.FILL, 3, 2); 
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 250;
     	folderContentsGroup.setLayoutData(gd);
@@ -284,7 +296,8 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
      	gd.heightHint = 180;
      	gd.horizontalSpan = 2;
      	this.fileViewer.getControl().setLayoutData(gd);
-     	this.fileViewer.setContentProvider(new DataFolderContentProvider());
+     	fileContentProvider = new DataFolderContentProvider();
+     	this.fileViewer.setContentProvider(fileContentProvider);
      	this.fileViewer.setLabelProvider(new FileSystemLabelProvider());
      	this.fileViewer.addSelectionChangedListener( new ISelectionChangedListener() {
  			
@@ -306,7 +319,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
  			public void checkStateChanged(CheckStateChangedEvent event) {
  				Object element = event.getElement();
  				if( element instanceof File ) {
- 					info.setDoProcess((File)element, event.getChecked());
+ 					if( info.isFlatFileMode() ) {
+ 						info.setDoProcess((File)element, event.getChecked());
+ 					} else {
+ 						info.setDoProcessXml((File)element, event.getChecked());
+ 					}
  				}
  				validatePage();
  			}
@@ -322,7 +339,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
             		TableItem tableItem = (TableItem)e.item;
             		if( tableItem.getData() instanceof File ) {
             			fileViewer.getTable().setSelection(new TableItem[] {tableItem});
-     					info.setDoProcess((File)tableItem.getData(), tableItem.getChecked());
+            			if( info.isFlatFileMode() ) {
+     						info.setDoProcess((File)tableItem.getData(), tableItem.getChecked());
+            			} else {
+            				info.setDoProcessXml((File)tableItem.getData(), tableItem.getChecked());
+            			}
      				}
             	}
             }
@@ -331,15 +352,19 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
         });
         
      // create columns
-        TableViewerColumn column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
-        column.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
-        column.setLabelProvider(new DataFileContentColumnLabelProvider(COLUMN_FILE_NAME));
-        column.getColumn().pack();
+        fileNameColumn = new TableViewerColumn(this.fileViewer, SWT.LEFT);
+        if( this.info.isFlatFileMode() ) {
+        	fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
+        } else {
+        	fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+        }
+        fileNameColumn.setLabelProvider(new DataFileContentColumnLabelProvider(COLUMN_FILE_NAME));
+        fileNameColumn.getColumn().pack();
 
-        column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
+        TableViewerColumn column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
         column.getColumn().setText(getString("viewFileNameColumn")); //$NON-NLS-1$
         column.setLabelProvider(new DataFileContentColumnLabelProvider(COLUMN_VIEW_TABLE_NAME));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.fileViewer));
+        column.setEditingSupport(new ViewTableNameEditingSupport(this.fileViewer));
         column.getColumn().pack();
         
         column = new TableViewerColumn(this.fileViewer, SWT.LEFT);
@@ -462,10 +487,25 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	        	TableItem[] items = fileViewer.getTable().getItems();
 	        	for( TableItem item : items) {
 	        		Object data = item.getData();
-	        		if( data != null && data instanceof File && !((File)data).isDirectory()) {
-	        			TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo((File)data);
-	        			this.info.addFileInfo(fileInfo);
-	        			this.info.validate();
+	        		if( data != null && data instanceof File ) {
+	        			File theFile = (File)data;
+	        			if( !theFile.isDirectory() ) {
+		        			if( this.info.isFlatFileMode() ) {
+		        				if( this.info.getFileInfo(theFile) == null ) {
+				        			TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo((File)data);
+				        			this.info.addFileInfo(fileInfo);
+		        				}
+			        			this.info.validate();
+		        			} else {
+		        				if( theFile.getName().toUpperCase().endsWith(".XML") ) { //$NON-NLS-1$
+		        					if( this.info.getXmlFileInfo(theFile) == null ) {
+					        			TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo((File)data);
+					        			this.info.addXmlFileInfo(fileInfo);
+		        					}
+				        			this.info.validate();
+			        			}
+		        			}
+	        			}
 	        		}
 	        	}
 	        	for( TableColumn column : this.fileViewer.getTable().getColumns() ) {
@@ -565,22 +605,42 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
     	// Get selection
     	IStructuredSelection selectedFile = (IStructuredSelection)this.fileViewer.getSelection();
     	if( selectedFile.getFirstElement() != null && selectedFile.getFirstElement() instanceof File ) {
-    		TeiidMetadataFileInfo fileInfo = this.info.getFileInfo((File)selectedFile.getFirstElement());
-    		
-    		// Make a copy of the fileInfo;
-    		
-    		TeiidMetadataFileInfo tempFileInfo = new TeiidMetadataFileInfo(fileInfo);
-    		TeiidDataFileAnalyzerDialog dialog = new TeiidDataFileAnalyzerDialog(this.getShell(), tempFileInfo);
-    		
-    		dialog.open();
-    		
-    		if( dialog.getReturnCode() == Dialog.OK ) {
-    			if( dialog.infoChanged() ) {
-    				fileInfo.inject(tempFileInfo);
-    			}
-    			info.validate();
-    			this.fileViewer.refresh();
-    			validatePage();
+    		if( this.info.isFlatFileMode() ) {
+	    		TeiidMetadataFileInfo fileInfo = this.info.getFileInfo((File)selectedFile.getFirstElement());
+	    		
+	    		// Make a copy of the fileInfo;
+	    		
+	    		TeiidMetadataFileInfo tempFileInfo = new TeiidMetadataFileInfo(fileInfo);
+	    		TeiidDataFileAnalyzerDialog dialog = new TeiidDataFileAnalyzerDialog(this.getShell(), tempFileInfo);
+	    		
+	    		dialog.open();
+	    		
+	    		if( dialog.getReturnCode() == Dialog.OK ) {
+	    			if( dialog.infoChanged() ) {
+	    				fileInfo.inject(tempFileInfo);
+	    			}
+	    			info.validate();
+	    			this.fileViewer.refresh();
+	    			validatePage();
+	    		}
+    		} else {
+    			TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo((File)selectedFile.getFirstElement());
+	    		
+	    		// Make a copy of the fileInfo;
+	    		
+	    		TeiidXmlFileInfo tempFileInfo = new TeiidXmlFileInfo(fileInfo);
+	    		TeiidXmlFileDataAnalyzerDialog dialog = new TeiidXmlFileDataAnalyzerDialog(this.getShell(), tempFileInfo);
+	    		
+	    		dialog.open();
+	    		
+	    		if( dialog.getReturnCode() == Dialog.OK ) {
+	    			if( dialog.infoChanged() ) {
+	    				fileInfo.inject(tempFileInfo);
+	    			}
+	    			info.validate();
+	    			this.fileViewer.refresh();
+	    			validatePage();
+	    		}
     		}
     		
     		
@@ -590,10 +650,15 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
     void editViewTableName() {
     	IStructuredSelection selectedFile = (IStructuredSelection)this.fileViewer.getSelection();
     	if( selectedFile.getFirstElement() != null && selectedFile.getFirstElement() instanceof File ) {
-    		TeiidMetadataFileInfo fileInfo = this.info.getFileInfo((File)selectedFile.getFirstElement());
+    		EditViewTableNameDialog dialog = null;
     		
-    		EditViewTableNameDialog dialog = new EditViewTableNameDialog(this.getShell(), fileInfo);
-    		
+    		if( this.info.isFlatFileMode() ) {
+	    		TeiidMetadataFileInfo fileInfo = this.info.getFileInfo((File)selectedFile.getFirstElement());
+	    		dialog = new EditViewTableNameDialog(this.getShell(), fileInfo);
+    		} else {
+    			TeiidXmlFileInfo xmlFileInfo = this.info.getXmlFileInfo((File)selectedFile.getFirstElement());
+	    		dialog = new EditViewTableNameDialog(this.getShell(), xmlFileInfo);
+    		}
     		dialog.open();
     		
     		if( dialog.getReturnCode() == Dialog.OK ) {
@@ -697,6 +762,8 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
   }
   
   class DataFolderContentProvider implements ITreeContentProvider {
+	  
+	    boolean isFlatFileContent = true;
 
 	    ///////////////////////////////////////////////////////////////////////////////////////////////
 	    // CONSTANTS
@@ -740,7 +807,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		    	
 		    	for( File theFile : allFiles) {
 		    		if( !theFile.isDirectory()) {
-		    			goodFilesList.add(theFile);
+		    			if( isFlatFileContent ) {
+		    				goodFilesList.add(theFile);
+		    			} else if(theFile.getName().toUpperCase().endsWith(".XML")) { //$NON-NLS-1$
+		    				goodFilesList.add(theFile);
+		    			}
 		    		}
 		    	}
 		        return goodFilesList.toArray(new File[0]);
@@ -751,7 +822,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	    	
 	    	for( File theFile : roots) {
 	    		if( !theFile.isDirectory()) {
-	    			goodFilesList.add(theFile);
+	    			if( isFlatFileContent ) {
+	    				goodFilesList.add(theFile);
+	    			} else if(theFile.getName().toUpperCase().endsWith(".XML")) { //$NON-NLS-1$
+	    				goodFilesList.add(theFile);
+	    			}
 	    		}
 	    	}
 	        return goodFilesList.toArray(new File[0]);
@@ -782,6 +857,10 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	                             Object theOldInput,
 	                             Object theNewInput) {
 	    }
+	    
+	    public void setIsFlatFileContent(boolean isFlatFileContent) {
+	    	this.isFlatFileContent = isFlatFileContent;
+	    }
 	}
   
 	class DataFileContentColumnLabelProvider extends ColumnLabelProvider {
@@ -805,16 +884,30 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 					return ((File) element).getName();
 				}
 				case COLUMN_VIEW_TABLE_NAME: {
-					TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
-					if (fileInfo != null && fileInfo.getViewTableName() != null) {
-						return fileInfo.getViewTableName();
+					if( info.isFlatFileMode() ) {
+						TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
+						if (fileInfo != null && fileInfo.getViewTableName() != null) {
+							return fileInfo.getViewTableName();
+						}
+					} else {
+						TeiidXmlFileInfo xmlFileInfo = info.getXmlFileInfo((File) element);
+						if (xmlFileInfo != null && xmlFileInfo.getViewTableName() != null) {
+							return xmlFileInfo.getViewTableName();
+						}
 					}
 					return EMPTY_STRING;
 				}
 				case COLUMN_STATUS: {
-					TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
-					if (fileInfo != null && fileInfo.getViewTableName() != null) {
-						return fileInfo.getStatus().getMessage();
+					if( info.isFlatFileMode() ) {
+						TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
+						if (fileInfo != null && fileInfo.getViewTableName() != null) {
+							return fileInfo.getStatus().getMessage();
+						}
+					} else {
+						TeiidXmlFileInfo xmlFileInfo = info.getXmlFileInfo((File) element);
+						if (xmlFileInfo != null && xmlFileInfo.getViewTableName() != null) {
+							return xmlFileInfo.getStatus().getMessage();
+						}
 					}
 				}
 			}
@@ -845,16 +938,30 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		@Override
 		public Image getImage(Object element) {
 			if( this.columnNumber == COLUMN_STATUS ) {
-				TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
-				if (fileInfo != null) {
-					if( fileInfo.getStatus().getSeverity() == IStatus.OK){
+				if( info.isFlatFileMode() ) {
+					TeiidMetadataFileInfo fileInfo = info.getFileInfo((File) element);
+					if (fileInfo != null) {
+						if( fileInfo.getStatus().getSeverity() == IStatus.OK){
+							return null;
+						} else if(fileInfo.getStatus().getSeverity() == IStatus.WARNING ) {
+							return UiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_ICON);
+						} else if(fileInfo.getStatus().getSeverity() == IStatus.ERROR ) {
+							return UiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON);
+						}
 						return null;
-					} else if(fileInfo.getStatus().getSeverity() == IStatus.WARNING ) {
-						return UiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_ICON);
-					} else if(fileInfo.getStatus().getSeverity() == IStatus.ERROR ) {
-						return UiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON);
 					}
-					return null;
+				} else {
+					TeiidXmlFileInfo fileInfo = info.getXmlFileInfo((File) element);
+					if (fileInfo != null) {
+						if( fileInfo.getStatus().getSeverity() == IStatus.OK){
+							return null;
+						} else if(fileInfo.getStatus().getSeverity() == IStatus.WARNING ) {
+							return UiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_ICON);
+						} else if(fileInfo.getStatus().getSeverity() == IStatus.ERROR ) {
+							return UiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON);
+						}
+						return null;
+					}
 				}
 			}
 			return null;
@@ -863,7 +970,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		
 	}
 	
-    class ColumnWidthEditingSupport extends EditingSupport {
+    class ViewTableNameEditingSupport extends EditingSupport {
     	
 		private TextCellEditor editor;
 
@@ -872,7 +979,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		 * 
 		 * @param viewer
 		 */
-		public ColumnWidthEditingSupport(ColumnViewer viewer) {
+		public ViewTableNameEditingSupport(ColumnViewer viewer) {
 			super(viewer);
 			this.editor = new TextCellEditor((Composite) viewer.getControl());
 		}
@@ -902,12 +1009,19 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		 */
 		protected Object getValue(Object element) {
 			if( element instanceof File ) {
-				TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
-				if( fileInfo != null ) {
-					return ((TeiidMetadataFileInfo)fileInfo).getViewTableName();
+				if( info.isFlatFileMode() ) {
+					TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
+					if( fileInfo != null ) {
+						return fileInfo.getViewTableName();
+					}
+				}
+				
+				TeiidXmlFileInfo xmlFileInfo = info.getXmlFileInfo((File)element);
+				if( xmlFileInfo != null ) {
+					return xmlFileInfo.getViewTableName();
 				}
 			}
-			return ""; //$NON-NLS-1$
+			return StringUtilities.EMPTY_STRING;
 		}
 
 		/*
@@ -918,17 +1032,49 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 		 */
 		protected void setValue(Object element, Object value) {
 			if( element instanceof File ) {
-				TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
-				if( fileInfo != null ) {
-					String oldValue = fileInfo.getViewTableName();
+				if( info.isFlatFileMode() ) {
+					TeiidMetadataFileInfo fileInfo = info.getFileInfo((File)element);
+					if( fileInfo != null ) {
+						String oldValue = fileInfo.getViewTableName();
+						String newValue = (String)value;
+						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
+							fileInfo.setViewTableName(newValue);
+							fileViewer.refresh();
+						}
+						return;
+					}
+				}
+				
+				TeiidXmlFileInfo xmlFileInfo = info.getXmlFileInfo((File)element);
+				if( xmlFileInfo != null ) {
+					String oldValue = xmlFileInfo.getViewTableName();
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						fileInfo.setViewTableName(newValue);
+						xmlFileInfo.setViewTableName(newValue);
+						fileViewer.refresh();
 					}
 				}
 			}
 		}
 
+	}
+    
+    
+	
+	@Override
+	public void setVisible(boolean visible) {
+		this.fileContentProvider.setIsFlatFileContent(this.info.isFlatFileMode());
+		if( this.info.isFlatFileMode() ) {
+			this.setTitle(TITLE);
+        	this.fileNameColumn.getColumn().setText(getString("dataFileNameColumn")); //$NON-NLS-1$
+        } else {
+        	this.setTitle(XML_TITLE);
+        	this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+        }
+
+		super.setVisible(visible);
+		loadFileListViewer();
+		fileNameColumn.getColumn().pack();
 	}
 	
 	class EditViewTableNameDialog extends TitleAreaDialog {
@@ -938,15 +1084,18 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	    // Instance variables
 	    //=============================================================
 	    private TeiidMetadataFileInfo fileInfo;
+	    private TeiidXmlFileInfo xmlFileInfo;
 	    private Text tableNameText;
 	    
 	    private StringNameValidator validator;
+	    
+	    boolean isFlatFileMode;
 	        
 	    //=============================================================
 	    // Constructors
 	    //=============================================================
+	    
 	    /**
-	     * AliasEntryDialog constructor.
 	     * 
 	     * @param parent   parent of this dialog
 	     * @param transObj the transformation EObject
@@ -956,6 +1105,20 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	        super(parent);
 	        this.fileInfo = fileInfo;
 	        this.validator = new RelationalStringNameValidator(true, true);
+	        this.isFlatFileMode = true;
+	    }
+	    
+	    /**
+	     * 
+	     * @param parent   parent of this dialog
+	     * @param transObj the transformation EObject
+	     * @param title    dialog display title
+	     */
+	    public EditViewTableNameDialog(Shell parent, TeiidXmlFileInfo xmlFileInfo) {
+	        super(parent);
+	        this.xmlFileInfo = xmlFileInfo;
+	        this.validator = new RelationalStringNameValidator(true, true);
+	        this.isFlatFileMode = false;
 	    }
 	    
 	    @Override
@@ -999,7 +1162,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	        
 	        tableNameText = WidgetFactory.createTextField(nameGroup);
 //	        tableNameText.setTextLimit(50);
-	        tableNameText.setText(this.fileInfo.getViewTableName());
+	        if( isFlatFileMode ) {
+	        	tableNameText.setText(this.fileInfo.getViewTableName());
+	        } else {
+	        	tableNameText.setText(this.xmlFileInfo.getViewTableName());
+	        }
 	        tableNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	        
 	        tableNameText.addModifyListener( new ModifyListener() {
@@ -1014,7 +1181,7 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 						return;
 					}
 					
-					setErrorMessage(Util.getString("EditViewTableNameDialog.errorMessage" , error)); //$NON-NLS-1$
+					setErrorMessage(Util.getString("TeiidMetadataSourceSelectionPage.EditViewTableNameDialog.errorMessage" , error)); //$NON-NLS-1$
 					setOkEnabled(false);
 				}
 			});
@@ -1031,7 +1198,11 @@ public class TeiidMetadataSourceSelectionPage extends AbstractWizardPage
 	    }
 	    @Override
 	    protected void okPressed() {
-	        fileInfo.setViewTableName(tableNameText.getText());
+	    	if( isFlatFileMode ) {
+	    		fileInfo.setViewTableName(tableNameText.getText());
+	    	} else {
+	    		xmlFileInfo.setViewTableName(tableNameText.getText());
+	    	}
 	        super.okPressed();
 	    }
 	    

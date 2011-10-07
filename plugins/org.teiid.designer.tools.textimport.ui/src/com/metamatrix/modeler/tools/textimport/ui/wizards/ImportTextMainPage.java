@@ -7,12 +7,9 @@
  */
 package com.metamatrix.modeler.tools.textimport.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -33,6 +30,7 @@ import com.metamatrix.modeler.tools.textimport.ui.TextImportContributionManager;
 import com.metamatrix.modeler.tools.textimport.ui.UiConstants;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.widget.WrappingLabel;
+import com.metamatrix.ui.text.StyledTextEditor;
 
 /**
  * @since 4.2
@@ -41,7 +39,7 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
 
     // widgets
     protected Combo importTypeCombo;
-    private ListViewer expectedFormatListViewer;
+    private StyledTextEditor expectedFormatListViewer;
     private WrappingLabel descriptionLabel;
 
     // A boolean to indicate if the user has typed anything
@@ -263,9 +261,13 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
         messageLabel.setText(getString("expectedFormatListMessage")); //$NON-NLS-1$
         messageLabel.setFont(parent.getFont());
 
-        expectedFormatListViewer = new ListViewer(parent);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        expectedFormatListViewer.getControl().setLayoutData(data);
+        expectedFormatListViewer = new StyledTextEditor(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 600;
+        data.heightHint = 400;
+        expectedFormatListViewer.setLayoutData(data);
+        
+        expectedFormatListViewer.setEditable(false);
     }
 
     protected void updateFromComboSelection() {
@@ -323,9 +325,7 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
     }
 
     private void clearExpectedFormatListViewer() {
-        org.eclipse.swt.widgets.List contents = expectedFormatListViewer.getList();
-        String[] items = contents.getItems();
-        expectedFormatListViewer.remove(items);
+        expectedFormatListViewer.setText(""); //$NON-NLS-1$
     }
 
     private void loadDescriptionText( String typeStr ) {
@@ -341,24 +341,23 @@ public class ImportTextMainPage extends WizardDataTransferPage implements UiCons
         if (typeStr != null && typeStr.length() > 0) {
             String sampleData = TextImportContributionManager.getSampleData(typeStr);
             if (sampleData != null) {
-                expectedFormatListViewer.add(parseList(sampleData));
+                expectedFormatListViewer.setText(parseList_2(sampleData));
             }
         }
     }
-
-    /**
-     * Parses the vertical bar separated string into an array of strings
-     * 
-     * @return list
-     */
-    private static String[] parseList( String listString ) {
-        List list = new ArrayList(10);
+    
+    private static String parseList_2( String listString) {
+        StringBuffer sb = new StringBuffer();
+        
         StringTokenizer tokenizer = new StringTokenizer(listString, "|"); //$NON-NLS-1$
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
-            list.add(token);
+            sb.append(token);
+            if( tokenizer.hasMoreTokens() ) {
+                sb.append('\n');
+            }
         }
-        return (String[])list.toArray(new String[list.size()]);
+        return sb.toString();
     }
 
     /**

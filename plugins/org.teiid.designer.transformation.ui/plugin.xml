@@ -288,4 +288,18 @@
          </description>
       </wizard>
   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+<!-- Teiid Metadata Import Wizard -->
+      <wizard
+            name="%teiidXmlFileImportWizard.name"
+            icon="icons/full/cview16/import_teiid_metadata.png"
+            category="com.metamatrix.modeler.ui"
+            class="com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileImportWizard"
+            id="teiidXmlFileImportWizard">
+         <description>
+            %teiidXmlFileImportWizard.description
+         </description>
+      </wizard>
+  </extension>
 </plugin>

@@ -8,12 +8,14 @@
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.StringUtilities;
 
 /**
  * A <code>TeiidColumnInfo</code> defines extension properties for metaclasses within a metamodel.
  */
 public class TeiidColumnInfo {
 	public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
+	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
 	
 	public static final int DEFAULT_WIDTH = 10;
 	
@@ -31,6 +33,22 @@ public class TeiidColumnInfo {
      * The column width value
      */
 	private int width = DEFAULT_WIDTH;
+	
+	
+	 /**
+     * The unique column datatype (never <code>null</code> or empty).
+     */
+	private boolean forOrdinality;
+	
+	 /**
+     * The unique column datatype (never <code>null</code> or empty).
+     */
+	private String defaultValue = StringUtilities.EMPTY_STRING;
+	
+	 /**
+     * The unique column datatype (never <code>null</code> or empty).
+     */
+	private String xmlPath = StringUtilities.EMPTY_STRING;
 	
 	/**
 	 * 
@@ -64,6 +82,26 @@ public class TeiidColumnInfo {
         CoreArgCheck.isPositive(width, "width is zero or less"); //$NON-NLS-1$
         
 		this.width = width;
+	}
+	
+	/**
+	 * 
+	 * @param name the column name (never <code>null</code> or empty).
+	 * @param datatype the column datatype (never <code>null</code> or empty).
+	 */
+	public TeiidColumnInfo(String name, boolean ordinality, String datatype, String defaultValue, String xmlPath ) {
+		this(name, datatype);
+        this.forOrdinality = ordinality;
+        if( defaultValue == null ) {
+        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        } else {
+        	this.defaultValue = defaultValue;
+        }
+        if( xmlPath == null ) {
+        	this.xmlPath = StringUtilities.EMPTY_STRING;
+        } else {
+        	this.xmlPath = xmlPath;
+        }
 	}
 
 	/**
@@ -115,6 +153,61 @@ public class TeiidColumnInfo {
 	public void setWidth(int width) {
 		CoreArgCheck.isPositive(width, "width is less than 1"); //$NON-NLS-1$
 		this.width = width;
+	}
+	
+	/**
+	 * 
+	 * @return defaultValue the column defaultValue
+	 */
+	public String getDefaultValue() {
+		return this.defaultValue;
+	}
+	
+	/**
+	 * 
+	 * @param defaultValue the column defaultValue
+	 */
+	public void setDefaultValue(String defaultValue) {
+		if( defaultValue == null ) {
+        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        } else {
+        	this.defaultValue = defaultValue;
+        }
+	}
+
+	/**
+	 * 
+	 * @param xmlPath the column xmlPath
+	 */
+	public void setXmlPath(String xmlPath) {
+        if( xmlPath == null ) {
+        	this.xmlPath = StringUtilities.EMPTY_STRING;
+        } else {
+        	this.xmlPath = xmlPath;
+        }
+	}
+	
+	/**
+	 * 
+	 * @return xmlPath the column xmlPath
+	 */
+	public String getXmlPath() {
+		return this.xmlPath;
+	}
+	/**
+	 * 
+	 * @return forOrdinality the column forOrdinality
+	 */
+	public boolean getOrdinality() {
+		return this.forOrdinality;
+	}
+
+	/**
+	 * 
+	 * @param forOrdinality the column forOrdinality
+	 */
+	public void setOrdinality(boolean value) {
+		this.forOrdinality = value;
 	}
 	
     /**
