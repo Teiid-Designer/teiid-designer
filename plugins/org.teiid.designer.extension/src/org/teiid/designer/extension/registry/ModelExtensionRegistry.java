@@ -161,14 +161,14 @@ public final class ModelExtensionRegistry {
     }
 
     /**
-     * @return a collection of all model extension definition namespace prefixes (never <code>null</code>)
+     * @return a collection of all registered model extension definition namespace prefixes (never <code>null</code>)
      */
     public Set<String> getAllNamespacePrefixes() {
         return new HashSet<String>(namespaces.values());
     }
 
     /**
-     * @return a collection of all model extension definition namespace URIs (never <code>null</code>)
+     * @return a collection of all registered model extension definition namespace URIs (never <code>null</code>)
      */
     public Set<String> getAllNamespaceUris() {
         return this.namespaces.keySet();

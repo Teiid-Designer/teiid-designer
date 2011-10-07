@@ -7,204 +7,108 @@
  */
 package com.metamatrix.modeler.internal.ui.forms;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.HyperlinkGroup;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class FormUtil {
 
     public static final String HTML_BEGIN = "<form><p>"; //$NON-NLS-1$
     public static final String HTML_END = "</p></form>"; //$NON-NLS-1$
 
-    // CLEAR
-    public static final int DEFAULT_CLEAR_MARGIN = 2;
-    public static final int CLEAR_MARGIN_TOP = DEFAULT_CLEAR_MARGIN;
-    public static final int CLEAR_MARGIN_BOTTOM = DEFAULT_CLEAR_MARGIN;
-    public static final int CLEAR_MARGIN_LEFT = DEFAULT_CLEAR_MARGIN;
-    public static final int CLEAR_MARGIN_RIGHT = DEFAULT_CLEAR_MARGIN;
-    public static final int CLEAR_HORIZONTAL_SPACING = 0;
-    public static final int CLEAR_VERTICAL_SPACING = 0;
-    public static final int CLEAR_MARGIN_HEIGHT = 0;
-    public static final int CLEAR_MARGIN_WIDTH = 0;
+    public static Section createSection( final IManagedForm managedForm,
+                                         final FormToolkit toolkit,
+                                         final Composite parent,
+                                         String title,
+                                         String description,
+                                         int style,
+                                         boolean shouldGiveUpVerticalSpaceWhenFolded ) {
+        final Section section = toolkit.createSection(parent, style);
+        section.setText(title);
+        section.setDescription(description);
+        section.getDescriptionControl().setFont(JFaceResources.getBannerFont());
+        section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-    // FORM BODY
-    public static final int FORM_BODY_MARGIN_TOP = 12;
-    public static final int FORM_BODY_MARGIN_BOTTOM = 12;
-    public static final int FORM_BODY_MARGIN_LEFT = 6;
-    public static final int FORM_BODY_MARGIN_RIGHT = 6;
-    public static final int FORM_BODY_HORIZONTAL_SPACING = 20;
-    public static final int FORM_BODY_VERTICAL_SPACING = 17;
-    public static final int FORM_BODY_MARGIN_HEIGHT = 0;
-    public static final int FORM_BODY_MARGIN_WIDTH = 0;
+        managedForm.addPart(new SectionPart(section));
 
-    // FORM PANE
-    public static final int FORM_PANE_MARGIN_TOP = 0;
-    public static final int FORM_PANE_MARGIN_BOTTOM = 0;
-    public static final int FORM_PANE_MARGIN_LEFT = 0;
-    public static final int FORM_PANE_MARGIN_RIGHT = 0;
-    public static final int FORM_PANE_HORIZONTAL_SPACING = FORM_BODY_HORIZONTAL_SPACING;
-    public static final int FORM_PANE_VERTICAL_SPACING = FORM_BODY_VERTICAL_SPACING;
-    public static final int FORM_PANE_MARGIN_HEIGHT = 0;
-    public static final int FORM_PANE_MARGIN_WIDTH = 0;
+        if (shouldGiveUpVerticalSpaceWhenFolded) {
+            section.addExpansionListener(new ExpansionAdapter() {
 
-    // SECTION CLIENT
-    public static final int SECTION_CLIENT_MARGIN_TOP = 5;
-    public static final int SECTION_CLIENT_MARGIN_BOTTOM = 5;
-    public static final int SECTION_CLIENT_MARGIN_LEFT = 2;
-    public static final int SECTION_CLIENT_MARGIN_RIGHT = 2;
-    public static final int SECTION_CLIENT_HORIZONTAL_SPACING = 5;
-    public static final int SECTION_CLIENT_VERTICAL_SPACING = 5;
-    public static final int SECTION_CLIENT_MARGIN_HEIGHT = 0;
-    public static final int SECTION_CLIENT_MARGIN_WIDTH = 0;
-    public static final int SECTION_HEADER_VERTICAL_SPACING = 6;
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+                 */
+                @Override
+                public void expansionStateChanged( ExpansionEvent e ) {
+                    GridData gridData = (GridData)section.getLayoutData();
+                    gridData.grabExcessVerticalSpace = e.getState();
+                }
+            });
+        }
 
-    public static Button createButton( Composite parent,
-                                       FormToolkit toolkit,
-                                       String label ) {
-        Button button = toolkit.createButton(parent, label, SWT.PUSH);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-        button.setLayoutData(gd);
-        return button;
+        section.addExpansionListener(new ExpansionAdapter() {
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+             */
+            @Override
+            public void expansionStateChanged( ExpansionEvent e ) {
+                managedForm.reflow(true);
+            }
+        });
+
+        return section;
     }
+    
+    public static Button[] createSectionToolBar( Section section,
+                                                 FormToolkit toolkit,
+                                                 Image[] buttonImages ) {
 
-    public static Button[] createButtonsContainer( Composite parent,
-                                                   FormToolkit toolkit,
-                                                   String[] buttonLabels ) {
-        Composite container = toolkit.createComposite(parent);
-        GridData gd = new GridData(GridData.FILL_VERTICAL);
-        container.setLayoutData(gd);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = layout.marginHeight = 0;
-        container.setLayout(layout);
+        Composite toolBar = toolkit.createComposite(section, SWT.NONE);
+        RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+        layout.marginLeft = 0;
+        layout.marginRight = 0;
+        layout.spacing = 0;
+        layout.marginTop = 0;
+        layout.marginBottom = 0;
+        toolBar.setLayout(layout);
+        section.setTextClient(toolBar);
 
-        Button[] buttons = new Button[buttonLabels.length];
+        final Image backgroundImage = section.getBackgroundImage();
+        final Button[] buttons = new Button[buttonImages.length];
         int i = 0;
 
-        for (String label : buttonLabels) {
-            Button button = createButton(container, toolkit, label);
+        for (Image image : buttonImages) {
+            Button button = toolkit.createButton(toolBar, null, SWT.FLAT);
+            button.setBackgroundImage(backgroundImage);
+            button.setImage(image);
             buttons[i++] = button;
         }
 
         return buttons;
-    }
-
-    /**
-     * For miscellaneous grouping composites. For sections (as a whole - header plus client).
-     * 
-     * @param makeColumnsEqualWidth
-     * @param numColumns
-     * @return
-     */
-    public static GridLayout createClearGridLayout( boolean makeColumnsEqualWidth,
-                                                    int numColumns ) {
-        GridLayout layout = new GridLayout();
-
-        layout.marginHeight = CLEAR_MARGIN_HEIGHT;
-        layout.marginWidth = CLEAR_MARGIN_WIDTH;
-
-        layout.marginTop = CLEAR_MARGIN_TOP;
-        layout.marginBottom = CLEAR_MARGIN_BOTTOM;
-        layout.marginLeft = CLEAR_MARGIN_LEFT;
-        layout.marginRight = CLEAR_MARGIN_RIGHT;
-
-        layout.horizontalSpacing = CLEAR_HORIZONTAL_SPACING;
-        layout.verticalSpacing = CLEAR_VERTICAL_SPACING;
-
-        layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-        layout.numColumns = numColumns;
-
-        return layout;
-    }
-
-    /**
-     * For form bodies.
-     * 
-     * @param makeColumnsEqualWidth
-     * @param numColumns
-     * @return
-     */
-    public static GridLayout createFormGridLayout( boolean makeColumnsEqualWidth,
-                                                   int numColumns ) {
-        GridLayout layout = new GridLayout();
-
-        layout.marginHeight = FORM_BODY_MARGIN_HEIGHT;
-        layout.marginWidth = FORM_BODY_MARGIN_WIDTH;
-
-        layout.marginTop = FORM_BODY_MARGIN_TOP;
-        layout.marginBottom = FORM_BODY_MARGIN_BOTTOM;
-        layout.marginLeft = FORM_BODY_MARGIN_LEFT;
-        layout.marginRight = FORM_BODY_MARGIN_RIGHT;
-
-        layout.horizontalSpacing = FORM_BODY_HORIZONTAL_SPACING;
-        layout.verticalSpacing = FORM_BODY_VERTICAL_SPACING;
-
-        layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-        layout.numColumns = numColumns;
-
-        return layout;
-    }
-
-    /**
-     * For composites used to group sections in left and right panes.
-     * 
-     * @param makeColumnsEqualWidth
-     * @param numColumns
-     * @return
-     */
-    public static GridLayout createFormPaneGridLayout( boolean makeColumnsEqualWidth,
-                                                       int numColumns ) {
-        GridLayout layout = new GridLayout();
-
-        layout.marginHeight = FORM_PANE_MARGIN_HEIGHT;
-        layout.marginWidth = FORM_PANE_MARGIN_WIDTH;
-
-        layout.marginTop = FORM_PANE_MARGIN_TOP;
-        layout.marginBottom = FORM_PANE_MARGIN_BOTTOM;
-        layout.marginLeft = FORM_PANE_MARGIN_LEFT;
-        layout.marginRight = FORM_PANE_MARGIN_RIGHT;
-
-        layout.horizontalSpacing = FORM_PANE_HORIZONTAL_SPACING;
-        layout.verticalSpacing = FORM_PANE_VERTICAL_SPACING;
-
-        layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-        layout.numColumns = numColumns;
-
-        return layout;
-    }
-
-    /**
-     * For composites set as section clients. For composites containg form text.
-     * 
-     * @param makeColumnsEqualWidth
-     * @param numColumns
-     * @return
-     */
-    public static GridLayout createSectionClientGridLayout( boolean makeColumnsEqualWidth,
-                                                            int numColumns ) {
-        GridLayout layout = new GridLayout();
-
-        layout.marginHeight = SECTION_CLIENT_MARGIN_HEIGHT;
-        layout.marginWidth = SECTION_CLIENT_MARGIN_WIDTH;
-
-        layout.marginTop = SECTION_CLIENT_MARGIN_TOP;
-        layout.marginBottom = SECTION_CLIENT_MARGIN_BOTTOM;
-        layout.marginLeft = SECTION_CLIENT_MARGIN_LEFT;
-        layout.marginRight = SECTION_CLIENT_MARGIN_RIGHT;
-
-        layout.horizontalSpacing = SECTION_CLIENT_HORIZONTAL_SPACING;
-        layout.verticalSpacing = SECTION_CLIENT_VERTICAL_SPACING;
-
-        layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-        layout.numColumns = numColumns;
-
-        return layout;
     }
 
     public static boolean safeEquals( Object leftVal,
@@ -250,6 +154,72 @@ public class FormUtil {
 
         // no scrolled form in hierarchy, return null:
         return null;
+    }
+
+    public static boolean openQuestion( Shell parent,
+                                        String title,
+                                        Image titleImage,
+                                        String message ) {
+        class MessageFormDialog extends FormDialog {
+
+            private final Image titleImage;
+            private final String message;
+            private final String title;
+
+            MessageFormDialog( Shell parent,
+                               String title,
+                               Image titleImage,
+                               String message ) {
+                super(parent);
+                this.title = title;
+                this.titleImage = titleImage;
+                this.message = message;
+            }
+            
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+             */
+            @Override
+            protected Button createButton( Composite parent,
+                                           int id,
+                                           String label,
+                                           boolean defaultButton ) {
+                if (Window.OK == id) {
+                    label = IDialogConstants.YES_LABEL;
+                } else if (Window.CANCEL == id) {
+                    label = IDialogConstants.NO_LABEL;
+                }
+
+                return super.createButton(parent, id, label, defaultButton);
+            }
+
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.ui.forms.FormDialog#createFormContent(org.eclipse.ui.forms.IManagedForm)
+             */
+            @Override
+            protected void createFormContent( IManagedForm managedForm ) {
+                ScrolledForm scrolledForm = managedForm.getForm();
+                scrolledForm.setText(this.title);
+                scrolledForm.setImage(this.titleImage);
+                scrolledForm.setMessage(null, IMessageProvider.INFORMATION);
+
+                FormToolkit toolkit = managedForm.getToolkit();
+                toolkit.decorateFormHeading(scrolledForm.getForm());
+
+                Composite body = scrolledForm.getBody();
+                body.setLayout(new TableWrapLayout());
+                toolkit.createLabel(body, this.message, SWT.WRAP);
+            }
+        }
+
+        FormDialog dialog = new MessageFormDialog(parent, title, titleImage, message);
+        dialog.create();
+        dialog.getShell().pack();
+        return (dialog.open() == Window.OK);
     }
 
     public static void tweakColors( FormToolkit ftk,

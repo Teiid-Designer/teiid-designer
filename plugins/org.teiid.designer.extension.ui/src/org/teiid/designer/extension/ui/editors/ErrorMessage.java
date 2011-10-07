@@ -11,6 +11,8 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IMessage;
 
+import com.metamatrix.core.util.CoreStringUtil;
+
 /**
  * An error message used in the {@link ModelExtensionDefinitionEditor}.
  */
@@ -80,7 +82,7 @@ final class ErrorMessage implements IMessage {
      */
     @Override
     public int getMessageType() {
-        return IMessageProvider.ERROR;
+        return (CoreStringUtil.isEmpty(message) ? IMessageProvider.NONE : IMessageProvider.ERROR);
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
 
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -121,13 +122,13 @@ public class ModelExtensionAssistantAggregator {
         String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
 
         if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            // TODO throw exception
+            throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
         }
 
         ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
 
         if (assistant == null) {
-            // TODO throw exception
+            throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));
         }
 
         assistant.removeProperty(modelObject, propId);
@@ -139,13 +140,13 @@ public class ModelExtensionAssistantAggregator {
         String namespacePrefix = ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId);
 
         if (CoreStringUtil.isEmpty(namespacePrefix)) {
-            // TODO throw exception
+            throw new Exception(NLS.bind(Messages.namespacePrefixNotFound, propId));
         }
 
         ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
 
         if (assistant == null) {
-            // TODO throw exception
+            throw new Exception(NLS.bind(Messages.modelExtensionAssistantNotFound, propId));
         }
 
         assistant.setPropertyValue(modelObject, propId, newValue);

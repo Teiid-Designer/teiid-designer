@@ -8,10 +8,18 @@
 package org.teiid.designer.extension.properties;
 
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
+import org.eclipse.osgi.util.NLS;
 import org.teiid.core.properties.PropertyDefinition;
+import org.teiid.designer.extension.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionPropertyDefinition</code> is the property definition of all extension properties.
@@ -35,21 +43,31 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     boolean addListener( PropertyChangeListener listener );
 
     /**
-     * @return the namespace prefix (cannot be <code>null</code> or empty)
+     * @return the fixed value (a non-<code>null</code> value means the value is unmodifiable)
+     */
+    String getFixedValue();
+
+    /**
+     * @return the namespace prefix (can be <code>null</code> or empty)
      */
     String getNamespacePrefix();
 
     /**
-     * @return the runtime type (cannot be <code>null</code> or empty)
+     * @return the runtime type (can be <code>null</code> or empty)
      */
     String getRuntimeType();
 
     /**
      * A simple identifier does not include the namespace prefix.
      * 
-     * @return the simple identifier (cannot be <code>null</code> or empty)
+     * @return the simple identifier (can be <code>null</code> or empty)
      */
     String getSimpleId();
+
+    /**
+     * @return the type (can be <code>null</code> or empty)
+     */
+    Type getType();
 
     /**
      * @param listener the listener being removed (cannot be <code>null</code>)
@@ -68,6 +86,11 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     void setDescription( String newDescription );
 
     /**
+     * @param runtimeType the Teiid runtime type (can be <code>null</code>)
+     */
+    void setType( Type runtimeType );
+
+    /**
      * @return <code>true</code> if this property should be indexed for use by the Teiid server
      */
     boolean shouldBeIndexed();
@@ -77,14 +100,64 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
      */
     public enum PropertyName {
         /**
+         * Indicates if the property should only be modified by advanced users.
+         */
+        ADVANCED,
+
+        /**
          * The allowed values property.
          */
         ALLOWED_VALUES,
 
         /**
+         * The default value of the property (used when user has not entered a value).
+         */
+        DEFAULT_VALUE,
+
+        /**
          * The description property.
          */
-        DESCRIPTION
+        DESCRIPTION,
+
+        /**
+         * The property name to display to the user.
+         */
+        DISPLAY_NAME,
+
+        /**
+         * The fixed property value.
+         */
+        FIXED_VALUE,
+
+        /**
+         * Indicates if the property should be indexed for use in the Teiid runtime.
+         */
+        INDEX,
+
+        /**
+         * Indicates if the property should be masked when displayed to the user.
+         */
+        MASKED,
+
+        /**
+         * The namespace prefix where the extension property is defined.
+         */
+        NAMESPACE_PREFIX,
+
+        /**
+         * Indicates if the property is required to have a value.
+         */
+        REQUIRED,
+
+        /**
+         * The property identifier without the namespace prefix.
+         */
+        SIMPLE_ID,
+
+        /**
+         * The Teiid runtime data type.
+         */
+        TYPE
     }
 
     /**
@@ -117,8 +190,9 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
 
         /**
          * @param type the Teiid runtime type (cannot be <code>null</code>)
+         * @throws IllegalArgumentException if the param is not valid
          */
-        Type( String type ) {
+        private Type( String type ) {
             assert type != null : "runtime type is null"; //$NON-NLS-1$
             this.runtimeType = type;
         }
@@ -144,11 +218,9 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     class Utils {
 
         /**
-         * If the runtime type cannot be converted, then {@link ModelExtensionPropertyDefinitionImpl.Type#STRING string} is
-         * returned.
-         * 
-         * @param runtimeType the Teiid runtime type being converted (cannot be <code>null</code> or empty)
-         * @return the model extension property definition type (never <code>null</code>)
+         * @param runtimeType the Teiid runtime type being converted (never <code>null</code> or empty)
+         * @return the model extension property definition type (newver <code>null</code>)
+         * @throws IllegalArgumentException if argument cannot be converted to a valid type
          */
         public static Type convertRuntimeType( String runtimeType ) {
             CoreArgCheck.isNotEmpty(runtimeType, "runtimeType is empty"); //$NON-NLS-1$
@@ -159,7 +231,7 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
                 }
             }
 
-            return Type.STRING;
+            throw new IllegalArgumentException(NLS.bind(Messages.invalidRuntimeType, runtimeType));
         }
 
         /**
@@ -206,6 +278,132 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
             }
 
             return false;
+        }
+
+        /**
+         * @param runtimeType the runtime type (can be <code>null</code>)
+         * @param proposedValue the proposed value (can be <code>null</code> or empty)
+         * @param required indicates if the property requires a value
+         * @param allowedValues the allowed values (can be <code>null</code> or empty)
+         * @return the error message or <code>null</code>
+         */
+        public static String isValidValue( Type runtimeType,
+                                           String proposedValue,
+                                           boolean required,
+                                           String[] allowedValues ) {
+            // must have a runtime type
+            if (runtimeType == null) {
+                return Messages.missingRuntimeTypeValidationMsg;
+            }
+
+            // must have a value
+            if (CoreStringUtil.isEmpty(proposedValue)) {
+                if (required) {
+                    return Messages.emptyPropertyValue;
+                }
+            }
+
+            // validate against allowed values first
+            if ((allowedValues != null) && (allowedValues.length != 0)) {
+                for (String allowedValue : allowedValues) {
+                    if (allowedValue.equals(proposedValue)) {
+                        // valid
+                        return null;
+                    }
+                }
+
+                // must match an allowed value
+                return Messages.valueDoesNotMatchAnAllowedValue;
+            }
+
+            // no validation done on these types
+            if ((Type.STRING == runtimeType) || (Type.BLOB == runtimeType) || (Type.CLOB == runtimeType)
+                    || (Type.OBJECT == runtimeType) || (Type.XML == runtimeType)) {
+                return null; // valid
+            }
+
+            if (Type.BOOLEAN == runtimeType) {
+                if (!proposedValue.equalsIgnoreCase(Boolean.TRUE.toString())
+                        && !proposedValue.equalsIgnoreCase(Boolean.FALSE.toString())) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.CHAR == runtimeType) {
+                if (proposedValue.length() != 1) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.BYTE == runtimeType) {
+                try {
+                    Byte.parseByte(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.SHORT == runtimeType) {
+                try {
+                    Short.parseShort(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.INTEGER == runtimeType) {
+                try {
+                    Integer.parseInt(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.LONG == runtimeType) {
+                try {
+                    Long.parseLong(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.FLOAT == runtimeType) {
+                try {
+                    Float.parseFloat(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.DOUBLE == runtimeType) {
+                try {
+                    Double.parseDouble(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.BIG_INTEGER == runtimeType) {
+                try {
+                    new BigInteger(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.BIG_DECIMAL == runtimeType) {
+                try {
+                    new BigDecimal(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.DATE == runtimeType) {
+                try {
+                    Date.valueOf(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.TIME == runtimeType) {
+                try {
+                    Time.valueOf(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else if (Type.TIMESTAMP == runtimeType) {
+                try {
+                    Timestamp.valueOf(proposedValue);
+                } catch (Exception e) {
+                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                }
+            } else {
+                // unknown property type
+                return NLS.bind(Messages.unknownPropertyType, runtimeType);
+            }
+
+            // valid
+            return null;
         }
     }
 

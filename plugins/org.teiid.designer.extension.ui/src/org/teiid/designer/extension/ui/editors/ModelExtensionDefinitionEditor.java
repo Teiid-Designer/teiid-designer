@@ -33,6 +33,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
@@ -50,6 +51,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private IAction showRegistryViewAction;
     private IAction updateRegisteryAction;
+    
+    private ModelExtensionDefinitionValidator validator;
 
     /**
      * {@inheritDoc}
@@ -77,11 +80,11 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             addPage(0, sourceEditor, getEditorInput());
 
             // add properties editor
-            this.propertiesPage = new PropertiesEditorPage(this, this.med);
+            this.propertiesPage = new PropertiesEditorPage(this, this.validator);
             addPage(0, this.propertiesPage);
 
             // add overview editor
-            this.overviewPage = new OverviewEditorPage(this, this.med);
+            this.overviewPage = new OverviewEditorPage(this, this.validator);
             addPage(0, this.overviewPage);
 
             // set text editor title and initialize header text to first page
@@ -101,6 +104,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                     handlePageChanged();
                 }
             });
+
+            this.overviewPage.setFocus();
         } catch (PartInitException e) {
             // TODO implement exception handling
         }
@@ -145,6 +150,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser();
         this.med = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
         this.med.setResourcePath(medFile.getLocation().toPortableString());
+        this.validator = new ModelExtensionDefinitionValidator(this.med);
     }
 
     /**
@@ -188,7 +194,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     void handlePageChanged() {
-        this.scrolledForm.setText(((FormPage)getSelectedPage()).getTitle());
+        FormPage page = (FormPage)getSelectedPage();
+        this.scrolledForm.setText(page.getTitle());
+        page.setFocus();
     }
 
     /**

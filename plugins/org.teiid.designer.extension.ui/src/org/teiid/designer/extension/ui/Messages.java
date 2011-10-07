@@ -19,6 +19,20 @@ public class Messages extends NLS {
     public static String namespaceUriColumnText;
     public static String versionColumnText;
     public static String registeredColumnText;
+    
+    public static String localeColumnText;
+    public static String localeColumnToolTip;
+    public static String translationColumnText;
+    public static String translationColumnToolTip;
+    
+    public static String addPropertyDescriptionDialogTitle;
+    public static String editPropertyDescriptionDialogTitle;
+    public static String addPropertyDisplayNameDialogTitle;
+    public static String editPropertyDisplayNameDialogTitle;
+    
+    public static String translationDialogMsg;
+    public static String localeLabel;
+    public static String translationLabel;
 
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;
@@ -102,6 +116,7 @@ public class Messages extends NLS {
     public static String propertiesPageExtensionPropertiesDescription;
     public static String propertiesPageExtensionPropertiesTitle;
     public static String propertiesPageAddMetaclassButtonToolTip;
+    public static String propertiesPageEditMetaclassButtonToolTip;
     public static String propertiesPageRemoveMetaclassButtonToolTip;
     public static String propertiesPageAddPropertyButtonToolTip;
     public static String propertiesPageEditPropertyButtonToolTip;
@@ -116,6 +131,8 @@ public class Messages extends NLS {
     public static String resourcePathLabel;
     public static String versionLabel;
     public static String descriptionLabel;
+    public static String simpleIdLabel;
+    public static String runtimeTypeLabel;
 
     public static String addButton;
     public static String editButton;
@@ -137,11 +154,51 @@ public class Messages extends NLS {
     public static String runtimeTypePropertyAttributeColumnHeader;
     public static String simpleIdPropertyAttributeColumnHeader;
 
+    public static String advancedPropertyAttributeColumnHeaderToolTip;
+    public static String allowedValuesPropertyAttributeColumnHeaderToolTip;
+    public static String defaultValuePropertyAttributeColumnHeaderToolTip;
+    public static String descriptionPropertyAttributeColumnHeaderToolTip;
+    public static String displayNamePropertyAttributeColumnHeaderToolTip;
+    public static String indexedPropertyAttributeColumnHeaderToolTip;
+    public static String maskedPropertyAttributeColumnHeaderToolTip;
+    public static String modifiablePropertyAttributeColumnHeaderToolTip;
+    public static String requiredPropertyAttributeColumnHeaderToolTip;
+    public static String runtimeTypePropertyAttributeColumnHeaderToolTip;
+    public static String simpleIdPropertyAttributeColumnHeaderToolTip;
+
     public static String addMetaclassDialogTitle;
-    public static String addMetaclassDialogMessage;
+    public static String metaclassDialogMessage;
+    public static String editMetaclassDialogTitle;
     public static String metaclassLabel;
     public static String metaclassToolTip;
-    public static String metaclassExistsInMedMsg;
+    public static String removeMetaclassDialogTitle;
+    public static String removeMetaclassDialogMsg;
+    public static String removePropertyDialogTitle;
+    public static String removePropertyDialogMsg;
+    
+    public static String addPropertyDialogTitle;
+    public static String editPropertyDialogDescriptionSectionDescription;
+    public static String editPropertyDialogDescriptionSectionTitle;
+    public static String editPropertyDialogAddDescriptionButtonToolTip;
+    public static String editPropertyDialogEditDescriptionButtonToolTip;
+    public static String editPropertyDialogRemoveDescriptionButtonToolTip;
+    public static String editPropertyDialogDisplayNameSectionDescription;
+    public static String editPropertyDialogDisplayNameSectionTitle;
+    public static String editPropertyDialogAddDisplayNameButtonToolTip;
+    public static String editPropertyDialogEditDisplayNameButtonToolTip;
+    public static String editPropertyDialogRemoveDisplayNameButtonToolTip;
+    public static String editPropertyDialogInfoSectionDescription;
+    public static String editPropertyDialogInfoSectionTitle;
+    public static String editPropertyDialogInvalidRuntimeTypeMsg;
+    public static String editPropertyDialogPropertyValueSectionDescription;
+    public static String editPropertyDialogPropertyValueSectionTitle;
+    public static String editPropertyDialogTitle;
+    public static String editPropertyDialogFlagsSectionTitle;
+    public static String propertyDialogMessage;
+    public static String removeDescriptionDialogTitle;
+    public static String removeDescriptionDialogMsg;
+    public static String removeDisplayNameDialogTitle;
+    public static String removeDisplayNameDialogMsg;
 
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$

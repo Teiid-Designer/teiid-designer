@@ -9,6 +9,7 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -206,8 +209,29 @@ public class ModelExtensionDefinition {
     }
 
     /**
-     * @param metaclassName the metaclass name whose extended properties are being requested (cannot be <code>null</code> or empty)
-     * @return the extension properties (never <code>null</code> but can be empty)
+     * @return a copy of the collection of extension property definitions (never <code>null</code> but can be empty)
+     */
+    public Map<String, Map<String, ModelExtensionPropertyDefinition>> getPropertyDefinitions() {
+        Map<String, Map<String, ModelExtensionPropertyDefinition>> properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
+
+        for (Map.Entry<String, Map<String, ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) {
+            String metaclassName = entry.getKey();
+            Map<String, ModelExtensionPropertyDefinition> propDefns = new HashMap<String, ModelExtensionPropertyDefinition>();
+
+            for (ModelExtensionPropertyDefinition propDefn : entry.getValue().values()) {
+                propDefns.put(propDefn.getId(), propDefn);
+            }
+
+            properties.put(metaclassName, propDefns);
+        }
+
+        return properties;
+    }
+
+    /**
+     * @param metaclassName the metaclass name whose extended property definitions are being requested (cannot be <code>null</code>
+     *            or empty)
+     * @return the extension property definitions (never <code>null</code> but can be empty)
      */
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( String metaclassName ) {
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is null"); //$NON-NLS-1$
@@ -318,9 +342,8 @@ public class ModelExtensionDefinition {
         int currentVersion = this.header.getVersion();
         if (currentVersion != newVersion) {
             if (newVersion < ModelExtensionDefinitionHeader.DEFAULT_VERSION) {
-                Util.log(IStatus.ERROR,
- NLS.bind(invalidDefinitionFileNewVersion, new Object[] {getNamespacePrefix(), newVersion,
-                    currentVersion}));
+                Util.log(IStatus.ERROR, NLS.bind(invalidDefinitionFileNewVersion, new Object[] { getNamespacePrefix(), newVersion,
+                        currentVersion }));
                 return;
             }
 

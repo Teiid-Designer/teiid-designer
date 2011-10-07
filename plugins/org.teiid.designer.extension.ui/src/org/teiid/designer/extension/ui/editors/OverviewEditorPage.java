@@ -9,6 +9,8 @@ package org.teiid.designer.extension.ui.editors;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW_PAGE;
+import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
+import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 
 import java.util.Set;
 
@@ -29,16 +31,11 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
-/**
- * 
- */
 public final class OverviewEditorPage extends MedEditorPage {
 
     private final ErrorMessage descriptionError;
@@ -56,8 +53,8 @@ public final class OverviewEditorPage extends MedEditorPage {
     private Text txtVersion;
 
     public OverviewEditorPage( FormEditor medEditor,
-                               ModelExtensionDefinition med ) {
-        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, med);
+                               ModelExtensionDefinitionValidator medValidator ) {
+        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, medValidator);
         this.descriptionError = new ErrorMessage();
         this.metamodelUriError = new ErrorMessage();
         this.namespacePrefixError = new ErrorMessage();
@@ -76,24 +73,41 @@ public final class OverviewEditorPage extends MedEditorPage {
     @Override
     protected void createBody( Composite body,
                                FormToolkit toolkit ) {
-        body.setLayout(FormUtil.createFormGridLayout(false, 2));
+        BODY: {
+            body.setLayout(new GridLayout());
+            body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        }
 
-        Section section = toolkit.createSection(body, ExpandableComposite.NO_TITLE | ExpandableComposite.TITLE_BAR);
-        section.setLayout(FormUtil.createClearGridLayout(false, 1));
-        section.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+        final Section finalSection;
 
-        Composite container = toolkit.createComposite(section);
-        container.setLayout(FormUtil.createSectionClientGridLayout(false, 2));
-        section.setClient(container);
+        SECTION: {
+            Section section = toolkit.createSection(body, ExpandableComposite.NO_TITLE | ExpandableComposite.TITLE_BAR
+                    | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
+            section.setLayout(new GridLayout());
+            section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            finalSection = section;
+        }
 
-        ModelExtensionDefinition med = getModelExtensionDefinition();
+        final Composite finalContainer;
+
+        CONTAINER: {
+            Composite container = toolkit.createComposite(finalSection);
+            container.setLayout(new GridLayout(2, false));
+            container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            finalSection.setClient(container);
+            finalContainer = container;
+        }
 
         NAMESPACE_PREFIX: {
-            toolkit.createLabel(container, Messages.namespacePrefixLabel);
+            toolkit.createLabel(finalContainer, Messages.namespacePrefixLabel);
 
-            this.txtNamespacePrefix = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
-            this.txtNamespacePrefix.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-            this.txtNamespacePrefix.setText(med.getNamespacePrefix());
+            this.txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            this.txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            if (isEditMode()) {
+                this.txtNamespacePrefix.setText(this.getValidator().getNamespacePrefix());
+            }
+
             this.txtNamespacePrefix.addModifyListener(new ModifyListener() {
 
                 /**
@@ -108,15 +122,19 @@ public final class OverviewEditorPage extends MedEditorPage {
             });
         }
 
-        final Text txtNamespaceUri;
+        final Text finalTxtNamespaceUri;
 
         NAMESPACE_URI: {
-            toolkit.createLabel(container, Messages.namespaceUriLabel);
+            toolkit.createLabel(finalContainer, Messages.namespaceUriLabel);
 
-            this.txtNamespaceUri = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
-            txtNamespaceUri = this.txtNamespaceUri;
-            this.txtNamespaceUri.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-            this.txtNamespaceUri.setText(med.getNamespaceUri());
+            this.txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            finalTxtNamespaceUri = this.txtNamespaceUri;
+            this.txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            if (isEditMode()) {
+                this.txtNamespaceUri.setText(this.getValidator().getNamespaceUri());
+            }
+
             this.txtNamespaceUri.addModifyListener(new ModifyListener() {
 
                 /**
@@ -132,23 +150,26 @@ public final class OverviewEditorPage extends MedEditorPage {
         }
 
         METAMODEL_URI: {
-            toolkit.createLabel(container, Messages.extendedMetamodelUriLabel);
+            toolkit.createLabel(finalContainer, Messages.extendedMetamodelUriLabel);
 
-            this.cbxMetamodelUris = new CCombo(container, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
+            this.cbxMetamodelUris = new CCombo(finalContainer, COMBO_STYLE);
             toolkit.adapt(this.cbxMetamodelUris, true, false);
+            this.cbxMetamodelUris.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
             // populate URIs
             Set<String> items = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
             this.cbxMetamodelUris.setItems(items.toArray(new String[items.size()]));
 
             // set value based on MED
-            String metamodelUri = med.getMetamodelUri();
-            int index = this.cbxMetamodelUris.indexOf(metamodelUri);
+            if (isEditMode()) {
+                String metamodelUri = getValidator().getMetamodelUri();
+                int index = this.cbxMetamodelUris.indexOf(metamodelUri);
 
-            if (index == -1) {
-                UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
-            } else {
-                this.cbxMetamodelUris.select(index);
+                if (index == -1) {
+                    UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
+                } else {
+                    this.cbxMetamodelUris.select(index);
+                }
             }
 
             this.cbxMetamodelUris.addModifyListener(new ModifyListener() {
@@ -163,6 +184,7 @@ public final class OverviewEditorPage extends MedEditorPage {
                     validateMetamodelUri();
                 }
             });
+
             final CCombo cbx = this.cbxMetamodelUris;
             this.cbxMetamodelUris.addControlListener(new ControlAdapter() {
 
@@ -173,18 +195,23 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void controlResized( ControlEvent e ) {
-                    cbx.setSize(txtNamespaceUri.getSize());
+                    cbx.setSize(finalTxtNamespaceUri.getSize());
                 }
             });
         }
 
         RESOURCE_PATH: {
-            toolkit.createLabel(container, Messages.resourcePathLabel);
+            toolkit.createLabel(finalContainer, Messages.resourcePathLabel);
 
-            this.txtResourcePath = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | SWT.BORDER);
-            this.txtResourcePath.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-            this.txtResourcePath.setText(med.getResourcePath());
-            ((GridData)this.txtResourcePath.getLayoutData()).verticalIndent += ((GridLayout)container.getLayout()).verticalSpacing;
+            this.txtResourcePath = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY
+                    | TEXT_STYLE);
+            this.txtResourcePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            ((GridData)this.txtResourcePath.getLayoutData()).verticalIndent += ((GridLayout)finalContainer.getLayout()).verticalSpacing;
+
+            if (isEditMode()) {
+                this.txtResourcePath.setText(getValidator().getResourcePath());
+            }
+
             this.txtResourcePath.addModifyListener(new ModifyListener() {
 
                 /**
@@ -200,11 +227,15 @@ public final class OverviewEditorPage extends MedEditorPage {
         }
 
         VERSION: {
-            toolkit.createLabel(container, Messages.versionLabel);
+            toolkit.createLabel(finalContainer, Messages.versionLabel);
 
-            this.txtVersion = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER);
-            this.txtVersion.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-            this.txtVersion.setText(String.valueOf(med.getVersion()));
+            this.txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            this.txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            if (isEditMode()) {
+                this.txtVersion.setText(String.valueOf(getValidator().getVersion()));
+            }
+
             this.txtVersion.addModifyListener(new ModifyListener() {
 
                 /**
@@ -220,13 +251,17 @@ public final class OverviewEditorPage extends MedEditorPage {
         }
 
         DESCRIPTION: {
-            Label label = toolkit.createLabel(container, Messages.descriptionLabel);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+            Label label = toolkit.createLabel(finalContainer, Messages.descriptionLabel);
+            label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-            this.txtDescription = toolkit.createText(container, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
+            this.txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            this.txtDescription.setText(med.getDescription());
+
+            if (isEditMode()) {
+                this.txtDescription.setText(getValidator().getDescription());
+            }
+
             this.txtDescription.addModifyListener(new ModifyListener() {
 
                 /**
@@ -269,6 +304,8 @@ public final class OverviewEditorPage extends MedEditorPage {
     public void setFocus() {
         if (this.txtNamespacePrefix != null) {
             this.txtNamespacePrefix.setFocus();
+        } else {
+            super.setFocus();
         }
     }
 
@@ -294,17 +331,19 @@ public final class OverviewEditorPage extends MedEditorPage {
 
     void validateMetamodelUri() {
         this.metamodelUriError.message = ModelExtensionDefinitionValidator.validateMetamodelUri(this.cbxMetamodelUris.getText(),
-                                                                                                getRegistry());
+                                                                                                getRegistry().getExtendableMetamodelUris());
         updateMessage(this.metamodelUriError);
     }
 
     void validateNamespacePrefix() {
-        this.namespacePrefixError.message = ModelExtensionDefinitionValidator.validateNamespacePrefix(this.txtNamespacePrefix.getText());
+        this.namespacePrefixError.message = ModelExtensionDefinitionValidator.validateNamespacePrefix(this.txtNamespacePrefix.getText(),
+                                                                                                      getRegistry().getAllNamespacePrefixes());
         updateMessage(this.namespacePrefixError);
     }
 
     void validateNamespaceUri() {
-        this.namespaceUriError.message = ModelExtensionDefinitionValidator.validateNamespaceUri(this.txtNamespaceUri.getText());
+        this.namespaceUriError.message = ModelExtensionDefinitionValidator.validateNamespaceUri(this.txtNamespaceUri.getText(),
+                                                                                                getRegistry().getAllNamespaceUris());
         updateMessage(this.namespaceUriError);
     }
 

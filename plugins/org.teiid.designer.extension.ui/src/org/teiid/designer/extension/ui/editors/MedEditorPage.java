@@ -9,13 +9,14 @@ package org.teiid.designer.extension.ui.editors;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -26,15 +27,15 @@ import com.metamatrix.core.util.CoreStringUtil;
  */
 public abstract class MedEditorPage extends FormPage {
 
-    private final ModelExtensionDefinition med;
+    private final ModelExtensionDefinitionValidator medValidator;
 
     protected MedEditorPage( FormEditor medEditor,
                              String id,
                              String title,
-                             ModelExtensionDefinition med ) {
+                             ModelExtensionDefinitionValidator medValidator ) {
         super(medEditor, id, title);
-        CoreArgCheck.isNotNull(med, "MED is null"); //$NON-NLS-1$
-        this.med = med;
+        CoreArgCheck.isNotNull(medValidator, "medValidator is null"); //$NON-NLS-1$
+        this.medValidator = medValidator;
     }
 
     protected abstract void createBody( Composite body,
@@ -51,16 +52,20 @@ public abstract class MedEditorPage extends FormPage {
         updateAllMessages();
     }
 
-    protected IMessageManager getMessageManager() {
-        return ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
-    }
-
-    protected ModelExtensionDefinition getModelExtensionDefinition() {
-        return this.med;
-    }
-
     protected ModelExtensionRegistry getRegistry() {
         return ExtensionPlugin.getInstance().getRegistry();
+    }
+
+    protected Shell getShell() {
+        return getSite().getShell();
+    }
+
+    protected ModelExtensionDefinitionValidator getValidator() {
+        return this.medValidator;
+    }
+
+    protected boolean isEditMode() {
+        return this.medValidator.isEditMode();
     }
 
     protected abstract void updateAllMessages();
