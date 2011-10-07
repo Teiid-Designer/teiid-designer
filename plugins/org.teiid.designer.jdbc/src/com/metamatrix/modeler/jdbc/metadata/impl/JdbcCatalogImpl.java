@@ -106,49 +106,25 @@ public class JdbcCatalogImpl extends JdbcNodeImpl implements JdbcCatalog {
         // Convert the list to an array and return ...
         return (JdbcNode[])children.toArray(new JdbcNode[children.size()]);
     }
-
-    /* (non-Javadoc)
-     * This method returns a result set for a given catalog name
-     * Was derived from eclipse's Data Tools SQL2005ServerLoader class
-     */
-    private ResultSet getSchemas( String catalogName ) throws SQLException {
-        String QUERY_TEMPLATE = "select CATALOG_NAME as \'TABLE_CATALOG\', SCHEMA_NAME as \'TABLE_SCHEM" //$NON-NLS-1$
-                              + "\' from catalogName.INFORMATION_SCHEMA.SCHEMATA  ORDER BY TABLE_SCHEM"; //$NON-NLS-1$
-        String sql = QUERY_TEMPLATE.replaceAll("catalogName", catalogName); //$NON-NLS-1$
-
-        return getJdbcDatabase().getConnection().createStatement().executeQuery(sql);
-    }
     
     private boolean addSchemaChildren(DatabaseMetaData metadata, List children) {
         boolean supportsSchemas = true;
-        boolean isSqlServer = metadata.getClass().getName().endsWith(SQL_SERVER_DB_METADATA);
         // Load the schemas ...
         ResultSet resultSet = null;
         try {
-            if( getName() != null && isSqlServer  ) {
-                // SQL Server requires a bit different query in order to obtain the correct schema from the DB
-                resultSet = getSchemas(getName());
-                while (resultSet.next()) {
-                    final String schemaName = resultSet.getString(TABLE_SCHEM_STR);
-                    final String catalogName = resultSet.getString(TABLE_CATALOG_STR);
-                    if (getName().equalsIgnoreCase(catalogName)) {
-                        children.add(new JdbcSchemaImpl(this, schemaName));
-                    }
-                }
-            } else {
+            if( getName() != null ) {
+
                 resultSet = metadata.getSchemas();
                 while (resultSet.next()) {
                     final String catalogName = resultSet.getString(1);
                     children.add(new JdbcSchemaImpl(this, catalogName));
                 }
             }
-
-
         } catch (UnsupportedOperationException e) {
             supportsSchemas = false;
         } catch (Throwable t) {
             // Note, if SQL Server database, filter out SQL Server "permission" exceptions 
-            if( !(isSqlServer && t.getClass().getName().endsWith(SQL_SERVER_EXCEPTION)) ) {
+            if( !(t.getClass().getName().endsWith(SQL_SERVER_EXCEPTION)) ) {
                  final Object[] params = new Object[] {metadata.getClass().getName(), getJdbcDatabase().getConnection()};
                                 final String msg = JdbcPlugin.Util.getString("JdbcDatabaseImpl.Unexpected_exception_while_calling_getSchemas()_and_processing_results", params); //$NON-NLS-1$
                  JdbcPlugin.Util.log(IStatus.WARNING, t, msg);
