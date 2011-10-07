@@ -72,6 +72,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.modelgenerator.xml</module>
 		<module>org.teiid.designer.modeshape</module>
 		<module>org.teiid.designer.query.ui</module>
+		<module>org.teiid.designer.relational</module>
 		<module>org.teiid.designer.relational.ui</module>
 		<module>org.teiid.designer.relationship</module>
 		<module>org.teiid.designer.relationship.ui</module>
