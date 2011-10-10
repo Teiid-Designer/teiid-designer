@@ -48,6 +48,7 @@ import org.json.XML;
 import org.teiid.rest.RestPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 ${path}
@@ -73,13 +74,21 @@ public class ${className}{
             if (!root.getNodeName().equals("input")) throw new WebApplicationException(Response.Status.BAD_REQUEST);
             NodeList nodes = root.getChildNodes();
             for (int i = 0; i < nodes.getLength(); i++) {
-                Element element = (Element)nodes.item(i);
-                parameters.put(element.getNodeName(), element.getTextContent());
+                Element element = findElement(nodes.item(i));
+                if (element != null){
+                    parameters.put(element.getNodeName(), element.getTextContent());
+                }
             }
             return parameters;
         } catch (Exception e) {
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }
+    }
+
+    private Element findElement( Node node ) {
+        while (node != null && node.getNodeType() != Node.ELEMENT_NODE)
+            node = node.getNextSibling();
+        return (Element)node;
     }
 
     protected Map<String, String> getJSONInputs( InputStream is ) {
