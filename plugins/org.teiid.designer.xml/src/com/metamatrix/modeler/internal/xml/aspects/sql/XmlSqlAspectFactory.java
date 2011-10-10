@@ -8,6 +8,7 @@
 package com.metamatrix.modeler.internal.xml.aspects.sql;
 
 import org.eclipse.emf.ecore.EClassifier;
+
 import com.metamatrix.metamodels.xml.XmlDocumentPackage;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspect;
 import com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory;
@@ -17,14 +18,6 @@ import com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity;
  * XmlSqlAspectFactory
  */
 public class XmlSqlAspectFactory implements MetamodelAspectFactory {
-
-    /**
-     * Construct an instance of XmlSqlAspectFactory.
-     * 
-     */
-    public XmlSqlAspectFactory() {
-        super();
-    }
 
     /**
      * @see com.metamatrix.modeler.core.metamodel.aspect.MetamodelAspectFactory#create(org.eclipse.emf.ecore.EClassifier, com.metamatrix.modeler.core.metamodel.aspect.MetamodelEntity)

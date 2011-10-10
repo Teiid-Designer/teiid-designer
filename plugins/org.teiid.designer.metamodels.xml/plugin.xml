@@ -16,7 +16,7 @@
    	eNS_URI value defined in the EPackage class for that metamodel.
    -->
    <extension
-         id="xmldocxmldoc"
+         id="xmldoc"
          name="%metamodelName"
          point="org.teiid.designer.core.metamodel">
       <uri>
