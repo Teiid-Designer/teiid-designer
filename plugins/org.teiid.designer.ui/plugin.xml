@@ -30,7 +30,7 @@
    <extension-point id="modelResourceAction" 			name="%modelResourceAction" 			schema="schema/modelResourceAction.exsd"/>
    <extension-point id="modelObjectSpecialAction" 		name="%modelObjectSpecialAction" 		schema="schema/modelObjectSpecialAction.exsd"/>
    <extension-point id="generalPreferenceContributor" 	name="%generalPreferenceContributor" 	schema="schema/generalPreferenceContributor.exsd"/>
-
+   <extension-point id="modelProjectAction"             name="%modelProjectAction"              schema="schema/modelProjectAction.exsd"/>
 <!-- Model Project Nature -->
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
@@ -949,7 +949,16 @@
             name="com.metamatrix.modeler.internal.ui.actions.CreatePushdownFunctionAction">
       </class>
    </extension>
-
+<!-- Actions contributed to the Model Projects -->
+   <extension
+        id="CloneProjectAction2"
+        name="%cloneProjectAction2.name"
+        point="org.teiid.designer.ui.modelProjectAction">
+      <projectAction
+         name="com.metamatrix.modeler.internal.ui.actions.CloneProjectAction2"
+         label="%cloneProjectAction2.label">
+      </projectAction>
+   </extension>
 
 <!-- Adding Model Explorer action to show/hide non-model files -->
 	<extension

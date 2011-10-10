@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -25,9 +26,9 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.Resource.Factory.Registry;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.command.CommandParameter;
@@ -37,10 +38,11 @@ import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.xsd.XSDPackage;
-import org.teiid.core.id.IDGenerator;
 import org.teiid.core.id.InvalidIDException;
 import org.teiid.core.id.ObjectID;
 import org.teiid.core.id.UUID;
+
+import com.metamatrix.core.event.EventBroker;
 import com.metamatrix.core.modeler.CoreModelerPlugin;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -565,13 +567,6 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
                                    ModelerCore.Util.getString("ContainerImpl.The_EditingDomain_reference_may_not_be_null_1")); //$NON-NLS-1$
         }
         this.editingDomain = editingDomain;
-    }
-
-    /**
-     * Return the {@link IDGenerator} to use for the generation of {@link ObjectID} instances.
-     */
-    public IDGenerator getIDGenerator() {
-        return IDGenerator.getInstance();
     }
 
     /**
@@ -1215,9 +1210,6 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
         // Set the URIConverter instance ...
         resourceSet.setURIConverter(new ExtensibleURIConverterImpl());
 
-        // Initialize the IDGenerator
-        this.initializeIDGenerator();
-
         // Create the EMF Transaction Provider
         this.emfTransactionProvider = new UnitOfWorkProviderImpl(this.resourceSet);
 
@@ -1274,12 +1266,6 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
     // }
     // }
     // }
-
-    private void initializeIDGenerator() {
-        // Register all known ObjectIDFactory types with the IDGenerator
-        IDGenerator idGen = IDGenerator.getInstance();
-        idGen.addBuiltInFactories();
-    }
 
     private void log( final String msg ) {
         if (ModelerCore.DEBUG) {

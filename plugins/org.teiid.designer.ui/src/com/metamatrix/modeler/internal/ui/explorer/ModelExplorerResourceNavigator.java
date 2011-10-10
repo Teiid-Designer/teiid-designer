@@ -88,7 +88,6 @@ import com.metamatrix.core.event.EventSourceException;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.internal.core.workspace.DotProjectUtils;
 import com.metamatrix.modeler.internal.ui.PluginConstants;
-import com.metamatrix.modeler.internal.ui.actions.CloneProjectAction2;
 import com.metamatrix.modeler.internal.ui.actions.DeleteResourceAction;
 import com.metamatrix.modeler.internal.ui.actions.PasteInResourceAction;
 import com.metamatrix.modeler.internal.ui.actions.PasteSpecialAction;
@@ -108,6 +107,7 @@ import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.DelegatableAction;
 import com.metamatrix.modeler.ui.actions.IModelerActionConstants;
+import com.metamatrix.modeler.ui.actions.ModelProjectActionManager;
 import com.metamatrix.modeler.ui.actions.ModelResourceActionManager;
 import com.metamatrix.modeler.ui.actions.ModelerActionBarIdManager;
 import com.metamatrix.modeler.ui.actions.ModelerActionService;
@@ -214,7 +214,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private ModelExplorerMoveAction moveAction;
     private ModelExplorerCopyAction copyAction;
     private RemoveProjectAction removeProjectAction;
-    private CloneProjectAction2 cloneProjectAction;
     /** action allowing user to directly refresh tree */
     private IAction refreshAction;
     /** action allowing user to sort model contents alphabetically */
@@ -269,10 +268,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         this.removeProjectAction = new RemoveProjectAction();
         // register to receive workspace selection events in order to swap out copy actions
         wdw.getSelectionService().addSelectionListener(this.removeProjectAction);
-
-        this.cloneProjectAction = new CloneProjectAction2();
-        // register to receive workspace selection events in order to swap out copy actions
-        wdw.getSelectionService().addSelectionListener(this.cloneProjectAction);
 
         svc.registerDefaultGlobalActions(bars);
 
@@ -914,7 +909,11 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                     theMenu.insertBefore(ContextMenu.ADDITIONS, removeProjectAction);
                 } else {
                     if (DotProjectUtils.isModelerProject((IProject)obj)) {
-                        theMenu.insertBefore(ContextMenu.ADDITIONS, cloneProjectAction);
+                        // theMenu.insertBefore(ContextMenu.ADDITIONS, cloneProjectAction);
+                        MenuManager mpaMenu = ModelProjectActionManager.getModelProjectActionMenu(selection);
+                        if (mpaMenu != null && mpaMenu.getItems().length > 0) {
+                            theMenu.insertBefore(ContextMenu.ADDITIONS, mpaMenu);
+                        }
                     }
                 }
             }

@@ -307,6 +307,13 @@ public interface UiConstants {
             String CLASSNAME = "name"; //$NON-NLS-1$
             String LABEL = "label"; //$NON-NLS-1$
         }
+        
+        interface ModelProjectActionExtension {
+            String ID = "modelProjectAction"; //$NON-NLS-1$
+            String RESOURCE_ACTION = "projectAction"; //$NON-NLS-1$
+            String CLASSNAME = "name"; //$NON-NLS-1$
+            String LABEL = "label"; //$NON-NLS-1$
+        }
 
         interface GeneralPreferenceContributor {
             String ID = "generalPreferenceContributor"; //$NON-NLS-1$

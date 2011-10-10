@@ -7,15 +7,23 @@
  */
 package com.metamatrix.modeler.internal.ui.viewsupport;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
+import org.eclipse.ui.wizards.IWizardDescriptor;
+
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerResourceNavigator;
 import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -93,4 +101,36 @@ public class ModelerUiViewUtils {
         });
 
     }
+    
+    public static void launchWizard(String id, IStructuredSelection selection) {
+    	 // First see if this is a "new wizard".
+    	 IWizardDescriptor descriptor = PlatformUI.getWorkbench()
+    	   .getNewWizardRegistry().findWizard(id);
+    	 // If not check if it is an "import wizard".
+    	 if (descriptor == null) {
+    	   descriptor = PlatformUI.getWorkbench().getImportWizardRegistry()
+    	   .findWizard(id);
+    	 }
+    	 // Or maybe an export wizard
+    	 if (descriptor == null) {
+    	   descriptor = PlatformUI.getWorkbench().getExportWizardRegistry()
+    	   .findWizard(id);
+    	 }
+    	 try {
+    	   // Then if we have a wizard, open it.
+    	   if (descriptor != null) {
+    	     IWorkbenchWizard wizard = descriptor.createWizard();
+    	     wizard.init(PlatformUI.getWorkbench(), selection);
+    	     
+    	     WizardDialog wd = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+    	     wd.create();
+    	     wd.setTitle(wizard.getWindowTitle());
+    	     wd.open();
+    	   }
+    	 } catch (CoreException e) {
+    	   e.printStackTrace();
+    	 }
+    	}
+
+
 }
