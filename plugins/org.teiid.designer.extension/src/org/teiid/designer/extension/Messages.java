@@ -17,13 +17,13 @@ public class Messages extends NLS {
     public static String definitionSchemaFileNotFoundInFilesystem;
     public static String definitionSchemaFileNotFoundInWorkspace;
     public static String descriptorToolTip;
+    public static String duplicateAllowedValue;
     public static String emptyPropertyValue;
     public static String errorProcessingDefinitionFile;
     public static String errorProcessingExtensionPoint;
     public static String errorProcessingModelExtension;
     public static String extensionPropertyNotAdded;
     public static String incorrectModelExtensionAssistantClass;
-    public static String invalidAllowedValues;
     public static String invalidBooleanAllowedValue;
     public static String invalidDefinitionFileNewVersion;
     public static String invalidDefinitionFileVersion;
@@ -42,6 +42,7 @@ public class Messages extends NLS {
     public static String unknownRegistryQueryType;
     public static String valueDoesNotMatchAnAllowedValue;
 
+    public static String allowedValue;
     public static String description;
     public static String metaclassName;
     public static String metamodelUri;

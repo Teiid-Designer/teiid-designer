@@ -82,7 +82,7 @@ final class ErrorMessage implements IMessage {
      */
     @Override
     public int getMessageType() {
-        return (CoreStringUtil.isEmpty(message) ? IMessageProvider.NONE : IMessageProvider.ERROR);
+        return (CoreStringUtil.isEmpty(this.message) ? IMessageProvider.NONE : IMessageProvider.ERROR);
     }
 
     /**

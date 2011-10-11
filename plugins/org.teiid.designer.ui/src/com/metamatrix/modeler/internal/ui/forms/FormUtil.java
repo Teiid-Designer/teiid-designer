@@ -48,6 +48,10 @@ public class FormUtil {
         section.setDescription(description);
         section.getDescriptionControl().setFont(JFaceResources.getBannerFont());
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        section.clientVerticalSpacing = 5;
+        section.descriptionVerticalSpacing = 5;
+        section.marginHeight = 5;
+        section.titleBarTextMarginWidth = 5;
 
         managedForm.addPart(new SectionPart(section));
 

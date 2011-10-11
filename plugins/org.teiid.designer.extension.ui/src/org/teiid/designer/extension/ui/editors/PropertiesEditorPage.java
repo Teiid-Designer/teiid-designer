@@ -56,6 +56,7 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
+import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
@@ -405,7 +406,7 @@ public class PropertiesEditorPage extends MedEditorPage {
                     String metaclass = getSelectedMetaclass();
 
                     if (CoreStringUtil.isEmpty(metaclass)) {
-                        return new Object[0];
+                        return ArrayUtil.Constants.EMPTY_ARRAY;
                     }
 
                     return getValidator().getPropertyDefinitions(metaclass);

@@ -10,10 +10,12 @@ package org.teiid.designer.extension.definition;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +26,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Utils;
 import org.teiid.designer.extension.properties.Translation;
 
+import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
@@ -181,14 +184,49 @@ public final class ModelExtensionDefinitionValidator {
         return null; // always valid
     }
 
+    public static String validatePropertyAllowedValue( String runtimeType,
+                                                       String allowedValue ) {
+        String errorMsg = emptyCheck(Messages.allowedValue, allowedValue);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            // if no runtime type and not empty assume valid
+            if (CoreStringUtil.isEmpty(validatePropertyRuntimeType(runtimeType))) {
+                // make sure value is valid for type
+                errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), allowedValue, true, null);
+            }
+        }
+
+        return errorMsg;
+    }
+
+    /**
+     * @param runtimeType the runtime type (cannot be <code>null</code>)
+     * @param allowedValues the allowed values (can be <code>null</code>)
+     * @return <code>null</code> if all values are valid based on the runtime type
+     */
     public static String validatePropertyAllowedValues( String runtimeType,
                                                         String[] allowedValues ) {
-        // only validate if there is a runtime type and allowed values
-        if (CoreStringUtil.isEmpty(validatePropertyRuntimeType(runtimeType)) && (allowedValues != null)
-                && (allowedValues.length != 0)) {
-            for (String allowedValue : allowedValues) {
-                if (!CoreStringUtil.isEmpty(Utils.isValidValue(Utils.convertRuntimeType(runtimeType), allowedValue, true, null))) {
-                    return NLS.bind(Messages.invalidAllowedValues, allowedValue, runtimeType);
+        // valid not to have allowed values
+        if (ArrayUtil.isNullOrEmpty(allowedValues)) {
+            return null;
+        }
+
+        for (String allowedValue : allowedValues) {
+            // need to get rid of first occurrence of allowedValue in order to see if there is a duplicate
+            String errorMsg = validatePropertyAllowedValue(runtimeType, allowedValue);
+
+            // value is not valid for type
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                return errorMsg;
+            }
+
+            // make sure there are no duplicates
+            List<String> temp = new ArrayList<String>(Arrays.asList(allowedValues));
+            temp.remove(allowedValue);
+
+            for (Object value : temp) {
+                if (value.equals(allowedValue)) {
+                    return NLS.bind(Messages.duplicateAllowedValue, allowedValue);
                 }
             }
         }

@@ -34,6 +34,13 @@ public class Messages extends NLS {
     public static String localeLabel;
     public static String translationLabel;
 
+    public static String addAllowedValueDialogTitle;
+    public static String allowedValueDialogMessage;
+    public static String allowedValueDialogMessageTitle;
+    public static String allowedValueLabel;
+    public static String allowedValueToolTip;
+    public static String editAllowedValueDialogTitle;
+    
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;
     public static String findMedReferencesActionText;
@@ -174,6 +181,7 @@ public class Messages extends NLS {
     public static String addMetaclassDialogTitle;
     public static String metaclassDialogMessage;
     public static String editMetaclassDialogTitle;
+    public static String metaclassDialogTitle;
     public static String metaclassLabel;
     public static String metaclassToolTip;
     public static String removeMetaclassDialogTitle;
@@ -208,6 +216,7 @@ public class Messages extends NLS {
     public static String editPropertyDialogPropertyValueSectionTitle;
     public static String editPropertyDialogTitle;
     public static String editPropertyDialogFlagsSectionTitle;
+    public static String propertyDialogTitle;
     public static String propertyDialogMessage;
     public static String removeDescriptionDialogTitle;
     public static String removeDescriptionDialogMsg;

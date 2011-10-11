@@ -94,6 +94,8 @@ final class EditMetaclassDialog extends FormDialog {
 
         if (isEditMode()) {
             newShell.setText(Messages.editMetaclassDialogTitle);
+        } else {
+            newShell.setText(Messages.addMetaclassDialogTitle);
         }
     }
 
@@ -126,9 +128,9 @@ final class EditMetaclassDialog extends FormDialog {
     @Override
     protected void createFormContent( IManagedForm managedForm ) {
         this.scrolledForm = managedForm.getForm();
-        this.scrolledForm.setText(Messages.addMetaclassDialogTitle);
+        this.scrolledForm.setText(Messages.metaclassDialogTitle);
         this.scrolledForm.setImage(Activator.getDefault().getImage(MED_EDITOR));
-        this.scrolledForm.setMessage(Messages.metaclassDialogMessage, IMessageProvider.INFORMATION);
+        this.scrolledForm.setMessage(Messages.metaclassDialogMessage, IMessageProvider.NONE);
 
         FormToolkit toolkit = managedForm.getToolkit();
         toolkit.decorateFormHeading(scrolledForm.getForm());
@@ -218,16 +220,6 @@ final class EditMetaclassDialog extends FormDialog {
         }
 
         this.scrolledForm.setMessage(errorMsg, imageType);
-    }
-
-    private String validateMetaclassName() {
-        String errorMsg = ModelExtensionDefinitionValidator.validateMetaclassName(this.metaclassName);
-
-        if (CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = ModelExtensionDefinitionValidator.validateMetaclassNames(this.existingMetaclasses, false);
-        }
-
-        return errorMsg;
     }
 
 }
