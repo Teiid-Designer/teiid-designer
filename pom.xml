@@ -4,11 +4,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<parent>
 	  <groupId>org.jboss.tools</groupId>
 	  <artifactId>org.jboss.tools.parent.pom</artifactId>
-	  <version>0.0.2-SNAPSHOT</version>
+	  <version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- parent pom must be built before the rest of the reactor can proceed. Get it here: http://anonsvn.jboss.org/repos/jbosstools/trunk/build/parent/pom.xml
