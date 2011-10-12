@@ -1,19 +1,22 @@
 <project
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-	  <groupId>org.jboss.tools</groupId>
-	  <artifactId>org.jboss.tools.parent.pom</artifactId>
-	  <version>0.0.3-SNAPSHOT</version>
+		<groupId>org.jboss.tools</groupId>
+		<artifactId>org.jboss.tools.parent.pom</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../build/parent/pom.xml</relativePath>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
+	<name>teiid.all</name>
 	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<!-- parent pom must be built before the rest of the reactor can proceed. Get it here: http://anonsvn.jboss.org/repos/jbosstools/trunk/build/parent/pom.xml
-		<module>../build/parent</module>
-		-->
+		<!-- parent pom must be built before the rest of the reactor can proceed. 
+			Get it here: http://anonsvn.jboss.org/repos/jbosstools/trunk/build/parent/pom.xml 
+			<module>../build/parent</module> -->
 		<module>plugins</module>
 		<module>features</module>
 		<module>tests</module>
