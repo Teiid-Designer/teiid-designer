@@ -599,6 +599,10 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                 return header.getNamespacePrefix();
             }
 
+            if (this.columnIndex == ColumnIndexes.REGISTERED) {
+                return null;
+            }
+
             if (this.columnIndex == ColumnIndexes.VERSION) {
                 return Integer.toString(header.getVersion());
             }
