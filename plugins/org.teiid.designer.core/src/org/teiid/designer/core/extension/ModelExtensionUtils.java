@@ -8,9 +8,13 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -19,6 +23,8 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.Translation;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -159,7 +165,7 @@ public class ModelExtensionUtils {
                                 }
                                 // Get the values for this property Definition
                                 String simpleId = null;
-                                String displayName = null;
+                                Set<Translation> displayNames = null;
                                 String runtimeType = null;
                                 String required = null;
                                 String defaultValue = null;
@@ -167,8 +173,8 @@ public class ModelExtensionUtils {
                                 String advanced = null;
                                 String masked = null;
                                 String index = null;
-                                String[] allowedValues = null;
-                                String defnDescrip = propertyDefinitionAnnotation.getDescription();
+                                Set<String> allowedValues = null;
+                                Set<Translation> descriptions = null;
                                 EMap<String, String> propDefnTags = propertyDefinitionAnnotation.getTags();
                                 for (Object propDefnTagObj : propDefnTags.entrySet()) {
                                     if (!(propDefnTagObj instanceof EStringToStringMapEntryImpl)) {
@@ -180,8 +186,40 @@ public class ModelExtensionUtils {
                                     String value = ((EStringToStringMapEntryImpl)propDefnTagObj).getValue();
                                     if (PropertyTagKeys.ID.equals(key)) {
                                         simpleId = value;
-                                    } else if (PropertyTagKeys.DISPLAY_NAME.equals(key)) {
-                                        displayName = value;
+                                    } else if (PropertyTagKeys.DISPLAY_NAMES.equals(key)) {
+                                        displayNames = new HashSet<Translation>();
+                                        Annotation displayNamesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
+                                                                                                     false);
+                                        EMap<String, String> displayNamesTags = displayNamesAnnotation.getTags();
+
+                                        for (Object temp : displayNamesTags.entrySet()) {
+                                            if (!(temp instanceof EStringToStringMapEntryImpl)) {
+                                                throw new Exception(Util.getString(I18N_PREFIX
+                                                        + "modelExtensionDefinitionTagUnexpectedClass", temp.getClass())); //$NON-NLS-1$
+                                            }
+
+                                            EStringToStringMapEntryImpl displayNameEntry = (EStringToStringMapEntryImpl)object;
+                                            String localeTxt = displayNameEntry.getKey();
+                                            displayNames.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
+                                                                             displayNameEntry.getValue()));
+                                        }
+                                    } else if (PropertyTagKeys.DESCRIPTIONS.equals(key)) {
+                                        descriptions = new HashSet<Translation>();
+                                        Annotation desciptionsAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
+                                                                                                    false);
+                                        EMap<String, String> descriptionsTags = desciptionsAnnotation.getTags();
+
+                                        for (Object temp : descriptionsTags.entrySet()) {
+                                            if (!(temp instanceof EStringToStringMapEntryImpl)) {
+                                                throw new Exception(Util.getString(I18N_PREFIX
+                                                        + "modelExtensionDefinitionTagUnexpectedClass", temp.getClass())); //$NON-NLS-1$
+                                            }
+
+                                            EStringToStringMapEntryImpl descriptionEntry = (EStringToStringMapEntryImpl)object;
+                                            String localeTxt = descriptionEntry.getKey();
+                                            descriptions.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
+                                                                             descriptionEntry.getValue()));
+                                        }
                                     } else if (PropertyTagKeys.RUNTIME_TYPE.equals(key)) {
                                         runtimeType = value;
                                     } else if (PropertyTagKeys.REQUIRED.equals(key)) {
@@ -197,41 +235,37 @@ public class ModelExtensionUtils {
                                     } else if (PropertyTagKeys.INDEX.equals(key)) {
                                         index = value;
                                     } else if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
+                                        allowedValues = new HashSet<String>();
                                         Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
                                                                                                       false);
 
                                         if (allowedValuesAnnotation == null) {
-                                            throw new Exception(
-                                                                Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
+                                            throw new Exception(Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
                                                                                ((EStringToStringMapEntryImpl)propDefnTagObj).getKey()));
                                         }
 
                                         EMap<String, String> allowedValuesTags = allowedValuesAnnotation.getTags();
-                                        Object[] allowedValueObjs = allowedValuesTags.keySet().toArray();
-                                        allowedValues = new String[allowedValueObjs.length];
-                                        for (int i = 0; i < allowedValueObjs.length; i++) {
-                                            allowedValues[i] = (String)allowedValueObjs[i];
+
+                                        for (String allowedValue : allowedValuesTags.keySet()) {
+                                            allowedValues.add(allowedValue);
                                         }
                                     }
                                 }
-                                // TODO: Set indexed property value correctly
 
                                 // Create a property definition based on the read in properties, then add it.
                                 ModelExtensionPropertyDefinition propertyDefn = assistant.createPropertyDefinition(simpleId,
-                                                                                                                   displayName,
                                                                                                                    runtimeType,
                                                                                                                    required,
                                                                                                                    defaultValue,
                                                                                                                    fixedValue,
                                                                                                                    advanced,
                                                                                                                    masked,
-                                                                                                                   "true"); //$NON-NLS-1$
-                                // Set the allowed Values
-                                if (allowedValues != null) {
-                                    propertyDefn.setAllowedValues(allowedValues);
-                                }
-                                propertyDefn.setDescription(defnDescrip);
-                                // Add the property defn to the ModelExtensionDefinition
+                                                                                                                   index,
+                                                                                                                   allowedValues,
+                                                                                                                   descriptions,
+                                                                                                                   displayNames);
+
+                                // Add the property definition to the ModelExtensionDefinition
                                 assistant.addPropertyDefinition(metaclassName, propertyDefn);
                             }
                         }
@@ -700,15 +734,22 @@ public class ModelExtensionUtils {
                         }
                     }
 
-                    // display name
-                    value = propDefn.getDisplayName();
+                    DISPLAY_NAMES: {
+                        Set<Translation> displayNames = propDefn.getDisplayNames();
 
-                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DISPLAY_NAME), value)) {
-                        if (CoreStringUtil.isEmpty(value)) {
-                            propDefTags.removeKey(PropertyTagKeys.DISPLAY_NAME);
-                        } else {
-                            propDefTags.put(PropertyTagKeys.DISPLAY_NAME, value);
+                        if (!displayNames.isEmpty()) {
+                            Annotation displayNamesAnnotation = getAnnotation(modelResource, propDefAnnotation,
+                                                                              PropertyTagKeys.DISPLAY_NAMES,
+                                                                              CoreStringUtil.Constants.EMPTY_STRING, true);
+                            EMap<String, String> displayNamesTags = displayNamesAnnotation.getTags();
+                            displayNamesTags.clear();
+
+                            for (Translation translation : displayNames) {
+                                displayNamesTags.put(translation.getLocale().toString(), translation.getTranslation());
+                            }
                         }
+
+                        break DISPLAY_NAMES;
                     }
 
                     // default value
@@ -722,15 +763,22 @@ public class ModelExtensionUtils {
                         }
                     }
 
-                    // description
-                    value = propDefn.getDescription();
+                    DESCRIPTIONS: {
+                        Set<Translation> descriptions = propDefn.getDescriptions();
 
-                    if (!CoreStringUtil.equals(propDefTags.get(PropertyTagKeys.DESCRIPTION), value)) {
-                        if (CoreStringUtil.isEmpty(value)) {
-                            propDefTags.removeKey(PropertyTagKeys.DESCRIPTION);
-                        } else {
-                            propDefTags.put(PropertyTagKeys.DESCRIPTION, value);
+                        if (!descriptions.isEmpty()) {
+                            Annotation descriptionsAnnotation = getAnnotation(modelResource, propDefAnnotation,
+                                                                              PropertyTagKeys.DESCRIPTIONS,
+                                                                              CoreStringUtil.Constants.EMPTY_STRING, true);
+                            EMap<String, String> descriptionsTags = descriptionsAnnotation.getTags();
+                            descriptionsTags.clear();
+
+                            for (Translation translation : descriptions) {
+                                descriptionsTags.put(translation.getLocale().toString(), translation.getTranslation());
+                            }
                         }
+
+                        break DESCRIPTIONS;
                     }
 
                     // id
@@ -798,8 +846,8 @@ public class ModelExtensionUtils {
         String ADVANCED = "advance"; //$NON-NLS-1$
         String ALLOWED_VALUES = "allowedValues"; //$NON-NLS-1$
         String DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
-        String DESCRIPTION = "description"; //$NON-NLS-1$
-        String DISPLAY_NAME = "displayName"; //$NON-NLS-1$
+        String DESCRIPTIONS = "description"; //$NON-NLS-1$
+        String DISPLAY_NAMES = "displayName"; //$NON-NLS-1$
         String ID = "id"; //$NON-NLS-1$
         String MASKED = "masked"; //$NON-NLS-1$
         String MODIFIABLE = "modifiable"; //$NON-NLS-1$

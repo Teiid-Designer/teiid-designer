@@ -19,17 +19,18 @@ public class DefaultModelObjectExtensionAssistant extends ModelObjectExtensionAs
      */
     public DefaultModelObjectExtensionAssistant( String namespacePrefix,
                                                  String namespaceUri,
-                                                 String metamodelUri ) {
-        createModelExtensionDefinition(namespacePrefix, namespaceUri, metamodelUri);
+                                                 String metamodelUri,
+                                                 String description,
+                                                 String version ) {
+        createModelExtensionDefinition(namespacePrefix, namespaceUri, metamodelUri, description, version);
     }
 
     /*
      * constructor
      */
     public DefaultModelObjectExtensionAssistant( ModelExtensionDefinitionHeader medHeader ) {
-        createModelExtensionDefinition(medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(), medHeader.getMetamodelUri());
-        setDefinitionDescription(medHeader.getDescription());
-        setDefinitionVersion(String.valueOf(medHeader.getVersion()));
+        createModelExtensionDefinition(medHeader.getNamespacePrefix(), medHeader.getNamespaceUri(), medHeader.getMetamodelUri(),
+                                       medHeader.getDescription(), String.valueOf(medHeader.getVersion()));
     }
 
 }

@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.wizards;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -45,6 +46,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -157,21 +159,31 @@ public final class NewMedWizard extends AbstractWizard
         // Create a MED using the DefaultModelObjectExtensionAssistant
         DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(namespacePrefix,
                                                                                                          namespaceUri,
-                                                                                                         metamodelUri);
+                                                                                                         metamodelUri,
+                                                                                                         null,
+                                                                                                         null);
         ModelExtensionDefinition newMed = defaultAssistant.getModelExtensionDefinition();
         newMed.setDescription("description for the ModelExtensionDefinition"); //$NON-NLS-1$
 
         // Create a Dummy Property
         String propId = "propertyId"; //$NON-NLS-1$
-        String propName = "Property Name"; //$NON-NLS-1$
         String type = "boolean"; //$NON-NLS-1$
         String required = "false"; //$NON-NLS-1$
         String advanced = "false"; //$NON-NLS-1$
         String masked = "false"; //$NON-NLS-1$
         String index = "false"; //$NON-NLS-1$
-        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(namespacePrefix, propId, propName,
-                                                                                             type, required,
-                                                                                             "", "", advanced, masked, index); //$NON-NLS-1$ //$NON-NLS-2$
+        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(namespacePrefix,
+                                                                                             propId,
+                                                                                             type,
+                                                                                             required,
+                                                                                             null,
+                                                                                             null,
+                                                                                             advanced,
+                                                                                             masked,
+                                                                                             index,
+                                                                                             null,
+                                                                                             null,
+                                                                                             null);
         // Add dummy property to the med, under a dummy metaclass name
         newMed.addPropertyDefinition("metaclassName", propDefn); //$NON-NLS-1$ 
 

@@ -259,7 +259,11 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
             if (isEditMode()) {
-                this.txtDescription.setText(getValidator().getDescription());
+                String description = getValidator().getDescription();
+
+                if (!CoreStringUtil.isEmpty(description)) {
+                    this.txtDescription.setText(description);
+                }
             }
 
             this.txtDescription.addModifyListener(new ModifyListener() {

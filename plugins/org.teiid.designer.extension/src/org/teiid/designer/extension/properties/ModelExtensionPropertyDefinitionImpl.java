@@ -11,9 +11,9 @@ import static org.teiid.designer.extension.ExtensionPlugin.Util;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
@@ -35,10 +35,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     public static final Type TYPE_DEFAULT = Type.STRING;
 
     private boolean advanced = ADVANCED_DEFAULT;
-    private String[] allowedValues;
+    private final Set<String> allowedValues;
     private String defaultValue;
-    private String description;
-    private String displayName;
+    private final Set<Translation> descriptions;
+    private final Set<Translation> displayNames;
     private String fixedValue;
     private boolean index = INDEX_DEFAULT;
     private CopyOnWriteArrayList<PropertyChangeListener> listeners;
@@ -50,12 +50,14 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
     public ModelExtensionPropertyDefinitionImpl() {
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+        this.allowedValues = new HashSet<String>();
+        this.descriptions = new HashSet<Translation>();
+        this.displayNames = new HashSet<Translation>();
     }
 
     /**
      * @param namespacePrefix the namespace prefix (can be <code>null</code> or empty)
      * @param simpleId the property identifier without the namespace prefix (can be <code>null</code> or empty)
-     * @param displayName the display name (can be <code>null</code> or empty)
      * @param runtimeType the Teiid runtime type (can be <code>null</code> or empty). Default value is {@value Type#STRING}.
      * @param required <code>true</code> string if this property must have a value (can be <code>null</code> or empty). Default
      *            value is {@value #REQUIRED_DEFAULT}.
@@ -68,21 +70,25 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      *            value is {@value #MASKED_DEFAULT}.
      * @param index <code>true</code> string if this property should be indexed for use by the Teiid server (can be
      *            <code>null</code> or empty). Default value is {@value #INDEX_DEFAULT}.
+     * @param allowedValues the allowed property values (can be <code>null</code> or empty)
+     * @param descriptions the one or more translations of the property description (can be <code>null</code> or empty)
+     * @param displayNames the one or more translations of the property display name (can be <code>null</code> or empty)
      */
     public ModelExtensionPropertyDefinitionImpl( String namespacePrefix,
                                                  String simpleId,
-                                                 String displayName,
                                                  String runtimeType,
                                                  String required,
                                                  String defaultValue,
                                                  String fixedValue,
                                                  String advanced,
                                                  String masked,
-                                                 String index ) {
+                                                 String index,
+                                                 Set<String> allowedValues,
+                                                 Set<Translation> descriptions,
+                                                 Set<Translation> displayNames ) {
         this();
         this.namespacePrefix = namespacePrefix;
         this.simpleId = simpleId;
-        this.displayName = displayName;
         this.defaultValue = defaultValue;
         this.fixedValue = fixedValue;
 
@@ -107,8 +113,50 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         }
 
         if (Type.BOOLEAN == this.type) {
-            this.allowedValues = BOOLEAN_ALLOWED_VALUES;
+            this.allowedValues.add(BOOLEAN_ALLOWED_VALUES[0]);
+            this.allowedValues.add(BOOLEAN_ALLOWED_VALUES[1]);
         }
+
+        if (descriptions != null) {
+            this.descriptions.addAll(descriptions);
+        }
+
+        if (displayNames != null) {
+            this.displayNames.addAll(displayNames);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#addAllowedValue(java.lang.String)
+     */
+    @Override
+    public boolean addAllowedValue( String newAllowedValue ) {
+        CoreStringUtil.isEmpty(newAllowedValue);
+        return this.allowedValues.add(newAllowedValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#addDescription(org.teiid.designer.extension.properties.Translation)
+     */
+    @Override
+    public boolean addDescription( Translation newDescription ) {
+        CoreArgCheck.isNotNull(newDescription, "newDescription is null"); //$NON-NLS-1$
+        return this.descriptions.add(newDescription);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#addDisplayName(org.teiid.designer.extension.properties.Translation)
+     */
+    @Override
+    public boolean addDisplayName( Translation newDisplayName ) {
+        CoreArgCheck.isNotNull(newDisplayName, "newDisplayName is null"); //$NON-NLS-1$
+        return this.displayNames.add(newDisplayName);
     }
 
     /**
@@ -117,9 +165,19 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#addListener(java.beans.PropertyChangeListener)
      */
     @Override
-    public boolean addListener( PropertyChangeListener listener ) {
-        CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
-        return this.listeners.addIfAbsent(listener);
+    public boolean addListener( PropertyChangeListener newListener ) {
+        CoreArgCheck.isNotNull(newListener, "newListener is null"); //$NON-NLS-1$
+        return this.listeners.addIfAbsent(newListener);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#allowedValues()
+     */
+    @Override
+    public Set<String> allowedValues() {
+        return new HashSet<String>(this.allowedValues);
     }
 
     /**
@@ -147,7 +205,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String[] getAllowedValues() {
-        return this.allowedValues;
+        return this.allowedValues.toArray(new String[this.allowedValues.size()]);
     }
 
     /**
@@ -163,23 +221,61 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
+     * Obtains the localized description for the current locale.
+     * 
      * @see org.teiid.core.properties.PropertyDefinition#getDescription()
      */
     @Override
     public String getDescription() {
-        return this.description;
+        for (Translation description : this.descriptions) {
+            if (Locale.getDefault().equals(description.getLocale())) {
+                return description.getTranslation();
+            }
+        }
+
+        // no translation found
+        return null;
     }
 
     /**
      * {@inheritDoc}
      * 
-     * Note: If a localized display name is not set the ID is used.
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#getDescriptions()
+     */
+    @Override
+    public Set<Translation> getDescriptions() {
+        return this.descriptions;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * Obtains the localized display name for the current locale. If no translation is available then the property identifier is
+     * returned.
      * 
      * @see org.teiid.core.properties.PropertyDefinition#getDisplayName()
+     * @see #getId()
      */
     @Override
     public String getDisplayName() {
-        return (CoreStringUtil.isEmpty(this.displayName) ? getId() : this.displayName);
+        for (Translation displayName : this.displayNames) {
+            if (Locale.getDefault().equals(displayName.getLocale())) {
+                return displayName.getTranslation();
+            }
+        }
+
+        // no translation found
+        return getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#getDisplayNames()
+     */
+    @Override
+    public Set<Translation> getDisplayNames() {
+        return this.displayNames;
     }
 
     /**
@@ -299,7 +395,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String isValidValue( String proposedValue ) {
-        String errorMsg = Utils.isValidValue(this.type, proposedValue, this.required, this.allowedValues);
+        String errorMsg = Utils.isValidValue(this.type, proposedValue, this.required, getAllowedValues());
 
         if (!CoreStringUtil.isEmpty(errorMsg)) {
             errorMsg = NLS.bind(Messages.appendPropertyId, errorMsg, getId());
@@ -331,6 +427,39 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeAllowedValue(java.lang.String)
+     */
+    @Override
+    public boolean removeAllowedValue( String allowedValue ) {
+        CoreStringUtil.isEmpty(allowedValue);
+        return this.allowedValues.remove(allowedValue);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeDescription(org.teiid.designer.extension.properties.Translation)
+     */
+    @Override
+    public boolean removeDescription( Translation description ) {
+        CoreArgCheck.isNotNull(description, "description is null"); //$NON-NLS-1$
+        return this.descriptions.remove(description);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeDisplayName(org.teiid.designer.extension.properties.Translation)
+     */
+    @Override
+    public boolean removeDisplayName( Translation displayName ) {
+        CoreArgCheck.isNotNull(displayName, "displayName is null"); //$NON-NLS-1$
+        return this.displayNames.remove(displayName);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeListener(java.beans.PropertyChangeListener)
      */
     @Override
@@ -352,23 +481,27 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setAllowedValues(java.lang.String[])
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setAllowedValues(java.util.Set)
      */
     @Override
-    public void setAllowedValues( String[] newAllowedValues ) {
+    public void setAllowedValues( Set<String> newAllowedValues ) {
+        boolean clearAllowedValues = ((newAllowedValues == null) || newAllowedValues.isEmpty());
+
         if (Type.BOOLEAN == this.type) {
             boolean error = false;
 
-            if ((newAllowedValues == null) || (BOOLEAN_ALLOWED_VALUES.length != newAllowedValues.length)) {
+            if (clearAllowedValues || (BOOLEAN_ALLOWED_VALUES.length != newAllowedValues.size())) {
                 error = true;
             } else {
-                if (CoreStringUtil.isEmpty(newAllowedValues[0]) || CoreStringUtil.isEmpty(newAllowedValues[1])) {
+                String[] booleanValues = newAllowedValues.toArray(new String[BOOLEAN_ALLOWED_VALUES.length]);
+
+                if (CoreStringUtil.isEmpty(booleanValues[0]) || CoreStringUtil.isEmpty(booleanValues[1])) {
                     error = true;
-                } else if (!newAllowedValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
-                        || !newAllowedValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
+                } else if (!booleanValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
+                        || !booleanValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
                     error = true;
-                } else if (!newAllowedValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
-                        || !newAllowedValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
+                } else if (!booleanValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
+                        || !booleanValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
                     error = true;
                 }
             }
@@ -380,54 +513,28 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
             return;
         }
 
-        Object oldValue = this.allowedValues;
         boolean changed = false;
 
-        if (this.allowedValues == null) {
-            if (newAllowedValues != null) {
-                changed = true;
-            }
+        if (this.allowedValues.isEmpty() && !clearAllowedValues) {
+            changed = true;
+        } else if (!this.allowedValues.isEmpty() && clearAllowedValues) {
+            changed = true;
+        } else if (this.allowedValues.size() != newAllowedValues.size()) {
+            changed = true;
         } else {
-            if (newAllowedValues == null) {
-                changed = true;
-            } else if (this.allowedValues.length == newAllowedValues.length) {
-                // see if values have changed
-                Collection<String> newValuesCollection = Arrays.asList(newAllowedValues);
-
-                for (String value : this.allowedValues) {
-                    if (!newValuesCollection.contains(value)) {
-                        changed = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (changed && (newAllowedValues != null)) {
-            Collection<String> newValues = new ArrayList<String>(newAllowedValues.length);
-
-            for (String value : newAllowedValues) {
-                String errorMsg = isValidValue(value);
-
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    newValues.add(value);
-                } else {
-                    Util.log(IStatus.ERROR, NLS.bind(Messages.appendPropertyId, errorMsg, getId()));
+            // sizes are the same so see if values have changed
+            for (String value : this.allowedValues) {
+                if (!newAllowedValues.contains(value)) {
+                    changed = true;
                     break;
-                }
-            }
-
-            if (newValues.size() != newAllowedValues.length) {
-                changed = newValues.isEmpty();
-
-                if (changed) {
-                    newAllowedValues = newValues.toArray(new String[newValues.size()]);
                 }
             }
         }
 
         if (changed) {
-            this.allowedValues = newAllowedValues;
+            Object oldValue = new HashSet<String>(this.allowedValues);
+            this.allowedValues.clear();
+            this.allowedValues.addAll(newAllowedValues);
             notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, this.allowedValues);
         }
     }
@@ -439,32 +546,59 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         if (!CoreStringUtil.equals(this.defaultValue, newDefaultValue)) {
             String oldValue = this.defaultValue;
             this.defaultValue = newDefaultValue;
-            notifyChangeListeners(PropertyName.DEFAULT_VALUE, oldValue, this.description);
+            notifyChangeListeners(PropertyName.DEFAULT_VALUE, oldValue, this.defaultValue);
         }
     }
 
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setDescription(java.lang.String)
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setDescriptions(java.util.Set)
      */
     @Override
-    public void setDescription( String newDescription ) {
-        if (!CoreStringUtil.equals(this.description, newDescription)) {
-            Object oldValue = this.description;
-            this.description = newDescription;
-            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.description);
+    public void setDescriptions( Set<Translation> newDescriptions ) {
+        boolean changed = true;
+
+        if ((newDescriptions != null) && (this.descriptions.size() == newDescriptions.size())
+                && this.descriptions.containsAll(newDescriptions)) {
+            changed = false;
+        }
+
+        if (changed) {
+            Object oldValue = new HashSet<Translation>(this.descriptions);
+            this.descriptions.clear();
+
+            if (newDescriptions != null) {
+                this.descriptions.addAll(newDescriptions);
+            }
+
+            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.descriptions);
         }
     }
 
     /**
-     * @param newDisplayName the new display name (can be <code>null</code> or empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setDisplayNames(java.util.Set)
      */
-    public void setDisplayName( String newDisplayName ) {
-        if (!CoreStringUtil.equals(this.displayName, newDisplayName)) {
-            String oldValue = this.displayName;
-            this.displayName = newDisplayName;
-            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayName);
+    @Override
+    public void setDisplayNames( Set<Translation> newDisplayNames ) {
+        boolean changed = true;
+
+        if ((newDisplayNames != null) && (this.displayNames.size() == newDisplayNames.size())
+                && this.displayNames.containsAll(newDisplayNames)) {
+            changed = false;
+        }
+
+        if (changed) {
+            Object oldValue = new HashSet<Translation>(this.displayNames);
+            this.displayNames.clear();
+
+            if (newDisplayNames != null) {
+                this.displayNames.addAll(newDisplayNames);
+            }
+
+            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayNames);
         }
     }
 

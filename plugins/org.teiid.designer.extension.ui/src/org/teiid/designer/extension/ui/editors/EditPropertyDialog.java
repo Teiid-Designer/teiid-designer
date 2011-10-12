@@ -18,7 +18,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -169,10 +171,8 @@ final class EditPropertyDialog extends FormDialog {
             this.existingPropIds.remove(this.propDefnBeingEdited.getSimpleId());
 
             this.propDefn.setAdvanced(this.propDefnBeingEdited.isAdvanced());
-            this.propDefn.setAllowedValues(this.propDefnBeingEdited.getAllowedValues());
+            this.propDefn.setAllowedValues(this.propDefnBeingEdited.allowedValues());
             this.propDefn.setDefaultValue(this.propDefnBeingEdited.getDefaultValue());
-            this.propDefn.setDescription(this.propDefnBeingEdited.getDescription());
-            this.propDefn.setDisplayName(this.propDefnBeingEdited.getDisplayName());
             this.propDefn.setFixedValue(this.propDefnBeingEdited.getFixedValue());
             this.propDefn.setIndex(this.propDefnBeingEdited.shouldBeIndexed());
             this.propDefn.setMasked(this.propDefnBeingEdited.isMasked());
@@ -180,6 +180,18 @@ final class EditPropertyDialog extends FormDialog {
             this.propDefn.setRequired(this.propDefnBeingEdited.isRequired());
             this.propDefn.setSimpleId(this.propDefnBeingEdited.getSimpleId());
             this.propDefn.setType(this.propDefnBeingEdited.getType());
+
+            if (!this.propDefnBeingEdited.getDescriptions().isEmpty()) {
+                for (Translation description : this.propDefnBeingEdited.getDescriptions()) {
+                    this.propDefn.addDescription(Translation.copy(description));
+                }
+            }
+
+            if (!this.propDefnBeingEdited.getDisplayNames().isEmpty()) {
+                for (Translation displayName : this.propDefnBeingEdited.getDisplayNames()) {
+                    this.propDefn.addDisplayName(Translation.copy(displayName));
+                }
+            }
         }
     }
 
@@ -352,7 +364,7 @@ final class EditPropertyDialog extends FormDialog {
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
-                    return new Object[0]; // TODO implement
+                    return getPropertyDefinition().getDescriptions().toArray();
                 }
 
                 /**
@@ -534,7 +546,7 @@ final class EditPropertyDialog extends FormDialog {
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
-                    return new Object[0]; // TODO implement
+                    return getPropertyDefinition().getDisplayNames().toArray();
                 }
 
                 /**
@@ -1127,6 +1139,21 @@ final class EditPropertyDialog extends FormDialog {
         return section;
     }
 
+    private Set<Locale> getLocales( Set<Translation> translations ) {
+        assert (translations != null) : "translations is null"; //$NON-NLS-1$
+        Set<Locale> locales = new HashSet<Locale>(translations.size());
+
+        for (Translation translation : translations) {
+            locales.add(translation.getLocale());
+        }
+
+        return locales;
+    }
+
+    ModelExtensionPropertyDefinition getPropertyDefinition() {
+        return this.propDefn;
+    }
+
     String getSelectedAllowedValue() {
         IStructuredSelection selection = (IStructuredSelection)this.valuesViewer.getSelection();
         return (selection.isEmpty() ? null : (String)selection.getFirstElement());
@@ -1150,14 +1177,23 @@ final class EditPropertyDialog extends FormDialog {
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            String allowedValue = dialog.getAllowedValue();
-            String[] currentValues = this.propDefn.getAllowedValues();
-            String[] newValues = new String[currentValues.length + 1];
-            System.arraycopy(currentValues, 0, newValues, 0, currentValues.length);
-            newValues[currentValues.length + 1] = allowedValue;
-            this.propDefn.setAllowedValues(newValues);
-            String errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
-                                                                                              newValues);
+            String errorMsg = null;
+            String newAllowedValue = dialog.getAllowedValue();
+
+            if (this.propDefn.addAllowedValue(newAllowedValue)) {
+                // validate new allowed value
+                errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.propDefn.getRuntimeType(),
+                                                                                          newAllowedValue);
+
+                // validate allowed value collection
+                if (CoreStringUtil.isEmpty(errorMsg)) {
+                    errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
+                                                                                               this.propDefn.getAllowedValues());
+                }
+            } else {
+                // TODO value not added msg
+            }
+
             addMessage(this.allowedValuesError, errorMsg);
         }
     }
@@ -1170,12 +1206,27 @@ final class EditPropertyDialog extends FormDialog {
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            Translation description = dialog.getTranslation();
-            // TODO add new description
+            String errorMsg = null;
+            Translation newDescription = dialog.getTranslation();
+
+            if (this.propDefn.addDescription(newDescription)) {
+                errorMsg = ModelExtensionDefinitionValidator.validateTranslationLocale(newDescription.getLocale(),
+                                                                                       getLocales(this.propDefn.getDescriptions()));
+
+                if (CoreStringUtil.isEmpty(errorMsg)) {
+                    errorMsg = ModelExtensionDefinitionValidator.validateTranslationText(newDescription.getTranslation());
+                }
+            } else {
+                // shouldn't happen if the EditTranslationDialog is working correctly
+                UTIL.log(NLS.bind(Messages.editPropertyDialogDescriptionNotAddedMsg, newDescription));
+            }
+
+            addMessage(this.descriptionError, errorMsg);
         }
     }
 
     void handleAddDisplayName() {
+        String errorMsg = null;
         EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
                                                                  Messages.addPropertyDisplayNameDialogTitle,
                                                                  new ArrayList<Locale>());
@@ -1183,8 +1234,21 @@ final class EditPropertyDialog extends FormDialog {
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            Translation displayName = dialog.getTranslation();
-            // TODO add new display name
+            Translation newDisplayName = dialog.getTranslation();
+
+            if (this.propDefn.addDisplayName(newDisplayName)) {
+                errorMsg = ModelExtensionDefinitionValidator.validateTranslationLocale(newDisplayName.getLocale(),
+                                                                                       getLocales(this.propDefn.getDisplayNames()));
+
+                if (CoreStringUtil.isEmpty(errorMsg)) {
+                    errorMsg = ModelExtensionDefinitionValidator.validateTranslationText(newDisplayName.getTranslation());
+                }
+            } else {
+                // shouldn't happen if the EditTranslationDialog is working correctly
+                UTIL.log(NLS.bind(Messages.editPropertyDialogDisplayNameNotAddedMsg, newDisplayName));
+            }
+
+            addMessage(this.displayNameError, errorMsg);
         }
     }
 

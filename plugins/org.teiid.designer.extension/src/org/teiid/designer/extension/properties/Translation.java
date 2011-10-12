@@ -13,11 +13,16 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A translation related to a specific {@link Locale}.
  */
 public class Translation {
+
+    public static Translation copy( Translation source ) {
+        return new Translation(source.getLocale(), source.getTranslation());
+    }
 
     private Locale locale;
     private String translation;
@@ -30,32 +35,66 @@ public class Translation {
     }
 
     /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( Object object ) {
+        if ((object == null) || !getClass().equals(object.getClass())) {
+            return false;
+        }
+
+        Translation other = (Translation)object;
+        return this.locale.equals(other.locale) && CoreStringUtil.equals(this.translation, other.translation);
+    }
+
+    /**
      * @return the locale of the translation
      */
     public Locale getLocale() {
-        return locale;
+        return this.locale;
     }
 
     /**
-     * @return the translation
+     * @return the translation (can be <code>null</code> or empty)
      */
     public String getTranslation() {
-        return translation;
+        return this.translation;
     }
 
     /**
-     * If the new locale is <code>null</code> the current locale is not changed.
+     * {@inheritDoc}
      * 
-     * @param newLocale the new locale
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int PRIME = 1000003;
+        int result = PRIME * this.locale.hashCode();
+
+        if (this.translation != null) {
+            result += this.translation.hashCode();
+        }
+
+        return result;
+    }
+
+    /**
+     * Only set if the locale is different than the current locale.
+     * 
+     * @param newLocale the new locale (cannot be <code>null</code>)
      */
     public void setLocale( Locale newLocale ) {
-        if ((newLocale != null) && !this.locale.equals(newLocale)) {
+        CoreArgCheck.isNotNull(newLocale, "newLocale is null"); //$NON-NLS-1$
+
+        if (!this.locale.equals(newLocale)) {
             this.locale = newLocale;
         }
     }
 
     /**
-     * @param newTranslation the new translation
+     * @param newTranslation the new translation (can be <code>null</code> or empty)
      */
     public void setTranslation( String newTranslation ) {
         this.translation = newTranslation;

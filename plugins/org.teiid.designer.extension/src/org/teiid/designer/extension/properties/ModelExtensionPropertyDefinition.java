@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.properties.PropertyDefinition;
@@ -37,10 +38,45 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     char ID_DELIM = ':';
 
     /**
+     * @param newAllowedValue the allowed value being added (cannot be <code>null</code>)
+     * @return <code>true</code> if the allowed value was added
+     */
+    boolean addAllowedValue( String newAllowedValue );
+
+    /**
+     * @param newDescription the translated description being added (cannot be <code>null</code>)
+     * @return <code>true</code> if the description was added
+     */
+    boolean addDescription( Translation newDescription );
+
+    /**
+     * @param newDisplayName the translated display name being added (cannot be <code>null</code>)
+     * @return <code>true</code> if the display name was added
+     */
+    boolean addDisplayName( Translation newDisplayName );
+
+    /**
      * @param listener the listener being registered to receive property definition property change events (never <code>null</code>)
      * @return <code>true</code> if the listener was successfully added
      */
     boolean addListener( PropertyChangeListener listener );
+
+    /**
+     * The collection returned can be manipulated without affecting this property definition.
+     * 
+     * @return the allowed values (never <code>null</code> but can be empty)
+     */
+    Set<String> allowedValues();
+
+    /**
+     * @return the descriptions (never <code>null</code> but can be empty)
+     */
+    Set<Translation> getDescriptions();
+
+    /**
+     * @return the display names (never <code>null</code> but can be empty)
+     */
+    Set<Translation> getDisplayNames();
 
     /**
      * @return the fixed value (a non-<code>null</code> value means the value is unmodifiable)
@@ -70,6 +106,24 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     Type getType();
 
     /**
+     * @param allowedValue the allowed value being removed (cannot be <code>null</code>)
+     * @return <code>true</code> if the allowed value was removed
+     */
+    boolean removeAllowedValue( String allowedValue );
+
+    /**
+     * @param description the description being removed (cannot be <code>null</code>)
+     * @return <code>true</code> if the description was removed
+     */
+    boolean removeDescription( Translation description );
+
+    /**
+     * @param displayName the display name being removed (cannot be <code>null</code>)
+     * @return <code>true</code> if the display name was removed
+     */
+    boolean removeDisplayName( Translation displayName );
+
+    /**
      * @param listener the listener being removed (cannot be <code>null</code>)
      * @return <code>true</code> if the listener was successfully removed
      */
@@ -78,12 +132,17 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     /**
      * @param newAllowedValues the new allowed values (can be <code>null</code> but cannot have <code>null</code> values)
      */
-    void setAllowedValues( String[] values );
+    void setAllowedValues( Set<String> newAllowedValues );
 
     /**
-     * @param newDescription the new description (can be <code>null</code> or empty)
+     * @param newDescriptions the new descriptions (can be <code>null</code> or empty)
      */
-    void setDescription( String newDescription );
+    void setDescriptions( Set<Translation> newDescriptions );
+
+    /**
+     * @param newDisplayNames the new display names (can be <code>null</code> or empty)
+     */
+    void setDisplayNames( Set<Translation> newDisplayNames );
 
     /**
      * @param runtimeType the Teiid runtime type (can be <code>null</code>)

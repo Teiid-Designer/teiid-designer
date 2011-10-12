@@ -9,9 +9,11 @@ package org.teiid.designer.modelgenerator.salesforce.extension;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.teiid.designer.core.extension.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.Translation;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.modelgenerator.salesforce.SalesforceConstants.SF_Column;
@@ -54,21 +56,24 @@ public final class SalesforceModelExtensionAssistant extends ModelObjectExtensio
      */
     @Override
     public ModelExtensionPropertyDefinition createPropertyDefinition( String id,
-                                                                      String displayName,
                                                                       String type,
                                                                       String required,
                                                                       String defaultValue,
                                                                       String fixedValue,
                                                                       String advanced,
                                                                       String masked,
-                                                                      String index ) {
+                                                                      String index,
+                                                                      Set<String> allowedValues,
+                                                                      Set<Translation> descriptions,
+                                                                      Set<Translation> displayNames ) {
         String mappedId = propIds.get(id);
 
         if (!CoreStringUtil.isEmpty(mappedId)) {
             id = mappedId;
         }
 
-        return super.createPropertyDefinition(id, displayName, type, required, defaultValue, fixedValue, advanced, masked, index);
+        return super.createPropertyDefinition(id, type, required, defaultValue, fixedValue, advanced, masked, index, allowedValues,
+                                              descriptions, displayNames);
     }
 
 }

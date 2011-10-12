@@ -12,19 +12,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.Translation;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -105,18 +111,12 @@ public class ModelExtensionDefinitionParser {
     class Handler extends DefaultHandler {
 
         private String advanced;
-        private Collection<String> allowedValues = new ArrayList<String>();
+        private Set<String> allowedValues = new HashSet<String>();
 
         private final ModelExtensionAssistant assistant;
         private String defaultValue;
         private ModelExtensionDefinition definition;
         private String description;
-        private boolean descriptionLanguageCountryMatch;
-        private boolean descriptionLanguageMatch;
-        private boolean descriptionLocaleMatch;
-
-        private String displayDescription;
-        private String displayName;
         private final Stack<String> elements;
         private String fixedValue;
         private String id;
@@ -124,19 +124,21 @@ public class ModelExtensionDefinitionParser {
         private String masked;
         private String metaclassName;
         private String metamodelUri;
-        private boolean nameLanguageCountryMatch;
-        private boolean nameLanguageMatch;
-        private boolean nameLocaleMatch;
         private String namespacePrefix;
-
         private String namespaceUri;
         private ModelExtensionPropertyDefinition propDefn;
         private final Map<String, Collection<ModelExtensionPropertyDefinition>> properties;
         private String required;
         private String type;
-        private boolean updateDescription = false;
-        private boolean updateName = false;
         private String version;
+
+        private Set<Translation> descriptions = new HashSet<Translation>();
+        private String currentDescriptionLocale;
+        private String currentDescriptionText;
+
+        private Set<Translation> displayNames = new HashSet<Translation>();
+        private String currentDisplayNameLocale;
+        private String currentDisplayNameText;
 
         /**
          * @param assistant the model extension assistant used by the parser (cannot be <code>null</code>)
@@ -165,31 +167,19 @@ public class ModelExtensionDefinitionParser {
                     // model extension definition is not localized
                     this.description = value;
                 } else if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
-                    if (this.updateDescription) {
-                        this.displayDescription = value;
-                    } else {
-                        if (DEBUG_MODE) {
-                            System.err.println("display description characters not used=" + value); //$NON-NLS-1$
-                        }
-                    }
+                    this.currentDescriptionText = value;
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
-                                   + ExtensionConstants.Elements.DESCRIPTION + " tag"; //$NON-NLS-1$
+                            + ExtensionConstants.Elements.DESCRIPTION + " tag"; //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
                 if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
-                    if (this.updateName) {
-                        this.displayName = value;
-                    } else {
-                        if (DEBUG_MODE) {
-                            System.err.println("display name characters not used=" + value); //$NON-NLS-1$
-                        }
-                    }
+                    this.currentDisplayNameText = value;
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
-                                   + ExtensionConstants.Elements.DISPLAY + " tag"; //$NON-NLS-1$
+                            + ExtensionConstants.Elements.DISPLAY + " tag"; //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(getCurrentElement())) {
                 this.allowedValues.add(value);
@@ -216,29 +206,42 @@ public class ModelExtensionDefinitionParser {
             }
 
             if (ExtensionConstants.Elements.DISPLAY.equals(localName)) {
-                if (DEBUG_MODE) {
-                    System.err.println("reset: nameLocaleMatch=" + this.nameLocaleMatch + ", nameLanguageCountryMatch=" //$NON-NLS-1$ //$NON-NLS-2$
-                            + this.nameLanguageCountryMatch + ", nameLanguageMatch=" + this.nameLanguageMatch); //$NON-NLS-1$
+                if (this.currentDisplayNameLocale != null) {
+                    if (DEBUG_MODE) {
+                        System.err.println("Adding display name with locale of " + this.currentDisplayNameLocale + " and text of " //$NON-NLS-1$ //$NON-NLS-2$
+                                + this.currentDisplayNameText);
+                    }
+
+                    Locale locale = I18nUtil.parseLocaleString(this.currentDisplayNameLocale);
+                    this.displayNames.add(new Translation(locale, this.currentDisplayNameText));
                 }
+
+                this.currentDisplayNameLocale = null;
+                this.currentDisplayNameText = null;
             } else if (ExtensionConstants.Elements.DESCRIPTION.equals(localName)) {
-                if (DEBUG_MODE) {
-                    System.err.println("reset: descriptionLocaleMatch=" + this.descriptionLocaleMatch //$NON-NLS-1$
-                            + ", descriptionLanguageCountryMatch=" + this.descriptionLanguageCountryMatch //$NON-NLS-1$
-                            + ", descriptionLanguageMatch=" + this.descriptionLanguageMatch); //$NON-NLS-1$
+                if (this.currentDescriptionLocale != null) {
+                    if (DEBUG_MODE) {
+                        System.err.println("Adding description with locale of " + this.currentDescriptionLocale + " and text of " //$NON-NLS-1$ //$NON-NLS-2$
+                                + this.currentDescriptionText);
+                    }
+
+                    Locale locale = I18nUtil.parseLocaleString(this.currentDescriptionLocale);
+                    this.descriptions.add(new Translation(locale, this.currentDescriptionText));
                 }
+
+                this.currentDescriptionLocale = null;
+                this.currentDescriptionText = null;
             } else if (ExtensionConstants.Elements.PROPERTY.equals(localName)) {
                 savePropertyDefinition();
 
                 if (DEBUG_MODE) {
-                    System.err.println("reset: id=" + this.id + ", displayName=" + this.displayName + ", type=" + this.type //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                            + ", required=" + this.required + ", defaultValue=" + this.defaultValue + ", fixedValue=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                            + this.fixedValue + ", advanced=" + this.advanced + ", masked=" + this.masked + ", displayDescription=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                            + this.displayDescription + ", index=" + this.index); //$NON-NLS-1$
+                    System.err.println("saved property: id=" + this.id + ", type=" + this.type + ", required=" + this.required //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            + ", defaultValue=" + this.defaultValue + ", fixedValue=" + this.fixedValue + ", advanced=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            + this.advanced + ", masked=" + this.masked + ", index=" + this.index); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 // reset all property definition related fields
                 this.id = null;
-                this.displayName = null;
                 this.type = null;
                 this.required = null;
                 this.defaultValue = null;
@@ -246,19 +249,15 @@ public class ModelExtensionDefinitionParser {
                 this.advanced = null;
                 this.masked = null;
                 this.index = null;
-                this.displayDescription = null;
                 this.allowedValues.clear();
                 this.propDefn = null;
+                this.descriptions.clear();
+                this.displayNames.clear();
 
-                // reset locale specific fields
-                this.updateDescription = false;
-                this.descriptionLocaleMatch = false;
-                this.descriptionLanguageCountryMatch = false;
-                this.descriptionLanguageMatch = false;
-                this.updateName = false;
-                this.nameLocaleMatch = false;
-                this.nameLanguageCountryMatch = false;
-                this.nameLanguageMatch = false;
+                this.currentDescriptionLocale = null;
+                this.currentDescriptionText = null;
+                this.currentDisplayNameLocale = null;
+                this.currentDisplayNameText = null;
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(localName)) {
                 if (DEBUG_MODE) {
                     System.err.println("reset: metaclassName=" + this.metaclassName); //$NON-NLS-1$
@@ -335,62 +334,9 @@ public class ModelExtensionDefinitionParser {
         }
 
         /**
-         * @param localeString the string representing the local of the display string
-         * @param displayNameCheck <code>true</code> if the display string is a property definition display name
-         */
-        private void processLocaleString( String localeString,
-                                          boolean displayNameCheck ) {
-            Locale locale = null;
-            boolean localeMatch = (displayNameCheck ? this.nameLocaleMatch : this.descriptionLocaleMatch);
-            boolean languageCountryMatch = (displayNameCheck ? this.nameLanguageCountryMatch : this.descriptionLanguageCountryMatch);
-            boolean languageMatch = (displayNameCheck ? this.nameLanguageMatch : this.descriptionLanguageMatch);
-            boolean updateNeeded = true;
-
-            if (CoreStringUtil.isEmpty(localeString)) {
-                locale = LOCALE;
-                localeMatch = true;
-            } else {
-                locale = I18nUtil.parseLocaleString(localeString);
-
-                if (!localeMatch) {
-                    if (LOCALE.equals(locale)) {
-                        localeMatch = true;
-                        languageCountryMatch = false;
-                        languageMatch = false;
-                    } else if (!languageCountryMatch && LOCALE.getLanguage().equals(locale.getLanguage())
-                            && LOCALE.getCountry().equals(locale.getCountry())) {
-                        languageCountryMatch = true;
-                        languageMatch = false;
-                    } else if (!languageMatch && LOCALE.getLanguage().equals(locale.getLanguage())) {
-                        languageMatch = true;
-                    } else {
-                        updateNeeded = false;
-                    }
-                } else {
-                    updateNeeded = false;
-                }
-            }
-
-            if (displayNameCheck) {
-                this.updateName = updateNeeded;
-                this.nameLocaleMatch = localeMatch;
-                this.nameLanguageCountryMatch = languageCountryMatch;
-                this.nameLanguageMatch = languageMatch;
-            } else {
-                this.updateDescription = updateNeeded;
-                this.descriptionLocaleMatch = localeMatch;
-                this.descriptionLanguageCountryMatch = languageCountryMatch;
-                this.descriptionLanguageMatch = languageMatch;
-            }
-        }
-
-        /**
          * Saves the model extension definition that was just parsed.
          */
         private void saveModelExtensionDefinitionProperties() {
-            this.assistant.setDefinitionDescription(this.description);
-            this.assistant.setDefinitionVersion(this.version);
-
             for (Map.Entry<String, Collection<ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) {
                 String extendedMetaclassName = entry.getKey();
 
@@ -404,20 +350,9 @@ public class ModelExtensionDefinitionParser {
          * Saves the property definition that was just parsed.
          */
         private void savePropertyDefinition() {
-            this.propDefn = this.assistant.createPropertyDefinition(this.id, this.displayName, this.type, this.required,
-                                                                    this.defaultValue, this.fixedValue, this.advanced, this.masked,
-                                                                    this.index);
-            // if necessary set description
-            if (!CoreStringUtil.isEmpty(this.displayDescription)) {
-                this.assistant.setDescription(this.propDefn, this.displayDescription);
-            }
-
-            // if necessary set allowed values
-            String[] values = (this.allowedValues.isEmpty() ? null
-                                                           : this.allowedValues.toArray(new String[this.allowedValues.size()]));
-            if (values != null) {
-                this.assistant.setAllowedValues(this.propDefn, values);
-            }
+            this.propDefn = this.assistant.createPropertyDefinition(this.id, this.type, this.required, this.defaultValue,
+                                                                    this.fixedValue, this.advanced, this.masked, this.index,
+                                                                    this.allowedValues, this.descriptions, this.displayNames);
 
             // add all the property definition
             assert this.metaclassName != null : "metaclassName is null"; //$NON-NLS-1$
@@ -462,7 +397,7 @@ public class ModelExtensionDefinitionParser {
                 assert !CoreStringUtil.isEmpty(this.version) : "version is empty"; //$NON-NLS-1$
 
                 this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
-                                                                                this.metamodelUri);
+                                                                                this.metamodelUri, this.description, this.version);
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
                 this.metaclassName = attributes.getValue(ExtensionConstants.Attributes.NAME);
                 assert !CoreStringUtil.isEmpty(this.metaclassName) : "metaclassName is empty"; //$NON-NLS-1$
@@ -489,10 +424,10 @@ public class ModelExtensionDefinitionParser {
                 this.index = attributes.getValue(ExtensionConstants.Attributes.INDEX);
                 assert !CoreStringUtil.isEmpty(this.index) : "index is empty"; //$NON-NLS-1$
             } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
-                processLocaleString(attributes.getValue(ExtensionConstants.Attributes.LOCALE), true);
+                this.currentDisplayNameLocale = attributes.getValue(ExtensionConstants.Attributes.LOCALE);
             } else if (ExtensionConstants.Elements.DESCRIPTION.equals(getCurrentElement())
-                       && ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
-                processLocaleString(attributes.getValue(ExtensionConstants.Attributes.LOCALE), false);
+                    && ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
+                this.currentDescriptionLocale = attributes.getValue(ExtensionConstants.Attributes.LOCALE);
             } else {
                 if (DEBUG_MODE) {
                     System.err.println("\n\nstartElement not being process: currentElement=" + getCurrentElement() //$NON-NLS-1$

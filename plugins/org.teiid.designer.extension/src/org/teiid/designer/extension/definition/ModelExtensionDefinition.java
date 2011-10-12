@@ -21,6 +21,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -66,20 +68,35 @@ public class ModelExtensionDefinition {
      * @param namespacePrefix the unique namespace prefix (cannot be <code>null</code> or empty)
      * @param namespaceUri the unique namespace URI (cannot be <code>null</code> or empty)
      * @param metamodelUri the metamodel URI that is being extended (cannot be <code>null</code> or empty)
+     * @param description the description of the definition (can be <code>null</code> or empty)
+     * @param version the definition version (can be <code>null</code> or empty)
      */
     public ModelExtensionDefinition( ModelExtensionAssistant assistant,
                                      String namespacePrefix,
                                      String namespaceUri,
-                                     String metamodelUri ) {
+                                     String metamodelUri,
+                                     String description,
+                                     String version ) {
         CoreArgCheck.isNotNull(assistant, "assistant is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(namespaceUri, "namespaceUri is null"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(metamodelUri, "metamodelUri is null"); //$NON-NLS-1$
 
         this.assistant = assistant;
-        this.header = new ModelExtensionDefinitionHeader(namespacePrefix, namespaceUri, metamodelUri);
         this.properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+
+        int versionNumber = ModelExtensionDefinitionHeader.DEFAULT_VERSION;
+
+        if (!CoreStringUtil.isEmpty(version)) {
+            try {
+                versionNumber = Integer.parseInt(version);
+            } catch (Exception e) {
+                ExtensionConstants.UTIL.log(NLS.bind(Messages.invalidDefinitionFileNewVersion, namespacePrefix, version));
+            }
+        }
+
+        this.header = new ModelExtensionDefinitionHeader(namespacePrefix, namespaceUri, metamodelUri, description, versionNumber);
     }
 
     /**
