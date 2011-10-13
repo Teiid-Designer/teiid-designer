@@ -2,33 +2,22 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: net.sf.saxon
-Bundle-Version: 8.7.3
-Bundle-ClassPath: saxon9-dom.jar,
- saxon9-dom4j.jar,
- saxon9-jdom.jar,
- saxon9-s9api.jar,
- saxon9-sql.jar,
- saxon9-xom.jar,
- saxon9-xpath.jar,
- saxon9-xqj.jar,
- saxon9.jar
+Bundle-Version: 9.2.1
+Bundle-ClassPath: saxon9he.jar,
+ .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: javax.xml.namespace,
- javax.xml.xquery,
+Export-Package: javax.xml.xquery,
  net.sf.saxon,
  net.sf.saxon.charcode,
  net.sf.saxon.codenorm,
  net.sf.saxon.dom,
- net.sf.saxon.dom4j,
  net.sf.saxon.event,
  net.sf.saxon.evpull,
  net.sf.saxon.expr,
- net.sf.saxon.exslt,
  net.sf.saxon.functions,
  net.sf.saxon.instruct,
  net.sf.saxon.java,
- net.sf.saxon.jdom,
  net.sf.saxon.number,
  net.sf.saxon.om,
  net.sf.saxon.pattern,
@@ -37,7 +26,6 @@ Export-Package: javax.xml.namespace,
  net.sf.saxon.regex,
  net.sf.saxon.s9api,
  net.sf.saxon.sort,
- net.sf.saxon.sql,
  net.sf.saxon.style,
  net.sf.saxon.sxpath,
  net.sf.saxon.tinytree,
@@ -46,7 +34,6 @@ Export-Package: javax.xml.namespace,
  net.sf.saxon.tree,
  net.sf.saxon.type,
  net.sf.saxon.value,
- net.sf.saxon.xom,
  net.sf.saxon.xpath,
  net.sf.saxon.xqj
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
