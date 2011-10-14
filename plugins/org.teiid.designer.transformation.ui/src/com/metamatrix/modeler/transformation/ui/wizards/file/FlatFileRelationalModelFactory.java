@@ -28,6 +28,7 @@ import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 
@@ -35,6 +36,11 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String RELATIONAL_PACKAGE_URI	= RelationalPackage.eNS_URI;
     public static final RelationalFactory factory = RelationalFactory.eINSTANCE;
     public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
+    
+    public static final String GET_FILES = "getFiles"; //$NON-NLS-1$
+    public static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
+    public static final String SAVE_FILE = "saveFile"; //$NON-NLS-1$
+    public static final String ALL_PROCEDURES = "allProcedures"; //$NON-NLS-1$
     
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
     
@@ -72,6 +78,48 @@ public class FlatFileRelationalModelFactory implements UiConstants {
         return resrc;
     }
     
+    public boolean addMissingProcedure(ModelResource modelResource, String specificProcedure) throws ModelerCoreException{
+    	if( modelResource != null ) {
+    		if( specificProcedure.equalsIgnoreCase(ALL_PROCEDURES)) {
+	    		if( !procedureExists(modelResource, GET_FILES ) ) {
+	    			addGetFilesProcedure(modelResource);
+	    		}
+	    		if( !procedureExists(modelResource, GET_TEXT_FILES ) ) {
+	    			addGetTextFilesProcedure(modelResource);
+	    		}
+	    		if( !procedureExists(modelResource, SAVE_FILE ) ) {
+	    			addSaveFileProcedure(modelResource);
+	    		}
+    		} else if( specificProcedure.equalsIgnoreCase(GET_FILES) && !procedureExists(modelResource, GET_FILES ) ) {
+	    		addGetFilesProcedure(modelResource);
+    		} else if( specificProcedure.equalsIgnoreCase(GET_TEXT_FILES) && !procedureExists(modelResource, GET_TEXT_FILES ) ) {
+	    		addGetTextFilesProcedure(modelResource);
+    		} else if( specificProcedure.equalsIgnoreCase(SAVE_FILE) && !procedureExists(modelResource, SAVE_FILE ) ) {
+	    		addSaveFileProcedure(modelResource);
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    private boolean procedureExists(ModelResource modelResource, String procedureName) {
+    	if( modelResource != null ) {
+    		try {
+    			for( Object obj : modelResource.getAllRootEObjects() ) {
+
+                    EObject eObj = (EObject)obj;
+                    if (eObj instanceof Procedure  && procedureName.equalsIgnoreCase(ModelObjectUtilities.getName(eObj)) ) {
+                        return true;
+                    }
+                }
+            } catch (ModelWorkspaceException err) {
+                Util.log(err);
+            }
+    	}
+    	
+    	return false;
+    }
+    
 	
 	private void addGetFilesProcedure(ModelResource mr) throws ModelerCoreException {
 
@@ -79,7 +127,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
-    	proc.setName("getFiles"); //$NON-NLS-1$
+    	proc.setName(GET_FILES);
     	ProcedureParameter param = factory.createProcedureParameter();
     	param.setName("pathAndExt"); //$NON-NLS-1$
     	param.setProcedure(proc);
@@ -112,7 +160,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 		EObject clobType = datatypeManager.findDatatype("clob"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
-    	proc.setName("getTextFiles"); //$NON-NLS-1$
+    	proc.setName(GET_TEXT_FILES);
     	ProcedureParameter param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("pathAndExt"); //$NON-NLS-1$
@@ -147,7 +195,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 		EObject objectType = datatypeManager.findDatatype("object"); //$NON-NLS-1$
 		
 		Procedure proc = factory.createProcedure();
-    	proc.setName("saveFile"); //$NON-NLS-1$
+    	proc.setName(SAVE_FILE);
     	ProcedureParameter param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("filePath"); //$NON-NLS-1$

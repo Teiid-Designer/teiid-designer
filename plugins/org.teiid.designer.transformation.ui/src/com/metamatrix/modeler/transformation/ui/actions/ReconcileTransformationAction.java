@@ -38,6 +38,7 @@ import com.metamatrix.modeler.transformation.ui.editors.QueryEditorStatusEvent;
 import com.metamatrix.modeler.transformation.ui.editors.TransformationObjectEditorPage;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlEditorPanel;
 import com.metamatrix.modeler.transformation.ui.reconciler.ReconcilerDialog;
+import com.metamatrix.modeler.transformation.validation.SqlTransformationResult;
 import com.metamatrix.modeler.transformation.validation.TransformationValidator;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.query.internal.ui.sqleditor.component.QueryDisplayNode;
@@ -232,6 +233,26 @@ public class ReconcileTransformationAction extends TransformationAction implemen
         }
 
         if (tObjEditorPage != null) {
+        	// Check for null or EMPTY SQL
+        	
+            if( this.tObjEditorPage.getCurrentSqlEditor().getText() == null || this.tObjEditorPage.getCurrentSqlEditor().getText().trim().length() == 0 ) {
+            	MessageDialog.openWarning(shell, 
+            			UiConstants.Util.getString("ReconcileTransformationAction.emptySQLTitle"),  //$NON-NLS-1$
+            			UiConstants.Util.getString("ReconcileTransformationAction.emptySQLMessage")); //$NON-NLS-1$
+            	return;
+            }
+        	
+        	// Check Parsable Status
+            SqlTransformationResult existingStatus = SqlMappingRootCache.getSqlTransformationStatus(this.tObjEditorPage.getCurrentMappingRoot(), QueryValidator.SELECT_TRNS, true, null);
+            if( existingStatus != null ) {
+            	if( !existingStatus.isParsable()) {
+            		MessageDialog.openWarning(shell, 
+                			UiConstants.Util.getString("ReconcileTransformationAction.sqlNotParsableTitle"),  //$NON-NLS-1$
+                			UiConstants.Util.getString("ReconcileTransformationAction.sqlNotParsableMessage")); //$NON-NLS-1$
+                	return;
+            	}
+            }
+        	
             sePanel = tObjEditorPage.getCurrentSqlEditor();
             isUnion = sePanel.isCommandUnion();
 

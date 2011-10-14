@@ -23,6 +23,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileImportProcessor;
+import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
 
@@ -96,6 +97,7 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         // Set initial view model and view model location values if present from selection
         if( isViewRelationalModel ) {
         	this.filesInfo.setViewModelName( ((IFile)seletedObj).getName());
+        	this.filesInfo.setViewModelLocation(((IFile)seletedObj).getFullPath().removeLastSegments(1));
         	this.filesInfo.setViewModelExists(true);
         }
         if( folder != null ) {
@@ -106,25 +108,36 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         this.fileOptionsPage = new TeiidMetadataFileOptionsPage(this);
         addPage(this.fileOptionsPage);
         
-        this.sourcePage = new TeiidMetadataSourceSelectionPage(this.filesInfo);
-        addPage(this.sourcePage);
-        
         this.targetPage = new TeiidMetadataTargetModelsPage(this.filesInfo);
         addPage(this.targetPage);
+        
+        this.sourcePage = new TeiidMetadataSourceSelectionPage(this.filesInfo);
+        addPage(this.sourcePage);
+
 	}
 
 	@Override
 	public boolean finish() {
 		if( this.filesInfo.isFlatFileMode() ) {
-			TeiidMetadataImportProcessor processor = new TeiidMetadataImportProcessor(this.filesInfo);
+			final TeiidMetadataImportProcessor processor = new TeiidMetadataImportProcessor(this.filesInfo, this.getShell());
 			
-			processor.execute();
+			UiUtil.runInSwtThread(new Runnable() {
+				@Override
+				public void run() {
+					processor.execute();
+				}
+			}, false);
 			
 			return true;
 		} else {
-			TeiidXmlFileImportProcessor processor = new TeiidXmlFileImportProcessor(this.filesInfo);
+			final TeiidXmlFileImportProcessor processor = new TeiidXmlFileImportProcessor(this.filesInfo, this.getShell());
 			
-			processor.execute();
+			UiUtil.runInSwtThread(new Runnable() {
+				@Override
+				public void run() {
+					processor.execute();
+				}
+			}, false);
 			
 			return true;
 		}

@@ -222,6 +222,17 @@ public abstract class ModelObjectUtilities {
             }
         }
     }
+    
+    /**
+     * Get the name for the specified model object.
+     * 
+     * @param eObject
+     * @return the name on this model object. may return null.
+     */
+    public static String getName( EObject eObject ) {
+    	CoreArgCheck.isNotNull(eObject, "eObject"); //$NON-NLS-1$
+    	return ModelerCore.getModelEditor().getName(eObject);
+    }
 
     /**
      * Return the virtual model state of the specified model object.

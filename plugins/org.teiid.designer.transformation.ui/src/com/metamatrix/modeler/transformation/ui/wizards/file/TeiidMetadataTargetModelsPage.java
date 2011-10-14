@@ -16,7 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -28,13 +28,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
-import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
@@ -45,6 +47,7 @@ import com.metamatrix.modeler.internal.ui.PluginConstants;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerContentProvider;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
+import com.metamatrix.modeler.internal.ui.viewsupport.ModelObjectUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelResourceSelectionValidator;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
@@ -53,7 +56,6 @@ import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
-import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetFactory;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
@@ -71,16 +73,17 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 	
+	private static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
+	
     private static final int STATUS_OK = 0;
     private static final int STATUS_NO_SOURCE_LOCATION 	= 1;
     private static final int STATUS_NO_VIEW_LOCATION 	= 2;
     private static final int STATUS_NO_SOURCE_FILENAME 	= 3;
-    private static final int STATUS_SOURCE_FILE_EXISTS 	= 4;    
-    private static final int STATUS_NO_VIEW_FILENAME 	= 5;
-    private static final int STATUS_BAD_FILENAME 		= 6;
-    private static final int STATUS_CLOSED_PROJECT 		= 7;
-    private static final int STATUS_NO_PROJECT_NATURE 	= 8;
-    private static final int STATUS_SAME_MODEL_NAMES 	= 9;
+    private static final int STATUS_NO_VIEW_FILENAME 	= 4;
+    private static final int STATUS_BAD_FILENAME 		= 5;
+    private static final int STATUS_CLOSED_PROJECT 		= 6;
+    private static final int STATUS_NO_PROJECT_NATURE 	= 7;
+    private static final int STATUS_SAME_MODEL_NAMES 	= 8;
     
     private static final String DEFAULT_EXTENSION = ".xmi"; //$NON-NLS-1$
 	
@@ -90,18 +93,23 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
 	
     private Text sourceModelContainerText;
     private Text sourceModelFileText;
+    private Text sourceHelpText;
     private IPath sourceModelFilePath;
     
     private Text viewModelContainerText;
     private Text viewModelFileText;
+    private Text viewHelpText;
     private IPath viewModelFilePath;
-    private Button updateViewModelCheckBox;
     
     private int currentStatus = STATUS_OK;
     private String fileNameMessage = null;
     private String panelMessage = null;
     
     private TeiidMetadataImportInfo info;
+    
+    boolean creatingControl = false;
+    
+    boolean synchronizing = false;
     
 	/**
 	 * @since 4.0
@@ -114,6 +122,7 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
 	
 	@Override
 	public void createControl(Composite parent) {
+		creatingControl = true; 
         // Create page
         final Composite mainPanel = new Composite(parent, SWT.NONE);
         
@@ -130,16 +139,24 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         
         setMessage(INITIAL_MESSAGE);
         
+        setViewHelpMessage();
+        setSourceHelpMessage();
+
+        creatingControl = false;
+        
         setPageComplete(false);
 	}
-	
-//    private boolean validatePage() {
-//    	WizardUtil.setPageComplete(this);
-//    	setMessage(INITIAL_MESSAGE);
-//        return true;
-//    }
     
-    private void createSourceModelGroup(Composite parent) {
+    @Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		
+		if( visible ) {
+			synchronizeUI();
+		}
+	}
+
+	private void createSourceModelGroup(Composite parent) {
     	Group sourceGroup = WidgetFactory.createGroup(parent, getString("sourceModelDefinitionGroup"), SWT.NONE, 1); //$NON-NLS-1$
     	sourceGroup.setLayout(new GridLayout(3, false));
     	sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -148,11 +165,10 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         locationLabel.setText(getString("location")); //$NON-NLS-1$
 
         sourceModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
-        if( this.info.getSourceModelLocation() != null ) {
-        	sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
-        }
+
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         sourceModelContainerText.setLayoutData(gridData);
+        sourceModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         sourceModelContainerText.addModifyListener(new ModifyListener() {
             public void modifyText( ModifyEvent e ) {
                 updateStatusMessage();
@@ -182,7 +198,34 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             	handleSourceModelTextChanged();
             }
         });
-        new Label(sourceGroup, SWT.NONE);
+        
+        browseButton = new Button(sourceGroup, SWT.PUSH);
+        gridData = new GridData();
+        browseButton.setLayoutData(gridData);
+        browseButton.setText(getString("browse")); //$NON-NLS-1$
+        browseButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleSourceModelBrowse();
+            }
+        });
+        
+    	new Label(sourceGroup, SWT.NONE);
+    	
+        Group helpGroup = WidgetFactory.createGroup(sourceGroup, getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH,2); //$NON-NLS-1$
+        helpGroup.setLayout(new GridLayout(1, false));
+        helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	
+        {        	
+        	sourceHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
+        	sourceHelpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	sourceHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        	gd.heightHint = 25;
+        	gd.horizontalSpan=3;
+        	sourceHelpText.setLayoutData(gd);
+        }
+        
     }
     
     private void createViewModelGroup(Composite parent) {
@@ -194,11 +237,9 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         locationLabel.setText(getString("location")); //$NON-NLS-1$
 
         viewModelContainerText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
-        if( this.info.getViewModelLocation() != null ) {
-        	viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
-        }
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         viewModelContainerText.setLayoutData(gridData);
+        viewModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         viewModelContainerText.addModifyListener(new ModifyListener() {
             public void modifyText( ModifyEvent e ) {
                 updateStatusMessage();
@@ -242,19 +283,20 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             }
         });
         
-        this.updateViewModelCheckBox = WidgetFactory.createCheckBox(viewGroup, getString("updateExistingModel"), 0, 3); //$NON-NLS-1$
-        this.updateViewModelCheckBox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-                updateViewModelCheckBoxSelected();
-            }
-        });
+    	new Label(viewGroup, SWT.NONE);
+    	
+        Group helpGroup = WidgetFactory.createGroup(viewGroup, getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH,2); //$NON-NLS-1$
+        helpGroup.setLayout(new GridLayout(1, false));
+        helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
-        
-        if( this.info.getViewModelName() != null ) {
-        	viewModelFileText.setText(this.info.getViewModelName());
-        	this.updateViewModelCheckBox.setSelection(true);
+        {
+        	viewHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
+        	viewHelpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	viewHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        	gd.heightHint = 25;
+        	gd.horizontalSpan=3;
+        	viewHelpText.setLayoutData(gd);
         }
     }
     
@@ -267,9 +309,10 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
                                                                        new ModelProjectSelectionStatusValidator());
 
         if (folder != null && sourceModelContainerText != null) {
-            sourceModelContainerText.setText(folder.getFullPath().makeRelative().toString());
             this.info.setSourceModelLocation(folder.getFullPath().makeRelative());
         }
+        
+        synchronizeUI();
 
         updateStatusMessage();
     }
@@ -283,10 +326,12 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
                                                                        new ModelProjectSelectionStatusValidator());
 
         if (folder != null && viewModelContainerText != null) {
-            viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
+            //viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
             this.info.setViewModelLocation(folder.getFullPath().makeRelative());
         }
 
+        synchronizeUI();
+        
         updateStatusMessage();
     }
     
@@ -303,90 +348,73 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         if (selections != null && selections.length == 1 && viewModelFileText != null) {
         	if( selections[0] instanceof IFile) {
         		IFile modelFile = (IFile)selections[0];
-        		IPath folderPath = modelFile.getFullPath().makeRelative().removeLastSegments(1);
+        		IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
         		String modelName = modelFile.getFullPath().lastSegment();
-        		viewModelFileText.setText(modelName);
-        		viewModelFilePath = folderPath;
-        		viewModelContainerText.setText(folderPath.makeRelative().toString());
-        		this.updateViewModelCheckBox.setSelection(true);
         		info.setViewModelExists(true);
-        		updateViewModelCheckBoxSelected();
+        		info.setViewModelLocation(folderPath);
+        		info.setViewModelName(modelName);
         	}
         }
+        
+        synchronizeUI();
 
+        updateStatusMessage();
+    }
+    
+    void handleSourceModelBrowse() {
+        final Object[] selections = WidgetUtil.showWorkspaceObjectSelectionDialog(getString("selectViewModelTitle"), //$NON-NLS-1$
+                                                                               getString("selectViewModelMessage"), //$NON-NLS-1$
+                                                                               false,
+                                                                               null,
+                                                                               sourceModelFilter,
+                                                                               new ModelResourceSelectionValidator(false),
+                                                                               new ModelExplorerLabelProvider(),
+                                                                               new ModelExplorerContentProvider() ); 
+
+        if (selections != null && selections.length == 1 && viewModelFileText != null) {
+        	if( selections[0] instanceof IFile) {
+        		IFile modelFile = (IFile)selections[0];
+        		IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
+        		String modelName = modelFile.getFullPath().lastSegment();
+        		info.setSourceModelExists(true);
+        		info.setSourceModelLocation(folderPath);
+        		info.setSourceModelName(modelName);
+        	}
+        }
+        
+        synchronizeUI();
+        
         updateStatusMessage();
     }
     
     void handleSourceModelTextChanged() {
+    	if( synchronizing ) return;
+    	
     	String newName = ""; //$NON-NLS-1$
     	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > 0 ) {
     		newName = this.sourceModelFileText.getText();
     		this.info.setSourceModelName(newName);
+    		this.info.setSourceModelExists(sourceModelExists());
     		
     	}
+    	synchronizeUI();
     	updateStatusMessage();
     }
     
     void handleViewModelTextChanged() {
-    	if( info.getViewModelLocation() != null && this.viewModelFileText.getText() != null ) {
-    		IPath modelPath = info.getViewModelLocation().append(this.viewModelFileText.getText());
-    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
-    		}
+    	if( synchronizing ) return;
+    	
+    	String newName = ""; //$NON-NLS-1$
+    	if( this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > 0 ) {
+    		newName = this.viewModelFileText.getText();
+    		this.info.setViewModelName(newName);
+    		this.info.setViewModelExists(viewModelExists());
     		
-    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
-    		if( item != null ) {
-    			this.updateViewModelCheckBox.setSelection(true);
-    			
-    		} else {
-    			this.updateViewModelCheckBox.setSelection(false);
-    		}
-    		if( this.viewModelFileText.getText().length() > 0 ) {
-    			this.info.setViewModelName(this.viewModelFileText.getText());
-    		}
     	}
-    	updateViewModelCheckBoxSelected();
+    	
+    	synchronizeUI();
+    	
         updateStatusMessage();
-    }
-    
-    void updateViewModelCheckBoxSelected() {
-    	final ModelResource model;
-        /*
-         * jhTODO: when checkbox is true, disable finish, enable next
-         */
-        if (this.updateViewModelCheckBox.getSelection()) {
-            try {
-                model = getSelectedViewResource();
-                if (model != null && !model.isReadOnly()) {
-                    if (model.getModelType().getValue() != ModelType.VIRTUAL) {
-                        this.viewModelFileText.setText(model.getItemName());
-                        // Return here (skipping call to validatePage) since previous line that sets the model name will end
-                        // up calling validatePage anyway.
-                        return;
-                    }
-                }
-            } catch (final ModelWorkspaceException err) {
-                Util.log(err);
-                WidgetUtil.showError(err.getLocalizedMessage());
-            }
-        }
-        updateStatusMessage();
-    }
-    
-    /**
-     * Get the selected ModelResource.  This method will check the selectedModel field - if it is
-     * not null it will be returned.  Otherwise, the original selection is returned.
-     * @return the ModelResource selection
-     */
-    private ModelResource getSelectedViewResource() throws ModelWorkspaceException {
-    	ModelResource model = null;
-
-        final IStructuredSelection selection = UiUtil.getStructuredSelection();
-        if(selection.size() == 1) {
-        	model = ModelUtil.getModel(selection.getFirstElement());
-        }
-        
-    	return model;
     }
 
     /**
@@ -396,6 +424,10 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
      */
     void updateStatusMessage() {
         checkStatus();
+        
+        setViewHelpMessage();
+        setSourceHelpMessage();
+        
         switch (currentStatus) {
 
             case (STATUS_NO_SOURCE_LOCATION):
@@ -409,13 +441,7 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             case (STATUS_BAD_FILENAME):
                 updateStatus(Util.getString(I18N_PREFIX + "illegalFileName", fileNameMessage)); //$NON-NLS-1$
                 break;
-
-            case (STATUS_SOURCE_FILE_EXISTS):
-                final String fileName = getSourceFileName();
-                final String container = getSourceContainerName();
-                sourceModelFilePath = new Path(container).append(fileName);
-                updateStatus(Util.getString(I18N_PREFIX + "fileAlreadyExistsMessage", sourceModelFilePath.toOSString())); //$NON-NLS-1$
-                break;
+            	
             case (STATUS_NO_VIEW_LOCATION):
                 updateStatus(Util.getString(I18N_PREFIX + "viewFileLocationMustBeSpecified")); //$NON-NLS-1$
                 break;
@@ -427,7 +453,7 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
             case (STATUS_SAME_MODEL_NAMES):
             	updateStatus(Util.getString(I18N_PREFIX + "sourceAndViewFilesCannotHaveSameName")); //$NON-NLS-1$
             	break;
-            
+            		
             case (STATUS_OK):
             default:
                 updateStatus(panelMessage);
@@ -469,12 +495,6 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         fileNameMessage = ModelUtilities.validateModelName(fileText, DEFAULT_EXTENSION);
         if (fileNameMessage != null) {
             currentStatus = STATUS_BAD_FILENAME;
-            return false;
-        }
-        String fileName = getSourceFileName();
-        sourceModelFilePath = new Path(container).append(fileName);
-        if (ResourcesPlugin.getWorkspace().getRoot().exists(sourceModelFilePath)) {
-            currentStatus = STATUS_SOURCE_FILE_EXISTS;
             return false;
         }
         
@@ -522,9 +542,42 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         	return false;
         }
         
-        
         currentStatus = STATUS_OK;
         return true;
+    }
+    
+    private void setViewHelpMessage() {
+    	if( creatingControl ) return;
+    	
+        if( info.viewModelExists() ) {
+        	this.viewHelpText.setText(Util.getString(I18N_PREFIX + "existingViewModelMessage", info.getViewModelName())); //$NON-NLS-1$
+        } else {
+        	if( info.getViewModelName() == null ) {
+        		this.viewHelpText.setText(Util.getString(I18N_PREFIX + "viewModelUndefined")); //$NON-NLS-1$
+        	} else {
+        		this.viewHelpText.setText(Util.getString(I18N_PREFIX + "newViewModelMessage", info.getViewModelName())); //$NON-NLS-1$
+        	}
+        }
+    }
+    
+    private void setSourceHelpMessage() {
+    	if( creatingControl ) return;
+    
+        if( info.sourceModelExists() ) {
+	    	if(  sourceHasProcedure() ) {
+	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasProcedure", info.getSourceModelName())); //$NON-NLS-1$
+	    		currentStatus = STATUS_OK;
+	    	} else {
+	    		currentStatus = STATUS_OK;
+	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName())); //$NON-NLS-1$
+	    	}
+        } else {
+        	if( info.getSourceModelName() == null ) {
+        		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
+        	} else {
+        		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName())); //$NON-NLS-1$
+        	}
+        }
     }
 
     private void updateStatus( String message ) {
@@ -532,8 +585,107 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
         boolean complete = ((message == null));
         setPageComplete(complete);
         if( complete ) {
-        	setMessage(getString("pressFinishMessage")); //$NON-NLS-1$
+        	setMessage(getString("pressNextMessage")); //$NON-NLS-1$
         }
+    }
+    
+    private boolean sourceHasProcedure() {
+    	if( this.sourceModelFilePath == null ) {
+    		return false;
+    	}
+    	
+    	IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+		}
+    	
+    	IResource sourceModel = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath);
+    	ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)sourceModel, false);
+    	if( smr != null ) {
+    		try {
+    			for( Object obj : smr.getAllRootEObjects() ) {
+
+                    EObject eObj = (EObject)obj;
+                    if (eObj instanceof Procedure  && GET_TEXT_FILES.equalsIgnoreCase(ModelObjectUtilities.getName(eObj)) ) {
+                        return true;
+                    }
+                }
+            } catch (ModelWorkspaceException err) {
+                Util.log(err);
+            }
+    	}
+    	
+    	return false;
+    }
+    
+    private boolean viewModelExists() {
+    	if( this.viewModelFilePath == null ) {
+    		return false;
+    	}
+    	
+    	IPath modelPath = new Path(viewModelFilePath.toOSString()).append(this.viewModelFileText.getText());
+		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+		}
+		
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		if( item != null ) {
+			return true;
+		}
+    		
+    	return false;
+    }
+    
+    private boolean sourceModelExists() {
+    	if( this.sourceModelFilePath == null ) {
+    		return false;
+    	}
+    	
+		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+		}
+		
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		if( item != null ) {
+			return true;
+		}
+    		
+    	return false;
+    }
+    
+
+    
+    private void synchronizeUI() {
+    	synchronizing = true;
+    	
+        if( this.info.getSourceModelLocation() != null ) {
+        	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
+        } else {
+        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+        if( this.info.getViewModelLocation() != null ) {
+        	viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+        } else {
+        	this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+        if( this.info.getViewModelName() != null ) {
+        	this.viewModelFilePath = this.info.getViewModelLocation();
+        	this.viewModelFileText.setText(this.info.getViewModelName());
+        } else {
+        	this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+        if( this.info.getSourceModelName() != null ) {
+        	this.sourceModelFilePath = this.info.getSourceModelLocation();
+        	this.sourceModelFileText.setText(this.info.getSourceModelName());
+        } else {
+        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+        }
+        
+        synchronizing = false;
     }
     
     private String getHiddenProjectPath() {
@@ -644,6 +796,43 @@ public class TeiidMetadataTargetModelsPage extends AbstractWizardPage
                             ModelerCore.Util.log(ex);
                         }
                         if (theModel != null && ModelIdentifier.isRelationalViewModel(theModel)) {
+                            doSelect = true;
+                        }
+                    }
+                }
+            } else if (element instanceof IContainer) {
+                doSelect = true;
+            }
+
+            return doSelect;
+        }
+    };
+    
+    final ViewerFilter sourceModelFilter = new ModelWorkspaceViewerFilter(true) {
+
+        @Override
+        public boolean select( final Viewer viewer,
+                               final Object parent,
+                               final Object element ) {
+            boolean doSelect = false;
+            if (element instanceof IResource) {
+                // If the project is closed, dont show
+                boolean projectOpen = ((IResource)element).getProject().isOpen();
+                if (projectOpen) {
+                    // Show open projects
+                    if (element instanceof IProject) {
+                        doSelect = true;
+                    } else if (element instanceof IContainer) {
+                        doSelect = true;
+                        // Show webservice model files, and not .xsd files
+                    } else if (element instanceof IFile && ModelUtil.isModelFile((IFile)element)) {
+                        ModelResource theModel = null;
+                        try {
+                            theModel = ModelUtil.getModelResource((IFile)element, true);
+                        } catch (Exception ex) {
+                            ModelerCore.Util.log(ex);
+                        }
+                        if (theModel != null && ModelIdentifier.isRelationalSourceModel(theModel)) {
                             doSelect = true;
                         }
                     }

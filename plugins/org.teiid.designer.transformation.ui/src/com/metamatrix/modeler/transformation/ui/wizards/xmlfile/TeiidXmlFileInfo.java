@@ -21,15 +21,12 @@ import org.eclipse.core.runtime.Status;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
-import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
-import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataFileInfo;
 
 public class TeiidXmlFileInfo implements UiConstants {
-	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
 	public static final char DOT = '.';
     public static final char COMMA = ',';
@@ -40,8 +37,6 @@ public class TeiidXmlFileInfo implements UiConstants {
     public static final String PATH = "PATH"; //$NON-NLS-1$
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
     public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
-	
-	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -137,6 +132,7 @@ public class TeiidXmlFileInfo implements UiConstants {
 		this.dataFile = info.getDataFile();
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
+		this.xqueryExpression = info.getXQueryExpression(); 
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), 
@@ -297,37 +293,41 @@ public class TeiidXmlFileInfo implements UiConstants {
 		validate();
 	}
 	
+	public void columnChanged(TeiidColumnInfo columnInfo) {
+		validate();
+	}
+	
 	private void validate() {
+		// Validate XQuery Expression
+		if( this.getXQueryExpression() == null || this.getXQueryExpression().length() == 0 ) {
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.xqueryExpressionNullOrEmpty"))); //$NON-NLS-1$
+			return;
+		}
 		
-		// Validate Column names?
+		
+		// must have one or more columns defined
+		if( this.columnInfoList.isEmpty() ) {
+			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noColumnsDefined"))); //$NON-NLS-1$
+			return;
+		}
+		
+		// Validate Column names
+		// Check for ERRORS FIRST
+		for( TeiidColumnInfo info : this.getColumnInfoList()) {
+			if( info.getStatus().getSeverity() == IStatus.ERROR ) {
+				this.setStatus(info.getStatus());
+				return;
+			}
+		}
+		
+		for( TeiidColumnInfo info : this.getColumnInfoList()) {
+			if( info.getStatus().getSeverity() != IStatus.OK ) {
+				this.setStatus(info.getStatus());
+				return;
+			}
+		}
 		
 		// Validate Paths
-		
-		// Validate XQuery Expression
-//		if( this.useHeaderForColumnNames ) {
-//			if( this.getHeaderString() == null || this.getHeaderString().length() == 0 ) {
-//				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noHeaderFound"))); //$NON-NLS-1$
-//				return;
-//			}
-//		}
-		
-//		if( this.columnInfoList.size() == 1 ) {
-//			// COULD HAVE ONE COLUMN, SO VALIDATE
-//			String message = TeiidXmlFileInfo.validator.checkValidName(this.columnInfoList.iterator().next().getName());
-//			if( message != null ) {
-//				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noHeaderFound"))); //$NON-NLS-1$
-//				return;
-//			}
-//		}
-		
-//		// Check that if Skipped lines > 0 && useHeader == TRUE that skippedLines > headerLineNumber
-//		if( this.includeHeader && this.firstDataRow > 0 ) {
-//			if( this.firstDataRow <= headerLineNumber ) {
-//				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
-//						Util.getString(I18N_PREFIX + "status.skippedLinesNotGreaterThanHeader", this.firstDataRow, this.headerLineNumber))); //$NON-NLS-1$
-//				return;
-//			}
-//		}
 		
 		setStatus(Status.OK_STATUS);
 	}
@@ -521,7 +521,7 @@ public class TeiidXmlFileInfo implements UiConstants {
     	String finalSQLString = UiPlugin.Util.getString(
     			"XmlViewModelFactory.textTableSqlTemplate", //$NON-NLS-1$
     			string_0,
-    			"myRelModel", //$NON-NLS-1$
+    			relationalModelName,
     			string_2,
     			string_3,
     			string_4,

@@ -7,8 +7,14 @@
  */
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
+import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
+import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
+import com.metamatrix.modeler.transformation.ui.UiConstants;
 
 /**
  * A <code>TeiidColumnInfo</code> defines extension properties for metaclasses within a metamodel.
@@ -18,6 +24,8 @@ public class TeiidColumnInfo {
 	public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
 	
 	public static final int DEFAULT_WIDTH = 10;
+	
+	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
 	
     /**
      * The unique column name (never <code>null</code> or empty).
@@ -51,6 +59,12 @@ public class TeiidColumnInfo {
 	private String xmlPath = StringUtilities.EMPTY_STRING;
 	
 	/**
+	 * Current <code>IStatus</code> representing the state of the input values for this instance of
+	 * <code>TeiidColumnInfo</code>
+	 */
+	private IStatus status;
+	
+	/**
 	 * 
 	 * @param name the column name (never <code>null</code> or empty).
 	 */
@@ -70,6 +84,7 @@ public class TeiidColumnInfo {
         
 		this.name = name;
 		this.datatype = datatype;
+		validate();
 	}
 	
 	/**
@@ -102,6 +117,7 @@ public class TeiidColumnInfo {
         } else {
         	this.xmlPath = xmlPath;
         }
+        validate();
 	}
 
 	/**
@@ -119,6 +135,7 @@ public class TeiidColumnInfo {
 	public void setName(String name) {
 		CoreArgCheck.isNotNull(name, "name is null"); //$NON-NLS-1$
 		this.name = name;
+		validate();
 	}
 
 	/**
@@ -136,6 +153,7 @@ public class TeiidColumnInfo {
 	public void setDatatype(String datatype) {
 		CoreArgCheck.isNotNull(datatype, "datatype is null"); //$NON-NLS-1$
 		this.datatype = datatype;
+		validate();
 	}
 	
 	/**
@@ -153,6 +171,7 @@ public class TeiidColumnInfo {
 	public void setWidth(int width) {
 		CoreArgCheck.isPositive(width, "width is less than 1"); //$NON-NLS-1$
 		this.width = width;
+		validate();
 	}
 	
 	/**
@@ -173,6 +192,7 @@ public class TeiidColumnInfo {
         } else {
         	this.defaultValue = defaultValue;
         }
+		validate();
 	}
 
 	/**
@@ -208,6 +228,36 @@ public class TeiidColumnInfo {
 	 */
 	public void setOrdinality(boolean value) {
 		this.forOrdinality = value;
+		validate();
+	}
+	
+	/**
+	 * 
+	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
+	 */
+	public IStatus getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * 
+	 * @param status the <code>IStatus</code> representing the validity of the data in this info object
+	 */
+	public void setStatus(IStatus status) {
+		this.status = status;
+	}
+	
+	private void validate() {
+
+		String result = nameValidator.checkValidName(getName());
+		if( result != null ) {
+			setStatus(new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, UiConstants.Util.getString("TeiidColumnInfo.status.invalidColumnName", getName()))); //$NON-NLS-1$
+			return;
+		}
+		
+		// Validate Paths
+		
+		setStatus(Status.OK_STATUS);
 	}
 	
     /**

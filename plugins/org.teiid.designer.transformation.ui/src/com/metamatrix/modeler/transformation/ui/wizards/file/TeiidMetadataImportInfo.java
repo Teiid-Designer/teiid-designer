@@ -61,6 +61,11 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 */
 	private IPath sourceModelLocation;
 	
+	/**
+	 * boolean indicator that the target source model is an existing model
+	 */
+	private boolean sourceModelExists;
+	
     /**
      * The unique view model name (never <code>null</code> or empty).
      * 
@@ -148,6 +153,14 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public void setSourceModelLocation(IPath location) {
 		CoreArgCheck.isNotNull(location, "location is null"); //$NON-NLS-1$
 		this.sourceModelLocation = location;
+	}
+	
+	public void setSourceModelExists(boolean sourceModelExists) {
+		this.sourceModelExists = sourceModelExists;
+	}
+	
+	public boolean sourceModelExists() {
+		return this.sourceModelExists;
 	}
 	
 	/**
@@ -312,7 +325,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 			setStatus(Status.OK_STATUS);
 		} else {
 			if( this.xmlFileInfoMap.isEmpty() ) {
-				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noXmlDataFilesFound"))); //$NON-NLS-1$
 				return;
 			}
 			boolean noneProcessed = true;
@@ -322,14 +335,14 @@ public class TeiidMetadataImportInfo implements UiConstants {
 				}
 			}
 			if( noneProcessed ) {
-				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesSelected"))); //$NON-NLS-1$
+				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noXmlDataFilesSelected"))); //$NON-NLS-1$
 				return;
 			}
 			
 			for( TeiidXmlFileInfo info : xmlFileInfoMap.values()) {
 				if( info.doProcess() && info.getStatus().getSeverity() > IStatus.WARNING ) {
 					setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
-							Util.getString(I18N_PREFIX + "errorInImportConfiguration", info.getDataFile().getName()) )); //$NON-NLS-1$
+							Util.getString(I18N_PREFIX + "errorInXmlImportConfiguration", info.getDataFile().getName()) )); //$NON-NLS-1$
 					return;
 				}
 			}

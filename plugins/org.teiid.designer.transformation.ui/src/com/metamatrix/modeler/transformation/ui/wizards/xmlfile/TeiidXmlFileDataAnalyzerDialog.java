@@ -98,7 +98,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 	TextViewer sqlTextViewer;
 	IDocument sqlDocument;
 	Label numberOfFixedWidthColumnsLabel;
-	Text numberOfCachedLinesText, headerLineNumberText;
+	Text numberOfCachedLinesText, xQueryExpressionText;
 	Button parseRowButton;
 	Action parseRowAction;
 	Button deleteButton;
@@ -168,34 +168,39 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     
     
     private void synchronizeUI() {
-    	// This method takes the Business Object (TeiidMetadataFileInfo) and syncs all ui Objects
+    	// This method takes the Business Object (TeiidXmlFileInfo) and syncs all ui Objects
     	this.synchronizing = true;
     	
     	this.numberOfCachedLinesText.setText(Integer.toString(this.fileInfo.getNumberOfCachedFileLines()));
+    	
+    	this.xQueryExpressionText.setText(this.fileInfo.getXQueryExpression());
     	
     	this.synchronizing = false;
     }
     
     private void createXQueryOptionsGroup(Composite parent) {
     	Group xQueryOptionsGroup = WidgetFactory.createGroup(parent, getString("xQueryOptionsGroup"), SWT.NONE, 1); //$NON-NLS-1$
+    	xQueryOptionsGroup.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
     	xQueryOptionsGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
     	xQueryOptionsGroup.setLayoutData(gd);
     	
     	Label prefixLabel = new Label(xQueryOptionsGroup, SWT.NONE);
+    	prefixLabel.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
     	prefixLabel.setText(getString("xQueryExpressionLabel")); //$NON-NLS-1$
         
-    	final Text xQueryText = WidgetFactory.createTextField(xQueryOptionsGroup, SWT.NONE);
+    	xQueryExpressionText = WidgetFactory.createTextField(xQueryOptionsGroup, SWT.NONE);
     	gd = new GridData(GridData.FILL_HORIZONTAL);
     	gd.minimumWidth = 50;
     	gd.horizontalSpan=1;
     	gd.grabExcessHorizontalSpace = true;
-    	xQueryText.setLayoutData(gd);
-    	xQueryText.addModifyListener(new ModifyListener() {
+    	xQueryExpressionText.setLayoutData(gd);
+    	xQueryExpressionText.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
+    	xQueryExpressionText.addModifyListener(new ModifyListener() {
     		public void modifyText( final ModifyEvent event ) {
     			if( !synchronizing ) {
-	    			if( !xQueryText.getText().isEmpty()) {
-        				fileInfo.setXQueryExpression(xQueryText.getText());
+	    			if( !xQueryExpressionText.getText().isEmpty()) {
+        				fileInfo.setXQueryExpression(xQueryExpressionText.getText());
         				setErrorMessage(null);
         				handleInfoChanged(false);
 	            	} else {
@@ -296,27 +301,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
         
      // Add a Context Menu
         final MenuManager columnMenuManager = new MenuManager();
-        this.fileContentsViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
-//        this.fileContentsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-//            /**
-//             * {@inheritDoc}
-//             * 
-//             * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-//             */
-//            @Override
-//            public void selectionChanged( final SelectionChangedEvent event ) {
-//            	columnMenuManager.removeAll();
-//                IStructuredSelection sel = (IStructuredSelection)fileContentsViewer.getSelection();
-//                if (sel.size() == 1) {
-//					columnMenuManager.add(parseRowAction);
-//					parseRowButton.setEnabled(true);
-//                } else {
-//                	parseRowButton.setEnabled(false);
-//                }
-//
-//            }
-//        });
-        
+        this.fileContentsViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));        
         
         this.parseRowAction = new Action(getString("parseSelectedRow")) { //$NON-NLS-1$
             @Override
@@ -380,6 +365,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     	deleteButton = new Button(leftToolbarPanel, SWT.PUSH);
     	deleteButton.setText(getString("deleteLabel")); //$NON-NLS-1$
     	deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	deleteButton.setEnabled(false);
     	deleteButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -414,6 +400,9 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 							enable = false;
 							break;
 						}
+					} 
+					if( objs.length == 0 ) {
+						enable = false;
 					}
 					deleteButton.setEnabled(enable);
 				}
@@ -468,7 +457,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     
     private void handleInfoChanged(boolean reloadFileContents) {
     	if( synchronizing ) return;
-    	
+
     	this.infoChanged = true;
     	
     	synchronizeUI();
@@ -668,6 +657,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 							((TeiidColumnInfo)element).setName(newValue);
 							columnsPanel.refresh(element);
+					    	fileInfo.columnChanged((TeiidColumnInfo)element);
 							handleInfoChanged(false);
 						}
 					} break;
@@ -677,6 +667,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 							((TeiidColumnInfo)element).setDefaultValue(newValue);
 							columnsPanel.refresh(element);
+							fileInfo.columnChanged((TeiidColumnInfo)element);
 							handleInfoChanged(false);
 						}
 					} break;
@@ -686,6 +677,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 							((TeiidColumnInfo)element).setXmlPath(newValue);
 							columnsPanel.refresh(element);
+							fileInfo.columnChanged((TeiidColumnInfo)element);
 							handleInfoChanged(false);
 						}
 					} break;
