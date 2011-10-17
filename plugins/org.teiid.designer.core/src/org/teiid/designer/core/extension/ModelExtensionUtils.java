@@ -8,13 +8,11 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +22,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -67,9 +64,11 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * Determine if the ModelResource contains a ModelExtensionDefinition with the specified Namespace Prefix.
+     * 
      * @param modelResource the model resource being checked (cannot be <code>null</code>)
      * @param namespacePrefix the namespace prefix of the model extension definition being looked for (cannot be <code>null</code>
-     *            or empty)
+     *        or empty)
      * @return <code>true</code> if the model resource contains the model extension definition with the specified namespace prefix
      * @throws Exception if there is a problem accessing the model resource
      */
@@ -81,6 +80,8 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * Get the ModelExtensionDefinitionHeader for the specified Namespace Prefix for the ModelResource
+     * 
      * @param modelResource the model resource being checked (cannot be <code>null</code>)
      * @param namespacePrefix the namespace prefix of the model extension definition being looked for (cannot be <code>null</code>
      *        or empty)
@@ -109,6 +110,8 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * Reads the annotations from the supplied ModelResource, converting to a ModelExtensionDefinition object
+     * 
      * @param assistant the ModelExtensionAssistant
      * @param modelResource the model resource (cannot be <code>null</code>)
      * @return the ModelExtensionDefinition
@@ -122,13 +125,18 @@ public class ModelExtensionUtils {
 
         ModelExtensionDefinition med = null;
         String namespacePrefix = assistant.getNamespacePrefix();
+        // Get the Header info from the modelResource for the supplied namespacePrefix
         ModelExtensionDefinitionHeader medHeader = getModelExtensionDefinitionHeader(modelResource, namespacePrefix);
+
         if (medHeader != null) {
+            // Create a ModelExtensionDefinition
             med = assistant.createModelExtensionDefinition(medHeader);
+            // Get annotation for this namespacePrefix from the modelResource
             Annotation defnAnnotation = getDefinitionAnnotation(modelResource, false, namespacePrefix);
             if (defnAnnotation != null) {
+                // Get Tags from the Annotation
                 EMap<String, String> definitionTags = defnAnnotation.getTags();
-                // Get the extended metaclasses and set
+                // Iterate over Tags, process the extended metaclass tag info
                 for (Object object : definitionTags.entrySet()) {
                     if (!(object instanceof EStringToStringMapEntryImpl)) {
                         throw new Exception(Util.getString(I18N_PREFIX + "modelExtensionDefinitionTagUnexpectedClass", //$NON-NLS-1$
@@ -137,7 +145,7 @@ public class ModelExtensionUtils {
 
                     EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)object;
 
-                    // Get the Annotation for each extended metaclass
+                    // Get the Annotation for each extended Metaclass
                     if (entry.getKey().startsWith(EXTENDED_METACLASS_PREFIX)) {
                         Annotation metaclassAnnotation = getModelObjectAnnotation(entry, false);
 
@@ -145,9 +153,10 @@ public class ModelExtensionUtils {
                             throw new Exception(Util.getString(I18N_PREFIX + "metaclassAnnotationNotFound", entry.getKey())); //$NON-NLS-1$
                         }
 
+                        // Metaclass Name
                         String metaclassName = getKeyId(EXTENDED_METACLASS_PREFIX, entry.getKey());
 
-                        // For this metaclass annotation, get the associated Property Definitions
+                        // Get Property Definitions for this Metaclass
                         EMap<String, String> metaclassTags = metaclassAnnotation.getTags();
                         for (Object metaclassTagObj : metaclassTags.entrySet()) {
                             if (!(metaclassTagObj instanceof EStringToStringMapEntryImpl)) {
@@ -155,7 +164,9 @@ public class ModelExtensionUtils {
                                                     Util.getString(I18N_PREFIX + "metaclassEntryUnexpectedClass", metaclassTagObj.getClass())); //$NON-NLS-1$
                             }
 
+                            // Find Property Definition Tags
                             if (((EStringToStringMapEntryImpl)metaclassTagObj).getKey().startsWith(PROP_DEFN_PREFIX)) {
+                                // Get PropertyDefinition Annotation
                                 Annotation propertyDefinitionAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)metaclassTagObj,
                                                                                                    false);
 
@@ -163,7 +174,7 @@ public class ModelExtensionUtils {
                                     throw new Exception(
                                                         Util.getString(I18N_PREFIX + "propertyDefinitionAnnotationNotFound", ((EStringToStringMapEntryImpl)metaclassTagObj).getKey())); //$NON-NLS-1$
                                 }
-                                // Get the values for this property Definition
+                                // Get ProperyDefinition Values
                                 String simpleId = null;
                                 Set<Translation> displayNames = null;
                                 String runtimeType = null;
@@ -175,6 +186,8 @@ public class ModelExtensionUtils {
                                 String index = null;
                                 Set<String> allowedValues = null;
                                 Set<Translation> descriptions = null;
+
+                                // Get Value for each Tag
                                 EMap<String, String> propDefnTags = propertyDefinitionAnnotation.getTags();
                                 for (Object propDefnTagObj : propDefnTags.entrySet()) {
                                     if (!(propDefnTagObj instanceof EStringToStringMapEntryImpl)) {
@@ -182,10 +195,14 @@ public class ModelExtensionUtils {
                                                  Util.getString(I18N_PREFIX + "propertyDefinitionEntryUnexpectedClass", propDefnTagObj.getClass())); //$NON-NLS-1$
                                     }
 
+                                    // Get Tag Key/Value
                                     String key = ((EStringToStringMapEntryImpl)propDefnTagObj).getKey();
                                     String value = ((EStringToStringMapEntryImpl)propDefnTagObj).getValue();
+
+                                    // Id
                                     if (PropertyTagKeys.ID.equals(key)) {
                                         simpleId = value;
+                                        // Display Names (multiple for locales)
                                     } else if (PropertyTagKeys.DISPLAY_NAMES.equals(key)) {
                                         displayNames = new HashSet<Translation>();
                                         Annotation displayNamesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
@@ -203,6 +220,7 @@ public class ModelExtensionUtils {
                                             displayNames.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
                                                                              displayNameEntry.getValue()));
                                         }
+                                        // Descriptions (multiple for locales)
                                     } else if (PropertyTagKeys.DESCRIPTIONS.equals(key)) {
                                         descriptions = new HashSet<Translation>();
                                         Annotation desciptionsAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
@@ -220,20 +238,28 @@ public class ModelExtensionUtils {
                                             descriptions.add(new Translation(I18nUtil.parseLocaleString(localeTxt),
                                                                              descriptionEntry.getValue()));
                                         }
+                                        // Runtime type
                                     } else if (PropertyTagKeys.RUNTIME_TYPE.equals(key)) {
                                         runtimeType = value;
+                                        // Required
                                     } else if (PropertyTagKeys.REQUIRED.equals(key)) {
                                         required = value;
+                                        // Default Value
                                     } else if (PropertyTagKeys.DEFAULT_VALUE.equals(key)) {
                                         defaultValue = value;
+                                        // Fixed Value
                                     } else if (PropertyTagKeys.FIXED_VALUE.equals(key)) {
                                         fixedValue = value;
+                                        // Advanced
                                     } else if (PropertyTagKeys.ADVANCED.equals(key)) {
                                         advanced = value;
+                                        // Masked
                                     } else if (PropertyTagKeys.MASKED.equals(key)) {
                                         masked = value;
+                                        // Index
                                     } else if (PropertyTagKeys.INDEX.equals(key)) {
                                         index = value;
+                                        // Allowed Values
                                     } else if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
                                         allowedValues = new HashSet<String>();
                                         Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)propDefnTagObj,
@@ -637,6 +663,8 @@ public class ModelExtensionUtils {
     }
 
     /**
+     * Update the <code>ModelResource</code> annotations, with the supplied <code>ModelExtensionDefinition</code> properties.
+     * 
      * @param modelResource the model resource where the model resource definition is being stored (cannot be <code>null</code>)
      * @param definition the model extension definition being stored (cannot be <code>null</code>)
      * @throws Exception if there is a problem access the model resource

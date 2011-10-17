@@ -10,8 +10,9 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.Messages.errorOpeningMedEditor;
 import static org.teiid.designer.extension.ui.Messages.medEditorSourcePageTitle;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
+import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -34,6 +35,7 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
@@ -160,6 +162,21 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     public void doSave( IProgressMonitor monitor ) {
+
+        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+
+        IEditorInput editorInput = this.getEditorInput();
+
+        try {
+            if (editorInput instanceof IFileEditorInput) {
+                IFile inputFile = ((IFileEditorInput)editorInput).getFile();
+                InputStream inputStream = medWriter.write(this.med);
+                inputFile.setContents(inputStream, IResource.KEEP_HISTORY, monitor);
+            }
+        } catch (Exception e) {
+            // TODO log exception
+        }
+
         // TODO implement addPages
         commitPages(true);
     }

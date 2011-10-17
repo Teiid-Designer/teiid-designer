@@ -8,11 +8,9 @@
 package org.teiid.designer.extension.properties;
 
 import java.util.Locale;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.Messages;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -88,7 +86,7 @@ public class Translation implements Comparable<Translation>{
         int result = HashCodeUtil.hashCode(0, this.locale);
 
         if (this.translation != null) {
-            result = HashCodeUtil.hashCode(0, this.translation);
+            result = HashCodeUtil.hashCode(result, this.translation);
         }
 
         return result;

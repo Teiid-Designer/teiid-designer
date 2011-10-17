@@ -9,22 +9,22 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -370,6 +370,79 @@ public class ModelExtensionDefinition {
             // alert listeners
             notifyChangeListeners(PropertyName.VERSION, oldValue, newVersion);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public final boolean equals( final Object object ) {
+        if (this == object) return true;
+        if (object == null) return false;
+        if (getClass() != object.getClass()) return false;
+        final ModelExtensionDefinition other = (ModelExtensionDefinition)object;
+
+        // Check BuiltIn status
+        if (this.isBuiltIn() != other.isBuiltIn()) {
+            return false;
+        }
+
+        // ResourcePath
+        if (!CoreStringUtil.equals(getResourcePath(), other.getResourcePath())) return false;
+
+        // Check MED headers equal
+        if (!getHeader().equals(other.getHeader())) {
+            return false;
+        }
+
+        // Verify same number of extended metaclasses
+        String[] extendedMetaclassNames = this.getExtendedMetaclasses();
+        String[] otherMetaclassNames = other.getExtendedMetaclasses();
+        if (extendedMetaclassNames.length != otherMetaclassNames.length) return false;
+        if (extendedMetaclassNames.length == 0 && otherMetaclassNames.length == 0) return true;
+
+        // Check that metaClasses extended are same, and Property Definitions are the same for each
+        boolean areEqual = true;
+        for (int i = 0; i < extendedMetaclassNames.length; i++) {
+            Set<ModelExtensionPropertyDefinition> metaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(
+                                                                                                                         this.getPropertyDefinitions(extendedMetaclassNames[i]));
+            Set<ModelExtensionPropertyDefinition> otherMetaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(
+                                                                                                                              other.getPropertyDefinitions(extendedMetaclassNames[i]));
+
+            if ((metaClassPropertyDefns.size() != otherMetaClassPropertyDefns.size())
+                || !metaClassPropertyDefns.removeAll(otherMetaClassPropertyDefns)) {
+                areEqual = false;
+                break;
+            }
+        }
+
+        return areEqual;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = HashCodeUtil.hashCode(0, this.builtIn);
+
+        HashCodeUtil.hashCode(result, getResourcePath());
+
+        HashCodeUtil.hashCode(result, getHeader());
+
+        String[] extendedMetaclassNames = this.getExtendedMetaclasses();
+        for (int i = 0; i < extendedMetaclassNames.length; i++) {
+            Collection<ModelExtensionPropertyDefinition> metaclassPropertyDefns = this.getPropertyDefinitions(extendedMetaclassNames[i]);
+            for (ModelExtensionPropertyDefinition propDefn : metaclassPropertyDefns) {
+                HashCodeUtil.hashCode(result, propDefn);
+            }
+        }
+
+        return result;
     }
 
     /**

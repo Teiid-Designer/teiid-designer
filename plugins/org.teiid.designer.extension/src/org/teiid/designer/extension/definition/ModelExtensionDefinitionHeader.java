@@ -7,7 +7,9 @@
  */
 package org.teiid.designer.extension.definition;
 
+import org.teiid.core.HashCodeUtil;
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 
@@ -130,29 +132,42 @@ public class ModelExtensionDefinitionHeader {
     @Override
     public final boolean equals( final Object object ) {
         if (this == object) return true;
-        if (object == null) return false;
-        if (getClass() != object.getClass()) return false;
+        if (object == null || getClass() != object.getClass()) return false;
+
         final ModelExtensionDefinitionHeader other = (ModelExtensionDefinitionHeader)object;
 
-        if (this.namespacePrefix == null) {
-            if (other.namespacePrefix != null) return false;
-        } else if (!this.namespacePrefix.equals(other.namespacePrefix)) return false;
+        return CoreStringUtil.equals(this.namespacePrefix, other.namespacePrefix)
+               && CoreStringUtil.equals(this.namespaceUri, other.namespaceUri)
+               && CoreStringUtil.equals(this.metamodelUri, other.metamodelUri)
+               && CoreStringUtil.equals(this.description, other.description) && this.version == other.version;
+    }
 
-        if (this.namespaceUri == null) {
-            if (other.namespaceUri != null) return false;
-        } else if (!this.namespaceUri.equals(other.namespaceUri)) return false;
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = HashCodeUtil.hashCode(0, getVersion());
 
-        if (this.metamodelUri == null) {
-            if (other.metamodelUri != null) return false;
-        } else if (!this.metamodelUri.equals(other.metamodelUri)) return false;
+        // string properties
+        if (getNamespacePrefix() != null) {
+            result = HashCodeUtil.hashCode(result, getNamespacePrefix());
+        }
 
-        if (this.description == null) {
-            if (other.description != null) return false;
-        } else if (!this.description.equals(other.description)) return false;
+        if (getMetamodelUri() != null) {
+            result = HashCodeUtil.hashCode(result, getMetamodelUri());
+        }
 
-        if (this.version != other.version) return false;
+        if (getNamespaceUri() != null) {
+            result = HashCodeUtil.hashCode(result, getNamespaceUri());
+        }
 
-        return true;
+        if (getDescription() != null) {
+            result = HashCodeUtil.hashCode(result, getDescription());
+        }
+        return result;
     }
 
     /**

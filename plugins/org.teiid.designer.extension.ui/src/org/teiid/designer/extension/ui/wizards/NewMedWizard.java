@@ -7,10 +7,8 @@
  */
 package org.teiid.designer.extension.ui.wizards;
 
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -40,13 +38,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
-import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -111,8 +107,8 @@ public final class NewMedWizard extends AbstractWizard
 
                     // if medInputStream is null, Create a default Med
                     if (medInputStream == null) {
-                        File schemaFile = ExtensionPlugin.getInstance().getMedSchema();
-                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter(schemaFile);
+                        // File schemaFile = ExtensionPlugin.getInstance().getMedSchema();
+                        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
                         medInputStream = medWriter.write(createDefaultMed());
                     }
 

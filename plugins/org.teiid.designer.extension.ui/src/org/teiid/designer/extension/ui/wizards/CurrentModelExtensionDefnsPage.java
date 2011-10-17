@@ -766,12 +766,12 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
 
-        File schemaFile = null;
+        // File schemaFile = null;
         InputStream unregisteredMedStream = null;
 
         try {
-            schemaFile = ExtensionPlugin.getInstance().getMedSchema();
-            ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter(schemaFile);
+            // schemaFile = ExtensionPlugin.getInstance().getMedSchema();
+            ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
             unregisteredMedStream = medWriter.write(unregisteredMed);
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
