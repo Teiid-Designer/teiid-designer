@@ -69,11 +69,15 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     Set<String> allowedValues();
 
     /**
+     * The collection returned can be manipulated without affecting this property definition.
+     * 
      * @return the descriptions (never <code>null</code> but can be empty)
      */
     Set<Translation> getDescriptions();
 
     /**
+     * The collection returned can be manipulated without affecting this property definition.
+     * 
      * @return the display names (never <code>null</code> but can be empty)
      */
     Set<Translation> getDisplayNames();

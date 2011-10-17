@@ -10,6 +10,7 @@ package org.teiid.designer.extension.properties;
 import java.util.Locale;
 
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -18,7 +19,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 /**
  * A translation related to a specific {@link Locale}.
  */
-public class Translation {
+public class Translation implements Comparable<Translation>{
 
     public static Translation copy( Translation source ) {
         return new Translation(source.getLocale(), source.getTranslation());
@@ -36,11 +37,25 @@ public class Translation {
 
     /**
      * {@inheritDoc}
+     *
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo( Translation that ) {
+        return this.locale.toString().compareTo(that.locale.toString());
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals( Object object ) {
+        if (this == object) {
+            return true;
+        }
+
         if ((object == null) || !getClass().equals(object.getClass())) {
             return false;
         }
@@ -70,11 +85,10 @@ public class Translation {
      */
     @Override
     public int hashCode() {
-        final int PRIME = 1000003;
-        int result = PRIME * this.locale.hashCode();
+        int result = HashCodeUtil.hashCode(0, this.locale);
 
         if (this.translation != null) {
-            result += this.translation.hashCode();
+            result = HashCodeUtil.hashCode(0, this.translation);
         }
 
         return result;

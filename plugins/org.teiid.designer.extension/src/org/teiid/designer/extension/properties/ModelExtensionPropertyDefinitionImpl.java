@@ -11,13 +11,18 @@ import static org.teiid.designer.extension.ExtensionPlugin.Util;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.Messages;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -220,7 +225,48 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
             return false;
         }
 
-        return getId().equals(((ModelExtensionPropertyDefinitionImpl)obj).getId());
+        ModelExtensionPropertyDefinition that = (ModelExtensionPropertyDefinition)obj;
+
+        // boolean properties
+        if ((getType() != that.getType()) || (isAdvanced() != that.isAdvanced()) || (shouldBeIndexed() != that.shouldBeIndexed())
+                || (isMasked() != that.isMasked()) || (isRequired() != that.isRequired())) {
+            return false;
+        }
+
+        // string properties
+        if (!CoreStringUtil.equals(getSimpleId(), that.getSimpleId())
+                || !CoreStringUtil.equals(getNamespacePrefix(), that.getNamespacePrefix())
+                || !CoreStringUtil.equals(getFixedValue(), that.getFixedValue())
+                || !CoreStringUtil.equals(getDefaultValue(), that.getDefaultValue())) {
+            return false;
+        }
+
+        // allowed values
+        Set<String> thisValues = allowedValues();
+        Set<String> thatValues = (getAllowedValues() == null) ? new HashSet<String>()
+                                                             : new HashSet<String>(Arrays.asList(that.getAllowedValues()));
+
+        if ((thisValues.size() != thatValues.size()) || !thisValues.removeAll(thatValues)) {
+            return false;
+        }
+
+        // descriptions
+        Set<Translation> thisDescriptions = getDescriptions();
+        Set<Translation> thatDescriptions = that.getDescriptions();
+
+        if ((thisDescriptions.size() != thatDescriptions.size()) || !thisDescriptions.removeAll(thatDescriptions)) {
+            return false;
+        }
+
+        // display names
+        Set<Translation> thisDisplayNames = getDisplayNames();
+        Set<Translation> thatDisplayNames = that.getDisplayNames();
+
+        if ((thisDisplayNames.size() != thatDisplayNames.size()) || !thisDisplayNames.removeAll(thatDisplayNames)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -370,7 +416,66 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public int hashCode() {
-        return getId().hashCode();
+        int result = HashCodeUtil.hashCode(0, getType());
+
+        // boolean properties
+        result = HashCodeUtil.hashCode(result, isAdvanced());
+        result = HashCodeUtil.hashCode(result, shouldBeIndexed());
+        result = HashCodeUtil.hashCode(result, isMasked());
+        result = HashCodeUtil.hashCode(result, isRequired());
+
+        // string properties
+        if (getSimpleId() != null) {
+            result = HashCodeUtil.hashCode(result, getSimpleId());
+        }
+
+        if (getNamespacePrefix() != null) {
+            result = HashCodeUtil.hashCode(result, getNamespacePrefix());
+        }
+
+        if (getFixedValue() != null) {
+            result = HashCodeUtil.hashCode(result, getFixedValue());
+        }
+
+        if (getDefaultValue() != null) {
+            result = HashCodeUtil.hashCode(result, getDefaultValue());
+        }
+
+        // allowed values
+        if (!allowedValues().isEmpty()) {
+            List<String> sortedValues = new ArrayList<String>(allowedValues());
+            Collections.sort(sortedValues);
+
+            for (String allowedValue : sortedValues) {
+                result = HashCodeUtil.hashCode(result, allowedValue);
+            }
+        }
+
+        // descriptions
+        Set<Translation> translations = getDescriptions();
+
+        if (!translations.isEmpty()) {
+            List<Translation> sortedDescriptions = new ArrayList<Translation>(translations);
+            Collections.sort(sortedDescriptions);
+
+            for (Translation description : sortedDescriptions) {
+                result = HashCodeUtil.hashCode(result, description);
+            }
+        }
+
+        // display names
+        translations = getDisplayNames();
+
+        if (!translations.isEmpty()) {
+            List<Translation> sortedDisplayNames = new ArrayList<Translation>(translations);
+            Collections.sort(sortedDisplayNames);
+
+            for (Translation description : sortedDisplayNames) {
+                result = HashCodeUtil.hashCode(result, description);
+            }
+        }
+
+        return result;
     }
 
     /**

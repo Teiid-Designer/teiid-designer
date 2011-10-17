@@ -258,6 +258,7 @@ final class EditPropertyDialog extends FormDialog {
             Section section = FormUtil.createSection(this.managedForm, toolkit, body,
                                                      Messages.editPropertyDialogDescriptionSectionTitle,
                                                      Messages.editPropertyDialogDescriptionSectionDescription, SECTION_STYLE, true);
+            section.setExpanded(false);
             finalSection = section;
 
             // configure section toolbar
@@ -428,6 +429,7 @@ final class EditPropertyDialog extends FormDialog {
             Section section = FormUtil.createSection(this.managedForm, toolkit, body,
                                                      Messages.editPropertyDialogDisplayNameSectionTitle,
                                                      Messages.editPropertyDialogDisplayNameSectionDescription, SECTION_STYLE, true);
+            section.setExpanded(false);
             finalSection = section;
 
             // configure section toolbar
@@ -613,7 +615,7 @@ final class EditPropertyDialog extends FormDialog {
         BODY: {
             Composite body = this.scrolledForm.getBody();
             finalBody = body;
-            body.setLayout(new GridLayout(2, true));
+            body.setLayout(new GridLayout());
             body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             body.addControlListener(new ControlAdapter() {
                 /**
@@ -818,9 +820,6 @@ final class EditPropertyDialog extends FormDialog {
     @SuppressWarnings("unused")
     private Section createPropertyValueSection( Composite body,
                                                 FormToolkit toolkit ) {
-        // TODO implement createPropertyValueSection
-        // TODO assign error widgets here
-
         Section section = FormUtil.createSection(this.managedForm, toolkit, body,
                                                  Messages.editPropertyDialogPropertyValueSectionTitle,
                                                  Messages.editPropertyDialogPropertyValueSectionDescription, SECTION_STYLE, true);
@@ -1002,7 +1001,7 @@ final class EditPropertyDialog extends FormDialog {
                  */
                 @Override
                 public void widgetSelected( SelectionEvent e ) {
-                    handleFixedValueSelected();
+                    handleHasInitialValueSelected();
                 }
             });
 
@@ -1033,7 +1032,7 @@ final class EditPropertyDialog extends FormDialog {
                  */
                 @Override
                 public void widgetSelected( SelectionEvent e ) {
-                    handleFixedValueSelected();
+                    handleHasFixedValueSelected();
                 }
             });
             this.btnFixedValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -1129,8 +1128,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAllowedValueSelected() {
-        int index = this.lstAllowedValues.getSelectionIndex();
-        boolean enable = (index != -1);
+        boolean enable =  (this.lstAllowedValues.getSelectionIndex() != -1);
 
         if (this.btnEditValue.getEnabled() != enable) {
             this.btnEditValue.setEnabled(enable);
@@ -1228,18 +1226,74 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    void handleFixedValueSelected() {
-        String newFixedValue = this.txtInitialValue.getText();
+    void handleHasAllowedValuesSelected() {
+        boolean enable = this.btnAllowedValues.getSelection();
 
-        if (!this.btnFixedValue.getSelection()) {
-            newFixedValue = CoreStringUtil.Constants.EMPTY_STRING;
+        if (enable) {
+            for (String allowedValue : this.lstAllowedValues.getItems()) {
+                this.propDefn.addAllowedValue(allowedValue);
+            }
+        } else {
+            for (String allowedValue : this.lstAllowedValues.getItems()) {
+                this.propDefn.removeAllowedValue(allowedValue);
+            }
         }
 
-        this.propDefn.setFixedValue(newFixedValue);
+        if (this.lstAllowedValues.getEnabled() != enable) {
+            this.lstAllowedValues.setEnabled(enable);
+        }
+
+        if (this.btnAddValue.getEnabled() != enable) {
+            this.btnAddValue.setEnabled(enable);
+        }
+
+        // make sure there is an allowed value selected
+        enable = enable && (this.lstAllowedValues.getSelectionIndex() != -1);
+
+        if (this.btnEditValue.getEnabled() != enable) {
+            this.btnEditValue.setEnabled(enable);
+        }
+
+        if (this.btnRemoveValue.getEnabled() != enable) {
+            this.btnRemoveValue.setEnabled(enable);
+        }
     }
 
-    void handleHasAllowedValuesSelected() {
-        // TODO implement handleHasAllowedValuesSelected
+    void handleHasFixedValueSelected() {
+        boolean hasFixedValue = this.btnFixedValue.getSelection();
+        String value = this.txtInitialValue.getText();
+
+        if (hasFixedValue) {
+            this.propDefn.setFixedValue(value);
+            this.propDefn.setDefaultValue(null);
+        } else {
+            this.propDefn.setFixedValue(null);
+            this.propDefn.setDefaultValue(value);
+        }
+    }
+
+    void handleHasInitialValueSelected() {
+        boolean hasInitialValue = this.btnInitialValue.getSelection();
+        String value = this.txtInitialValue.getText();
+
+        if (hasInitialValue) {
+            if (this.btnFixedValue.getSelection()) {
+                this.propDefn.setFixedValue(value);
+            } else {
+                this.propDefn.setDefaultValue(value);
+            }
+        } else {
+            this.propDefn.setDefaultValue(null);
+            this.propDefn.setFixedValue(null);
+        }
+
+        if (this.txtInitialValue.getEnabled() != hasInitialValue) {
+            this.txtInitialValue.setEnabled(hasInitialValue);
+        }
+
+        if (this.btnFixedValue.getEnabled() != hasInitialValue) {
+            this.btnFixedValue.setEnabled(hasInitialValue);
+        }
     }
 
     void handleIndexedChanged( boolean newValue ) {
@@ -1247,9 +1301,17 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleInitialValueChanged( String newValue ) {
-        // TODO if there are allowed values make sure new value is one of them
-        if (!this.propDefn.isModifiable()) {
-            this.propDefn.setFixedValue(newValue);
+        if (this.btnInitialValue.getSelection()) {
+            if (this.btnFixedValue.getSelection()) {
+                this.propDefn.setFixedValue(newValue);
+                this.propDefn.setDefaultValue(null);
+            } else {
+                this.propDefn.setFixedValue(null);
+                this.propDefn.setDefaultValue(newValue);
+            }
+        } else {
+            this.propDefn.setFixedValue(null);
+            this.propDefn.setDefaultValue(null);
         }
     }
 
