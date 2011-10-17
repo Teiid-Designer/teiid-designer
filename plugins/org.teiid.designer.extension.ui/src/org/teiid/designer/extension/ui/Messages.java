@@ -172,11 +172,6 @@ public class Messages extends NLS {
     public static String requiredPropertyAttributeColumnHeaderToolTip;
     public static String runtimeTypePropertyAttributeColumnHeaderToolTip;
     public static String simpleIdPropertyAttributeColumnHeaderToolTip;
-    
-    public static String allowedValueColumnText;
-    public static String allowedValueColumnHeaderToolTip;
-    public static String defaultValueColumnText;
-    public static String defaultValueColumnHeaderToolTip;
 
     public static String addMetaclassDialogTitle;
     public static String metaclassDialogMessage;
@@ -190,12 +185,15 @@ public class Messages extends NLS {
     public static String removePropertyDialogMsg;
     
     public static String addPropertyDialogTitle;
-    public static String editPropertyDialogAllowedValuesSectionTitle;
+    public static String editPropertyDialogMaskedButtonText;
+    public static String editPropertyDialogMaskedButtonToolTip;
+    public static String editPropertyDialogRequiredButtonText;
+    public static String editPropertyDialogRequiredButtonToolTip;
     public static String editPropertyDialogDescriptionSectionDescription;
     public static String editPropertyDialogFixedValueButtonText;
     public static String editPropertyDialogFixedValueButtonToolTip;
-    public static String editPropertyDialogVariableValueButtonText;
-    public static String editPropertyDialogVariableValueButtonToolTip;
+    public static String editPropertyDialogAllowedValuesButtonText;
+    public static String editPropertyDialogAllowedValuesButtonToolTip;
     public static String editPropertyDialogDescriptionSectionTitle;
     public static String editPropertyDialogAddDescriptionButtonToolTip;
     public static String editPropertyDialogEditDescriptionButtonToolTip;
@@ -208,19 +206,23 @@ public class Messages extends NLS {
     public static String editPropertyDialogAddAllowedValueButtonToolTip;
     public static String editPropertyDialogEditAllowedValueButtonToolTip;
     public static String editPropertyDialogRemoveAllowedValueButtonToolTip;
-    public static String editPropertyDialogToggleDefaultValueButtonToolTip;
     public static String editPropertyDialogInfoSectionDescription;
     public static String editPropertyDialogInfoSectionTitle;
     public static String editPropertyDialogInvalidRuntimeTypeMsg;
     public static String editPropertyDialogPropertyValueSectionDescription;
     public static String editPropertyDialogPropertyValueSectionTitle;
     public static String editPropertyDialogTitle;
-    public static String editPropertyDialogFlagsSectionTitle;
     public static String editPropertyDialogAllowedValueNotAddedMsg;
     public static String editPropertyDialogDescriptionNotAddedMsg;
     public static String editPropertyDialogDisplayNameNotAddedMsg;
+    public static String editPropertyDialogInitialValueButtonText;
+    public static String editPropertyDialogInitialValueButtonToolTip;
+    public static String editPropertyDialogAdvancedButtonText;
+    public static String editPropertyDialogIndexButtonText;
     public static String propertyDialogTitle;
     public static String propertyDialogMessage;
+    public static String removeAllowedValueDialogTitle;
+    public static String removeAllowedValueDialogMsg;
     public static String removeDescriptionDialogTitle;
     public static String removeDescriptionDialogMsg;
     public static String removeDisplayNameDialogTitle;

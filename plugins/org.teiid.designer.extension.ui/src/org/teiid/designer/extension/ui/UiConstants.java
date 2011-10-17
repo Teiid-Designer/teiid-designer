@@ -51,7 +51,6 @@ public interface UiConstants {
         String REMOVE_PROPERTY = FOLDER + "remove-property.png"; //$NON-NLS-1$
         String REMOVE_VALUE = FOLDER + "remove-value.png"; //$NON-NLS-1$
         String SHOW_REGISTRY_VIEW_ACTION = REGISTRY_VIEW;
-        String TOGGLE_DEFAULT_VALUE = FOLDER + "toggle-default-value.png"; //$NON-NLS-1$
     }
 
     interface Form {

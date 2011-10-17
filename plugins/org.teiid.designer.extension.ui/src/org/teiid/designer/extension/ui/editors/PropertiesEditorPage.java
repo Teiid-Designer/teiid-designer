@@ -578,7 +578,7 @@ public class PropertiesEditorPage extends MedEditorPage {
                                                            getExistingPropertyIds(metaclassName),
                                                            getSelectedProperty());
         dialog.create();
-        dialog.getShell().pack();
+        dialog.getShell().setSize((int)(getShell().getSize().x * .8), (int)(getShell().getSize().y * .8));
 
         if (dialog.open() == Window.OK) {
             // TODO implement handleEditProperty

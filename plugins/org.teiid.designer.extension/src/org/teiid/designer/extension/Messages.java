@@ -48,6 +48,8 @@ public class Messages extends NLS {
     public static String metamodelUri;
     public static String namespacePrefix;
     public static String namespaceUri;
+    public static String propertyDescription;
+    public static String propertyDisplayName;
     public static String propertySimpleId;
     public static String resourcePath;
     public static String translation;
@@ -57,6 +59,7 @@ public class Messages extends NLS {
     public static String duplicateTranslationLocaleValidationMsg;
     public static String extendedMetaclassHasNoPropertiesValidationMsg;
     public static String localeMissingValidationMsg;
+    public static String objectIsNullValidationMsg;
     public static String medFileDoesNotExistValidationMsg;
     public static String medHasNoMetaclassesValidationMsg;
     public static String medHasDuplicateMetaclassesValidationMsg;

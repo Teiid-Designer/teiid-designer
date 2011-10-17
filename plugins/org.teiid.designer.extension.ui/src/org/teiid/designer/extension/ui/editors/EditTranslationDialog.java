@@ -12,6 +12,7 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,11 +52,12 @@ import com.metamatrix.core.util.CoreStringUtil;
 public class EditTranslationDialog extends FormDialog {
 
     private Button btnOk;
-    private final List<Locale> existingLocales;
+    private final List<Translation> existingTranslations;
     private Locale locale;
     private ScrolledForm scrolledForm;
 
     private final String title;
+    private final String translationType;
 
     private final ErrorMessage localeError;
     private final ErrorMessage translationError;
@@ -68,34 +70,47 @@ public class EditTranslationDialog extends FormDialog {
 
     /**
      * @param parentShell the parent shell (may be <code>null</code>)
-     * @param existingLocales the existing locales with translations (never <code>null</code> but can be empty)
+     * @param title the dialog title (cannot be <code>null</code> or empty)
+     * @param translationType a word describing what the translation represents (description, display name, etc.) (cannot be
+     *            <code>null</code> or empty)
+     * @param existingTranslations the existing translations (can be <code>null</code> or empty)
      */
     public EditTranslationDialog( Shell parentShell,
-                              String title,
-                              List<Locale> existingLocales ) {
+                                  String title,
+                                  String translationType,
+                                  Collection<Translation> existingTranslations ) {
         super(parentShell);
+        CoreArgCheck.isNotNull(title, "title is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(translationType, "translationType is null"); //$NON-NLS-1$
+
         this.title = title;
-        this.existingLocales = new ArrayList<Locale>(existingLocales);
+        this.translationType = translationType;
+        this.existingTranslations = ((existingTranslations == null) ? new ArrayList<Translation>()
+                                                                   : new ArrayList<Translation>(existingTranslations));
         this.localeError = new ErrorMessage();
         this.translationError = new ErrorMessage();
     }
 
     /**
      * @param parentShell the parent shell (may be <code>null</code>)
-     * @param existingLocales the existing locales with translations (never <code>null</code> but can be empty)
+     * @param title the dialog title
+     * @param translationType a word describing what the translation represents (description, display name, etc.) (cannot be
+     *            <code>null</code> or empty)
+     * @param existingTranslations the existing translations (can be <code>null</code> or empty)
      */
     public EditTranslationDialog( Shell parentShell,
-                              String title,
-                              List<Locale> existingLocales,
-                              Translation translationBeingEdited ) {
-        this(parentShell, title, existingLocales);
+                                  String title,
+                                  String translationType,
+                                  Collection<Translation> existingTranslations,
+                                  Translation translationBeingEdited ) {
+        this(parentShell, title, translationType, existingTranslations);
 
         CoreArgCheck.isNotNull(translationBeingEdited, "translationBeingEdited is null"); //$NON-NLS-1$
         this.translationBeingEdited = translationBeingEdited;
         this.locale = this.translationBeingEdited.getLocale();
 
         // remove the translation being edited
-        this.existingLocales.remove(this.existingLocales);
+        this.existingTranslations.remove(this.existingTranslations);
     }
 
     /**
@@ -178,6 +193,10 @@ public class EditTranslationDialog extends FormDialog {
             if (isEditMode()) {
                 String current = this.translationBeingEdited.getLocale().getDisplayName();
                 int index = cbxLocales.indexOf(current);
+
+                if (index != -1) {
+                    cbxLocales.select(index);
+                }
             }
 
             cbxLocales.addSelectionListener(new SelectionAdapter() {
@@ -252,7 +271,16 @@ public class EditTranslationDialog extends FormDialog {
 
     void handleLocaleChanged( Locale newLocale ) {
         this.locale = newLocale;
-        this.localeError.message = ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale, this.existingLocales);
+        this.localeError.message = ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale);
+
+        if (CoreStringUtil.isEmpty(this.localeError.message)) {
+            Translation newTranslation = new Translation(this.locale, this.translation);
+            this.existingTranslations.add(newTranslation);
+            this.localeError.message = ModelExtensionDefinitionValidator.validateTranslations(this.translationType,
+                                                                                              this.existingTranslations);
+            this.existingTranslations.remove(newTranslation);
+        }
+
         updateState();
     }
 
@@ -277,14 +305,20 @@ public class EditTranslationDialog extends FormDialog {
         } else if (!CoreStringUtil.isEmpty(this.translationError.message)) {
             msg = this.translationError.message;
         } else {
-            enable = true;
             imageType = IMessageProvider.NONE;
             msg = Messages.translationDialogMsg;
 
             if (isEditMode()) {
-                if (this.locale.equals(this.translationBeingEdited.getLocale())
-                        && this.translation.equals(this.translationBeingEdited.getTranslation())) {
-                    enable = false;
+                Locale localeBeingEdited = this.translationBeingEdited.getLocale();
+
+                if (this.locale == null) {
+                    enable = (localeBeingEdited != null);
+                } else {
+                    enable = ((localeBeingEdited == null) || !localeBeingEdited.equals(this.locale));
+                }
+
+                if (enable) {
+                    enable = !CoreStringUtil.equals(this.translation, this.translationBeingEdited.getTranslation());
                 }
             }
         }

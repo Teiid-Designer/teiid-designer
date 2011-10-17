@@ -18,9 +18,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -46,8 +43,10 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -57,7 +56,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -90,17 +88,17 @@ final class EditPropertyDialog extends FormDialog {
     private Button btnRemoveDescription;
     private Button btnRemoveDisplayName;
 
-    private Button btnFixedValue;
-    private Text txtFixedValue;
-    private Button btnVariableValue;
+    private Button btnAllowedValues;
+    private org.eclipse.swt.widgets.List lstAllowedValues;
     private Button btnAddValue;
     private Button btnEditValue;
     private Button btnRemoveValue;
-    private Button btnToggleDefaultValue;
+    private Button btnInitialValue;
+    private Text txtInitialValue;
+    private Button btnFixedValue;
 
     private TableViewer descriptionViewer;
     private TableViewer displayNameViewer;
-    private TableViewer valuesViewer;
 
     private final Collection<String> existingPropIds;
 
@@ -116,11 +114,10 @@ final class EditPropertyDialog extends FormDialog {
 
     private final ErrorMessage advancedError;
     private final ErrorMessage allowedValuesError;
-    private final ErrorMessage defaultValueError;
     private final ErrorMessage displayNameError;
     private final ErrorMessage descriptionError;
-    private final ErrorMessage fixedValueError;
     private final ErrorMessage indexedError;
+    private final ErrorMessage initialValueError;
     private final ErrorMessage maskedError;
     private final ErrorMessage requiredError;
     private final ErrorMessage runtimeTypeError;
@@ -144,11 +141,10 @@ final class EditPropertyDialog extends FormDialog {
         // errors
         this.advancedError = new ErrorMessage();
         this.allowedValuesError = new ErrorMessage();
-        this.defaultValueError = new ErrorMessage();
         this.displayNameError = new ErrorMessage();
         this.descriptionError = new ErrorMessage();
-        this.fixedValueError = new ErrorMessage();
         this.indexedError = new ErrorMessage();
+        this.initialValueError = new ErrorMessage();
         this.maskedError = new ErrorMessage();
         this.requiredError = new ErrorMessage();
         this.simpleIdError = new ErrorMessage();
@@ -195,14 +191,12 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    private void addMessage( ErrorMessage errorMsg,
-                             String newMsg ) {
-        String oldMessage = errorMsg.message;
-
-        if (!CoreStringUtil.equals(oldMessage, newMsg)) {
-            errorMsg.message = newMsg;
-            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
-                                                             errorMsg.getMessageType(), errorMsg.getControl());
+    private void addMessage( ErrorMessage errorMsg ) {
+        if (CoreStringUtil.isEmpty(errorMsg.message)) {
+            this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
+        } else {
+            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.message, null, errorMsg.getMessageType(),
+                                                             errorMsg.getControl());
         }
     }
 
@@ -343,6 +337,7 @@ final class EditPropertyDialog extends FormDialog {
             table.setLayout(new GridLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
+            ((GridData)table.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * .4);
 
             this.descriptionViewer = new TableViewer(table);
             this.descriptionViewer.setContentProvider(new IStructuredContentProvider() {
@@ -414,20 +409,6 @@ final class EditPropertyDialog extends FormDialog {
                 final TableViewerColumn lastColumn = new TableViewerColumn(this.descriptionViewer, SWT.LEFT);
                 lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
                 configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
-
-                // size last column to extend to width of table
-                finalContainer.addControlListener(new ControlAdapter() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-                     */
-                    @Override
-                    public void controlResized( ControlEvent e ) {
-                        lastColumn.getColumn().setWidth(finalContainer.getClientArea().width - firstColumn.getColumn().getWidth());
-                    }
-                });
             }
 
             // populate table
@@ -525,6 +506,7 @@ final class EditPropertyDialog extends FormDialog {
             table.setLayout(new GridLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
+            ((GridData)table.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * .4);
 
             this.displayNameViewer = new TableViewer(table);
             this.displayNameViewer.setContentProvider(new IStructuredContentProvider() {
@@ -596,20 +578,6 @@ final class EditPropertyDialog extends FormDialog {
                 final TableViewerColumn lastColumn = new TableViewerColumn(this.displayNameViewer, SWT.LEFT);
                 lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
                 configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
-
-                // size last column to extend to width of table
-                finalContainer.addControlListener(new ControlAdapter() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-                     */
-                    @Override
-                    public void controlResized( ControlEvent e ) {
-                        lastColumn.getColumn().setWidth(finalContainer.getClientArea().width - firstColumn.getColumn().getWidth());
-                    }
-                });
             }
 
             // populate table
@@ -647,6 +615,17 @@ final class EditPropertyDialog extends FormDialog {
             finalBody = body;
             body.setLayout(new GridLayout(2, true));
             body.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            body.addControlListener(new ControlAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+                 */
+                @Override
+                public void controlResized( ControlEvent e ) {
+                    super.controlResized(e);
+                }
+            });
         }
 
         SECTIONS: {
@@ -740,7 +719,7 @@ final class EditPropertyDialog extends FormDialog {
         RUNTIME_TYPE: {
             toolkit.createLabel(finalContainer, Messages.runtimeTypeLabel);
 
-            CCombo cbxRuntimeType = new CCombo(finalContainer, COMBO_STYLE);
+            final CCombo cbxRuntimeType = new CCombo(finalContainer, COMBO_STYLE);
             toolkit.adapt(cbxRuntimeType, true, false);
             this.runtimeTypeError.widget = cbxRuntimeType;
             cbxRuntimeType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -787,43 +766,17 @@ final class EditPropertyDialog extends FormDialog {
                  */
                 @Override
                 public void controlResized( ControlEvent e ) {
-                    ((CCombo)e.widget).setSize(finalTxtSimpleId.getSize());
+                    cbxRuntimeType.setSize(finalTxtSimpleId.getSize());
                 }
             });
         }
 
         FLAGS: {
-            Section section = toolkit.createSection(finalContainer, ExpandableComposite.TITLE_BAR);
-            section.setText(Messages.editPropertyDialogFlagsSectionTitle);
-            section.setLayout(new GridLayout());
-            section.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            ((GridData)section.getLayoutData()).horizontalSpan = 2;
-            ((GridData)section.getLayoutData()).verticalIndent += ((GridLayout)finalContainer.getLayout()).verticalSpacing;
-
-            Composite container = toolkit.createComposite(section, SWT.NONE);
-            container.setLayout(new GridLayout(5, true));
-            container.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            section.setClient(container);
-
-            Button btn = toolkit.createButton(container, Messages.requiredPropertyAttributeColumnHeader, SWT.CHECK);
-            this.requiredError.widget = btn;
-            btn.setSelection(this.propDefn.isRequired());
-            btn.setToolTipText(Messages.requiredPropertyAttributeColumnHeaderToolTip);
-            btn.addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleRequiredChanged(((Button)e.widget).getSelection());
-                }
-            });
-
-            btn = toolkit.createButton(container, Messages.advancedPropertyAttributeColumnHeader, SWT.CHECK);
+            Button btn = toolkit.createButton(finalContainer, Messages.editPropertyDialogAdvancedButtonText, SWT.CHECK);
             this.advancedError.widget = btn;
+            btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            ((GridData)btn.getLayoutData()).verticalIndent = 5;
+            ((GridData)btn.getLayoutData()).horizontalSpan = 2;
             btn.setSelection(this.propDefn.isAdvanced());
             btn.setToolTipText(Messages.advancedPropertyAttributeColumnHeaderToolTip);
             btn.addSelectionListener(new SelectionAdapter() {
@@ -839,25 +792,10 @@ final class EditPropertyDialog extends FormDialog {
                 }
             });
 
-            btn = toolkit.createButton(container, Messages.maskedPropertyAttributeColumnHeader, SWT.CHECK);
-            this.maskedError.widget = btn;
-            btn.setSelection(this.propDefn.isMasked());
-            btn.setToolTipText(Messages.maskedPropertyAttributeColumnHeaderToolTip);
-            btn.addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleMaskedChanged(((Button)e.widget).getSelection());
-                }
-            });
-
-            btn = toolkit.createButton(container, Messages.indexedPropertyAttributeColumnHeader, SWT.CHECK);
+            btn = toolkit.createButton(finalContainer, Messages.editPropertyDialogIndexButtonText, SWT.CHECK);
             this.indexedError.widget = btn;
+            btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            ((GridData)btn.getLayoutData()).horizontalSpan = 2;
             btn.setSelection(this.propDefn.shouldBeIndexed());
             btn.setToolTipText(Messages.indexedPropertyAttributeColumnHeaderToolTip);
             btn.addSelectionListener(new SelectionAdapter() {
@@ -887,17 +825,204 @@ final class EditPropertyDialog extends FormDialog {
                                                  Messages.editPropertyDialogPropertyValueSectionTitle,
                                                  Messages.editPropertyDialogPropertyValueSectionDescription, SECTION_STYLE, true);
 
-        Composite container = toolkit.createComposite(section);
-        container.setLayout(new GridLayout());
-        container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        section.setClient(container);
+        final Composite finalContainer;
+
+        SECTION: {
+            Composite container = toolkit.createComposite(section);
+            finalContainer = container;
+            container.setLayout(new GridLayout());
+            container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            section.setClient(container);
+        }
 
         TOP: {
-            Composite top = toolkit.createComposite(container);
-            top.setLayout(new GridLayout(2, false));
-            top.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            Button btnRequired = toolkit.createButton(finalContainer, Messages.editPropertyDialogRequiredButtonText, SWT.CHECK);
+            this.requiredError.widget = btnRequired;
+            btnRequired.setSelection(this.propDefn.isRequired());
+            btnRequired.setToolTipText(Messages.editPropertyDialogRequiredButtonToolTip);
+            btnRequired.addSelectionListener(new SelectionAdapter() {
 
-            this.btnFixedValue = toolkit.createButton(top, Messages.editPropertyDialogFixedValueButtonText, SWT.RADIO);
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleRequiredChanged(((Button)e.widget).getSelection());
+                }
+            });
+
+            Button btnMasked = toolkit.createButton(finalContainer, Messages.editPropertyDialogMaskedButtonText, SWT.CHECK);
+            this.maskedError.widget = btnMasked;
+            btnMasked.setSelection(this.propDefn.isMasked());
+            btnMasked.setToolTipText(Messages.editPropertyDialogMaskedButtonToolTip);
+            btnMasked.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleMaskedChanged(((Button)e.widget).getSelection());
+                }
+            });
+        }
+
+        MIDDLE: {
+            Composite middle = toolkit.createComposite(finalContainer);
+            GridLayout middleLayout = new GridLayout(2, false);
+            middleLayout.horizontalSpacing = 0;
+            middleLayout.marginHeight = 0;
+            middleLayout.marginWidth = 0;
+            middle.setLayout(middleLayout);
+            middle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+            this.btnAllowedValues = toolkit.createButton(middle, Messages.editPropertyDialogAllowedValuesButtonText, SWT.CHECK);
+            this.btnAllowedValues.setToolTipText(Messages.editPropertyDialogAllowedValuesButtonToolTip);
+            this.btnAllowedValues.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            ((GridData)this.btnAllowedValues.getLayoutData()).horizontalSpan = 2;
+            this.btnAllowedValues.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleHasAllowedValuesSelected();
+                }
+            });
+
+            this.lstAllowedValues = new org.eclipse.swt.widgets.List(middle, SWT.SINGLE | SWT.BORDER);
+            this.lstAllowedValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            ((GridData)this.lstAllowedValues.getLayoutData()).horizontalIndent = 20;
+            this.lstAllowedValues.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleAllowedValueSelected();
+                }
+            });
+
+            Composite pnlButtons = toolkit.createComposite(middle);
+            RowLayout btnLayout = new RowLayout(SWT.VERTICAL);
+            btnLayout.marginLeft = 0;
+            btnLayout.marginRight = 0;
+            btnLayout.spacing = 0;
+            btnLayout.marginTop = 0;
+            btnLayout.marginBottom = 0;
+            pnlButtons.setLayout(btnLayout);
+            pnlButtons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+            // configure add allowed value button
+            this.btnAddValue = toolkit.createButton(pnlButtons, CoreStringUtil.Constants.EMPTY_STRING, SWT.FLAT);
+            this.btnAddValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleAddAllowedValue();
+                }
+            });
+            this.btnAddValue.setToolTipText(Messages.editPropertyDialogAddAllowedValueButtonToolTip);
+            this.btnAddValue.setImage(Activator.getDefault().getImage(ImageIds.ADD_VALUE));
+            this.btnAddValue.setEnabled(false);
+
+            // configure edit allowed value button
+            this.btnEditValue = toolkit.createButton(pnlButtons, CoreStringUtil.Constants.EMPTY_STRING, SWT.FLAT);
+            this.btnEditValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleEditAllowedValue();
+                }
+            });
+            this.btnEditValue.setToolTipText(Messages.editPropertyDialogEditAllowedValueButtonToolTip);
+            this.btnEditValue.setImage(Activator.getDefault().getImage(ImageIds.EDIT_VALUE));
+            this.btnEditValue.setEnabled(false);
+
+            // configure remove allowed value button
+            this.btnRemoveValue = toolkit.createButton(pnlButtons, CoreStringUtil.Constants.EMPTY_STRING, SWT.FLAT);
+            this.btnRemoveValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleRemoveAllowedValue();
+                }
+            });
+            this.btnRemoveValue.setToolTipText(Messages.editPropertyDialogRemoveAllowedValueButtonToolTip);
+            this.btnRemoveValue.setImage(Activator.getDefault().getImage(ImageIds.REMOVE_VALUE));
+            this.btnRemoveValue.setEnabled(false);
+
+            if (isEditMode()) {
+                String[] allowedValues = this.propDefn.getAllowedValues();
+
+                if ((allowedValues != null) && (allowedValues.length != 0)) {
+                    this.lstAllowedValues.setItems(allowedValues);
+                }
+            }
+        }
+
+        BOTTOM: {
+            Composite bottom = toolkit.createComposite(finalContainer, SWT.NONE);
+            bottom.setLayout(new GridLayout(2, false));
+            bottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+            this.btnInitialValue = toolkit.createButton(bottom, Messages.editPropertyDialogInitialValueButtonText, SWT.CHECK);
+            this.btnInitialValue.setToolTipText(Messages.editPropertyDialogInitialValueButtonToolTip);
+            this.btnInitialValue.addSelectionListener(new SelectionAdapter() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( SelectionEvent e ) {
+                    handleFixedValueSelected();
+                }
+            });
+
+            this.txtInitialValue = toolkit.createText(bottom, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            this.initialValueError.widget = this.txtInitialValue;
+            this.txtInitialValue.addModifyListener(new ModifyListener() {
+
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleInitialValueChanged(((Text)e.widget).getText());
+                }
+            });
+            this.txtInitialValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+            this.btnFixedValue = toolkit.createButton(bottom, Messages.editPropertyDialogFixedValueButtonText, SWT.CHECK);
             this.btnFixedValue.setToolTipText(Messages.editPropertyDialogFixedValueButtonToolTip);
             this.btnFixedValue.addSelectionListener(new SelectionAdapter() {
 
@@ -911,243 +1036,14 @@ final class EditPropertyDialog extends FormDialog {
                     handleFixedValueSelected();
                 }
             });
+            this.btnFixedValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            ((GridData)this.btnFixedValue.getLayoutData()).horizontalIndent = 20;
+            ((GridData)this.btnFixedValue.getLayoutData()).horizontalSpan = 2;
 
-            this.txtFixedValue = toolkit.createText(top, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            this.fixedValueError.widget = this.txtFixedValue;
-            this.txtFixedValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            this.txtFixedValue.addModifyListener(new ModifyListener() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleFixedValueChanged(((Text)e.widget).getText());
-                }
-            });
-
-            this.btnVariableValue = toolkit.createButton(top, Messages.editPropertyDialogVariableValueButtonText, SWT.RADIO);
-            this.btnVariableValue.setToolTipText(Messages.editPropertyDialogVariableValueButtonToolTip);
-            this.btnVariableValue.addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleVariableValueSelected();
-                }
-            });
-
-            if (this.propDefn.isModifiable()) {
-                this.btnVariableValue.setSelection(true);
-            } else {
-                this.btnFixedValue.setSelection(true);
-            }
-        }
-
-        BOTTOM: {
-            Section valuesSection = toolkit.createSection(container, ExpandableComposite.TITLE_BAR
-                    | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
-            valuesSection.setText(Messages.editPropertyDialogAllowedValuesSectionTitle);
-            valuesSection.setLayout(new GridLayout());
-            valuesSection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-            Button[] buttons = FormUtil.createSectionToolBar(valuesSection,
-                                                             toolkit,
-                                                             new Image[] { Activator.getDefault().getImage(ImageIds.ADD_VALUE),
-                                                                     Activator.getDefault().getImage(ImageIds.EDIT_VALUE),
-                                                                     Activator.getDefault().getImage(ImageIds.REMOVE_VALUE),
-                                                                     Activator.getDefault().getImage(ImageIds.TOGGLE_DEFAULT_VALUE) });
-
-            // configure add allowed value button
-            buttons[0].addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleAddAllowedValue();
-                }
-            });
-            buttons[0].setToolTipText(Messages.editPropertyDialogAddAllowedValueButtonToolTip);
-
-            // configure edit allowed value button
-            buttons[1].setEnabled(false);
-            buttons[1].addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleEditAllowedValue();
-                }
-            });
-            buttons[1].setToolTipText(Messages.editPropertyDialogEditAllowedValueButtonToolTip);
-            this.btnEditValue = buttons[1];
-
-            // configure remove allowed value button
-            buttons[2].setEnabled(false);
-            buttons[2].addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleRemoveAllowedValue();
-                }
-            });
-            buttons[2].setToolTipText(Messages.editPropertyDialogRemoveAllowedValueButtonToolTip);
-            this.btnRemoveValue = buttons[2];
-
-            // configure remove allowed value button
-            buttons[3].setEnabled(false);
-            buttons[3].addSelectionListener(new SelectionAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleToggleDefaultValue();
-                }
-            });
-            buttons[3].setToolTipText(Messages.editPropertyDialogToggleDefaultValueButtonToolTip);
-            this.btnToggleDefaultValue = buttons[3];
-
-            final Composite bottom = toolkit.createComposite(valuesSection, SWT.NONE);
-            bottom.setLayout(new GridLayout());
-            bottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            valuesSection.setClient(bottom);
-
-            VIEWER: {
-                Table table = toolkit.createTable(bottom, VIEWER_STYLE);
-                this.allowedValuesError.widget = table;
-                table.setHeaderVisible(true);
-                table.setLinesVisible(true);
-                table.setLayout(new GridLayout());
-                table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-                ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
-
-                this.valuesViewer = new TableViewer(table);
-                this.valuesViewer.setContentProvider(new IStructuredContentProvider() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-                     */
-                    @Override
-                    public void dispose() {
-                        // nothing to do
-                    }
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-                     */
-                    @Override
-                    public Object[] getElements( Object inputElement ) {
-                        return new Object[0]; // TODO implement
-                    }
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-                     *      java.lang.Object, java.lang.Object)
-                     */
-                    @Override
-                    public void inputChanged( Viewer viewer,
-                                              Object oldInput,
-                                              Object newInput ) {
-                        // nothing to do
-                    }
-                });
-                this.valuesViewer.setLabelProvider(new LabelProvider());
-                this.valuesViewer.addDoubleClickListener(new IDoubleClickListener() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
-                     */
-                    @Override
-                    public void doubleClick( DoubleClickEvent event ) {
-                        handleEditAllowedValue();
-                    }
-                });
-                this.valuesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-                     */
-                    @Override
-                    public void selectionChanged( SelectionChangedEvent event ) {
-                        handleAllowedValueSelected();
-                    }
-                });
-
-                COLUMNS: {
-                    final TableViewerColumn firstColumn = new TableViewerColumn(this.valuesViewer, SWT.LEFT);
-                    firstColumn.setLabelProvider(new AllowedValueLabelProvider(ColumnIndexes.DEFAULT_VALUE));
-                    configureColumn(firstColumn, ColumnHeaders.DEFAULT_VALUE, ColumnToolTips.DEFAULT_VALUE, true);
-
-                    final TableViewerColumn lastColumn = new TableViewerColumn(this.valuesViewer, SWT.LEFT);
-                    lastColumn.setLabelProvider(new AllowedValueLabelProvider(ColumnIndexes.VALUE));
-                    configureColumn(lastColumn, ColumnHeaders.VALUE, ColumnToolTips.VALUE, true);
-
-                    // size last column to extend to width of table
-                    bottom.addControlListener(new ControlAdapter() {
-
-                        /**
-                         * {@inheritDoc}
-                         * 
-                         * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-                         */
-                        @Override
-                        public void controlResized( ControlEvent e ) {
-                            lastColumn.getColumn().setWidth(bottom.getClientArea().width - firstColumn.getColumn().getWidth());
-                        }
-                    });
-                }
-
-                // populate table
-                this.valuesViewer.setInput(this);
-                WidgetUtil.pack(this.valuesViewer);
-            }
+            // TODO set initial enabled state of buttons and text field
         }
 
         return section;
-    }
-
-    private Set<Locale> getLocales( Set<Translation> translations ) {
-        assert (translations != null) : "translations is null"; //$NON-NLS-1$
-        Set<Locale> locales = new HashSet<Locale>(translations.size());
-
-        for (Translation translation : translations) {
-            locales.add(translation.getLocale());
-        }
-
-        return locales;
     }
 
     ModelExtensionPropertyDefinition getPropertyDefinition() {
@@ -1155,8 +1051,8 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     String getSelectedAllowedValue() {
-        IStructuredSelection selection = (IStructuredSelection)this.valuesViewer.getSelection();
-        return (selection.isEmpty() ? null : (String)selection.getFirstElement());
+        int index = this.lstAllowedValues.getSelectionIndex();
+        return ((index == -1) ? null : this.lstAllowedValues.getItem(index));
     }
 
     Translation getSelectedDescription() {
@@ -1174,81 +1070,57 @@ final class EditPropertyDialog extends FormDialog {
                                                                    this.propDefn.getType(),
                                                                    this.propDefn.getAllowedValues());
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
-            String errorMsg = null;
             String newAllowedValue = dialog.getAllowedValue();
 
             if (this.propDefn.addAllowedValue(newAllowedValue)) {
-                // validate new allowed value
-                errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.propDefn.getRuntimeType(),
-                                                                                          newAllowedValue);
-
-                // validate allowed value collection
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
-                                                                                               this.propDefn.getAllowedValues());
-                }
+                this.lstAllowedValues.add(newAllowedValue);
             } else {
-                // TODO value not added msg
+                // not sure when this would happen
+                UTIL.log(NLS.bind(Messages.editPropertyDialogAllowedValueNotAddedMsg, newAllowedValue));
             }
-
-            addMessage(this.allowedValuesError, errorMsg);
         }
     }
 
     void handleAddDescription() {
         EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
                                                                  Messages.addPropertyDescriptionDialogTitle,
-                                                                 new ArrayList<Locale>());
+                                                                 org.teiid.designer.extension.Messages.propertyDescription,
+                                                                 this.propDefn.getDescriptions());
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
-            String errorMsg = null;
             Translation newDescription = dialog.getTranslation();
 
             if (this.propDefn.addDescription(newDescription)) {
-                errorMsg = ModelExtensionDefinitionValidator.validateTranslationLocale(newDescription.getLocale(),
-                                                                                       getLocales(this.propDefn.getDescriptions()));
-
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = ModelExtensionDefinitionValidator.validateTranslationText(newDescription.getTranslation());
-                }
+                this.descriptionViewer.refresh();
             } else {
-                // shouldn't happen if the EditTranslationDialog is working correctly
+                // not sure when this would happen
                 UTIL.log(NLS.bind(Messages.editPropertyDialogDescriptionNotAddedMsg, newDescription));
             }
-
-            addMessage(this.descriptionError, errorMsg);
         }
     }
 
     void handleAddDisplayName() {
-        String errorMsg = null;
         EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
                                                                  Messages.addPropertyDisplayNameDialogTitle,
-                                                                 new ArrayList<Locale>());
+                                                                 org.teiid.designer.extension.Messages.propertyDisplayName,
+                                                                 this.propDefn.getDisplayNames());
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
             Translation newDisplayName = dialog.getTranslation();
 
             if (this.propDefn.addDisplayName(newDisplayName)) {
-                errorMsg = ModelExtensionDefinitionValidator.validateTranslationLocale(newDisplayName.getLocale(),
-                                                                                       getLocales(this.propDefn.getDisplayNames()));
-
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = ModelExtensionDefinitionValidator.validateTranslationText(newDisplayName.getTranslation());
-                }
+                this.displayNameViewer.refresh();
             } else {
-                // shouldn't happen if the EditTranslationDialog is working correctly
+                // not sure when this would happen
                 UTIL.log(NLS.bind(Messages.editPropertyDialogDisplayNameNotAddedMsg, newDisplayName));
             }
-
-            addMessage(this.displayNameError, errorMsg);
         }
     }
 
@@ -1257,8 +1129,8 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAllowedValueSelected() {
-        IStructuredSelection selection = (IStructuredSelection)this.valuesViewer.getSelection();
-        boolean enable = !selection.isEmpty();
+        int index = this.lstAllowedValues.getSelectionIndex();
+        boolean enable = (index != -1);
 
         if (this.btnEditValue.getEnabled() != enable) {
             this.btnEditValue.setEnabled(enable);
@@ -1267,11 +1139,6 @@ final class EditPropertyDialog extends FormDialog {
         if (this.btnRemoveValue.getEnabled() != enable) {
             this.btnRemoveValue.setEnabled(enable);
         }
-
-        if (this.btnToggleDefaultValue.getEnabled() != enable) {
-            this.btnToggleDefaultValue.setEnabled(enable);
-        }
-
     }
 
     void handleDescriptionSelected() {
@@ -1288,7 +1155,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleDisplayNameSelected() {
-        IStructuredSelection selection = (IStructuredSelection)this.descriptionViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)this.displayNameViewer.getSelection();
         boolean enable = !selection.isEmpty();
 
         if (this.btnEditDisplayName.getEnabled() != enable) {
@@ -1308,74 +1175,82 @@ final class EditPropertyDialog extends FormDialog {
                                                                    this.propDefn.getAllowedValues(),
                                                                    selectedAllowedValue);
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
             String changedValue = dialog.getAllowedValue();
-            String[] currentValues = this.propDefn.getAllowedValues();
-            int i = 0;
 
-            for (String allowedValue : currentValues) {
-                if (allowedValue.equals(selectedAllowedValue)) {
-                    currentValues[i] = changedValue;
-                    break;
-                }
+            // remove
+            this.propDefn.removeAllowedValue(selectedAllowedValue);
+            this.lstAllowedValues.remove(selectedAllowedValue);
 
-                ++i;
-            }
-
-            String errorMsg = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
-                                                                                              this.propDefn.getAllowedValues());
-            addMessage(this.allowedValuesError, errorMsg);
+            // add
+            this.propDefn.addAllowedValue(changedValue);
+            this.lstAllowedValues.add(changedValue);
         }
     }
 
     void handleEditDescription() {
         assert (getSelectedDescription() != null) : "Edit description button is enabled and shouldn't be"; //$NON-NLS-1$
+        Translation selectedDescription = getSelectedDescription();
         EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
                                                                  Messages.editPropertyDescriptionDialogTitle,
-                                                                 new ArrayList<Locale>(),
-                                                                 getSelectedDescription());
+                                                                 org.teiid.designer.extension.Messages.propertyDescription,
+                                                                 this.propDefn.getDescriptions(),
+                                                                 selectedDescription);
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
             Translation changedDescription = dialog.getTranslation();
-            // TODO implement handleEditDescription
+            this.propDefn.removeDescription(selectedDescription);
+            this.propDefn.addDescription(changedDescription);
+            this.descriptionViewer.refresh();
         }
     }
 
     void handleEditDisplayName() {
         assert (getSelectedDisplayName() != null) : "Edit display name button is enabled and shouldn't be"; //$NON-NLS-1$
+        Translation selectedDisplayName = getSelectedDisplayName();
         EditTranslationDialog dialog = new EditTranslationDialog(getShell(),
                                                                  Messages.editPropertyDescriptionDialogTitle,
-                                                                 new ArrayList<Locale>(),
-                                                                 getSelectedDisplayName());
+                                                                 org.teiid.designer.extension.Messages.propertyDisplayName,
+                                                                 this.propDefn.getDisplayNames(),
+                                                                 selectedDisplayName);
         dialog.create();
-        dialog.getShell().pack();
+        sizeDialog(dialog.getShell(), getShell());
 
         if (dialog.open() == Window.OK) {
             Translation changedDisplayName = dialog.getTranslation();
-            // TODO implement handleEditDisplayName
+            this.propDefn.removeDescription(selectedDisplayName);
+            this.propDefn.addDescription(changedDisplayName);
+            this.descriptionViewer.refresh();
         }
-    }
-
-    void handleFixedValueChanged( String newValue ) {
-        this.propDefn.setFixedValue(newValue);
     }
 
     void handleFixedValueSelected() {
-        boolean enable = this.btnFixedValue.getSelection();
+        String newFixedValue = this.txtInitialValue.getText();
 
-        if (this.txtFixedValue.getEnabled() != enable) {
-            this.txtFixedValue.setEnabled(enable);
-
-            handleFixedValueChanged(enable ? this.txtFixedValue.getText() : CoreStringUtil.Constants.EMPTY_STRING);
+        if (!this.btnFixedValue.getSelection()) {
+            newFixedValue = CoreStringUtil.Constants.EMPTY_STRING;
         }
+
+        this.propDefn.setFixedValue(newFixedValue);
+    }
+
+    void handleHasAllowedValuesSelected() {
+        // TODO implement handleHasAllowedValuesSelected
     }
 
     void handleIndexedChanged( boolean newValue ) {
         this.propDefn.setIndex(newValue);
+    }
+
+    void handleInitialValueChanged( String newValue ) {
+        // TODO if there are allowed values make sure new value is one of them
+        if (!this.propDefn.isModifiable()) {
+            this.propDefn.setFixedValue(newValue);
+        }
     }
 
     void handleMaskedChanged( boolean newValue ) {
@@ -1384,46 +1259,47 @@ final class EditPropertyDialog extends FormDialog {
 
     void handlePropertyChanged( PropertyChangeEvent e ) {
         String propName = e.getPropertyName();
-        String newMsg = null;
         ErrorMessage errorMsg = null;
 
         if (PropertyName.ADVANCED.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced());
+            this.advancedError.message = ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced());
             errorMsg = this.advancedError;
         } else if (PropertyName.ALLOWED_VALUES.toString().equals(propName)) {
-            // TODO implement
+            this.allowedValuesError.message = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
+                                                                                                              this.propDefn.getAllowedValues());
+            errorMsg = this.allowedValuesError;
         } else if (PropertyName.DEFAULT_VALUE.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
-                                                                                    this.propDefn.getDefaultValue(),
-                                                                                    this.propDefn.getAllowedValues());
-            errorMsg = this.defaultValueError;
-            // TODO implement this
-            // } else if (PropertyName.DESCRIPTION.equals(propName)) {
-            // this.descriptionError.message =
-            // ModelExtensionDefinitionValidator.validateTranslation(this.propDefn.getDescription());
-            // errorMsg = this.descriptionError;
-            // } else if (PropertyName.DISPLAY_NAME.equals(propName)) {
-            // this.displayNameError.message =
-            // ModelExtensionDefinitionValidator.validateTranslation(this.propDefn.getDisplayName());
-            // errorMsg = this.displayNameError;
+            this.initialValueError.message = ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
+                                                                                                            this.propDefn.getDefaultValue(),
+                                                                                                            this.propDefn.getAllowedValues());
+            errorMsg = this.initialValueError;
+        } else if (PropertyName.DESCRIPTION.equals(propName)) {
+            this.descriptionError.message = ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
+                                                                                                   this.propDefn.getDescriptions());
+            errorMsg = this.descriptionError;
+        } else if (PropertyName.DISPLAY_NAME.equals(propName)) {
+            this.displayNameError.message = ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
+                                                                                                   this.propDefn.getDisplayNames());
+            errorMsg = this.displayNameError;
         } else if (PropertyName.FIXED_VALUE.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
-                                                                                  this.propDefn.getFixedValue());
-            errorMsg = this.fixedValueError;
+            this.initialValueError.message = ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
+                                                                                                          this.propDefn.getFixedValue());
+            errorMsg = this.initialValueError;
         } else if (PropertyName.INDEX.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed());
+            this.indexedError.message = ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed());
             errorMsg = this.indexedError;
         } else if (PropertyName.MASKED.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked());
+            this.maskedError.message = ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked());
             errorMsg = this.maskedError;
         } else if (PropertyName.REQUIRED.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired());
+            this.requiredError.message = ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired());
             errorMsg = this.requiredError;
         } else if (PropertyName.SIMPLE_ID.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(), this.existingPropIds);
+            this.simpleIdError.message = ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
+                                                                                                    this.existingPropIds);
             errorMsg = this.simpleIdError;
         } else if (PropertyName.TYPE.toString().equals(propName)) {
-            newMsg = ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType());
+            this.typeError.message = ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType());
             errorMsg = this.typeError;
         } else {
             // should be handling all property changes so this shouldn't happen
@@ -1432,12 +1308,14 @@ final class EditPropertyDialog extends FormDialog {
 
         // update message
         if (errorMsg != null) {
-            addMessage(errorMsg, newMsg);
+            addMessage(errorMsg);
         }
 
         // change message to default message if there is no error
-        if ((errorMsg == null) || CoreStringUtil.isEmpty(errorMsg.message)) {
+        if (this.scrolledForm.getMessageType() != IMessageProvider.ERROR) {
             if (!Messages.propertyDialogMessage.equals(this.scrolledForm.getMessage())) {
+                // eclipse bug keeps font foreground red after an error when setting to NONE so set to INFO first as workaround
+                this.scrolledForm.setMessage(Messages.propertyDialogMessage, IMessageProvider.INFORMATION);
                 this.scrolledForm.setMessage(Messages.propertyDialogMessage, IMessageProvider.NONE);
             }
         }
@@ -1447,7 +1325,13 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleRemoveAllowedValue() {
-        // TODO implement handleRemoveAllowedValue
+        assert (getSelectedAllowedValue() != null) : "Remove allowed value button is enabled and shouldn't be"; //$NON-NLS-1$
+
+        if (FormUtil.openQuestion(getShell(), Messages.removeAllowedValueDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
+                                  NLS.bind(Messages.removeAllowedValueDialogMsg, getSelectedDescription()))) {
+            this.propDefn.removeAllowedValue(getSelectedAllowedValue());
+            this.lstAllowedValues.remove(getSelectedAllowedValue());
+        }
     }
 
     void handleRemoveDescription() {
@@ -1455,7 +1339,8 @@ final class EditPropertyDialog extends FormDialog {
 
         if (FormUtil.openQuestion(getShell(), Messages.removeDescriptionDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
                                   NLS.bind(Messages.removeDescriptionDialogMsg, getSelectedDescription()))) {
-            // TODO implement handleRemoveDescription
+            this.propDefn.removeDescription(getSelectedDescription());
+            this.descriptionViewer.refresh();
         }
     }
 
@@ -1464,7 +1349,8 @@ final class EditPropertyDialog extends FormDialog {
 
         if (FormUtil.openQuestion(getShell(), Messages.removeDisplayNameDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
                                   NLS.bind(Messages.removeDisplayNameDialogMsg, getSelectedDisplayName()))) {
-            // TODO implement handleRemoveDisplayName
+            this.propDefn.removeDisplayName(getSelectedDisplayName());
+            this.displayNameViewer.refresh();
         }
     }
 
@@ -1488,28 +1374,20 @@ final class EditPropertyDialog extends FormDialog {
         this.propDefn.setSimpleId(newValue);
     }
 
-    void handleToggleDefaultValue() {
-        // TODO implement handleToggleDefaultValue
-    }
-
-    void handleVariableValueSelected() {
-        boolean enable = this.btnVariableValue.getSelection();
-
-        if (this.valuesViewer.getTable().getEnabled() != enable) {
-            this.valuesViewer.getTable().setEnabled(enable);
-
-            if (enable) {
-                // TODO enable applicable toolbar buttons
-                // TODO get allowed values from table and set in propDefn
-            } else {
-                // TODO disable toolbar buttons
-                this.propDefn.setAllowedValues(null);
-            }
-        }
-    }
-
     private boolean isEditMode() {
         return (this.propDefnBeingEdited != null);
+    }
+
+    private void sizeDialog( Shell dialogShell,
+                             Shell parentShell ) {
+        dialogShell.pack();
+
+        Point dialogSize = dialogShell.getSize();
+        Point parentSize = parentShell.getSize();
+
+        if ((dialogSize.x > parentSize.x) || (dialogSize.y > parentSize.y)) {
+            dialogShell.setSize((int)(parentSize.x * 0.8), (int)(parentSize.y * 0.8));
+        }
     }
 
     private void updateState() {
@@ -1533,31 +1411,19 @@ final class EditPropertyDialog extends FormDialog {
         }
     }
 
-    interface ColumnHeaders {
+    private interface ColumnHeaders {
         String LOCALE = Messages.localeColumnText;
         String TRANSLATION = Messages.translationColumnText;
-
-        // allowed value tablew
-        String VALUE = Messages.allowedValueColumnText;
-        String DEFAULT_VALUE = Messages.defaultValueColumnText;
     }
 
-    interface ColumnIndexes {
+    private interface ColumnIndexes {
         int LOCALE = 0;
         int TRANSLATION = 1;
-
-        // allowed value tablew
-        int VALUE = 0;
-        int DEFAULT_VALUE = 1;
     }
 
-    interface ColumnToolTips {
+    private interface ColumnToolTips {
         String LOCALE = Messages.localeColumnToolTip;
         String TRANSLATION = Messages.translationColumnToolTip;
-
-        // allowed value tablew
-        String VALUE = Messages.allowedValueColumnHeaderToolTip;
-        String DEFAULT_VALUE = Messages.defaultValueColumnHeaderToolTip;
     }
 
     class TranslationLabelProvider extends ColumnLabelProvider {
@@ -1588,7 +1454,7 @@ final class EditPropertyDialog extends FormDialog {
             Translation translation = (Translation)element;
 
             if (ColumnIndexes.LOCALE == this.columnIndex) {
-                return translation.getLocale().getDisplayLanguage();
+                return translation.getLocale().toString();
             }
 
             if (ColumnIndexes.TRANSLATION == this.columnIndex) {
@@ -1596,46 +1462,6 @@ final class EditPropertyDialog extends FormDialog {
             }
 
             return super.getText(element);
-        }
-
-    }
-
-    class AllowedValueLabelProvider extends ColumnLabelProvider {
-
-        private final int columnIndex;
-
-        public AllowedValueLabelProvider( final int columnIndex ) {
-            this.columnIndex = columnIndex;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-         */
-        @Override
-        public Image getImage( Object element ) {
-            if (ColumnIndexes.DEFAULT_VALUE == this.columnIndex) {
-                // if (((AllowedValue)element).makeDefault) {
-                // return Activator.getDefault().getImage(ImageIds.CHECK_MARK);
-                // }
-            }
-
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText( Object element ) {
-            if (ColumnIndexes.VALUE == this.columnIndex) {
-                // return ((AllowedValue)element).value;
-            }
-
-            return null;
         }
 
     }

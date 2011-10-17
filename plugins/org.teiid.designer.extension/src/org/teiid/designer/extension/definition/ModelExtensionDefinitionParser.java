@@ -304,6 +304,7 @@ public class ModelExtensionDefinitionParser {
         public void error( SAXParseException e ) throws SAXException {
             // overriding this method is needed to stop parsing
             // exception indicates a validation or format problem
+            //TODO instead of throwing exception keep track of errors
             throw e;
         }
 

@@ -73,6 +73,16 @@ public final class ModelExtensionDefinitionValidator {
         return null;
     }
 
+    private static String nullCheck( String name,
+                                     Object object ) {
+        if (object == null) {
+            return NLS.bind(Messages.objectIsNullValidationMsg, name);
+        }
+
+        // value is valid
+        return null;
+    }
+
     private static String uriCheck( String propertyName,
                                     String value ) {
         String errorMsg = containsSpacesCheck(propertyName, value);
@@ -392,9 +402,8 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     public static String validateTranslation( Locale locale,
-                                              String text,
-                                              Collection<Locale> existingLocales ) {
-        String errorMsg = validateTranslationLocale(locale, existingLocales);
+                                              String text ) {
+        String errorMsg = validateTranslationLocale(locale);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             errorMsg = validateTranslationText(text);
@@ -403,17 +412,47 @@ public final class ModelExtensionDefinitionValidator {
         return errorMsg;
     }
 
-    public static String validateTranslationLocale( Locale locale,
-                                                    Collection<Locale> existingLocales ) {
+    public static String validateTranslationLocale( Locale locale ) {
         if (locale == null) {
             return Messages.localeMissingValidationMsg;
         }
 
-        if ((existingLocales != null) && existingLocales.contains(locale)) {
-            return Messages.duplicateTranslationLocaleValidationMsg;
+        return null;
+    }
+
+    public static String validateTranslations( String translationType,
+                                               Collection<Translation> translations ) {
+        if ((translations == null) || translations.isEmpty()) {
+            return null;
         }
 
-        return null;
+        String errorMsg = null;
+        Set<Locale> locales = new HashSet<Locale>(translations.size());
+
+        for (Translation translation : translations) {
+            errorMsg = nullCheck(translationType, translation);
+
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                break;
+            }
+
+            errorMsg = validateTranslation(translation.getLocale(), translation.getTranslation());
+
+            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                break;
+            }
+
+            locales.add(translation.getLocale());
+        }
+
+        // duplicates check
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            if (translations.size() != locales.size()) {
+                errorMsg = NLS.bind(Messages.duplicateTranslationLocaleValidationMsg, translationType);
+            }
+        }
+
+        return errorMsg;
     }
 
     public static String validateTranslationText( String text ) {
@@ -515,12 +554,12 @@ public final class ModelExtensionDefinitionValidator {
 
     public String addPropertyDescription( Translation description ) {
         // TODO need to add
-        return validateTranslation(description.getLocale(), description.getTranslation(), null);
+        return validateTranslation(description.getLocale(), description.getTranslation());
     }
 
     public String addPropertyDisplayName( Translation displayName ) {
         // TODO need to add
-        return validateTranslation(displayName.getLocale(), displayName.getTranslation(), null);
+        return validateTranslation(displayName.getLocale(), displayName.getTranslation());
     }
 
     /**

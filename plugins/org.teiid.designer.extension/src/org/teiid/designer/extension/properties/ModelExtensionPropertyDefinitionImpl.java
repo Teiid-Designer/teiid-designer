@@ -124,6 +124,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         if (displayNames != null) {
             this.displayNames.addAll(displayNames);
         }
+
+        if (allowedValues != null) {
+            this.allowedValues.addAll(allowedValues);
+        }
     }
 
     /**
@@ -134,7 +138,14 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addAllowedValue( String newAllowedValue ) {
         CoreStringUtil.isEmpty(newAllowedValue);
-        return this.allowedValues.add(newAllowedValue);
+        Object oldValue = new HashSet<String>(this.allowedValues);
+        boolean added = this.allowedValues.add(newAllowedValue);
+
+        if (added) {
+            notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, this.allowedValues);
+        }
+
+        return added;
     }
 
     /**
@@ -145,7 +156,14 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addDescription( Translation newDescription ) {
         CoreArgCheck.isNotNull(newDescription, "newDescription is null"); //$NON-NLS-1$
-        return this.descriptions.add(newDescription);
+        Object oldValue = new HashSet<Translation>(this.descriptions);
+        boolean added = this.descriptions.add(newDescription);
+
+        if (added) {
+            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.descriptions);
+        }
+
+        return added;
     }
 
     /**
@@ -156,7 +174,14 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addDisplayName( Translation newDisplayName ) {
         CoreArgCheck.isNotNull(newDisplayName, "newDisplayName is null"); //$NON-NLS-1$
-        return this.displayNames.add(newDisplayName);
+        Object oldValue = new HashSet<Translation>(this.displayNames);
+        boolean added = this.displayNames.add(newDisplayName);
+
+        if (added) {
+            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayNames);
+        }
+
+        return added;
     }
 
     /**
@@ -172,7 +197,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#allowedValues()
      */
     @Override
@@ -430,9 +455,16 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeAllowedValue(java.lang.String)
      */
     @Override
-    public boolean removeAllowedValue( String allowedValue ) {
-        CoreStringUtil.isEmpty(allowedValue);
-        return this.allowedValues.remove(allowedValue);
+    public boolean removeAllowedValue( String allowedValueBeingRemoved ) {
+        CoreStringUtil.isEmpty(allowedValueBeingRemoved);
+        Object oldValue = new HashSet<String>(this.allowedValues);
+        boolean removed = this.allowedValues.remove(allowedValueBeingRemoved);
+
+        if (removed) {
+            notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, this.allowedValues);
+        }
+
+        return removed;
     }
 
     /**
@@ -441,9 +473,16 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeDescription(org.teiid.designer.extension.properties.Translation)
      */
     @Override
-    public boolean removeDescription( Translation description ) {
-        CoreArgCheck.isNotNull(description, "description is null"); //$NON-NLS-1$
-        return this.descriptions.remove(description);
+    public boolean removeDescription( Translation descriptionBeingRemoved ) {
+        CoreArgCheck.isNotNull(descriptionBeingRemoved, "description is null"); //$NON-NLS-1$
+        Object oldValue = new HashSet<Translation>(this.descriptions);
+        boolean removed = this.descriptions.remove(descriptionBeingRemoved);
+
+        if (removed) {
+            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.descriptions);
+        }
+
+        return removed;
     }
 
     /**
@@ -452,9 +491,16 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#removeDisplayName(org.teiid.designer.extension.properties.Translation)
      */
     @Override
-    public boolean removeDisplayName( Translation displayName ) {
-        CoreArgCheck.isNotNull(displayName, "displayName is null"); //$NON-NLS-1$
-        return this.displayNames.remove(displayName);
+    public boolean removeDisplayName( Translation displayNameBeingRemoved ) {
+        CoreArgCheck.isNotNull(displayNameBeingRemoved, "displayName is null"); //$NON-NLS-1$
+        Object oldValue = new HashSet<Translation>(this.displayNames);
+        boolean removed = this.displayNames.remove(displayNameBeingRemoved);
+
+        if (removed) {
+            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayNames);
+        }
+
+        return removed;
     }
 
     /**
