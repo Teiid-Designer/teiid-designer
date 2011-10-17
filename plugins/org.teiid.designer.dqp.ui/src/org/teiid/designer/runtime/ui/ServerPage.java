@@ -9,11 +9,13 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -26,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -36,6 +39,7 @@ import org.teiid.designer.runtime.Server;
 import org.teiid.designer.runtime.ServerManager;
 import org.teiid.designer.runtime.TeiidAdminInfo;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
+
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.dqp.ui.DqpUiConstants;
 import com.metamatrix.modeler.dqp.ui.DqpUiPlugin;
@@ -73,7 +77,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * The label the user wants to identify the Teiid instance with. May not be <code>null</code> or empty. Only used if the host
      * URL is not being used as a label.
      */
-    private String customLabel;
+    private String displayName;
 
     /**
      * The server being editor or <code>null</code> if creating a new server.
@@ -141,8 +145,12 @@ public final class ServerPage extends WizardPage implements HostProvider {
      * The SSL true/false protocol for jdbc URL
      */
     private boolean jdbcURLIsSecure;
+    
+    private Composite pnlMain;
 
     private Text jdbcURLText;
+    
+    private Group teiidJdbcGroup;
 
     private TeiidAdminInfo localAdminInfo;
     private TeiidJdbcInfo localJdbcInfo;
@@ -150,7 +158,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
     /**
      * Indicates if custom text, not the URL, should be used to identify the Teiid instance.
      */
-    private boolean useCustomLabel;
+    private boolean useDisplayName = true;
 
     // ===========================================================================================================================
     // Constructors
@@ -161,7 +169,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
      */
     public ServerPage() {
         super(ServerPage.class.getSimpleName());
-        setTitle(UTIL.getString("serverPageTitle")); //$NON-NLS-1$
+        setTitle("Enter Teiid Server Connection Information"); //UTIL.getString("serverPageTitle")); //$NON-NLS-1$
         setPageComplete(false);
 
         this.host = HostProvider.DEFAULT_HOST;
@@ -221,8 +229,8 @@ public final class ServerPage extends WizardPage implements HostProvider {
         this.jdbcURLIsSecure = server.getTeiidJdbcInfo().isSecure();
         this.saveJdbcPassword = server.getTeiidJdbcInfo().isPasswordBeingPersisted();
 
-        this.customLabel = server.getCustomLabel();
-        this.useCustomLabel = !StringUtilities.isEmpty(this.customLabel);
+        this.displayName = server.getCustomLabel();
+        this.useDisplayName = !StringUtilities.isEmpty(this.displayName);
 
         this.isEdit = true;
     }
@@ -232,85 +240,29 @@ public final class ServerPage extends WizardPage implements HostProvider {
     // ===========================================================================================================================
 
     private void constructHostPanel( Composite parent ) {
-        Composite pnlHost = new Composite(parent, SWT.NONE);
+    	Group pnlHost = WidgetFactory.createGroup(parent, UTIL.getString("serverPageNameGroup")); //$NON-NLS-1$
         pnlHost.setLayout(new GridLayout(2, false));
         pnlHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        ((GridData) pnlHost.getLayoutData()).horizontalSpan = 1;
+        
+		final Text txtNameLabel = new Text(pnlHost, SWT.BORDER);
+		txtNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		txtNameLabel.setToolTipText(UTIL.getString("serverPageUseCustomTextAsLabel.toolTip")); //$NON-NLS-1$
+		txtNameLabel.setEnabled(true);
+		txtNameLabel.setText((this.displayName == null) ? "" : this.displayName); //$NON-NLS-1$
 
-        { // Host row
-            Label label = new Label(pnlHost, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPageHostNameLabel")); //$NON-NLS-1$
+		txtNameLabel.addModifyListener(new ModifyListener() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+			 */
+			@Override
+			public void modifyText(ModifyEvent e) {
+				handleDisplayNameModified(((Text) e.widget).getText());
+			}
 
-            Text text = new Text(pnlHost, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPageHostNameTooltip")); //$NON-NLS-1$
-            text.setText(this.host);
-
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleHostModified(((Text) e.widget).getText());
-                }
-            });
-        }
-
-        { // label group
-            Group pnl = WidgetFactory.createGroup(pnlHost, UTIL.getString("serverPageLabelGroup")); //$NON-NLS-1$
-            pnl.setLayout(new GridLayout());
-            pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            ((GridData) pnl.getLayoutData()).horizontalSpan = 2;
-
-            Button btnUseUrl = new Button(pnl, SWT.RADIO | SWT.LEFT);
-            btnUseUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            btnUseUrl.setText(UTIL.getString("serverPageUseUrlAsLabel")); //$NON-NLS-1$
-            btnUseUrl.setToolTipText(UTIL.getString("serverPageUseUrlAsLabel.toolTip")); //$NON-NLS-1$
-            btnUseUrl.setSelection(!this.useCustomLabel);
-
-            Button btnUseCustom = new Button(pnl, SWT.RADIO | SWT.LEFT);
-            btnUseCustom.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            btnUseCustom.setText(UTIL.getString("serverPageUseCustomTextAsLabel")); //$NON-NLS-1$
-            btnUseCustom.setToolTipText(UTIL.getString("serverPageUseCustomTextAsLabel.toolTip")); //$NON-NLS-1$
-            btnUseCustom.setSelection(this.useCustomLabel);
-
-            final Text txtCustomLabel = new Text(pnl, SWT.BORDER);
-            txtCustomLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            txtCustomLabel.setToolTipText(UTIL.getString("serverPageUseCustomTextAsLabel.toolTip")); //$NON-NLS-1$
-            txtCustomLabel.setEnabled(this.useCustomLabel);
-            txtCustomLabel.setText((this.customLabel == null) ? "" : this.customLabel); //$NON-NLS-1$
-
-            txtCustomLabel.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleCustomLabelModified(((Text) e.widget).getText());
-                }
-            });
-
-            btnUseCustom.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    boolean selected = ((Button)e.widget).getSelection();
-                    txtCustomLabel.setEnabled(selected);
-                    txtCustomLabel.setFocus();
-                    txtCustomLabel.selectAll();
-                    setUseCustomLabel(selected, txtCustomLabel.getText());
-                }
-            });
-        }
+		});
     }
 
     private void constructTeiidAdminConnectionPanel( Composite parent ) {
@@ -318,6 +270,15 @@ public final class ServerPage extends WizardPage implements HostProvider {
         pnl.setLayout(new GridLayout(3, false));
         pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
+        {
+        	Text helpText = new Text(pnl, SWT.WRAP | SWT.READ_ONLY);
+        	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        	((GridData)helpText.getLayoutData()).horizontalSpan = 3;
+        	helpText.setText(UTIL.getString("serverPageAdminConnectionInfoHelp.txt"));  //$NON-NLS-1$
+        }
+        
         { // PORT ROW
             Label label = new Label(pnl, SWT.LEFT);
             label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -387,7 +348,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
         { // password row
             Label label = new Label(pnl, SWT.LEFT);
             label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
+            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$            		
 
             Text text = new Text(pnl, SWT.BORDER);
             text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -425,7 +386,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
 
                 // listener for when value changes
                 btn.addSelectionListener(new SelectionAdapter() {
-                    /**
+                    /**            		
                      * {@inheritDoc}
                      * 
                      * 
@@ -441,14 +402,19 @@ public final class ServerPage extends WizardPage implements HostProvider {
 
         {
             Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
             label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
 
-            adminURLText = new Text(pnl, SWT.READ_ONLY);
-            adminURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            adminURLText = new Text(pnl,  SWT.WRAP | SWT.READ_ONLY);
+            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+            gd.heightHint = 30;
+            gd.grabExcessHorizontalSpace = true;
+            adminURLText.setLayoutData(gd);
             adminURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
             adminURLText.setText(this.localAdminInfo.getUrl());
             adminURLText.setBackground(pnl.getBackground());
+            adminURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+            adminURLText.setFont(JFaceResources.getTextFont());
 
             { // Secure SSL row
                 final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
@@ -475,9 +441,235 @@ public final class ServerPage extends WizardPage implements HostProvider {
             }
 
         }
+    }
 
+    private void constructTeiidJdbcConnectionPanel( Composite parent ) {
+        teiidJdbcGroup = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
+        teiidJdbcGroup.setLayout(new GridLayout(3, false));
+        teiidJdbcGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        
+        {
+        	Text helpText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY);
+        	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	helpText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        	((GridData)helpText.getLayoutData()).horizontalSpan = 3;
+        	helpText.setText(UTIL.getString("serverPageJDBCConnectionInfoHelp.txt"));  //$NON-NLS-1$
+        }
+        
+
+        { // HOST ROW
+
+        	Label label = new Label(teiidJdbcGroup, SWT.LEFT);
+          	label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+          	label.setText("Host: "); //UTIL.getString("serverPageHostNameLabel")); //$NON-NLS-1$
+
+          	Text text = new Text(teiidJdbcGroup, SWT.BORDER);
+          	text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+          	text.setToolTipText(UTIL.getString("serverPageHostNameTooltip")); //$NON-NLS-1$
+          	text.setText(this.host);
+
+          	text.addModifyListener(new ModifyListener() {
+              	/**
+               	* {@inheritDoc}
+               	* 
+               	* @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+               	*/
+              	@Override
+              	public void modifyText( ModifyEvent e ) {
+            	  	handleHostModified(((Text) e.widget).getText());
+              	}
+          	});
+            {
+                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
+                emptyLabel.setText(" "); //$NON-NLS-1$
+
+            }
+        }
+  
+        { // PORT ROW	
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$);
+
+            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
+            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+            text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$);
+
+            // set initial value
+            if (this.jdbcPort != null) {
+                text.setText(this.jdbcPort);
+            }
+
+            text.addModifyListener(new ModifyListener() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleJdbcPortModified(((Text) e.widget).getText());
+                }
+            });
+            {
+                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
+                emptyLabel.setText(" "); //$NON-NLS-1$
+
+            }
+        }
+
+        { // user row
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
+
+            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
+            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+            text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
+
+            // set initial value
+            if (this.jdbcUsername != null) {
+                text.setText(this.jdbcUsername);
+            }
+
+            text.addModifyListener(new ModifyListener() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleJdbcUserModified(((Text) e.widget).getText());
+                }
+            });
+
+            {
+                Label emptyLabel = new Label(teiidJdbcGroup, SWT.LEFT);
+                emptyLabel.setText(" "); //$NON-NLS-1$
+
+            }
+        }
+
+        { // password row
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
+
+            Text text = new Text(teiidJdbcGroup, SWT.BORDER);
+            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
+            text.setEchoChar('*');
+
+            // set initial value before hooking up listener
+            if (this.jdbcPassword != null) {
+                text.setText(this.jdbcPassword);
+            }
+
+            // listener for when value changes
+            text.addModifyListener(new ModifyListener() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleJdbcPasswordModified(((Text) e.widget).getText());
+                }
+            });
+            { // save button row
+                final Button btn = new Button(teiidJdbcGroup, SWT.CHECK | SWT.LEFT);
+                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
+                btn.setText(UTIL.getString("serverPageSavePassword")); //$NON-NLS-1$
+                btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
+
+                // set initial value before hooking up listeners
+                if (this.saveJdbcPassword) {
+                    btn.setSelection(true);
+                }
+
+                // listener for when value changes
+                btn.addSelectionListener(new SelectionAdapter() {
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * 
+                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected( SelectionEvent e ) {
+                        handleJdbcSavePasswordChanged(((Button) e.widget).getSelection());
+                    }
+                });
+            }
+        }
+
+        {
+            Label label = new Label(teiidJdbcGroup, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+            label.setText(UTIL.getString("serverPageJDBCUrlLabel")); //$NON-NLS-1$
+
+            jdbcURLText = new Text(teiidJdbcGroup, SWT.WRAP | SWT.READ_ONLY);
+            GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+            gd.heightHint = 30;
+            gd.grabExcessHorizontalSpace = true;
+            jdbcURLText.setLayoutData(gd);
+            jdbcURLText.setToolTipText(UTIL.getString("serverPageJDBCUrlToolTip")); //$NON-NLS-1$
+            jdbcURLText.setText(this.localJdbcInfo.getUrl());
+            jdbcURLText.setBackground(teiidJdbcGroup.getBackground());
+            jdbcURLText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+            jdbcURLText.setFont(JFaceResources.getTextFont());
+
+            { // Secure SSL row
+                final Button btn = new Button(teiidJdbcGroup, SWT.CHECK | SWT.LEFT);
+                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
+                btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
+                btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
+
+                // set initial value before hooking up listeners
+                btn.setSelection(this.jdbcURLIsSecure);
+
+                // listener for when value changes
+                btn.addSelectionListener(new SelectionAdapter() {
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected( SelectionEvent e ) {
+                        handleJdbcSSLChanged(((Button) e.widget).getSelection());
+                    }
+                });
+            }
+
+        }
+
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl( Composite parent ) {
+        pnlMain = new Composite(parent, SWT.NONE);
+        pnlMain.setLayout(new GridLayout());
+        pnlMain.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+        constructHostPanel(pnlMain);
+
+        constructTeiidJdbcConnectionPanel(pnlMain);
+        
+        constructTeiidAdminConnectionPanel(pnlMain);
+        
         { // AUTO CONNECT ROW
-            this.btnAutoConnectOnFinish = new Button(pnl, SWT.CHECK);
+            this.btnAutoConnectOnFinish = new Button(pnlMain, SWT.CHECK);
             String theLabel = UTIL.getString("serverPageSetAsDefaultLabel"); //$NON-NLS-1$
             String theTooltip = UTIL.getString("serverPageSetAsDefaultToolTip"); //$NON-NLS-1$
             if (this.isEdit) {
@@ -512,214 +704,31 @@ public final class ServerPage extends WizardPage implements HostProvider {
                     handleAutoConnect();
                 }
             });
-
-            this.btnTestConnection = new Button(pnl, SWT.PUSH);
-            this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
-            this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
-            this.btnTestConnection.setEnabled(false);
-
-            // add margins to the side of the text
-            GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-            int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-            Point minSize = this.btnTestConnection.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-            gd.widthHint = Math.max(widthHint, minSize.x + 10);
-            this.btnTestConnection.setLayoutData(gd);
-
-            this.btnTestConnection.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleTestConnection();
-                }
-            });
-
-        }
-    }
-
-    private void constructTeiidJdbcConnectionPanel( Composite parent ) {
-        Group pnl = WidgetFactory.createGroup(parent, UTIL.getString("serverPageJDBCConnectionInfoLabel")); //$NON-NLS-1$);
-        pnl.setLayout(new GridLayout(3, false));
-        pnl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-        { // PORT ROW
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePortNumberLabel")); //$NON-NLS-1$);
-
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePortNumberTooltip")); //$NON-NLS-1$);
-
-            // set initial value
-            if (this.jdbcPort != null) {
-                text.setText(this.jdbcPort);
-            }
-
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleJdbcPortModified(((Text) e.widget).getText());
-                }
-            });
-            {
-                Label emptyLabel = new Label(pnl, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
         }
 
-        { // user row
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPageUserLabel")); //$NON-NLS-1$
+        this.btnTestConnection = new Button(pnlMain, SWT.PUSH);
+        this.btnTestConnection.setText(UTIL.getString("serverPageTestConnectionButton")); //$NON-NLS-1$
+        this.btnTestConnection.setToolTipText(UTIL.getString("serverPageTestConnectionButtonToolTip")); //$NON-NLS-1$
+        this.btnTestConnection.setEnabled(false);
 
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            text.setToolTipText(UTIL.getString("serverPageUserToolTip")); //$NON-NLS-1$
+        // add margins to the side of the text
+        GridData gd = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
+        int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+        Point minSize = this.btnTestConnection.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        gd.widthHint = Math.max(widthHint, minSize.x + 10);
+        this.btnTestConnection.setLayoutData(gd);
 
-            // set initial value
-            if (this.jdbcUsername != null) {
-                text.setText(this.jdbcUsername);
+        this.btnTestConnection.addSelectionListener(new SelectionAdapter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected( SelectionEvent e ) {
+                handleTestConnection();
             }
-
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleJdbcUserModified(((Text) e.widget).getText());
-                }
-            });
-
-            {
-                Label emptyLabel = new Label(pnl, SWT.LEFT);
-                emptyLabel.setText(" "); //$NON-NLS-1$
-
-            }
-        }
-
-        { // password row
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPagePasswordLabel")); //$NON-NLS-1$
-
-            Text text = new Text(pnl, SWT.BORDER);
-            text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            text.setToolTipText(UTIL.getString("serverPagePasswordToolTip")); //$NON-NLS-1$
-            text.setEchoChar('*');
-
-            // set initial value before hooking up listener
-            if (this.jdbcPassword != null) {
-                text.setText(this.jdbcPassword);
-            }
-
-            // listener for when value changes
-            text.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleJdbcPasswordModified(((Text) e.widget).getText());
-                }
-            });
-            { // save button row
-                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSavePassword")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSavePasswordToolTip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                if (this.saveJdbcPassword) {
-                    btn.setSelection(true);
-                }
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleJdbcSavePasswordChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
-        }
-
-        {
-            Label label = new Label(pnl, SWT.LEFT);
-            label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            label.setText(UTIL.getString("serverPageUrlLabel")); //$NON-NLS-1$
-
-            jdbcURLText = new Text(pnl, SWT.READ_ONLY);
-            jdbcURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            jdbcURLText.setToolTipText(UTIL.getString("serverPageUrlToolTip")); //$NON-NLS-1$
-            jdbcURLText.setText(this.localJdbcInfo.getUrl());
-            jdbcURLText.setBackground(pnl.getBackground());
-
-            { // Secure SSL row
-                final Button btn = new Button(pnl, SWT.CHECK | SWT.LEFT);
-                btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-                ((GridData) btn.getLayoutData()).horizontalSpan = 1;
-                btn.setText(UTIL.getString("serverPageSSLConnectionLabel")); //$NON-NLS-1$
-                btn.setToolTipText(UTIL.getString("serverPageSSLConnectionTooltip")); //$NON-NLS-1$
-
-                // set initial value before hooking up listeners
-                btn.setSelection(this.jdbcURLIsSecure);
-
-                // listener for when value changes
-                btn.addSelectionListener(new SelectionAdapter() {
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected( SelectionEvent e ) {
-                        handleJdbcSSLChanged(((Button) e.widget).getSelection());
-                    }
-                });
-            }
-
-        }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void createControl( Composite parent ) {
-        Composite pnlMain = new Composite(parent, SWT.NONE);
-        pnlMain.setLayout(new GridLayout());
-        pnlMain.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-        constructHostPanel(pnlMain);
-
-        constructTeiidAdminConnectionPanel(pnlMain);
-
-        constructTeiidJdbcConnectionPanel(pnlMain);
+        });
 
         setControl(pnlMain);
 
@@ -748,7 +757,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
     public Server getServer() {
         if (this.status.getSeverity() != IStatus.ERROR) {
             Server newServer = new Server(this.host, this.localAdminInfo, this.localJdbcInfo, getServerManager());
-            newServer.setCustomLabel(this.customLabel);
+            newServer.setCustomLabel(this.displayName);
             return newServer;
         }
 
@@ -798,8 +807,8 @@ public final class ServerPage extends WizardPage implements HostProvider {
         updateState();
     }
 
-    void handleCustomLabelModified( String newCustomLabel ) {
-        this.customLabel = newCustomLabel.trim();
+    void handleDisplayNameModified( String newCustomLabel ) {
+        this.displayName = newCustomLabel.trim();
         updateState();
     }
 
@@ -809,6 +818,11 @@ public final class ServerPage extends WizardPage implements HostProvider {
     void handleHostModified( String newHost ) {
         this.host = newHost;
         updateState();
+        if( teiidJdbcGroup != null ) {
+        	//teiidJdbcGroup.pack();
+        	//teiidJdbcGroup.getParent().pack();
+        	//pnlMain.pack();
+        }
     }
 
     /**
@@ -918,8 +932,8 @@ public final class ServerPage extends WizardPage implements HostProvider {
 
     void setUseCustomLabel( boolean useCustomLabel,
                             String customLabel ) {
-        this.useCustomLabel = useCustomLabel;
-        this.customLabel = (this.useCustomLabel ? customLabel : null);
+        this.useDisplayName = useCustomLabel;
+        this.displayName = (this.useDisplayName ? customLabel : null);
 
         updateState();
     }
@@ -938,7 +952,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
             validate();
 
             // set initial message
-            setMessage(UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
+            setMessage("Define the Teiid Server connection properties required to perform both JDBC and Admin tasks."); //UTIL.getString("serverPageOkStatusMsg")); //$NON-NLS-1$
         }
     }
 
@@ -1022,7 +1036,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
         }
 
         // if necessary, check custom label
-        if (this.useCustomLabel && StringUtilities.isEmpty(this.customLabel)) {
+        if (this.useDisplayName && StringUtilities.isEmpty(this.displayName)) {
             this.status = new Status(IStatus.ERROR, PLUGIN_ID, UTIL.getString("serverPageEmptyCustomLabelMsg")); //$NON-NLS-1$
         }
     }
@@ -1037,7 +1051,7 @@ public final class ServerPage extends WizardPage implements HostProvider {
         if (this.isEdit) {
             this.server.getTeiidAdminInfo().setAll(this.localAdminInfo);
             this.server.getTeiidJdbcInfo().setAll(this.localJdbcInfo);
-            this.server.setCustomLabel(this.customLabel);
+            this.server.setCustomLabel(this.displayName);
         }
     }
 }
