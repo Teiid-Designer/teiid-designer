@@ -9,6 +9,7 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -19,12 +20,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -430,15 +433,15 @@ public class ModelExtensionDefinition {
     public int hashCode() {
         int result = HashCodeUtil.hashCode(0, this.builtIn);
 
-        HashCodeUtil.hashCode(result, getResourcePath());
+        result = HashCodeUtil.hashCode(result, getResourcePath());
 
-        HashCodeUtil.hashCode(result, getHeader());
+        result = HashCodeUtil.hashCode(result, getHeader());
 
         String[] extendedMetaclassNames = this.getExtendedMetaclasses();
         for (int i = 0; i < extendedMetaclassNames.length; i++) {
             Collection<ModelExtensionPropertyDefinition> metaclassPropertyDefns = this.getPropertyDefinitions(extendedMetaclassNames[i]);
             for (ModelExtensionPropertyDefinition propDefn : metaclassPropertyDefns) {
-                HashCodeUtil.hashCode(result, propDefn);
+                result = HashCodeUtil.hashCode(result, propDefn);
             }
         }
 
@@ -452,14 +455,7 @@ public class ModelExtensionDefinition {
      */
     @Override
     public String toString() {
-        StringBuilder text = new StringBuilder();
-        text.append("Model Extension Definition: "); //$NON-NLS-1$
-        text.append("namespacePrefix=").append(getNamespacePrefix()); //$NON-NLS-1$
-        text.append(", namespaceUri=").append(getNamespaceUri()); //$NON-NLS-1$
-        text.append(", metamodelUri=").append(getMetamodelUri()); //$NON-NLS-1$
-        text.append(", version=").append(getVersion()); //$NON-NLS-1$
-
-        return text.toString();
+        return getHeader().toString();
     }
 
     /**
