@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -28,7 +28,6 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -54,6 +53,8 @@ public class ExtensionPlugin extends Plugin {
     private ModelExtensionAssistantAggregator assistantAggregator;
 
     private ModelExtensionRegistry registry;
+
+    private static IPath runtimePath;
 
     public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {
         return this.assistantAggregator;
@@ -143,7 +144,10 @@ public class ExtensionPlugin extends Plugin {
         return metamodelUris;
     }
 
-    private void loadRegistry() {
+    /*
+     * Load the Built In MEDS (which are contributed from extension point) into the Registry.
+     */
+    private void loadBuiltInMeds() {
         final String EXT_PT = PLUGIN_ID + ".modelExtensionProvider"; //$NON-NLS-1$
         final String PATH = "path"; //$NON-NLS-1$
         final String CLASS_NAME = "className"; //$NON-NLS-1$
@@ -254,12 +258,82 @@ public class ExtensionPlugin extends Plugin {
             this.registry.setMetamodelUris(loadExtensibleMetamodelUris());
             this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
 
-            // load model extension registry
-            loadRegistry();
+            // Load Built-In MEDs into the Registry
+            loadBuiltInMeds();
+
+            // Load User-Defined MEDs into the Registry
+            loadUserDefinedMeds();
         } catch (Exception e) {
             Util.log(e);
             throw e;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It is recommended for the UI to call {@link UserDefinitionsManager#shutdown(org.eclipse.core.runtime.IProgressMonitor)} as
+     * there are shutdown tasks that the UI should block on before shutting down.
+     * 
+     * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop( final BundleContext context ) throws Exception {
+        try {
+            // Save the User-defined MEDs that are currently in the registry (not necessary to save Built Ins)
+            saveUserDefinedMeds();
+        } finally {
+            super.stop(context);
+        }
+    }
+
+    /*
+     * Save the User-Defined MEDS in the Registry to the defined file system location.  
+     */
+    private void saveUserDefinedMeds() {
+        if (this.registry != null) {
+            // Save the registry User-Defined Definitions to the specified location
+            this.registry.saveUserDefinitions(getUserDefinitionsPath());
+        }
+    }
+
+    /*
+     * Load the User-Defined MEDS into the Registry.  These are the MEDS which were previously registered and saved at the 
+     * last shutdown.
+     */
+    private void loadUserDefinedMeds() throws CoreException {
+        if (this.registry != null) {
+            // Restore the User-Defined Definitions into the Registry
+            final IStatus status = this.registry.restoreUserDefinitions(getUserDefinitionsPath());
+
+            if (!status.isOK()) {
+                Util.log(status);
+            }
+
+            if (status.getSeverity() == IStatus.ERROR) {
+                throw new CoreException(status);
+            }
+        }
+    }
+
+    /*
+     * Return the path string to the directory containing the persisted user definitions.
+     */
+    private String getUserDefinitionsPath() {
+        return getRuntimePath().toFile().getAbsolutePath();
+    }
+
+    /**
+     * @return the <code>designer.extension</code> plugin's runtime workspace path or the test runtime path
+     * @throws IOException if an error occurs obtaining the path
+     * @since 6.0.0
+     */
+    public IPath getRuntimePath() {
+        if (runtimePath == null) {
+            runtimePath = ExtensionPlugin.getInstance().getStateLocation();
+        }
+
+        return (IPath)runtimePath.clone();
     }
 
 }

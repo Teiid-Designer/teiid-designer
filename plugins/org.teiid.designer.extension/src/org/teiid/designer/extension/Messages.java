@@ -20,6 +20,11 @@ public class Messages extends NLS {
     public static String duplicateAllowedValue;
     public static String emptyPropertyValue;
     public static String errorProcessingDefinitionFile;
+    public static String errorUserDefinitionNotFoundOrNotReadable;
+    public static String errorUserDefinitionDeleteNotFoundOrCantWrite;
+    public static String errorUserDefinitionNotSaved;
+    public static String errorAddingUserDefinition;
+    public static String errorRestoringUserDefinitions;
     public static String errorProcessingExtensionPoint;
     public static String errorProcessingModelExtension;
     public static String extensionPropertyNotAdded;

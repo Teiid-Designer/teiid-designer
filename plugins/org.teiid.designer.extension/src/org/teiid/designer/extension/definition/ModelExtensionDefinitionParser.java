@@ -17,10 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
@@ -30,7 +28,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -276,6 +273,8 @@ public class ModelExtensionDefinitionParser {
                     System.err.println("allowedValues=" + valuesString.subSequence(0, valuesString.length() - DELIM.length())); //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(localName)) {
+                if (this.definition != null) this.definition.setDescription(this.description);
+
                 saveModelExtensionDefinitionProperties();
 
                 if (DEBUG_MODE) {

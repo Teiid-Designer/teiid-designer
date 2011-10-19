@@ -159,7 +159,7 @@ public final class NewMedWizard extends AbstractWizard
         // Default MED properties
         String namespacePrefix = "namespacePrefix"; //$NON-NLS-1$
         String namespaceUri = "namespaceUri"; //$NON-NLS-1$
-        String metamodelUri = "metamodelUri"; //$NON-NLS-1$
+        String metamodelUri = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
 
         // Create a MED using the DefaultModelObjectExtensionAssistant
         DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(namespacePrefix,

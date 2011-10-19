@@ -8,7 +8,8 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,14 +19,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -141,6 +144,71 @@ public final class ModelExtensionRegistry {
      */
     public Collection<ModelExtensionDefinition> getAllDefinitions() {
         return this.definitions.values();
+    }
+
+    /**
+     * @return a collection of the built-in model extension definitions (never <code>null</code>)
+     */
+    public Collection<ModelExtensionDefinition> getBuiltInDefinitions() {
+        Collection<ModelExtensionDefinition> builtInDefns = new ArrayList<ModelExtensionDefinition>();
+        for (ModelExtensionDefinition med : definitions.values()) {
+            if (med.isBuiltIn()) {
+                builtInDefns.add(med);
+            }
+        }
+        return builtInDefns;
+    }
+
+    /**
+     * @return a collection of the User-defined model extension definitions (never <code>null</code>)
+     */
+    public Collection<ModelExtensionDefinition> getUserDefinedDefinitions() {
+        Collection<ModelExtensionDefinition> userDefns = new ArrayList<ModelExtensionDefinition>();
+        for (ModelExtensionDefinition med : definitions.values()) {
+            if (!med.isBuiltIn()) {
+                userDefns.add(med);
+            }
+        }
+        return userDefns;
+    }
+
+    /**
+     * Restore the persisted user-defined MEDs from the file system (at the specified path location) into the registry.
+     * 
+     * @param userDefinitionsPath
+     * @return IStatus indicating successful loading.
+     */
+    public IStatus restoreUserDefinitions( String userDefinitionsPath ) {
+        boolean allSuccess = true;
+        String errMessage = null;
+        UserExtensionDefinitionsManager mgr = new UserExtensionDefinitionsManager(userDefinitionsPath);
+
+        Collection<File> userMedFiles = mgr.getUserDefinitionFiles();
+        for (File medFile : userMedFiles) {
+            try {
+                addDefinition(new FileInputStream(medFile), new ModelExtensionAssistantAdapter());
+            } catch (Exception e) {
+                allSuccess = false;
+                errMessage = NLS.bind(Messages.errorAddingUserDefinition, medFile.getAbsolutePath());
+                Util.log(IStatus.ERROR, e, errMessage);
+            }
+        }
+        if (allSuccess) {
+            return new Status(IStatus.OK, ExtensionPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+        }
+        return new Status(IStatus.WARNING, ExtensionPlugin.PLUGIN_ID, 0, Messages.errorRestoringUserDefinitions, null);
+    }
+
+    /**
+     * Save all user-defined MEDs that are currently in the registry to the file system (at the specified path location). Any user
+     * meds that have been previously saved at the specified location will be overwritten.
+     * 
+     * @param userDefinitionsPath
+     * @return IStatus indicating successful loading.
+     */
+    public void saveUserDefinitions( String userDefinitionsPath ) {
+        UserExtensionDefinitionsManager mgr = new UserExtensionDefinitionsManager(userDefinitionsPath);
+        mgr.saveUserDefinitions(getUserDefinedDefinitions());
     }
 
     /**
