@@ -10,7 +10,9 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.Messages.errorOpeningMedEditor;
 import static org.teiid.designer.extension.ui.Messages.medEditorSourcePageTitle;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
+
 import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,7 +36,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
@@ -53,8 +54,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private IAction showRegistryViewAction;
     private IAction updateRegisteryAction;
-    
-    private ModelExtensionDefinitionValidator validator;
 
     /**
      * {@inheritDoc}
@@ -82,11 +81,11 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             addPage(0, sourceEditor, getEditorInput());
 
             // add properties editor
-            this.propertiesPage = new PropertiesEditorPage(this, this.validator);
+            this.propertiesPage = new PropertiesEditorPage(this, this.med);
             addPage(0, this.propertiesPage);
 
             // add overview editor
-            this.overviewPage = new OverviewEditorPage(this, this.validator);
+            this.overviewPage = new OverviewEditorPage(this, this.med);
             addPage(0, this.overviewPage);
 
             // set text editor title and initialize header text to first page
@@ -151,8 +150,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private void createMed( IFile medFile ) throws Exception {
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser();
         this.med = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
-        this.med.setResourcePath(medFile.getLocation().toPortableString());
-        this.validator = new ModelExtensionDefinitionValidator(this.med);
     }
 
     /**

@@ -48,7 +48,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     private boolean index = INDEX_DEFAULT;
     private CopyOnWriteArrayList<PropertyChangeListener> listeners;
     private boolean masked = MASKED_DEFAULT;
-    private String namespacePrefix;
+    private NamespacePrefixProvider namespacePrefixProvider;
     private boolean required = REQUIRED_DEFAULT;
     private String simpleId;
     private Type type = TYPE_DEFAULT;
@@ -61,7 +61,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param namespacePrefix the namespace prefix (can be <code>null</code> or empty)
+     * @param namespacePrefixProvider the namespace prefix provider (cannot be <code>null</code>)
      * @param simpleId the property identifier without the namespace prefix (can be <code>null</code> or empty)
      * @param runtimeType the Teiid runtime type (can be <code>null</code> or empty). Default value is {@value Type#STRING}.
      * @param required <code>true</code> string if this property must have a value (can be <code>null</code> or empty). Default
@@ -79,7 +79,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @param descriptions the one or more translations of the property description (can be <code>null</code> or empty)
      * @param displayNames the one or more translations of the property display name (can be <code>null</code> or empty)
      */
-    public ModelExtensionPropertyDefinitionImpl( String namespacePrefix,
+    public ModelExtensionPropertyDefinitionImpl( NamespacePrefixProvider namespacePrefixProvider,
                                                  String simpleId,
                                                  String runtimeType,
                                                  String required,
@@ -92,7 +92,9 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
                                                  Set<Translation> descriptions,
                                                  Set<Translation> displayNames ) {
         this();
-        this.namespacePrefix = namespacePrefix;
+
+        CoreArgCheck.isNotNull(namespacePrefixProvider, "namespacePrefixProvider is null"); //$NON-NLS-1$
+        this.namespacePrefixProvider = namespacePrefixProvider;
         this.simpleId = simpleId;
         this.defaultValue = defaultValue;
         this.fixedValue = fixedValue;
@@ -366,7 +368,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getId() {
-        return Utils.getPropertyId(this.namespacePrefix, this.simpleId);
+        return Utils.getPropertyId(getNamespacePrefix(), this.simpleId);
     }
 
     /**
@@ -376,7 +378,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getNamespacePrefix() {
-        return this.namespacePrefix;
+        return this.namespacePrefixProvider.getNamespacePrefix();
     }
 
     /**
@@ -781,17 +783,6 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         if (this.masked != newMasked) {
             this.masked = newMasked;
             notifyChangeListeners(PropertyName.MASKED, !this.masked, this.masked);
-        }
-    }
-
-    /**
-     * @param newNamespacePrefix the new namespace prefix (can be <code>null</code> or empty)
-     */
-    public void setNamespacePrefix( String newNamespacePrefix ) {
-        if (!CoreStringUtil.equals(this.namespacePrefix, newNamespacePrefix)) {
-            String oldValue = this.namespacePrefix;
-            this.namespacePrefix = newNamespacePrefix;
-            notifyChangeListeners(PropertyName.FIXED_VALUE, oldValue, this.namespacePrefix);
         }
     }
 

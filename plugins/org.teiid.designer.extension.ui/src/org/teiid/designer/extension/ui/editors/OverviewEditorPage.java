@@ -12,6 +12,7 @@ import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import org.eclipse.osgi.util.NLS;
@@ -24,6 +25,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -31,6 +33,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Messages;
 
@@ -42,25 +46,16 @@ public final class OverviewEditorPage extends MedEditorPage {
     private final ErrorMessage metamodelUriError;
     private final ErrorMessage namespacePrefixError;
     private final ErrorMessage namespaceUriError;
-    private final ErrorMessage resourcePathError;
-    private final ErrorMessage versionError;
 
-    private CCombo cbxMetamodelUris;
-    private Text txtDescription;
-    private Text txtNamespacePrefix;
-    private Text txtNamespaceUri;
-    private Text txtResourcePath;
-    private Text txtVersion;
+    private Control firstFocusControl;
 
     public OverviewEditorPage( FormEditor medEditor,
-                               ModelExtensionDefinitionValidator medValidator ) {
-        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, medValidator);
+                               ModelExtensionDefinition medBeingEdited ) {
+        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, medBeingEdited);
         this.descriptionError = new ErrorMessage();
         this.metamodelUriError = new ErrorMessage();
         this.namespacePrefixError = new ErrorMessage();
         this.namespaceUriError = new ErrorMessage();
-        this.resourcePathError = new ErrorMessage();
-        this.versionError = new ErrorMessage();
     }
 
     /**
@@ -101,14 +96,10 @@ public final class OverviewEditorPage extends MedEditorPage {
         NAMESPACE_PREFIX: {
             toolkit.createLabel(finalContainer, Messages.namespacePrefixLabel);
 
-            this.txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            this.txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-            if (isEditMode()) {
-                this.txtNamespacePrefix.setText(this.getValidator().getNamespacePrefix());
-            }
-
-            this.txtNamespacePrefix.addModifyListener(new ModifyListener() {
+            Text txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            txtNamespacePrefix.setText(getMed().getNamespacePrefix());
+            txtNamespacePrefix.addModifyListener(new ModifyListener() {
 
                 /**
                  * {@inheritDoc}
@@ -117,9 +108,15 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void modifyText( ModifyEvent e ) {
-                    validateNamespacePrefix();
+                    handleNamespacePrefixChanged(((Text)e.widget).getText());
                 }
             });
+
+            // associate control with error message
+            this.namespacePrefixError.setControl(txtNamespacePrefix);
+
+            // assign control as where to set focus to when page is set to current page
+            this.firstFocusControl = txtNamespacePrefix;
         }
 
         final Text finalTxtNamespaceUri;
@@ -127,15 +124,11 @@ public final class OverviewEditorPage extends MedEditorPage {
         NAMESPACE_URI: {
             toolkit.createLabel(finalContainer, Messages.namespaceUriLabel);
 
-            this.txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            finalTxtNamespaceUri = this.txtNamespaceUri;
-            this.txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-            if (isEditMode()) {
-                this.txtNamespaceUri.setText(this.getValidator().getNamespaceUri());
-            }
-
-            this.txtNamespaceUri.addModifyListener(new ModifyListener() {
+            Text txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
+            finalTxtNamespaceUri = txtNamespaceUri;
+            txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            txtNamespaceUri.setText(getMed().getNamespaceUri());
+            txtNamespaceUri.addModifyListener(new ModifyListener() {
 
                 /**
                  * {@inheritDoc}
@@ -144,35 +137,39 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void modifyText( ModifyEvent e ) {
-                    validateNamespaceUri();
+                    handleNamespaceUriChanged(((Text)e.widget).getText());
                 }
             });
+
+            // associate control with error message
+            this.namespaceUriError.setControl(txtNamespaceUri);
         }
 
         METAMODEL_URI: {
             toolkit.createLabel(finalContainer, Messages.extendedMetamodelUriLabel);
 
-            this.cbxMetamodelUris = new CCombo(finalContainer, COMBO_STYLE);
-            toolkit.adapt(this.cbxMetamodelUris, true, false);
-            this.cbxMetamodelUris.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            final CCombo cbxMetamodelUris = new CCombo(finalContainer, COMBO_STYLE);
+            toolkit.adapt(cbxMetamodelUris, true, false);
+            cbxMetamodelUris.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
             // populate URIs
             Set<String> items = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
-            this.cbxMetamodelUris.setItems(items.toArray(new String[items.size()]));
+            cbxMetamodelUris.setItems(items.toArray(new String[items.size()]));
 
             // set value based on MED
-            if (isEditMode()) {
-                String metamodelUri = getValidator().getMetamodelUri();
-                int index = this.cbxMetamodelUris.indexOf(metamodelUri);
+            String metamodelUri = getMed().getMetamodelUri();
+
+            if (!CoreStringUtil.isEmpty(metamodelUri)) {
+                int index = cbxMetamodelUris.indexOf(metamodelUri);
 
                 if (index == -1) {
                     UTIL.log(NLS.bind(Messages.overviewPageInvalidMetamodelUriMsg, metamodelUri));
                 } else {
-                    this.cbxMetamodelUris.select(index);
+                    cbxMetamodelUris.select(index);
                 }
             }
 
-            this.cbxMetamodelUris.addModifyListener(new ModifyListener() {
+            cbxMetamodelUris.addModifyListener(new ModifyListener() {
 
                 /**
                  * {@inheritDoc}
@@ -181,12 +178,11 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void modifyText( ModifyEvent e ) {
-                    validateMetamodelUri();
+                    handleMetamodelUriChanged(((CCombo)e.widget).getText());
                 }
             });
 
-            final CCombo cbx = this.cbxMetamodelUris;
-            this.cbxMetamodelUris.addControlListener(new ControlAdapter() {
+            cbxMetamodelUris.addControlListener(new ControlAdapter() {
 
                 /**
                  * {@inheritDoc}
@@ -195,78 +191,36 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void controlResized( ControlEvent e ) {
-                    cbx.setSize(finalTxtNamespaceUri.getSize());
+                    cbxMetamodelUris.setSize(finalTxtNamespaceUri.getSize());
                 }
             });
-        }
 
-        RESOURCE_PATH: {
-            toolkit.createLabel(finalContainer, Messages.resourcePathLabel);
-
-            this.txtResourcePath = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY
-                    | TEXT_STYLE);
-            this.txtResourcePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            ((GridData)this.txtResourcePath.getLayoutData()).verticalIndent += ((GridLayout)finalContainer.getLayout()).verticalSpacing;
-
-            if (isEditMode()) {
-                this.txtResourcePath.setText(getValidator().getResourcePath());
-            }
-
-            this.txtResourcePath.addModifyListener(new ModifyListener() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    validateResourcePath();
-                }
-            });
+            // associate control with error message
+            this.metamodelUriError.setControl(cbxMetamodelUris);
         }
 
         VERSION: {
             toolkit.createLabel(finalContainer, Messages.versionLabel);
 
-            this.txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            this.txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-            if (isEditMode()) {
-                this.txtVersion.setText(String.valueOf(getValidator().getVersion()));
-            }
-
-            this.txtVersion.addModifyListener(new ModifyListener() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    validateVersion();
-                }
-            });
+            Text txtVersion = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.READ_ONLY | TEXT_STYLE);
+            txtVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            txtVersion.setText(String.valueOf(getMed().getVersion()));
         }
 
         DESCRIPTION: {
             Label label = toolkit.createLabel(finalContainer, Messages.descriptionLabel);
             label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-            this.txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
+            Text txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
-            this.txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            txtDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            String description = getMed().getDescription();
 
-            if (isEditMode()) {
-                String description = getValidator().getDescription();
-
-                if (!CoreStringUtil.isEmpty(description)) {
-                    this.txtDescription.setText(description);
-                }
+            if (!CoreStringUtil.isEmpty(description)) {
+                txtDescription.setText(description);
             }
 
-            this.txtDescription.addModifyListener(new ModifyListener() {
+            txtDescription.addModifyListener(new ModifyListener() {
 
                 /**
                  * {@inheritDoc}
@@ -275,18 +229,13 @@ public final class OverviewEditorPage extends MedEditorPage {
                  */
                 @Override
                 public void modifyText( ModifyEvent e ) {
-                    validateDescription();
+                    handleDescriptionChanged(((Text)e.widget).getText());
                 }
             });
-        }
 
-        // set error message controls
-        this.descriptionError.widget = this.txtDescription;
-        this.metamodelUriError.widget = this.cbxMetamodelUris;
-        this.namespacePrefixError.widget = this.txtNamespacePrefix;
-        this.namespaceUriError.widget = this.txtNamespaceUri;
-        this.resourcePathError.widget = this.txtResourcePath;
-        this.versionError.widget = this.txtVersion;
+            // associate control with error message
+            this.descriptionError.setControl(txtDescription);
+        }
     }
 
     /**
@@ -299,6 +248,42 @@ public final class OverviewEditorPage extends MedEditorPage {
         return Messages.medEditorOverviewPageToolTip;
     }
 
+    void handleDescriptionChanged( String newDescription ) {
+        getMed().setDescription(newDescription);
+    }
+
+    void handleMetamodelUriChanged( String newMetamodelUri ) {
+        getMed().setMetamodelUri(newMetamodelUri);
+    }
+
+    void handleNamespacePrefixChanged( String newNamespacePrefix ) {
+        getMed().setNamespacePrefix(newNamespacePrefix);
+    }
+
+    void handleNamespaceUriChanged( String newNamespaceUri ) {
+        getMed().setNamespaceUri(newNamespaceUri);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    @Override
+    public void propertyChange( PropertyChangeEvent e ) {
+        String propName = e.getPropertyName();
+
+        if (PropertyName.DESCRIPTION.equals(propName)) {
+            validateDescription();
+        } else if (PropertyName.METAMODEL_URI.equals(propName)) {
+            validateMetamodelUri();
+        } else if (PropertyName.NAMESPACE_PREFIX.equals(propName)) {
+            validateNamespacePrefix();
+        } else if (PropertyName.NAMESPACE_URI.equals(propName)) {
+            validateNamespaceUri();
+        }
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -306,8 +291,8 @@ public final class OverviewEditorPage extends MedEditorPage {
      */
     @Override
     public void setFocus() {
-        if (this.txtNamespacePrefix != null) {
-            this.txtNamespacePrefix.setFocus();
+        if (this.firstFocusControl != null) {
+            this.firstFocusControl.setFocus();
         } else {
             super.setFocus();
         }
@@ -324,41 +309,29 @@ public final class OverviewEditorPage extends MedEditorPage {
         validateMetamodelUri();
         validateNamespacePrefix();
         validateNamespaceUri();
-        validateResourcePath();
-        validateVersion();
     }
 
-    void validateDescription() {
-        this.descriptionError.message = ModelExtensionDefinitionValidator.validateDescription(this.txtDescription.getText());
+    private void validateDescription() {
+        this.descriptionError.setMessage(ModelExtensionDefinitionValidator.validateDescription(getMed().getDescription()));
         updateMessage(this.descriptionError);
     }
 
-    void validateMetamodelUri() {
-        this.metamodelUriError.message = ModelExtensionDefinitionValidator.validateMetamodelUri(this.cbxMetamodelUris.getText(),
-                                                                                                getRegistry().getExtendableMetamodelUris());
+    private void validateMetamodelUri() {
+        this.metamodelUriError.setMessage(ModelExtensionDefinitionValidator.validateMetamodelUri(getMed().getMetamodelUri(),
+                                                                                                 getRegistry().getExtendableMetamodelUris()));
         updateMessage(this.metamodelUriError);
     }
 
-    void validateNamespacePrefix() {
-        this.namespacePrefixError.message = ModelExtensionDefinitionValidator.validateNamespacePrefix(this.txtNamespacePrefix.getText(),
-                                                                                                      getRegistry().getAllNamespacePrefixes());
+    private void validateNamespacePrefix() {
+        this.namespacePrefixError.setMessage(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
+                                                                                                       getRegistry().getAllNamespacePrefixes()));
         updateMessage(this.namespacePrefixError);
     }
 
-    void validateNamespaceUri() {
-        this.namespaceUriError.message = ModelExtensionDefinitionValidator.validateNamespaceUri(this.txtNamespaceUri.getText(),
-                                                                                                getRegistry().getAllNamespaceUris());
+    private void validateNamespaceUri() {
+        this.namespaceUriError.setMessage(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
+                                                                                                 getRegistry().getAllNamespaceUris()));
         updateMessage(this.namespaceUriError);
-    }
-
-    void validateResourcePath() {
-        this.resourcePathError.message = ModelExtensionDefinitionValidator.validateResourcePath(this.txtResourcePath.getText());
-        updateMessage(this.resourcePathError);
-    }
-
-    void validateVersion() {
-        this.versionError.message = ModelExtensionDefinitionValidator.validateVersion(this.txtVersion.getText());
-        updateMessage(this.versionError);
     }
 
 }

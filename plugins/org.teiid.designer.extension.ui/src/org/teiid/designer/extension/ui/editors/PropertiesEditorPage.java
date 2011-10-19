@@ -19,6 +19,7 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,9 +51,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
@@ -80,8 +82,8 @@ public class PropertiesEditorPage extends MedEditorPage {
     private final ErrorMessage propertyError;
 
     public PropertiesEditorPage( FormEditor medEditor,
-                                 ModelExtensionDefinitionValidator medValidator ) {
-        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle, medValidator);
+                                 ModelExtensionDefinition medBeingEdited ) {
+        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle, medBeingEdited);
         this.metaclassError = new ErrorMessage();
         this.propertyError = new ErrorMessage();
     }
@@ -124,10 +126,6 @@ public class PropertiesEditorPage extends MedEditorPage {
             Section propertiesSection = createPropertiesSection(finalBottom, toolkit);
             propertiesSection.descriptionVerticalSpacing = metaclassSection.getTextClientHeightDifference();
         }
-
-        // set error message controls
-        this.metaclassError.widget = this.metaclassViewer.getControl();
-        this.propertyError.widget = this.propertyViewer.getControl();
 
         // populate UI
         this.metaclassViewer.setInput(this);
@@ -228,11 +226,13 @@ public class PropertiesEditorPage extends MedEditorPage {
         }
 
         VIEWER: {
-            this.metaclassViewer = new TableViewer(finalContainer, VIEWER_STYLE);
-            Table table = this.metaclassViewer.getTable();
+            Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
             table.setLayoutData(new GridLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
+            this.metaclassError.setControl(table);
+
+            this.metaclassViewer = new TableViewer(table);
             this.metaclassViewer.setContentProvider(new IStructuredContentProvider() {
 
                 /**
@@ -252,7 +252,7 @@ public class PropertiesEditorPage extends MedEditorPage {
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
-                    return getValidator().getExtendedMetaclasses();
+                    return getMed().getExtendedMetaclasses();
                 }
 
                 /**
@@ -377,13 +377,15 @@ public class PropertiesEditorPage extends MedEditorPage {
         }
 
         VIEWER: {
-            this.propertyViewer = new TableViewer(finalContainer, VIEWER_STYLE);
-            final Table table = this.propertyViewer.getTable();
+            Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
             table.setHeaderVisible(true);
             table.setLinesVisible(true);
             table.setLayoutData(new GridLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 10;
+            this.propertyError.setControl(table);
+
+            this.propertyViewer = new TableViewer(table);
             this.propertyViewer.setContentProvider(new IStructuredContentProvider() {
 
                 /**
@@ -409,7 +411,7 @@ public class PropertiesEditorPage extends MedEditorPage {
                         return ArrayUtil.Constants.EMPTY_ARRAY;
                     }
 
-                    return getValidator().getPropertyDefinitions(metaclass);
+                    return getMed().getPropertyDefinitions(metaclass).toArray();
                 }
 
                 /**
@@ -489,13 +491,13 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     Collection<String> getExistingPropertyIds( String metaclassName ) {
-        ModelExtensionPropertyDefinition[] propDefns = getValidator().getPropertyDefinitions(metaclassName);
+        Collection<ModelExtensionPropertyDefinition> propDefns = getMed().getPropertyDefinitions(metaclassName);
 
         if (propDefns == null) {
             return new ArrayList<String>(0);
         }
 
-        Collection<String> result = new ArrayList<String>(propDefns.length);
+        Collection<String> result = new ArrayList<String>(propDefns.size());
 
         for (ModelExtensionPropertyDefinition propDefn : propDefns) {
             result.add(propDefn.getSimpleId());
@@ -525,13 +527,13 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     void handleAddMetaclass() {
-        EditMetaclassDialog dialog = new EditMetaclassDialog(getShell(), Arrays.asList(getValidator().getExtendedMetaclasses()));
+        EditMetaclassDialog dialog = new EditMetaclassDialog(getShell(), Arrays.asList(getMed().getExtendedMetaclasses()));
         dialog.create();
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            // TODO implement handleAddMetaclass
-            String metaclassName = dialog.getMetaclassName();
+            String newMetaclassName = dialog.getMetaclassName();
+            getMed().addMetaclass(newMetaclassName);
         }
     }
 
@@ -539,14 +541,15 @@ public class PropertiesEditorPage extends MedEditorPage {
         assert (getSelectedMetaclass() != null) : "Selected metaclass is null and shouldn't be"; //$NON-NLS-1$
         String metaclassName = getSelectedMetaclass();
         EditPropertyDialog dialog = new EditPropertyDialog(getShell(),
-                                                           getValidator().getNamespacePrefix(),
+                                                           getMed(),
                                                            metaclassName,
                                                            getExistingPropertyIds(metaclassName));
         dialog.create();
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            // TODO implement handleAddProperty
+            ModelExtensionPropertyDefinition newPropDefn = dialog.getPropertyDefinition();
+            getMed().addPropertyDefinition(metaclassName, newPropDefn);
         }
     }
 
@@ -554,16 +557,15 @@ public class PropertiesEditorPage extends MedEditorPage {
         assert !CoreStringUtil.isEmpty(getSelectedMetaclass()) : "Edit metaclass button is enabled and there is no metaclass selected"; //$NON-NLS-1$
         String selectedMetaclassName = getSelectedMetaclass();
         EditMetaclassDialog dialog = new EditMetaclassDialog(getShell(),
-                                                             Arrays.asList(getValidator().getExtendedMetaclasses()),
+                                                             Arrays.asList(getMed().getExtendedMetaclasses()),
                                                              selectedMetaclassName);
         dialog.create();
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            // TODO add to med
-            // TODO add to metaclass table
-            String metaclassName = dialog.getMetaclassName();
-            // med.addPropertyDefinition(metaclassName, propDefn);
+            Collection<ModelExtensionPropertyDefinition> propDefns = getMed().removeMetaclass(selectedMetaclassName);
+            String modifiedMetaclassName = dialog.getMetaclassName();
+            getMed().addPropertyDefinitions(modifiedMetaclassName, propDefns);
         }
     }
 
@@ -572,16 +574,24 @@ public class PropertiesEditorPage extends MedEditorPage {
         assert (getSelectedProperty() != null) : "Edit property button is enabled and there is no property selected"; //$NON-NLS-1$
 
         String metaclassName = getSelectedMetaclass();
+        ModelExtensionPropertyDefinition selectedPropDefn = getSelectedProperty();
         EditPropertyDialog dialog = new EditPropertyDialog(getShell(),
-                                                           getValidator().getNamespacePrefix(),
+                                                           getMed(),
                                                            metaclassName,
                                                            getExistingPropertyIds(metaclassName),
-                                                           getSelectedProperty());
+                                                           selectedPropDefn);
         dialog.create();
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
-            // TODO implement handleEditProperty
+            ModelExtensionPropertyDefinition modifiedPropDefn = dialog.getPropertyDefinition();
+
+            if (selectedPropDefn.getId().equals(modifiedPropDefn.getId())) {
+                getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
+            } else {
+                getMed().removePropertyDefinition(metaclassName, selectedPropDefn);
+                getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
+            }
         }
     }
 
@@ -599,6 +609,24 @@ public class PropertiesEditorPage extends MedEditorPage {
         // alert property viewer the selection changed
         this.propertyViewer.setInput(this);
         WidgetUtil.pack(this.propertyViewer);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    @Override
+    public void propertyChange( PropertyChangeEvent e ) {
+        String propName = e.getPropertyName();
+
+        if (PropertyName.METACLASS.equals(propName)) {
+            validateMetaclasses();
+            this.metaclassViewer.refresh();
+        } else if (PropertyName.PROPERTY_DEFINITION.equals(propName)) {
+            validatePropertyDefinitions();
+            this.propertyViewer.refresh();
+        }
     }
 
     void handlePropertySelected() {
@@ -619,17 +647,18 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         if (FormUtil.openQuestion(getShell(), Messages.removeMetaclassDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
                                   NLS.bind(Messages.removeMetaclassDialogMsg, selectedMetaclassName))) {
-            // TODO implement handleRemoveMetaclass
+            getMed().removeMetaclass(selectedMetaclassName);
         }
     }
 
     void handleRemoveProperty() {
+        assert !CoreStringUtil.isEmpty(getSelectedMetaclass()) : "Remove property button is enabled and there is no metaclass selected"; //$NON-NLS-1$
         assert (getSelectedProperty() != null) : "Remove property button is enabled and there is no property selected"; //$NON-NLS-1$
         ModelExtensionPropertyDefinition selectedPropDefn = getSelectedProperty();
 
         if (FormUtil.openQuestion(getShell(), Messages.removePropertyDialogTitle, Activator.getDefault().getImage(MED_EDITOR),
                                   NLS.bind(Messages.removePropertyDialogMsg, selectedPropDefn.getSimpleId()))) {
-            // TODO implement handleRemoveMetaclass
+            getMed().removePropertyDefinition(getSelectedMetaclass(), selectedPropDefn);
         }
     }
 
@@ -661,9 +690,19 @@ public class PropertiesEditorPage extends MedEditorPage {
      */
     @Override
     protected void updateAllMessages() {
-        ModelExtensionRegistry registry = getRegistry();
-        getValidator().validate(registry.getExtendableMetamodelUris(), registry.getAllNamespacePrefixes(),
-                                registry.getAllNamespaceUris());
+        validateMetaclasses();
+        validatePropertyDefinitions();
+    }
+
+    private void validateMetaclasses() {
+        this.metaclassError.setMessage(ModelExtensionDefinitionValidator.validateMetaclassNames(getMed().getExtendedMetaclasses(),
+                                                                                                true));
+        updateMessage(this.metaclassError);
+    }
+
+    private void validatePropertyDefinitions() {
+        this.propertyError.setMessage(ModelExtensionDefinitionValidator.validatePropertyDefinitions(getMed().getPropertyDefinitions()));
+        updateMessage(this.propertyError);
     }
 
     interface ColumnHeaders {

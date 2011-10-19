@@ -21,12 +21,12 @@ final class ErrorMessage implements IMessage {
     /**
      * The error message (can be <code>null</code> or empty)
      */
-    String message;
+    private String message;
 
     /**
      * The UI control where the error can be fixed.
      */
-    Control widget;
+    private Control widget;
 
     /**
      * Clears the error message.
@@ -93,6 +93,20 @@ final class ErrorMessage implements IMessage {
     @Override
     public String getPrefix() {
         return null;
+    }
+
+    /**
+     * @param newControl the new control (can be <code>null</code>)
+     */
+    public void setControl(Control newControl) {
+        this.widget = newControl;
+    }
+
+    /**
+     * @param newMessage the new message (can be <code>null</code> or empty)
+     */
+    public void setMessage(String newMessage) {
+        this.message = newMessage;
     }
 
 }

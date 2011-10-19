@@ -135,7 +135,6 @@ public class Messages extends NLS {
     public static String namespacePrefixLabel;
     public static String namespaceUriLabel;
     public static String extendedMetamodelUriLabel;
-    public static String resourcePathLabel;
     public static String versionLabel;
     public static String descriptionLabel;
     public static String simpleIdLabel;

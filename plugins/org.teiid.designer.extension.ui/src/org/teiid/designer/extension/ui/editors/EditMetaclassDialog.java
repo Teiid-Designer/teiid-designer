@@ -145,7 +145,7 @@ final class EditMetaclassDialog extends FormDialog {
         lblMetaclassName.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
 
         Text txtMetaclassName = toolkit.createText(body, null, TEXT_STYLE);
-        this.metaclassError.widget = txtMetaclassName;
+        this.metaclassError.setControl(txtMetaclassName);
         txtMetaclassName.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.MIDDLE));
         txtMetaclassName.setToolTipText(Messages.metaclassToolTip);
 
@@ -183,7 +183,7 @@ final class EditMetaclassDialog extends FormDialog {
         }
 
         this.metaclassName = newMetaclassName;
-        this.metaclassError.message = ModelExtensionDefinitionValidator.validateMetaclassName(this.metaclassName);
+        this.metaclassError.setMessage(ModelExtensionDefinitionValidator.validateMetaclassName(this.metaclassName));
         this.existingMetaclasses.add(this.metaclassName);
         updateState();
     }
@@ -194,7 +194,7 @@ final class EditMetaclassDialog extends FormDialog {
 
     private void updateState() {
         // check to see if new metaclassName is valid
-        String errorMsg = this.metaclassError.message;
+        String errorMsg = this.metaclassError.getMessage();
         int imageType = IMessageProvider.NONE;
 
         // update UI controls

@@ -9,6 +9,7 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,6 +44,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -69,10 +71,10 @@ public final class NewMedWizard extends AbstractWizard
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 
-    private String medName; // name of MED to create
-    private IContainer folderLocation; // location to create the MED
-    private InputStream medInputStream; // supplied InputStream
-    private IFile createdMedFile; // the file that was saved
+    String medName; // name of MED to create
+    IContainer folderLocation; // location to create the MED
+    InputStream medInputStream; // supplied InputStream
+    IFile createdMedFile; // the file that was saved
 
     private WizardPage pg;
     private Text nameText, folderText;
@@ -99,6 +101,13 @@ public final class NewMedWizard extends AbstractWizard
 
         // create MED resource
         final IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            @Override
             @SuppressWarnings("unchecked")
 			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
                 try {
@@ -146,7 +155,7 @@ public final class NewMedWizard extends AbstractWizard
      * Create a Default ModelObjectDefinition, with some preset values to make it a valid Med.
      * @return a default ModelExtensionDefinition
      */
-    private ModelExtensionDefinition createDefaultMed() {
+    ModelExtensionDefinition createDefaultMed() {
         // Default MED properties
         String namespacePrefix = "namespacePrefix"; //$NON-NLS-1$
         String namespaceUri = "namespaceUri"; //$NON-NLS-1$
@@ -168,7 +177,7 @@ public final class NewMedWizard extends AbstractWizard
         String advanced = "false"; //$NON-NLS-1$
         String masked = "false"; //$NON-NLS-1$
         String index = "false"; //$NON-NLS-1$
-        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(namespacePrefix,
+        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(newMed,
                                                                                              propId,
                                                                                              type,
                                                                                              required,
@@ -190,6 +199,7 @@ public final class NewMedWizard extends AbstractWizard
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      * @since 7.6
      */
+    @Override
     public void init( final IWorkbench workbench,
                       final IStructuredSelection selection ) {
 
@@ -200,6 +210,13 @@ public final class NewMedWizard extends AbstractWizard
         if (folderLocation != null && !folderInModelProject()) {
             // Create empty page
             this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), Messages.newMedWizardPageTitle, null) {
+
+                /**
+                 * {@inheritDoc}
+                 *
+                 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+                 */
+                @Override
                 public void createControl( final Composite parent ) {
                     setControl(createEmptyPageControl(parent));
                 }
@@ -209,6 +226,13 @@ public final class NewMedWizard extends AbstractWizard
 
             // Create and add page
             this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), Messages.newMedWizardPageTitle, null) {
+
+                /**
+                 * {@inheritDoc}
+                 *
+                 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+                 */
+                @Override
                 public void createControl( final Composite parent ) {
                     setControl(createPageControl(parent));
                 }
@@ -287,6 +311,13 @@ public final class NewMedWizard extends AbstractWizard
         final String name = (this.folderLocation == null ? null : this.folderLocation.getFullPath().makeRelative().toString());
         this.folderText = WidgetFactory.createTextField(pg, GridData.FILL_HORIZONTAL, 1, name, SWT.READ_ONLY);
         this.folderText.addModifyListener(new ModifyListener() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+             */
+            @Override
             public void modifyText( final ModifyEvent event ) {
                 folderModified();
             }
@@ -294,6 +325,12 @@ public final class NewMedWizard extends AbstractWizard
         // Folder Browse Button
         btnFolderBrowse = WidgetFactory.createButton(pg, BROWSE_BUTTON);
         btnFolderBrowse.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 browseFolderButtonSelected();
@@ -308,6 +345,13 @@ public final class NewMedWizard extends AbstractWizard
         // MED Name text widget
         this.nameText = WidgetFactory.createTextField(pg, GridData.HORIZONTAL_ALIGN_FILL, COLUMN_COUNT - 1);
         this.nameText.addModifyListener(new ModifyListener() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+             */
+            @Override
             public void modifyText( final ModifyEvent event ) {
                 nameModified();
             }
@@ -323,10 +367,7 @@ public final class NewMedWizard extends AbstractWizard
         return pg;
     }
 
-    /**
-     * @since 7.6
-     */
-    private void browseFolderButtonSelected() {
+    void browseFolderButtonSelected() {
         this.folderLocation = WidgetUtil.showFolderSelectionDialog(this.folderLocation,
                                                                    new ModelingResourceFilter(),
                                                                    projectValidator);

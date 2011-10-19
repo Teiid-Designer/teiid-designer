@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,12 +20,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.properties.NamespacePrefixProvider;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
@@ -34,7 +33,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 /**
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.
  */
-public class ModelExtensionDefinition {
+public class ModelExtensionDefinition implements NamespacePrefixProvider {
 
     /**
      * The model extension assistant (never <code>null</code>).
@@ -52,25 +51,29 @@ public class ModelExtensionDefinition {
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners;
 
     /**
-     * A resource path (can be <code>null</code> or empty).
+     * Key is metaclass name, value is a collection of property definitions.
      */
-    private String path;
+    private final Map<String, Collection<ModelExtensionPropertyDefinition>> properties;
 
     /**
-     * Key is metaclass name, value is a collection of property definitions key by property name.
+     * The ModelExtensionDefinitionHeader of this definition (never <code>null</code>).
      */
-    private final Map<String, Map<String, ModelExtensionPropertyDefinition>> properties;
+    private final ModelExtensionDefinitionHeader header;
 
-    /**
-     * The ModelExtensionDefinitionHeader of this definition (never <code>null</code> or empty).
-     */
-    private ModelExtensionDefinitionHeader header;
+    public ModelExtensionDefinition( ModelExtensionAssistant assistant ) {
+        CoreArgCheck.isNotNull(assistant, "assistant is null"); //$NON-NLS-1$
+
+        this.assistant = assistant;
+        this.properties = new HashMap<String, Collection<ModelExtensionPropertyDefinition>>();
+        this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+        this.header = new ModelExtensionDefinitionHeader();
+    }
 
     /**
      * @param assistant the model extension assist (cannot be <code>null</code>)
-     * @param namespacePrefix the unique namespace prefix (cannot be <code>null</code> or empty)
-     * @param namespaceUri the unique namespace URI (cannot be <code>null</code> or empty)
-     * @param metamodelUri the metamodel URI that is being extended (cannot be <code>null</code> or empty)
+     * @param namespacePrefix the unique namespace prefix (can be <code>null</code> or empty)
+     * @param namespaceUri the unique namespace URI (can be <code>null</code> or empty)
+     * @param metamodelUri the metamodel URI that is being extended (can be <code>null</code> or empty)
      * @param description the description of the definition (can be <code>null</code> or empty)
      * @param version the definition version (can be <code>null</code> or empty)
      */
@@ -80,26 +83,23 @@ public class ModelExtensionDefinition {
                                      String metamodelUri,
                                      String description,
                                      String version ) {
-        CoreArgCheck.isNotNull(assistant, "assistant is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(namespaceUri, "namespaceUri is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(metamodelUri, "metamodelUri is null"); //$NON-NLS-1$
-
-        this.assistant = assistant;
-        this.properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
-        this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+        this(assistant);
 
         int versionNumber = ModelExtensionDefinitionHeader.DEFAULT_VERSION;
 
         if (!CoreStringUtil.isEmpty(version)) {
             try {
                 versionNumber = Integer.parseInt(version);
+                this.header.setVersion(versionNumber);
             } catch (Exception e) {
                 ExtensionConstants.UTIL.log(NLS.bind(Messages.invalidDefinitionFileNewVersion, namespacePrefix, version));
             }
         }
 
-        this.header = new ModelExtensionDefinitionHeader(namespacePrefix, namespaceUri, metamodelUri, description, versionNumber);
+        this.header.setNamespacePrefix(namespacePrefix);
+        this.header.setNamespaceUri(namespaceUri);
+        this.header.setMetamodelUri(metamodelUri);
+        this.header.setDescription(description);
     }
 
     /**
@@ -108,7 +108,29 @@ public class ModelExtensionDefinition {
      */
     public boolean addListener( PropertyChangeListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
-        return this.listeners.addIfAbsent(listener);
+        boolean added = this.listeners.addIfAbsent(listener);
+
+        if (added) {
+            added = this.header.addListener(listener);
+        }
+
+        return added;
+    }
+
+    /**
+     * @param metaclassName the name of the metaclass that can be extended (never <code>null</code> or empty)
+     * @return <code>true</code> if the metaclass was added
+     */
+    public boolean addMetaclass( String metaclassName ) {
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
+
+        if (this.properties.containsKey(metaclassName)) {
+            return false;
+        }
+
+        this.properties.put(metaclassName, new ArrayList<ModelExtensionPropertyDefinition>());
+        notifyChangeListeners(PropertyName.METACLASS, null, metaclassName);
+        return true;
     }
 
     /**
@@ -121,25 +143,44 @@ public class ModelExtensionDefinition {
                                           ModelExtensionPropertyDefinition propDefn ) {
         CoreArgCheck.isNotNull(propDefn, "propDefn is null"); //$NON-NLS-1$
 
-        Map<String, ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
+        Collection<ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
 
         if (props == null) {
-            props = new HashMap<String, ModelExtensionPropertyDefinition>();
-            this.properties.put(metaclassName, props);
-        }
-
-        String key = propDefn.getId();
-
-        // don't add if already exists
-        if (props.containsKey(key)) {
-            return false;
+            if (addMetaclass(metaclassName)) {
+                props = internalGetProperties(metaclassName);
+            } else {
+                return false;
+            }
         }
 
         // add new property and alert listeners
-        props.put(key, propDefn);
-        notifyChangeListeners(PropertyName.ADD_PROPERTY_DEFINITION, null, propDefn);
+        if (props.contains(propDefn)) {
+            return false;
+        }
+
+        props.add(propDefn);
+        notifyChangeListeners(PropertyName.PROPERTY_DEFINITION, null, propDefn);
 
         return true;
+    }
+
+    /**
+     * @param metaclassName the name of the metaclass that the properties will be added to (cannot be <code>null</code> or empty)
+     * @param propDefns the property definitions being added (cannot be <code>null</code>)
+     * @return <code>true</code> if one or more property definitions were added
+     */
+    public boolean addPropertyDefinitions( String metaclassName,
+                                           Collection<ModelExtensionPropertyDefinition> propDefns ) {
+        CoreArgCheck.isNotNull(propDefns, "propDefns is null"); //$NON-NLS-1$
+        boolean added = false;
+
+        for (ModelExtensionPropertyDefinition propDefn : propDefns) {
+            if (addPropertyDefinition(metaclassName, propDefn)) {
+                added = true;
+            }
+        }
+
+        return added;
     }
 
     /**
@@ -189,8 +230,11 @@ public class ModelExtensionDefinition {
     }
 
     /**
-     * @return the namespace prefix (never <code>null</code> or empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.NamespacePrefixProvider#getNamespacePrefix()
      */
+    @Override
     public String getNamespacePrefix() {
         return this.header.getNamespacePrefix();
     }
@@ -216,32 +260,36 @@ public class ModelExtensionDefinition {
      */
     public ModelExtensionPropertyDefinition getPropertyDefinition( String metaclassName,
                                                                    String propId ) {
-        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(propId, "propId is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
 
-        Map<String, ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
+        Collection<ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
 
         if (props == null) {
             return null;
         }
 
-        return props.get(propId);
+        for (ModelExtensionPropertyDefinition propDefn : props) {
+            if (propId.equals(propDefn.getId())) {
+                return propDefn;
+            }
+        }
+
+        // not found
+        return null;
     }
 
     /**
      * @return a copy of the collection of extension property definitions (never <code>null</code> but can be empty)
      */
-    public Map<String, Map<String, ModelExtensionPropertyDefinition>> getPropertyDefinitions() {
-        Map<String, Map<String, ModelExtensionPropertyDefinition>> properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
+    public Map<String, Collection<ModelExtensionPropertyDefinition>> getPropertyDefinitions() {
+        Map<String, Collection<ModelExtensionPropertyDefinition>> properties = new HashMap<String, Collection<ModelExtensionPropertyDefinition>>();
 
-        for (Map.Entry<String, Map<String, ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) {
+        for (Map.Entry<String, Collection<ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) {
+            Collection<ModelExtensionPropertyDefinition> propDefns = new ArrayList<ModelExtensionPropertyDefinition>();
+            propDefns.addAll(entry.getValue());
+
             String metaclassName = entry.getKey();
-            Map<String, ModelExtensionPropertyDefinition> propDefns = new HashMap<String, ModelExtensionPropertyDefinition>();
-
-            for (ModelExtensionPropertyDefinition propDefn : entry.getValue().values()) {
-                propDefns.put(propDefn.getId(), propDefn);
-            }
-
             properties.put(metaclassName, propDefns);
         }
 
@@ -255,20 +303,13 @@ public class ModelExtensionDefinition {
      */
     public Collection<ModelExtensionPropertyDefinition> getPropertyDefinitions( String metaclassName ) {
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is null"); //$NON-NLS-1$
-        Map<String, ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
+        Collection<ModelExtensionPropertyDefinition> props = internalGetProperties(metaclassName);
 
         if (props == null) {
             return Collections.emptyList();
         }
 
-        return new ArrayList<ModelExtensionPropertyDefinition>(props.values());
-    }
-
-    /**
-     * @return the resource path (can be <code>null</code> or empty)
-     */
-    public String getResourcePath() {
-        return path;
+        return new ArrayList<ModelExtensionPropertyDefinition>(props);
     }
 
     /**
@@ -282,7 +323,7 @@ public class ModelExtensionDefinition {
      * @param metaclassName the metaclass name whose extension properties are being requested (cannot be <code>null</code>)
      * @return the extension properties (never <code>null</code>)
      */
-    private Map<String, ModelExtensionPropertyDefinition> internalGetProperties( String metaclassName ) {
+    private Collection<ModelExtensionPropertyDefinition> internalGetProperties( String metaclassName ) {
         CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is null"); //$NON-NLS-1$
         return this.properties.get(metaclassName);
     }
@@ -329,28 +370,80 @@ public class ModelExtensionDefinition {
      */
     public boolean removeListener( PropertyChangeListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
-        return this.listeners.remove(listener);
+        boolean removed = this.listeners.remove(listener);
+
+        if (removed) {
+            removed = this.header.removeListener(listener);
+        }
+
+        return removed;
+    }
+
+    /**
+     * @param metaclassName the name of the metaclass whose property definition is being removed (cannot be <code>null</code> or
+     *            empty)
+     * @param propDefn the property definition being removed (cannot be <code>null</code>)
+     * @return <code>true</code> if the property definition has been removed
+     */
+    public boolean removePropertyDefinition( String metaclassName,
+                                             ModelExtensionPropertyDefinition propDefn ) {
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(propDefn, "propDefn is null"); //$NON-NLS-1$
+
+        Collection<ModelExtensionPropertyDefinition> propDefns = getPropertyDefinitions(metaclassName);
+        boolean removed = propDefns.remove(propDefn);
+
+        if (removed) {
+            notifyChangeListeners(PropertyName.METACLASS, metaclassName, null);
+        }
+
+        return removed;
+    }
+
+    /**
+     * @param metaclassName the name of the metaclass being removed (cannot be <code>null</code> or empty)
+     * @return the property definitions of the metaclass being removed (can be <code>null</code> if metaclass was not found or
+     *         didn't have properties)
+     */
+    public Collection<ModelExtensionPropertyDefinition> removeMetaclass( String metaclassName ) {
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
+
+        if (this.properties.containsKey(metaclassName)) {
+            Collection<ModelExtensionPropertyDefinition> propDefns = this.properties.remove(metaclassName);
+            notifyChangeListeners(PropertyName.METACLASS, metaclassName, null);
+            return propDefns;
+        }
+
+        // metaclass not found
+        return null;
     }
 
     /**
      * @param newDescription the new description (can be <code>null</code> or empty)
      */
     public void setDescription( String newDescription ) {
-        String currentDescription = this.header.getDescription();
-        if (!CoreStringUtil.equals(currentDescription, newDescription)) {
-            Object oldValue = currentDescription;
-            this.header.setDescription(newDescription);
-
-            // alert listeners
-            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, newDescription);
-        }
+        this.header.setDescription(newDescription);
     }
 
     /**
-     * @param path the resource path (can be <code>null</code> or empty)
+     * @param newMetamodelUri the new metamodel URI (can be <code>null</code> or empty)
      */
-    public void setResourcePath( String path ) {
-        this.path = path;
+    public void setMetamodelUri( String newMetamodelUri ) {
+        this.header.setMetamodelUri(newMetamodelUri);
+    }
+
+    /**
+     * @param newNamespacePrefix the new namespace prefix (can be <code>null</code> or empty)
+     */
+    public void setNamespacePrefix( String newNamespacePrefix ) {
+        this.header.setNamespacePrefix(newNamespacePrefix);
+    }
+
+    /**
+     * @param newNamespaceUri the new namespace URI (can be <code>null</code> or empty)
+     */
+    public void setNamespaceUri( String newNamespaceUri ) {
+        this.header.setNamespaceUri(newNamespaceUri);
     }
 
     /**
@@ -359,20 +452,7 @@ public class ModelExtensionDefinition {
      * @param newVersion the new version
      */
     public void setVersion( int newVersion ) {
-        int currentVersion = this.header.getVersion();
-        if (currentVersion != newVersion) {
-            if (newVersion < ModelExtensionDefinitionHeader.DEFAULT_VERSION) {
-                Util.log(IStatus.ERROR, NLS.bind(invalidDefinitionFileNewVersion, new Object[] { getNamespacePrefix(), newVersion,
-                        currentVersion }));
-                return;
-            }
-
-            Object oldValue = currentVersion;
-            this.header.setVersion(newVersion);
-
-            // alert listeners
-            notifyChangeListeners(PropertyName.VERSION, oldValue, newVersion);
-        }
+        this.header.setVersion(newVersion);
     }
 
     /**
@@ -382,18 +462,18 @@ public class ModelExtensionDefinition {
      */
     @Override
     public final boolean equals( final Object object ) {
-        if (this == object) return true;
-        if (object == null) return false;
-        if (getClass() != object.getClass()) return false;
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
         final ModelExtensionDefinition other = (ModelExtensionDefinition)object;
 
         // Check BuiltIn status
         if (this.isBuiltIn() != other.isBuiltIn()) {
             return false;
         }
-
-        // ResourcePath
-        if (!CoreStringUtil.equals(getResourcePath(), other.getResourcePath())) return false;
 
         // Check MED headers equal
         if (!getHeader().equals(other.getHeader())) {
@@ -403,19 +483,19 @@ public class ModelExtensionDefinition {
         // Verify same number of extended metaclasses
         String[] extendedMetaclassNames = this.getExtendedMetaclasses();
         String[] otherMetaclassNames = other.getExtendedMetaclasses();
-        if (extendedMetaclassNames.length != otherMetaclassNames.length) return false;
-        if (extendedMetaclassNames.length == 0 && otherMetaclassNames.length == 0) return true;
+        if (extendedMetaclassNames.length != otherMetaclassNames.length)
+            return false;
+        if (extendedMetaclassNames.length == 0 && otherMetaclassNames.length == 0)
+            return true;
 
         // Check that metaClasses extended are same, and Property Definitions are the same for each
         boolean areEqual = true;
         for (int i = 0; i < extendedMetaclassNames.length; i++) {
-            Set<ModelExtensionPropertyDefinition> metaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(
-                                                                                                                         this.getPropertyDefinitions(extendedMetaclassNames[i]));
-            Set<ModelExtensionPropertyDefinition> otherMetaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(
-                                                                                                                              other.getPropertyDefinitions(extendedMetaclassNames[i]));
+            Set<ModelExtensionPropertyDefinition> metaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(this.getPropertyDefinitions(extendedMetaclassNames[i]));
+            Set<ModelExtensionPropertyDefinition> otherMetaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(other.getPropertyDefinitions(extendedMetaclassNames[i]));
 
             if ((metaClassPropertyDefns.size() != otherMetaClassPropertyDefns.size())
-                || !metaClassPropertyDefns.removeAll(otherMetaClassPropertyDefns)) {
+                    || !metaClassPropertyDefns.removeAll(otherMetaClassPropertyDefns)) {
                 areEqual = false;
                 break;
             }
@@ -432,8 +512,6 @@ public class ModelExtensionDefinition {
     @Override
     public int hashCode() {
         int result = HashCodeUtil.hashCode(0, this.builtIn);
-
-        result = HashCodeUtil.hashCode(result, getResourcePath());
 
         result = HashCodeUtil.hashCode(result, getHeader());
 
@@ -464,14 +542,34 @@ public class ModelExtensionDefinition {
     public enum PropertyName {
 
         /**
-         * An added property definition.
+         * A property definition.
          */
-        ADD_PROPERTY_DEFINITION,
+        PROPERTY_DEFINITION,
 
         /**
          * The description.
          */
         DESCRIPTION,
+
+        /**
+         * The metamodel URI.
+         */
+        METAMODEL_URI,
+
+        /**
+         * The metaclass name being extended.
+         */
+        METACLASS,
+
+        /**
+         * The namespace prefix.
+         */
+        NAMESPACE_PREFIX,
+
+        /**
+         * The namespace URI.
+         */
+        NAMESPACE_URI,
 
         /**
          * The version.

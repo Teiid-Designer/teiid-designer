@@ -99,7 +99,8 @@ public abstract class ModelExtensionAssistant {
                                                                       Set<String> allowedValues,
                                                                       Set<Translation> descriptions,
                                                                       Set<Translation> displayNames ) {
-        return new ModelExtensionPropertyDefinitionImpl(getNamespacePrefix(),
+        assert this.definition != null : "model extension definition is null"; //$NON-NLS-1$
+        return new ModelExtensionPropertyDefinitionImpl(this.definition,
                                                         simpleId,
                                                         runtimeType,
                                                         required,

@@ -120,23 +120,6 @@ public final class ModelExtensionRegistry {
     }
 
     /**
-     * @param path the resource path of the model extension definition is being requested (cannot be <code>null</code> or empty)
-     * @return the model extension definition or <code>null</code> if not found
-     */
-    public ModelExtensionDefinition findDefinition( String path ) {
-        CoreArgCheck.isNotEmpty(path, "path is empty"); //$NON-NLS-1$
-
-        for (ModelExtensionDefinition med : getAllDefinitions()) {
-            if (path.equals(med.getResourcePath())) {
-                return med;
-            }
-        }
-
-        // not found
-        return null;
-    }
-
-    /**
      * @param event the event being broadcast (cannot be <code>null</code>)
      */
     private void fireEvent( RegistryEvent event ) {

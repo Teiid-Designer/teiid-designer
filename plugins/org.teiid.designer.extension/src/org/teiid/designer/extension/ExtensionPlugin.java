@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -27,6 +28,7 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -221,7 +223,6 @@ public class ExtensionPlugin extends Plugin {
                             ModelExtensionDefinition definition = getRegistry().addDefinition(new FileInputStream(defnFile),
                                                                                               (ModelExtensionAssistant)assistant);
                             definition.markAsBuiltIn();
-                            definition.setResourcePath(FileLocator.resolve(url).getPath());
                         }
                     };
 

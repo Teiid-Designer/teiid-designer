@@ -170,7 +170,7 @@ final class EditAllowedValueDialog extends FormDialog {
         lblValue.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
 
         Text txtValue = toolkit.createText(body, null, TEXT_STYLE);
-        this.valueError.widget = txtValue;
+        this.valueError.setControl(txtValue);
         txtValue.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.MIDDLE));
         txtValue.setToolTipText(Messages.allowedValueToolTip);
 
@@ -204,14 +204,14 @@ final class EditAllowedValueDialog extends FormDialog {
 
     void handleValueChanged( String newValue ) {
         this.allowedValue = newValue;
-        this.valueError.message = ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.runtimeType,
-                                                                                                 this.allowedValue);
+        this.valueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.runtimeType,
+                                                                                                  this.allowedValue));
 
-        if (CoreStringUtil.isEmpty(this.valueError.message)) {
+        if (CoreStringUtil.isEmpty(this.valueError.getMessage())) {
             String[] temp = new String[this.existingValues.length + 1];
             System.arraycopy(this.existingValues, 0, temp, 0, this.existingValues.length);
             temp[this.existingValues.length] = newValue;
-            this.valueError.message = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.runtimeType, temp);
+            this.valueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.runtimeType, temp));
         }
 
         updateState();
@@ -223,7 +223,7 @@ final class EditAllowedValueDialog extends FormDialog {
 
     private void updateState() {
         // check to see if new metaclassName is valid
-        String errorMsg = this.valueError.message;
+        String errorMsg = this.valueError.getMessage();
         int imageType = IMessageProvider.NONE;
 
         // update UI controls

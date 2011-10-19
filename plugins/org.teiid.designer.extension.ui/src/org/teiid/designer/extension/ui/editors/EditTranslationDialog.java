@@ -174,7 +174,7 @@ public class EditTranslationDialog extends FormDialog {
             lblLocale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
             CCombo cbxLocales = new CCombo(body, COMBO_STYLE);
-            this.localeError.widget = cbxLocales;
+            this.localeError.setControl(cbxLocales);
             cbx = cbxLocales;
             toolkit.adapt(cbxLocales, true, false);
             cbxLocales.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -218,7 +218,7 @@ public class EditTranslationDialog extends FormDialog {
             lblTranslation.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
             final Text txtTranslation = toolkit.createText(body, null, TEXT_STYLE);
-            this.translationError.widget = txtTranslation;
+            this.translationError.setControl(txtTranslation);
             txtTranslation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             ((GridData)txtTranslation.getLayoutData()).verticalIndent += ((GridLayout)body.getLayout()).verticalSpacing;
 
@@ -271,13 +271,13 @@ public class EditTranslationDialog extends FormDialog {
 
     void handleLocaleChanged( Locale newLocale ) {
         this.locale = newLocale;
-        this.localeError.message = ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale);
+        this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
 
-        if (CoreStringUtil.isEmpty(this.localeError.message)) {
+        if (CoreStringUtil.isEmpty(this.localeError.getMessage())) {
             Translation newTranslation = new Translation(this.locale, this.translation);
             this.existingTranslations.add(newTranslation);
-            this.localeError.message = ModelExtensionDefinitionValidator.validateTranslations(this.translationType,
-                                                                                              this.existingTranslations);
+            this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(this.translationType,
+                                                                                               this.existingTranslations));
             this.existingTranslations.remove(newTranslation);
         }
 
@@ -286,7 +286,7 @@ public class EditTranslationDialog extends FormDialog {
 
     void handleTranslationChanged( String newTranslation ) {
         this.translation = newTranslation;
-        this.translationError.message = ModelExtensionDefinitionValidator.validateTranslationText(this.translation);
+        this.translationError.setMessage(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
         updateState();
     }
 
@@ -300,10 +300,10 @@ public class EditTranslationDialog extends FormDialog {
         int imageType = IMessageProvider.ERROR;
         boolean enable = false;
 
-        if (!CoreStringUtil.isEmpty(this.localeError.message)) {
-            msg = this.localeError.message;
-        } else if (!CoreStringUtil.isEmpty(this.translationError.message)) {
-            msg = this.translationError.message;
+        if (!CoreStringUtil.isEmpty(this.localeError.getMessage())) {
+            msg = this.localeError.getMessage();
+        } else if (!CoreStringUtil.isEmpty(this.translationError.getMessage())) {
+            msg = this.translationError.getMessage();
         } else {
             imageType = IMessageProvider.NONE;
             msg = Messages.translationDialogMsg;

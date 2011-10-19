@@ -64,6 +64,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.PropertyName;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
+import org.teiid.designer.extension.properties.NamespacePrefixProvider;
 import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
@@ -80,7 +81,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 final class EditPropertyDialog extends FormDialog {
 
     private final String metaclassName;
-    private final String namespacePrefix;
+    private final NamespacePrefixProvider namespacePrefixProvider;
 
     private Button btnEditDescription;
     private Button btnEditDisplayName;
@@ -125,15 +126,15 @@ final class EditPropertyDialog extends FormDialog {
     private final ErrorMessage typeError;
 
     public EditPropertyDialog( Shell shell,
-                               String namespacePrefix,
+                               NamespacePrefixProvider namespacePrefixProvider,
                                String metaclassName,
                                Collection<String> existingPropIds ) {
         super(shell);
 
-        CoreArgCheck.isNotNull(metaclassName, "metaclassName is null"); //$NON-NLS-1$
-        CoreArgCheck.isNotNull(namespacePrefix, "namespacePrefix is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotEmpty(metaclassName, "metaclassName is empty"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(namespacePrefixProvider, "namespacePrefixProvider is null"); //$NON-NLS-1$
         this.metaclassName = metaclassName;
-        this.namespacePrefix = namespacePrefix;
+        this.namespacePrefixProvider = namespacePrefixProvider;
 
         this.existingPropIds = new ArrayList<String>(existingPropIds);
         this.propDefn = new ModelExtensionPropertyDefinitionImpl();
@@ -153,11 +154,11 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     public EditPropertyDialog( Shell shell,
-                               String namespacePrefix,
+                               NamespacePrefixProvider namespacePrefixProvider,
                                String metaclassName,
                                Collection<String> existingPropIds,
                                ModelExtensionPropertyDefinition propDefnBeingEdited ) {
-        this(shell, namespacePrefix, metaclassName, existingPropIds);
+        this(shell, namespacePrefixProvider, metaclassName, existingPropIds);
         this.propDefnBeingEdited = propDefnBeingEdited;
 
         if (this.propDefnBeingEdited != null) {
@@ -172,7 +173,6 @@ final class EditPropertyDialog extends FormDialog {
             this.propDefn.setFixedValue(this.propDefnBeingEdited.getFixedValue());
             this.propDefn.setIndex(this.propDefnBeingEdited.shouldBeIndexed());
             this.propDefn.setMasked(this.propDefnBeingEdited.isMasked());
-            this.propDefn.setNamespacePrefix(this.propDefnBeingEdited.getNamespacePrefix());
             this.propDefn.setRequired(this.propDefnBeingEdited.isRequired());
             this.propDefn.setSimpleId(this.propDefnBeingEdited.getSimpleId());
             this.propDefn.setType(this.propDefnBeingEdited.getType());
@@ -192,11 +192,11 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void addMessage( ErrorMessage errorMsg ) {
-        if (CoreStringUtil.isEmpty(errorMsg.message)) {
+        if (CoreStringUtil.isEmpty(errorMsg.getMessage())) {
             this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
         } else {
-            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.message, null, errorMsg.getMessageType(),
-                                                             errorMsg.getControl());
+            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
+                                                             errorMsg.getMessageType(), errorMsg.getControl());
         }
     }
 
@@ -330,7 +330,7 @@ final class EditPropertyDialog extends FormDialog {
 
         VIEWER: {
             Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
-            this.descriptionError.widget = table;
+            this.descriptionError.setControl(table);
             table.setHeaderVisible(true);
             table.setLinesVisible(true);
             table.setHeaderVisible(true);
@@ -502,7 +502,7 @@ final class EditPropertyDialog extends FormDialog {
 
         VIEWER: {
             Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
-            this.displayNameError.widget = table;
+            this.displayNameError.setControl(table);
             table.setHeaderVisible(true);
             table.setLinesVisible(true);
             table.setLayout(new GridLayout());
@@ -686,7 +686,7 @@ final class EditPropertyDialog extends FormDialog {
         NAMESPACE_PREFIX: {
             toolkit.createLabel(finalContainer, Messages.namespacePrefixLabel);
 
-            Label label = toolkit.createLabel(finalContainer, this.namespacePrefix);
+            Label label = toolkit.createLabel(finalContainer, this.namespacePrefixProvider.getNamespacePrefix());
             label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         }
 
@@ -697,7 +697,7 @@ final class EditPropertyDialog extends FormDialog {
 
             Text txtSimpleId = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             finalTxtSimpleId = txtSimpleId;
-            this.simpleIdError.widget = txtSimpleId;
+            this.simpleIdError.setControl(txtSimpleId);
             txtSimpleId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
             txtSimpleId.setFocus();
             txtSimpleId.addModifyListener(new ModifyListener() {
@@ -723,7 +723,7 @@ final class EditPropertyDialog extends FormDialog {
 
             final CCombo cbxRuntimeType = new CCombo(finalContainer, COMBO_STYLE);
             toolkit.adapt(cbxRuntimeType, true, false);
-            this.runtimeTypeError.widget = cbxRuntimeType;
+            this.runtimeTypeError.setControl(cbxRuntimeType);
             cbxRuntimeType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
             // populate runtime types
@@ -775,7 +775,7 @@ final class EditPropertyDialog extends FormDialog {
 
         FLAGS: {
             Button btn = toolkit.createButton(finalContainer, Messages.editPropertyDialogAdvancedButtonText, SWT.CHECK);
-            this.advancedError.widget = btn;
+            this.advancedError.setControl(btn);
             btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             ((GridData)btn.getLayoutData()).verticalIndent = 5;
             ((GridData)btn.getLayoutData()).horizontalSpan = 2;
@@ -795,7 +795,7 @@ final class EditPropertyDialog extends FormDialog {
             });
 
             btn = toolkit.createButton(finalContainer, Messages.editPropertyDialogIndexButtonText, SWT.CHECK);
-            this.indexedError.widget = btn;
+            this.indexedError.setControl(btn);
             btn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             ((GridData)btn.getLayoutData()).horizontalSpan = 2;
             btn.setSelection(this.propDefn.shouldBeIndexed());
@@ -836,7 +836,7 @@ final class EditPropertyDialog extends FormDialog {
 
         TOP: {
             Button btnRequired = toolkit.createButton(finalContainer, Messages.editPropertyDialogRequiredButtonText, SWT.CHECK);
-            this.requiredError.widget = btnRequired;
+            this.requiredError.setControl(btnRequired);
             btnRequired.setSelection(this.propDefn.isRequired());
             btnRequired.setToolTipText(Messages.editPropertyDialogRequiredButtonToolTip);
             btnRequired.addSelectionListener(new SelectionAdapter() {
@@ -853,7 +853,7 @@ final class EditPropertyDialog extends FormDialog {
             });
 
             Button btnMasked = toolkit.createButton(finalContainer, Messages.editPropertyDialogMaskedButtonText, SWT.CHECK);
-            this.maskedError.widget = btnMasked;
+            this.maskedError.setControl(btnMasked);
             btnMasked.setSelection(this.propDefn.isMasked());
             btnMasked.setToolTipText(Messages.editPropertyDialogMaskedButtonToolTip);
             btnMasked.addSelectionListener(new SelectionAdapter() {
@@ -980,6 +980,7 @@ final class EditPropertyDialog extends FormDialog {
                 String[] allowedValues = this.propDefn.getAllowedValues();
 
                 if ((allowedValues != null) && (allowedValues.length != 0)) {
+                    this.btnAllowedValues.setSelection(true);
                     this.lstAllowedValues.setItems(allowedValues);
                 }
             }
@@ -1006,7 +1007,7 @@ final class EditPropertyDialog extends FormDialog {
             });
 
             this.txtInitialValue = toolkit.createText(bottom, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
-            this.initialValueError.widget = this.txtInitialValue;
+            this.initialValueError.setControl(this.txtInitialValue);
             this.txtInitialValue.addModifyListener(new ModifyListener() {
 
                 /**
@@ -1039,7 +1040,14 @@ final class EditPropertyDialog extends FormDialog {
             ((GridData)this.btnFixedValue.getLayoutData()).horizontalIndent = 20;
             ((GridData)this.btnFixedValue.getLayoutData()).horizontalSpan = 2;
 
-            // TODO set initial enabled state of buttons and text field
+            if (!CoreStringUtil.isEmpty(this.propDefn.getDefaultValue())) {
+                this.btnInitialValue.setSelection(true);
+                this.txtInitialValue.setText(this.propDefn.getDefaultValue());
+            } else if (!CoreStringUtil.isEmpty(this.propDefn.getFixedValue())) {
+                this.btnInitialValue.setSelection(true);
+                this.btnFixedValue.setSelection(true);
+                this.txtInitialValue.setText(this.propDefn.getFixedValue());
+            }
         }
 
         return section;
@@ -1128,7 +1136,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     void handleAllowedValueSelected() {
-        boolean enable =  (this.lstAllowedValues.getSelectionIndex() != -1);
+        boolean enable = (this.lstAllowedValues.getSelectionIndex() != -1);
 
         if (this.btnEditValue.getEnabled() != enable) {
             this.btnEditValue.setEnabled(enable);
@@ -1324,48 +1332,48 @@ final class EditPropertyDialog extends FormDialog {
         ErrorMessage errorMsg = null;
 
         if (PropertyName.ADVANCED.toString().equals(propName)) {
-            this.advancedError.message = ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced());
+            this.advancedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced()));
             errorMsg = this.advancedError;
         } else if (PropertyName.ALLOWED_VALUES.toString().equals(propName)) {
-            this.allowedValuesError.message = ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
-                                                                                                              this.propDefn.getAllowedValues());
+            this.allowedValuesError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
+                                                                                                               this.propDefn.getAllowedValues()));
             errorMsg = this.allowedValuesError;
         } else if (PropertyName.DEFAULT_VALUE.toString().equals(propName)) {
-            this.initialValueError.message = ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
-                                                                                                            this.propDefn.getDefaultValue(),
-                                                                                                            this.propDefn.getAllowedValues());
+            this.initialValueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
+                                                                                                             this.propDefn.getDefaultValue(),
+                                                                                                             this.propDefn.getAllowedValues()));
             errorMsg = this.initialValueError;
         } else if (PropertyName.DESCRIPTION.equals(propName)) {
-            this.descriptionError.message = ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
-                                                                                                   this.propDefn.getDescriptions());
+            this.descriptionError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
+                                                                                                    this.propDefn.getDescriptions()));
             errorMsg = this.descriptionError;
         } else if (PropertyName.DISPLAY_NAME.equals(propName)) {
-            this.displayNameError.message = ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
-                                                                                                   this.propDefn.getDisplayNames());
+            this.displayNameError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
+                                                                                                    this.propDefn.getDisplayNames()));
             errorMsg = this.displayNameError;
         } else if (PropertyName.FIXED_VALUE.toString().equals(propName)) {
-            this.initialValueError.message = ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
-                                                                                                          this.propDefn.getFixedValue());
+            this.initialValueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
+                                                                                                           this.propDefn.getFixedValue()));
             errorMsg = this.initialValueError;
         } else if (PropertyName.INDEX.toString().equals(propName)) {
-            this.indexedError.message = ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed());
+            this.indexedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed()));
             errorMsg = this.indexedError;
         } else if (PropertyName.MASKED.toString().equals(propName)) {
-            this.maskedError.message = ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked());
+            this.maskedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked()));
             errorMsg = this.maskedError;
         } else if (PropertyName.REQUIRED.toString().equals(propName)) {
-            this.requiredError.message = ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired());
+            this.requiredError.setMessage(ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired()));
             errorMsg = this.requiredError;
         } else if (PropertyName.SIMPLE_ID.toString().equals(propName)) {
-            this.simpleIdError.message = ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
-                                                                                                    this.existingPropIds);
+            this.simpleIdError.setMessage(ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
+                                                                                                     this.existingPropIds));
             errorMsg = this.simpleIdError;
         } else if (PropertyName.TYPE.toString().equals(propName)) {
-            this.typeError.message = ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType());
+            this.typeError.setMessage(ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType()));
             errorMsg = this.typeError;
         } else {
-            // should be handling all property changes so this shouldn't happen
-            UTIL.log("Property [" + propName + "] is not being handled by property change listener");
+            // shouldn't happen if handling all property changes
+            assert false;
         }
 
         // update message
@@ -1453,13 +1461,11 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void updateState() {
-        // TODO implement updateState
         boolean enable = (this.scrolledForm.getMessageType() != IMessageProvider.ERROR);
 
         // update UI controls
         if (enable) {
             if (isEditMode()) {
-                // TODO if no changes then don't enable. need to change equals in prop defn class
                 enable = this.propDefn.equals(this.propDefnBeingEdited);
             }
 

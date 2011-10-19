@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -121,19 +120,19 @@ public final class ModelExtensionDefinitionValidator {
     /**
      * Makes sure there is at least one metaclass name and no duplicate names.
      * 
-     * @param metaclassNames the collection of metaclass names in the model extension definition
+     * @param metaclassNames the collection of metaclass names in the model extension definition (can be <code>null</code>)
      * @param validateEachName indicates if each name should validate using {@link #validateMetaclassName(String)}
      * @return
      */
-    public static String validateMetaclassNames( Collection<String> metaclassNames,
+    public static String validateMetaclassNames( String[] metaclassNames,
                                                  boolean validateEachName ) {
         String errorMsg = null;
 
-        if ((metaclassNames == null) || metaclassNames.isEmpty()) {
+        if ((metaclassNames == null) || (metaclassNames.length == 0)) {
             errorMsg = Messages.medHasNoMetaclassesValidationMsg;
         } else {
             // make sure no duplicates
-            if (metaclassNames.size() != new HashSet<String>(metaclassNames).size()) {
+            if (metaclassNames.length != new HashSet<String>(Arrays.asList(metaclassNames)).size()) {
                 errorMsg = Messages.medHasDuplicateMetaclassesValidationMsg;
             }
 
@@ -261,13 +260,11 @@ public final class ModelExtensionDefinitionValidator {
                                                      String runtimeType,
                                                      String defaultValue,
                                                      String fixedValue,
-                                                     String description,
-                                                     String displayName,
+                                                     Collection<Translation> descriptions,
+                                                     Collection<Translation> displayNames,
                                                      String[] allowedValues ) {
-        // namespace prefix
         String errorMsg = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
 
-        // runtime type
         if (!CoreStringUtil.isEmpty(errorMsg)) {
             errorMsg = validatePropertyRuntimeType(runtimeType);
 
@@ -278,16 +275,15 @@ public final class ModelExtensionDefinitionValidator {
                     errorMsg = validatePropertyFixedValue(runtimeType, fixedValue);
 
                     if (!CoreStringUtil.isEmpty(errorMsg)) {
-                        // TODO fix this
-                        // errorMsg = validateTranslation(description);
-                        //
-                        // if (!CoreStringUtil.isEmpty(errorMsg)) {
-                        // errorMsg = validateTranslation(displayName, null);
-                        //
+                        errorMsg = validateTranslations(Messages.propertyDescription, descriptions);
+
                         if (!CoreStringUtil.isEmpty(errorMsg)) {
-                            errorMsg = validatePropertyAllowedValues(runtimeType, allowedValues);
+                            errorMsg = validateTranslations(Messages.propertyDisplayName, displayNames);
+
+                            if (!CoreStringUtil.isEmpty(errorMsg)) {
+                                errorMsg = validatePropertyAllowedValues(runtimeType, allowedValues);
+                            }
                         }
-                        // }
                     }
                 }
             }
@@ -296,7 +292,7 @@ public final class ModelExtensionDefinitionValidator {
         return errorMsg;
     }
 
-    public static String validatePropertyDefinitions( Map<String, Map<String, ModelExtensionPropertyDefinition>> medPropDefns ) {
+    public static String validatePropertyDefinitions( Map<String, Collection<ModelExtensionPropertyDefinition>> medPropDefns ) {
         String errorMsg = null;
 
         MED_PROP_DEFNS: {
@@ -305,17 +301,17 @@ public final class ModelExtensionDefinitionValidator {
 
                 if (CoreStringUtil.isEmpty(errorMsg)) {
                     // make sure metaclass has at least one property
-                    Map<String, ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
+                    Collection<ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
 
                     if ((props == null) || props.isEmpty()) {
                         errorMsg = NLS.bind(Messages.extendedMetaclassHasNoPropertiesValidationMsg, metaclassName);
                         break MED_PROP_DEFNS;
                     }
 
-                    for (Map<String, ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
+                    for (Collection<ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
                         Set<String> ids = new HashSet<String>();
 
-                        for (ModelExtensionPropertyDefinition propDefn : propDefns.values()) {
+                        for (ModelExtensionPropertyDefinition propDefn : propDefns) {
                             // check for duplicates
                             if (!ids.add(propDefn.getSimpleId())) {
                                 errorMsg = NLS.bind(Messages.duplicatePropertyIdValidatinMsg, propDefn.getSimpleId());
@@ -324,8 +320,8 @@ public final class ModelExtensionDefinitionValidator {
 
                             errorMsg = validatePropertyDefinition(propDefn.getNamespacePrefix(), propDefn.getSimpleId(),
                                                                   propDefn.getRuntimeType(), propDefn.getDefaultValue(),
-                                                                  propDefn.getFixedValue(), propDefn.getDescription(),
-                                                                  propDefn.getDisplayName(), propDefn.getAllowedValues());
+                                                                  propDefn.getFixedValue(), propDefn.getDescriptions(),
+                                                                  propDefn.getDisplayNames(), propDefn.getAllowedValues());
 
                             if (!CoreStringUtil.isEmpty(errorMsg)) {
                                 break MED_PROP_DEFNS;
@@ -482,287 +478,11 @@ public final class ModelExtensionDefinitionValidator {
         return null;
     }
 
-    private String description;
-
-    private String descriptionError;
-    private ModelExtensionDefinition medBeingEdited;
-
-    private final Collection<String> metaclasses;
-    private String metaclassesError;
-
-    private String metamodelUri;
-    private String metamodelUriError;
-
-    private String namespacePrefix;
-    private String namespacePrefixError;
-
-    private String namespaceUri;
-    private String namespaceUriError;
-
-    private final Map<String, Map<String, ModelExtensionPropertyDefinition>> properties;
-    private String propertiesError;
-
-    private String resourcePath;
-    private String resourcePathError;
-
-    private int version = -1;
-    private String versionError;
-
-    public ModelExtensionDefinitionValidator() {
-        this.metaclasses = new ArrayList<String>();
-        this.properties = new HashMap<String, Map<String, ModelExtensionPropertyDefinition>>();
-    }
-
-    public ModelExtensionDefinitionValidator( ModelExtensionDefinition med ) {
-        this();
-
-        if (med != null) {
-            this.medBeingEdited = med;
-            this.resourcePath = med.getResourcePath();
-            this.description = med.getDescription();
-            this.metamodelUri = med.getMetamodelUri();
-            this.namespacePrefix = med.getNamespacePrefix();
-            this.namespaceUri = med.getNamespaceUri();
-            this.version = med.getVersion();
-
-            for (String metaclassName : med.getExtendedMetaclasses()) {
-                this.metaclasses.add(metaclassName);
-                Map<String, ModelExtensionPropertyDefinition> propDefns = this.properties.get(metaclassName);
-
-                if (propDefns == null) {
-                    propDefns = new HashMap<String, ModelExtensionPropertyDefinition>();
-                    this.properties.put(metaclassName, propDefns);
-                }
-
-                for (ModelExtensionPropertyDefinition propDefn : med.getPropertyDefinitions(metaclassName)) {
-                    propDefns.put(propDefn.getId(), propDefn);
-                }
-            }
-        }
-    }
-
-    public String addMetaclassName( String metaclassName ) {
-        this.metaclassesError = validateMetaclassName(metaclassName);
-        this.metaclasses.add(metaclassName);
-
-        if (CoreStringUtil.isEmpty(this.metaclassesError)) {
-            this.metaclassesError = validateMetaclassNames(this.metaclasses, false);
-        }
-
-        return this.metaclassesError;
-    }
-
-    public String addPropertyDescription( Translation description ) {
-        // TODO need to add
-        return validateTranslation(description.getLocale(), description.getTranslation());
-    }
-
-    public String addPropertyDisplayName( Translation displayName ) {
-        // TODO need to add
-        return validateTranslation(displayName.getLocale(), displayName.getTranslation());
-    }
-
     /**
-     * @return the description
+     * Don't allow construction.
      */
-    public String getDescription() {
-        return this.description;
-    }
-
-    public String[] getExtendedMetaclasses() {
-        return this.metaclasses.toArray(new String[this.metaclasses.size()]);
-    }
-
-    /**
-     * @return the metamodel URI
-     */
-    public String getMetamodelUri() {
-        return this.metamodelUri;
-    }
-
-    /**
-     * @return the namespace prefix
-     */
-    public String getNamespacePrefix() {
-        return this.namespacePrefix;
-    }
-
-    /**
-     * @return the namespace URI
-     */
-    public String getNamespaceUri() {
-        return this.namespaceUri;
-    }
-
-    public ModelExtensionPropertyDefinition[] getPropertyDefinitions( String metaclassName ) {
-        Map<String, ModelExtensionPropertyDefinition> map = this.properties.get(metaclassName);
-
-        if (map == null) {
-            return new ModelExtensionPropertyDefinition[0];
-        }
-
-        Collection<ModelExtensionPropertyDefinition> propDefns = map.values();
-        return propDefns.toArray(new ModelExtensionPropertyDefinition[propDefns.size()]);
-    }
-
-    /**
-     * @return resourcePath
-     */
-    public String getResourcePath() {
-        return this.resourcePath;
-    }
-
-    /**
-     * @return the version
-     */
-    public int getVersion() {
-        return this.version;
-    }
-
-    public boolean isEditMode() {
-        return (this.medBeingEdited != null);
-    }
-
-    public String removeMetaclassName( String metaclassName ) {
-        this.metaclasses.remove(metaclassName);
-        this.properties.remove(metaclassName);
-        this.metaclassesError = validateMetaclassNames(this.metaclasses, false);
-
-        if (CoreStringUtil.isEmpty(this.metaclassesError)) {
-            this.metaclassesError = validatePropertyDefinitions(this.properties);
-        }
-
-        return this.metaclassesError;
-    }
-
-    public String removePropertyDescription( Translation description ) {
-        // TODO need to remove
-        return null; // no validation required
-    }
-
-    public String removePropertyDisplayName( Translation displayName ) {
-        // TODO need to remove
-        return null; // no validation required
-    }
-
-    /**
-     * @param the new description
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setDescription( String description ) {
-        this.description = description;
-        this.descriptionError = validateDescription(description);
-        return this.descriptionError;
-    }
-
-    /**
-     * @param metamodelUri the new metamodel URI
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setMetamodelUri( String metamodelUri,
-                                   Collection<String> existingMetamodelUris ) {
-        this.metamodelUri = metamodelUri;
-        this.metamodelUriError = validateMetamodelUri(metamodelUri, existingMetamodelUris);
-        return this.metamodelUriError;
-    }
-
-    /**
-     * @param namespacePrefix the new namespace prefix
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setNamespacePrefix( String namespacePrefix,
-                                      Collection<String> existingNamespacePrefixes ) {
-        this.namespacePrefix = namespacePrefix;
-        this.namespacePrefixError = validateNamespacePrefix(namespacePrefix, existingNamespacePrefixes);
-        return this.namespacePrefixError;
-    }
-
-    /**
-     * @param namespaceUri the new namespace URI
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setNamespaceUri( String namespaceUri,
-                                   Collection<String> existingNamespaceUris ) {
-        this.namespaceUri = namespaceUri;
-        this.namespaceUriError = validateNamespaceUri(namespaceUri, existingNamespaceUris);
-        return this.namespaceUriError;
-    }
-
-    /**
-     * @param resourcePath Sets resourcePath to the specified value.
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setResourcePath( String path ) {
-        this.resourcePath = path;
-        this.resourcePathError = validateResourcePath(path);
-        return this.resourcePathError;
-    }
-
-    /**
-     * @param version the new version
-     * @return the validation error message or <code>null</code> if new value is valid
-     */
-    public String setVersion( int version ) {
-        this.version = version;
-        this.versionError = validateVersion(String.valueOf(version));
-        return this.versionError;
-    }
-
-    public Collection<String> validate( Collection<String> extendableMetamodelUris,
-                                        Collection<String> existingNamespacePrefixes,
-                                        Collection<String> existingNamespaceUris ) {
-        Collection<String> errors = new ArrayList<String>();
-
-        // description
-        this.descriptionError = validateDescription(this.description);
-
-        if (!CoreStringUtil.isEmpty(this.descriptionError)) {
-            errors.add(this.descriptionError);
-        }
-
-        // metamodel URI
-        this.metamodelUriError = validateMetamodelUri(this.metamodelUri, extendableMetamodelUris);
-
-        if (!CoreStringUtil.isEmpty(this.metamodelUriError)) {
-            errors.add(this.metamodelUriError);
-        }
-
-        // namespace prefix
-        this.namespacePrefixError = validateNamespacePrefix(this.namespacePrefix, existingNamespacePrefixes);
-
-        if (!CoreStringUtil.isEmpty(this.namespacePrefixError)) {
-            errors.add(this.namespacePrefixError);
-        }
-
-        // namespace URI
-        this.namespaceUriError = validateNamespaceUri(this.namespaceUri, existingNamespaceUris);
-
-        if (!CoreStringUtil.isEmpty(this.namespaceUriError)) {
-            errors.add(this.namespaceUriError);
-        }
-
-        // resource resourcePath
-        this.resourcePathError = validateResourcePath(this.resourcePath);
-
-        if (!CoreStringUtil.isEmpty(this.resourcePathError)) {
-            errors.add(this.resourcePathError);
-        }
-
-        // extended metaclasses
-        this.metaclassesError = validateMetaclassNames(this.metaclasses, true);
-
-        if (!CoreStringUtil.isEmpty(this.metaclassesError)) {
-            errors.add(this.metaclassesError);
-        }
-
-        // properties
-        this.propertiesError = validatePropertyDefinitions(this.properties);
-
-        if (!CoreStringUtil.isEmpty(this.propertiesError)) {
-            errors.add(this.propertiesError);
-        }
-
-        return errors;
+    private ModelExtensionDefinitionValidator() {
+        // nothing to do
     }
 
 }

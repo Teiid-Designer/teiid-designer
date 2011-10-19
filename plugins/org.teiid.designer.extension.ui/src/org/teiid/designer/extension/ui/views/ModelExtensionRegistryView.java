@@ -8,16 +8,12 @@
 package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
-import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -50,12 +46,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -452,24 +444,25 @@ public final class ModelExtensionRegistryView extends ViewPart {
     void handleOpenMed() {
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Open MED editor action should not be enabled if there is no selection"; //$NON-NLS-1$
-
-        String path = selectedMed.getResourcePath();
-
-        if (CoreStringUtil.isEmpty(path)) {
-            MessageDialog.openInformation(null, null, "The selected Model Extension Definition's resource (*.mxd) cannot be found.");
-        } else {
-            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
-
-            if (file != null) {
-                try {
-                    IWorkbenchWindow window = Activator.getDefault().getCurrentWorkbenchWindow();
-                    IWorkbenchPage page = window.getActivePage();
-                    IDE.openEditor(page, new FileEditorInput(file), MED_EDITOR);
-                } catch (Exception e) {
-                    UTIL.log(e);
-                }
-            }
-        }
+        // TODO implement handleOpenMed
+//
+//        String path = selectedMed.getResourcePath();
+//
+//        if (CoreStringUtil.isEmpty(path)) {
+//            MessageDialog.openInformation(null, null, "The selected Model Extension Definition's resource (*.mxd) cannot be found.");
+//        } else {
+//            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+//
+//            if (file != null) {
+//                try {
+//                    IWorkbenchWindow window = Activator.getDefault().getCurrentWorkbenchWindow();
+//                    IWorkbenchPage page = window.getActivePage();
+//                    IDE.openEditor(page, new FileEditorInput(file), MED_EDITOR);
+//                } catch (Exception e) {
+//                    UTIL.log(e);
+//                }
+//            }
+//        }
     }
 
     void handleRegisterMed() {
