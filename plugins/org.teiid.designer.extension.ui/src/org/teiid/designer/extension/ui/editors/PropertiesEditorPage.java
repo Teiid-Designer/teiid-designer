@@ -620,10 +620,10 @@ public class PropertiesEditorPage extends MedEditorPage {
     public void propertyChange( PropertyChangeEvent e ) {
         String propName = e.getPropertyName();
 
-        if (PropertyName.METACLASS.equals(propName)) {
+        if (PropertyName.METACLASS.toString().equals(propName)) {
             validateMetaclasses();
             this.metaclassViewer.refresh();
-        } else if (PropertyName.PROPERTY_DEFINITION.equals(propName)) {
+        } else if (PropertyName.PROPERTY_DEFINITION.toString().equals(propName)) {
             validatePropertyDefinitions();
             this.propertyViewer.refresh();
         }

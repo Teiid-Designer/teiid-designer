@@ -159,7 +159,7 @@ public class EditTranslationDialog extends FormDialog {
         this.scrolledForm = managedForm.getForm();
         this.scrolledForm.setText(this.title);
         this.scrolledForm.setImage(Activator.getDefault().getImage(MED_EDITOR));
-        this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.INFORMATION);
+        this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.NONE);
 
         FormToolkit toolkit = managedForm.getToolkit();
         toolkit.decorateFormHeading(this.scrolledForm.getForm());
@@ -271,22 +271,13 @@ public class EditTranslationDialog extends FormDialog {
 
     void handleLocaleChanged( Locale newLocale ) {
         this.locale = newLocale;
-        this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
-
-        if (CoreStringUtil.isEmpty(this.localeError.getMessage())) {
-            Translation newTranslation = new Translation(this.locale, this.translation);
-            this.existingTranslations.add(newTranslation);
-            this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(this.translationType,
-                                                                                               this.existingTranslations));
-            this.existingTranslations.remove(newTranslation);
-        }
-
+        validate();
         updateState();
     }
 
     void handleTranslationChanged( String newTranslation ) {
         this.translation = newTranslation;
-        this.translationError.setMessage(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
+        validate();
         updateState();
     }
 
@@ -294,20 +285,20 @@ public class EditTranslationDialog extends FormDialog {
         return (this.translationBeingEdited != null);
     }
 
+    private void updateMessage( ErrorMessage errorMsg ) {
+        if (CoreStringUtil.isEmpty(errorMsg.getMessage())) {
+            this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
+        } else {
+            this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
+                                                             errorMsg.getMessageType(), errorMsg.getControl());
+        }
+    }
+
     private void updateState() {
-        int currentState = this.scrolledForm.getMessageType();
-        String msg = null;
-        int imageType = IMessageProvider.ERROR;
         boolean enable = false;
 
-        if (!CoreStringUtil.isEmpty(this.localeError.getMessage())) {
-            msg = this.localeError.getMessage();
-        } else if (!CoreStringUtil.isEmpty(this.translationError.getMessage())) {
-            msg = this.translationError.getMessage();
-        } else {
-            imageType = IMessageProvider.NONE;
-            msg = Messages.translationDialogMsg;
-
+        if (CoreStringUtil.isEmpty(this.localeError.getMessage()) && CoreStringUtil.isEmpty(this.translationError.getMessage())) {
+            enable = true;
             if (isEditMode()) {
                 Locale localeBeingEdited = this.translationBeingEdited.getLocale();
 
@@ -321,17 +312,37 @@ public class EditTranslationDialog extends FormDialog {
                     enable = !CoreStringUtil.equals(this.translation, this.translationBeingEdited.getTranslation());
                 }
             }
+
+            // set message
+            // a bug in Eclipse doesn't reset the font color going from an error to NONE so first set to INFORMATION to get the
+            // font color to change
+            this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.INFORMATION);
+            this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.NONE);
         }
 
         // set enabled state of OK button
         if (this.btnOk.getEnabled() != enable) {
             this.btnOk.setEnabled(enable);
         }
+    }
 
-        // set message
-        if ((currentState != imageType) || (imageType == IMessageProvider.ERROR)) {
-            this.scrolledForm.setMessage(msg, imageType);
+    private void validate() {
+        // validate locale
+        this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
+
+        if (CoreStringUtil.isEmpty(this.localeError.getMessage())) {
+            assert (this.locale != null) : "locale is null and should not be"; //$NON-NLS-1$
+            Translation newTranslation = new Translation(this.locale, this.translation);
+            Collection<Translation> temp = new ArrayList<Translation>(this.existingTranslations);
+            temp.add(newTranslation);
+            this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(this.translationType, temp, false));
         }
+
+        updateMessage(this.localeError);
+
+        // validate translation text
+        this.translationError.setMessage(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
+        updateMessage(this.translationError);
     }
 
 }

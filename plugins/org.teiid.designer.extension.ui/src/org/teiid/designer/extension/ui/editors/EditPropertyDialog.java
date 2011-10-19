@@ -938,7 +938,6 @@ final class EditPropertyDialog extends FormDialog {
             });
             this.btnAddValue.setToolTipText(Messages.editPropertyDialogAddAllowedValueButtonToolTip);
             this.btnAddValue.setImage(Activator.getDefault().getImage(ImageIds.ADD_VALUE));
-            this.btnAddValue.setEnabled(false);
 
             // configure edit allowed value button
             this.btnEditValue = toolkit.createButton(pnlButtons, CoreStringUtil.Constants.EMPTY_STRING, SWT.FLAT);
@@ -1345,11 +1344,13 @@ final class EditPropertyDialog extends FormDialog {
             errorMsg = this.initialValueError;
         } else if (PropertyName.DESCRIPTION.equals(propName)) {
             this.descriptionError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
-                                                                                                    this.propDefn.getDescriptions()));
+                                                                                                    this.propDefn.getDescriptions(),
+                                                                                                    true));
             errorMsg = this.descriptionError;
         } else if (PropertyName.DISPLAY_NAME.equals(propName)) {
             this.displayNameError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
-                                                                                                    this.propDefn.getDisplayNames()));
+                                                                                                    this.propDefn.getDisplayNames(),
+                                                                                                    true));
             errorMsg = this.displayNameError;
         } else if (PropertyName.FIXED_VALUE.toString().equals(propName)) {
             this.initialValueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),

@@ -273,13 +273,13 @@ public final class OverviewEditorPage extends MedEditorPage {
     public void propertyChange( PropertyChangeEvent e ) {
         String propName = e.getPropertyName();
 
-        if (PropertyName.DESCRIPTION.equals(propName)) {
+        if (PropertyName.DESCRIPTION.toString().equals(propName)) {
             validateDescription();
-        } else if (PropertyName.METAMODEL_URI.equals(propName)) {
+        } else if (PropertyName.METAMODEL_URI.toString().equals(propName)) {
             validateMetamodelUri();
-        } else if (PropertyName.NAMESPACE_PREFIX.equals(propName)) {
+        } else if (PropertyName.NAMESPACE_PREFIX.toString().equals(propName)) {
             validateNamespacePrefix();
-        } else if (PropertyName.NAMESPACE_URI.equals(propName)) {
+        } else if (PropertyName.NAMESPACE_URI.toString().equals(propName)) {
             validateNamespaceUri();
         }
     }

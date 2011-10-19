@@ -275,10 +275,10 @@ public final class ModelExtensionDefinitionValidator {
                     errorMsg = validatePropertyFixedValue(runtimeType, fixedValue);
 
                     if (!CoreStringUtil.isEmpty(errorMsg)) {
-                        errorMsg = validateTranslations(Messages.propertyDescription, descriptions);
+                        errorMsg = validateTranslations(Messages.propertyDescription, descriptions, true);
 
                         if (!CoreStringUtil.isEmpty(errorMsg)) {
-                            errorMsg = validateTranslations(Messages.propertyDisplayName, displayNames);
+                            errorMsg = validateTranslations(Messages.propertyDisplayName, displayNames, true);
 
                             if (!CoreStringUtil.isEmpty(errorMsg)) {
                                 errorMsg = validatePropertyAllowedValues(runtimeType, allowedValues);
@@ -417,7 +417,8 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     public static String validateTranslations( String translationType,
-                                               Collection<Translation> translations ) {
+                                               Collection<Translation> translations,
+                                               boolean validateEachTranslation ) {
         if ((translations == null) || translations.isEmpty()) {
             return null;
         }
@@ -432,10 +433,12 @@ public final class ModelExtensionDefinitionValidator {
                 break;
             }
 
-            errorMsg = validateTranslation(translation.getLocale(), translation.getTranslation());
-
-            if (!CoreStringUtil.isEmpty(errorMsg)) {
-                break;
+            if (validateEachTranslation) {
+                errorMsg = validateTranslation(translation.getLocale(), translation.getTranslation());
+    
+                if (!CoreStringUtil.isEmpty(errorMsg)) {
+                    break;
+                }
             }
 
             locales.add(translation.getLocale());

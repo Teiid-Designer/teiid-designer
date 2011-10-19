@@ -59,6 +59,9 @@ public abstract class MedEditorPage extends FormPage implements PropertyChangeLi
                 this.med.addPropertyDefinition(metaclassName, propDefn);
             }
         }
+
+        // drive the UI by listening for property changes
+        this.med.addListener(this);
     }
 
     protected abstract void createBody( Composite body,
