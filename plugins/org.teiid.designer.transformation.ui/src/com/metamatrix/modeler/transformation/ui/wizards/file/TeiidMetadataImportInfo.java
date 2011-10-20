@@ -246,6 +246,10 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @param doProcess
 	 */
 	public void setDoProcessXml(File file, boolean doProcess) {
+		for( TeiidXmlFileInfo info : getXmlFileInfos()) {
+			info.setDoProcess(false);
+		}
+		
 		TeiidXmlFileInfo info = getXmlFileInfo(file);
 		if( info != null ) {
 			info.setDoProcess(doProcess);

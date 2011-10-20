@@ -1,10 +1,10 @@
 /*
  * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
 import java.io.IOException;
@@ -17,11 +17,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
@@ -48,11 +46,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
@@ -66,92 +62,83 @@ import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
+import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WizardUtil;
+import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 import com.metamatrix.ui.table.CheckBoxEditingSupport;
 import com.metamatrix.ui.table.ComboBoxEditingSupport;
 
-public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements UiConstants {
+public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implements
+		UiConstants {
+	// ===========================================================================================================================
+	// Constants
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTANTS
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileDataAnalyzerDialog.class);
-    private static final String TITLE = getString("title"); //$NON-NLS-1$
-    private static final String EMPTY = ""; //$NON-NLS-1$
-    public static final int NAME_PROP = 0;
-    public static final int DEFAULT_VALUE_PROP = 1;
-    public static final int XML_PATH_PROP = 2;
-    
-    private static String getString( final String id ) {
-        return Util.getString(I18N_PREFIX + id);
-    }
-    private static String getString( final String id , Object param) {
-        return Util.getString(I18N_PREFIX + id, param);
-    }
-    
-	private final TeiidXmlFileInfo fileInfo;
-	private boolean infoChanged;
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportXmlOptionsPage.class);
+
+	private static final String TITLE = getString("title"); //$NON-NLS-1$
+	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
+
+    private final String EMPTY = ""; //$NON-NLS-1$
+    private final int NAME_PROP = 0;
+    private final int DEFAULT_VALUE_PROP = 1;
+    private final int XML_PATH_PROP = 2;
+
+	private static String getString(final String id) {
+		return Util.getString(I18N_PREFIX + id);
+	}
 	
+	private static String getString(final String id, final Object param) {
+		return Util.getString(I18N_PREFIX + id, param);
+	}
+
+	private TeiidMetadataImportInfo info;
+
+	// Target SQL Variables
 	Group headerGroup;
 	ListViewer fileContentsViewer;
 	TextViewer sqlTextViewer;
 	IDocument sqlDocument;
 	Label numberOfFixedWidthColumnsLabel;
-	Text numberOfCachedLinesText, xQueryExpressionText;
+	Text numberOfCachedLinesText, xQueryExpressionText, selectedFileText;
 	Button parseRowButton;
 	Action parseRowAction;
 	Button deleteButton;
 	
-	EditColumnsPanel columnsPanel;
+	EditColumnsPanel columnsPanel;	
 	
+	private TeiidXmlFileInfo fileInfo;
+	
+	boolean creatingControl = false;
+
 	boolean synchronizing = false;
 
-    
-    /**
-     * @param parent
-     * @param title
-     * @since 7.4
-     */
-    public TeiidXmlFileDataAnalyzerDialog( Shell parent,
-                                     TeiidXmlFileInfo fileInfo) {
+	/**
+	 * @since 4.0
+	 */
+	public TeiidMetadataImportXmlOptionsPage(TeiidMetadataImportInfo info) {
+		super(TeiidMetadataImportXmlOptionsPage.class.getSimpleName(), TITLE);
+		this.info = info;
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(Images.IMPORT_TEIID_METADATA));
+	}
 
-        super(parent);
-        this.fileInfo = fileInfo;
-        
-    }
-    
-    @Override
-    protected void configureShell( Shell shell ) {
-        super.configureShell(shell);
-        shell.setText(TITLE);
-    }
-    
-    /* (non-Javadoc)
-    * @see org.eclipse.jface.window.Window#setShellStyle(int)
-    */
-    @Override
-    protected void setShellStyle( int newShellStyle ) {
-        super.setShellStyle(newShellStyle | SWT.RESIZE | SWT.MAX);
-
-    }
-    
 	@Override
-    protected Control createDialogArea( Composite parent ) {
-    	setTitleImage(UiPlugin.getDefault().getImage(Images.IMPORT_TEIID_METADATA));
-    	
-        Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
+	public void createControl(Composite parent) {
+		creatingControl = true;
+		// Create page
+		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
-        this.setTitle(getString("messageTitle",fileInfo.getDataFile().getName()) ); //$NON-NLS-1$
-        this.setMessage(getString("initialMessage")); //$NON-NLS-1$
-        
-        mainPanel.setLayout(new GridLayout(1, false));
-        mainPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        
-        
+		mainPanel.setLayout(new GridLayout());
+		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		setControl(mainPanel);
+
+		setMessage(INITIAL_MESSAGE);
+
         createFileContentsGroup(mainPanel);
-
-        
+    	
         createXQueryOptionsGroup(mainPanel);
 
         // Create Bottom Composite
@@ -159,25 +146,60 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
         
         createXmlTableSqlGroup(mainPanel);
         
-        synchronizeUI();
-        
-        validate();
-        //LayoutDebugger.debugLayout(mainPanel);
-        return mainPanel;
+		creatingControl = false;
+
+		setPageComplete(false);
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+			TeiidXmlFileInfo xmlFileInfo = null;
+			for( TeiidXmlFileInfo xmlInfo : info.getXmlFileInfos() ) {
+				if( xmlInfo.doProcess() ) {
+					xmlFileInfo = xmlInfo;
+					break;
+				}
+			}
+			if( xmlFileInfo != null ) {
+				this.fileInfo = xmlFileInfo;
+				
+				loadFileContentsViewer();
+			}
+			synchronizeUI();
+		}
+	}
+
+
+
+
+
+	private boolean validatePage() {
+
+		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
+		
+		return true;
+	}
+	
+    private void setThisPageComplete( String message, int severity) {
+    	WizardUtil.setPageComplete(this, message, severity);
     }
-    
-    
-    private void synchronizeUI() {
-    	// This method takes the Business Object (TeiidXmlFileInfo) and syncs all ui Objects
-    	this.synchronizing = true;
-    	
+
+
+	private void synchronizeUI() {
+		synchronizing = true;
+
+		selectedFileText.setText(fileInfo.getDataFile().getName());
+				
     	this.numberOfCachedLinesText.setText(Integer.toString(this.fileInfo.getNumberOfCachedFileLines()));
     	
     	this.xQueryExpressionText.setText(this.fileInfo.getXQueryExpression());
-    	
-    	this.synchronizing = false;
-    }
-    
+
+		synchronizing = false;
+	}
+	    
     private void createXQueryOptionsGroup(Composite parent) {
     	Group xQueryOptionsGroup = WidgetFactory.createGroup(parent, getString("xQueryOptionsGroup"), SWT.NONE, 1); //$NON-NLS-1$
     	xQueryOptionsGroup.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
@@ -245,13 +267,13 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     	fileContentsGroup.setLayoutData(gd);
     	
     	Composite topPanel = WidgetFactory.createPanel(fileContentsGroup);
-    	topPanel.setLayout(new GridLayout(2, false));
+    	topPanel.setLayout(new GridLayout(3, false));
         GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
         gd1.horizontalSpan=4;
         topPanel.setLayoutData(gd1);
         
     	Label prefixLabel = new Label(topPanel, SWT.NONE);
-    	prefixLabel.setText(getString("numberOfLinesLabel",this.fileInfo.getNumberOfLinesInFile())); //$NON-NLS-1$
+    	prefixLabel.setText(getString("numberOfLinesLabel", 20)); //this.fileInfo.getNumberOfLinesInFile())); //$NON-NLS-1$
     	GridData lgd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
         lgd.horizontalSpan=1;
         prefixLabel.setLayoutData(lgd);
@@ -289,14 +311,33 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     		}
     	});
     	
+        this.parseRowButton = WidgetFactory.createButton(topPanel, SWT.PUSH);
+        this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
+//    	gd = new GridData();
+//    	gd.minimumWidth = 100;
+//    	gd.minimumHeight = 25;
+//    	this.parseRowButton.setLayoutData(gd);
+        this.parseRowButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+            	parseSelectedDataRow();
+            }
+        });
+        this.parseRowButton.setEnabled(true);
+        this.parseRowButton.setToolTipText(getString("parseSelectedTooltip")); //$NON-NLS-1$
+    	
     	this.fileContentsViewer = new ListViewer(fileContentsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan=4;
         this.fileContentsViewer.getControl().setLayoutData(data);
-        for( String row : this.fileInfo.getCachedFirstLines() ) {
-        	if( row != null ) {
-        		this.fileContentsViewer.add(row);
-        	}
+        
+        if( this.fileInfo != null ) {
+	        for( String row : this.fileInfo.getCachedFirstLines() ) {
+	        	if( row != null ) {
+	        		this.fileContentsViewer.add(row);
+	        	}
+	        }
         }
         
      // Add a Context Menu
@@ -310,22 +351,13 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
             }
 		};
     	
-        this.parseRowButton = WidgetFactory.createButton(fileContentsGroup, SWT.PUSH);
-        this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
-    	gd = new GridData(GridData.FILL_BOTH);
-    	gd.minimumWidth = 100;
-    	gd.minimumHeight = 25;
-    	this.parseRowButton.setLayoutData(gd);
-        this.parseRowButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-            	parseSelectedDataRow();
-            }
-        });
-        this.parseRowButton.setEnabled(true);
-        this.parseRowButton.setToolTipText(getString("parseSelectedTooltip")); //$NON-NLS-1$
-        
+		Label selectedFileLabel = new Label(fileContentsGroup, SWT.NONE);
+		selectedFileLabel.setText(getString("selectedXmlFile")); //$NON-NLS-1$
+		
+        selectedFileText = new Text(fileContentsGroup, SWT.BORDER | SWT.SINGLE);
+        selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
     	//LayoutDebugger.debugLayout(fileContentsGroup);
     }
@@ -382,7 +414,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     		
 		});
     	
-    	columnsPanel = new EditColumnsPanel(columnInfoGroup, SWT.NONE, this.fileInfo);
+    	columnsPanel = new EditColumnsPanel(columnInfoGroup, SWT.NONE);
     	
     	columnsPanel.addSelectionListener(new ISelectionChangedListener() {
 			
@@ -457,8 +489,6 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     
     private void handleInfoChanged(boolean reloadFileContents) {
     	if( synchronizing ) return;
-
-    	this.infoChanged = true;
     	
     	synchronizeUI();
     	
@@ -470,7 +500,7 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     	
     	updateSqlText();
         
-        validate();
+        validatePage();
     }
     
     private void loadFileContentsViewer() {
@@ -486,21 +516,10 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     	return this.fileInfo;
     }
     
-    public boolean infoChanged() {
-    	return this.infoChanged;
-    }
-    
     void updateSqlText() {
-        sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());
-    }
-    
-    private void validate() {
-    	if( fileInfo.getStatus().isOK() || fileInfo.getStatus().getSeverity() == IStatus.WARNING  ) {
-    		setErrorMessage(null);
-    		setMessage(getString("initialMessage")); //$NON-NLS-1$
-    		return;
+    	if( this.fileInfo != null ) {
+    		sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());
     	}
-    	setErrorMessage(fileInfo.getStatus().getMessage());
     }
 
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
@@ -733,17 +752,12 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
     class EditColumnsPanel  {
     	TableViewer columnsViewer;
     	
-    	TeiidXmlFileInfo fileInfo;
-    	
-		public EditColumnsPanel(Composite parent, int style, TeiidXmlFileInfo fileInfo) {
+		public EditColumnsPanel(Composite parent, int style) {
 			super();
-			
-			this.fileInfo = fileInfo;
 			createPanel(parent);
 		}
 		
-		private void createPanel(Composite parent) {
-	    	
+		private void createPanel(Composite parent) {	      
 	    	Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 	        table.setHeaderVisible(true);
 	        table.setLinesVisible(true);
@@ -786,9 +800,10 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, XML_PATH_PROP));
 	        column.getColumn().pack();
 	        
-
-	        for( TeiidColumnInfo row : this.fileInfo.getColumnInfoList() ) {
-	        	this.columnsViewer.add(row);
+	        if( fileInfo != null ) {
+		        for( TeiidColumnInfo row : fileInfo.getColumnInfoList() ) {
+		        	this.columnsViewer.add(row);
+		        }
 	        }
 		}
         
@@ -844,5 +859,5 @@ public class TeiidXmlFileDataAnalyzerDialog  extends TitleAreaDialog implements 
 		}
     	
     }
+	    
 }
-

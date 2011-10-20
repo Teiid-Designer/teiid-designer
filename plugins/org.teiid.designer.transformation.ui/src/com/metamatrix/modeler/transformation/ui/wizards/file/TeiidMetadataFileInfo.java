@@ -24,15 +24,17 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.UiPlugin;
 
 
 /**
  * Business object used to manage Teiid-specific Metadata File information used during import
  * 
  */
-public class TeiidMetadataFileInfo implements UiConstants {
+public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
+	public static final char DOT = '.';
 	public static final char DEFAULT_DELIMITER = ',';
 	public static final char COMMA = ',';
 	public static final char SPACE = ' ';
@@ -42,6 +44,10 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	public static final char DEFAULT_QUOTE= '"';
 	public static final char DEFAULT_ESCAPE= '\\';
 	public static final int DEFAULT_HEADER_LINE_NUMBER = 1;
+    public static final char S_QUOTE = '\'';
+    public static final String HEADER = "HEADER"; //$NON-NLS-1$
+    public static final String SKIP = "SKIP"; //$NON-NLS-1$
+    public static final String WIDTH = "width"; //$NON-NLS-1$
 
 	private static final StringNameValidator validator = new RelationalStringNameValidator(false, true);
 	
@@ -59,16 +65,16 @@ public class TeiidMetadataFileInfo implements UiConstants {
      */
     private int numberOfLinesInFile = 0;
     
-    /**
-     * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
-     */
-	private File dataFile;
-	
-    /**
-     * The unique view table name containing the generated SELECT SQL statement that converts file data into
-     * relational columns (never <code>null</code> or empty).
-     */
-	private String viewTableName;
+//    /**
+//     * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
+//     */
+//	private File dataFile;
+//	
+//    /**
+//     * The unique view table name containing the generated SELECT SQL statement that converts file data into
+//     * relational columns (never <code>null</code> or empty).
+//     */
+//	private String viewTableName;
 	
 	/**
      * indicator that the data file includes a header containing column names and the header line number should be
@@ -175,10 +181,9 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	 * @param dataFile the Teiid-formatted data file
 	 */
 	public TeiidMetadataFileInfo(File dataFile) {
-		super();
+		super(dataFile, true);
 		CoreArgCheck.isNotNull(dataFile, "dataFile is null"); //$NON-NLS-1$
-		
-		this.dataFile = dataFile;
+
 		initialize();
 	}
 	
@@ -187,7 +192,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	 * @param info the data file info object
 	 */
 	public TeiidMetadataFileInfo(TeiidMetadataFileInfo info) {
-		super();
+		super(info.getDataFile(), true);
 		
 		inject(info);
 	}
@@ -203,8 +208,6 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		CoreArgCheck.isPositive(info.getHeaderLineNumber(), "header line number is less than zero"); //$NON-NLS-1$
 		
 		ignoreReload = true;
-		
-		this.dataFile = info.getDataFile();
 		
 		this.delimiter = info.getDelimiter();
 		this.quote = info.getQuote();
@@ -229,7 +232,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), colInfo.getDatatype(), colInfo.getWidth()));
 		}
 		
-		this.viewTableName = info.getViewTableName();
+		setViewTableName(info.getViewTableName());
 		
 		this.status = info.getStatus();
 		
@@ -244,7 +247,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		
 		loadHeader();
 		
-		String fileName = dataFile.getName();
+		String fileName = getDataFile().getName();
 		if(fileName.toLowerCase().endsWith(".txt")) { //$NON-NLS-1$
 			fileName = fileName.substring(0, fileName.length()-4);
 		}
@@ -272,23 +275,23 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		return this.columnDatatypeMap.get(columnName);
 	}
 	
-	/**
-	 * 
-	 * @return viewTableName the view table name (never <code>null</code> or empty).
-	 */
-	public String getViewTableName() {
-		return this.viewTableName;
-	}
+//	/**
+//	 * 
+//	 * @return viewTableName the view table name (never <code>null</code> or empty).
+//	 */
+//	public String getViewTableName() {
+//		return this.viewTableName;
+//	}
 
-	/**
-	 * 
-	 * @param viewTableName (never <code>null</code> or empty).
-	 */
-	public void setViewTableName(String viewTableName) {
-		CoreArgCheck.isNotEmpty(viewTableName, "viewTableName is null"); //$NON-NLS-1$
-		
-		this.viewTableName = viewTableName;
-	}
+//	/**
+//	 * 
+//	 * @param viewTableName (never <code>null</code> or empty).
+//	 */
+//	public void setViewTableName(String viewTableName) {
+//		CoreArgCheck.isNotEmpty(viewTableName, "viewTableName is null"); //$NON-NLS-1$
+//		
+//		this.viewTableName = viewTableName;
+//	}
 
 	/**
 	 * 
@@ -387,13 +390,13 @@ public class TeiidMetadataFileInfo implements UiConstants {
 	public char getEscape() {
 		return this.escape;
 	}
-	/**
-	 * 
-	 * @return dataFile the teiid-formatted data <code>File</code>
-	 */
-	public File getDataFile() {
-		return this.dataFile;
-	}
+//	/**
+//	 * 
+//	 * @return dataFile the teiid-formatted data <code>File</code>
+//	 */
+//	public File getDataFile() {
+//		return this.dataFile;
+//	}
 	
 	public String getHeaderString() {
 		if( cachedFirstLines.length == 0 ) {
@@ -410,13 +413,13 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		this.cachedFirstLines = new String[0];
 		Collection<String> lines = new ArrayList<String>(7);
 		
-        if(this.dataFile != null && this.dataFile.exists()){
+        if(getDataFile() != null && getDataFile().exists()){
             FileReader fr=null;
             BufferedReader in=null;
 
             try{
             	int iLines = 0;
-                fr=new FileReader(this.dataFile);
+                fr=new FileReader(getDataFile());
                 in = new BufferedReader(fr);
                 String str;
                 while ((str = in.readLine()) != null) {
@@ -431,7 +434,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
                 this.cachedFirstLines = lines.toArray(new String[0]);
             }catch(Exception e){
             	Util.log(IStatus.ERROR, e, 
-                		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", this.dataFile.getName())); //$NON-NLS-1$
+                		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", getDataFile().getName())); //$NON-NLS-1$
             }
             finally{
                 try{
@@ -495,7 +498,7 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		validate();
 	}
 	
-	private void validate() {
+	public void validate() {
 		if( this.useHeaderForColumnNames ) {
 			if( this.getHeaderString() == null || this.getHeaderString().length() == 0 ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noHeaderFound"))); //$NON-NLS-1$
@@ -799,5 +802,104 @@ public class TeiidMetadataFileInfo implements UiConstants {
 		
 		return values.toArray(new String[values.size()]);
     }
+    
+	/**
+	 * Returns the current generated SQL string based on an unknown relational model name
+	 * @return the generated SQL string
+	 */
+    public String getSqlStringTemplate() {
+    	return getSqlString("myRelModel"); //$NON-NLS-1$
+    }
+    
+    public String getSqlString(String relationalModelName) {
+    	/*
+    	 * 
+    	 * TEXTTABLE(expression COLUMNS <COLUMN>, ... [DELIMITER char] [(QUOTE|ESCAPE) char] [HEADER [integer]] [SKIP integer]) AS name
+    	 * 
+    	 * DELIMITER sets the field delimiter character to use. Defaults to ','.
+    	 * 
+    	 * QUOTE sets the quote, or qualifier, character used to wrap field values. Defaults to '"'.
+    	 * 
+    	 * ESCAPE sets the escape character to use if no quoting character is in use. This is used in situations where the delimiter or new line characters are escaped with a preceding character, e.g. \
+    	 * 
+    	 * 
+			SELECT A.lastName, A.firstName, A.middleName, A.AId FROM
+        (EXEC EmployeeData.getTextFiles('EmployeeData.txt')) AS f, TEXTTABLE(file COLUMNS lastName string, firstName string, middleName string, HEADER 3) AS A
+    	 
+    	 *
+    	 * SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, TEXTTABLE(file COLUMNS {3}  HEADER {4}) AS {5}
+    	 */
+    	String alias = "A"; //$NON-NLS-1$
+    	StringBuffer sb = new StringBuffer();
+    	int i=0;
+    	int nColumns = getColumnInfoList().length;
+    	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
+    		sb.append(alias).append(DOT).append(columnStr.getName());
+    		
+    		if(i < (nColumns-1)) {
+    			sb.append(COMMA).append(SPACE);
+    		}
+    		i++;
+    	}
+    	String string_0 = sb.toString();
+    	
+    	sb = new StringBuffer();
+    	i=0;
+    	for( TeiidColumnInfo columnStr : getColumnInfoList()) {
+    		sb.append(columnStr.getName()).append(SPACE).append(columnStr.getDatatype());
+			if( isFixedWidthColumns()) {
+				sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
+			}
+    		if(i < (nColumns-1)) {
+    			sb.append(COMMA).append(SPACE);
+    		}
 
+    		i++;
+    	}
+    	String string_2 = S_QUOTE + getDataFile().getName() + S_QUOTE;
+    	String string_3 = sb.toString();
+    	
+    	sb = new StringBuffer();
+    	
+    	if( doUseDelimitedColumns() && getDelimiter() != TeiidMetadataFileInfo.DEFAULT_DELIMITER ) {
+    		sb.append("DELIMITER"); //$NON-NLS-1$
+    		sb.append(SPACE).append('\'').append(getDelimiter()).append('\'');
+    	}
+    	
+    	if( doIncludeQuote() ) {
+    		if( getQuote() != TeiidMetadataFileInfo.DEFAULT_QUOTE) {
+	    		sb.append("QUOTE"); //$NON-NLS-1$
+	    		sb.append(SPACE).append('\'').append(getQuote()).append('\'');
+    		}
+    	} else if(doIncludeEscape() ) {
+    		if( getEscape() != TeiidMetadataFileInfo.DEFAULT_ESCAPE) {
+	    		sb.append("ESCAPE"); //$NON-NLS-1$
+	    		sb.append(SPACE).append('\'').append(getQuote()).append('\'');
+    		}
+    	}
+    	
+    	if( doIncludeHeader() ) {
+    		sb.append(SPACE).append("HEADER"); //$NON-NLS-1$
+    		if( getHeaderLineNumber() > 1 ) {
+    			sb.append(SPACE).append(Integer.toString(getHeaderLineNumber()));
+    		}
+    	}
+    	if( doIncludeSkip() && getFirstDataRow() > 1 ) {
+    		sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
+    		sb.append(SPACE).append(Integer.toString(getFirstDataRow()-1));
+    	}
+    	String string_4 = sb.toString();
+    	
+    	String finalSQLString = UiPlugin.Util.getString(
+    			"TeiidMetadataFileInfo.textTableSqlTemplate", //$NON-NLS-1$
+    			string_0,
+    			relationalModelName,
+    			string_2,
+    			string_3,
+    			string_4,
+    			alias);
+    	
+    	return finalSQLString;
+    	
+    }
 }

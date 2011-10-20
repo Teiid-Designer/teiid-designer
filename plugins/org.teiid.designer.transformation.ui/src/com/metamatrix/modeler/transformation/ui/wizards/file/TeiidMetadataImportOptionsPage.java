@@ -10,7 +10,10 @@ package com.metamatrix.modeler.transformation.ui.wizards.file;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -33,47 +36,53 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
+import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
+import com.metamatrix.modeler.transformation.ui.editors.sqleditor.SqlTextViewer;
+import com.metamatrix.query.internal.ui.sqleditor.sql.ColorManager;
 import com.metamatrix.ui.internal.util.WidgetFactory;
+import com.metamatrix.ui.internal.util.WizardUtil;
+import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 
-/**
- * Dialog to allow users to configure the parsing parameters of delimiter character and header line number, view resulting
- * column data and set column datatype values to be used in generating view tables.
- * 
- */
-public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiConstants {
+public class TeiidMetadataImportOptionsPage extends AbstractWizardPage implements UiConstants {
+	// ===========================================================================================================================
+	// Constants
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTANTS
-    // /////////////////////////////////////////////////////////////////////////////////////////////
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidDataFileAnalyzerDialog.class);
-    private static final String TITLE = getString("title"); //$NON-NLS-1$
-    private static final String EMPTY = ""; //$NON-NLS-1$
-    private static String getString( final String id ) {
-        return Util.getString(I18N_PREFIX + id);
-    }
-    private static String getString( final String id , Object param) {
-        return Util.getString(I18N_PREFIX + id, param);
-    }
-    
-	private final TeiidMetadataFileInfo fileInfo;
-	private boolean infoChanged;
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportOptionsPage.class);
+
+	private static final String TITLE = getString("title"); //$NON-NLS-1$
+	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
+
+	private final String EMPTY = ""; //$NON-NLS-1$
+
+	private static String getString(final String id) {
+		return Util.getString(I18N_PREFIX + id);
+	}
+
+	private static String getString(final String id, final Object param) {
+		return Util.getString(I18N_PREFIX + id, param);
+	}
+
+	private TeiidMetadataImportInfo info;
+
+	private TeiidMetadataFileInfo dataFileInfo;
 	
 	Group headerGroup;
 	ListViewer fileContentsViewer;
 	TableViewer columnsViewer;
+	TextViewer sqlTextViewer;
+	IDocument sqlDocument;
 	Label headerLineNumberLabel, numberOfFixedWidthColumnsLabel;
-	Text numberOfCachedLinesText, headerLineNumberText, delimiterText, quoteText, escapeText, firstDataRowText;
+	Text numberOfCachedLinesText, headerLineNumberText, delimiterText, quoteText, escapeText, firstDataRowText, selectedFileText;
 	Button useHeaderForColumnNamesCB;
 	Button commaRB, spaceRB, tabRB, semicolonRB, barRB, otherDelimiterRB;
 	Button delimitedColumnsRB, fixedWidthColumnsRB;
@@ -81,58 +90,62 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 	Button useHeaderInSQLCB, includeQuoteCB, includeEscapeCB, includeSkipCB;
 	Button parseRowButton;
 	Action parseRowAction;
-	
+
+	boolean creatingControl = false;
+
 	boolean synchronizing = false;
 
-    
-    /**
-     * @param parent
-     * @param title
-     * @since 7.4
-     */
-    public TeiidDataFileAnalyzerDialog( Shell parent,
-                                     TeiidMetadataFileInfo fileInfo) {
+	/**
+	 * @since 4.0
+	 */
+	public TeiidMetadataImportOptionsPage(TeiidMetadataImportInfo info) {
+		super(TeiidMetadataImportOptionsPage.class.getSimpleName(), TITLE);
+		this.info = info;
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
+				Images.IMPORT_TEIID_METADATA));
+	}
 
-        super(parent);
-        this.fileInfo = fileInfo;
-        
-    }
-    
-    @Override
-    protected void configureShell( Shell shell ) {
-        super.configureShell(shell);
-        shell.setText(TITLE);
-    }
-    
-    /* (non-Javadoc)
-    * @see org.eclipse.jface.window.Window#setShellStyle(int)
-    */
-    @Override
-    protected void setShellStyle( int newShellStyle ) {
-        super.setShellStyle(newShellStyle | SWT.RESIZE | SWT.MAX);
-
-    }
-    
 	@Override
-    protected Control createDialogArea( Composite parent ) {
-    	setTitleImage(UiPlugin.getDefault().getImage(Images.IMPORT_TEIID_METADATA));
-    	
-        Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
+	public void createControl(Composite parent) {
+		creatingControl = true;
+		// Create page
+		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
-        this.setTitle(getString("messageTitle",fileInfo.getDataFile().getName()) ); //$NON-NLS-1$
-        this.setMessage(getString("initialMessage")); //$NON-NLS-1$
-        
-        mainPanel.setLayout(new GridLayout(1, false));
-        mainPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        
-        
-        createFileContentsGroup(mainPanel);
+		mainPanel.setLayout(new GridLayout(2, false));
+		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
+		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
+		setControl(mainPanel);
+		
+		
+        // Create Bottom Composite
+        Composite upperPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2, 2);
+        upperPanel.setLayout(new GridLayout(2, false));
+
+		setMessage(INITIAL_MESSAGE);
+		
+		Label selectedFileLabel = new Label(upperPanel, SWT.NONE);
+		selectedFileLabel.setText(getString("selectedFile")); //$NON-NLS-1$
+		
+        selectedFileText = new Text(upperPanel, SWT.BORDER);//, SWT.BORDER | SWT.SINGLE);
+        selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		//LayoutDebugger.debugLayout(mainPanel);
+		
+        // Create Bottom Composite
+        Composite topPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
+        topPanel.setLayout(new GridLayout(2, false));
         
+        createFileOptionsGroup(topPanel);
+        
+        createFileContentsGroup(topPanel);
+
         createColumnsFormatGroup(mainPanel);
 
         // Create Bottom Composite
-        Composite bottomPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_BOTH, 1);
+        Composite bottomPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
         bottomPanel.setLayout(new GridLayout(2, false));
         
         createDelimitersGroup(bottomPanel);
@@ -141,37 +154,72 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         
         createTextTableOptionsGroup(mainPanel);
         
-        synchronizeUI();
-        
-        validate();
-        //LayoutDebugger.debugLayout(mainPanel);
-        return mainPanel;
-    }
-    
-    
-    private void synchronizeUI() {
-    	// This method takes the Business Object (TeiidMetadataFileInfo) and syncs all ui Objects
-    	this.synchronizing = true;
+        createSqlGroup(mainPanel);
+
+		creatingControl = false;
+
+		setPageComplete(false);
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+			TeiidMetadataFileInfo fileInfo = null;
+			for (TeiidMetadataFileInfo theFileInfo : info.getFileInfos()) {
+				if (theFileInfo.doProcess()) {
+					fileInfo = theFileInfo;
+					break;
+				}
+			}
+			if (fileInfo != null) {
+				this.dataFileInfo = fileInfo;
+
+				loadFileContentsViewer();
+			}
+			synchronizeUI();
+		}
+	}
+
+	private boolean validatePage() {
+		if( !dataFileInfo.getStatus().isOK() && !(dataFileInfo.getStatus().getSeverity() == IStatus.WARNING)  ) {
+			setThisPageComplete(dataFileInfo.getStatus().getMessage(), IStatus.ERROR);
+			return false;
+		}
+		
+		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
+		return true;
+	}
+
+	private void setThisPageComplete(String message, int severity) {
+		WizardUtil.setPageComplete(this, message, severity);
+	}
+
+	private void synchronizeUI() {
+		synchronizing = true;
+
+		selectedFileText.setText(dataFileInfo.getDataFile().getName());
+
+    	this.numberOfCachedLinesText.setText(Integer.toString(this.dataFileInfo.getNumberOfCachedFileLines()));
     	
-    	this.numberOfCachedLinesText.setText(Integer.toString(this.fileInfo.getNumberOfCachedFileLines()));
+    	this.delimitedColumnsRB.setSelection(this.dataFileInfo.doUseDelimitedColumns());
+    	this.fixedWidthColumnsRB.setSelection(this.dataFileInfo.isFixedWidthColumns());
     	
-    	this.delimitedColumnsRB.setSelection(this.fileInfo.doUseDelimitedColumns());
-    	this.fixedWidthColumnsRB.setSelection(this.fileInfo.isFixedWidthColumns());
+    	this.useHeaderForColumnNamesCB.setSelection(this.dataFileInfo.doUseHeaderForColumnNames());
+    	this.headerLineNumberText.setText(Integer.toString(this.dataFileInfo.getHeaderLineNumber()));
+    	this.numberOfFixedWidthColumnsText.setText(Integer.toString(this.dataFileInfo.getNumberOfFixedWidthColumns()));
+    	this.firstDataRowText.setText(Integer.toString(dataFileInfo.getFirstDataRow()));
     	
-    	this.useHeaderForColumnNamesCB.setSelection(this.fileInfo.doUseHeaderForColumnNames());
-    	this.headerLineNumberText.setText(Integer.toString(this.fileInfo.getHeaderLineNumber()));
-    	this.numberOfFixedWidthColumnsText.setText(Integer.toString(this.fileInfo.getNumberOfFixedWidthColumns()));
-    	this.firstDataRowText.setText(Integer.toString(fileInfo.getFirstDataRow()));
+    	this.useHeaderInSQLCB.setSelection(this.dataFileInfo.doIncludeHeader());
+    	this.includeSkipCB.setSelection(this.dataFileInfo.doIncludeSkip());
+    	this.includeQuoteCB.setSelection(this.dataFileInfo.doIncludeQuote());
+    	this.includeEscapeCB.setSelection(this.dataFileInfo.doIncludeEscape());
     	
-    	this.useHeaderInSQLCB.setSelection(this.fileInfo.doIncludeHeader());
-    	this.includeSkipCB.setSelection(this.fileInfo.doIncludeSkip());
-    	this.includeQuoteCB.setSelection(this.fileInfo.doIncludeQuote());
-    	this.includeEscapeCB.setSelection(this.fileInfo.doIncludeEscape());
+    	this.quoteText.setText(EMPTY + this.dataFileInfo.getQuote());
+    	this.escapeText.setText(EMPTY + this.dataFileInfo.getEscape());
     	
-    	this.quoteText.setText(EMPTY + this.fileInfo.getQuote());
-    	this.escapeText.setText(EMPTY + this.fileInfo.getEscape());
-    	
-    	boolean enable = this.fileInfo.doUseDelimitedColumns();
+    	boolean enable = this.dataFileInfo.doUseDelimitedColumns();
     	this.useHeaderForColumnNamesCB.setEnabled(enable);
     	this.useHeaderInSQLCB.setEnabled(enable);
     	this.includeEscapeCB.setEnabled(enable);
@@ -188,146 +236,160 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	this.numberOfFixedWidthColumnsLabel.setEnabled(!enable);
         this.numberOfFixedWidthColumnsText.setEnabled(!enable);
     	
-    	this.headerLineNumberLabel.setEnabled(this.fileInfo.doUseHeaderForColumnNames());
-    	this.headerLineNumberText.setEnabled(this.fileInfo.doUseHeaderForColumnNames());
+    	this.headerLineNumberLabel.setEnabled(this.dataFileInfo.doUseHeaderForColumnNames());
+    	this.headerLineNumberText.setEnabled(this.dataFileInfo.doUseHeaderForColumnNames());
+
+    	updateSqlText();
     	
-    	this.synchronizing = false;
-    }
+		synchronizing = false;
+	}
+
     
-    private void createTextTableOptionsGroup(Composite parent) {
-    	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE, 1); //$NON-NLS-1$
-    	textTableOptionsGroup.setLayout(new GridLayout(7, false));
-    	textTableOptionsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+    private void createFileOptionsGroup(Composite parent) {
+    	Group fileOptionsGroup = WidgetFactory.createGroup(parent, "Format Options", SWT.NONE, 1, 2); //$NON-NLS-1$
+    	fileOptionsGroup.setLayout(new GridLayout(2, false));
+    	GridData gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        gd.horizontalSpan=1;
+        gd.grabExcessVerticalSpace = true;
+        fileOptionsGroup.setLayoutData(gd);
     	
-    	this.useHeaderInSQLCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeHeader"), 0, 1); //$NON-NLS-1$
-        this.useHeaderInSQLCB.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing ) {
-	            	fileInfo.setIncludeHeader(useHeaderInSQLCB.getSelection());
-	            	handleInfoChanged(false);
-            	}
-            }
-        });
-        this.useHeaderInSQLCB.setToolTipText(getString("useHeaderTooltip")); //$NON-NLS-1$
-        this.useHeaderInSQLCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+    	// Create Bottom Composite
         
-        this.includeSkipCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeSkip"), 0, 1); //$NON-NLS-1$
-        this.includeSkipCB.addSelectionListener(new SelectionAdapter() {
+        this.useHeaderForColumnNamesCB = WidgetFactory.createCheckBox(fileOptionsGroup, getString("useHeaderForColumnNames"), 0, 2); //$NON-NLS-1$
+        this.useHeaderForColumnNamesCB.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
             	if( !synchronizing ) {
-	            	fileInfo.setIncludeSkip(includeSkipCB.getSelection());
-	            	handleInfoChanged(false);
-            	}
-            }
-        });
-        this.includeSkipCB.setToolTipText(getString("includeSkipTooltip")); //$NON-NLS-1$
-        this.includeSkipCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-        addSpacer(textTableOptionsGroup, 20);
-        
-        this.includeQuoteCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeQuote"), 0, 1); //$NON-NLS-1$
-        this.includeQuoteCB.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing ) {
-	            	fileInfo.setIncludeQuote(includeQuoteCB.getSelection());
+	            	dataFileInfo.setDoUseHeaderForColumnNames(useHeaderForColumnNamesCB.getSelection());
 	            	handleInfoChanged(false);
             	}
             }
         });
         
-        this.quoteText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
-    	GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-    	gd.minimumWidth = 50;
-    	gd.horizontalSpan=1;
-    	this.quoteText.setLayoutData(gd);
-    	this.quoteText.setTextLimit(1);
-    	this.quoteText.addModifyListener(new ModifyListener() {
+        this.parseRowAction = new Action(getString("parseSelectedRow")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+            	parseSelectedDataRow();
+            }
+		};
+		//addSpacer(fileContentsGroup, 32);
+        
+        headerLineNumberLabel = new Label(fileOptionsGroup, SWT.NONE);
+    	headerLineNumberLabel.setText(getString("headerLineNumber")); //$NON-NLS-1$
+    	this.headerLineNumberText = WidgetFactory.createTextField(fileOptionsGroup, SWT.NONE);
+    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.minimumWidth = 40;
+    	gd.minimumHeight= 23;
+    	this.headerLineNumberText.setLayoutData(gd);
+    	this.headerLineNumberText.addModifyListener(new ModifyListener() {
 
             public void modifyText( final ModifyEvent event ) {
             	if( !synchronizing ) {
-	            	if( !quoteText.getText().isEmpty()) {
-	            		if( quoteText.getText().charAt(0) != fileInfo.getQuote() ) {
-	            			fileInfo.setQuote(quoteText.getText().charAt(0));
-	            			handleInfoChanged(false);
-	            		}
-	            		setErrorMessage(null);
+	            	if( !headerLineNumberText.getText().isEmpty()) {
+	            		try {
+	        				int lineNumber = Integer.parseInt(headerLineNumberText.getText());
+	        				if( lineNumber == 0 ) {
+	        					setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( lineNumber != dataFileInfo.getHeaderLineNumber() ) {
+	        					dataFileInfo.setHeaderLineNumber(lineNumber);
+	        					handleInfoChanged(false);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("headerLineNumberMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
 	            	} else {
-	            		setErrorMessage(getString("quoteCannotBeNull")); //$NON-NLS-1$
+	            		setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
+	            		return;
+            	}
+            	}
+            }
+        });
+    	this.headerLineNumberLabel.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
+    	this.headerLineNumberText.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
+    	
+    	Label firstDataRowLabel = new Label(fileOptionsGroup, SWT.NONE);
+    	firstDataRowLabel.setText(getString("firstRowLineNumber")); //$NON-NLS-1$
+    	firstDataRowLabel.setToolTipText(getString("firstDataRowTooltip")); //$NON-NLS-1$
+    	this.firstDataRowText = WidgetFactory.createTextField(fileOptionsGroup, SWT.NONE);
+    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.minimumWidth = 20;
+	    gd.horizontalSpan=1;
+	    this.firstDataRowText.setLayoutData(gd);
+    	this.firstDataRowText.addModifyListener(new ModifyListener() {
+
+            public void modifyText( final ModifyEvent event ) {
+            	if( !synchronizing ) {
+	            	if( !firstDataRowText.getText().isEmpty()) {
+	            		try {
+	        				int nLines = Integer.parseInt(firstDataRowText.getText());
+	        				if( nLines < 1 ) {
+	        					setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
+	        					return;
+	        				}
+	        				if( nLines != dataFileInfo.getFirstDataRow() ) {
+	        					dataFileInfo.setFirstDataRow(nLines);
+	        					handleInfoChanged(false);
+	        				}
+	        				setErrorMessage(null);
+	        			} catch (NumberFormatException ex) {
+	        				setErrorMessage(getString("firstDataRowMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
+	        				return;
+	        			}
+	            	} else {
+	            		setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
 	            		return;
 	            	}
             	}
             }
         });
-        
-        this.includeQuoteCB.setToolTipText(getString("includeQuoteTooltip")); //$NON-NLS-1$
-        
-        this.includeEscapeCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeEscape"), 0, 1); //$NON-NLS-1$
-        this.includeEscapeCB.addSelectionListener(new SelectionAdapter() {
+    	this.firstDataRowText.setToolTipText(getString("firstDataRowTooltip")); //$NON-NLS-1$
+    	
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	new Label(fileOptionsGroup, SWT.NONE);
+    	
+        this.parseRowButton = WidgetFactory.createButton(fileOptionsGroup, SWT.PUSH);
+        this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
+    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.minimumWidth = 120;
+    	gd.horizontalSpan = 2;
+    	this.parseRowButton.setLayoutData(gd);
+        this.parseRowButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing ) {
-	            	fileInfo.setIncludeEscape(includeEscapeCB.getSelection());
-	            	handleInfoChanged(false);
-            	}
+            public void widgetSelected( final SelectionEvent event ) {
+            	parseSelectedDataRow();
             }
         });
-    	this.escapeText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
-    	gd.grabExcessHorizontalSpace = true;
-    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-    	gd.minimumWidth = 50;
-    	gd.horizontalSpan=1;
-    	gd.grabExcessHorizontalSpace = true;
-    	this.escapeText.setLayoutData(gd);
-    	this.escapeText.setTextLimit(1);
-    	this.escapeText.addModifyListener(new ModifyListener() {
-
-            public void modifyText( final ModifyEvent event ) {
-            	if( !synchronizing ) {
-	            	if( !escapeText.getText().isEmpty()) {
-	            		if( escapeText.getText().charAt(0) != fileInfo.getEscape() ) {
-	            			fileInfo.setEscape(escapeText.getText().charAt(0));
-	            			handleInfoChanged(false);
-	            		}
-	            		setErrorMessage(null);
-	            	} else {
-	            		setErrorMessage(getString("escapeCannotBeNull")); //$NON-NLS-1$
-	            		return;
-	            	}
-            	}
-            }
-        });
-        
-        this.includeEscapeCB.setToolTipText(getString("includeEscapeTooltip")); //$NON-NLS-1$
-        
+        this.parseRowButton.setEnabled(false);
+        this.parseRowButton.setToolTipText(getString("parseSelectedTooltip")); //$NON-NLS-1$
     }
     
     private void createFileContentsGroup(Composite parent) {
     	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
     	fileContentsGroup.setLayout(new GridLayout(4, false));
-    	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 270;
+    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.heightHint = 190;
     	gd.widthHint = 500;
     	fileContentsGroup.setLayoutData(gd);
-    	
-    	Composite topPanel = WidgetFactory.createPanel(fileContentsGroup);
-    	topPanel.setLayout(new GridLayout(2, false));
-        GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
-        gd1.horizontalSpan=4;
-        topPanel.setLayoutData(gd1);
-        
-    	Label prefixLabel = new Label(topPanel, SWT.NONE);
-    	prefixLabel.setText(getString("numberOfLinesLabel",this.fileInfo.getNumberOfLinesInFile())); //$NON-NLS-1$
-    	GridData lgd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+
+    	Label prefixLabel = new Label(fileContentsGroup, SWT.NONE);
+    	prefixLabel.setText(getString("numberOfLinesLabel", 20)); //$NON-NLS-1$
+    	GridData lgd = new GridData(GridData.FILL_HORIZONTAL);
         lgd.horizontalSpan=1;
         prefixLabel.setLayoutData(lgd);
         
-    	this.numberOfCachedLinesText = WidgetFactory.createTextField(topPanel, SWT.NONE);
+    	this.numberOfCachedLinesText = WidgetFactory.createTextField(fileContentsGroup, SWT.NONE);
     	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
     	gd.minimumWidth = 50;
     	gd.horizontalSpan=1;
@@ -343,8 +405,8 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 	        					setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
 	        					return;
 	        				}
-	        				if( nLines != fileInfo.getNumberOfCachedFileLines() ) {
-	        					fileInfo.setNumberOfCachedFileLines(nLines);
+	        				if( nLines != dataFileInfo.getNumberOfCachedFileLines() ) {
+	        					dataFileInfo.setNumberOfCachedFileLines(nLines);
 	        					handleInfoChanged(true);
 	        				}
 	        				setErrorMessage(null);
@@ -360,14 +422,21 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     		}
     	});
     	
+
+
+    	
     	this.fileContentsViewer = new ListViewer(fileContentsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridData data = new GridData(GridData.FILL_BOTH);
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
         data.horizontalSpan=4;
+        data.heightHint = 130;
         this.fileContentsViewer.getControl().setLayoutData(data);
-        for( String row : this.fileInfo.getCachedFirstLines() ) {
-        	if( row != null ) {
-        		this.fileContentsViewer.add(row);
-        	}
+        
+        if( this.dataFileInfo != null ) {
+	        for( String row : this.dataFileInfo.getCachedFirstLines() ) {
+	        	if( row != null ) {
+	        		this.fileContentsViewer.add(row);
+	        	}
+	        }
         }
         
      // Add a Context Menu
@@ -392,129 +461,12 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 
             }
         });
-        
-    	
-    	// Create Bottom Composite
-        
-        this.useHeaderForColumnNamesCB = WidgetFactory.createCheckBox(fileContentsGroup, getString("useHeaderForColumnNames"), 0, 2); //$NON-NLS-1$
-        this.useHeaderForColumnNamesCB.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-            	if( !synchronizing ) {
-	            	fileInfo.setDoUseHeaderForColumnNames(useHeaderForColumnNamesCB.getSelection());
-	            	handleInfoChanged(false);
-            	}
-            }
-        });
-        
-        this.parseRowAction = new Action(getString("parseSelectedRow")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-            	parseSelectedDataRow();
-            }
-		};
-		addSpacer(fileContentsGroup, 32);
-    	
-        this.parseRowButton = WidgetFactory.createButton(fileContentsGroup, SWT.PUSH);
-        this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
-    	gd = new GridData(GridData.FILL_BOTH);
-    	gd.minimumWidth = 100;
-    	this.parseRowButton.setLayoutData(gd);
-        this.parseRowButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-            	parseSelectedDataRow();
-            }
-        });
-        this.parseRowButton.setEnabled(false);
-        this.parseRowButton.setToolTipText(getString("parseSelectedTooltip")); //$NON-NLS-1$
-        
-        headerLineNumberLabel = new Label(fileContentsGroup, SWT.NONE);
-    	headerLineNumberLabel.setText(getString("headerLineNumber")); //$NON-NLS-1$
-    	this.headerLineNumberText = WidgetFactory.createTextField(fileContentsGroup, SWT.NONE);
-    	gd = new GridData(GridData.FILL_BOTH);
-    	gd.minimumWidth = 100;
-    	gd.minimumHeight= 23;
-    	this.headerLineNumberText.setLayoutData(gd);
-    	this.headerLineNumberText.addModifyListener(new ModifyListener() {
-
-            public void modifyText( final ModifyEvent event ) {
-            	if( !synchronizing ) {
-	            	if( !headerLineNumberText.getText().isEmpty()) {
-	            		try {
-	        				int lineNumber = Integer.parseInt(headerLineNumberText.getText());
-	        				if( lineNumber == 0 ) {
-	        					setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
-	        					return;
-	        				}
-	        				if( lineNumber != fileInfo.getHeaderLineNumber() ) {
-	        					fileInfo.setHeaderLineNumber(lineNumber);
-	        					handleInfoChanged(false);
-	        				}
-	        				setErrorMessage(null);
-	        			} catch (NumberFormatException ex) {
-	        				setErrorMessage(getString("headerLineNumberMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
-	        				return;
-	        			}
-	            	} else {
-	            		setErrorMessage(getString("headerLineNumberCannotBeNullOrZero")); //$NON-NLS-1$
-	            		return;
-            	}
-            	}
-            }
-        });
-    	this.headerLineNumberLabel.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
-    	this.headerLineNumberText.setEnabled(this.useHeaderForColumnNamesCB.getSelection());
-    	addSpacer(fileContentsGroup, 32);
-    	addSpacer(fileContentsGroup, 32);
-    	
-    	Label firstDataRowLabel = new Label(fileContentsGroup, SWT.NONE);
-    	firstDataRowLabel.setText(getString("firstRowLineNumber")); //$NON-NLS-1$
-    	firstDataRowLabel.setToolTipText(getString("firstDataRowTooltip")); //$NON-NLS-1$
-    	this.firstDataRowText = WidgetFactory.createTextField(fileContentsGroup, SWT.NONE);
-    	gd = new GridData(GridData.FILL_HORIZONTAL);
-    	gd.minimumWidth = 20;
-	    gd.horizontalSpan=1;
-	    this.firstDataRowText.setLayoutData(gd);
-    	this.firstDataRowText.addModifyListener(new ModifyListener() {
-
-            public void modifyText( final ModifyEvent event ) {
-            	if( !synchronizing ) {
-	            	if( !firstDataRowText.getText().isEmpty()) {
-	            		try {
-	        				int nLines = Integer.parseInt(firstDataRowText.getText());
-	        				if( nLines < 1 ) {
-	        					setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
-	        					return;
-	        				}
-	        				if( nLines != fileInfo.getFirstDataRow() ) {
-	        					fileInfo.setFirstDataRow(nLines);
-	        					handleInfoChanged(false);
-	        				}
-	        				setErrorMessage(null);
-	        			} catch (NumberFormatException ex) {
-	        				setErrorMessage(getString("firstDataRowMustBeInteger", headerLineNumberText.getText())); //$NON-NLS-1$
-	        				return;
-	        			}
-	            	} else {
-	            		setErrorMessage(getString("firstDataRowCannotBeZeroOrNegative")); //$NON-NLS-1$
-	            		return;
-	            	}
-            	}
-            }
-        });
-    	this.firstDataRowText.setToolTipText(getString("firstDataRowTooltip")); //$NON-NLS-1$
-    	addSpacer(fileContentsGroup, 32);
-    	addSpacer(fileContentsGroup, 32);
-    	
     	//LayoutDebugger.debugLayout(fileContentsGroup);
     }
     
     private void createColumnsFormatGroup(Composite parent) {
     	// Create Bottom Composite
-        Composite topPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
+        Composite topPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
         topPanel.setLayout(new GridLayout(2, false));
         
     	Group columnFormatGroup = WidgetFactory.createGroup(topPanel, getString("columnsFormatGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
@@ -529,7 +481,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
             @Override
             public void widgetSelected(final SelectionEvent event) {
             	if( !synchronizing ) {
-	            	fileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
+	            	dataFileInfo.setUseDelimitedColumns(delimitedColumnsRB.getSelection());
 	            	handleInfoChanged(false);
             	}
             }
@@ -542,7 +494,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
             @Override
             public void widgetSelected(final SelectionEvent event) {
             	if( !synchronizing ) {
-	            	fileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
+	            	dataFileInfo.setFixedWidthColumns(fixedWidthColumnsRB.getSelection());
 	            	handleInfoChanged(false);
             	}
             }
@@ -567,8 +519,8 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 	        					setErrorMessage(getString("numberOfFixedWidthColumnsCannotBeNegative")); //$NON-NLS-1$
 	        					return;
 	        				}
-	        				if( nColumns != fileInfo.getNumberOfFixedWidthColumns() ) {
-		        				fileInfo.setNumberOfFixedWidthColumns(nColumns);
+	        				if( nColumns != dataFileInfo.getNumberOfFixedWidthColumns() ) {
+		        				dataFileInfo.setNumberOfFixedWidthColumns(nColumns);
 		        				handleInfoChanged(false);
 	        				}
 	        				setErrorMessage(null);
@@ -584,15 +536,15 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
             }
         });
     	
-    	this.numberOfFixedWidthColumnsLabel.setEnabled(this.fileInfo.isFixedWidthColumns());
-        this.numberOfFixedWidthColumnsText.setEnabled(this.fileInfo.isFixedWidthColumns());
+    	this.numberOfFixedWidthColumnsLabel.setEnabled(false);
+        this.numberOfFixedWidthColumnsText.setEnabled(false);
     }
     
     private void createDelimitersGroup(Composite parent) {
-        Composite subPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
-        subPanel.setLayout(new GridLayout(1, false));
+//        Composite subPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
+//        subPanel.setLayout(new GridLayout(1, false));
     	
-    	Group delimitersGroup = WidgetFactory.createGroup(subPanel, "Delimeter Options"/*getString("fileFormatOptionsGroup")*/, SWT.NONE, 1, 2); //$NON-NLS-1$
+    	Group delimitersGroup = WidgetFactory.createGroup(parent, "Delimeter Options"/*getString("fileFormatOptionsGroup")*/, SWT.NONE, 1, 2); //$NON-NLS-1$
     	delimitersGroup.setLayout(new GridLayout(2, false));
     	delimitersGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     	
@@ -693,12 +645,155 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         column.getColumn().pack();
         
     	
-
-        for( TeiidColumnInfo row : this.fileInfo.getColumnInfoList() ) {
-        	this.columnsViewer.add(row);
+        if( this.dataFileInfo != null ) {
+	        for( TeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
+	        	this.columnsViewer.add(row);
+	        }
         }
-        
        
+    }
+    
+    private void createSqlGroup(Composite parent) {
+    	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("textTableOptionsGroup"), SWT.NONE, 2, 1); //$NON-NLS-1$
+    	textTableOptionsGroup.setLayout(new GridLayout(1, false));
+    	GridData gd = new GridData(GridData.FILL_BOTH);
+    	gd.heightHint = 120;
+    	gd.horizontalSpan = 2;
+    	textTableOptionsGroup.setLayoutData(gd);
+    	
+    	ColorManager colorManager = new ColorManager();
+        int styles = SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.FULL_SELECTION;
+
+        sqlTextViewer = new SqlTextViewer(textTableOptionsGroup, new VerticalRuler(0), styles, colorManager);
+        sqlDocument = new Document();
+        sqlTextViewer.setInput(sqlDocument);
+        sqlTextViewer.setEditable(false);
+        sqlTextViewer.getTextWidget().setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
+        sqlTextViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        updateSqlText();
+    }
+    
+    private void createTextTableOptionsGroup(Composite parent) {
+    	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidTextTableGroup"), SWT.NONE); //$NON-NLS-1$
+    	textTableOptionsGroup.setLayout(new GridLayout(7, false));
+    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.horizontalSpan = 2;
+    	textTableOptionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	
+    	this.useHeaderInSQLCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeHeader"), 0, 1); //$NON-NLS-1$
+        this.useHeaderInSQLCB.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if( !synchronizing ) {
+	            	dataFileInfo.setIncludeHeader(useHeaderInSQLCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
+            }
+        });
+        this.useHeaderInSQLCB.setToolTipText(getString("includeHeaderTooltip")); //$NON-NLS-1$
+        this.useHeaderInSQLCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        
+        this.includeSkipCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeSkip"), 0, 1); //$NON-NLS-1$
+        this.includeSkipCB.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if( !synchronizing ) {
+	            	dataFileInfo.setIncludeSkip(includeSkipCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
+            }
+        });
+        this.includeSkipCB.setToolTipText(getString("includeSkipTooltip")); //$NON-NLS-1$
+        this.includeSkipCB.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+        addSpacer(textTableOptionsGroup, 20);
+        
+        this.includeQuoteCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeQuote"), 0, 1); //$NON-NLS-1$
+        this.includeQuoteCB.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if( !synchronizing ) {
+	            	dataFileInfo.setIncludeQuote(includeQuoteCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
+            }
+        });
+        
+        this.quoteText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
+    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+    	gd.minimumWidth = 50;
+    	gd.horizontalSpan=1;
+    	this.quoteText.setLayoutData(gd);
+    	this.quoteText.setTextLimit(1);
+    	this.quoteText.addModifyListener(new ModifyListener() {
+
+            public void modifyText( final ModifyEvent event ) {
+            	if( !synchronizing ) {
+	            	if( !quoteText.getText().isEmpty()) {
+	            		if( quoteText.getText().charAt(0) != dataFileInfo.getQuote() ) {
+	            			dataFileInfo.setQuote(quoteText.getText().charAt(0));
+	            			handleInfoChanged(false);
+	            		}
+	            		setErrorMessage(null);
+	            	} else {
+	            		setErrorMessage(getString("quoteCannotBeNull")); //$NON-NLS-1$
+	            		return;
+	            	}
+            	}
+            }
+        });
+        
+        this.includeQuoteCB.setToolTipText(getString("includeQuoteTooltip")); //$NON-NLS-1$
+        
+        this.includeEscapeCB = WidgetFactory.createCheckBox(textTableOptionsGroup, getString("includeEscape"), 0, 1); //$NON-NLS-1$
+        this.includeEscapeCB.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+            	if( !synchronizing ) {
+	            	dataFileInfo.setIncludeEscape(includeEscapeCB.getSelection());
+	            	handleInfoChanged(false);
+            	}
+            }
+        });
+    	this.escapeText = WidgetFactory.createTextField(textTableOptionsGroup, SWT.NONE);
+    	gd.grabExcessHorizontalSpace = true;
+    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+    	gd.minimumWidth = 50;
+    	gd.horizontalSpan=1;
+    	gd.grabExcessHorizontalSpace = true;
+    	this.escapeText.setLayoutData(gd);
+    	this.escapeText.setTextLimit(1);
+    	this.escapeText.addModifyListener(new ModifyListener() {
+
+            public void modifyText( final ModifyEvent event ) {
+            	if( !synchronizing ) {
+	            	if( !escapeText.getText().isEmpty()) {
+	            		if( escapeText.getText().charAt(0) != dataFileInfo.getEscape() ) {
+	            			dataFileInfo.setEscape(escapeText.getText().charAt(0));
+	            			handleInfoChanged(false);
+	            		}
+	            		setErrorMessage(null);
+	            	} else {
+	            		setErrorMessage(getString("escapeCannotBeNull")); //$NON-NLS-1$
+	            		return;
+	            	}
+            	}
+            }
+        });
+        
+        this.includeEscapeCB.setToolTipText(getString("includeEscapeTooltip")); //$NON-NLS-1$
+        
+    }
+    
+    void updateSqlText() {
+    	if( this.dataFileInfo != null ) {
+    		sqlTextViewer.getDocument().set(dataFileInfo.getSqlStringTemplate());
+    	}
     }
     
     private void addSpacer(Composite parent, int nSpaces) {
@@ -719,7 +814,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     		setErrorMessage(null);
         	if( this.otherDelimiterRB.getSelection() ) {
 	        	if( !this.otherDelimiterText.getText().isEmpty()) {
-		    		this.fileInfo.setDelimiter(this.delimiterText.getText().charAt(0));
+		    		this.dataFileInfo.setDelimiter(this.delimiterText.getText().charAt(0));
 		    	} else {
 		    		setErrorMessage(getString("delimiterCannotBeNull")); //$NON-NLS-1$
 		    		return;
@@ -727,18 +822,18 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
         	}
         	
         	if( this.commaRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.COMMA);
+        		dataFileInfo.setDelimiter(TeiidMetadataFileInfo.COMMA);
         	} else if( this.spaceRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.SPACE);
+        		dataFileInfo.setDelimiter(TeiidMetadataFileInfo.SPACE);
         	} else if ( this.tabRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.TAB);
+        		dataFileInfo.setDelimiter(TeiidMetadataFileInfo.TAB);
         	} else if ( this.semicolonRB.getSelection() ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.SEMICOLON);
+        		dataFileInfo.setDelimiter(TeiidMetadataFileInfo.SEMICOLON);
         	} else if ( this.barRB.getSelection()  ) {
-        		fileInfo.setDelimiter(TeiidMetadataFileInfo.BAR);
+        		dataFileInfo.setDelimiter(TeiidMetadataFileInfo.BAR);
         	} else {
         		if( !this.otherDelimiterText.getText().isEmpty()) {
-    	    		this.fileInfo.setDelimiter(this.delimiterText.getText().charAt(0));
+    	    		this.dataFileInfo.setDelimiter(this.delimiterText.getText().charAt(0));
     	    	}
         	}
     	}
@@ -748,7 +843,7 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	IStructuredSelection selectedFile = (IStructuredSelection)this.fileContentsViewer.getSelection();
     	if( selectedFile.getFirstElement() != null && selectedFile.getFirstElement() instanceof String ) {
     		String dataRowStr = (String)selectedFile.getFirstElement();
-    		ParsedDataRowDialog dialog = new ParsedDataRowDialog(getShell(), fileInfo, dataRowStr);
+    		ParsedDataRowDialog dialog = new ParsedDataRowDialog(getShell(), dataFileInfo, dataRowStr);
         	
         	dialog.open();
     	}
@@ -756,8 +851,6 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     
     private void handleInfoChanged(boolean reloadFileContents) {
     	if( synchronizing ) return;
-    	
-    	this.infoChanged = true;
     	
     	setDelimiterValue();
     	
@@ -768,16 +861,16 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     	}
 
     	this.columnsViewer.getTable().removeAll();
-        for( TeiidColumnInfo row : fileInfo.getColumnInfoList() ) {
+        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
         	this.columnsViewer.add(row);
         }
         
-        validate();
+        validatePage();
     }
     
     private void loadFileContentsViewer() {
     	fileContentsViewer.getList().removeAll();
-    	for( String row : this.fileInfo.getCachedFirstLines() ) {
+    	for( String row : this.dataFileInfo.getCachedFirstLines() ) {
         	if( row != null ) {
         		this.fileContentsViewer.add(row);
         	}
@@ -785,22 +878,9 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
     }
     
     public TeiidMetadataFileInfo getFileInfo() {
-    	return this.fileInfo;
+    	return this.dataFileInfo;
     }
     
-    public boolean infoChanged() {
-    	return this.infoChanged;
-    }
-    
-    private void validate() {
-    	if( fileInfo.getStatus().isOK() || fileInfo.getStatus().getSeverity() == IStatus.WARNING  ) {
-    		setErrorMessage(null);
-    		setMessage(getString("initialMessage")); //$NON-NLS-1$
-    		return;
-    	}
-    	setErrorMessage(fileInfo.getStatus().getMessage());
-    }
-
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;
@@ -998,4 +1078,5 @@ public class TeiidDataFileAnalyzerDialog extends TitleAreaDialog implements UiCo
 		}
 
 	}
+
 }

@@ -22,7 +22,7 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileImportProcessor;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidMetadataImportViewModelPage;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
@@ -45,14 +45,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
     }
-	
-    TeiidMetadataSourceSelectionPage sourcePage;
-    TeiidMetadataTargetModelsPage targetPage;
-    TeiidMetadataFileOptionsPage fileOptionsPage;
-    
+
     private TeiidMetadataImportInfo filesInfo;
-    
-    boolean isFlatFileOption = true;
     
 	/**
 	 * @since 4.0
@@ -93,58 +87,49 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         
         // Construct the business object
         this.filesInfo = new TeiidMetadataImportInfo();
+        this.filesInfo.setFlatFileMode(true);
         
         // Set initial view model and view model location values if present from selection
         if( isViewRelationalModel ) {
         	this.filesInfo.setViewModelName( ((IFile)seletedObj).getName());
         	this.filesInfo.setViewModelLocation(((IFile)seletedObj).getFullPath().removeLastSegments(1));
         	this.filesInfo.setViewModelExists(true);
+        	this.filesInfo.setSourceModelLocation(((IFile)seletedObj).getFullPath().removeLastSegments(1));
         }
         if( folder != null ) {
         	this.filesInfo.setSourceModelLocation(folder.getFullPath());
         	this.filesInfo.setViewModelLocation(folder.getFullPath());
         }
-        
-        this.fileOptionsPage = new TeiidMetadataFileOptionsPage(this);
-        addPage(this.fileOptionsPage);
-        
-        this.targetPage = new TeiidMetadataTargetModelsPage(this.filesInfo);
-        addPage(this.targetPage);
-        
-        this.sourcePage = new TeiidMetadataSourceSelectionPage(this.filesInfo);
-        addPage(this.sourcePage);
+	}
+	
 
+	@Override
+	public void addPages() {
+		TeiidMetadataImportSourcePage sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
+        addPage(sourcePage);
+        
+        TeiidMetadataImportOptionsPage optionsPage = new TeiidMetadataImportOptionsPage(getFileInfo());
+        addPage(optionsPage);
+        
+        TeiidMetadataImportViewModelPage viewModelPage = new TeiidMetadataImportViewModelPage(getFileInfo());
+        addPage(viewModelPage);
 	}
 
 	@Override
 	public boolean finish() {
-		if( this.filesInfo.isFlatFileMode() ) {
-			final TeiidMetadataImportProcessor processor = new TeiidMetadataImportProcessor(this.filesInfo, this.getShell());
-			
-			UiUtil.runInSwtThread(new Runnable() {
-				@Override
-				public void run() {
-					processor.execute();
-				}
-			}, false);
-			
-			return true;
-		} else {
-			final TeiidXmlFileImportProcessor processor = new TeiidXmlFileImportProcessor(this.filesInfo, this.getShell());
-			
-			UiUtil.runInSwtThread(new Runnable() {
-				@Override
-				public void run() {
-					processor.execute();
-				}
-			}, false);
-			
-			return true;
-		}
+		final TeiidMetadataImportProcessor processor = new TeiidMetadataImportProcessor(this.filesInfo, this.getShell());
+		
+		UiUtil.runInSwtThread(new Runnable() {
+			@Override
+			public void run() {
+				processor.execute();
+			}
+		}, false);
+		
+		return true;
 	}
 
-	public void setFileOption(boolean useFlatFile) {
-		this.filesInfo.setFlatFileMode(useFlatFile);
+	public TeiidMetadataImportInfo getFileInfo() {
+		return this.filesInfo;
 	}
-	
 }

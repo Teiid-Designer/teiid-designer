@@ -24,8 +24,9 @@ import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidColumnInfo;
+import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidFileInfo;
 
-public class TeiidXmlFileInfo implements UiConstants {
+public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
 	
 	public static final char DOT = '.';
@@ -52,16 +53,16 @@ public class TeiidXmlFileInfo implements UiConstants {
      */
     private int numberOfLinesInFile = 0;
     
-    /**
-     * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
-     */
-	private File dataFile;
+//    /**
+//     * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
+//     */
+//	private File dataFile;
 	
-    /**
-     * The unique view table name containing the generated SELECT SQL statement that converts file data into
-     * relational columns (never <code>null</code> or empty).
-     */
-	private String viewTableName = StringUtilities.EMPTY_STRING;
+//    /**
+//     * The unique view table name containing the generated SELECT SQL statement that converts file data into
+//     * relational columns (never <code>null</code> or empty).
+//     */
+//	private String viewTableName = StringUtilities.EMPTY_STRING;
 	
     /**
      * An initial xquery expression
@@ -78,11 +79,11 @@ public class TeiidXmlFileInfo implements UiConstants {
 	 */
 	private boolean doProcess;
 	
-	/**
-	 * Current <code>IStatus</code> representing the state of the input values for this instance of
-	 * <code>TeiidMetadataFileInfo</code>
-	 */
-	private IStatus status;
+//	/**
+//	 * Current <code>IStatus</code> representing the state of the input values for this instance of
+//	 * <code>TeiidMetadataFileInfo</code>
+//	 */
+//	private IStatus status;
 	
 	/**
 	 * The cached <code>Collection</code> of the first 6 lines to use for UI display purposes
@@ -104,10 +105,10 @@ public class TeiidXmlFileInfo implements UiConstants {
 	 * @param dataFile the Teiid-formatted data file
 	 */
 	public TeiidXmlFileInfo(File dataFile) {
-		super();
+		super(dataFile, false);
 		CoreArgCheck.isNotNull(dataFile, "dataFile is null"); //$NON-NLS-1$
-		
-		this.dataFile = dataFile;
+//		
+//		this.dataFile = dataFile;
 		initialize();
 	}
 	
@@ -116,7 +117,7 @@ public class TeiidXmlFileInfo implements UiConstants {
 	 * @param info the data file info object
 	 */
 	public TeiidXmlFileInfo(TeiidXmlFileInfo info) {
-		super();
+		super(info.getDataFile(), false);
 		
 		inject(info);
 	}
@@ -129,7 +130,6 @@ public class TeiidXmlFileInfo implements UiConstants {
 	public void inject(TeiidXmlFileInfo info) {
 		CoreArgCheck.isNotNull(info.getDataFile(), "dataFile is null"); //$NON-NLS-1$
 		
-		this.dataFile = info.getDataFile();
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.xqueryExpression = info.getXQueryExpression(); 
@@ -142,25 +142,25 @@ public class TeiidXmlFileInfo implements UiConstants {
 						colInfo.getXmlPath()));
 		}
 		
-		this.status = info.getStatus();
+		setStatus(info.getStatus());
 		if( info.getViewTableName() != null ) {
-			this.viewTableName = info.getViewTableName();
+			setViewTableName(info.getViewTableName());
 		} else {
-			this.viewTableName = StringUtilities.EMPTY_STRING;
+			setViewTableName(StringUtilities.EMPTY_STRING);
 		}
 		
 		validate();
 	}
 	
 	private void initialize() {
-		this.status = Status.OK_STATUS;
+		setStatus(Status.OK_STATUS);
 		this.columnDatatypeMap = new HashMap<String, String>();
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		
 		loadHeader();
 		
-		String fileName = dataFile.getName();
+		String fileName = getDataFile().getName();
 		if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
 			fileName = fileName.substring(0, fileName.length()-4);
 		}
@@ -190,24 +190,25 @@ public class TeiidXmlFileInfo implements UiConstants {
 		return this.columnDatatypeMap.get(columnName);
 	}
 	
-	/**
-	 * 
-	 * @return viewTableName the view table name (never <code>null</code> or empty).
-	 */
-	public String getViewTableName() {
-		return this.viewTableName;
-	}
+//	/**
+//	 * 
+//	 * @return viewTableName the view table name (never <code>null</code> or empty).
+//	 */
+//	public String getViewTableName() {
+//		return this.viewTableName;
+//	}
 
-	/**
-	 * 
-	 * @param viewTableName (never <code>null</code> or empty).
-	 */
-	public void setViewTableName(String viewTableName) {
-		CoreArgCheck.isNotEmpty(viewTableName, "viewTableName is null"); //$NON-NLS-1$
-		
-		this.viewTableName = viewTableName;
-		validate();
-	}
+//	/**
+//	 * 
+//	 * @param viewTableName (never <code>null</code> or empty).
+//	 */
+//	@Override
+//	public void setViewTableName(String viewTableName) {
+//		CoreArgCheck.isNotEmpty(viewTableName, "viewTableName is null"); //$NON-NLS-1$
+//		
+//		this.viewTableName = viewTableName;
+//		validate();
+//	}
 	
 	/**
 	 * 
@@ -232,13 +233,13 @@ public class TeiidXmlFileInfo implements UiConstants {
 		this.cachedFirstLines = new String[0];
 		Collection<String> lines = new ArrayList<String>(7);
 		
-        if(this.dataFile != null && this.dataFile.exists()){
+        if(this.getDataFile() != null && this.getDataFile().exists()){
             FileReader fr=null;
             BufferedReader in=null;
 
             try{
             	int iLines = 0;
-                fr=new FileReader(this.dataFile);
+                fr=new FileReader(this.getDataFile());
                 in = new BufferedReader(fr);
                 String str;
                 while ((str = in.readLine()) != null) {
@@ -253,7 +254,7 @@ public class TeiidXmlFileInfo implements UiConstants {
                 this.cachedFirstLines = lines.toArray(new String[0]);
             }catch(Exception e){
             	Util.log(IStatus.ERROR, e, 
-                		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", this.dataFile.getName())); //$NON-NLS-1$
+                		Util.getString(I18N_PREFIX + "problemLoadingFileContentsMessage", this.getDataFile().getName())); //$NON-NLS-1$
             }
             finally{
                 try{
@@ -297,7 +298,7 @@ public class TeiidXmlFileInfo implements UiConstants {
 		validate();
 	}
 	
-	private void validate() {
+	public void validate() {
 		// Validate XQuery Expression
 		if( this.getXQueryExpression() == null || this.getXQueryExpression().length() == 0 ) {
 			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.xqueryExpressionNullOrEmpty"))); //$NON-NLS-1$
@@ -374,21 +375,21 @@ public class TeiidXmlFileInfo implements UiConstants {
 		return this.numberOfLinesInFile;
 	}
 	
-	/**
-	 * 
-	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public IStatus getStatus() {
-		return this.status;
-	}
-
-	/**
-	 * 
-	 * @param status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public void setStatus(IStatus status) {
-		this.status = status;
-	}
+//	/**
+//	 * 
+//	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
+//	 */
+//	public IStatus getStatus() {
+//		return this.status;
+//	}
+//
+//	/**
+//	 * 
+//	 * @param status the <code>IStatus</code> representing the validity of the data in this info object
+//	 */
+//	public void setStatus(IStatus status) {
+//		this.status = status;
+//	}
 	
 	public void setOrdinality(TeiidColumnInfo columnInfo, boolean value) {
 		// Need to synchronize the setting of this value for a column info.
@@ -429,13 +430,13 @@ public class TeiidXmlFileInfo implements UiConstants {
         return text.toString();
     }
     
-	/**
-	 * 
-	 * @return dataFile the teiid-formatted data <code>File</code>
-	 */
-	public File getDataFile() {
-		return this.dataFile;
-	}
+//	/**
+//	 * 
+//	 * @return dataFile the teiid-formatted data <code>File</code>
+//	 */
+//	public File getDataFile() {
+//		return this.dataFile;
+//	}
     
 	/**
 	 * Returns the current generated SQL string based on an unknown relational model name
@@ -519,7 +520,7 @@ public class TeiidXmlFileInfo implements UiConstants {
 
     	// SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
     	String finalSQLString = UiPlugin.Util.getString(
-    			"XmlViewModelFactory.textTableSqlTemplate", //$NON-NLS-1$
+    			"TeiidXmlFileInfo.xmlTableSqlTemplate", //$NON-NLS-1$
     			string_0,
     			relationalModelName,
     			string_2,
