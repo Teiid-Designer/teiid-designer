@@ -64,17 +64,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
      * The number of lines in data file
      */
     private int numberOfLinesInFile = 0;
-    
-//    /**
-//     * The unique data file name containing Teiid-formatted relational table data (never <code>null</code> or empty).
-//     */
-//	private File dataFile;
-//	
-//    /**
-//     * The unique view table name containing the generated SELECT SQL statement that converts file data into
-//     * relational columns (never <code>null</code> or empty).
-//     */
-//	private String viewTableName;
 	
 	/**
      * indicator that the data file includes a header containing column names and the header line number should be
@@ -154,12 +143,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	private boolean doProcess;
 	
 	/**
-	 * Current <code>IStatus</code> representing the state of the input values for this instance of
-	 * <code>TeiidMetadataFileInfo</code>
-	 */
-	private IStatus status;
-	
-	/**
 	 * The cached <code>Collection</code> of the first 6 lines to use for UI display purposes
 	 */
 	private String[] cachedFirstLines;
@@ -234,13 +217,13 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		
 		setViewTableName(info.getViewTableName());
 		
-		this.status = info.getStatus();
+		setStatus(info.getStatus());
 		
 		ignoreReload = false;
 	}
 	
 	private void initialize() {
-		this.status = Status.OK_STATUS;
+		setStatus(Status.OK_STATUS);
 		this.columnDatatypeMap = new HashMap<String, String>();
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
@@ -274,24 +257,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	public String getDatatype(String columnName) {
 		return this.columnDatatypeMap.get(columnName);
 	}
-	
-//	/**
-//	 * 
-//	 * @return viewTableName the view table name (never <code>null</code> or empty).
-//	 */
-//	public String getViewTableName() {
-//		return this.viewTableName;
-//	}
-
-//	/**
-//	 * 
-//	 * @param viewTableName (never <code>null</code> or empty).
-//	 */
-//	public void setViewTableName(String viewTableName) {
-//		CoreArgCheck.isNotEmpty(viewTableName, "viewTableName is null"); //$NON-NLS-1$
-//		
-//		this.viewTableName = viewTableName;
-//	}
 
 	/**
 	 * 
@@ -390,13 +355,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	public char getEscape() {
 		return this.escape;
 	}
-//	/**
-//	 * 
-//	 * @return dataFile the teiid-formatted data <code>File</code>
-//	 */
-//	public File getDataFile() {
-//		return this.dataFile;
-//	}
 	
 	public String getHeaderString() {
 		if( cachedFirstLines.length == 0 ) {
@@ -729,22 +687,6 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 */
 	public int getNumberOfLinesInFile() {
 		return this.numberOfLinesInFile;
-	}
-	
-	/**
-	 * 
-	 * @return status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public IStatus getStatus() {
-		return this.status;
-	}
-
-	/**
-	 * 
-	 * @param status the <code>IStatus</code> representing the validity of the data in this info object
-	 */
-	public void setStatus(IStatus status) {
-		this.status = status;
 	}
 	
     /**

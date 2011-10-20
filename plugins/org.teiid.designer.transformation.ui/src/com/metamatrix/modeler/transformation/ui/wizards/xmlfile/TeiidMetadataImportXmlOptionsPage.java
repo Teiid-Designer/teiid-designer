@@ -221,13 +221,8 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	xQueryExpressionText.addModifyListener(new ModifyListener() {
     		public void modifyText( final ModifyEvent event ) {
     			if( !synchronizing ) {
-	    			if( !xQueryExpressionText.getText().isEmpty()) {
-        				fileInfo.setXQueryExpression(xQueryExpressionText.getText());
-        				setErrorMessage(null);
-        				handleInfoChanged(false);
-	            	} else {
-	            		setErrorMessage(getString("expressionCannotBeEmpty")); //$NON-NLS-1$
-	            	}
+        			fileInfo.setXQueryExpression(xQueryExpressionText.getText());
+        			handleInfoChanged(false);
     			}
     		}
     	});

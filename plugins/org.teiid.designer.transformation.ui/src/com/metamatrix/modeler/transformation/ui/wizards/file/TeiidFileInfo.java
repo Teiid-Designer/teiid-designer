@@ -13,6 +13,10 @@ import org.eclipse.core.runtime.IStatus;
 
 import com.metamatrix.core.util.CoreArgCheck;
 
+/**
+ * Abstract business object used to manage Teiid-specific Metadata File information used during import
+ * 
+ */
 public abstract class TeiidFileInfo {
 	boolean isFlatFile = false;
 	
