@@ -35,6 +35,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.core.xslt.test</module>
 		<!-- <module>org.teiid.designer.ddl.importer.test</module> -->
 		<!-- <module>org.teiid.designer.dqp.test</module> -->
+		<module>org.teiid.designer.extension.test</module>
 		<!-- <module>org.teiid.designer.jdbc.relational.test</module> -->
 		<module>org.teiid.designer.jdbc.test.framework</module>
 		<!-- <module>org.teiid.designer.jdbc.test</module> -->
