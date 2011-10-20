@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
@@ -148,7 +149,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     private void createMed( IFile medFile ) throws Exception {
-        ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser();
+        ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
         this.med = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
     }
 

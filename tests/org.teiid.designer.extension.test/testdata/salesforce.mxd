@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.salesforce"
+	namespacePrefix="salesforce" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1"
+>
+	<p:description>Salesforce extended relational model properties</p:description>
+	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.BaseTableImpl">
+		<p:property name="custom" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Custom</p:display>
+		</p:property>
+		<p:property name="supportsCreate" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Create</p:display>
+		</p:property>
+		<p:property name="supportsDelete" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Delete</p:display>
+		</p:property>
+		<p:property name="supportsIdLookup" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports ID Lookup</p:display>
+		</p:property>
+		<p:property name="supportsMerge" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Merge</p:display>
+		</p:property>
+		<p:property name="supportsQuery" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Query</p:display>
+		</p:property>
+		<p:property name="supportsReplicate" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Replicate</p:display>
+		</p:property>
+		<p:property name="supportsRetrieve" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Supports Retrieve</p:display>
+		</p:property>
+        <p:property name="supportsSearch" type="boolean" defaultValue="false">
+            <p:display locale="en_US">Supports Search</p:display>
+        </p:property>
+	</p:extendedMetaclass>
+	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ColumnImpl">
+		<p:property name="custom" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Custom</p:display>
+		</p:property>
+		<p:property name="calculated" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Calculated</p:display>
+		</p:property>
+		<p:property name="defaultedOnCreate" type="boolean" defaultValue="false">
+			<p:display locale="en_US">Defaulted on Create</p:display>
+		</p:property>
+		<p:property name="picklistValues" type="string">
+			<p:display locale="en_US">Picklist Values</p:display>
+		</p:property>
+	</p:extendedMetaclass>
+</p:modelExtension>

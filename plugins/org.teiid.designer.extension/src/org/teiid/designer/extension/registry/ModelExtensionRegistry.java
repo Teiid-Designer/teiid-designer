@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -29,6 +31,7 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -62,13 +65,27 @@ public final class ModelExtensionRegistry {
     private ModelExtensionDefinitionParser parser;
 
     /**
+     * @param medSchema the model extension definition schema file (cannot be <code>null</code> and must exist) 
      * @throws IllegalStateException if there is a problem with the model extension XSD
      */
-    public ModelExtensionRegistry() throws IllegalStateException {
+    public ModelExtensionRegistry(File medSchema) throws IllegalStateException {
         this.definitions = new HashMap<String, ModelExtensionDefinition>();
         this.listeners = new CopyOnWriteArrayList<RegistryListener>();
         this.namespaces = new HashMap<String, String>();
-        this.parser = new ModelExtensionDefinitionParser();
+
+        try {
+            this.parser = new ModelExtensionDefinitionParser(medSchema);
+        } catch (Exception e) {
+            IllegalStateException error;
+
+            if (e instanceof IllegalStateException) {
+                error = (IllegalStateException)e;
+            } else {
+                error = new IllegalStateException(e);
+            }
+
+            throw error;
+        }
     }
 
     /**

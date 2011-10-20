@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -28,6 +29,7 @@ import org.osgi.framework.BundleContext;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -254,7 +256,7 @@ public class ExtensionPlugin extends Plugin {
         ((LoggingUtil)Util).initializePlatformLogger(this);
 
         try {
-            this.registry = new ModelExtensionRegistry();
+            this.registry = new ModelExtensionRegistry(getMedSchema());
             this.registry.setMetamodelUris(loadExtensibleMetamodelUris());
             this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
 

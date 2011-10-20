@@ -17,10 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.teiid.designer.extension.ExtensionConstants;
-import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
@@ -28,6 +29,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -48,6 +50,8 @@ public class ModelExtensionDefinitionParser {
      */
     static final Locale LOCALE = Locale.getDefault();
 
+    private final File definitionSchemaFile;
+
     /**
      * The parser of the definition stream.
      */
@@ -56,9 +60,11 @@ public class ModelExtensionDefinitionParser {
     /**
      * Constructs a parser.
      * 
+     * @param medSchema the model extension definition schema file used during validation (cannot be <code>null</code> and must
+     *            exist)
      * @throws IllegalStateException if there were problems with the model extension definition schema file
      */
-    public ModelExtensionDefinitionParser() throws IllegalStateException {
+    public ModelExtensionDefinitionParser( File medSchema ) throws IllegalStateException {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -67,7 +73,7 @@ public class ModelExtensionDefinitionParser {
             this.parser = factory.newSAXParser();
             this.parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            File definitionSchemaFile = ExtensionPlugin.getInstance().getMedSchema();
+            this.definitionSchemaFile = medSchema;
 
             if (definitionSchemaFile == null || !definitionSchemaFile.exists()) {
                 throw new IllegalStateException(Messages.definitionSchemaFileNotFoundInFilesystem);
@@ -273,7 +279,8 @@ public class ModelExtensionDefinitionParser {
                     System.err.println("allowedValues=" + valuesString.subSequence(0, valuesString.length() - DELIM.length())); //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(localName)) {
-                if (this.definition != null) this.definition.setDescription(this.description);
+                if (this.definition != null)
+                    this.definition.setDescription(this.description);
 
                 saveModelExtensionDefinitionProperties();
 
@@ -303,7 +310,7 @@ public class ModelExtensionDefinitionParser {
         public void error( SAXParseException e ) throws SAXException {
             // overriding this method is needed to stop parsing
             // exception indicates a validation or format problem
-            //TODO instead of throwing exception keep track of errors
+            // TODO instead of throwing exception keep track of errors
             throw e;
         }
 
