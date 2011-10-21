@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.ui.editors;
 
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
-import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.util.ArrayList;
@@ -20,8 +19,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -178,6 +175,7 @@ public class EditTranslationDialog extends FormDialog {
             cbx = cbxLocales;
             toolkit.adapt(cbxLocales, true, false);
             cbxLocales.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            ((GridData)cbxLocales.getLayoutData()).heightHint = cbxLocales.getItemHeight() + 4;
 
             // populate locale combo
             final Locale[] locales = Locale.getAvailableLocales();
@@ -215,12 +213,15 @@ public class EditTranslationDialog extends FormDialog {
 
         TRANSLATION: {
             Label lblTranslation = toolkit.createLabel(body, Messages.translationLabel, SWT.NONE);
-            lblTranslation.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            lblTranslation.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 
-            final Text txtTranslation = toolkit.createText(body, null, TEXT_STYLE);
+            Text txtTranslation = toolkit.createText(body, null, SWT.BORDER | SWT.MULTI
+                                                           | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.translationError.setControl(txtTranslation);
-            txtTranslation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            txtTranslation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)txtTranslation.getLayoutData()).verticalIndent += ((GridLayout)body.getLayout()).verticalSpacing;
+            ((GridData)txtTranslation.getLayoutData()).heightHint = txtTranslation.getLineHeight() * 3;
+            ((GridData)txtTranslation.getLayoutData()).widthHint = (int)(getShell().getSize().x * 0.8);
 
             if (isEditMode()) {
                 txtTranslation.setText(this.translationBeingEdited.getTranslation());
@@ -236,20 +237,6 @@ public class EditTranslationDialog extends FormDialog {
                 @Override
                 public void modifyText( ModifyEvent e ) {
                     handleTranslationChanged(((Text)e.widget).getText());
-                }
-            });
-
-            // size combo to be same size as text field
-            cbx.addControlListener(new ControlAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-                 */
-                @Override
-                public void controlResized( ControlEvent e ) {
-                    cbx.setSize(txtTranslation.getSize().x, txtTranslation.getSize().y);
                 }
             });
         }
@@ -299,6 +286,7 @@ public class EditTranslationDialog extends FormDialog {
 
         if (CoreStringUtil.isEmpty(this.localeError.getMessage()) && CoreStringUtil.isEmpty(this.translationError.getMessage())) {
             enable = true;
+
             if (isEditMode()) {
                 Locale localeBeingEdited = this.translationBeingEdited.getLocale();
 
@@ -313,11 +301,13 @@ public class EditTranslationDialog extends FormDialog {
                 }
             }
 
-            // set message
-            // a bug in Eclipse doesn't reset the font color going from an error to NONE so first set to INFORMATION to get the
-            // font color to change
-            this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.INFORMATION);
-            this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.NONE);
+            // set message if changed
+            if (!CoreStringUtil.equals(Messages.translationDialogMsg, this.scrolledForm.getMessage())) {
+                // a bug in Eclipse doesn't reset the font color going from an error to NONE so first set to INFORMATION to get the
+                // font color to change
+                this.scrolledForm.setMessage(CoreStringUtil.Constants.EMPTY_STRING, IMessageProvider.INFORMATION);
+                this.scrolledForm.setMessage(Messages.translationDialogMsg, IMessageProvider.NONE);
+            }
         }
 
         // set enabled state of OK button

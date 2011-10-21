@@ -18,8 +18,6 @@ import java.util.Set;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -148,9 +146,10 @@ public final class OverviewEditorPage extends MedEditorPage {
         METAMODEL_URI: {
             toolkit.createLabel(finalContainer, Messages.extendedMetamodelUriLabel);
 
-            final CCombo cbxMetamodelUris = new CCombo(finalContainer, COMBO_STYLE);
+            CCombo cbxMetamodelUris = new CCombo(finalContainer, COMBO_STYLE);
             toolkit.adapt(cbxMetamodelUris, true, false);
             cbxMetamodelUris.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            ((GridData)cbxMetamodelUris.getLayoutData()).heightHint = cbxMetamodelUris.getItemHeight() + 4;
 
             // populate URIs
             Set<String> items = ExtensionPlugin.getInstance().getRegistry().getExtendableMetamodelUris();
@@ -182,19 +181,6 @@ public final class OverviewEditorPage extends MedEditorPage {
                 }
             });
 
-            cbxMetamodelUris.addControlListener(new ControlAdapter() {
-
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-                 */
-                @Override
-                public void controlResized( ControlEvent e ) {
-                    cbxMetamodelUris.setSize(finalTxtNamespaceUri.getSize());
-                }
-            });
-
             // associate control with error message
             this.metamodelUriError.setControl(cbxMetamodelUris);
         }
@@ -209,7 +195,7 @@ public final class OverviewEditorPage extends MedEditorPage {
 
         DESCRIPTION: {
             Label label = toolkit.createLabel(finalContainer, Messages.descriptionLabel);
-            label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            label.setLayoutData(new GridData(SWT.BEGINNING, SWT.TOP, false, false));
 
             Text txtDescription = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, SWT.BORDER | SWT.MULTI
                     | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);

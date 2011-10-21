@@ -48,6 +48,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     private boolean index = INDEX_DEFAULT;
     private CopyOnWriteArrayList<PropertyChangeListener> listeners;
     private boolean masked = MASKED_DEFAULT;
+    private String namespacePrefix;
     private NamespacePrefixProvider namespacePrefixProvider;
     private boolean required = REQUIRED_DEFAULT;
     private String simpleId;
@@ -145,11 +146,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addAllowedValue( String newAllowedValue ) {
         CoreStringUtil.isEmpty(newAllowedValue);
-        Object oldValue = new HashSet<String>(this.allowedValues);
         boolean added = this.allowedValues.add(newAllowedValue);
 
         if (added) {
-            notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, this.allowedValues);
+            notifyChangeListeners(PropertyName.ALLOWED_VALUES, null, newAllowedValue);
         }
 
         return added;
@@ -163,11 +163,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addDescription( Translation newDescription ) {
         CoreArgCheck.isNotNull(newDescription, "newDescription is null"); //$NON-NLS-1$
-        Object oldValue = new HashSet<Translation>(this.descriptions);
         boolean added = this.descriptions.add(newDescription);
 
         if (added) {
-            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.descriptions);
+            notifyChangeListeners(PropertyName.DESCRIPTION, null, newDescription);
         }
 
         return added;
@@ -181,11 +180,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean addDisplayName( Translation newDisplayName ) {
         CoreArgCheck.isNotNull(newDisplayName, "newDisplayName is null"); //$NON-NLS-1$
-        Object oldValue = new HashSet<Translation>(this.displayNames);
         boolean added = this.displayNames.add(newDisplayName);
 
         if (added) {
-            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayNames);
+            notifyChangeListeners(PropertyName.DISPLAY_NAME, null, newDisplayName);
         }
 
         return added;
@@ -236,10 +234,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         }
 
         // string properties
-        if (!CoreStringUtil.equals(getSimpleId(), that.getSimpleId())
-                || !CoreStringUtil.equals(getNamespacePrefix(), that.getNamespacePrefix())
-                || !CoreStringUtil.equals(getFixedValue(), that.getFixedValue())
-                || !CoreStringUtil.equals(getDefaultValue(), that.getDefaultValue())) {
+        if (!Utils.valuesAreEqual(getSimpleId(), that.getSimpleId())
+                || !Utils.valuesAreEqual(getNamespacePrefix(), that.getNamespacePrefix())
+                || !Utils.valuesAreEqual(getFixedValue(), that.getFixedValue())
+                || !Utils.valuesAreEqual(getDefaultValue(), that.getDefaultValue())) {
             return false;
         }
 
@@ -271,6 +269,40 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         return true;
     }
 
+    private String findTranslationMatch( Set<Translation> translations ) {
+        Locale defaultLocale = Locale.getDefault();
+        String defaultLanguage = defaultLocale.getLanguage();
+        String defaultCountry = defaultLocale.getCountry();
+
+        String languageCountryMatch = null;
+        String languageMatch = null;
+
+        for (Translation translation : translations) {
+            Locale locale = translation.getLocale();
+
+            // return exact match
+            if (defaultLocale.equals(translation.getLocale())) {
+                return translation.getTranslation();
+            }
+
+            // look for language and country match
+            String language = locale.getLanguage();
+            String country = locale.getCountry();
+
+            if (CoreStringUtil.equals(defaultLanguage, language) && CoreStringUtil.equals(defaultCountry, country)) {
+                languageCountryMatch = translation.getTranslation();
+                continue;
+            }
+
+            // look for language match
+            if (CoreStringUtil.equals(defaultLanguage, language)) {
+                languageMatch = translation.getTranslation();
+            }
+        }
+
+        return ((languageCountryMatch == null) ? languageMatch : languageCountryMatch);
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -300,14 +332,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getDescription() {
-        for (Translation description : this.descriptions) {
-            if (Locale.getDefault().equals(description.getLocale())) {
-                return description.getTranslation();
-            }
-        }
-
-        // no translation found
-        return null;
+        return findTranslationMatch(this.descriptions);
     }
 
     /**
@@ -331,14 +356,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getDisplayName() {
-        for (Translation displayName : this.displayNames) {
-            if (Locale.getDefault().equals(displayName.getLocale())) {
-                return displayName.getTranslation();
-            }
-        }
-
-        // no translation found
-        return getId();
+        return findTranslationMatch(this.displayNames);
     }
 
     /**
@@ -373,12 +391,19 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
     /**
      * {@inheritDoc}
+     * <p>
+     * If the {@link NamespacePrefixProvider namespace prefix provider} has been set, it will be used to provide the namespace
+     * prefix.
      * 
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#getNamespacePrefix()
      */
     @Override
     public String getNamespacePrefix() {
-        return this.namespacePrefixProvider.getNamespacePrefix();
+        if (this.namespacePrefixProvider != null) {
+            return this.namespacePrefixProvider.getNamespacePrefix();
+        }
+
+        return this.namespacePrefix;
     }
 
     /**
@@ -388,7 +413,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public String getRuntimeType() {
-        return this.type.getRuntimeType();
+        return ((this.type == null) ? null : this.type.getRuntimeType());
     }
 
     /**
@@ -564,11 +589,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean removeAllowedValue( String allowedValueBeingRemoved ) {
         CoreStringUtil.isEmpty(allowedValueBeingRemoved);
-        Object oldValue = new HashSet<String>(this.allowedValues);
+        Object oldValue = allowedValueBeingRemoved;
         boolean removed = this.allowedValues.remove(allowedValueBeingRemoved);
 
         if (removed) {
-            notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, this.allowedValues);
+            notifyChangeListeners(PropertyName.ALLOWED_VALUES, oldValue, null);
         }
 
         return removed;
@@ -582,11 +607,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean removeDescription( Translation descriptionBeingRemoved ) {
         CoreArgCheck.isNotNull(descriptionBeingRemoved, "description is null"); //$NON-NLS-1$
-        Object oldValue = new HashSet<Translation>(this.descriptions);
+        Object oldValue = descriptionBeingRemoved;
         boolean removed = this.descriptions.remove(descriptionBeingRemoved);
 
         if (removed) {
-            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, this.descriptions);
+            notifyChangeListeners(PropertyName.DESCRIPTION, oldValue, null);
         }
 
         return removed;
@@ -600,11 +625,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     @Override
     public boolean removeDisplayName( Translation displayNameBeingRemoved ) {
         CoreArgCheck.isNotNull(displayNameBeingRemoved, "displayName is null"); //$NON-NLS-1$
-        Object oldValue = new HashSet<Translation>(this.displayNames);
+        Object oldValue = displayNameBeingRemoved;
         boolean removed = this.displayNames.remove(displayNameBeingRemoved);
 
         if (removed) {
-            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, this.displayNames);
+            notifyChangeListeners(PropertyName.DISPLAY_NAME, oldValue, null);
         }
 
         return removed;
@@ -622,8 +647,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newAdvanced the new advanced value
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setAdvanced(boolean)
      */
+    @Override
     public void setAdvanced( boolean newAdvanced ) {
         if (this.advanced != newAdvanced) {
             this.advanced = newAdvanced;
@@ -693,10 +721,13 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newDefaultValue the new default value (can be <code>null</code> or empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setDefaultValue(java.lang.String)
      */
+    @Override
     public void setDefaultValue( String newDefaultValue ) {
-        if (!CoreStringUtil.equals(this.defaultValue, newDefaultValue)) {
+        if (!Utils.valuesAreEqual(this.defaultValue, newDefaultValue)) {
             String oldValue = this.defaultValue;
             this.defaultValue = newDefaultValue;
             notifyChangeListeners(PropertyName.DEFAULT_VALUE, oldValue, this.defaultValue);
@@ -756,10 +787,13 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newFixedValue the new fixed value (can be <code>null</code> or empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setFixedValue(java.lang.String)
      */
+    @Override
     public void setFixedValue( String newFixedValue ) {
-        if (!CoreStringUtil.equals(this.fixedValue, newFixedValue)) {
+        if (!Utils.valuesAreEqual(this.fixedValue, newFixedValue)) {
             String oldValue = this.fixedValue;
             this.fixedValue = newFixedValue;
             notifyChangeListeners(PropertyName.FIXED_VALUE, oldValue, this.fixedValue);
@@ -767,8 +801,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newIndex the new index value
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setIndex(boolean)
      */
+    @Override
     public void setIndex( boolean newIndex ) {
         if (this.index != newIndex) {
             this.index = newIndex;
@@ -777,8 +814,11 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newMasked the new masked value
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setMasked(boolean)
      */
+    @Override
     public void setMasked( boolean newMasked ) {
         if (this.masked != newMasked) {
             this.masked = newMasked;
@@ -787,8 +827,27 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newRequired the new required value
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespacePrefix(java.lang.String)
      */
+    @Override
+    public void setNamespacePrefix( String newNamespacePrefix ) {
+        String oldValue = getNamespacePrefix();
+
+        if (!Utils.valuesAreEqual(oldValue, newNamespacePrefix)) {
+            this.namespacePrefix = newNamespacePrefix;
+            this.namespacePrefixProvider = null;
+            notifyChangeListeners(PropertyName.NAMESPACE_PREFIX, oldValue, this.namespacePrefix);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setRequired(boolean)
+     */
+    @Override
     public void setRequired( boolean newRequired ) {
         if (this.required != newRequired) {
             this.required = newRequired;
@@ -797,10 +856,13 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     }
 
     /**
-     * @param newSimpleId the new simpleId (can be <code>null</code> or empty)
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setSimpleId(java.lang.String)
      */
+    @Override
     public void setSimpleId( String newSimpleId ) {
-        if (!CoreStringUtil.equals(this.simpleId, newSimpleId)) {
+        if (!Utils.valuesAreEqual(this.simpleId, newSimpleId)) {
             String oldValue = this.simpleId;
             this.simpleId = newSimpleId;
             notifyChangeListeners(PropertyName.SIMPLE_ID, oldValue, this.simpleId);
@@ -813,8 +875,12 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setType(org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type)
      */
     @Override
-    public void setType( Type runtimeType ) {
-        this.type = runtimeType;
+    public void setType( Type newRuntimeType ) {
+        if (this.type != newRuntimeType) {
+            Type oldValue = this.type;
+            this.type = newRuntimeType;
+            notifyChangeListeners(PropertyName.TYPE, oldValue, this.type);
+        }
     }
 
     /**

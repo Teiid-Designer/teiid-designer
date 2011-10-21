@@ -134,9 +134,19 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
     boolean removeListener( PropertyChangeListener listener );
 
     /**
+     * @param newAdvanced the new advanced value
+     */
+    void setAdvanced( boolean newAdvanced );
+
+    /**
      * @param newAllowedValues the new allowed values (can be <code>null</code> but cannot have <code>null</code> values)
      */
     void setAllowedValues( Set<String> newAllowedValues );
+
+    /**
+     * @param newDefaultValue the new default value (can be <code>null</code> or empty)
+     */
+    void setDefaultValue( String newDefaultValue );
 
     /**
      * @param newDescriptions the new descriptions (can be <code>null</code> or empty)
@@ -147,6 +157,36 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
      * @param newDisplayNames the new display names (can be <code>null</code> or empty)
      */
     void setDisplayNames( Set<Translation> newDisplayNames );
+
+    /**
+     * @param newFixedValue the new fixed value (can be <code>null</code> or empty)
+     */
+    void setFixedValue( String newFixedValue );
+
+    /**
+     * @param newIndex the new index value
+     */
+    void setIndex( boolean newIndex );
+
+    /**
+     * @param newMasked the new masked value
+     */
+    void setMasked( boolean newMasked );
+
+    /**
+     * @param newNamespacePrefix the new namespace prefix (can be <code>null</code> or empty)
+     */
+    void setNamespacePrefix( String newNamespacePrefix );
+
+    /**
+     * @param newRequired the new required value
+     */
+    void setRequired( boolean newRequired );
+
+    /**
+     * @param newSimpleId the new simpleId (can be <code>null</code> or empty)
+     */
+    void setSimpleId( String newSimpleId );
 
     /**
      * @param runtimeType the Teiid runtime type (can be <code>null</code>)
@@ -298,11 +338,27 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
         }
 
         /**
-         * @param propId the string being checked (cannot be <code>null</code> or empty)
+         * @param thisValue the first value being compared (can be <code>null</code> or empty)
+         * @param thatValue the other value being compared (can be <code>null</code> or empty)
+         * @return <code>true</code> if values are equal or both values are empty
+         */
+        public static boolean valuesAreEqual( String thisValue,
+                                              String thatValue ) {
+            if (CoreStringUtil.isEmpty(thisValue) && CoreStringUtil.isEmpty(thatValue)) {
+                return true;
+            }
+
+            return CoreStringUtil.equals(thisValue, thatValue);
+        }
+
+        /**
+         * @param propId the string being checked (can be <code>null</code> or empty)
          * @return the namespace prefix or <code>null</code> if not found
          */
         public static String getNamespacePrefix( String propId ) {
-            CoreArgCheck.isNotEmpty(propId, "propId is empty"); //$NON-NLS-1$
+            if (CoreStringUtil.isEmpty(propId)) {
+                return null;
+            }
 
             int index = propId.indexOf(ID_DELIM);
 
@@ -318,24 +374,30 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
             return null;
         }
 
+        /**
+         * @param namespacePrefix the namespace prefix (can be <code>null</code> or empty)
+         * @param propertySimpleId the simple identifier (can be <code>null</code> or empty)
+         * @return the property ID or <code>null</code> if either the namespace prefix or simple identifier is empty
+         */
         public static String getPropertyId( String namespacePrefix,
                                             String propertySimpleId ) {
-            CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
-            CoreArgCheck.isNotEmpty(propertySimpleId, "propertySimpleId is empty"); //$NON-NLS-1$
+            if (CoreStringUtil.isEmpty(namespacePrefix) || CoreStringUtil.isEmpty(propertySimpleId)) {
+                return null;
+            }
+
             return namespacePrefix + ModelExtensionPropertyDefinition.ID_DELIM + propertySimpleId;
         }
 
         /**
-         * @param id the identifier being checked (cannot be <code>null</code> or empty)
+         * @param id the identifier being checked (can be <code>null</code> or empty)
          * @param namespacePrefix the namespace prefix used to determine the result (cannot be <code>null</code> or empty)
          * @return <code>true</code> if the identifier is a property definition ID for the specified namespace prefix
          */
         public static boolean isExtensionPropertyId( String id,
                                                      String namespacePrefix ) {
-            CoreArgCheck.isNotEmpty(id, "id is empty"); //$NON-NLS-1$
             CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
 
-            if (id.startsWith(namespacePrefix + ModelExtensionPropertyDefinition.ID_DELIM)) {
+            if ((id != null) && id.startsWith(namespacePrefix + ModelExtensionPropertyDefinition.ID_DELIM)) {
                 return (id.length() > (namespacePrefix.length() + Character.toString(ModelExtensionPropertyDefinition.ID_DELIM)
                                                                            .length()));
             }
@@ -388,77 +450,77 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
             if (Type.BOOLEAN == runtimeType) {
                 if (!proposedValue.equalsIgnoreCase(Boolean.TRUE.toString())
                         && !proposedValue.equalsIgnoreCase(Boolean.FALSE.toString())) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.CHAR == runtimeType) {
                 if (proposedValue.length() != 1) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.BYTE == runtimeType) {
                 try {
                     Byte.parseByte(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.SHORT == runtimeType) {
                 try {
                     Short.parseShort(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.INTEGER == runtimeType) {
                 try {
                     Integer.parseInt(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.LONG == runtimeType) {
                 try {
                     Long.parseLong(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.FLOAT == runtimeType) {
                 try {
                     Float.parseFloat(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.DOUBLE == runtimeType) {
                 try {
                     Double.parseDouble(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.BIG_INTEGER == runtimeType) {
                 try {
                     new BigInteger(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.BIG_DECIMAL == runtimeType) {
                 try {
                     new BigDecimal(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.DATE == runtimeType) {
                 try {
                     Date.valueOf(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.TIME == runtimeType) {
                 try {
                     Time.valueOf(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else if (Type.TIMESTAMP == runtimeType) {
                 try {
                     Timestamp.valueOf(proposedValue);
                 } catch (Exception e) {
-                    return NLS.bind(Messages.invalidPropertyValueForType, runtimeType);
+                    return NLS.bind(Messages.invalidPropertyValueForType, proposedValue, runtimeType);
                 }
             } else {
                 // unknown property type

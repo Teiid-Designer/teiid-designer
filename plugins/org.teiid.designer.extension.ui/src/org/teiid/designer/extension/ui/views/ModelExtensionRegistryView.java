@@ -357,9 +357,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
         MenuManager mgr = createContextMenu();
         Menu menu = mgr.createContextMenu(this.viewer.getControl());
         this.viewer.getControl().setMenu(menu);
-        // TODO need MXD path stored somewhere so selection can find in explorer tree
-        // getSite().registerContextMenu(mgr, this.selectionProvider);
-        // getSite().setSelectionProvider(this.selectionProvider);
 
         IActionBars actionBars = getViewSite().getActionBars();
         configureMenu(actionBars.getMenuManager());
@@ -429,14 +426,16 @@ public final class ModelExtensionRegistryView extends ViewPart {
         }
 
         if (this.openMedEditorAction.isEnabled() != enable) {
-            this.openMedEditorAction.setEnabled(enable);
+            // always disable and only enable if not a built-in
+            if (!enable || !selectedMed.isBuiltIn()) {
+                this.openMedEditorAction.setEnabled(enable);
+            }
         }
 
         if (this.unregisterMedAction.isEnabled() != enable) {
-            if (enable && !selectedMed.isBuiltIn()) {
-                this.unregisterMedAction.setEnabled(true);
-            } else {
-                this.unregisterMedAction.setEnabled(false);
+            // always disable and only enable if not a built-in
+            if (!enable || !selectedMed.isBuiltIn()) {
+                this.unregisterMedAction.setEnabled(enable);
             }
         }
     }

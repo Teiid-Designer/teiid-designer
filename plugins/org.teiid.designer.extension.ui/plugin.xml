@@ -16,7 +16,7 @@
             extensions="mxd"
             id="org.teiid.designer.extension.ui.modelDefinitionEditor"
             icon="icons/model-extension-definition-editor.png"
-            name="Model Extension Definition">
+            name="%modelExtensionDefinitionEditor.name">
       </editor>
    </extension>
 
@@ -42,7 +42,7 @@
 <!-- New Model Extension Definition wizard -->
       <wizard
             name="%newMedWizard"
-            icon="icons/full/ctool16/newvdb_wiz.gif"
+            icon="icons/new-med-wiz.png"
             category="com.metamatrix.modeler.ui"
             class="org.teiid.designer.extension.ui.wizards.NewMedWizard"
             id="newMedWizard">

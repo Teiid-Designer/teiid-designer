@@ -211,6 +211,7 @@ public class Messages extends NLS {
     public static String editPropertyDialogPropertyValueSectionDescription;
     public static String editPropertyDialogPropertyValueSectionTitle;
     public static String editPropertyDialogTitle;
+    public static String editPropertyDialogAllowedValueRequiredMsg;
     public static String editPropertyDialogAllowedValueNotAddedMsg;
     public static String editPropertyDialogDescriptionNotAddedMsg;
     public static String editPropertyDialogDisplayNameNotAddedMsg;

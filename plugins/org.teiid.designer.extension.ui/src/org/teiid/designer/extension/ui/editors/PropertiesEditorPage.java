@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -533,7 +534,11 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         if (dialog.open() == Window.OK) {
             String newMetaclassName = dialog.getMetaclassName();
-            getMed().addMetaclass(newMetaclassName);
+
+            // select new metaclass
+            if (getMed().addMetaclass(newMetaclassName)) {
+                this.metaclassViewer.setSelection(new StructuredSelection(newMetaclassName));
+            }
         }
     }
 
@@ -549,7 +554,11 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         if (dialog.open() == Window.OK) {
             ModelExtensionPropertyDefinition newPropDefn = dialog.getPropertyDefinition();
-            getMed().addPropertyDefinition(metaclassName, newPropDefn);
+
+            // select new property definition
+            if (getMed().addPropertyDefinition(metaclassName, newPropDefn)) {
+                this.propertyViewer.setSelection(new StructuredSelection(newPropDefn));
+            }
         }
     }
 
@@ -585,13 +594,8 @@ public class PropertiesEditorPage extends MedEditorPage {
 
         if (dialog.open() == Window.OK) {
             ModelExtensionPropertyDefinition modifiedPropDefn = dialog.getPropertyDefinition();
-
-            if (selectedPropDefn.getId().equals(modifiedPropDefn.getId())) {
-                getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
-            } else {
-                getMed().removePropertyDefinition(metaclassName, selectedPropDefn);
-                getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
-            }
+            getMed().removePropertyDefinition(metaclassName, selectedPropDefn);
+            getMed().addPropertyDefinition(metaclassName, modifiedPropDefn);
         }
     }
 
@@ -698,6 +702,7 @@ public class PropertiesEditorPage extends MedEditorPage {
         this.metaclassError.setMessage(ModelExtensionDefinitionValidator.validateMetaclassNames(getMed().getExtendedMetaclasses(),
                                                                                                 true));
         updateMessage(this.metaclassError);
+        validatePropertyDefinitions(); // need to do this to catch when a new metaclass is added
     }
 
     private void validatePropertyDefinitions() {
