@@ -49,10 +49,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -82,9 +80,8 @@ public class PropertiesEditorPage extends MedEditorPage {
     private final ErrorMessage metaclassError;
     private final ErrorMessage propertyError;
 
-    public PropertiesEditorPage( FormEditor medEditor,
-                                 ModelExtensionDefinition medBeingEdited ) {
-        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle, medBeingEdited);
+    public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
+        super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
         this.metaclassError = new ErrorMessage();
         this.propertyError = new ErrorMessage();
     }
@@ -618,10 +615,10 @@ public class PropertiesEditorPage extends MedEditorPage {
     /**
      * {@inheritDoc}
      * 
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#handlePropertyChanged(java.beans.PropertyChangeEvent)
      */
     @Override
-    public void propertyChange( PropertyChangeEvent e ) {
+    protected void handlePropertyChanged( PropertyChangeEvent e ) {
         String propName = e.getPropertyName();
 
         if (PropertyName.METACLASS.toString().equals(propName)) {

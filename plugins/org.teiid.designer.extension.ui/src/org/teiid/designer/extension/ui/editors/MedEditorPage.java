@@ -7,61 +7,31 @@
  */
 package org.teiid.designer.extension.ui.editors;
 
-import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IMessageManager;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
-import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 
-import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
- * 
+ * The <code>MedEditorPage</code> is a base class for {@link ModelExtensionDefinitionEditor} pages that require the model extension
+ * definition that is being edited.
  */
-public abstract class MedEditorPage extends FormPage implements PropertyChangeListener {
+public abstract class MedEditorPage extends FormPage {
 
-    private final ModelExtensionDefinition med;
-    private ModelExtensionDefinition medBeingEdited;
-
-    protected MedEditorPage( FormEditor medEditor,
+    protected MedEditorPage( ModelExtensionDefinitionEditor medEditor,
                              String id,
-                             String title,
-                             ModelExtensionDefinition medBeingEdited ) {
+                             String title ) {
         super(medEditor, id, title);
-
-        CoreArgCheck.isNotNull(medBeingEdited, "medBeingEdited is null"); //$NON-NLS-1$
-        this.medBeingEdited = medBeingEdited;
-
-        // copy over data to MED that will be changed by editor
-        this.med = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
-        this.med.setDescription(this.medBeingEdited.getDescription());
-        this.med.setMetamodelUri(this.medBeingEdited.getMetamodelUri());
-        this.med.setNamespacePrefix(this.medBeingEdited.getNamespacePrefix());
-        this.med.setNamespaceUri(this.medBeingEdited.getNamespaceUri());
-        this.med.setVersion(this.medBeingEdited.getVersion());
-
-        // properties
-        for (String metaclassName : medBeingEdited.getExtendedMetaclasses()) {
-            this.med.addMetaclass(metaclassName);
-
-            for (ModelExtensionPropertyDefinition propDefn : medBeingEdited.getPropertyDefinitions(metaclassName)) {
-                this.med.addPropertyDefinition(metaclassName, propDefn);
-            }
-        }
-
-        // drive the UI by listening for property changes
-        this.med.addListener(this);
     }
 
     protected abstract void createBody( Composite body,
@@ -78,24 +48,29 @@ public abstract class MedEditorPage extends FormPage implements PropertyChangeLi
         updateAllMessages();
     }
 
-    protected ModelExtensionRegistry getRegistry() {
-        return ExtensionPlugin.getInstance().getRegistry();
-    }
-
     /**
      * @return the MED being modified by the GUI (never <code>null</code>)
      */
     protected ModelExtensionDefinition getMed() {
-        return this.med;
+        return getMedEditor().getMed();
+    }
+
+    protected ModelExtensionDefinitionEditor getMedEditor() {
+        return (ModelExtensionDefinitionEditor)getEditor();
+    }
+
+    protected ModelExtensionRegistry getRegistry() {
+        return ExtensionPlugin.getInstance().getRegistry();
     }
 
     protected Shell getShell() {
         return getSite().getShell();
     }
 
-    protected boolean isChanged() {
-        return !this.med.equals(this.medBeingEdited);
-    }
+    /**
+     * @param e the property change event being handled (never <code>null</code>)
+     */
+    protected abstract void handlePropertyChanged( PropertyChangeEvent e );
 
     protected abstract void updateAllMessages();
 

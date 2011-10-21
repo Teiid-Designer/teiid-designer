@@ -26,12 +26,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.ui.Messages;
@@ -47,9 +45,8 @@ public final class OverviewEditorPage extends MedEditorPage {
 
     private Control firstFocusControl;
 
-    public OverviewEditorPage( FormEditor medEditor,
-                               ModelExtensionDefinition medBeingEdited ) {
-        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle, medBeingEdited);
+    public OverviewEditorPage( ModelExtensionDefinitionEditor medEditor ) {
+        super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
         this.descriptionError = new ErrorMessage();
         this.metamodelUriError = new ErrorMessage();
         this.namespacePrefixError = new ErrorMessage();
@@ -253,10 +250,10 @@ public final class OverviewEditorPage extends MedEditorPage {
     /**
      * {@inheritDoc}
      * 
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#handlePropertyChanged(java.beans.PropertyChangeEvent)
      */
     @Override
-    public void propertyChange( PropertyChangeEvent e ) {
+    protected void handlePropertyChanged( PropertyChangeEvent e ) {
         String propName = e.getPropertyName();
 
         if (PropertyName.DESCRIPTION.toString().equals(propName)) {

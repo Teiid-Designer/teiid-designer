@@ -11,6 +11,8 @@ import static org.teiid.designer.extension.ui.Messages.errorOpeningMedEditor;
 import static org.teiid.designer.extension.ui.Messages.medEditorSourcePageTitle;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
@@ -38,6 +40,7 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
@@ -45,9 +48,10 @@ import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefin
 /**
  * 
  */
-public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor {
+public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements PropertyChangeListener {
 
-    private ModelExtensionDefinition med;
+    private ModelExtensionDefinition originalMed;
+    private ModelExtensionDefinition medBeingEdited;
     private MedEditorPage overviewPage;
 
     private MedEditorPage propertiesPage;
@@ -55,6 +59,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private IAction showRegistryViewAction;
     private IAction updateRegisteryAction;
+
+    private boolean dirty = false;
 
     /**
      * {@inheritDoc}
@@ -82,11 +88,11 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             addPage(0, sourceEditor, getEditorInput());
 
             // add properties editor
-            this.propertiesPage = new PropertiesEditorPage(this, this.med);
+            this.propertiesPage = new PropertiesEditorPage(this);
             addPage(0, this.propertiesPage);
 
             // add overview editor
-            this.overviewPage = new OverviewEditorPage(this, this.med);
+            this.overviewPage = new OverviewEditorPage(this);
             addPage(0, this.overviewPage);
 
             // set text editor title and initialize header text to first page
@@ -149,8 +155,29 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     private void createMed( IFile medFile ) throws Exception {
+        // TODO need to turn validation off in the parser here
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
-        this.med = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
+        this.originalMed = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
+
+        // copy over data to MED that will be changed by editor
+        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
+        this.medBeingEdited.setDescription(this.originalMed.getDescription());
+        this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
+        this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
+        this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
+        this.medBeingEdited.setVersion(this.originalMed.getVersion());
+
+        // properties
+        for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
+            this.medBeingEdited.addMetaclass(metaclassName);
+
+            for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
+                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
+            }
+        }
+
+        // register to receive property change events
+        this.medBeingEdited.addListener(this);
     }
 
     /**
@@ -168,7 +195,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         try {
             if (editorInput instanceof IFileEditorInput) {
                 IFile inputFile = ((IFileEditorInput)editorInput).getFile();
-                InputStream inputStream = medWriter.write(this.med);
+                InputStream inputStream = medWriter.write(this.medBeingEdited);
                 inputFile.setContents(inputStream, IResource.KEEP_HISTORY, monitor);
             }
         } catch (Exception e) {
@@ -186,7 +213,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     public void doSaveAs() {
-        // TODO implement addPages
+        // TODO implement doSaveAs
     }
 
     /**
@@ -197,7 +224,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public Object getAdapter( Class adapter ) {
         if (adapter.equals(IContentOutlinePage.class)) {
-            // TODO implement getAdapter
+            // TODO implement IContentOutlinePage
             return null;
         }
 
@@ -237,11 +264,41 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     /**
      * {@inheritDoc}
      * 
+     * @see org.eclipse.ui.forms.editor.SharedHeaderFormEditor#isDirty()
+     */
+    @Override
+    public boolean isDirty() {
+        return this.dirty;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
      */
     @Override
     public boolean isSaveAsAllowed() {
         return true;
+    }
+
+    ModelExtensionDefinition getMed() {
+        return this.medBeingEdited;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    @Override
+    public final void propertyChange( PropertyChangeEvent e ) {
+        boolean oldValue = isDirty();
+        boolean newValue = !this.originalMed.equals(this.medBeingEdited);
+
+        if (oldValue != newValue) {
+            this.dirty = newValue;
+            getHeaderForm().dirtyStateChanged();
+        }
     }
 
 }
