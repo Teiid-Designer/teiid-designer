@@ -23,6 +23,10 @@ public class Factory implements Constants {
         return new ModelExtensionAssistantAdapter();
     }
 
+    public static Listener createPropertyChangeListener() {
+        return new Listener();
+    }
+
     public static ModelExtensionRegistry createRegistry() throws Exception {
         ModelExtensionRegistry registry = new ModelExtensionRegistry(new File(MED_SCHEMA));
         registry.setMetamodelUris(Constants.Utils.getExtendableMetamodelUris());
@@ -36,6 +40,17 @@ public class Factory implements Constants {
                                             DEFAULT_METAMODEL_URI,
                                             DEFAULT_MED_DESCRIPTION,
                                             DEFAULT_VERSION);
+    }
+
+    public static ModelExtensionDefinition createDefinitionWithOneMetaclassAndNoPropertyDefinitions() {
+        ModelExtensionDefinition med = new ModelExtensionDefinition(createAssistant(),
+                                            DEFAULT_NAMESPACE_PREFIX,
+                                            DEFAULT_NAMESPACE_URI,
+                                            DEFAULT_METAMODEL_URI,
+                                            DEFAULT_MED_DESCRIPTION,
+                                            DEFAULT_VERSION);
+        med.addMetaclass(DEFAULT_METACLASS);
+        return med;
     }
 
 }

@@ -36,6 +36,7 @@ public interface Constants {
     String DEFAULT_NAMESPACE_URI = SALESFORCE_MED_URI;
     String DEFAULT_METAMODEL_URI = RELATIONAL_METAMODEL;
     String DEFAULT_VERSION = String.valueOf(ModelExtensionDefinitionHeader.DEFAULT_VERSION);
+    String DEFAULT_METACLASS = "com.metamatrix.metamodels.relational.impl.BaseTableImpl"; //$NON-NLS-1$
 
     public class Utils {
         static public Set<String> getExtendableMetamodelUris() {
