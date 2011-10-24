@@ -40,12 +40,14 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -58,6 +60,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.registry.RegistryEvent;
 import org.teiid.designer.extension.registry.RegistryListener;
@@ -65,6 +68,7 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
+import org.teiid.designer.extension.ui.wizards.NewMedWizard;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -82,8 +86,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
     private IAction cloneMedAction;
 
     private IAction findMedReferencesAction;
-
-    private IAction openMedEditorAction;
 
     private IAction registerMedAction;
 
@@ -128,7 +130,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
     private void configureToolBar( IToolBarManager toolBarMgr ) {
         toolBarMgr.add(this.registerMedAction);
         toolBarMgr.add(this.unregisterMedAction);
-        toolBarMgr.add(this.openMedEditorAction);
         toolBarMgr.add(this.cloneMedAction);
         toolBarMgr.update(true);
     }
@@ -171,23 +172,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
         } catch (Exception e) {
             UTIL.log(e);
         }
-
-        this.openMedEditorAction = new Action(Messages.openMedActionText, SWT.BORDER) {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.action.Action#run()
-             */
-            @Override
-            public void run() {
-                handleOpenMed();
-            }
-        };
-        this.openMedEditorAction.setToolTipText(Messages.openMedActionToolTip);
-        this.openMedEditorAction.setEnabled(false);
-        this.openMedEditorAction.setImageDescriptor(PlatformUI.getWorkbench()
-                                                              .getSharedImages()
-                                                              .getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
 
         this.registerMedAction = new Action(Messages.registerMedActionText, SWT.BORDER) {
             /**
@@ -248,7 +232,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
         MenuManager mgr = new MenuManager();
         mgr.add(this.registerMedAction);
         mgr.add(this.unregisterMedAction);
-        mgr.add(this.openMedEditorAction);
         mgr.add(this.cloneMedAction);
 
         return mgr;
@@ -412,11 +395,20 @@ public final class ModelExtensionRegistryView extends ViewPart {
     }
 
     void handleCloneMed() {
-        // TODO implement handleCloneMed
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        MessageDialog.openInformation(null, null, "Clone MED not implemented");
+        NewMedWizard wizard = new NewMedWizard();
+        wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
+        // Set the selectedMed contents on the wizard
+        ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
+        InputStream iStream = writer.write(selectedMed);
+        wizard.setMedInput(iStream);
+
+        // Open wizard dialog
+        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+        wizardDialog.setBlockOnOpen(true);
+        wizardDialog.open();
     }
 
     void handleFindMedReferences() {
@@ -434,17 +426,14 @@ public final class ModelExtensionRegistryView extends ViewPart {
         if (selectedMed == null) {
             this.cloneMedAction.setEnabled(false);
             this.findMedReferencesAction.setEnabled(false);
-            this.openMedEditorAction.setEnabled(false);
             this.unregisterMedAction.setEnabled(false);
             // MED Selected, enabled depending on builtIn for some
         } else {
             this.cloneMedAction.setEnabled(true);
             this.findMedReferencesAction.setEnabled(true);
             if (selectedMed.isBuiltIn()) {
-                this.openMedEditorAction.setEnabled(false);
                 this.unregisterMedAction.setEnabled(false);
             } else {
-                this.openMedEditorAction.setEnabled(true);
                 this.unregisterMedAction.setEnabled(true);
             }
         }

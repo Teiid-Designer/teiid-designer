@@ -14,12 +14,10 @@ import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryAction
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -61,7 +59,6 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
@@ -172,8 +169,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 }
 
                 boolean wasAdded = false;
+                boolean isDeployable = false;
                 if (fileContents != null) {
-                    boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
+                    isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
                     // If the URI is not registered, go ahead with registration
                     if (isDeployable) {
                         // Add the Extension Definition to the registry
@@ -186,9 +184,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                     }
                 }
 
-                // Notify user if registration failed.
-                if (!wasAdded) {
-                    MessageDialog.openInformation(getShell(), Messages.registerMedActionFailedTitle,
+                // Notify user if the med was deployable, but the registration failed.
+                if (isDeployable && !wasAdded) {
+                    MessageDialog.openInformation(getShell(),
+                                                  Messages.registerMedActionFailedTitle,
                                                   Messages.registerMedActionFailedMsg);
                     return;
                 }
