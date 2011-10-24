@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns="http://org.teiid.modelExtension/2011" xmlnssi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="sourcefunctiona" namespaceUri="org.teiid.designer.extension.sourcefunction" version="1" xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd" xmlns="http://org.teiid.modelExtension/2011">
+    <pescription>Source Function properties</pescription>
+    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+        <property advanced="false" defaultValue="false" fixedValue="" index="true" masked="false" name="deterministic" required="false" type="boolean">
+            <pisplay locale="en_US">Deterministic</pisplay>
+            <pescription locale="en_US">Specifies that the source function will always returns the same result for a specific input value</pescription>
+            <p:allowedValue>false</p:allowedValue>
+            <p:allowedValue>true</p:allowedValue>
+        </property>
+    </p:extendedMetaclass>
+</modelExtension>

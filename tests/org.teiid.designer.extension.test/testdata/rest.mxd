@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.rest"
+	namespacePrefix="rest" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1">
+	<p:description>REST extended virtual procedure properties</p:description>
+	<p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+		<p:property name="restMethod" type="string" defaultValue=" " index="false">
+			<p:description locale="en_US">The REST method to map this procedure to. Supported methods are
+				GET/PUT/POST/DELETE.</p:description>
+			<p:display locale="en_US">Rest Method</p:display>
+			<p:allowedValue> </p:allowedValue>
+			<p:allowedValue>GET</p:allowedValue>
+			<p:allowedValue>PUT</p:allowedValue>
+			<p:allowedValue>POST</p:allowedValue>
+			<p:allowedValue>DELETE</p:allowedValue>
+		</p:property>
+		<p:property name="uri" type="string" required="false" index="false">
+			<p:description locale="en_US">The relative URI to map this procedure to.</p:description>
+			<p:display locale="en_US">URI</p:display>
+		</p:property>
+	</p:extendedMetaclass>
+</p:modelExtension>

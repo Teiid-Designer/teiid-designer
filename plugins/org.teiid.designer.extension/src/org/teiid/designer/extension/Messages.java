@@ -42,6 +42,8 @@ public class Messages extends NLS {
     public static String namespacePrefixNotFound;
     public static String namespaceUriAlreadyRegistered;
     public static String invalidMetamodelUriExtension;
+    public static String parserFoundSkippedEntity;
+    public static String parserFoundUnparsedEntityDeclaration;
     public static String problemConstructingModelExtensionAssistantClass;
     public static String unknownPropertyType;
     public static String unknownRegistryQueryType;

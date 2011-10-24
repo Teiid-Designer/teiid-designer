@@ -21,6 +21,7 @@ import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -31,7 +32,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.metamatrix.core.util.CoreArgCheck;
-import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 
 /**
@@ -51,6 +51,8 @@ public class ModelExtensionDefinitionParser {
     static final Locale LOCALE = Locale.getDefault();
 
     private final File definitionSchemaFile;
+
+    private Handler handler;
 
     /**
      * The parser of the definition stream.
@@ -94,6 +96,40 @@ public class ModelExtensionDefinitionParser {
     }
 
     /**
+     * @return the error messages output from the last parse operation (<code>null</code> if
+     *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
+     */
+    Collection<String> getErrors() {
+        if (this.handler == null) {
+            return null;
+        }
+
+        return this.handler.getErrors();
+    }
+
+    /**
+     * @return the information messages output from the last parse operation (never <code>null</code> but can be empty)
+     */
+    Collection<String> getInfos() {
+        if (this.handler == null) {
+            return null;
+        }
+
+        return this.handler.getInfos();
+    }
+
+    /**
+     * @return the warning messages output from the last parse operation (never <code>null</code> but can be empty)
+     */
+    Collection<String> getWarnings() {
+        if (this.handler == null) {
+            return null;
+        }
+
+        return this.handler.getWarnings();
+    }
+
+    /**
      * @param definitionStream the model extension definition input stream (cannot be <code>null</code>)
      * @param assistant the model extension assistant (cannot be <code>null</code>)
      * @return the model extension definition (never <code>null</code>)
@@ -103,15 +139,19 @@ public class ModelExtensionDefinitionParser {
                                            ModelExtensionAssistant assistant ) throws Exception {
         CoreArgCheck.isNotNull(definitionStream, "definitionStream is null"); //$NON-NLS-1$
 
-        Handler handler = new Handler(assistant);
+        this.handler = new Handler(assistant);
         this.parser.parse(definitionStream, handler);
-        return handler.getModelExtensionDefinition();
+        return this.handler.getModelExtensionDefinition();
     }
 
     /**
      * The handler used by the parser. Each instance should be only used to parse one file.
      */
     class Handler extends DefaultHandler {
+
+        private final Collection<String> errors;
+        private final Collection<String> infos;
+        private final Collection<String> warnings;
 
         private String advanced;
         private Set<String> allowedValues = new HashSet<String>();
@@ -152,6 +192,9 @@ public class ModelExtensionDefinitionParser {
             this.assistant = assistant;
             this.properties = new HashMap<String, Collection<ModelExtensionPropertyDefinition>>();
             this.elements = new Stack<String>();
+            this.errors = new ArrayList<String>();
+            this.infos = new ArrayList<String>();
+            this.warnings = new ArrayList<String>();
         }
 
         /**
@@ -307,11 +350,8 @@ public class ModelExtensionDefinitionParser {
          * @see org.xml.sax.helpers.DefaultHandler#error(org.xml.sax.SAXParseException)
          */
         @Override
-        public void error( SAXParseException e ) throws SAXException {
-            // overriding this method is needed to stop parsing
-            // exception indicates a validation or format problem
-            // TODO instead of throwing exception keep track of errors
-            throw e;
+        public void error( SAXParseException e ) {
+            this.errors.add(e.getLocalizedMessage());
         }
 
         /**
@@ -323,6 +363,20 @@ public class ModelExtensionDefinitionParser {
             }
 
             return this.elements.peek();
+        }
+
+        /**
+         * @return the error messages output from the last parse operation (never <code>null</code> but can be empty)
+         */
+        Collection<String> getErrors() {
+            return this.errors;
+        }
+
+        /**
+         * @return the information messages output from the last parse operation (never <code>null</code> but can be empty)
+         */
+        Collection<String> getInfos() {
+            return this.infos;
         }
 
         ModelExtensionDefinition getModelExtensionDefinition() {
@@ -338,6 +392,13 @@ public class ModelExtensionDefinitionParser {
             }
 
             return null;
+        }
+
+        /**
+         * @return the warning messages output from the last parse operation (never <code>null</code> but can be empty)
+         */
+        Collection<String> getWarnings() {
+            return this.warnings;
         }
 
         /**
@@ -376,6 +437,16 @@ public class ModelExtensionDefinitionParser {
         /**
          * {@inheritDoc}
          * 
+         * @see org.xml.sax.helpers.DefaultHandler#skippedEntity(java.lang.String)
+         */
+        @Override
+        public void skippedEntity( String name ) {
+            this.infos.add(NLS.bind(Messages.parserFoundUnparsedEntityDeclaration, name));
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
          * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
          *      org.xml.sax.Attributes)
          */
@@ -392,44 +463,24 @@ public class ModelExtensionDefinitionParser {
 
             if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(getCurrentElement())) {
                 this.namespacePrefix = attributes.getValue(ExtensionConstants.Attributes.NAMESPACE_PREFIX);
-                assert !CoreStringUtil.isEmpty(this.namespacePrefix) : "namespacePrefix is empty"; //$NON-NLS-1$
-
                 this.namespaceUri = attributes.getValue(ExtensionConstants.Attributes.NAMESPACE_URI);
-                assert !CoreStringUtil.isEmpty(this.namespaceUri) : "namespaceUri is empty"; //$NON-NLS-1$
-
                 this.metamodelUri = attributes.getValue(ExtensionConstants.Attributes.METAMODEL_URI);
-                assert !CoreStringUtil.isEmpty(this.metamodelUri) : "metamodelUri is empty"; //$NON-NLS-1$
-
                 this.version = attributes.getValue(ExtensionConstants.Attributes.VERSION);
-                assert !CoreStringUtil.isEmpty(this.version) : "version is empty"; //$NON-NLS-1$
-
                 this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
                                                                                 this.metamodelUri, this.description, this.version);
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
                 this.metaclassName = attributes.getValue(ExtensionConstants.Attributes.NAME);
-                assert !CoreStringUtil.isEmpty(this.metaclassName) : "metaclassName is empty"; //$NON-NLS-1$
             } else if (ExtensionConstants.Elements.PROPERTY.equals(getCurrentElement())) {
                 this.id = attributes.getValue(ExtensionConstants.Attributes.NAME);
-                assert !CoreStringUtil.isEmpty(this.id) : "id is empty"; //$NON-NLS-1$
-
                 this.type = attributes.getValue(ExtensionConstants.Attributes.TYPE);
-                assert !CoreStringUtil.isEmpty(this.type) : "type is empty"; //$NON-NLS-1$
-
                 this.required = attributes.getValue(ExtensionConstants.Attributes.REQUIRED);
-                assert !CoreStringUtil.isEmpty(this.required) : "required is empty"; //$NON-NLS-1$
 
                 // optional attributes
                 this.defaultValue = attributes.getValue(ExtensionConstants.Attributes.DEFAULT_VALUE);
                 this.fixedValue = attributes.getValue(ExtensionConstants.Attributes.FIXED_VALUE);
-
                 this.advanced = attributes.getValue(ExtensionConstants.Attributes.ADVANCED);
-                assert !CoreStringUtil.isEmpty(this.advanced) : "advanced is empty"; //$NON-NLS-1$
-
                 this.masked = attributes.getValue(ExtensionConstants.Attributes.MASKED);
-                assert !CoreStringUtil.isEmpty(this.masked) : "masked is empty"; //$NON-NLS-1$
-
                 this.index = attributes.getValue(ExtensionConstants.Attributes.INDEX);
-                assert !CoreStringUtil.isEmpty(this.index) : "index is empty"; //$NON-NLS-1$
             } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
                 this.currentDisplayNameLocale = attributes.getValue(ExtensionConstants.Attributes.LOCALE);
             } else if (ExtensionConstants.Elements.DESCRIPTION.equals(getCurrentElement())
@@ -444,6 +495,31 @@ public class ModelExtensionDefinitionParser {
 
             super.startElement(uri, localName, qName, attributes);
         }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.xml.sax.helpers.DefaultHandler#warning(org.xml.sax.SAXParseException)
+         */
+        @Override
+        public void warning( SAXParseException e ) {
+            this.warnings.add(e.getLocalizedMessage());
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.xml.sax.helpers.DefaultHandler#unparsedEntityDecl(java.lang.String, java.lang.String, java.lang.String,
+         *      java.lang.String)
+         */
+        @Override
+        public void unparsedEntityDecl( String name,
+                                        String publicId,
+                                        String systemId,
+                                        String notationName ) {
+            this.infos.add(NLS.bind(Messages.parserFoundUnparsedEntityDeclaration, name));
+        }
+
     }
 
 }

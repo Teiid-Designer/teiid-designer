@@ -9,11 +9,13 @@ package org.teiid.designer.extension;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionParserTest;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionTest;
 import org.teiid.designer.extension.registry.ModelExtensionRegistryTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ModelExtensionDefinitionTest.class, ModelExtensionRegistryTest.class })
+@Suite.SuiteClasses({ ModelExtensionDefinitionTest.class, ModelExtensionDefinitionParserTest.class,
+        ModelExtensionRegistryTest.class })
 public class AllTests {
     // nothing to do
 }

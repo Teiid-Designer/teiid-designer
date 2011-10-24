@@ -8,6 +8,8 @@
 package org.teiid.designer.extension.definition;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,9 +67,52 @@ public class ModelExtensionDefinitionTest implements Constants {
         assertEquals(CoreStringUtil.Constants.EMPTY_STRING, this.med.getNamespaceUri());
     }
 
+    @Test
+    public void shouldExtendMetaclass() {
+        this.med = Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        assertTrue(this.med.extendsMetaclass(Constants.DEFAULT_METACLASS));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowCheckForEmptyMetaclass() {
+        this.med.extendsMetaclass(CoreStringUtil.Constants.EMPTY_STRING);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowCheckForEmptyMetamodelUri() {
+        this.med.extendsMetamodelUri(CoreStringUtil.Constants.EMPTY_STRING);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowCheckForNullMetaclass() {
+        this.med.extendsMetaclass(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowCheckForNullMetamodelUri() {
+        this.med.extendsMetamodelUri(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowEmptyMetaclassToBeAdded() {
+        this.med.addMetaclass(null);
+        this.med.addMetaclass(CoreStringUtil.Constants.EMPTY_STRING);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAllowNullAssistantOnConstruction() {
         new ModelExtensionDefinition(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldNotAllowNullListener() {
+        this.med.addListener(null);
+    }
+
+    @Test
+    public void shouldNotExtendMetaclassThatHasNotBeenAdded() {
+        this.med = Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        assertFalse(this.med.extendsMetaclass(Constants.DEFAULT_METACLASS + "changed")); //$NON-NLS-1$
     }
 
     @Test
@@ -106,6 +151,15 @@ public class ModelExtensionDefinitionTest implements Constants {
     public void shouldNotReceivePropertyChangeEventAfterSettingVersionToSameValue() {
         Listener l = Factory.createPropertyChangeListener();
         this.med.addListener(l);
+        this.med.setVersion(this.med.getVersion());
+        assertEquals(0, l.getCount());
+    }
+
+    @Test
+    public void shouldNotReceivePropertyChangeEventsAfterUnregistering() {
+        Listener l = Factory.createPropertyChangeListener();
+        this.med.addListener(l);
+        this.med.removeListener(l);
         this.med.setVersion(this.med.getVersion());
         assertEquals(0, l.getCount());
     }
@@ -175,6 +229,19 @@ public class ModelExtensionDefinitionTest implements Constants {
     }
 
     @Test
+    public void shouldRemoveMetaclass() {
+        this.med = Factory.createDefinitionWithOneMetaclassAndNoPropertyDefinitions();
+        this.med.removeMetaclass(this.med.getExtendedMetaclasses()[0]);
+        assertFalse(this.med.extendsMetaclass(DEFAULT_METACLASS));
+    }
+
+    @Test
+    public void shouldSetBuiltIn() {
+        this.med.markAsBuiltIn();
+        assertTrue(this.med.isBuiltIn());
+    }
+
+    @Test
     public void shouldSetMetamodelUriOnConstruction() {
         assertEquals(DEFAULT_METAMODEL_URI, this.med.getMetamodelUri());
     }
@@ -190,8 +257,13 @@ public class ModelExtensionDefinitionTest implements Constants {
     }
 
     @Test
+    public void shouldSetNotToBeBuiltInOnConstruction() {
+        assertFalse(this.med.isBuiltIn());
+    }
+
+    @Test
     public void shouldSetVersionOnConstruction() {
         assertEquals(ModelExtensionDefinitionHeader.DEFAULT_VERSION, this.med.getVersion());
     }
-
+    
 }

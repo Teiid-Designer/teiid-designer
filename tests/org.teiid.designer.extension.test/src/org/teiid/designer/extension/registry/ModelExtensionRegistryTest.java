@@ -35,7 +35,7 @@ public class ModelExtensionRegistryTest implements Constants {
 
     @Test
     public void shouldAddDefinition() throws Exception {
-        File defnFile = new File(SALESFORCE_MED);
+        File defnFile = new File(SALESFORCE_MED_FILE_NAME);
         ModelExtensionDefinition med = this.registry.addDefinition(new FileInputStream(defnFile), this.assistant);
         Assert.assertNotNull("MED is null", med); //$NON-NLS-1$
         Assert.assertEquals(1, this.registry.getAllDefinitions().size());

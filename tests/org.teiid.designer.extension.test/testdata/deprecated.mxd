@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:modelExtension metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespaceUri="org.teiid.designer.extension.deprecated"
+	namespacePrefix="ext-custom" xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd " version="1"
+>
+	<p:description>Designer 7.4 extension properties</p:description>
+
+    <!-- Pushdown and REST Extension Properties -->
+    <p:extendedMetaclass name="com.metamatrix.metamodels.relational.impl.ProcedureImpl">
+        <p:property name="deterministic" type="boolean" index="true">
+            <p:description locale="en_US">Specifies that the source function will always returns the same result for a specific input value</p:description>
+            <p:display locale="en_US">Deterministic</p:display>
+        </p:property>
+        <p:property name="REST-METHOD" type="string" index="false">
+            <p:description locale="en_US">The REST method to map this procedure to. Supported methods are
+                GET/PUT/POST/DELETE.</p:description>
+            <p:display locale="en_US">Rest Method</p:display>
+            <p:allowedValue>GET</p:allowedValue>
+            <p:allowedValue>PUT</p:allowedValue>
+            <p:allowedValue>POST</p:allowedValue>
+            <p:allowedValue>DELETE</p:allowedValue>
+        </p:property>
+        <p:property name="URI" type="string" index="false">
+            <p:description locale="en_US">The relative URI to map this procedure to.</p:description>
+            <p:display locale="en_US">URI</p:display>
+        </p:property>
+    </p:extendedMetaclass>
+
+</p:modelExtension>

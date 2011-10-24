@@ -14,9 +14,11 @@ import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryAction
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -56,6 +58,7 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
+
 import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
@@ -265,8 +268,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             // TODO log exception
         }
 
-        // TODO implement addPages
-        commitPages(true);
+        // TODO set dirty flag
     }
 
     /**
