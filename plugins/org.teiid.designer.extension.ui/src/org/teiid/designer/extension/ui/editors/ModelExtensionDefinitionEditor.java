@@ -9,20 +9,29 @@ package org.teiid.designer.extension.ui.editors;
 
 import static org.teiid.designer.extension.ui.Messages.errorOpeningMedEditor;
 import static org.teiid.designer.extension.ui.Messages.medEditorSourcePageTitle;
+import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionText;
+import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
+import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
@@ -41,9 +50,13 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
+import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
+import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
  * 
@@ -132,8 +145,58 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     private void createActions() {
-        this.updateRegisteryAction = new UpdateRegistryModelExtensionDefinitionAction();
+        this.updateRegisteryAction = new Action(updateMedInRegistryActionText, SWT.FLAT) {
+            @Override
+            public void run() {
+                IEditorInput editorInput = getEditorInput();
+                IFile medFile = null;
+                if (editorInput instanceof IFileEditorInput) {
+                    medFile = ((IFileEditorInput)editorInput).getFile();
+                }
+
+                // -------------------------------------------------
+                // Do some validation checks before registering.
+                // -------------------------------------------------
+                ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
+                InputStream fileContents = null;
+                try {
+                    fileContents = medFile.getContents();
+                } catch (CoreException e) {
+                    UTIL.log(NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
+                }
+
+                boolean wasAdded = false;
+                if (fileContents != null) {
+                    boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
+                    // If the URI is not registered, go ahead with registration
+                    if (isDeployable) {
+                        // Add the Extension Definition to the registry
+                        try {
+                            UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(medFile);
+                            wasAdded = true;
+                        } catch (Exception e) {
+                            UTIL.log(NLS.bind(Messages.medRegistryAddErrorMsg, medFile.getName()));
+                        }
+                    }
+                }
+
+                // Notify user if registration failed.
+                if (!wasAdded) {
+                    MessageDialog.openInformation(getShell(),
+                                                  Messages.registerMedActionFailedTitle,
+                                                  Messages.registerMedActionFailedMsg);
+                    return;
+                }
+            }
+        };
+        this.updateRegisteryAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(REGISTERY_MED_UPDATE_ACTION));
+        this.updateRegisteryAction.setToolTipText(updateMedInRegistryActionToolTip);
+
         this.showRegistryViewAction = new ShowModelExtensionRegistryViewAction();
+    }
+
+    private static Shell getShell() {
+        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
     /**
@@ -283,7 +346,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     ModelExtensionDefinition getMed() {
         return this.medBeingEdited;
-    }
+}
 
     /**
      * {@inheritDoc}

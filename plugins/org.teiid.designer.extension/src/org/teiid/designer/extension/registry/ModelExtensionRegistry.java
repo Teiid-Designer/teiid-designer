@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -31,7 +29,6 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -89,6 +86,8 @@ public final class ModelExtensionRegistry {
     }
 
     /**
+     * Add a ModelExtensionDefinition to the Registry
+     * 
      * @param definitionStream the model extension input stream (cannot be <code>null</code>)
      * @param assistant the model extension assistant (cannot be <code>null</code>)
      * @return the model extension definition (never <code>null</code>)
@@ -128,6 +127,26 @@ public final class ModelExtensionRegistry {
         fireEvent(RegistryEvent.createAddDefinitionEvent(definition));
 
         return definition;
+    }
+
+    /**
+     * Remove a ModelExtensionDefinition from the Registry
+     * 
+     * @param namespacePrefix the namespacePrefix of the ModelExtensionDefinition to be removed from the repository.
+     */
+    public void removeDefinition( String namespacePrefix ) {
+        CoreArgCheck.isNotEmpty(namespacePrefix, "namespacePrefix is empty"); //$NON-NLS-1$
+
+        // Remove Definition and namespaceUri if it exists in the registry
+        if (isNamespacePrefixRegistered(namespacePrefix)) {
+            ModelExtensionDefinition removedMed = this.definitions.remove(namespacePrefix);
+            if (removedMed != null) {
+                this.namespaces.remove(removedMed.getNamespaceUri());
+
+                // notify registry listeners
+                fireEvent(RegistryEvent.createRemoveDefinitionEvent(removedMed));
+            }
+        }
     }
 
     /**
@@ -351,7 +370,7 @@ public final class ModelExtensionRegistry {
      */
     public boolean isNamespaceUriRegistered( String namespaceUri ) {
         CoreArgCheck.isNotEmpty(namespaceUri, "namespaceUri is empty"); //$NON-NLS-1$
-        return this.definitions.containsKey(this.namespaces.containsKey(namespaceUri));
+        return this.namespaces.containsKey(namespaceUri);
     }
 
     /**

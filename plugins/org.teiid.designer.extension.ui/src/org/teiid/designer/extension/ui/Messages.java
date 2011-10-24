@@ -55,6 +55,25 @@ public class Messages extends NLS {
     public static String unregisterMedActionToolTip;
     public static String updateMedInRegistryActionText;
     public static String updateMedInRegistryActionToolTip;
+    public static String updateMedInRegistryMedDirtyTitle;
+    public static String updateMedInRegistryMedDirtyMsg;
+    public static String updateMedInRegistryInvalidMedTitle;
+    public static String updateMedInRegistryInvalidMedMsg;
+    public static String selectMedDialogTitle;
+    public static String selectMedDialogMsg;
+    public static String selectMedDialogNotMedSelectionMsg;
+    public static String medFileGetContentsErrorMsg;
+    public static String medFileParseErrorMsg;
+    public static String medRegistryAddErrorMsg;
+
+    public static String registerMedActionInvalidMedTitle;
+    public static String registerMedActionInvalidMedMsg;
+    public static String registerMedActionNamespacePrefixRegisteredTitle;
+    public static String registerMedActionNamespacePrefixRegisteredMsg;
+    public static String registerMedActionNamespaceUriRegisteredTitle;
+    public static String registerMedActionNamespaceUriRegisteredMsg;
+    public static String registerMedActionFailedTitle;
+    public static String registerMedActionFailedMsg;
 
     public static String registryViewToolTip;
 

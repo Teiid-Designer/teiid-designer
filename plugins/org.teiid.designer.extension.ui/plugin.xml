@@ -61,6 +61,16 @@
          label="%manageModelExtensionDefnsAction.label">
       </resourceAction>
    </extension>
+   
+   <extension
+        id="updateRegistryModelExtensionDefinitionAction"
+        name="%updateRegistryModelExtensionDefinitionAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction"
+         label="%updateRegistryModelExtensionDefinitionAction.label">
+      </resourceAction>
+   </extension> 
 
 <!--
 	<extension

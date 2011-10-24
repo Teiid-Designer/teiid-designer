@@ -9,11 +9,15 @@ package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -35,6 +39,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -42,12 +47,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -56,14 +63,21 @@ import org.teiid.designer.extension.registry.RegistryEvent;
 import org.teiid.designer.extension.registry.RegistryListener;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
+import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
+import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
+import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.util.WidgetUtil;
+import com.metamatrix.ui.internal.viewsupport.StatusInfo;
 
 /**
  * 
  */
 public final class ModelExtensionRegistryView extends ViewPart {
+
+    private static final String MED_EXTENSION = "mxd"; //$NON-NLS-1$
 
     private IAction cloneMedAction;
 
@@ -415,27 +429,23 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     void handleMedSelected() {
         ModelExtensionDefinition selectedMed = getSelectedMed();
-        boolean enable = (selectedMed != null);
 
-        if (this.cloneMedAction.isEnabled() != enable) {
-            this.cloneMedAction.setEnabled(enable);
-        }
-
-        if (this.findMedReferencesAction.isEnabled() != enable) {
-            this.findMedReferencesAction.setEnabled(enable);
-        }
-
-        if (this.openMedEditorAction.isEnabled() != enable) {
-            // always disable and only enable if not a built-in
-            if (!enable || !selectedMed.isBuiltIn()) {
-                this.openMedEditorAction.setEnabled(enable);
-            }
-        }
-
-        if (this.unregisterMedAction.isEnabled() != enable) {
-            // always disable and only enable if not a built-in
-            if (!enable || !selectedMed.isBuiltIn()) {
-                this.unregisterMedAction.setEnabled(enable);
+        // No Selection, disable
+        if (selectedMed == null) {
+            this.cloneMedAction.setEnabled(false);
+            this.findMedReferencesAction.setEnabled(false);
+            this.openMedEditorAction.setEnabled(false);
+            this.unregisterMedAction.setEnabled(false);
+            // MED Selected, enabled depending on builtIn for some
+        } else {
+            this.cloneMedAction.setEnabled(true);
+            this.findMedReferencesAction.setEnabled(true);
+            if (selectedMed.isBuiltIn()) {
+                this.openMedEditorAction.setEnabled(false);
+                this.unregisterMedAction.setEnabled(false);
+            } else {
+                this.openMedEditorAction.setEnabled(true);
+                this.unregisterMedAction.setEnabled(true);
             }
         }
     }
@@ -464,9 +474,115 @@ public final class ModelExtensionRegistryView extends ViewPart {
 //        }
     }
 
+    /*
+     * Select a MED from the workspace and add it to the Registry
+     */
     void handleRegisterMed() {
-        // TODO implement handleRegisterMed
-        MessageDialog.openInformation(null, null, "Register MED not implemented");
+        // ---------------------------------
+        // Select mxd from workspace
+        // ---------------------------------
+        IFile mxdFile = selectWorkspaceMed();
+
+        if (mxdFile != null) {
+
+            // -------------------------------------------------
+            // Do some validation checks before registering.
+            // -------------------------------------------------
+            InputStream fileContents = null;
+            try {
+                fileContents = mxdFile.getContents();
+            } catch (CoreException e) {
+                UTIL.log(NLS.bind(Messages.medFileGetContentsErrorMsg, mxdFile.getName()));
+            }
+
+            if (fileContents != null) {
+                boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
+                // If the URI is not registered, go ahead with registration
+                if (isDeployable) {
+                    // Add the Extension Definition to the registry
+                    try {
+                        UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(mxdFile);
+                    } catch (Exception e) {
+                        UTIL.log(NLS.bind(Messages.medRegistryAddErrorMsg, mxdFile.getName()));
+                        MessageDialog.openInformation(getShell(),
+                                                      Messages.registerMedActionFailedTitle,
+                                                      Messages.registerMedActionFailedMsg);
+                    }
+                }
+            }
+        }
+    }
+
+    private IFile selectWorkspaceMed() {
+        final ViewerFilter filter = new ViewerFilter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+             *      java.lang.Object)
+             */
+            @Override
+            public boolean select( final Viewer viewer,
+                                   final Object parent,
+                                   final Object element ) {
+                if (element instanceof IContainer) return true;
+                final IFile file = (IFile)element;
+                if (!isMedFile(file)) return false;
+                return true;
+            }
+        };
+        ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
+        wsFilter.setShowHiddenProjects(false);
+        final Object[] models = WidgetUtil.showWorkspaceObjectSelectionDialog(Messages.selectMedDialogTitle,
+                                                                              Messages.selectMedDialogMsg,
+                                                                              false,
+                                                                              null,
+                                                                              wsFilter,
+                                                                              medSelectionValidator,
+                                                                              new ModelExplorerLabelProvider());
+        // Return selected mxd. If nothing selected, return null
+        if (models.length > 0 && models[0] instanceof IFile) return (IFile)models[0];
+        return null;
+    }
+
+    /** Validator that makes sure the selection containes all WSDL files. */
+    private ISelectionStatusValidator medSelectionValidator = new ISelectionStatusValidator() {
+        @Override
+        public IStatus validate( Object[] theSelection ) {
+            IStatus result = null;
+            boolean valid = true;
+
+            if ((theSelection != null) && (theSelection.length > 0)) {
+                for (int i = 0; i < theSelection.length; i++) {
+                    if ((!(theSelection[i] instanceof IFile)) || !isMedFile((IFile)theSelection[i])) {
+                        valid = false;
+                        break;
+                    }
+                }
+            } else {
+                valid = false;
+            }
+
+            if (valid) {
+                result = new StatusInfo(ExtensionPlugin.PLUGIN_ID);
+            } else {
+                result = new StatusInfo(ExtensionPlugin.PLUGIN_ID, IStatus.ERROR, Messages.selectMedDialogNotMedSelectionMsg);
+            }
+
+            return result;
+        }
+    };
+
+    /**
+     * Return true if the IResource represents a mxd file.
+     * 
+     * @param resource The file that may be a mxd file
+     * @return true if it is a mxd
+     */
+    public boolean isMedFile( final IResource resource ) {
+        // Check that the resource has the correct lower-case extension
+        if (MED_EXTENSION.equals(resource.getFileExtension())) return true;
+        return false;
     }
 
     void handleRegistryChanged( RegistryEvent event ) {
@@ -482,11 +598,10 @@ public final class ModelExtensionRegistryView extends ViewPart {
     }
 
     void handleUnregisterMed() {
-        // TODO implement handleDeleteMed
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Unregister MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        MessageDialog.openInformation(null, null, "Unregister MED not implemented");
+        this.registry.removeDefinition(selectedMed.getNamespacePrefix());
     }
 
     private void registerGlobalActions( IActionBars actionBars ) {
@@ -611,6 +726,10 @@ public final class ModelExtensionRegistryView extends ViewPart {
             return null;
         }
 
+    }
+
+    private static Shell getShell() {
+        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
 }
