@@ -9,6 +9,7 @@ package org.teiid.designer.extension.ui.editors;
 
 import java.beans.PropertyChangeEvent;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -34,6 +35,10 @@ public abstract class MedEditorPage extends FormPage {
         super(medEditor, id, title);
     }
 
+    /**
+     * @param body the parent UI control where all other controls should be added (never <code>null</code>)
+     * @param toolkit the form toolkit to use when creating form controls (never <code>null</code>)
+     */
     protected abstract void createBody( Composite body,
                                         FormToolkit toolkit );
 
@@ -46,6 +51,7 @@ public abstract class MedEditorPage extends FormPage {
     protected final void createFormContent( IManagedForm managedForm ) {
         createBody(managedForm.getForm().getBody(), managedForm.getToolkit());
         updateAllMessages();
+        setResourceReadOnly(isReadonly());
     }
 
     /**
@@ -55,12 +61,25 @@ public abstract class MedEditorPage extends FormPage {
         return getMedEditor().getMed();
     }
 
+    /**
+     * @return the model extension definition editor that this page belongs to (never <code>null</code>)
+     */
     protected ModelExtensionDefinitionEditor getMedEditor() {
         return (ModelExtensionDefinitionEditor)getEditor();
     }
 
+    /**
+     * @return the model extension registry (never <code>null</code>)
+     */
     protected ModelExtensionRegistry getRegistry() {
         return ExtensionPlugin.getInstance().getRegistry();
+    }
+
+    /**
+     * @return the resource being edited (never <code>null</code>)
+     */
+    protected IFile getFile() {
+        return getMedEditor().getFile();
     }
 
     protected Shell getShell() {
@@ -72,9 +91,40 @@ public abstract class MedEditorPage extends FormPage {
      */
     protected abstract void handlePropertyChanged( PropertyChangeEvent e );
 
+    /**
+     * @return <code>true</code> if the editor is readonly
+     */
+    protected boolean isReadonly() {
+        return getMedEditor().isReadOnly();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.forms.editor.FormPage#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        super.setFocus();
+
+        // check for null as this method gets called before controls are constructed
+        if (getManagedForm() != null) {
+            getManagedForm().refresh();
+        }
+    }
+
+    /**
+     * @param readOnly the new readonly state of the editor
+     */
+    protected abstract void setResourceReadOnly(boolean readOnly);
+
     protected abstract void updateAllMessages();
 
+    /**
+     * @param errorMessage the message being updated in the {@link IMessageManager message manager} (never <code>null</code>)
+     */
     protected void updateMessage( ErrorMessage errorMessage ) {
+        assert (errorMessage == null) : "errorMessage is null"; //$NON-NLS-1$
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
 
         if (CoreStringUtil.isEmpty(errorMessage.getMessage())) {

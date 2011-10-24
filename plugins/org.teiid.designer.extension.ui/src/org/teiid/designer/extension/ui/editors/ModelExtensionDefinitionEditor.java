@@ -11,19 +11,31 @@ import static org.teiid.designer.extension.ui.Messages.errorOpeningMedEditor;
 import static org.teiid.designer.extension.ui.Messages.medEditorSourcePageTitle;
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionText;
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
+import static org.teiid.designer.extension.ui.UiConstants.PLUGIN_ID;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -59,24 +71,35 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
+
+import com.metamatrix.modeler.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
+import com.metamatrix.ui.internal.util.UiUtil;
 
 /**
  * 
  */
-public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements PropertyChangeListener {
+public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IResourceChangeListener,
+        PropertyChangeListener {
+
+    private boolean dirty = false;
+    private boolean readOnly = false;
 
     private ModelExtensionDefinition originalMed;
     private ModelExtensionDefinition medBeingEdited;
+
     private MedEditorPage overviewPage;
 
     private MedEditorPage propertiesPage;
     private ScrolledForm scrolledForm;
 
     private IAction showRegistryViewAction;
+
     private IAction updateRegisteryAction;
 
-    private boolean dirty = false;
+    ModelExtensionDefinitionEditor accessThis() {
+        return this;
+    }
 
     /**
      * {@inheritDoc}
@@ -199,10 +222,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         this.showRegistryViewAction = new ShowModelExtensionRegistryViewAction();
     }
 
-    static Shell getShell() {
-        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-    }
-
     /**
      * {@inheritDoc}
      * 
@@ -221,36 +240,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
-    private void refreshMarkers( Collection<String> errors,
-                                Collection<String> warnings,
-                                Collection<String> infos ) throws Exception {
-        IFile file = ((FileEditorInput)getEditorInput()).getFile();
-        file.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
-
-        for (String msg : errors) {
-            final IMarker marker = file.createMarker(IMarker.PROBLEM);
-            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-            marker.setAttribute(IMarker.MESSAGE, msg);
-            // TODO marker.setAttribute(IMarker.LOCATION, null);
-        }
-
-        for (String msg : warnings) {
-            final IMarker marker = file.createMarker(IMarker.PROBLEM);
-            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-            marker.setAttribute(IMarker.MESSAGE, msg);
-            // TODO marker.setAttribute(IMarker.LOCATION, null);
-        }
-
-        for (String msg : infos) {
-            final IMarker marker = file.createMarker(IMarker.PROBLEM);
-            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
-            marker.setAttribute(IMarker.MESSAGE, msg);
-            // TODO marker.setAttribute(IMarker.LOCATION, null);
-        }
-    }
-
     private void createMed( IFile medFile ) throws Exception {
-        // TODO need to turn validation off in the parser here
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
         this.originalMed = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
 
@@ -258,24 +248,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         refreshMarkers(parser.getErrors(), parser.getWarnings(), parser.getInfos());
 
         // copy over data to MED that will be changed by editor
-        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
-        this.medBeingEdited.setDescription(this.originalMed.getDescription());
-        this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
-        this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
-        this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
-        this.medBeingEdited.setVersion(this.originalMed.getVersion());
-
-        // properties
-        for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
-            this.medBeingEdited.addMetaclass(metaclassName);
-
-            for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
-                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
-            }
-        }
-
-        // register to receive property change events
-        this.medBeingEdited.addListener(this);
+        updateEditorModelObject();
     }
 
     /**
@@ -286,21 +259,50 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public void doSave( IProgressMonitor monitor ) {
 
-        ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+        final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+        final ModelExtensionDefinition medToWrite = this.medBeingEdited;
+        final IFile mxdFile = getFile();
 
-        IEditorInput editorInput = this.getEditorInput();
+        WorkspaceJob job = new WorkspaceJob(NLS.bind(Messages.medEditorSaveJobTitle, mxdFile.getName())) {
 
-        try {
-            if (editorInput instanceof IFileEditorInput) {
-                IFile inputFile = ((IFileEditorInput)editorInput).getFile();
-                InputStream inputStream = medWriter.write(this.medBeingEdited);
-                inputFile.setContents(inputStream, IResource.KEEP_HISTORY, monitor);
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            @Override
+            public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException {
+                try {
+                    InputStream inputStream = medWriter.write(medToWrite);
+                    mxdFile.setContents(inputStream, IResource.KEEP_HISTORY, monitor);
+
+                    // copy over data to MED that will be changed by editor
+                    updateEditorModelObject();
+
+                    // update editor dirty should be handled in UI thread
+                    UiUtil.runInSwtThread(new Runnable() {
+
+                        /**
+                         * {@inheritDoc}
+                         * 
+                         * @see java.lang.Runnable#run()
+                         */
+                        @Override
+                        public void run() {
+                            refreshDirtyState();
+                        }
+                    }, true);
+
+                    return Status.OK_STATUS;
+                } catch (final Exception e) {
+                    throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getLocalizedMessage(), e));
+                }
             }
-        } catch (Exception e) {
-            // TODO log exception
-        }
 
-        // TODO set dirty flag
+        };
+
+        job.setRule(mxdFile);
+        job.schedule();
     }
 
     /**
@@ -328,8 +330,20 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         return super.getAdapter(adapter);
     }
 
+    protected IFile getFile() {
+        return ((IFileEditorInput)getEditorInput()).getFile();
+    }
+
+    ModelExtensionDefinition getMed() {
+        return this.medBeingEdited;
+    }
+
     IMessageManager getMessageManager() {
         return this.scrolledForm.getMessageManager();
+    }
+
+    Shell getShell() {
+        return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
     void handlePageChanged() {
@@ -352,6 +366,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         try {
             if (input instanceof IFileEditorInput) {
                 createMed(((IFileEditorInput)input).getFile());
+                ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
             }
         } catch (Exception e) {
             throw new PartInitException(errorOpeningMedEditor, e);
@@ -369,6 +384,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     /**
+     * @return <code>true</code> if the file is readonly
+     */
+    public boolean isReadOnly() {
+        return this.readOnly;
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
@@ -378,10 +400,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         return true;
     }
 
-    ModelExtensionDefinition getMed() {
-        return this.medBeingEdited;
-    }
-
     /**
      * {@inheritDoc}
      * 
@@ -389,17 +407,145 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     public final void propertyChange( PropertyChangeEvent e ) {
-        boolean oldValue = isDirty();
-        boolean newValue = !this.originalMed.equals(this.medBeingEdited);
-
-        if (oldValue != newValue) {
-            this.dirty = newValue;
-            getHeaderForm().dirtyStateChanged();
-        }
+        refreshDirtyState();
 
         // pass event on to pages
         this.overviewPage.handlePropertyChanged(e);
         this.propertiesPage.handlePropertyChanged(e);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+     */
+    @Override
+    public void resourceChanged( final IResourceChangeEvent event ) {
+        int type = event.getType();
+
+        if (type == IResourceChangeEvent.POST_CHANGE) {
+            IResourceDelta delta = event.getDelta();
+
+            if (delta == null)
+                return;
+
+            try {
+                delta.accept(new IResourceDeltaVisitor() {
+
+                    /**
+                     * {@inheritDoc}
+                     * 
+                     * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+                     */
+                    @Override
+                    public boolean visit( IResourceDelta delta ) {
+                        if (delta.getResource().equals(getFile())) {
+                            // MXD file has been deleted so close editor
+                            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
+                                if (!accessThis().getShell().isDisposed()) {
+                                    getEditorSite().getPage().closeEditor(accessThis(), false);
+                                }
+                            }
+
+                            return false; // stop visiting
+                        }
+
+                        return true; // keep visiting
+                    }
+                });
+            } catch (CoreException e) {
+                UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+            }
+        }
+    }
+
+    void refreshDirtyState() {
+        boolean newValue = !this.originalMed.equals(this.medBeingEdited);
+
+        if (isDirty() != newValue) {
+            this.dirty = newValue;
+            getHeaderForm().dirtyStateChanged();
+        }
+    }
+
+    private void refreshMarkers( Collection<String> errors,
+                                 Collection<String> warnings,
+                                 Collection<String> infos ) throws Exception {
+        IFile file = ((FileEditorInput)getEditorInput()).getFile();
+        file.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
+
+        for (String msg : errors) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+
+        for (String msg : warnings) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+
+        for (String msg : infos) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+    }
+
+    private void refreshReadOnlyState() {
+        ResourceAttributes attributes = getFile().getResourceAttributes();
+        boolean newValue = ((attributes == null) ? true : attributes.isReadOnly());
+
+        if (isReadOnly() != newValue) {
+            this.readOnly = newValue;
+
+            this.overviewPage.setResourceReadOnly(this.readOnly);
+            this.overviewPage.getManagedForm().refresh();
+
+            this.propertiesPage.setResourceReadOnly(this.readOnly);
+            this.overviewPage.getManagedForm().refresh();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.eclipse.ui.forms.editor.SharedHeaderFormEditor#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        refreshReadOnlyState();
+    }
+
+    void updateEditorModelObject() {
+        if (this.medBeingEdited != null) {
+            this.medBeingEdited.removeListener(this);
+            this.originalMed = this.medBeingEdited;
+        }
+
+        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
+        this.medBeingEdited.setDescription(this.originalMed.getDescription());
+        this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
+        this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
+        this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
+        this.medBeingEdited.setVersion(this.originalMed.getVersion());
+
+        // properties
+        for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
+            this.medBeingEdited.addMetaclass(metaclassName);
+
+            for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
+                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
+            }
+        }
+
+        // register to receive property change events
+        this.medBeingEdited.addListener(this);
     }
 
 }

@@ -128,6 +128,7 @@ public class Messages extends NLS {
     public static String availableMedsDialogNotDoneMsg;
 
     public static String errorOpeningMedEditor;
+    public static String medEditorSaveJobTitle;
 
     public static String medEditorOverviewPageTitle;
     public static String medEditorOverviewPageToolTip;

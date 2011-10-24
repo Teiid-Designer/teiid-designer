@@ -687,6 +687,56 @@ public class PropertiesEditorPage extends MedEditorPage {
     /**
      * {@inheritDoc}
      * 
+     * @see org.teiid.designer.extension.ui.editors.MedEditorPage#setResourceReadOnly(boolean)
+     */
+    @Override
+    protected void setResourceReadOnly( boolean readOnly ) {
+        // return if GUI hasn't been constructed yet
+        if (this.btnAddMetaclass == null) {
+            return;
+        }
+
+        if (this.btnAddMetaclass.getEnabled() == readOnly) {
+            this.btnAddMetaclass.setEnabled(!readOnly);
+        }
+
+        if (this.btnAddProperty.getEnabled() == readOnly) {
+            this.btnAddProperty.setEnabled(!readOnly);
+        }
+
+        if (this.btnEditMetaclass.getEnabled() == readOnly) {
+            this.btnEditMetaclass.setEnabled(!readOnly);
+        }
+
+        if (this.btnEditProperty.getEnabled() == readOnly) {
+            this.btnEditProperty.setEnabled(!readOnly);
+        }
+
+        if (this.btnRemoveMetaclass.getEnabled() == readOnly) {
+            this.btnRemoveMetaclass.setEnabled(!readOnly);
+        }
+
+        if (this.btnRemoveProperty.getEnabled() == readOnly) {
+            this.btnRemoveProperty.setEnabled(!readOnly);
+        }
+
+        if (this.metaclassViewer.getTable().getEnabled() == readOnly) {
+            this.metaclassViewer.getTable().setEnabled(!readOnly);
+        }
+
+        if (this.propertyViewer.getTable().getEnabled() == readOnly) {
+            this.propertyViewer.getTable().setEnabled(!readOnly);
+        }
+
+        if (!readOnly) {
+            handleMetaclassSelected();
+            handlePropertySelected();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @see org.teiid.designer.extension.ui.editors.MedEditorPage#updateAllMessages()
      */
     @Override
