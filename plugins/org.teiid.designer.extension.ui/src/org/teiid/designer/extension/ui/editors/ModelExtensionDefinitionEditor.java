@@ -18,8 +18,10 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,6 +47,7 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
@@ -185,8 +188,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
                 // Notify user if registration failed.
                 if (!wasAdded) {
-                    MessageDialog.openInformation(getShell(),
-                                                  Messages.registerMedActionFailedTitle,
+                    MessageDialog.openInformation(getShell(), Messages.registerMedActionFailedTitle,
                                                   Messages.registerMedActionFailedMsg);
                     return;
                 }
@@ -198,7 +200,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         this.showRegistryViewAction = new ShowModelExtensionRegistryViewAction();
     }
 
-    private static Shell getShell() {
+    static Shell getShell() {
         return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
 
@@ -220,10 +222,41 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
+    private void refreshMarkers( Collection<String> errors,
+                                Collection<String> warnings,
+                                Collection<String> infos ) throws Exception {
+        IFile file = ((FileEditorInput)getEditorInput()).getFile();
+        file.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
+
+        for (String msg : errors) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+
+        for (String msg : warnings) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+
+        for (String msg : infos) {
+            final IMarker marker = file.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+            marker.setAttribute(IMarker.MESSAGE, msg);
+            // TODO marker.setAttribute(IMarker.LOCATION, null);
+        }
+    }
+
     private void createMed( IFile medFile ) throws Exception {
         // TODO need to turn validation off in the parser here
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
         this.originalMed = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
+
+        // process parsing errors
+        refreshMarkers(parser.getErrors(), parser.getWarnings(), parser.getInfos());
 
         // copy over data to MED that will be changed by editor
         this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
@@ -348,7 +381,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     ModelExtensionDefinition getMed() {
         return this.medBeingEdited;
-}
+    }
 
     /**
      * {@inheritDoc}
@@ -364,6 +397,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             this.dirty = newValue;
             getHeaderForm().dirtyStateChanged();
         }
+
+        // pass event on to pages
+        this.overviewPage.handlePropertyChanged(e);
+        this.propertiesPage.handlePropertyChanged(e);
     }
 
 }

@@ -99,7 +99,7 @@ public class ModelExtensionDefinitionParser {
      * @return the error messages output from the last parse operation (<code>null</code> if
      *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
      */
-    Collection<String> getErrors() {
+    public Collection<String> getErrors() {
         if (this.handler == null) {
             return null;
         }
@@ -110,7 +110,7 @@ public class ModelExtensionDefinitionParser {
     /**
      * @return the information messages output from the last parse operation (never <code>null</code> but can be empty)
      */
-    Collection<String> getInfos() {
+    public Collection<String> getInfos() {
         if (this.handler == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public class ModelExtensionDefinitionParser {
     /**
      * @return the warning messages output from the last parse operation (never <code>null</code> but can be empty)
      */
-    Collection<String> getWarnings() {
+    public Collection<String> getWarnings() {
         if (this.handler == null) {
             return null;
         }

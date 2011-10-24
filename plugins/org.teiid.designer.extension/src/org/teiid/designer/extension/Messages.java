@@ -38,6 +38,7 @@ public class Messages extends NLS {
     public static String missingDefinitionPath;
     public static String modelExtensionAssistantNotFound;
     public static String modelExtensionAssistantSetIdCalled;
+    public static String modelExtensionDefinitionHasParseErrors;
     public static String namespacePrefixAlreadyRegistered;
     public static String namespacePrefixNotFound;
     public static String namespaceUriAlreadyRegistered;

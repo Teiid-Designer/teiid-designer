@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
@@ -29,6 +31,7 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -62,10 +65,10 @@ public final class ModelExtensionRegistry {
     private ModelExtensionDefinitionParser parser;
 
     /**
-     * @param medSchema the model extension definition schema file (cannot be <code>null</code> and must exist) 
+     * @param medSchema the model extension definition schema file (cannot be <code>null</code> and must exist)
      * @throws IllegalStateException if there is a problem with the model extension XSD
      */
-    public ModelExtensionRegistry(File medSchema) throws IllegalStateException {
+    public ModelExtensionRegistry( File medSchema ) throws IllegalStateException {
         this.definitions = new HashMap<String, ModelExtensionDefinition>();
         this.listeners = new CopyOnWriteArrayList<RegistryListener>();
         this.namespaces = new HashMap<String, String>();
@@ -97,6 +100,14 @@ public final class ModelExtensionRegistry {
                                                    ModelExtensionAssistant assistant ) throws Exception {
         ModelExtensionDefinition definition = this.parser.parse(definitionStream, assistant);
         assert definition != null : "parser should not return a null model extension definition"; //$NON-NLS-1$
+
+        // parser may have errors
+        Collection<String> errors = this.parser.getErrors();
+
+        if (!errors.isEmpty()) {
+            // attach first error message
+            throw new Exception(NLS.bind(Messages.modelExtensionDefinitionHasParseErrors, errors.size(), errors.iterator().next()));
+        }
 
         String namespacePrefix = definition.getNamespacePrefix();
 
