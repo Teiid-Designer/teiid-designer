@@ -10,7 +10,6 @@ package org.teiid.designer.extension;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 
 /**
@@ -60,6 +59,7 @@ public interface Constants {
     String[] BUILT_IN_MEDS = new String[] { SALESFORCE_MED_FILE_NAME, REST_MED_FILE_NAME, SOURCE_FUNCTION_MED_FILE_NAME,
             DEPRECATED_MED_FILE_NAME };
     String EMPTY_MED_FILE_NAME = TESTDATA + File.separatorChar + "emptyMed.mxd"; //$NON-NLS-1$
+    String TEMP_MED_FILE_NAME = TESTDATA + File.separatorChar + "tempMed.mxd"; //$NON-NLS-1$
 
     String DEFAULT_MED_DESCRIPTION = "This is a MED description"; //$NON-NLS-1$
     String DEFAULT_NAMESPACE_PREFIX = SALESFORCE_MED_PREFIX;
