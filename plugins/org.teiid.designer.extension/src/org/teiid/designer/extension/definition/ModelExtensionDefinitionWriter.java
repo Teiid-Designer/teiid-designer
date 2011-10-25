@@ -34,10 +34,8 @@ import org.w3c.dom.Text;
 public class ModelExtensionDefinitionWriter {
 
     private static final String NS_MED_COLON = ExtensionConstants.Namespaces.NS_MED + ":"; //$NON-NLS-1$
-    // private File definitionSchemaFile;
 
     public ModelExtensionDefinitionWriter() {
-        // this.definitionSchemaFile = schemaFile;
     }
 
     /**
@@ -175,10 +173,9 @@ public class ModelExtensionDefinitionWriter {
         String medDescription = med.getDescription();
         if (medDescription != null && !medDescription.isEmpty()) {
             Element descriptionElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DESCRIPTION);
-
+            modelExtensionElem.appendChild(descriptionElem);
             Text descriptionText = document.createTextNode(med.getDescription());
             descriptionElem.appendChild(descriptionText);
-            modelExtensionElem.appendChild(descriptionElem);
         }
     }
 
@@ -203,14 +200,13 @@ public class ModelExtensionDefinitionWriter {
 
             // Create the Element
             Element extendedMetaclassElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.EXTENDED_METACLASS);
+            // Append element to the document root
+            rootElem.appendChild(extendedMetaclassElem);
 
             // Set the Name attribute
             attr = document.createAttribute(ExtensionConstants.Attributes.NAME);
             attr.setValue(extendedMetaclassName);
             extendedMetaclassElem.setAttributeNode(attr);
-
-            // Append element to the document root
-            rootElem.appendChild(extendedMetaclassElem);
 
             // Set element on the returned element array
             extendedMetaclassElems[i] = extendedMetaclassElem;

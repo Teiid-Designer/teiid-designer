@@ -9,16 +9,13 @@ package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import static org.teiid.designer.extension.Messages.invalidDefinitionFileNewVersion;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -100,10 +97,10 @@ public class ModelExtensionDefinitionHeader {
 
         final ModelExtensionDefinitionHeader other = (ModelExtensionDefinitionHeader)object;
 
-        return CoreStringUtil.equals(this.namespacePrefix, other.namespacePrefix)
-               && CoreStringUtil.equals(this.namespaceUri, other.namespaceUri)
-               && CoreStringUtil.equals(this.metamodelUri, other.metamodelUri)
-               && CoreStringUtil.equals(this.description, other.description) && this.version == other.version;
+        return CoreStringUtil.valuesAreEqual(this.namespacePrefix, other.namespacePrefix)
+               && CoreStringUtil.valuesAreEqual(this.namespaceUri, other.namespaceUri)
+               && CoreStringUtil.valuesAreEqual(this.metamodelUri, other.metamodelUri)
+               && CoreStringUtil.valuesAreEqual(this.description, other.description) && this.version == other.version;
     }
 
     /**
@@ -151,19 +148,19 @@ public class ModelExtensionDefinitionHeader {
         int result = HashCodeUtil.hashCode(0, getVersion());
 
         // string properties
-        if (getNamespacePrefix() != null) {
+        if (getNamespacePrefix() != null && !getNamespacePrefix().isEmpty()) {
             result = HashCodeUtil.hashCode(result, getNamespacePrefix());
         }
 
-        if (getMetamodelUri() != null) {
+        if (getMetamodelUri() != null && !getMetamodelUri().isEmpty()) {
             result = HashCodeUtil.hashCode(result, getMetamodelUri());
         }
 
-        if (getNamespaceUri() != null) {
+        if (getNamespaceUri() != null && !getNamespaceUri().isEmpty()) {
             result = HashCodeUtil.hashCode(result, getNamespaceUri());
         }
 
-        if (getDescription() != null) {
+        if (getDescription() != null && !getDescription().isEmpty()) {
             result = HashCodeUtil.hashCode(result, getDescription());
         }
         return result;

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-
 import org.teiid.core.CorePlugin;
 import org.teiid.core.TeiidRuntimeException;
 
@@ -646,6 +645,22 @@ public final class CoreStringUtil {
      */
     public static boolean isEmpty( final String text ) {
         return (text == null || text.length() == 0);
+    }
+
+    /**
+     * Compare string values - considered equal if either are null or empty.
+     * 
+     * @param thisValue the first value being compared (can be <code>null</code> or empty)
+     * @param thatValue the other value being compared (can be <code>null</code> or empty)
+     * @return <code>true</code> if values are equal or both values are empty
+     */
+    public static boolean valuesAreEqual( String thisValue,
+                                          String thatValue ) {
+        if (isEmpty(thisValue) && isEmpty(thatValue)) {
+            return true;
+        }
+
+        return equals(thisValue, thatValue);
     }
 
     /**

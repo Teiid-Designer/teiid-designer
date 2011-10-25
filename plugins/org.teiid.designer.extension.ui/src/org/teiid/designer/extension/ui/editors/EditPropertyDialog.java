@@ -13,12 +13,10 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -69,7 +67,6 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -136,7 +133,7 @@ final class EditPropertyDialog extends FormDialog {
         this.namespacePrefixProvider = namespacePrefixProvider;
 
         this.existingPropIds = new ArrayList<String>(existingPropIds);
-        this.propDefn = new ModelExtensionPropertyDefinitionImpl();
+        this.propDefn = new ModelExtensionPropertyDefinitionImpl(this.namespacePrefixProvider);
 
         // errors
         this.advancedError = new ErrorMessage();
@@ -174,7 +171,6 @@ final class EditPropertyDialog extends FormDialog {
             this.propDefn.setRequired(this.propDefnBeingEdited.isRequired());
             this.propDefn.setSimpleId(this.propDefnBeingEdited.getSimpleId());
             this.propDefn.setType(this.propDefnBeingEdited.getType());
-            this.propDefn.setNamespacePrefix(this.propDefnBeingEdited.getNamespacePrefix());
 
             if (!this.propDefnBeingEdited.getDescriptions().isEmpty()) {
                 for (Translation description : this.propDefnBeingEdited.getDescriptions()) {

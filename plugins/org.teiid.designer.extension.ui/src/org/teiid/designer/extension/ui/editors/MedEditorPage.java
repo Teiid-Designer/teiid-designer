@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.ui.editors;
 
 import java.beans.PropertyChangeEvent;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
@@ -20,7 +19,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
@@ -124,7 +122,7 @@ public abstract class MedEditorPage extends FormPage {
      * @param errorMessage the message being updated in the {@link IMessageManager message manager} (never <code>null</code>)
      */
     protected void updateMessage( ErrorMessage errorMessage ) {
-        assert (errorMessage == null) : "errorMessage is null"; //$NON-NLS-1$
+        assert (errorMessage != null) : "errorMessage is null"; //$NON-NLS-1$
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
 
         if (CoreStringUtil.isEmpty(errorMessage.getMessage())) {

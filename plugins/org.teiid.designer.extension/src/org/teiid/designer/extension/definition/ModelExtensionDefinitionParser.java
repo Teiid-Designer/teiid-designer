@@ -17,10 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
@@ -30,7 +28,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 
@@ -305,6 +302,9 @@ public class ModelExtensionDefinitionParser {
                 this.currentDisplayNameLocale = null;
                 this.currentDisplayNameText = null;
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(localName)) {
+                if (this.metaclassName != null && !this.metaclassName.isEmpty()) {
+                    this.definition.addMetaclass(this.metaclassName);
+                }
                 if (DEBUG_MODE) {
                     System.err.println("reset: metaclassName=" + this.metaclassName); //$NON-NLS-1$
                 }

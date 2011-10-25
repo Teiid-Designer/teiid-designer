@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -19,14 +18,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.NamespacePrefixProvider;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -494,8 +491,9 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider {
             Set<ModelExtensionPropertyDefinition> metaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(this.getPropertyDefinitions(extendedMetaclassNames[i]));
             Set<ModelExtensionPropertyDefinition> otherMetaClassPropertyDefns = new HashSet<ModelExtensionPropertyDefinition>(other.getPropertyDefinitions(extendedMetaclassNames[i]));
 
+            // If sets are different size, or they are equal size (not empty) but dont contain the same elements - not equal
             if ((metaClassPropertyDefns.size() != otherMetaClassPropertyDefns.size())
-                    || !metaClassPropertyDefns.removeAll(otherMetaClassPropertyDefns)) {
+                || (!metaClassPropertyDefns.isEmpty() && !metaClassPropertyDefns.containsAll(otherMetaClassPropertyDefns))) {
                 areEqual = false;
                 break;
             }

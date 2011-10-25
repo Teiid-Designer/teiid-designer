@@ -14,11 +14,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Set;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.Messages;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -172,11 +170,6 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
      * @param newMasked the new masked value
      */
     void setMasked( boolean newMasked );
-
-    /**
-     * @param newNamespacePrefix the new namespace prefix (can be <code>null</code> or empty)
-     */
-    void setNamespacePrefix( String newNamespacePrefix );
 
     /**
      * @param newRequired the new required value
@@ -335,20 +328,6 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
             }
 
             throw new IllegalArgumentException(NLS.bind(Messages.invalidRuntimeType, runtimeType));
-        }
-
-        /**
-         * @param thisValue the first value being compared (can be <code>null</code> or empty)
-         * @param thatValue the other value being compared (can be <code>null</code> or empty)
-         * @return <code>true</code> if values are equal or both values are empty
-         */
-        public static boolean valuesAreEqual( String thisValue,
-                                              String thatValue ) {
-            if (CoreStringUtil.isEmpty(thisValue) && CoreStringUtil.isEmpty(thatValue)) {
-                return true;
-            }
-
-            return CoreStringUtil.equals(thisValue, thatValue);
         }
 
         /**
