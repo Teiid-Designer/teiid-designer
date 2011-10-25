@@ -66,3 +66,4 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.datatools.connectivity.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.apache.xerces.parsers

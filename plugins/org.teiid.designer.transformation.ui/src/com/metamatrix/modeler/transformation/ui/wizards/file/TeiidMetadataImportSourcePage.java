@@ -8,6 +8,9 @@
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -20,11 +23,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -62,6 +68,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.actions.EditConnectionProfileAction;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
 
+import com.metamatrix.common.protocol.URLHelper;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
@@ -115,12 +122,17 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String DOT_TXT = ".TXT"; //$NON-NLS-1$
 	private static final String DOT_CSV = ".CSV"; //$NON-NLS-1$
+	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
 	
 	private static final String DEFAULT_EXTENSION = ".xmi"; //$NON-NLS-1$
 	private static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
 
 	private static final String ODA_FLAT_FILE_ID = "org.eclipse.datatools.connectivity.oda.flatfile"; //$NON-NLS-1$
-
+	private static final String ODA_XML_FILE_ID = "org.eclipse.datatools.enablement.oda.xml";  //$NON-NLS-1$
+	
+	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
+	private static final String FILE_LIST_PROPERTY_KEY = "FILELIST";  //$NON-NLS-1$ //home/blafond/TestDesignerFolder/example files/xml/employee_info.xml
+	
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
@@ -150,6 +162,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     boolean synchronizing = false;
     
     boolean processingChecks = false;
+    
+    IStatus fileParsingStatus;
     
     IConnectionInfoHelper connectionInfoHelper;
 
@@ -218,8 +232,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		this.srcCombo.addModifyListener(new ModifyListener() {
 
 			public void modifyText(final ModifyEvent event) {
-				profileModified();
-				fileViewer.refresh();
+				//profileModified();
+				//fileViewer.refresh();
 			}
 		});
 		this.srcCombo.addSelectionListener(new SelectionListener() {
@@ -344,11 +358,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 										}
 									}									
 									info.setDoProcess((File) tableItem.getData(), wasChecked);
-									if( wasChecked ) {
-										selectedFileText.setText(((File) tableItem.getData()).getName());
-									} else {
-										selectedFileText.setText(EMPTY_STRING);
-									}
 								} else {
 									
 									if( wasChecked ) {
@@ -361,15 +370,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 									
 									
 									info.setDoProcessXml((File) tableItem.getData(), wasChecked);
-									if( wasChecked ) {
-										selectedFileText.setText(((File) tableItem.getData()).getName());
-									} else {
-										selectedFileText.setText(EMPTY_STRING);
-									}
 								}
 							}
 						}
 						processingChecks = false;
+						synchronizeUI();
 						validatePage();
 					}
 
@@ -482,6 +487,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			setConnectionProfile(null);
 		}
 
+		synchronizeUI();
+		
 		validatePage();
 
 		this.editCPButton.setEnabled(getConnectionProfile() != null);
@@ -496,49 +503,133 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	}
 
 	private void clearFileListViewer() {
+		this.info.clearXmlFileInfos();
+		this.info.clearFileInfos();
 		fileViewer.remove(fileViewer.getTable().getItems());
 	}
 
 	private void loadFileListViewer() {
 		if (getConnectionProfile() != null) {
-			File folder = getFolderForConnectionProfile();
-			if (folder != null && folder.exists() && folder.isDirectory()) {
-				// ================= OLD WAY =======================
-
-				fileViewer.setInput(folder);
-				TableItem[] items = fileViewer.getTable().getItems();
-				for (TableItem item : items) {
-					Object data = item.getData();
-					if (data != null && data instanceof File) {
-						File theFile = (File) data;
-						if (!theFile.isDirectory()) {
-							if (this.info.isFlatFileMode()) {
+			if( this.info.isFlatFileMode() ) {
+				File folder = getFolderForConnectionProfile();
+				if (folder != null && folder.exists() && folder.isDirectory()) {
+					// ================= OLD WAY =======================
+					fileParsingStatus = Status.OK_STATUS;
+					fileViewer.setInput(folder);
+					TableItem[] items = fileViewer.getTable().getItems();
+					for (TableItem item : items) {
+						Object data = item.getData();
+						if (data != null && data instanceof File) {
+							File theFile = (File) data;
+							if (!theFile.isDirectory()) {
 								if (this.info.getFileInfo(theFile) == null) {
-									TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo((File) data);
+									TeiidMetadataFileInfo fileInfo = new TeiidMetadataFileInfo(theFile);
 									this.info.addFileInfo(fileInfo);
 								}
 								this.info.validate();
-							} else {
-								if (theFile.getName().toUpperCase()
-										.endsWith(".XML")) { //$NON-NLS-1$
-									if (this.info.getXmlFileInfo(theFile) == null) {
-										TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo((File) data);
-										this.info.addXmlFileInfo(fileInfo);
-									}
-									this.info.validate();
-								}
 							}
 						}
 					}
+					for (TableColumn column : this.fileViewer.getTable()
+							.getColumns()) {
+						column.pack();
+						column.setWidth(column.getWidth() + 4);
+					}
 				}
-				for (TableColumn column : this.fileViewer.getTable()
-						.getColumns()) {
-					column.pack();
-					column.setWidth(column.getWidth() + 4);
+			} else {
+				File theXmlFile = getFileForConnectionProfile();
+				String urlString = getUrlStringForConnectionProfile();
+				
+				if( theXmlFile != null && theXmlFile.exists() ) {
+					fileViewer.setInput(theXmlFile);
+					
+					if (this.info.getXmlFileInfo(theXmlFile) == null) {
+						TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(theXmlFile);
+						fileParsingStatus = fileInfo.getParsingStatus();
+						if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
+				            MessageDialog.openError(this.getShell(), 
+				            		getString("parsingErrorTitle"),  //$NON-NLS-1$
+				            		fileParsingStatus.getMessage());
+						}
+						this.info.addXmlFileInfo(fileInfo);
+					}
+				} else if( urlString != null && urlString.trim().length() > 0 ) {
+					File xmlFile = null;
+					// Clears the viewer
+					// This will be the case if No XML is defined and URL version exists OR if nothing is defined in CP
+					fileViewer.setInput("no input"); //$NON-NLS-1$
+					// 
+			        URL newUrl = null;
+			        try {
+			        	newUrl = URLHelper.buildURL(urlString);
+			        } catch (MalformedURLException e) {
+			            Util.log(e);
+			            MessageDialog.openError(this.getShell(), 
+			            		getString("malformedUrlErrorTitle"),  //$NON-NLS-1$
+			            		UiConstants.Util.getString("malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
+			        }
+			        
+			        if( newUrl != null ) {
+				        boolean resolved = true;
+				        try {
+				            resolved = URLHelper.resolveUrl(newUrl);
+				        } catch (Exception e) {
+				            resolved = false;
+				            
+				        }
+				        
+				        if( resolved ) {
+				        	try {
+				                String filePath = formatPath(newUrl);
+				                xmlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
+				            } catch (MalformedURLException theException) {
+				            	Util.log(theException);
+				            } catch (IOException theException) {
+				            	Util.log(theException);
+				            }
+				        }
+			        }
+			        
+			        if( xmlFile != null && xmlFile.exists() ) {
+			        	fileViewer.setInput(xmlFile);
+						
+						if (this.info.getXmlFileInfo(theXmlFile) == null) {
+							TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(xmlFile);
+							this.info.addXmlFileInfo(fileInfo);
+						}
+			        }
+				} else {
+					fileViewer.setInput(null);
+					MessageDialog.openError(this.getShell(), 
+							getString("invalidXmlConnectionProfileTitle"),  //$NON-NLS-1$
+							getString("invalidXmlConnectionProfileMessage")); //$NON-NLS-1$
 				}
 			}
 		}
 	}
+	
+    /**
+     * If the path begins with a "/", we need to strip off since this will be changed to an underscore and create an invalid model
+     * name. Also, we need to remove any periods.
+     * 
+     * @param newUrl
+     * @return filePath - reformatted string used for generating the new file name
+     */
+    public static String formatPath( URL newUrl ) {
+        String filePath = newUrl.getPath();
+        /*
+         * If the path begins with a "/", we need to strip off since this will
+         * be changed to an underscore and create an invalid model name.
+         */
+        while (filePath.startsWith("/")) { //$NON-NLS-1$
+            filePath = filePath.substring(1);
+        }
+        int dotLocation = filePath.indexOf("."); //$NON-NLS-1$
+        if (dotLocation > -1) {
+            filePath = filePath.substring(0, dotLocation);
+        }
+        return filePath;
+    }
 
 	private File getFolderForConnectionProfile() {
 		if (getConnectionProfile() != null) {
@@ -551,17 +642,45 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 		return null;
 	}
+	
+	private File getFileForConnectionProfile() {
+		if (getConnectionProfile() != null) {
+			Properties props = getConnectionProfile().getBaseProperties();
+			String fileListValue = (String) props.get(FILE_LIST_PROPERTY_KEY);
+			if (fileListValue != null) {
+				return new File(fileListValue);
+			}
+		}
+
+		return null;
+	}
+	
+	private String getUrlStringForConnectionProfile() {
+		if (getConnectionProfile() != null) {
+			Properties props = getConnectionProfile().getBaseProperties();
+			String fileListValue = (String) props.get(FILE_LIST_PROPERTY_KEY);
+			if (fileListValue != null) {
+				return fileListValue;
+			}
+		}
+
+		return null;
+	}
 
 	void profileChanged() {
 		profileModified();
 	}
 
 	void createNewConnectionProfile() {
-		INewWizard wiz = (INewWizard) new NewTeiidFilteredCPWizard(
-				ODA_FLAT_FILE_ID);
+		INewWizard wiz = null;
+		
+		if( this.info.isFlatFileMode() ) {
+			wiz = (INewWizard) new NewTeiidFilteredCPWizard(ODA_FLAT_FILE_ID);
+		} else {
+			wiz = (INewWizard) new NewTeiidFilteredCPWizard(ODA_XML_FILE_ID);
+		}
 
-		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent()
-				.getActiveShell(), (Wizard) wiz);
+		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), (Wizard) wiz);
 		wizardDialog.setBlockOnOpen(true);
 
 		CPListener listener = new CPListener();
@@ -705,6 +824,27 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
         }
         
+        // Get selected Data file
+        if( this.info.isFlatFileMode() ) {
+        	String fileName = EMPTY_STRING;
+        	for(TeiidMetadataFileInfo tmFileInfo : this.info.getFileInfos() ) {
+        		if( tmFileInfo.doProcess() ) {
+        			fileName = tmFileInfo.getDataFile().getName();
+        			break;
+        		}
+        	}
+        	this.selectedFileText.setText(fileName);
+        } else {
+        	String fileName = EMPTY_STRING;
+        	for(TeiidXmlFileInfo xmlFileInfo : this.info.getXmlFileInfos() ) {
+        		if( xmlFileInfo.doProcess() ) {
+        			fileName = xmlFileInfo.getDataFile().getName();
+        			break;
+        		}
+        	}
+        	this.selectedFileText.setText(fileName);
+        }
+        
         synchronizing = false;
     }
 
@@ -749,10 +889,21 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 	private void refreshConnectionProfiles() {
 		this.connectionProfiles = new ArrayList<IConnectionProfile>();
-
-		final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(ODA_FLAT_FILE_ID);
-		for (final IConnectionProfile profile : tempProfiles) {
-			connectionProfiles.add(profile);
+		if( this.info.isFlatFileMode() ) {
+			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(ODA_FLAT_FILE_ID);
+			for (final IConnectionProfile profile : tempProfiles) {
+				connectionProfiles.add(profile);
+			}
+		} else {
+			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(ODA_XML_FILE_ID);
+			for (final IConnectionProfile profile : tempProfiles) {
+				// Check to see that this XML file is a File-based string?
+				Properties props = profile.getBaseProperties();
+				String fileListValue = (String) props.get(FILE_LIST_PROPERTY_KEY);
+				if (fileListValue != null) {
+					connectionProfiles.add(profile);
+				}
+			}
 		}
 	}
 
@@ -768,6 +919,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		}
 		if( !fileSelected ) {
 			setThisPageComplete(getString("noXmlDataFilesSelected"), ERROR);//$NON-NLS-1$
+			return false;
+		}
+		
+		if( fileParsingStatus.getSeverity() == IStatus.ERROR) {
+			setThisPageComplete(fileParsingStatus.getMessage(), ERROR);
 			return false;
 		}
 		
@@ -1015,7 +1171,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		 * @since 4.2
 		 */
 		public Object[] getElements(Object theInput) {
-			if (theInput instanceof File) {
+			if (theInput instanceof File && ((File) theInput).isDirectory()) {
 				File[] allFiles = ((File) theInput).listFiles();
 				Collection<File> goodFilesList = new ArrayList<File>();
 
@@ -1032,23 +1188,23 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 					}
 				}
 				return goodFilesList.toArray(new File[0]);
-			}
-
-			File[] roots = File.listRoots();
-			Collection<File> goodFilesList = new ArrayList<File>();
-
-			for (File theFile : roots) {
-				if (!theFile.isDirectory()) {
-					if (isFlatFileContent) {
-						if (theFile.getName().toUpperCase().endsWith(DOT_CSV)
-								|| theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
-							goodFilesList.add(theFile);
-						}
-					} else if (theFile.getName().toUpperCase().endsWith(DOT_XML)) {
+			} else if (theInput instanceof File) {
+				Collection<File> goodFilesList = new ArrayList<File>();
+				
+				File theFile = ((File) theInput);
+				
+				if (isFlatFileContent) {
+					if (theFile.getName().toUpperCase().endsWith(DOT_CSV)
+							|| theFile.getName().toUpperCase().endsWith(DOT_TXT)) {
 						goodFilesList.add(theFile);
 					}
+				} else if (theFile.getName().toUpperCase().endsWith(DOT_XML)) {
+					goodFilesList.add(theFile);
 				}
+				return goodFilesList.toArray(new File[0]);
 			}
+
+			Collection<File> goodFilesList = new ArrayList<File>();
 			return goodFilesList.toArray(new File[0]);
 		}
 

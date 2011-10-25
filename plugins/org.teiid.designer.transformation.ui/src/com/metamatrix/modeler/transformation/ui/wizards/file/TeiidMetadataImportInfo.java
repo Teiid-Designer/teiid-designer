@@ -298,6 +298,14 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		return xmlFileInfoMap.values();
 	}
 	
+	public void clearFileInfos() {
+		this.fileInfoMap.clear();
+	}
+	
+	public void clearXmlFileInfos() {
+		this.xmlFileInfoMap.clear();
+	}
+	
 	/**
 	 * Analyzes this object's data values and sets the current <code>IStatus</code>
 	 */

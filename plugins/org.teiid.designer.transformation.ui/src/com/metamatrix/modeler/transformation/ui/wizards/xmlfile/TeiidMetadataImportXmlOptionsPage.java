@@ -7,19 +7,13 @@
  */
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
@@ -30,12 +24,13 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -52,7 +47,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.types.DataTypeManager;
-import org.xml.sax.SAXException;
 
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -69,6 +63,7 @@ import com.metamatrix.ui.internal.util.WizardUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizardPage;
 import com.metamatrix.ui.table.CheckBoxEditingSupport;
 import com.metamatrix.ui.table.ComboBoxEditingSupport;
+import com.metamatrix.ui.tree.AbstractTreeContentProvider;
 
 public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implements
 		UiConstants {
@@ -88,23 +83,18 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
-	
-	private static String getString(final String id, final Object param) {
-		return Util.getString(I18N_PREFIX + id, param);
-	}
 
 	private TeiidMetadataImportInfo info;
 
 	// Target SQL Variables
 	Group headerGroup;
-	ListViewer fileContentsViewer;
+	TreeViewer xmlTreeViewer;
 	TextViewer sqlTextViewer;
 	IDocument sqlDocument;
-	Label numberOfFixedWidthColumnsLabel;
-	Text numberOfCachedLinesText, xQueryExpressionText, selectedFileText;
+	Text rootPathText, selectedFileText;
 	Button parseRowButton;
-	Action parseRowAction;
-	Button deleteButton;
+	Action createColumnAction, setRootPathAction;
+	Button deleteButton, upButton, downButton;
 	
 	EditColumnsPanel columnsPanel;	
 	
@@ -138,10 +128,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 		setMessage(INITIAL_MESSAGE);
 
         createFileContentsGroup(mainPanel);
-    	
-        createXQueryOptionsGroup(mainPanel);
 
-        // Create Bottom Composite
         createColumnInfoGroup(mainPanel);
         
         createXmlTableSqlGroup(mainPanel);
@@ -172,10 +159,6 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 		}
 	}
 
-
-
-
-
 	private boolean validatePage() {
 
 		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
@@ -187,46 +170,15 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	WizardUtil.setPageComplete(this, message, severity);
     }
 
-
 	private void synchronizeUI() {
 		synchronizing = true;
 
 		selectedFileText.setText(fileInfo.getDataFile().getName());
-				
-    	this.numberOfCachedLinesText.setText(Integer.toString(this.fileInfo.getNumberOfCachedFileLines()));
     	
-    	this.xQueryExpressionText.setText(this.fileInfo.getXQueryExpression());
+    	this.rootPathText.setText(this.fileInfo.getRootPath());
 
 		synchronizing = false;
 	}
-	    
-    private void createXQueryOptionsGroup(Composite parent) {
-    	Group xQueryOptionsGroup = WidgetFactory.createGroup(parent, getString("xQueryOptionsGroup"), SWT.NONE, 1); //$NON-NLS-1$
-    	xQueryOptionsGroup.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
-    	xQueryOptionsGroup.setLayout(new GridLayout(2, false));
-    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    	xQueryOptionsGroup.setLayoutData(gd);
-    	
-    	Label prefixLabel = new Label(xQueryOptionsGroup, SWT.NONE);
-    	prefixLabel.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
-    	prefixLabel.setText(getString("xQueryExpressionLabel")); //$NON-NLS-1$
-        
-    	xQueryExpressionText = WidgetFactory.createTextField(xQueryOptionsGroup, SWT.NONE);
-    	gd = new GridData(GridData.FILL_HORIZONTAL);
-    	gd.minimumWidth = 50;
-    	gd.horizontalSpan=1;
-    	gd.grabExcessHorizontalSpace = true;
-    	xQueryExpressionText.setLayoutData(gd);
-    	xQueryExpressionText.setToolTipText(getString("xQueryExpressionTooltip")); //$NON-NLS-1$
-    	xQueryExpressionText.addModifyListener(new ModifyListener() {
-    		public void modifyText( final ModifyEvent event ) {
-    			if( !synchronizing ) {
-        			fileInfo.setXQueryExpression(xQueryExpressionText.getText());
-        			handleInfoChanged(false);
-    			}
-    		}
-    	});
-    }
     
     private void createXmlTableSqlGroup(Composite parent) {
     	Group xmlTableOptionsGroup = WidgetFactory.createGroup(parent, getString("teiidXMLTableGroup"), SWT.NONE, 1); //$NON-NLS-1$
@@ -257,94 +209,9 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
     	fileContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 350;
+    	gd.heightHint = 320;
     	gd.widthHint = 500;
     	fileContentsGroup.setLayoutData(gd);
-    	
-    	Composite topPanel = WidgetFactory.createPanel(fileContentsGroup);
-    	topPanel.setLayout(new GridLayout(3, false));
-        GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
-        gd1.horizontalSpan=4;
-        topPanel.setLayoutData(gd1);
-        
-    	Label prefixLabel = new Label(topPanel, SWT.NONE);
-    	prefixLabel.setText(getString("numberOfLinesLabel", 20)); //this.fileInfo.getNumberOfLinesInFile())); //$NON-NLS-1$
-    	GridData lgd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-        lgd.horizontalSpan=1;
-        prefixLabel.setLayoutData(lgd);
-        
-    	this.numberOfCachedLinesText = WidgetFactory.createTextField(topPanel, SWT.NONE);
-    	gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-    	gd.minimumWidth = 50;
-    	gd.horizontalSpan=1;
-    	gd.grabExcessHorizontalSpace = true;
-    	this.numberOfCachedLinesText.setLayoutData(gd);
-    	this.numberOfCachedLinesText.addModifyListener(new ModifyListener() {
-    		public void modifyText( final ModifyEvent event ) {
-    			if( !synchronizing ) {
-	    			if( !numberOfCachedLinesText.getText().isEmpty()) {
-	            		try {
-	        				int nLines = Integer.parseInt(numberOfCachedLinesText.getText());
-	        				if( nLines == 0 ) {
-	        					setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
-	        					return;
-	        				}
-	        				if( nLines != fileInfo.getNumberOfCachedFileLines() ) {
-	        					fileInfo.setNumberOfCachedFileLines(nLines);
-	        					handleInfoChanged(true);
-	        				}
-	        				setErrorMessage(null);
-	        			} catch (NumberFormatException ex) {
-	        				setErrorMessage(getString("numberOfLinesMustBeInteger", numberOfCachedLinesText.getText())); //$NON-NLS-1$
-	        				return;
-	        			}
-	            	} else {
-	            		setErrorMessage(getString("numberOfLinesCannotBeNullOrZero")); //$NON-NLS-1$
-	            		return;
-	            	}
-    			}
-    		}
-    	});
-    	
-        this.parseRowButton = WidgetFactory.createButton(topPanel, SWT.PUSH);
-        this.parseRowButton.setText(getString("parseSelectedRow")); //$NON-NLS-1$
-//    	gd = new GridData();
-//    	gd.minimumWidth = 100;
-//    	gd.minimumHeight = 25;
-//    	this.parseRowButton.setLayoutData(gd);
-        this.parseRowButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-            	parseSelectedDataRow();
-            }
-        });
-        this.parseRowButton.setEnabled(true);
-        this.parseRowButton.setToolTipText(getString("parseSelectedTooltip")); //$NON-NLS-1$
-    	
-    	this.fileContentsViewer = new ListViewer(fileContentsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan=4;
-        this.fileContentsViewer.getControl().setLayoutData(data);
-        
-        if( this.fileInfo != null ) {
-	        for( String row : this.fileInfo.getCachedFirstLines() ) {
-	        	if( row != null ) {
-	        		this.fileContentsViewer.add(row);
-	        	}
-	        }
-        }
-        
-     // Add a Context Menu
-        final MenuManager columnMenuManager = new MenuManager();
-        this.fileContentsViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));        
-        
-        this.parseRowAction = new Action(getString("parseSelectedRow")) { //$NON-NLS-1$
-            @Override
-            public void run() {
-            	parseSelectedDataRow();
-            }
-		};
     	
 		Label selectedFileLabel = new Label(fileContentsGroup, SWT.NONE);
 		selectedFileLabel.setText(getString("selectedXmlFile")); //$NON-NLS-1$
@@ -353,6 +220,77 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
         selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	
+    	this.xmlTreeViewer = new TreeViewer(fileContentsGroup, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+        GridData data = new GridData(GridData.FILL_BOTH);
+        data.horizontalSpan=4;
+        this.xmlTreeViewer.getControl().setLayoutData(data);
+        this.xmlTreeViewer.setContentProvider(new AbstractTreeContentProvider() {
+        	
+            @Override
+            public Object[] getChildren( Object element ) {
+                return getNodeChildren(element);
+            }
+
+            public Object getParent( Object element ) {
+                return getNodeParent(element);
+            }
+
+            @Override
+            public boolean hasChildren( Object element ) {
+                return getNodeHasChildren(element);
+            }
+
+        });
+    	
+        this.xmlTreeViewer.setLabelProvider(new LabelProvider() {
+
+            @Override
+            public Image getImage( Object element ) {
+                return getNodeImage(element);
+            }
+
+            @Override
+            public String getText( Object element ) {
+                return getNodeName(element);
+            }
+        });
+        
+     // Add a Context Menu
+        final MenuManager columnMenuManager = new MenuManager();
+        this.xmlTreeViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
+        this.xmlTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+             */
+            @Override
+            public void selectionChanged( final SelectionChangedEvent event ) {
+            	columnMenuManager.removeAll();
+                IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+                if (sel.size() == 1) {
+					columnMenuManager.add(createColumnAction);
+					columnMenuManager.add(setRootPathAction);
+                }
+
+            }
+        });
+        
+        this.createColumnAction = new Action(getString("createColumnActionLabel")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+            	createColumn();
+            }
+		};
+		
+        this.setRootPathAction = new Action(getString("setAsRootpathActionLabel")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+            	setRootPath();
+            }
+		};
+
 
     	//LayoutDebugger.debugLayout(fileContentsGroup);
     }
@@ -366,7 +304,26 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 160;
     	columnInfoGroup.setLayoutData(gd);
-    	
+
+    	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
+    	prefixLabel.setToolTipText(getString("rootPathTooltip")); //$NON-NLS-1$
+    	prefixLabel.setText(getString("rootPathLabel")); //$NON-NLS-1$
+        
+    	rootPathText = WidgetFactory.createTextField(columnInfoGroup, SWT.NONE);
+    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.minimumWidth = 50;
+    	gd.horizontalSpan=1;
+    	gd.grabExcessHorizontalSpace = true;
+    	rootPathText.setLayoutData(gd);
+    	rootPathText.setToolTipText(getString("rootPathTooltip")); //$NON-NLS-1$
+    	rootPathText.addModifyListener(new ModifyListener() {
+    		public void modifyText( final ModifyEvent event ) {
+    			if( !synchronizing ) {
+        			fileInfo.setRootPath(rootPathText.getText());
+        			handleInfoChanged(false);
+    			}
+    		}
+    	});
 
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	leftToolbarPanel.setLayout(new GridLayout());
@@ -382,8 +339,14 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
-				fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
+				IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+		    	Object obj = sel.getFirstElement();
+		    	if( obj instanceof XmlElement ) {
+		    		createColumn();
+		    	} else {
+					String newName = "column_" + (fileInfo.getColumnInfoList().length + 1); //$NON-NLS-1$
+					fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, null);
+		    	}
 				handleInfoChanged(false);
 			}
     		
@@ -397,13 +360,53 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				if( !columnsPanel.getSelectedColumns().isEmpty() ) {
-					for( TeiidColumnInfo info : columnsPanel.getSelectedColumns()) {
-						fileInfo.removeColumn(info);
-					}
+				TeiidColumnInfo info = columnsPanel.getSelectedColumn();
+				if( info != null ) {
+					fileInfo.removeColumn(info);
 					handleInfoChanged(false);
 					deleteButton.setEnabled(false);
+				}
+			}
+    		
+		});
+    	
+    	upButton = new Button(leftToolbarPanel, SWT.PUSH);
+    	upButton.setText(getString("upLabel")); //$NON-NLS-1$
+    	upButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	upButton.setEnabled(false);
+    	upButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TeiidColumnInfo info = columnsPanel.getSelectedColumn();
+				if( info != null ) {
+					int selectedIndex = columnsPanel.getSelectedIndex();
+					fileInfo.moveColumnUp(info);
+					handleInfoChanged(false);
+					columnsPanel.selectRow(selectedIndex-1);
+					downButton.setEnabled(fileInfo.canMoveDown(info));
+					upButton.setEnabled(fileInfo.canMoveUp(info));
+				}
+			}
+    		
+		});
+    	
+    	downButton = new Button(leftToolbarPanel, SWT.PUSH);
+    	downButton.setText(getString("downLabel")); //$NON-NLS-1$
+    	downButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	downButton.setEnabled(false);
+    	downButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TeiidColumnInfo info = columnsPanel.getSelectedColumn();
+				if( info != null ) {
+					int selectedIndex = columnsPanel.getSelectedIndex();
+					fileInfo.moveColumnDown(info);
+					handleInfoChanged(false);
+					columnsPanel.selectRow(selectedIndex+1);
+					downButton.setEnabled(fileInfo.canMoveDown(info));
+					upButton.setEnabled(fileInfo.canMoveUp(info));
 				}
 			}
     		
@@ -419,19 +422,29 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 				
 				if( sel.isEmpty()) {
 					deleteButton.setEnabled(false);
+					upButton.setEnabled(false);
+					downButton.setEnabled(false);
 				} else {
 					boolean enable = true;
 					Object[] objs = sel.toArray();
+					TeiidColumnInfo columnInfo = null;
 					for( Object obj : objs) {
 						if(  !(obj instanceof TeiidColumnInfo)) {
 							enable = false;
 							break;
+						} else {
+							columnInfo = (TeiidColumnInfo)obj;
 						}
 					} 
 					if( objs.length == 0 ) {
 						enable = false;
 					}
 					deleteButton.setEnabled(enable);
+					if( enable ) {
+						upButton.setEnabled(fileInfo.canMoveUp(columnInfo));
+						downButton.setEnabled(fileInfo.canMoveDown(columnInfo));
+					}
+					
 				}
 				
 			}
@@ -450,46 +463,34 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	return sb.toString();
     }
     
-    private void parseSelectedDataRow() {
-    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    	//Using factory get an instance of document builder
-        try {
-			DocumentBuilder db = factory.newDocumentBuilder();
-
-			//parse using builder to get DOM representation of the XML file
-			@SuppressWarnings("unused")
-			org.w3c.dom.Document document = db.parse(fileInfo.getDataFile().getAbsolutePath());
-			
-			//get the root element
-            //Element root = document.getDocumentElement();
-            
-            String title = getString("xmlDataFileXmlParsingResultOK.title"); //$NON-NLS-1$
-            String message = getString("xmlDataFileXmlParsingResultOK.message", fileInfo.getDataFile().getName()); //$NON-NLS-1$
-            MessageDialog.openInformation(Display.getCurrent().getActiveShell(), title, message);
-            
-		} catch (ParserConfigurationException ex) {
-			String title = getString("xmlDataFileXmlParsingError.title"); //$NON-NLS-1$
-            String message = getString("xmlDataFileXmlParsingError", fileInfo.getDataFile().getName()) + ex.getMessage(); //$NON-NLS-1$
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
-		} catch (SAXException ex) {
-			String title = getString("xmlDataFileXmlParsingError.title"); //$NON-NLS-1$
-            String message = getString("xmlDataFileXmlParsingError", fileInfo.getDataFile().getName()) + ex.getMessage(); //$NON-NLS-1$
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
-		} catch (IOException ex) {
-			String title = getString("xmlDataFileXmlParsingError.title"); //$NON-NLS-1$
-            String message = getString("xmlDataFileXmlParsingError", fileInfo.getDataFile().getName()) + ex.getMessage(); //$NON-NLS-1$
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
-		}
+    private void setRootPath() {
+    	IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+    	Object obj = sel.getFirstElement();
+    	if( obj instanceof XmlElement ) {
+    		String pathValue = ((XmlElement)obj).getFullPath();
+    		this.fileInfo.setRootPath(pathValue);
+    		handleInfoChanged(false);
+    	}
+    }
+    
+    private void createColumn() {
+    	IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
+    	Object obj = sel.getFirstElement();
+    	if( obj instanceof XmlElement ) {
+    		XmlElement element = (XmlElement)obj;
+    		String newName =  element.getName();
+    		String rootPath = this.fileInfo.getRootPath();
+    		fileInfo.addColumn(newName, false, TeiidColumnInfo.DEFAULT_DATATYPE, null, rootPath, element);
+    		
+			handleInfoChanged(false);
+    	}
+    
     }
     
     private void handleInfoChanged(boolean reloadFileContents) {
     	if( synchronizing ) return;
     	
     	synchronizeUI();
-    	
-    	if( reloadFileContents ) {
-    		loadFileContentsViewer();
-    	}
 
     	this.columnsPanel.refresh();
     	
@@ -499,12 +500,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     }
     
     private void loadFileContentsViewer() {
-    	fileContentsViewer.getList().removeAll();
-    	for( String row : this.fileInfo.getCachedFirstLines() ) {
-        	if( row != null ) {
-        		this.fileContentsViewer.add(row);
-        	}
-        }
+    	this.xmlTreeViewer.setInput(fileInfo); //.getRootNode());
     }
     
     public TeiidXmlFileInfo getFileInfo() {
@@ -513,8 +509,45 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     
     void updateSqlText() {
     	if( this.fileInfo != null ) {
-    		sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());
+    		if( this.info.getSourceModelName() != null ) {
+    			String modelName = this.info.getSourceModelName();
+    			if( modelName.toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+    				modelName = modelName.substring(0, modelName.length()-4);
+    			}
+    			sqlTextViewer.getDocument().set(fileInfo.getSqlString(modelName));
+    		} else {
+    			sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());
+    		}
     	}
+    }
+    
+    Object[] getNodeChildren( Object element ) {
+        if (element instanceof TeiidXmlFileInfo) {
+            return new Object[] {this.fileInfo.getRootNode()};
+        }
+        return ((XmlElement)element).getChildrenDTDElements();
+    }
+
+    boolean getNodeHasChildren( Object element ) {
+        XmlElement node = (XmlElement)element;
+        Object[] children = node.getChildrenDTDElements();
+
+        return (children.length > 0);
+    }
+    Image getNodeImage( Object element ) {
+        // There is an EMF bug that prevents maxOccurs values other than 1 from being stored correctly for particles with model
+        // group definition content, so just show image of underlying model group
+    	return null;
+    }
+    
+    String getNodeName( Object element ) {
+        XmlElement node = (XmlElement)element;
+
+        return node.getName();
+    }
+
+    Object getNodeParent( Object element ) {
+        return ((XmlElement)element).getParent();
     }
 
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
@@ -554,7 +587,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 					}
 					case 4: {
 						if(element instanceof TeiidColumnInfo) {
-							return ((TeiidColumnInfo)element).getXmlPath();
+							return ((TeiidColumnInfo)element).getRelativePath();
 						}
 					}
 				}
@@ -649,7 +682,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 						return ((TeiidColumnInfo)element).getDefaultValue();
 					}
 					case XML_PATH_PROP: {
-						return ((TeiidColumnInfo)element).getXmlPath();
+						return ((TeiidColumnInfo)element).getRelativePath();
 					}
 				}
 			}
@@ -686,10 +719,10 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 						}
 					} break;
 					case XML_PATH_PROP: {
-						String oldValue = ((TeiidColumnInfo)element).getXmlPath();
+						String oldValue = ((TeiidColumnInfo)element).getRelativePath();
 						String newValue = (String)value;
 						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidColumnInfo)element).setXmlPath(newValue);
+							((TeiidColumnInfo)element).setRelativePath(newValue);
 							columnsPanel.refresh(element);
 							fileInfo.columnChanged((TeiidColumnInfo)element);
 							handleInfoChanged(false);
@@ -766,7 +799,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 	        
 	        // create columns
 	        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText(getString("columnName") + getSpaces(30)); //$NON-NLS-1$
+	        column.getColumn().setText(getString("columnName") + getSpaces(25)); //$NON-NLS-1$
 	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, NAME_PROP));
 	        column.setLabelProvider(new ColumnDataLabelProvider(0));
 	        column.getColumn().pack();
@@ -778,13 +811,13 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 	        column.getColumn().pack();
 
 	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText(getString("datatype") + getSpaces(6)); //$NON-NLS-1$ 
+	        column.getColumn().setText(getString("datatype") + getSpaces(2)); //$NON-NLS-1$ 
 	        column.setLabelProvider(new ColumnDataLabelProvider(2));
 	        column.setEditingSupport(new DatatypeComboEditingSupport(this.columnsViewer));
 	        column.getColumn().pack();
 	        
 	        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-	        column.getColumn().setText(getString("defaultValue") + getSpaces(6)); //$NON-NLS-1$ 
+	        column.getColumn().setText(getString("defaultValue") + getSpaces(2)); //$NON-NLS-1$ 
 	        column.setLabelProvider(new ColumnDataLabelProvider(3));
 	        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, DEFAULT_VALUE_PROP));
 	        column.getColumn().pack();
@@ -817,19 +850,25 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 			this.columnsViewer.addSelectionChangedListener(listener);
 		}
 		
-		public Collection<TeiidColumnInfo> getSelectedColumns() {
-			Collection<TeiidColumnInfo> columns = new ArrayList<TeiidColumnInfo>();
+		public TeiidColumnInfo getSelectedColumn() {
 			
 			IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
 			for( Object obj : selection.toArray()) {
 				if( obj instanceof TeiidColumnInfo ) {
-					columns.add((TeiidColumnInfo)obj);
+					return (TeiidColumnInfo) obj;
 				}
 			}
 			
-			return columns;
+			return null;
 		}
 		
+		public int getSelectedIndex() {
+			return columnsViewer.getTable().getSelectionIndex();
+		}
+		
+		public void selectRow(int index) {
+			columnsViewer.getTable().select(index);
+		}
     	
     }
     

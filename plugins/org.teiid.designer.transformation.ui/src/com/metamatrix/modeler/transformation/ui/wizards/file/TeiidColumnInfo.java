@@ -7,7 +7,9 @@
  */
 package com.metamatrix.modeler.transformation.ui.wizards.file;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 import com.metamatrix.core.util.CoreArgCheck;
@@ -15,6 +17,7 @@ import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.XmlElement;
 
 /**
  * A <code>TeiidColumnInfo</code> defines extension properties for metaclasses within a metamodel.
@@ -26,6 +29,8 @@ public class TeiidColumnInfo {
 	public static final int DEFAULT_WIDTH = 10;
 	
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	
+	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
 	
     /**
      * The unique column name (never <code>null</code> or empty).
@@ -54,9 +59,19 @@ public class TeiidColumnInfo {
 	private String defaultValue = StringUtilities.EMPTY_STRING;
 	
 	 /**
-     * The unique column datatype (never <code>null</code> or empty).
+     * The full xml path
      */
-	private String xmlPath = StringUtilities.EMPTY_STRING;
+	private IPath fullXmlPath = EMPTY_PATH;
+	
+	 /**
+     * The root xml path
+     */
+	private IPath rootXmlPath = EMPTY_PATH;
+	
+	 /**
+     * The xml element
+     */
+	private XmlElement xmlElement;
 	
 	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
@@ -104,7 +119,7 @@ public class TeiidColumnInfo {
 	 * @param name the column name (never <code>null</code> or empty).
 	 * @param datatype the column datatype (never <code>null</code> or empty).
 	 */
-	public TeiidColumnInfo(String name, boolean ordinality, String datatype, String defaultValue, String xmlPath ) {
+	public TeiidColumnInfo(String name, boolean ordinality, String datatype, String defaultValue, String fullXmlPath ) {
 		this(name, datatype);
         this.forOrdinality = ordinality;
         if( defaultValue == null ) {
@@ -112,10 +127,10 @@ public class TeiidColumnInfo {
         } else {
         	this.defaultValue = defaultValue;
         }
-        if( xmlPath == null ) {
-        	this.xmlPath = StringUtilities.EMPTY_STRING;
+        if( fullXmlPath == null ) {
+        	this.fullXmlPath = EMPTY_PATH;
         } else {
-        	this.xmlPath = xmlPath;
+        	this.fullXmlPath = new Path(fullXmlPath);
         }
         validate();
 	}
@@ -199,11 +214,11 @@ public class TeiidColumnInfo {
 	 * 
 	 * @param xmlPath the column xmlPath
 	 */
-	public void setXmlPath(String xmlPath) {
-        if( xmlPath == null ) {
-        	this.xmlPath = StringUtilities.EMPTY_STRING;
+	public void setRelativePath(String relativePath) {
+        if( relativePath == null ) {
+        	this.fullXmlPath = this.rootXmlPath;
         } else {
-        	this.xmlPath = xmlPath;
+        	this.fullXmlPath = this.rootXmlPath.append(relativePath);
         }
 	}
 	
@@ -211,9 +226,83 @@ public class TeiidColumnInfo {
 	 * 
 	 * @return xmlPath the column xmlPath
 	 */
-	public String getXmlPath() {
-		return this.xmlPath;
+	public String getRelativePath() {
+		if( this.xmlElement != null ) {
+			// Get difference between the xmlElement full path minus the root (if applicable)
+			String fullPath = getFullXmlPath();
+			String rootPath = this.rootXmlPath.toString();
+			
+			if( fullPath.startsWith(rootPath) ) {
+				return fullPath.substring(rootPath.length(), fullPath.length());
+			}
+		}
+		if( !this.fullXmlPath.isEmpty() ) {
+			if( !this.rootXmlPath.isEmpty() && this.fullXmlPath.toString().indexOf(rootXmlPath.toString()) > -1) {
+				return '/' + this.fullXmlPath.removeFirstSegments(this.rootXmlPath.segmentCount()).toString();
+			} else {
+				return this.fullXmlPath.toString();
+			}
+		}
+		return StringUtilities.EMPTY_STRING;
 	}
+	
+	public void setXmlElement(XmlElement element) {
+		this.xmlElement = element;
+	}
+	/**
+	 * 
+	 * @return xmlPath the column xmlPath
+	 */
+	public String getFullXmlPath() {
+		if( this.xmlElement != null ) {
+			return this.xmlElement.getFullPath();
+		}
+		
+		return this.fullXmlPath.toString();
+	}
+	
+	/**
+	 * 
+	 * @param xmlPath the column xmlPath
+	 */
+	public void setFullXmlPath(String fullPath) {
+        if( fullPath == null ) {
+        	this.fullXmlPath = EMPTY_PATH;
+        } else {
+        	this.fullXmlPath = new Path(fullPath);
+        }
+	}
+	
+	public void setRootPath(String thePath) {
+		if( thePath != null && thePath.length() > 0 ) {
+			// Need to remove the OLD root path from FULL path
+			IPath oldRelativePath = new Path(getRelativePath());
+			
+			String tmpRoot = thePath;
+			if( thePath.endsWith("/")) { //$NON-NLS-1$
+				tmpRoot = tmpRoot.substring(0, thePath.length()-1);
+			}
+			
+			String newFullPath = tmpRoot + oldRelativePath;
+			
+			setFullXmlPath(newFullPath); //tmpRoot + oldRelativePath.toString());
+			
+			this.rootXmlPath = new Path(thePath);
+		} else {
+			this.rootXmlPath = EMPTY_PATH;
+		}
+	}
+	
+
+	
+	/**
+	 * 
+	 * @return xmlElement the xmlElement
+	 */
+	public XmlElement getXmlElement() {
+		return this.xmlElement;
+	}
+	
 	/**
 	 * 
 	 * @return forOrdinality the column forOrdinality

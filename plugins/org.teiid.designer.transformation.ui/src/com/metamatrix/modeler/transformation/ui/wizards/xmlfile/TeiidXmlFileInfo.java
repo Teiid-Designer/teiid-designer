@@ -10,13 +10,14 @@ package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.LocatorImpl;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
@@ -60,14 +61,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     
 	
     /**
-     * An initial xquery expression
+     * An initial xquery root path expression
      * 
      * XMLTABLE([<NSP>,] xquery-expression [<PASSING>] [COLUMNS <COLUMN>, ... )] AS name
      * 
      * Usually of the form '$d/MedlineCitationSet/MedlineCitation'. In this case, the expression defines the initial path
      * inside the XML structure that the COLUMN PATH's are relative to
      */
-	private String xqueryExpression = StringUtilities.EMPTY_STRING;
+	private String rootPath = StringUtilities.EMPTY_STRING;
 	
 	/**
 	 * Indicator for the import processor to attempt to create a View Table given the info in this object.
@@ -84,10 +85,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	 */
 	private Collection<TeiidColumnInfo> columnInfoList;
  	
-	/**
-	 * The  <code>Map</code> of column names to column datatypes defined by the user in the UI
-	 */
-	private Map<String, String> columnDatatypeMap;
+	
+	private XmlElement rootNode;
+	
+	private IStatus parsingStatus;
 
 	/**
 	 * 
@@ -120,14 +121,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
-		this.xqueryExpression = info.getXQueryExpression(); 
+		this.rootPath = info.getRootPath(); 
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		for( TeiidColumnInfo colInfo : info.getColumnInfoList() ) {
 			this.columnInfoList.add(new TeiidColumnInfo(colInfo.getName(), 
 						colInfo.getOrdinality(), 
 						colInfo.getDatatype(), 
 						colInfo.getDefaultValue(),
-						colInfo.getXmlPath()));
+						colInfo.getFullXmlPath()));
 		}
 		
 		setStatus(info.getStatus());
@@ -142,11 +143,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	
 	private void initialize() {
 		setStatus(Status.OK_STATUS);
-		this.columnDatatypeMap = new HashMap<String, String>();
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
 		
-		loadHeader();
+		parsingStatus = parseXmlFile();
 		
 		String fileName = getDataFile().getName();
 		if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
@@ -158,40 +158,29 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	
 	/**
 	 * 
-	 * @param columnName the column name (never <code>null</code> or empty).
-	 * @param datatype the column datatype (never <code>null</code> or empty).
+	 * @return rootPath the root path xquery expression
 	 */
-	public void setDatatype(String columnName, String datatype) {
-		CoreArgCheck.isNotEmpty(columnName, "columnName is null"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(datatype, "datatype is null"); //$NON-NLS-1$
-		
-		this.columnDatatypeMap.put(columnName, datatype);
-		validate();
-	}
-	
-	/**
-	 * 
-	 * @param columnName the column name (never <code>null</code> or empty).
-	 * @return datatype the column datatype (will not be null)
-	 */
-	public String getDatatype(String columnName) {
-		return this.columnDatatypeMap.get(columnName);
-	}
-	
-	/**
-	 * 
-	 * @return viewTableName the view table name (never <code>null</code> or empty).
-	 */
-	public String getXQueryExpression() {
-		return this.xqueryExpression;
+	public String getRootPath() {
+		return this.rootPath;
 	}
 
 	/**
 	 * 
-	 * @param viewTableName (never <code>null</code> or empty).
+	 * @param rootPath
 	 */
-	public void setXQueryExpression(String expression) {
-		this.xqueryExpression = expression;
+	public void setRootPath(String path) {
+//		String tmpPath = path;
+//		if( path.endsWith("/")) {
+//			tmpPath = tmpPath.substring(0, this.rootPath.length());
+//		}
+
+		this.rootPath = path;
+		
+		// Need to walk through the ColumnInfo objects and have them re-set their paths
+		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+			colInfo.setRootPath(this.rootPath);
+		}
+		
 		validate();
 	}
 
@@ -251,8 +240,31 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	}
 	
 	public void addColumn(String name, boolean ordinality, String datatype, String defaultValue, String path) {
-		this.columnInfoList.add(new TeiidColumnInfo(name, ordinality, datatype, defaultValue, path) );
+		this.columnInfoList.add(new TeiidColumnInfo(name, ordinality, datatype, defaultValue, path));
 		validate();
+	}
+	
+	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, String fullPath) {
+		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, fullPath);
+		if( rootPath != null ) {
+			newColumnInfo.setRootPath(rootPath);
+		}
+		this.columnInfoList.add(newColumnInfo);
+		validate();
+		
+		return newColumnInfo;
+	}
+	
+	public TeiidColumnInfo addColumn(String name, boolean ordinality, String datatype, String defaultValue, String rootPath, XmlElement element) {
+		TeiidColumnInfo newColumnInfo = new TeiidColumnInfo(name, ordinality, datatype, defaultValue, element.getFullPath());
+		newColumnInfo.setXmlElement(element);
+		if( rootPath != null ) {
+			newColumnInfo.setRootPath(rootPath);
+		}
+		this.columnInfoList.add(newColumnInfo);
+		validate();
+		
+		return newColumnInfo;
 	}
 	
 	public void removeColumn(TeiidColumnInfo theInfo) {
@@ -265,8 +277,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	}
 	
 	public void validate() {
-		// Validate XQuery Expression
-		if( this.getXQueryExpression() == null || this.getXQueryExpression().length() == 0 ) {
+		// Validate XQuery Root Path Expression
+		if( this.getRootPath() == null || this.getRootPath().length() == 0 ) {
 			setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.xqueryExpressionNullOrEmpty"))); //$NON-NLS-1$
 			return;
 		}
@@ -365,6 +377,67 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		validate();
 	}
 	
+	
+	public void moveColumnUp(TeiidColumnInfo columnInfo) {
+		int startIndex = getColumnIndex(columnInfo);
+		
+		// 
+		if( startIndex > 0 ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			TeiidColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
+			TeiidColumnInfo[] infos = getColumnInfoList();
+			infos[startIndex-1] = columnInfo;
+			infos[startIndex] = priorInfo;
+			
+			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
+			for( TeiidColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.columnInfoList = colInfos;
+		}
+	}
+	
+	public void moveColumnDown(TeiidColumnInfo columnInfo) {
+		int startIndex = getColumnIndex(columnInfo);
+		if( startIndex < (getColumnInfoList().length-1) ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			TeiidColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
+			TeiidColumnInfo[] infos = getColumnInfoList();
+			infos[startIndex+1] = columnInfo;
+			infos[startIndex] = afterInfo;
+			
+			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
+			for( TeiidColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.columnInfoList = colInfos;
+		}
+	}
+	
+	public boolean canMoveUp(TeiidColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) > 0;
+	}
+	
+	public boolean canMoveDown(TeiidColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
+	}
+	
+	private int getColumnIndex(TeiidColumnInfo columnInfo) {
+		int i=0;
+		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+			if( colInfo == columnInfo) {
+				return i;
+			}
+			i++;
+		}
+		
+		// Shouldn't ever get here!
+		return -1;
+	}
+	
+	
     /**
      * {@inheritDoc}
      * 
@@ -431,8 +504,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	
     	sb = new StringBuffer();
     	String xQueryExp = DEFAULT_XQUERY;
-    	if( getXQueryExpression() != null && getXQueryExpression().length() > 0 ) {
-    		xQueryExp = getXQueryExpression();
+    	if( getRootPath() != null && getRootPath().length() > 0 ) {
+    		xQueryExp = getRootPath();
     	}
     	sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
     	String string_3 = sb.toString();
@@ -445,12 +518,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     		} else {
 	    		sb.append(columnInfo.getName()).append(SPACE).append(columnInfo.getDatatype());
 	    		
-	    		if( columnInfo.getDefaultValue() != null && columnInfo.getDefaultValue().length() > 0) {
-	    			sb.append(SPACE).append(DEFAULT).append(SPACE).append(S_QUOTE).append(columnInfo.getDefaultValue()).append(S_QUOTE);
+	    		String defValue = columnInfo.getDefaultValue();
+	    		if( defValue != null && defValue.length() > 0) {
+	    			sb.append(SPACE).append(DEFAULT).append(SPACE).append(S_QUOTE).append(defValue).append(S_QUOTE);
 	    		}
 	    		
-	    		if( columnInfo.getXmlPath()!= null && columnInfo.getXmlPath().length() > 1 ) {
-	    			sb.append(SPACE).append(PATH).append(SPACE).append(S_QUOTE).append(columnInfo.getXmlPath()).append(S_QUOTE);
+	    		String relPath = columnInfo.getRelativePath();
+	    		if( relPath != null && relPath.length() > 1 ) {
+	    			sb.append(SPACE).append(PATH).append(SPACE).append(S_QUOTE).append(relPath).append(S_QUOTE);
 	    		}
 	    		
 	    		
@@ -482,5 +557,38 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	
     	return finalSQLString;
     }
+    
+    public XmlElement getRootNode() {
+    	return this.rootNode;
+    }
+    
+    public IStatus getParsingStatus() {
+    	return this.parsingStatus;
+    }
 
+    public IStatus parseXmlFile() {
+		XmlParser xmlParser = new XmlParser();
+		XmlFileContentHandler contentHandler = new XmlFileContentHandler();
+		contentHandler.setDocumentLocator(new LocatorImpl());
+		xmlParser.setContentHandler(contentHandler);
+		try {
+			xmlParser.doParse(getDataFile());
+		} catch (RuntimeException ex) {
+			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+		} catch (IOException ex) {
+			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+		} catch (SAXException ex) {
+			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+		}
+		rootNode = contentHandler.getRootElement();
+		if( rootNode != null ) {
+			String message = Util.getString("noRootNodeParsingError"); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
+		}
+
+		return Status.OK_STATUS;
+    }
 }
