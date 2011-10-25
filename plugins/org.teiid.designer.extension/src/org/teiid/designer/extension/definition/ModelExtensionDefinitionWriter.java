@@ -172,11 +172,14 @@ public class ModelExtensionDefinitionWriter {
         // -----------------------------------------
         // Description - child element
         // -----------------------------------------
-        Element descriptionElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DESCRIPTION);
+        String medDescription = med.getDescription();
+        if (medDescription != null && !medDescription.isEmpty()) {
+            Element descriptionElem = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DESCRIPTION);
 
-        Text descriptionText = document.createTextNode(med.getDescription());
-        descriptionElem.appendChild(descriptionText);
-        modelExtensionElem.appendChild(descriptionElem);
+            Text descriptionText = document.createTextNode(med.getDescription());
+            descriptionElem.appendChild(descriptionText);
+            modelExtensionElem.appendChild(descriptionElem);
+        }
     }
 
     /**
