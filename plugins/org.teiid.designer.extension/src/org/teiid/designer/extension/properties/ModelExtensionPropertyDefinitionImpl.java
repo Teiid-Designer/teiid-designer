@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.properties;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.Messages;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -451,19 +454,19 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         result = HashCodeUtil.hashCode(result, isRequired());
 
         // string properties
-        if (getSimpleId() != null && !getSimpleId().isEmpty()) {
+        if (!CoreStringUtil.isEmpty(getSimpleId())) {
             result = HashCodeUtil.hashCode(result, getSimpleId());
         }
 
-        if (getNamespacePrefix() != null && !getNamespacePrefix().isEmpty()) {
+        if (!CoreStringUtil.isEmpty(getNamespacePrefix())) {
             result = HashCodeUtil.hashCode(result, getNamespacePrefix());
         }
 
-        if (getFixedValue() != null && !getFixedValue().isEmpty()) {
+        if (!CoreStringUtil.isEmpty(getFixedValue())) {
             result = HashCodeUtil.hashCode(result, getFixedValue());
         }
 
-        if (getDefaultValue() != null && !getDefaultValue().isEmpty()) {
+        if (!CoreStringUtil.isEmpty(getDefaultValue())) {
             result = HashCodeUtil.hashCode(result, getDefaultValue());
         }
 

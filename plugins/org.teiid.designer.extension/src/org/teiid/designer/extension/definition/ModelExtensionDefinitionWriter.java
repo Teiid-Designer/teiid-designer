@@ -11,14 +11,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Collection;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
@@ -28,6 +32,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import com.metamatrix.core.util.CoreArgCheck;
+
 /**
  * 
  */
@@ -35,24 +41,64 @@ public class ModelExtensionDefinitionWriter {
 
     private static final String NS_MED_COLON = ExtensionConstants.Namespaces.NS_MED + ":"; //$NON-NLS-1$
 
-    public ModelExtensionDefinitionWriter() {
-    }
-
     /**
-     * Create a Model Extension Definition template, based on the modelExtension.xsd
+     * Create a Model Extension Definition template, based on the modelExtension.xsd.
      * 
-     * @return empty template model extension definition (never <code>null</code>)
-     * @throws Exception if the definition file is <code>null</code> or if there is a problem parsing the file
+     * @param med the model extension definition being written (never <code>null</code>)
+     * @return the stream where the definition was written (never <code>null</code>)
+     * @throws IllegalStateException if the definition file is <code>null</code> or if there is a problem creating the stream
      */
-    public InputStream write( ModelExtensionDefinition med ) throws IllegalStateException {
+    public InputStream writeAsStream( ModelExtensionDefinition med ) throws IllegalStateException {
         InputStream inputStream = null;
 
         try {
             // Create a temp file for the new mxd
             File tempFile = File.createTempFile("MxdTemp", ".mxd"); //$NON-NLS-1$ //$NON-NLS-2$
-
             FileOutputStream tempOutputStream = new FileOutputStream(tempFile);
+            StreamResult streamResult = new StreamResult(tempOutputStream);
+            transform(med, streamResult);
+            inputStream = new FileInputStream(tempFile);
+        } catch (Exception e) {
+            IllegalStateException error = null;
 
+            if (e instanceof IllegalStateException) {
+                error = (IllegalStateException)e;
+            } else {
+                error = new IllegalStateException(e);
+            }
+
+            throw error;
+        }
+
+        return inputStream;
+    }
+
+    /**
+     * Create a text representation of the specified model extension definition suitable to be saved in a *.mxd file.
+     * 
+     * @param med the model extension definition being written (never <code>null</code>)
+     * @return a textual representation of the definition (never <code>null</code>)
+     * @throws IllegalStateException if the definition file is <code>null</code> or if there is a problem parsing the file
+     */
+    public String writeAsText( ModelExtensionDefinition med ) throws IllegalStateException {
+        StringWriter stringWriter = new StringWriter();
+        Result streamResult = new StreamResult(stringWriter);
+        transform(med, streamResult);
+        return stringWriter.getBuffer().toString();
+    }
+
+    /**
+     * Transforms the Model Extension Definition into the specified XML result.
+     * 
+     * @param med the model extension definition being transformed (never <code>null</code>)
+     * @throws Exception if the definition file is <code>null</code> or if there is a problem parsing the file
+     */
+    private void transform( ModelExtensionDefinition med, 
+                            Result result ) throws IllegalStateException {
+        CoreArgCheck.isNotNull(med, "med is null"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(result, "result is null"); //$NON-NLS-1$
+
+        try {
             // Create a copy ...
             // NOTE: THIS WORKS IF WE USE THE org.apache.xerces LIBRARY.
             // The problem is that these other implementations don't write out the
@@ -64,14 +110,10 @@ public class ModelExtensionDefinitionWriter {
             documentBuilderFactory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", //$NON-NLS-1$
                                                 "http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$
 
-            //            documentBuilderFactory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", //$NON-NLS-1$
-            // new InputSource(new FileInputStream(definitionSchemaFile)));
-
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             DOMImplementation domImpl = documentBuilder.getDOMImplementation();
             Document document = domImpl.createDocument(ExtensionConstants.Namespaces.NS_MED_VALUE,
-                                                       ExtensionConstants.Elements.MODEL_EXTENSION,
-                                                       null);
+                                                       ExtensionConstants.Elements.MODEL_EXTENSION, null);
 
             // --------------------------------------------------------------
             // Get the root Element.
@@ -84,9 +126,7 @@ public class ModelExtensionDefinitionWriter {
             // Create Element for each extended metaclass name
             // ------------------------------------------------
             String[] extendedMetaclassNames = med.getExtendedMetaclasses();
-            Element[] extendedMetaclassElems = createExtendedMetaclassElements(document,
-                                                                               modelExtensionElem,
-                                                                               extendedMetaclassNames);
+            Element[] extendedMetaclassElems = createExtendedMetaclassElements(document, modelExtensionElem, extendedMetaclassNames);
 
             // ----------------------------------------------------------------
             // Iterate Extended Metaclass Elements, adding properties for each
@@ -102,15 +142,12 @@ public class ModelExtensionDefinitionWriter {
 
             // Output the document
             DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(tempOutputStream);
             TransformerFactory tFactory = TransformerFactory.newInstance();
 
             Transformer transformer = tFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
-            transformer.transform(domSource, streamResult);
-
-            inputStream = new FileInputStream(tempFile);
+            transformer.transform(domSource, result);
         } catch (Exception e) {
             IllegalStateException error = null;
 
@@ -122,7 +159,6 @@ public class ModelExtensionDefinitionWriter {
 
             throw error;
         }
-        return inputStream;
     }
 
     /**

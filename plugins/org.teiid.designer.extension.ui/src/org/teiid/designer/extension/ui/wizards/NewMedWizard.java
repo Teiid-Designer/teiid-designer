@@ -118,7 +118,7 @@ public final class NewMedWizard extends AbstractWizard
                     if (medInputStream == null) {
                         // File schemaFile = ExtensionPlugin.getInstance().getMedSchema();
                         ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-                        medInputStream = medWriter.write(createDefaultMed());
+                        medInputStream = medWriter.writeAsStream(createDefaultMed());
                     }
 
                     createdMedFile.create(medInputStream, false, monitor);

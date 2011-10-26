@@ -8,12 +8,14 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -63,6 +65,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -87,8 +90,10 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     private static final int STATUS_NO_LOCATION = 1;
     private static final int STATUS_NO_MODELNAME = 2;
 
-    private ModelResource modelResource; // Current ModelResource selection
-    private Text locationText, modelNameText; // Text widgets for ModelName and Location
+    ModelResource modelResource; // Current ModelResource selection
+    Text locationText; // Text widgets for ModelName and Location
+
+    Text modelNameText;
 
     private TableViewer tableViewer;
     private MedHeadersEditManager editManager;
@@ -145,7 +150,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * Get the current ModelExtensionDefinitionHeader list
      */
-    private List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
+    List<ModelExtensionDefinitionHeader> getCurrentHeaders() {
         return this.editManager.getCurrentHeaders();
     }
 
@@ -505,7 +510,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         return viewer;
     }
 
-    private void handleMedSelectionChanged() {
+    void handleMedSelectionChanged() {
         // Update the selected Med
         int[] selectedMeds = this.tableViewer.getTable().getSelectionIndices();
         if (selectedMeds.length > 0) {
@@ -692,7 +697,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * Determine if the header namespace is registered
      */
-    private boolean isRegistered( ModelExtensionDefinitionHeader medHeader ) {
+    boolean isRegistered( ModelExtensionDefinitionHeader medHeader ) {
         boolean isRegistered = false;
         if (medHeader != null) {
             String namespacePrefix = medHeader.getNamespacePrefix();
@@ -772,7 +777,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         try {
             // schemaFile = ExtensionPlugin.getInstance().getMedSchema();
             ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-            unregisteredMedStream = medWriter.write(unregisteredMed);
+            unregisteredMedStream = medWriter.writeAsStream(unregisteredMed);
         } catch (Exception e) {
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }

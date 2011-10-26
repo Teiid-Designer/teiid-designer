@@ -17,8 +17,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
@@ -28,6 +30,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.I18nUtil;
 
@@ -93,7 +96,7 @@ public class ModelExtensionDefinitionParser {
     }
 
     /**
-     * @return the error messages output from the last parse operation (<code>null</code> if
+     * @return the error messages output from the last parse operation or <code>null</code> if
      *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
      */
     public Collection<String> getErrors() {
@@ -105,7 +108,20 @@ public class ModelExtensionDefinitionParser {
     }
 
     /**
-     * @return the information messages output from the last parse operation (never <code>null</code> but can be empty)
+     * @return the fatal error messages output from the last parse operation or <code>null</code> if
+     *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
+     */
+    public Collection<String> getFatalErrors() {
+        if (this.handler == null) {
+            return null;
+        }
+
+        return this.handler.getFatalErrors();
+    }
+
+    /**
+     * @return the information messages output from the last parse operation or <code>null</code> if
+     *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
      */
     public Collection<String> getInfos() {
         if (this.handler == null) {
@@ -116,7 +132,8 @@ public class ModelExtensionDefinitionParser {
     }
 
     /**
-     * @return the warning messages output from the last parse operation (never <code>null</code> but can be empty)
+     * @return the warning messages output from the last parse operation or <code>null</code> if
+     *         {@link #parse(InputStream, ModelExtensionAssistant))} has not been called
      */
     public Collection<String> getWarnings() {
         if (this.handler == null) {
@@ -146,6 +163,7 @@ public class ModelExtensionDefinitionParser {
      */
     class Handler extends DefaultHandler {
 
+        private final Collection<String> fatals;
         private final Collection<String> errors;
         private final Collection<String> infos;
         private final Collection<String> warnings;
@@ -189,6 +207,7 @@ public class ModelExtensionDefinitionParser {
             this.assistant = assistant;
             this.properties = new HashMap<String, Collection<ModelExtensionPropertyDefinition>>();
             this.elements = new Stack<String>();
+            this.fatals = new ArrayList<String>();
             this.errors = new ArrayList<String>();
             this.infos = new ArrayList<String>();
             this.warnings = new ArrayList<String>();
@@ -305,6 +324,7 @@ public class ModelExtensionDefinitionParser {
                 if (this.metaclassName != null && !this.metaclassName.isEmpty()) {
                     this.definition.addMetaclass(this.metaclassName);
                 }
+
                 if (DEBUG_MODE) {
                     System.err.println("reset: metaclassName=" + this.metaclassName); //$NON-NLS-1$
                 }
@@ -355,6 +375,16 @@ public class ModelExtensionDefinitionParser {
         }
 
         /**
+         * {@inheritDoc}
+         * 
+         * @see org.xml.sax.helpers.DefaultHandler#fatalError(org.xml.sax.SAXParseException)
+         */
+        @Override
+        public void fatalError( SAXParseException e ) {
+            this.fatals.add(e.getLocalizedMessage());
+        }
+
+        /**
          * @return the element currently being parsed
          */
         private String getCurrentElement() {
@@ -370,6 +400,13 @@ public class ModelExtensionDefinitionParser {
          */
         Collection<String> getErrors() {
             return this.errors;
+        }
+
+        /**
+         * @return the fatal error messages output from the last parse operation (never <code>null</code> but can be empty)
+         */
+        Collection<String> getFatalErrors() {
+            return this.fatals;
         }
 
         /**

@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.definition;
 
 import static junit.framework.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.designer.extension.Constants;
@@ -34,7 +36,7 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
     private ModelExtensionDefinitionParser parser;
 
     private InputStream write( ModelExtensionDefinition med ) throws Exception {
-        return writer.write(med);
+        return writer.writeAsStream(med);
     }
 
     private ModelExtensionDefinition parse( String fileName,

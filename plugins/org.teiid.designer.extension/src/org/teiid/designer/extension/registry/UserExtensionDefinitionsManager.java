@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.extension.Messages;
@@ -63,6 +65,12 @@ public final class UserExtensionDefinitionsManager {
         // create a FilenameFilter and override its accept-method
         this.mxdFilter = new FilenameFilter() {
 
+            /**
+             * {@inheritDoc}
+             *
+             * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
+             */
+            @Override
             public boolean accept( File dir,
                                    String name ) {
                 // if the file extension is .txt return true, else false
@@ -124,7 +132,7 @@ public final class UserExtensionDefinitionsManager {
                 String fName = namespacePrefix + version + USER_MED_EXT;
 
                 File file = new File(dir.getAbsolutePath() + File.separator + fName);
-                InputStream stream = medWriter.write(med);
+                InputStream stream = medWriter.writeAsStream(med);
                 try {
                     writeFile(stream, file);
                 } catch (IOException e) {

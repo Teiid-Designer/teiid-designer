@@ -9,10 +9,12 @@ package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -28,11 +30,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -69,6 +69,7 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -331,20 +332,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
         });
 
-        // double-click will open an editor
-        this.viewer.addOpenListener(new IOpenListener() {
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.IOpenListener#open(org.eclipse.jface.viewers.OpenEvent)
-             */
-            @Override
-            public void open( OpenEvent event ) {
-                handleOpenMed();
-            }
-        });
-
         // populate the view
         this.viewer.setInput(this);
         WidgetUtil.pack(this.viewer);
@@ -402,7 +389,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
         // Set the selectedMed contents on the wizard
         ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
-        InputStream iStream = writer.write(selectedMed);
+        InputStream iStream = writer.writeAsStream(selectedMed);
         wizard.setMedInput(iStream);
 
         // Open wizard dialog
@@ -437,30 +424,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
                 this.unregisterMedAction.setEnabled(true);
             }
         }
-    }
-
-    void handleOpenMed() {
-        ModelExtensionDefinition selectedMed = getSelectedMed();
-        assert (selectedMed != null) : "Open MED editor action should not be enabled if there is no selection"; //$NON-NLS-1$
-        // TODO implement handleOpenMed
-//
-//        String path = selectedMed.getResourcePath();
-//
-//        if (CoreStringUtil.isEmpty(path)) {
-//            MessageDialog.openInformation(null, null, "The selected Model Extension Definition's resource (*.mxd) cannot be found.");
-//        } else {
-//            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
-//
-//            if (file != null) {
-//                try {
-//                    IWorkbenchWindow window = Activator.getDefault().getCurrentWorkbenchWindow();
-//                    IWorkbenchPage page = window.getActivePage();
-//                    IDE.openEditor(page, new FileEditorInput(file), MED_EDITOR);
-//                } catch (Exception e) {
-//                    UTIL.log(e);
-//                }
-//            }
-//        }
     }
 
     /*
