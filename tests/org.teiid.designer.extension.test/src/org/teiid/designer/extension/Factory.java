@@ -9,10 +9,12 @@ package org.teiid.designer.extension;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -31,6 +33,24 @@ public class Factory implements Constants {
 
     public static ModelExtensionAssistant createAssistant() {
         return new ModelExtensionAssistantAdapter();
+    }
+
+    public static Set<Locale> createDefaultLocales() {
+        Set<Locale> locales = new HashSet<Locale>(DEFAULT_LOCALES.length);
+        locales.addAll(Arrays.asList(DEFAULT_LOCALES));
+        return locales;
+    }
+
+    public static Set<String> createDefaultStringAllowedValues() {
+        Set<String> allowedValues = new HashSet<String>(DEFAULT_STRING_ALLOWED_VALUES.length);
+        allowedValues.addAll(Arrays.asList(DEFAULT_STRING_ALLOWED_VALUES));
+        return allowedValues;
+    }
+
+    public static Set<Translation> createDefaultTranslations() {
+        Set<Translation> translations = new HashSet<Translation>(DEFAULT_TRANSLATIONS.length);
+        translations.addAll(Arrays.asList(DEFAULT_TRANSLATIONS));
+        return translations;
     }
 
     public static ModelExtensionDefinition createDefinitionWithNoPropertyDefinitions() {

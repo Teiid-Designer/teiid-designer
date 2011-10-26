@@ -68,7 +68,6 @@ public class Messages extends NLS {
     public static String extendedMetaclassHasNoPropertiesValidationMsg;
     public static String localeMissingValidationMsg;
     public static String objectIsNullValidationMsg;
-    public static String medFileDoesNotExistValidationMsg;
     public static String medHasNoMetaclassesValidationMsg;
     public static String medHasDuplicateMetaclassesValidationMsg;
     public static String metaclassNameHasInvalidCharactersValidationMsg;
@@ -79,6 +78,7 @@ public class Messages extends NLS {
     public static String propertyIsEmptyValidationMsg;
     public static String translationMissingValidationMsg;
     public static String valueContainsSpacesValidationMsg;
+    public static String valueContainsSpecialCharactersValidationMsg;
     public static String uriInvalidValidationMsg;
     public static String versionIsNotAnIntegerValidationMsg;
     public static String versionLessThanDefaultValidationMsg;

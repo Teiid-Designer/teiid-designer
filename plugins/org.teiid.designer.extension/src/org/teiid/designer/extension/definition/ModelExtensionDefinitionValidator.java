@@ -7,7 +7,6 @@
  */
 package org.teiid.designer.extension.definition;
 
-import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +41,21 @@ public final class ModelExtensionDefinitionValidator {
                 if (!Character.isLetterOrDigit(c) && (c != '_') && (c != '-')) {
                     errorMsg = NLS.bind(Messages.invalidPropertyId, value);
                     break;
+                }
+            }
+        }
+
+        return errorMsg;
+    }
+
+    private static String containsSpecialCharactersCheck( String propertyName,
+                                                          String value ) {
+        String errorMsg = emptyCheck(propertyName, value);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            for (char c : value.toCharArray()) {
+                if (!Character.isLetterOrDigit(c)) {
+                    errorMsg = NLS.bind(Messages.valueContainsSpacesValidationMsg, propertyName);
                 }
             }
         }
@@ -168,7 +182,10 @@ public final class ModelExtensionDefinitionValidator {
         String errorMsg = containsSpacesCheck(Messages.namespacePrefix, namespacePrefix);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
-            if ((existingNamespacePrefixes != null) && existingNamespacePrefixes.contains(namespacePrefix)) {
+            errorMsg = containsSpecialCharactersCheck(Messages.namespacePrefix, namespacePrefix);
+
+            if (CoreStringUtil.isEmpty(errorMsg) && (existingNamespacePrefixes != null)
+                    && existingNamespacePrefixes.contains(namespacePrefix)) {
                 errorMsg = NLS.bind(Messages.namespacePrefixExistsValidationMsg, namespacePrefix);
             }
         }
@@ -382,21 +399,6 @@ public final class ModelExtensionDefinitionValidator {
         return errorMsg;
     }
 
-    public static String validateResourcePath( String resourcePath ) {
-        String propertyName = Messages.resourcePath;
-        String errorMsg = emptyCheck(propertyName, resourcePath);
-
-        if (!CoreStringUtil.isEmpty(errorMsg)) {
-            File file = new File(resourcePath);
-
-            if (!file.exists()) {
-                errorMsg = NLS.bind(Messages.medFileDoesNotExistValidationMsg, resourcePath);
-            }
-        }
-
-        return errorMsg;
-    }
-
     public static String validateTranslation( Locale locale,
                                               String text ) {
         String errorMsg = validateTranslationLocale(locale);
@@ -435,7 +437,7 @@ public final class ModelExtensionDefinitionValidator {
 
             if (validateEachTranslation) {
                 errorMsg = validateTranslation(translation.getLocale(), translation.getTranslation());
-    
+
                 if (!CoreStringUtil.isEmpty(errorMsg)) {
                     break;
                 }
@@ -455,7 +457,14 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     public static String validateTranslationText( String text ) {
-        return emptyCheck(Messages.translation, text);
+        String errorMsg = emptyCheck(Messages.translation, text);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            // see if only spaces
+            errorMsg = emptyCheck(Messages.translation, text.trim());
+        }
+
+        return errorMsg;
     }
 
     public static String validateVersion( String version ) {
