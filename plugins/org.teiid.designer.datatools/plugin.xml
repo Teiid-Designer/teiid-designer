@@ -122,4 +122,13 @@
             profile="org.eclipse.datatools.connectivity.oda.flatfile"
             class="org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider"/>
    </extension>
+   
+   <extension
+       id="org.teiid.designer.datatools.profiles.xmlfile.ConnectionInfoProvider"
+       name="%xmlFileConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.eclipse.datatools.enablement.oda.xml"
+            class="org.teiid.designer.datatools.profiles.xmlfile.XmlFileConnectionInfoProvider"/>
+   </extension>
 </plugin>
