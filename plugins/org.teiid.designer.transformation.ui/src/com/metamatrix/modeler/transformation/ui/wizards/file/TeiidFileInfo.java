@@ -91,5 +91,13 @@ public abstract class TeiidFileInfo {
 		this.status = status;
 	}
 	
+	public String getModelNameWithoutExtension(String fullModelName) {
+		String modelName = fullModelName;
+		if( modelName.toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+			modelName = modelName.substring(0, modelName.length()-4);
+		}
+		return modelName;
+	}
+	
 	public abstract void validate();
 }

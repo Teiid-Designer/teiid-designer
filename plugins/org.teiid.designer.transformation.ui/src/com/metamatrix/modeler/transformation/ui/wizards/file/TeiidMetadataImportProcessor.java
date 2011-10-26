@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -27,6 +28,7 @@ import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
@@ -112,8 +114,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
         	
         	// Inject the connection profile info into the model
         	if (this.info.getConnectionProfile() != null) {
-                IConnectionInfoProvider provider = new FlatFileConnectionInfoProvider();
-                provider.setConnectionInfo(sourceModel, this.info.getConnectionProfile());
+        		addConnectionProfileInfoToModel(sourceModel, this.info.getConnectionProfile());
             }
         	monitor.subTask(getString("task.savingSourceModel", sourceModel.getItemName()) ); //$NON-NLS-1$
             try {
@@ -148,6 +149,15 @@ public class TeiidMetadataImportProcessor implements UiConstants {
         monitor.worked(10);
         
         return Status.OK_STATUS;
+    }
+    
+    
+    protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
+    	// Inject the connection profile info into the model
+    	if (profile != null) {
+            IConnectionInfoProvider provider = new FlatFileConnectionInfoProvider();
+            provider.setConnectionInfo(sourceModel, profile);
+        }
     }
 	
     private IStatus createViewsInExistingModelInTxn(IProgressMonitor monitor) {

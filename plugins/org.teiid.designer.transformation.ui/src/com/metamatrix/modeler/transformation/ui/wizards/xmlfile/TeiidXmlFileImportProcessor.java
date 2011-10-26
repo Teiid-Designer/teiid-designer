@@ -11,10 +11,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.xmlfile.XmlFileConnectionInfoProvider;
 
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
+import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
@@ -73,4 +77,14 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
 
         return modelResource;
     }
+
+	@Override
+	protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
+    	// Inject the connection profile info into the model
+    	if (profile != null) {
+            IConnectionInfoProvider provider = new XmlFileConnectionInfoProvider();
+            provider.setConnectionInfo(sourceModel, profile);
+        }
+	}
+    
 }

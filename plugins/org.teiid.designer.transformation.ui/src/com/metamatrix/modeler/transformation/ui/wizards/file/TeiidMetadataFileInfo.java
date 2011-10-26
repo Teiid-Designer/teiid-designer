@@ -277,7 +277,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		
 		if( ignoreReload ) return;
 		
-		defineColumns();
+		if( delimitedColumns ) {
+			defineColumns();
+		}
 	}
 
 	/**
@@ -313,11 +315,17 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	public void setDelimiter(char delimiter) {
 		CoreArgCheck.isNotEmpty("" + delimiter, "delimiter is null"); //$NON-NLS-1$ //$NON-NLS-2$
 		
+		if( this.delimiter == delimiter ) {
+			return;
+		}
+		
 		this.delimiter = delimiter;
 		
 		if ( ignoreReload ) return;
 		
-		defineColumns();
+		if( delimitedColumns ) {
+			defineColumns();
+		}
 	}
 	
 	/**
@@ -405,7 +413,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
             }
         }
         
-        defineColumns();
+		if( delimitedColumns ) {
+			defineColumns();
+		}
 	}
 	
 	/**
@@ -422,6 +432,16 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 */
 	public TeiidColumnInfo[] getColumnInfoList() {
 		return this.columnInfoList.toArray(new TeiidColumnInfo[this.columnInfoList.size()]);
+	}
+	
+	public void removeColumn(TeiidColumnInfo theInfo) {
+		this.columnInfoList.remove(theInfo);
+		validate();
+	}
+	
+	public void addColumn(TeiidColumnInfo theInfo) {
+		this.columnInfoList.add(theInfo);
+		validate();
 	}
 	
 	/*
@@ -448,10 +468,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 				}
 			}
 		} else {
-			for( int i=0; i<this.numberOfFixedWidthColumns; i++ ) {
-				String colName = "col" + (i+1); //$NON-NLS-1$
-				this.columnInfoList.add(new TeiidColumnInfo(colName));
-			}
+//			for( int i=0; i<this.numberOfFixedWidthColumns; i++ ) {
+//				String colName = "col" + (i+1); //$NON-NLS-1$
+//				this.columnInfoList.add(new TeiidColumnInfo(colName));
+//			}
 		}
 		validate();
 	}
@@ -611,9 +631,11 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 			this.useHeaderForColumnNames = false;
 		}
 
-		if( ignoreReload ) return;
-		
-		defineColumns();
+//		if( ignoreReload ) return;
+//		
+//		if( delimitedColumns ) {
+//			defineColumns();
+//		}
 	}
 	
 	/**
@@ -633,7 +655,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 		
 		if( ignoreReload ) return;
 		
-		defineColumns();
+		if( delimitedColumns ) {
+			defineColumns();
+		}
 	}
 	
 	/**
@@ -687,6 +711,65 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants 
 	 */
 	public int getNumberOfLinesInFile() {
 		return this.numberOfLinesInFile;
+	}
+	
+	public void moveColumnUp(TeiidColumnInfo columnInfo) {
+		int startIndex = getColumnIndex(columnInfo);
+		
+		// 
+		if( startIndex > 0 ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			TeiidColumnInfo priorInfo = getColumnInfoList()[startIndex-1];
+			TeiidColumnInfo[] infos = getColumnInfoList();
+			infos[startIndex-1] = columnInfo;
+			infos[startIndex] = priorInfo;
+			
+			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
+			for( TeiidColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.columnInfoList = colInfos;
+		}
+	}
+	
+	public void moveColumnDown(TeiidColumnInfo columnInfo) {
+		int startIndex = getColumnIndex(columnInfo);
+		if( startIndex < (getColumnInfoList().length-1) ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			TeiidColumnInfo afterInfo = getColumnInfoList()[startIndex+1];
+			TeiidColumnInfo[] infos = getColumnInfoList();
+			infos[startIndex+1] = columnInfo;
+			infos[startIndex] = afterInfo;
+			
+			Collection<TeiidColumnInfo> colInfos = new ArrayList<TeiidColumnInfo>(infos.length);
+			for( TeiidColumnInfo info : infos) {
+				colInfos.add(info);
+			}
+			
+			this.columnInfoList = colInfos;
+		}
+	}
+	
+	public boolean canMoveUp(TeiidColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) > 0;
+	}
+	
+	public boolean canMoveDown(TeiidColumnInfo columnInfo) {
+		return getColumnIndex(columnInfo) < getColumnInfoList().length-1;
+	}
+	
+	private int getColumnIndex(TeiidColumnInfo columnInfo) {
+		int i=0;
+		for( TeiidColumnInfo colInfo : getColumnInfoList() ) {
+			if( colInfo == columnInfo) {
+				return i;
+			}
+			i++;
+		}
+		
+		// Shouldn't ever get here!
+		return -1;
 	}
 	
     /**

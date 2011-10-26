@@ -173,6 +173,8 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			synchronizeUI();
 
 			setViewHelpMessage();
+			
+			validatePage();
 		}
 	}
 

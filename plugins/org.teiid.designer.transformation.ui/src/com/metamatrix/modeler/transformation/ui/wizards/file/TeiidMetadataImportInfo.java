@@ -233,6 +233,11 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @param doProcess
 	 */
 	public void setDoProcess(File file, boolean doProcess) {
+		// if doProcess == TRUE, then set ALL the files to false first
+		for( TeiidMetadataFileInfo info : getFileInfos()) {
+			info.setDoProcess(false);
+		}
+		
 		TeiidMetadataFileInfo info = getFileInfo(file);
 		if( info != null ) {
 			info.setDoProcess(doProcess);

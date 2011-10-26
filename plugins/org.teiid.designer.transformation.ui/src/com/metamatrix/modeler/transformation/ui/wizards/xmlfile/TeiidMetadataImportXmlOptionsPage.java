@@ -209,8 +209,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	Group fileContentsGroup = WidgetFactory.createGroup(parent, getString("fileContentsGroup"), SWT.NONE, 1, 4); //$NON-NLS-1$
     	fileContentsGroup.setLayout(new GridLayout(4, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 320;
-    	gd.widthHint = 500;
+    	gd.heightHint = 280;
     	fileContentsGroup.setLayoutData(gd);
     	
 		Label selectedFileLabel = new Label(fileContentsGroup, SWT.NONE);
@@ -302,7 +301,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1); //$NON-NLS-1$
     	columnInfoGroup.setLayout(new GridLayout(2, false));
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.heightHint = 160;
+    	gd.heightHint = 190;
     	columnInfoGroup.setLayoutData(gd);
 
     	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
@@ -327,10 +326,9 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	leftToolbarPanel.setLayout(new GridLayout());
-    	gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-    	gd.horizontalIndent = 1;
-    	gd.verticalIndent = 1;
-    	leftToolbarPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+	  	GridData ltpGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+	  	ltpGD.heightHint=190;
+	  	leftToolbarPanel.setLayoutData(ltpGD);
     	
     	Button addButton = new Button(leftToolbarPanel, SWT.PUSH);
     	addButton.setText(getString("addLabel")); //$NON-NLS-1$
@@ -510,10 +508,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     void updateSqlText() {
     	if( this.fileInfo != null ) {
     		if( this.info.getSourceModelName() != null ) {
-    			String modelName = this.info.getSourceModelName();
-    			if( modelName.toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    				modelName = modelName.substring(0, modelName.length()-4);
-    			}
+    			String modelName = this.fileInfo.getModelNameWithoutExtension(this.info.getSourceModelName());
     			sqlTextViewer.getDocument().set(fileInfo.getSqlString(modelName));
     		} else {
     			sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());

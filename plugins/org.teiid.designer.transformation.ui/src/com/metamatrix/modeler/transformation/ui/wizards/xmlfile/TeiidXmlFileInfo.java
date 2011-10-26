@@ -584,8 +584,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
 		}
 		rootNode = contentHandler.getRootElement();
-		if( rootNode != null ) {
-			String message = Util.getString("noRootNodeParsingError"); //$NON-NLS-1$
+		if( rootNode == null ) {
+			String message = getString("noRootNodeParsingError"); //$NON-NLS-1$
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
 		}
 
