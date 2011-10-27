@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
+package com.metamatrix.modeler.transformation.ui.wizards.file;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -54,9 +54,7 @@ import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelWorkspaceViewerFilter;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidFileInfo;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataFileInfo;
-import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
+import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.product.ProductCustomizerMgr;
 import com.metamatrix.ui.internal.util.WidgetFactory;

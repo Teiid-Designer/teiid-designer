@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
+import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard;
 import com.metamatrix.ui.internal.util.UiUtil;
 

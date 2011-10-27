@@ -22,7 +22,6 @@ import com.metamatrix.modeler.internal.core.workspace.ModelUtil;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
 import com.metamatrix.modeler.transformation.ui.UiPlugin;
-import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidMetadataImportViewModelPage;
 import com.metamatrix.ui.internal.util.UiUtil;
 import com.metamatrix.ui.internal.util.WidgetUtil;
 import com.metamatrix.ui.internal.wizard.AbstractWizard;
