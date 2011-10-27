@@ -542,16 +542,16 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				
 				if( theXmlFile != null && theXmlFile.exists() ) {
 					fileViewer.setInput(theXmlFile);
-					
-					if (this.info.getXmlFileInfo(theXmlFile) == null) {
-						TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(theXmlFile);
-						fileParsingStatus = fileInfo.getParsingStatus();
-						if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
-				            MessageDialog.openError(this.getShell(), 
-				            		getString("parsingErrorTitle"),  //$NON-NLS-1$
-				            		fileParsingStatus.getMessage());
-						}
+					TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(theXmlFile);
+					if (fileInfo == null) {
+						fileInfo = new TeiidXmlFileInfo(theXmlFile);
 						this.info.addXmlFileInfo(fileInfo);
+					}
+					fileParsingStatus = fileInfo.getParsingStatus();
+					if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
+			            MessageDialog.openError(this.getShell(), 
+			            		getString("parsingErrorTitle"),  //$NON-NLS-1$
+			            		fileParsingStatus.getMessage());
 					}
 				} else if( urlString != null && urlString.trim().length() > 0 ) {
 					File xmlFile = null;
@@ -592,10 +592,16 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			        
 			        if( xmlFile != null && xmlFile.exists() ) {
 			        	fileViewer.setInput(xmlFile);
-						
-						if (this.info.getXmlFileInfo(theXmlFile) == null) {
-							TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(xmlFile);
+						TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
+						if (fileInfo == null) {
+							fileInfo = new TeiidXmlFileInfo(xmlFile);
 							this.info.addXmlFileInfo(fileInfo);
+						}
+						fileParsingStatus = fileInfo.getParsingStatus();
+						if( fileParsingStatus.getSeverity() == IStatus.ERROR ) {
+				            MessageDialog.openError(this.getShell(), 
+				            		getString("parsingErrorTitle"),  //$NON-NLS-1$
+				            		fileParsingStatus.getMessage());
 						}
 			        }
 				} else {
@@ -798,7 +804,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	if( synchronizing ) return;
     	
     	String newName = ""; //$NON-NLS-1$
-    	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > 0 ) {
+    	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
     		newName = this.sourceModelFileText.getText();
     		this.info.setSourceModelName(newName);
     		this.info.setSourceModelExists(sourceModelExists());

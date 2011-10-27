@@ -28,7 +28,6 @@ import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo
  */
 public class TeiidMetadataImportInfo implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportInfo.class);
-	private static final String DEFAULT_EXTENSION_LCASE = ".xmi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -123,9 +122,6 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @return sourceModelName the source relational model name
 	 */
 	public String getSourceModelName() {
-        if (this.sourceModelName != null && !this.sourceModelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
-            return this.sourceModelName + DEFAULT_EXTENSION_LCASE;
-        }
         return this.sourceModelName;
 	}
 	
@@ -134,7 +130,6 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @param sourceModelName (never <code>null</code> or empty).
 	 */
 	public void setSourceModelName(String sourceModelName) {
-		CoreArgCheck.isNotEmpty(sourceModelName, "sourceModelName is null"); //$NON-NLS-1$
 		this.sourceModelName = sourceModelName;
 	}
 	
@@ -168,9 +163,6 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @return viewModelName the view relational model name
 	 */
 	public String getViewModelName() {
-		if (this.viewModelName != null && !this.viewModelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
-            return this.viewModelName + DEFAULT_EXTENSION_LCASE;
-        }
         return this.viewModelName;
 	}
 	
@@ -179,7 +171,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * @param viewModelName (never <code>null</code> or empty).
 	 */
 	public void setViewModelName(String viewModelName) {
-		CoreArgCheck.isNotEmpty(viewModelName, "viewModelName is null"); //$NON-NLS-1$
+//		CoreArgCheck.isNotEmpty(viewModelName, "viewModelName is null"); //$NON-NLS-1$
 		this.viewModelName = viewModelName;
 	}
 	

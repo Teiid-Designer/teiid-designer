@@ -338,7 +338,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			return;
 
 		String newName = ""; //$NON-NLS-1$
-		if (this.viewTableNameText.getText() != null && this.viewTableNameText.getText().length() > 0) {
+		if (this.viewTableNameText.getText() != null && this.viewTableNameText.getText().length() > -1) {
 			newName = this.viewTableNameText.getText();
 			this.fileInfo.setViewTableName(newName);
 		} else {
@@ -391,7 +391,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		}
 
 		String viewFileName = getViewFileName();
-		String sourceFilename = info.getSourceModelName();
+		String sourceFilename = getSourceFileName();
 		if (viewFileName.equalsIgnoreCase(sourceFilename)) {
 			setThisPageComplete(getString("sourceAndViewFilesCannotHaveSameName"), ERROR); //$NON-NLS-1$
 			return false;
@@ -520,6 +520,14 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 
 	private String getViewFileName() {
 		String result = this.viewModelFileText.getText().trim();
+		if (!result.endsWith(DEFAULT_EXTENSION)) {
+			result += DEFAULT_EXTENSION;
+		}
+		return result;
+	}
+	
+	private String getSourceFileName() {
+		String result = this.info.getSourceModelName().trim();
 		if (!result.endsWith(DEFAULT_EXTENSION)) {
 			result += DEFAULT_EXTENSION;
 		}

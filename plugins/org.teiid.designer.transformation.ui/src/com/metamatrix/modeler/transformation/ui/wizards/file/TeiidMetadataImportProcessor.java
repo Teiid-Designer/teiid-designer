@@ -39,6 +39,7 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
 
 public class TeiidMetadataImportProcessor implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportProcessor.class);
+	protected static final String DEFAULT_EXTENSION_LCASE = ".xmi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -266,14 +267,27 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     private ModelResource createRelationalFileSourceModel() throws ModelerCoreException {
     	FlatFileRelationalModelFactory factory = new FlatFileRelationalModelFactory();
     	
-    	return factory.createRelationalModel(this.info.getSourceModelLocation(), this.info.getSourceModelName());
+    	String modelName = this.info.getSourceModelName();
+    	
+    	if (!modelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
+    		modelName = modelName + DEFAULT_EXTENSION_LCASE;
+        }
+    	
+    	return factory.createRelationalModel(this.info.getSourceModelLocation(), modelName);
     	
     }
     
     protected ModelResource createViewsInNewModel(String sourceModelName) throws ModelerCoreException {
     	FlatFileViewModelFactory factory = new FlatFileViewModelFactory();
     	
-    	ModelResource modelResource = factory.createViewRelationalModel(this.info.getViewModelLocation(), this.info.getViewModelName());
+    	String modelName = this.info.getViewModelName();
+    	
+    	if (!modelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
+    		modelName = modelName + DEFAULT_EXTENSION_LCASE;
+        }
+    	
+    	ModelResource modelResource = factory.createViewRelationalModel(this.info.getViewModelLocation(), modelName);
+    	
         for( TeiidMetadataFileInfo info : this.info.getFileInfos()) {
         	if( info.doProcess() ) {
         		factory.createViewTable(modelResource, info, sourceModelName);
@@ -287,7 +301,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
         boolean requiredStart = ModelerCore.startTxn(true, true, "Import Teiid Metadata Create View Tables", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
-        	monitor.subTask(getString("task.creatingViewTablesInViewModel") + info.getViewModelName()); //$NON-NLS-1$
+        	monitor.subTask(getString("task.creatingProceduresInSourceModel") + info.getSourceModelName()); //$NON-NLS-1$
         	sourceModel = addProcedureToRelationalSourceModel();
         	monitor.worked(10);
         	succeeded = true;
@@ -314,7 +328,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     	if( info.getSourceModelLocation() != null && info.getSourceModelName() != null ) {
     		IPath modelPath = info.getSourceModelLocation().append(info.getSourceModelName());
     		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
     		}
     		
     		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);

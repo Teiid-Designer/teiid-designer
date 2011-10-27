@@ -37,7 +37,7 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
     	if( getInfo().getViewModelLocation() != null && getInfo().getViewModelName() != null ) {
     		IPath modelPath = getInfo().getViewModelLocation().append(getInfo().getViewModelName());
     		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
-    			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
+    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
     		}
     		
     		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
@@ -68,7 +68,14 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
     protected ModelResource createViewsInNewModel(String sourceModelName) throws ModelerCoreException {
     	XmlFileViewModelFactory factory = new XmlFileViewModelFactory();
     	
-    	ModelResource modelResource = factory.createViewRelationalModel(this.getInfo().getViewModelLocation(), this.getInfo().getViewModelName());
+    	String modelName = this.getInfo().getViewModelName();
+    	
+    	if (!modelName.toLowerCase().endsWith(DEFAULT_EXTENSION_LCASE)) {
+    		modelName = modelName + DEFAULT_EXTENSION_LCASE;
+        }
+    	
+    	
+    	ModelResource modelResource = factory.createViewRelationalModel(this.getInfo().getViewModelLocation(), modelName);
         for( TeiidXmlFileInfo info : this.getInfo().getXmlFileInfos()) {
         	if( info.doProcess() ) {
         		factory.createViewTable(modelResource, info, sourceModelName);

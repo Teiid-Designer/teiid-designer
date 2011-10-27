@@ -255,6 +255,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		this.barRB.setEnabled(enable);
     	this.otherDelimiterRB.setEnabled(enable);
     	this.otherDelimiterText.setEnabled(enable);
+    	this.quoteText.setEnabled(enable);
+    	this.escapeText.setEnabled(enable);
     	
     	this.delimitedColumnsViewer.getTable().setEnabled(enable);
     	this.fixedColumnsViewer.getTable().setEnabled(!enable);
@@ -264,6 +266,16 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	
     	this.numberLinesInFileLabel.setText(getString("numberOfLinesLabel", Integer.toString(this.dataFileInfo.getNumberOfLinesInFile()))); //$NON-NLS-1$
 
+    	this.delimitedColumnsViewer.getTable().removeAll();
+        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        	this.delimitedColumnsViewer.add(row);
+        }
+        
+    	this.fixedColumnsViewer.getTable().removeAll();
+        for( TeiidColumnInfo row : dataFileInfo.getColumnInfoList() ) {
+        	this.fixedColumnsViewer.add(row);
+        }
+    	
     	updateSqlText();
     	
 		synchronizing = false;
@@ -293,16 +305,20 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         delimitedColumnsCTab.setToolTipText(getString("delimitedColumnsTooltip")); //$NON-NLS-1$
         
         // Create Bottom Composite
-        Composite topPanel = WidgetFactory.createPanel(delimitedColumnsPanel, SWT.NONE, GridData.FILL_BOTH, 2);
-        topPanel.setLayout(new GridLayout(2, false));
+        Composite topPanel = WidgetFactory.createPanel(delimitedColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
+        GridLayout tpGL = new GridLayout(2, false);
+        tpGL.marginHeight = 1;
+        topPanel.setLayout(tpGL);
         
         createDelimitedFileOptionsGroup(topPanel);
         
         createDelimitedFileContentsGroup(topPanel);
         
         // Create Bottom Composite
-        Composite bottomPanel = WidgetFactory.createPanel(delimitedColumnsPanel, SWT.NONE, GridData.FILL_BOTH, 2);
-        bottomPanel.setLayout(new GridLayout(2, false));
+        Composite bottomPanel = WidgetFactory.createPanel(delimitedColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
+        GridLayout bpGL = new GridLayout(2, false);
+        bpGL.marginHeight = 1;
+        bottomPanel.setLayout(bpGL);
       
         createDelimitedColumnsOptionsGroup(bottomPanel);
       
@@ -325,15 +341,19 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         
         // Create Bottom Composite
         Composite topPanel = WidgetFactory.createPanel(fixedWidthColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
-        topPanel.setLayout(new GridLayout(2, false));
+        GridLayout tpGL = new GridLayout(2, false);
+        tpGL.marginHeight = 1;
+        topPanel.setLayout(tpGL);
         
         createFixedFileOptionsGroup(topPanel);
         
         createFixedFileContentsGroup(topPanel);
         
         // Create Bottom Composite
-        Composite bottomPanel = WidgetFactory.createPanel(fixedWidthColumnsPanel, SWT.NONE, GridData.FILL_BOTH, 2);
-        bottomPanel.setLayout(new GridLayout(2, false));
+        Composite bottomPanel = WidgetFactory.createPanel(fixedWidthColumnsPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2);
+        GridLayout bpGL = new GridLayout(2, false);
+        bpGL.marginHeight = 1;
+        bottomPanel.setLayout(bpGL);
       
         createFixedColumnsOptionsGroup(bottomPanel);
       
