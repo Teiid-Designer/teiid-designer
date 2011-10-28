@@ -7,11 +7,14 @@
  */
 package org.teiid.designer.extension.ui.actions;
 
+import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionText;
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -36,6 +39,7 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
+
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -45,7 +49,6 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
  */
 public final class UpdateRegistryModelExtensionDefinitionAction extends SortableSelectionAction {
 
-    private static final String MED_EXTENSION = "mxd"; //$NON-NLS-1$
     private IFile selectedMed;
 
     public UpdateRegistryModelExtensionDefinitionAction() {

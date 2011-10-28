@@ -8,9 +8,12 @@
 package org.teiid.designer.extension.properties;
 
 import java.util.Locale;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -40,7 +43,7 @@ public class Translation implements Comparable<Translation>{
      */
     @Override
     public int compareTo( Translation that ) {
-        return this.locale.toString().compareTo(that.locale.toString());
+        return ExtensionConstants.LOCALE_COMPARATOR.compare(getLocale(), that.getLocale());
     }
 
     /**

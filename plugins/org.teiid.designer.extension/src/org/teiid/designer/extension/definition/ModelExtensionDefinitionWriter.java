@@ -53,7 +53,7 @@ public class ModelExtensionDefinitionWriter {
 
         try {
             // Create a temp file for the new mxd
-            File tempFile = File.createTempFile("MxdTemp", ".mxd"); //$NON-NLS-1$ //$NON-NLS-2$
+            File tempFile = File.createTempFile("MxdTemp", ExtensionConstants.DOT_MED_EXTENSION); //$NON-NLS-1$
             FileOutputStream tempOutputStream = new FileOutputStream(tempFile);
             StreamResult streamResult = new StreamResult(tempOutputStream);
             transform(med, streamResult);

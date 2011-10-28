@@ -65,6 +65,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -343,7 +344,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     public void doSaveAs() {
         IProgressMonitor progressMonitor = getProgressMonitor();
         SaveAsDialog dialog = new SaveAsDialog(getShell());
-        dialog.setOriginalName(getFile().getName());
+        dialog.setOriginalFile(getFile());
         dialog.create();
 
         // dialog was canceled
@@ -357,6 +358,12 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
         // dialog OK'd
         IPath filePath = dialog.getResult();
+
+        // make sure that file has the right extension
+        if (!ExtensionConstants.MED_EXTENSION.equals(filePath.getFileExtension())) {
+            filePath = filePath.addFileExtension(ExtensionConstants.MED_EXTENSION);
+        }
+
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IFile file = workspace.getRoot().getFile(filePath);
 
@@ -480,8 +487,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         if (type == IResourceChangeEvent.POST_CHANGE) {
             IResourceDelta delta = event.getDelta();
 
-            if (delta == null)
+            if (delta == null) {
                 return;
+            }
 
             try {
                 delta.accept(new IResourceDeltaVisitor() {
@@ -497,7 +505,18 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                             // MXD file has been deleted so close editor
                             if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
                                 if (!accessThis().getShell().isDisposed()) {
-                                    getEditorSite().getPage().closeEditor(accessThis(), false);
+                                    accessThis().getShell().getDisplay().asyncExec(new Runnable() {
+
+                                        /**
+                                         * {@inheritDoc}
+                                         *
+                                         * @see java.lang.Runnable#run()
+                                         */
+                                        @Override
+                                        public void run() {
+                                            getEditorSite().getPage().closeEditor(accessThis(), false);
+                                        }
+                                    });
                                 }
                             }
 

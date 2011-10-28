@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.extension;
 
+import java.util.Comparator;
+import java.util.Locale;
+
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.LoggingUtil;
 
@@ -20,6 +23,10 @@ public interface ExtensionConstants {
     PluginUtil UTIL = new LoggingUtil(PLUGIN_ID);
 
     String SCHEMA_FILENAME = "modelExtension.xsd"; //$NON-NLS-1$
+
+    String MED_EXTENSION = "mxd"; //$NON-NLS-1$
+
+    String DOT_MED_EXTENSION = '.' + MED_EXTENSION;
 
     /**
      * The model extension definition schema attribute names.
@@ -60,5 +67,20 @@ public interface ExtensionConstants {
         String MODEL_EXTENSION = "modelExtension"; //$NON-NLS-1$
         String PROPERTY = "property"; //$NON-NLS-1$
     }
+
+    Comparator LOCALE_COMPARATOR = new Comparator<Locale>() {
+
+        /**
+         * @param thisLocale the first locale to be compared
+         * @param thatLocale the second locale to be compared
+         * @return a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the
+         *         second
+         */
+        @Override
+        public int compare( Locale thisLocale,
+                            Locale thatLocale ) {
+            return thisLocale.getDisplayLanguage().compareTo(thatLocale.getDisplayLanguage());
+        }
+    };
 
 }

@@ -11,7 +11,9 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +37,7 @@ import org.eclipse.ui.forms.FormDialog;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
 import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
@@ -105,6 +108,7 @@ public class EditTranslationDialog extends FormDialog {
         CoreArgCheck.isNotNull(translationBeingEdited, "translationBeingEdited is null"); //$NON-NLS-1$
         this.translationBeingEdited = translationBeingEdited;
         this.locale = this.translationBeingEdited.getLocale();
+        this.translation = this.translationBeingEdited.getTranslation();
 
         // remove the translation being edited
         this.existingTranslations.remove(this.existingTranslations);
@@ -175,18 +179,16 @@ public class EditTranslationDialog extends FormDialog {
             cbx = cbxLocales;
             toolkit.adapt(cbxLocales, true, false);
             cbxLocales.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            ((GridData)cbxLocales.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * 0.8);
             ((GridData)cbxLocales.getLayoutData()).heightHint = cbxLocales.getItemHeight() + 4;
 
             // populate locale combo
-            final Locale[] locales = Locale.getAvailableLocales();
-            String[] items = new String[locales.length];
-            int i = 0;
+            final List<Locale> locales = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+            Collections.sort(locales, ExtensionConstants.LOCALE_COMPARATOR);
 
             for (Locale locale : locales) {
-                items[i++] = locale.getDisplayName();
+                cbxLocales.add(locale.getDisplayName());
             }
-
-            cbxLocales.setItems(items);
 
             if (isEditMode()) {
                 String current = this.translationBeingEdited.getLocale().getDisplayName();
@@ -206,7 +208,7 @@ public class EditTranslationDialog extends FormDialog {
                 @Override
                 public void widgetSelected( SelectionEvent e ) {
                     int index = ((CCombo)e.widget).getSelectionIndex();
-                    handleLocaleChanged(locales[index]);
+                    handleLocaleChanged(locales.get(index));
                 }
             });
         }
@@ -215,13 +217,12 @@ public class EditTranslationDialog extends FormDialog {
             Label lblTranslation = toolkit.createLabel(body, Messages.translationLabel, SWT.NONE);
             lblTranslation.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 
-            Text txtTranslation = toolkit.createText(body, null, SWT.BORDER | SWT.MULTI
-                                                           | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
+            Text txtTranslation = toolkit.createText(body, null, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
             this.translationError.setControl(txtTranslation);
             txtTranslation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)txtTranslation.getLayoutData()).verticalIndent += ((GridLayout)body.getLayout()).verticalSpacing;
             ((GridData)txtTranslation.getLayoutData()).heightHint = txtTranslation.getLineHeight() * 3;
-            ((GridData)txtTranslation.getLayoutData()).widthHint = (int)(getShell().getSize().x * 0.8);
+            ((GridData)txtTranslation.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * 0.8);
 
             if (isEditMode()) {
                 txtTranslation.setText(this.translationBeingEdited.getTranslation());

@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.extension.ui.views;
 
+import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 
@@ -81,8 +82,6 @@ import com.metamatrix.ui.internal.viewsupport.StatusInfo;
  * 
  */
 public final class ModelExtensionRegistryView extends ViewPart {
-
-    private static final String MED_EXTENSION = "mxd"; //$NON-NLS-1$
 
     private IAction cloneMedAction;
 

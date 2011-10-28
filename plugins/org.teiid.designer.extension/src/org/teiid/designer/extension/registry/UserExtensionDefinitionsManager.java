@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
@@ -28,15 +29,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
  * The <code>UserDefinitionsManager</code> class manages the persistence of User-Defined ModelExtensionDefintions
  */
 public final class UserExtensionDefinitionsManager {
-
-    // ===========================================================================================================================
-    // Constants
-    // ===========================================================================================================================
-
-    /**
-     * The file name extension used when persisting the user MEDs.
-     */
-    private static final String USER_MED_EXT = ".mxd"; //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Fields
@@ -74,7 +66,7 @@ public final class UserExtensionDefinitionsManager {
             public boolean accept( File dir,
                                    String name ) {
                 // if the file extension is .txt return true, else false
-                return name.endsWith(USER_MED_EXT);
+                return name.endsWith(ExtensionConstants.DOT_MED_EXTENSION);
             }
         };
     }
@@ -129,7 +121,7 @@ public final class UserExtensionDefinitionsManager {
                 // Construct Name using namespace and version
                 String namespacePrefix = med.getNamespacePrefix();
                 int version = med.getVersion();
-                String fName = namespacePrefix + version + USER_MED_EXT;
+                String fName = namespacePrefix + version + ExtensionConstants.DOT_MED_EXTENSION;
 
                 File file = new File(dir.getAbsolutePath() + File.separator + fName);
                 InputStream stream = medWriter.writeAsStream(med);
