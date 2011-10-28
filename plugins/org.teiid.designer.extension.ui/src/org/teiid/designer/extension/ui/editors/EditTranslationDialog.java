@@ -319,20 +319,20 @@ public class EditTranslationDialog extends FormDialog {
 
     private void validate() {
         // validate locale
-        this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
+        this.localeError.setStatus(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
 
         if (CoreStringUtil.isEmpty(this.localeError.getMessage())) {
             assert (this.locale != null) : "locale is null and should not be"; //$NON-NLS-1$
             Translation newTranslation = new Translation(this.locale, this.translation);
             Collection<Translation> temp = new ArrayList<Translation>(this.existingTranslations);
             temp.add(newTranslation);
-            this.localeError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(this.translationType, temp, false));
+            this.localeError.setStatus(ModelExtensionDefinitionValidator.validateTranslations(this.translationType, temp, false));
         }
 
         updateMessage(this.localeError);
 
         // validate translation text
-        this.translationError.setMessage(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
+        this.translationError.setStatus(ModelExtensionDefinitionValidator.validateTranslationText(this.translation));
         updateMessage(this.translationError);
     }
 

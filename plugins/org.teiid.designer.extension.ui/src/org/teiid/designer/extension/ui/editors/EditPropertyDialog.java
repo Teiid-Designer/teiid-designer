@@ -13,10 +13,12 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -67,6 +69,7 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -1093,7 +1096,7 @@ final class EditPropertyDialog extends FormDialog {
                                                                  org.teiid.designer.extension.Messages.propertyDescription,
                                                                  this.propDefn.getDescriptions());
         dialog.create();
-//        sizeDialog(dialog.getShell(), getShell());
+        // sizeDialog(dialog.getShell(), getShell());
         dialog.getShell().pack();
 
         if (dialog.open() == Window.OK) {
@@ -1465,7 +1468,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void validateAdvancedValue() {
-        this.advancedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced()));
+        this.advancedError.setStatus(ModelExtensionDefinitionValidator.validatePropertyAdvancedAttribute(this.propDefn.isAdvanced()));
         addMessage(this.advancedError);
     }
 
@@ -1491,29 +1494,29 @@ final class EditPropertyDialog extends FormDialog {
         }
 
         if (CoreStringUtil.isEmpty(this.allowedValuesError.getMessage())) {
-            this.allowedValuesError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
-                                                                                                               this.propDefn.getAllowedValues()));
+            this.allowedValuesError.setStatus(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
+                                                                                                              this.propDefn.getAllowedValues()));
         }
 
         addMessage(this.allowedValuesError);
     }
 
     private void validateDescriptions() {
-        this.descriptionError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
-                                                                                                this.propDefn.getDescriptions(),
-                                                                                                true));
+        this.descriptionError.setStatus(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDescription,
+                                                                                               this.propDefn.getDescriptions(),
+                                                                                               true));
         addMessage(this.descriptionError);
     }
 
     private void validateDisplayNames() {
-        this.displayNameError.setMessage(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
-                                                                                                this.propDefn.getDisplayNames(),
-                                                                                                true));
+        this.displayNameError.setStatus(ModelExtensionDefinitionValidator.validateTranslations(org.teiid.designer.extension.Messages.propertyDisplayName,
+                                                                                               this.propDefn.getDisplayNames(),
+                                                                                               true));
         addMessage(this.displayNameError);
     }
 
     private void validateIndex() {
-        this.indexedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed()));
+        this.indexedError.setStatus(ModelExtensionDefinitionValidator.validatePropertyIndexedAttribute(this.propDefn.shouldBeIndexed()));
         addMessage(this.indexedError);
     }
 
@@ -1521,12 +1524,12 @@ final class EditPropertyDialog extends FormDialog {
                                        boolean valueIsFixed ) {
         if (shouldHaveInitialValue) {
             if (valueIsFixed) {
-                this.initialValueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
-                                                                                                               this.propDefn.getFixedValue()));
+                this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
+                                                                                                              this.propDefn.getFixedValue()));
             } else {
-                this.initialValueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
-                                                                                                                 this.propDefn.getDefaultValue(),
-                                                                                                                 this.propDefn.getAllowedValues()));
+                this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
+                                                                                                                this.propDefn.getDefaultValue(),
+                                                                                                                this.propDefn.getAllowedValues()));
             }
         } else {
             this.initialValueError.setMessage(null);
@@ -1536,23 +1539,23 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void validateMasked() {
-        this.maskedError.setMessage(ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked()));
+        this.maskedError.setStatus(ModelExtensionDefinitionValidator.validatePropertyMaskedAttribute(this.propDefn.isMasked()));
         addMessage(this.maskedError);
     }
 
     private void validateRequired() {
-        this.requiredError.setMessage(ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired()));
+        this.requiredError.setStatus(ModelExtensionDefinitionValidator.validatePropertyRequiredAttribute(this.propDefn.isRequired()));
         addMessage(this.requiredError);
     }
 
     private void validateSimpleId() {
-        this.simpleIdError.setMessage(ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
-                                                                                                 this.existingPropIds));
+        this.simpleIdError.setStatus(ModelExtensionDefinitionValidator.validatePropertySimpleId(this.propDefn.getSimpleId(),
+                                                                                                this.existingPropIds));
         addMessage(this.simpleIdError);
     }
 
     private void validateType() {
-        this.typeError.setMessage(ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType()));
+        this.typeError.setStatus(ModelExtensionDefinitionValidator.validatePropertyRuntimeType(this.propDefn.getRuntimeType()));
         addMessage(this.typeError);
         validateAllowedValues();
     }

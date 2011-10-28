@@ -111,12 +111,11 @@ public final class ModelExtensionDefinitionValidator {
         return errorMsg;
     }
 
-    public static String validateDescription( String description ) {
-        // any value is valid
-        return null;
+    public static ValidationStatus validateDescription( String description ) {
+        return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static String validateMetaclassName( String metaclassName ) {
+    public static ValidationStatus validateMetaclassName( String metaclassName ) {
         String errorMsg = emptyCheck(Messages.metaclassName, metaclassName);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -124,11 +123,16 @@ public final class ModelExtensionDefinitionValidator {
             for (char c : metaclassName.toCharArray()) {
                 if ((c != '.') && !Character.isJavaIdentifierPart(c)) {
                     errorMsg = Messages.metaclassNameHasInvalidCharactersValidationMsg;
+                    break;
                 }
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
     /**
@@ -138,8 +142,8 @@ public final class ModelExtensionDefinitionValidator {
      * @param validateEachName indicates if each name should validate using {@link #validateMetaclassName(String)}
      * @return
      */
-    public static String validateMetaclassNames( String[] metaclassNames,
-                                                 boolean validateEachName ) {
+    public static ValidationStatus validateMetaclassNames( String[] metaclassNames,
+                                                           boolean validateEachName ) {
         String errorMsg = null;
 
         if ((metaclassNames == null) || (metaclassNames.length == 0)) {
@@ -152,20 +156,24 @@ public final class ModelExtensionDefinitionValidator {
 
             if (validateEachName) {
                 for (String metaclassName : metaclassNames) {
-                    errorMsg = validateMetaclassName(metaclassName);
+                    ValidationStatus status = validateMetaclassName(metaclassName);
 
-                    if (!CoreStringUtil.isEmpty(errorMsg)) {
-                        break;
+                    if (status.isError()) {
+                        return status;
                     }
                 }
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validateMetamodelUri( String metamodelUri,
-                                               Collection<String> extendableMetamodelUris ) {
+    public static ValidationStatus validateMetamodelUri( String metamodelUri,
+                                                         Collection<String> extendableMetamodelUris ) {
         String errorMsg = uriCheck(Messages.metamodelUri, metamodelUri);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -174,11 +182,15 @@ public final class ModelExtensionDefinitionValidator {
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validateNamespacePrefix( String namespacePrefix,
-                                                  Collection<String> existingNamespacePrefixes ) {
+    public static ValidationStatus validateNamespacePrefix( String namespacePrefix,
+                                                            Collection<String> existingNamespacePrefixes ) {
         String errorMsg = containsSpacesCheck(Messages.namespacePrefix, namespacePrefix);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -186,43 +198,55 @@ public final class ModelExtensionDefinitionValidator {
 
             if (CoreStringUtil.isEmpty(errorMsg) && (existingNamespacePrefixes != null)
                     && existingNamespacePrefixes.contains(namespacePrefix)) {
-                errorMsg = NLS.bind(Messages.namespacePrefixExistsValidationMsg, namespacePrefix);
+                return ValidationStatus.createWarningMessage(NLS.bind(Messages.namespacePrefixExistsValidationMsg, namespacePrefix));
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validateNamespaceUri( String namespaceUri,
-                                               Collection<String> existingNamespaceUris ) {
+    public static ValidationStatus validateNamespaceUri( String namespaceUri,
+                                                         Collection<String> existingNamespaceUris ) {
         String errorMsg = uriCheck(Messages.namespaceUri, namespaceUri);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             if ((existingNamespaceUris != null) && existingNamespaceUris.contains(namespaceUri)) {
-                errorMsg = NLS.bind(Messages.namespaceUriExistsValidationMsg, namespaceUri);
+                return ValidationStatus.createWarningMessage(NLS.bind(Messages.namespaceUriExistsValidationMsg, namespaceUri));
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validatePropertyAdvancedAttribute( boolean proposedValue ) {
-        return null; // always valid
+    public static ValidationStatus validatePropertyAdvancedAttribute( boolean proposedValue ) {
+        return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static String validatePropertyAllowedValue( String runtimeType,
-                                                       String allowedValue ) {
+    public static ValidationStatus validatePropertyAllowedValue( String runtimeType,
+                                                                 String allowedValue ) {
         String errorMsg = emptyCheck(Messages.allowedValue, allowedValue);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             // if no runtime type and not empty assume valid
-            if (CoreStringUtil.isEmpty(validatePropertyRuntimeType(runtimeType))) {
+            if (!validatePropertyRuntimeType(runtimeType).isError()) {
                 // make sure value is valid for type
                 errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), allowedValue, true, null);
             }
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
     /**
@@ -230,20 +254,20 @@ public final class ModelExtensionDefinitionValidator {
      * @param allowedValues the allowed values (can be <code>null</code>)
      * @return <code>null</code> if all values are valid based on the runtime type
      */
-    public static String validatePropertyAllowedValues( String runtimeType,
-                                                        String[] allowedValues ) {
+    public static ValidationStatus validatePropertyAllowedValues( String runtimeType,
+                                                                  String[] allowedValues ) {
         // valid not to have allowed values
         if (ArrayUtil.isNullOrEmpty(allowedValues)) {
-            return null;
+            return ValidationStatus.OK_STATUS;
         }
 
         for (String allowedValue : allowedValues) {
             // need to get rid of first occurrence of allowedValue in order to see if there is a duplicate
-            String errorMsg = validatePropertyAllowedValue(runtimeType, allowedValue);
+            ValidationStatus status = validatePropertyAllowedValue(runtimeType, allowedValue);
 
             // value is not valid for type
-            if (!CoreStringUtil.isEmpty(errorMsg)) {
-                return errorMsg;
+            if (status.isError()) {
+                return status;
             }
 
             // make sure there are no duplicates
@@ -252,53 +276,63 @@ public final class ModelExtensionDefinitionValidator {
 
             for (Object value : temp) {
                 if (value.equals(allowedValue)) {
-                    return NLS.bind(Messages.duplicateAllowedValue, allowedValue);
+                    return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateAllowedValue, allowedValue));
                 }
             }
         }
 
         // valid
-        return null;
+        return ValidationStatus.OK_STATUS;
     }
 
-    public static String validatePropertyDefaultValue( String runtimeType,
-                                                       String defaultValue,
-                                                       String[] allowedValues ) {
+    public static ValidationStatus validatePropertyDefaultValue( String runtimeType,
+                                                                 String defaultValue,
+                                                                 String[] allowedValues ) {
         // only validate if there is a runtime type
-        if (CoreStringUtil.isEmpty(validatePropertyRuntimeType(runtimeType))) {
-            return Utils.isValidValue(Utils.convertRuntimeType(runtimeType), defaultValue, true, allowedValues);
+        ValidationStatus status = validatePropertyRuntimeType(runtimeType);
+
+        if (status.isError()) {
+            // allow any value if there is no runtime type
+            return ValidationStatus.OK_STATUS;
         }
 
-        return null;
+        // have a good runtime type
+        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), defaultValue, true, allowedValues);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validatePropertyDefinition( String namespacePrefix,
-                                                     String id,
-                                                     String runtimeType,
-                                                     String defaultValue,
-                                                     String fixedValue,
-                                                     Collection<Translation> descriptions,
-                                                     Collection<Translation> displayNames,
-                                                     String[] allowedValues ) {
-        String errorMsg = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
+    public static ValidationStatus validatePropertyDefinition( String namespacePrefix,
+                                                               String id,
+                                                               String runtimeType,
+                                                               String defaultValue,
+                                                               String fixedValue,
+                                                               Collection<Translation> descriptions,
+                                                               Collection<Translation> displayNames,
+                                                               String[] allowedValues ) {
+        ValidationStatus status = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
 
-        if (!CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = validatePropertyRuntimeType(runtimeType);
+        if (!status.isError()) {
+            status = validatePropertyRuntimeType(runtimeType);
 
-            if (!CoreStringUtil.isEmpty(errorMsg)) {
-                errorMsg = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues);
+            if (!status.isError()) {
+                status = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues);
 
-                if (!CoreStringUtil.isEmpty(errorMsg)) {
-                    errorMsg = validatePropertyFixedValue(runtimeType, fixedValue);
+                if (!status.isError()) {
+                    status = validatePropertyFixedValue(runtimeType, fixedValue);
 
-                    if (!CoreStringUtil.isEmpty(errorMsg)) {
-                        errorMsg = validateTranslations(Messages.propertyDescription, descriptions, true);
+                    if (!status.isError()) {
+                        status = validateTranslations(Messages.propertyDescription, descriptions, true);
 
-                        if (!CoreStringUtil.isEmpty(errorMsg)) {
-                            errorMsg = validateTranslations(Messages.propertyDisplayName, displayNames, true);
+                        if (!status.isError()) {
+                            status = validateTranslations(Messages.propertyDisplayName, displayNames, true);
 
-                            if (!CoreStringUtil.isEmpty(errorMsg)) {
-                                errorMsg = validatePropertyAllowedValues(runtimeType, allowedValues);
+                            if (!status.isError()) {
+                                status = validatePropertyAllowedValues(runtimeType, allowedValues);
                             }
                         }
                     }
@@ -306,75 +340,84 @@ public final class ModelExtensionDefinitionValidator {
             }
         }
 
-        return errorMsg;
+        return status;
     }
 
-    public static String validatePropertyDefinitions( Map<String, Collection<ModelExtensionPropertyDefinition>> medPropDefns ) {
-        String errorMsg = null;
+    public static ValidationStatus
+            validatePropertyDefinitions( Map<String, Collection<ModelExtensionPropertyDefinition>> medPropDefns ) {
+        ValidationStatus status = null;
 
-        MED_PROP_DEFNS: {
-            for (String metaclassName : medPropDefns.keySet()) {
-                errorMsg = validateMetaclassName(metaclassName);
+        for (String metaclassName : medPropDefns.keySet()) {
+            status = validateMetaclassName(metaclassName);
 
-                if (CoreStringUtil.isEmpty(errorMsg)) {
-                    // make sure metaclass has at least one property
-                    Collection<ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
+            if (!status.isError()) {
+                // make sure metaclass has at least one property
+                Collection<ModelExtensionPropertyDefinition> props = medPropDefns.get(metaclassName);
 
-                    if ((props == null) || props.isEmpty()) {
-                        errorMsg = NLS.bind(Messages.extendedMetaclassHasNoPropertiesValidationMsg, metaclassName);
-                        break MED_PROP_DEFNS;
-                    }
+                if ((props == null) || props.isEmpty()) {
+                    return ValidationStatus.createErrorMessage(NLS.bind(Messages.extendedMetaclassHasNoPropertiesValidationMsg,
+                                                                        metaclassName));
+                }
 
-                    for (Collection<ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
-                        Set<String> ids = new HashSet<String>();
+                for (Collection<ModelExtensionPropertyDefinition> propDefns : medPropDefns.values()) {
+                    Set<String> ids = new HashSet<String>();
 
-                        for (ModelExtensionPropertyDefinition propDefn : propDefns) {
-                            // check for duplicates
-                            if (!ids.add(propDefn.getSimpleId())) {
-                                errorMsg = NLS.bind(Messages.duplicatePropertyIdValidatinMsg, propDefn.getSimpleId());
-                                break MED_PROP_DEFNS;
-                            }
+                    for (ModelExtensionPropertyDefinition propDefn : propDefns) {
+                        // check for duplicates
+                        if (!ids.add(propDefn.getSimpleId())) {
+                            return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicatePropertyIdValidatinMsg,
+                                                                                propDefn.getSimpleId()));
+                        }
 
-                            errorMsg = validatePropertyDefinition(propDefn.getNamespacePrefix(), propDefn.getSimpleId(),
-                                                                  propDefn.getRuntimeType(), propDefn.getDefaultValue(),
-                                                                  propDefn.getFixedValue(), propDefn.getDescriptions(),
-                                                                  propDefn.getDisplayNames(), propDefn.getAllowedValues());
+                        status = validatePropertyDefinition(propDefn.getNamespacePrefix(), propDefn.getSimpleId(),
+                                                            propDefn.getRuntimeType(), propDefn.getDefaultValue(),
+                                                            propDefn.getFixedValue(), propDefn.getDescriptions(),
+                                                            propDefn.getDisplayNames(), propDefn.getAllowedValues());
 
-                            if (!CoreStringUtil.isEmpty(errorMsg)) {
-                                break MED_PROP_DEFNS;
-                            }
+                        if (status.isError()) {
+                            return status;
                         }
                     }
                 }
             }
         }
 
-        return errorMsg;
+        return ValidationStatus.OK_STATUS;
     }
 
-    public static String validatePropertyFixedValue( String runtimeType,
-                                                     String fixedValue ) {
+    public static ValidationStatus validatePropertyFixedValue( String runtimeType,
+                                                               String fixedValue ) {
         // only validate if there is a runtime type
-        if (CoreStringUtil.isEmpty(validatePropertyRuntimeType(runtimeType))) {
-            return Utils.isValidValue(Utils.convertRuntimeType(runtimeType), fixedValue, true, null);
+        ValidationStatus status = validatePropertyRuntimeType(runtimeType);
+
+        if (status.isError()) {
+            // allow any value if there is no runtime type
+            return ValidationStatus.OK_STATUS;
         }
 
-        return null;
+        // have a good runtime type
+        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), fixedValue, true, null);
+
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validatePropertyIndexedAttribute( boolean proposedValue ) {
-        return null; // always valid
+    public static ValidationStatus validatePropertyIndexedAttribute( boolean proposedValue ) {
+        return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static String validatePropertyMaskedAttribute( boolean proposedValue ) {
-        return null; // always valid
+    public static ValidationStatus validatePropertyMaskedAttribute( boolean proposedValue ) {
+        return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static String validatePropertyRequiredAttribute( boolean proposedValue ) {
-        return null; // always valid
+    public static ValidationStatus validatePropertyRequiredAttribute( boolean proposedValue ) {
+        return ValidationStatus.OK_STATUS; // any value is valid
     }
 
-    public static String validatePropertyRuntimeType( String runtimeType ) {
+    public static ValidationStatus validatePropertyRuntimeType( String runtimeType ) {
         String errorMsg = null;
 
         try {
@@ -383,11 +426,15 @@ public final class ModelExtensionDefinitionValidator {
             errorMsg = e.getLocalizedMessage();
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validatePropertySimpleId( String proposedValue,
-                                                   Collection<String> existingPropIds ) {
+    public static ValidationStatus validatePropertySimpleId( String proposedValue,
+                                                             Collection<String> existingPropIds ) {
         String errorMsg = containsOnlyIdCharactersCheck(Messages.propertySimpleId, proposedValue);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -396,33 +443,37 @@ public final class ModelExtensionDefinitionValidator {
             }
         }
 
-        return errorMsg;
-    }
-
-    public static String validateTranslation( Locale locale,
-                                              String text ) {
-        String errorMsg = validateTranslationLocale(locale);
-
         if (CoreStringUtil.isEmpty(errorMsg)) {
-            errorMsg = validateTranslationText(text);
+            return ValidationStatus.OK_STATUS;
         }
 
-        return errorMsg;
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validateTranslationLocale( Locale locale ) {
+    public static ValidationStatus validateTranslation( Locale locale,
+                                                        String text ) {
+        ValidationStatus status = validateTranslationLocale(locale);
+
+        if (!status.isError()) {
+            return validateTranslationText(text);
+        }
+
+        return status;
+    }
+
+    public static ValidationStatus validateTranslationLocale( Locale locale ) {
         if (locale == null) {
-            return Messages.localeMissingValidationMsg;
+            return ValidationStatus.createErrorMessage(Messages.localeMissingValidationMsg);
         }
 
-        return null;
+        return ValidationStatus.OK_STATUS;
     }
 
-    public static String validateTranslations( String translationType,
-                                               Collection<Translation> translations,
-                                               boolean validateEachTranslation ) {
+    public static ValidationStatus validateTranslations( String translationType,
+                                                         Collection<Translation> translations,
+                                                         boolean validateEachTranslation ) {
         if ((translations == null) || translations.isEmpty()) {
-            return null;
+            return ValidationStatus.OK_STATUS;
         }
 
         String errorMsg = null;
@@ -436,10 +487,10 @@ public final class ModelExtensionDefinitionValidator {
             }
 
             if (validateEachTranslation) {
-                errorMsg = validateTranslation(translation.getLocale(), translation.getTranslation());
+                ValidationStatus status = validateTranslation(translation.getLocale(), translation.getTranslation());
 
-                if (!CoreStringUtil.isEmpty(errorMsg)) {
-                    break;
+                if (status.isError()) {
+                    return status;
                 }
             }
 
@@ -449,14 +500,15 @@ public final class ModelExtensionDefinitionValidator {
         // duplicates check
         if (CoreStringUtil.isEmpty(errorMsg)) {
             if (translations.size() != locales.size()) {
-                errorMsg = NLS.bind(Messages.duplicateTranslationLocaleValidationMsg, translationType);
+                return ValidationStatus.createErrorMessage(NLS.bind(Messages.duplicateTranslationLocaleValidationMsg,
+                                                                    translationType));
             }
         }
 
-        return errorMsg;
+        return ValidationStatus.OK_STATUS;
     }
 
-    public static String validateTranslationText( String text ) {
+    public static ValidationStatus validateTranslationText( String text ) {
         String errorMsg = emptyCheck(Messages.translation, text);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
@@ -464,14 +516,18 @@ public final class ModelExtensionDefinitionValidator {
             errorMsg = emptyCheck(Messages.translation, text.trim());
         }
 
-        return errorMsg;
+        if (CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
+        return ValidationStatus.createErrorMessage(errorMsg);
     }
 
-    public static String validateVersion( String version ) {
-        String msg = containsSpacesCheck(Messages.version, version);
+    public static ValidationStatus validateVersion( String version ) {
+        String errorMsg = containsSpacesCheck(Messages.version, version);
 
-        if (!CoreStringUtil.isEmpty(msg)) {
-            return msg;
+        if (!CoreStringUtil.isEmpty(errorMsg)) {
+            return ValidationStatus.createErrorMessage(errorMsg);
         }
 
         int newVersion = -1;
@@ -479,15 +535,16 @@ public final class ModelExtensionDefinitionValidator {
         try {
             newVersion = Integer.parseInt(version);
         } catch (Exception e) {
-            return NLS.bind(Messages.versionIsNotAnIntegerValidationMsg, version);
+            return ValidationStatus.createErrorMessage(NLS.bind(Messages.versionIsNotAnIntegerValidationMsg, version));
         }
 
         if (newVersion < ModelExtensionDefinitionHeader.DEFAULT_VERSION) {
-            return NLS.bind(Messages.versionLessThanDefaultValidationMsg, ModelExtensionDefinitionHeader.DEFAULT_VERSION);
+            return ValidationStatus.createErrorMessage(NLS.bind(Messages.versionLessThanDefaultValidationMsg,
+                                                                ModelExtensionDefinitionHeader.DEFAULT_VERSION));
         }
 
         // good value
-        return null;
+        return ValidationStatus.OK_STATUS;
     }
 
     /**

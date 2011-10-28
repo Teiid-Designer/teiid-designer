@@ -204,14 +204,14 @@ final class EditAllowedValueDialog extends FormDialog {
 
     void handleValueChanged( String newValue ) {
         this.allowedValue = newValue;
-        this.valueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.runtimeType,
-                                                                                                  this.allowedValue));
+        this.valueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyAllowedValue(this.runtimeType,
+                                                                                                 this.allowedValue));
 
-        if (CoreStringUtil.isEmpty(this.valueError.getMessage())) {
+        if (!this.valueError.isError()) {
             String[] temp = new String[this.existingValues.length + 1];
             System.arraycopy(this.existingValues, 0, temp, 0, this.existingValues.length);
             temp[this.existingValues.length] = newValue;
-            this.valueError.setMessage(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.runtimeType, temp));
+            this.valueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.runtimeType, temp));
         }
 
         updateState();

@@ -183,7 +183,7 @@ final class EditMetaclassDialog extends FormDialog {
         }
 
         this.metaclassName = newMetaclassName;
-        this.metaclassError.setMessage(ModelExtensionDefinitionValidator.validateMetaclassName(this.metaclassName));
+        this.metaclassError.setStatus(ModelExtensionDefinitionValidator.validateMetaclassName(this.metaclassName));
         this.existingMetaclasses.add(this.metaclassName);
         updateState();
     }

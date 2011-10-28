@@ -63,6 +63,7 @@ public class Messages extends NLS {
     public static String translation;
     public static String version;
 
+    public static String okValidationMsg;
     public static String duplicatePropertyIdValidatinMsg;
     public static String duplicateTranslationLocaleValidationMsg;
     public static String extendedMetaclassHasNoPropertiesValidationMsg;

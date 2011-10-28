@@ -8,8 +8,8 @@
 package org.teiid.designer.extension.ui.editors;
 
 import java.beans.PropertyChangeEvent;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.IManagedForm;
@@ -19,7 +19,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * The <code>MedEditorPage</code> is a base class for {@link ModelExtensionDefinitionEditor} pages that require the model extension
@@ -98,7 +97,7 @@ public abstract class MedEditorPage extends FormPage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.editor.FormPage#setFocus()
      */
     @Override
@@ -114,7 +113,7 @@ public abstract class MedEditorPage extends FormPage {
     /**
      * @param readOnly the new readonly state of the editor
      */
-    protected abstract void setResourceReadOnly(boolean readOnly);
+    protected abstract void setResourceReadOnly( boolean readOnly );
 
     protected abstract void updateAllMessages();
 
@@ -125,11 +124,11 @@ public abstract class MedEditorPage extends FormPage {
         assert (errorMessage != null) : "errorMessage is null"; //$NON-NLS-1$
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
 
-        if (CoreStringUtil.isEmpty(errorMessage.getMessage())) {
+        if (errorMessage.isOk()) {
             msgMgr.removeMessage(errorMessage.getKey(), errorMessage.getControl());
         } else {
-            msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(), IMessageProvider.ERROR,
-                              errorMessage.getControl());
+            msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
+                              errorMessage.getMessageType(), errorMessage.getControl());
         }
     }
 

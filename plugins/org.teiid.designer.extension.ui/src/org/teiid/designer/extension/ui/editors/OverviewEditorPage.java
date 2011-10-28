@@ -312,25 +312,25 @@ public final class OverviewEditorPage extends MedEditorPage {
     }
 
     private void validateDescription() {
-        this.descriptionError.setMessage(ModelExtensionDefinitionValidator.validateDescription(getMed().getDescription()));
+        this.descriptionError.setStatus(ModelExtensionDefinitionValidator.validateDescription(getMed().getDescription()));
         updateMessage(this.descriptionError);
     }
 
     private void validateMetamodelUri() {
-        this.metamodelUriError.setMessage(ModelExtensionDefinitionValidator.validateMetamodelUri(getMed().getMetamodelUri(),
-                                                                                                 getRegistry().getExtendableMetamodelUris()));
+        this.metamodelUriError.setStatus(ModelExtensionDefinitionValidator.validateMetamodelUri(getMed().getMetamodelUri(),
+                                                                                                getRegistry().getExtendableMetamodelUris()));
         updateMessage(this.metamodelUriError);
     }
 
     private void validateNamespacePrefix() {
-        this.namespacePrefixError.setMessage(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
-                                                                                                       getRegistry().getAllNamespacePrefixes()));
+        this.namespacePrefixError.setStatus(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
+                                                                                                      getRegistry().getAllNamespacePrefixes()));
         updateMessage(this.namespacePrefixError);
     }
 
     private void validateNamespaceUri() {
-        this.namespaceUriError.setMessage(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
-                                                                                                 getRegistry().getAllNamespaceUris()));
+        this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
+                                                                                                getRegistry().getAllNamespaceUris()));
         updateMessage(this.namespaceUriError);
     }
 

@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.editors;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IMessage;
+import org.teiid.designer.extension.definition.ValidationStatus;
 
 import com.metamatrix.core.util.CoreStringUtil;
 
@@ -24,6 +25,11 @@ final class ErrorMessage implements IMessage {
     private String message;
 
     /**
+     * The message type.
+     */
+    private int messageType = IMessageProvider.NONE;
+
+    /**
      * The UI control where the error can be fixed.
      */
     private Control widget;
@@ -31,13 +37,13 @@ final class ErrorMessage implements IMessage {
     /**
      * Clears the error message.
      */
-    void clearMessage() {
-        this.message = null;
+    public void clearMessage() {
+        setMessage(null);
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.IMessage#getControl()
      */
     @Override
@@ -47,7 +53,7 @@ final class ErrorMessage implements IMessage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.IMessage#getData()
      */
     @Override
@@ -57,7 +63,7 @@ final class ErrorMessage implements IMessage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.IMessage#getKey()
      */
     @Override
@@ -67,7 +73,7 @@ final class ErrorMessage implements IMessage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.jface.dialogs.IMessageProvider#getMessage()
      */
     @Override
@@ -77,17 +83,17 @@ final class ErrorMessage implements IMessage {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.jface.dialogs.IMessageProvider#getMessageType()
      */
     @Override
     public int getMessageType() {
-        return (CoreStringUtil.isEmpty(this.message) ? IMessageProvider.NONE : IMessageProvider.ERROR);
+        return this.messageType;
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.eclipse.ui.forms.IMessage#getPrefix()
      */
     @Override
@@ -96,17 +102,60 @@ final class ErrorMessage implements IMessage {
     }
 
     /**
+     * @return <code>true</code> if the validation status has an error severity
+     */
+    public boolean isError() {
+        return (this.messageType == IMessageProvider.ERROR);
+    }
+
+    /**
+     * @return <code>true</code> if the validation status has an information severity
+     */
+    public boolean isInfo() {
+        return (this.messageType == IMessageProvider.INFORMATION);
+    }
+
+    /**
+     * @return <code>true</code> if the validation status has an OK severity
+     */
+    public boolean isOk() {
+        return (this.messageType == IMessageProvider.NONE);
+    }
+
+    /**
+     * @return <code>true</code> if the validation status has a warning severity
+     */
+    public boolean isWarning() {
+        return (this.messageType == IMessageProvider.WARNING);
+    }
+
+    /**
      * @param newControl the new control (can be <code>null</code>)
      */
-    public void setControl(Control newControl) {
+    public void setControl( Control newControl ) {
         this.widget = newControl;
     }
 
     /**
      * @param newMessage the new message (can be <code>null</code> or empty)
      */
-    public void setMessage(String newMessage) {
+    public void setMessage( String newMessage ) {
         this.message = newMessage;
+        this.messageType = (CoreStringUtil.isEmpty(this.message) ? IMessageProvider.NONE : IMessageProvider.ERROR);
+    }
+
+    public void setStatus( ValidationStatus status ) {
+        this.message = status.getMessage();
+
+        if (status.isError()) {
+            this.messageType = IMessageProvider.ERROR;
+        } else if (status.isWarning()) {
+            this.messageType = IMessageProvider.WARNING;
+        } else if (status.isInfo()) {
+            this.messageType = IMessageProvider.INFORMATION;
+        } else if (status.isOk()) {
+            this.messageType = IMessageProvider.NONE;
+        }
     }
 
 }

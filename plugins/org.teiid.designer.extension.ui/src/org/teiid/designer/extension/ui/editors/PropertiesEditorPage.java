@@ -746,14 +746,14 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     private void validateMetaclasses() {
-        this.metaclassError.setMessage(ModelExtensionDefinitionValidator.validateMetaclassNames(getMed().getExtendedMetaclasses(),
-                                                                                                true));
+        this.metaclassError.setStatus(ModelExtensionDefinitionValidator.validateMetaclassNames(getMed().getExtendedMetaclasses(),
+                                                                                               true));
         updateMessage(this.metaclassError);
         validatePropertyDefinitions(); // need to do this to catch when a new metaclass is added
     }
 
     private void validatePropertyDefinitions() {
-        this.propertyError.setMessage(ModelExtensionDefinitionValidator.validatePropertyDefinitions(getMed().getPropertyDefinitions()));
+        this.propertyError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefinitions(getMed().getPropertyDefinitions()));
         updateMessage(this.propertyError);
     }
 
