@@ -8,8 +8,10 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
+
 import java.io.File;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,6 +23,7 @@ import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -111,7 +114,8 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
 
         if (propDefn == null) {
-            throw new Exception(Util.getString(PREFIX + "propertyDefinitionNotFound", propId)); //$NON-NLS-1$
+            Util.log(Util.getString(PREFIX + "propertyDefinitionNotFound", propId)); //$NON-NLS-1$
+            return null;
         }
 
         String defaultValue = propDefn.getDefaultValue();
@@ -172,11 +176,10 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
                                     String propId ) throws Exception {
         String value = getOverriddenValue(modelObject, propId);
 
-        // if no overridden value then return default value
+        // if no overridden value then return default value if property definition exists
         if (CoreStringUtil.isEmpty(value)) {
             PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
-            assert propDefn != null : "propDefn '" + propId + "' should not be null because getOverriddenValue checks this"; //$NON-NLS-1$ //$NON-NLS-2$
-            return propDefn.getDefaultValue();
+            return ((propDefn == null)  ? null : propDefn.getDefaultValue());
         }
 
         return value;
@@ -301,7 +304,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
 
         // make sure right namespace
-        if (ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
+        if (!ModelExtensionPropertyDefinition.Utils.isExtensionPropertyId(propId, getNamespacePrefix())) {
             throw new Exception(Util.getString(PREFIX + "wrongNamespacePrefix", propId, getNamespacePrefix())); //$NON-NLS-1$
         }
 
@@ -331,7 +334,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
 
         if (propDefn == null) {
-            throw new Exception(Util.getString(PREFIX + "propertyDefinitiontNotFound", propId)); //$NON-NLS-1$
+            throw new Exception(Util.getString(PREFIX + "propertyDefinitionNotFound", propId)); //$NON-NLS-1$
         }
 
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);

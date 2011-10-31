@@ -19,6 +19,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.core.ModelerCore;
 
 /**
  * 
@@ -28,7 +29,7 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
     public static final String NAMESPACE_PREFIX = "ext-custom"; //$NON-NLS-1$
     public static final String REST_NAMESPACE_PREFIX = "rest"; //$NON-NLS-1$
     public static final String SOURCE_FUNCTION_NAMESPACE_PREFIX = "sourcefunction"; //$NON-NLS-1$
-    
+
     private static final String NEW_PUSH_DOWN = ModelExtensionPropertyDefinition.Utils.getPropertyId(SOURCE_FUNCTION_NAMESPACE_PREFIX,
                                                                                                      "deterministic"); //$NON-NLS-1$
     private static final String NEW_REST_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(REST_NAMESPACE_PREFIX,
@@ -66,26 +67,6 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         getRestAssistant().saveModelExtensionDefinition(modelObject);
         getRestAssistant().setPropertyValue(modelObject, NEW_REST_METHOD, restMethodValue);
         getRestAssistant().setPropertyValue(modelObject, NEW_URI, uriValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.extension.definition.ModelExtensionAssistant#getPropertyDefinition(java.lang.Object,
-     *      java.lang.String)
-     */
-    @Override
-    public ModelExtensionPropertyDefinition getPropertyDefinition( Object modelObject,
-                                                                   String propId ) {
-        if (OLD_PUSH_DOWN.equals(propId)) {
-            propId = NEW_PUSH_DOWN;
-        } else if (OLD_REST_METHOD.equals(propId)) {
-            propId = NEW_REST_METHOD;
-        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
-            propId = NEW_URI;
-        }
-
-        return super.getPropertyDefinition(modelObject, propId);
     }
 
     /**
@@ -165,6 +146,18 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         removeProperty(modelObject, OLD_URI_2);
     }
 
+    private void convert( Object modelObject,
+                          String oldPropId,
+                          String newPropId,
+                          ModelExtensionAssistant assistant ) throws Exception {
+        String value = getPropertyValue(modelObject, oldPropId);
+
+        if (!CoreStringUtil.isEmpty(value)) {
+            removeProperty(modelObject, oldPropId);
+            assistant.setPropertyValue(modelObject, newPropId, value);
+        }
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -178,28 +171,44 @@ public class DeprecatedModelExtensionAssistant extends ModelObjectExtensionAssis
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
         CoreArgCheck.isNotEmpty(propId, "id is empty"); //$NON-NLS-1$
 
-        // Change to old pushdown property will remove it - and re-save as new property
+        // convert all model objects that have the same old namespace property
+        Collection<EObject> eObjects = getModelResource(modelObject).getEObjects();
+        ModelExtensionAssistant assistant;
+
+        // first save the corresponding MED
         if (OLD_PUSH_DOWN.equals(propId)) {
-            // remove old
-            removeProperty(modelObject, OLD_PUSH_DOWN);
+            assistant = getSourceFunctionAssistant();
+            assistant.saveModelExtensionDefinition(modelObject);
 
-            // save new
-            getSourceFunctionAssistant().saveModelExtensionDefinition(modelObject);
-            getSourceFunctionAssistant().setPropertyValue(modelObject, NEW_PUSH_DOWN, newValue);
-        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId) || OLD_REST_METHOD.equals(propId)) {
-            // convert all properties
-            convertOldRestProperties(modelObject);
+            for (EObject eObject : eObjects) {
+                convert(eObject, OLD_PUSH_DOWN, NEW_PUSH_DOWN, assistant);
 
-            // set new value
-            if (OLD_REST_METHOD.equals(propId)) {
-                propId = NEW_REST_METHOD;
-            } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId)) {
-                propId = NEW_URI;
-            } else {
-                assert false : "an unexpected property ID was found: " + propId; //$NON-NLS-1$
+                // save new value
+                if (modelObject.equals(eObject)) {
+                    assistant.setPropertyValue(modelObject, NEW_PUSH_DOWN, newValue);
+                }
             }
+        } else if (OLD_URI_1.equals(propId) || OLD_URI_2.equals(propId) || OLD_REST_METHOD.equals(propId)) {
+            assistant = getRestAssistant();
+            assistant.saveModelExtensionDefinition(modelObject);
 
-            getRestAssistant().setPropertyValue(modelObject, propId, newValue);
+            for (EObject eObject : eObjects) {
+                convert(eObject, OLD_REST_METHOD, NEW_REST_METHOD, assistant);
+                convert(eObject, OLD_URI_1, NEW_URI, assistant);
+                convert(eObject, OLD_URI_2, NEW_URI, assistant);
+
+                // save new value
+                if (modelObject.equals(eObject)) {
+                    if (OLD_REST_METHOD.equals(propId)) {
+                        assistant.setPropertyValue(modelObject, NEW_REST_METHOD, newValue);
+                    } else {
+                        assistant.setPropertyValue(modelObject, NEW_URI, newValue);
+                    }
+                }
+            }
+        } else {
+            // should not happen
+            ModelerCore.Util.log(ModelerCore.Util.getString("DeprecatedModelExtensionAssistant.propertyNotFound", propId)); //$NON-NLS-1$
         }
     }
 }
