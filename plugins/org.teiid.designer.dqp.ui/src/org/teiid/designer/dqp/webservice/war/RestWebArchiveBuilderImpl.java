@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -409,11 +412,12 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * 
      * @param webInfClassesDirectory
      * @param properties
+     * @throws Exception
      * @since 7.4
      */
     protected void createResourceJavaClasses( File webInfLibDirectory,
                                               File webInfClassesDirectory,
-                                              Properties properties ) throws IOException {
+                                              Properties properties ) throws Exception {
 
         String pathToResource = "/org" + File.separator + "teiid" + File.separator + "rest" + File.separator + "services"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         String pathToPlugin = "/org" + File.separator + "teiid" + File.separator + "rest"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
@@ -483,8 +487,17 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             sourceFileList.add(teiidRestApplication);
 
             Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(sourceFileList);
-            CompilationTask task = compilerTool.getTask(null, fileManager, null, null, null, compilationUnits);
+            /*Create a diagnostic controller, which holds the compilation problems*/
+            DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+            CompilationTask task = compilerTool.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
             task.call();
+            List<Diagnostic<? extends JavaFileObject>> diagnosticList = diagnostics.getDiagnostics();
+            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticList) {
+                diagnostic.getKind();
+                if (diagnostic.getKind().equals(Kind.ERROR)) {
+                    throw new Exception(diagnostic.getMessage(null));
+                }
+            }
             fileManager.close();
 
             Boolean includeJars = (Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS);
@@ -508,10 +521,10 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             RestProcedure restProcedure = procedureIter.next();
 
             if (restProcedure.getProducesAnnotation() != null
-                && restProcedure.getProducesAnnotation().contains("MediaType.APPLICATION_XML")) { //$NON-NLS-1$
-                createXMLMethod(sb, restProcedure);
-            } else {
+                && restProcedure.getProducesAnnotation().contains("MediaType.APPLICATION_JSON")) { //$NON-NLS-1$
                 createJSONMethod(sb, restProcedure);
+            } else {
+                createXMLMethod(sb, restProcedure);
             }
 
         }

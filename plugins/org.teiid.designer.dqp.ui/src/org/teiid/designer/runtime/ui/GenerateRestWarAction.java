@@ -9,17 +9,14 @@ package org.teiid.designer.runtime.ui;
 
 import static com.metamatrix.modeler.dqp.ui.DqpUiConstants.UTIL;
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PREFIX;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -40,7 +37,6 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-
 import com.metamatrix.core.modeler.util.FileUtils;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -141,8 +137,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    MessageDialog.openInformation(window.getShell(),
-                                                  UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
+                    MessageDialog.openInformation(window.getShell(), UTIL.getString(I18N_PREFIX + "creationCompleteTitle"),//$NON-NLS-1$ 
                                                   successMessage);
                 }
             });
@@ -172,8 +167,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                     Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
                     Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
                     for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                        final ModelResource modelResource = ModelerCore.getModelWorkspace()
-                                                                       .findModelResource(vdbModelEntry.getName());
+                        final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
                         if (ModelIdentifier.isVirtualModelType(modelResource)) {
                             restfulProcedureArray = new ArrayList<RestProcedure>();
                             String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
@@ -224,16 +218,14 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         try {
             // try new way first
-            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
-                                                               .getRegistry()
-                                                               .getModelExtensionAssistant(NAMESPACE_PREFIX);
+            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
             restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
 
-            if (CoreStringUtil.isEmpty(restMethod)) {
+            if (CoreStringUtil.isEmpty(restMethod.trim())) {
                 // try old way
                 restMethod = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
                                                                                ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                                       + "REST-METHOD"); //$NON-NLS-1$
+                                                                               + "REST-METHOD"); //$NON-NLS-1$
             }
         } catch (Exception e) {
             UTIL.log(e);
@@ -247,15 +239,13 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         try {
             // try new way first
-            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance()
-                                                               .getRegistry()
-                                                               .getModelExtensionAssistant(NAMESPACE_PREFIX);
+            ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(NAMESPACE_PREFIX);
             uri = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
 
             if (CoreStringUtil.isEmpty(uri)) {
                 uri = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
                                                                         ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                                + "URI"); //$NON-NLS-1$
+                                                                        + "URI"); //$NON-NLS-1$
             }
         } catch (Exception e) {
             UTIL.log(e);
@@ -321,7 +311,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 // on the URI, we can expect more parameters via an input stream
                 // so the consumes annotation will need to be set. We will set for XML and JSON methods.
 
+                boolean hasInputStream = false;
                 if (uriParameterCount < parameterCount) {
+                    hasInputStream = true;
                     restProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_XML )"); //$NON-NLS-1$
                     jsonRestProcedure.setConsumesAnnotation("@Consumes( MediaType.APPLICATION_JSON )"); //$NON-NLS-1$
                 }
@@ -332,7 +324,11 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                 }
 
                 restfulProcedureArray.add(restProcedure);
-                restfulProcedureArray.add(jsonRestProcedure);
+
+                // Only add JSON operation if there is a return or InputStream. Otherwise, one method will do.
+                if (hasReturn || hasInputStream) {
+                    restfulProcedureArray.add(jsonRestProcedure);
+                }
             }
         }
     }
