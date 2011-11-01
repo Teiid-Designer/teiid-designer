@@ -86,7 +86,65 @@
          </enabledWhen>
       </page>
    </extension>
-      
+
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionProfileWizard"
+         description="Create a URL connection profile to remote XML file."
+         icon="icons/full/obj16/web-service-cp.png"
+         id="org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionProfileWizard"
+         name="XML File URL Source"
+         profile="org.teiid.designer.datatools.profiles.xml.fileurl"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.xml.XmlUrlProfilePropertyPage"
+            icon="icons/full/obj16/web-service-cp.png"
+            id="org.teiid.designer.datatools.profiles.xml.urlProfileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.xml.fileurl"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.xml.XmlLocalFileConnectionProfileWizard"
+         description="Create a connection profile to XML file on local file system."
+         icon="icons/full/obj16/web-service-cp.png"
+         id="org.teiid.designer.datatools.profiles.xml.XmlLocalFileConnectionProfileWizard"
+         name="XML Local File Source"
+         profile="org.teiid.designer.datatools.profiles.xml.localfile"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.xml.XmlLocalFileProfilePropertyPage"
+            icon="icons/full/obj16/web-service-cp.png"
+            id="org.teiid.designer.datatools.profiles.xml.localFileProfileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.xml.localfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
    <newWizard

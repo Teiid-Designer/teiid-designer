@@ -141,19 +141,27 @@ public class JDBCConnectionInfoProvider extends ConnectionInfoHelper implements 
         Properties connectionProps = new Properties();
         
         Properties baseProps = connectionProfile.getBaseProperties();
-        if (baseProps.get(DRIVER_CLASS_KEY) != null) {
+        if (baseProps.get(DRIVER_CLASS) != null) {
+            connectionProps.put(DRIVER_CLASS, baseProps.get(DRIVER_CLASS));
+        } else if( baseProps.get(DRIVER_CLASS_KEY) != null) {
             connectionProps.put(DRIVER_CLASS, baseProps.get(DRIVER_CLASS_KEY));
         }
-
-        if (baseProps.get(URL_KEY) != null) {
+        
+        if (baseProps.get(URL) != null) {
+            connectionProps.put(URL, baseProps.get(URL));
+        } else if (baseProps.get(URL_KEY) != null) {
             connectionProps.put(URL, baseProps.get(URL_KEY));
         }
 
-        if (baseProps.get(USERNAME_KEY) != null) {
+        if (baseProps.get(USERNAME) != null) {
+            connectionProps.put(USERNAME, baseProps.get(USERNAME));
+        } else if (baseProps.get(USERNAME_KEY) != null) {
             connectionProps.put(USERNAME, baseProps.get(USERNAME_KEY));
         }
 
-        if (baseProps.get(PASSWORD_KEY) != null) {
+        if (baseProps.get(PASSWORD) != null) {
+            connectionProps.put(PASSWORD, baseProps.get(PASSWORD));
+        } else if (baseProps.get(PASSWORD_KEY) != null) {
             connectionProps.put(PASSWORD, baseProps.get(PASSWORD_KEY));
         }
 

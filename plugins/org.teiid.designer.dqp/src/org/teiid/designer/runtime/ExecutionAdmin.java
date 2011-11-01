@@ -214,11 +214,12 @@ public class ExecutionAdmin {
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
         ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
         IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
-        Properties props = connInfoProvider.getConnectionProperties(modelResource);
+        IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
+        		
+        Properties props = connInfoProvider.getTeiidRelatedProperties(modelConnectionProfile);
         String dataSourceType = connInfoProvider.getDataSourceType();
 
         if (!props.isEmpty()) {
-            IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
             // The data source property key represents what's needed as a property for the Teiid Data Source
             // This is provided by the getDataSourcePasswordPropertyKey() method.
             String dsPasswordKey = connInfoProvider.getDataSourcePasswordPropertyKey();

@@ -35,12 +35,13 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 			IConnectionProfile connectionProfile) {
         Properties connectionProps = new Properties();
         
-        Properties props = connectionProfile.getBaseProperties();
+        Properties baseProps = connectionProfile.getBaseProperties();
         
-        String result = props.getProperty(IFlatFileProfileConstants.HOME_KEY);
-        if( result != null ) {
-        	connectionProps.setProperty(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, result);
-        }
+        if( baseProps.getProperty(IFlatFileProfileConstants.HOME_URL) != null ) {
+        	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_URL));
+        } else if( baseProps.getProperty(IFlatFileProfileConstants.HOME_KEY) != null ) {
+        	connectionProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, baseProps.get(IFlatFileProfileConstants.HOME_KEY));
+        } 
 
         return connectionProps;
 	}

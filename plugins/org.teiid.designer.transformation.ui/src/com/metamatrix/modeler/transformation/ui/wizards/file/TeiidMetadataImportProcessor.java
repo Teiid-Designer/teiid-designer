@@ -324,7 +324,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
         return Status.OK_STATUS;
     }
  
-    private ModelResource addProcedureToRelationalSourceModel() throws ModelerCoreException {
+    protected ModelResource addProcedureToRelationalSourceModel() throws ModelerCoreException {
     	if( info.getSourceModelLocation() != null && info.getSourceModelName() != null ) {
     		IPath modelPath = info.getSourceModelLocation().append(info.getSourceModelName());
     		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$

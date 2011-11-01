@@ -49,4 +49,6 @@ public interface DatatoolsUiConstants {
 		public static final String REMOVE_CONNECTION_ICON = PC.OBJ16 + "remove-connection.png"; //$NON-NLS-1$
 		public static final String VIEW_CONNECTION_ICON = PC.OBJ16 + "view-connection.png"; //$NON-NLS-1$
 	}
+	
+	public static final String DOT_XML_UPPER_CASE = ".XML";  //$NON-NLS-1$
 }

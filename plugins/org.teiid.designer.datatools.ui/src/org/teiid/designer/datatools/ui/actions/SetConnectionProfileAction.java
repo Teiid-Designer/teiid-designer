@@ -37,7 +37,7 @@ import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
 public class SetConnectionProfileAction extends SortableSelectionAction {
     private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
 
-    //UTIL.getString("BindToConnectorAction.label", SWT.DEFAULT); //$NON-NLS-1$
+    private static final String NO_PROFILE_PROVIDER_FOUND_KEY = "NoProfileProviderFound"; //$NON-NLS-1$
 
     /**
      * @since 5.0
@@ -87,11 +87,18 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
                 succeeded = true;
             }
         } catch (Exception e) {
-            MessageDialog.openError(getShell(),
-                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
-            IStatus status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
-                                        DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e); //$NON-NLS-1$
-            DatatoolsUiConstants.UTIL.log(status);
+        	String msg = e.getMessage();
+        	if( msg !=  null && msg.equalsIgnoreCase(NO_PROFILE_PROVIDER_FOUND_KEY) ) {
+        		MessageDialog.openWarning(getShell(),
+	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderTitle"), //$NON-NLS-1$
+	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderMessage")); //$NON-NLS-1$
+        	} else {
+	            MessageDialog.openError(getShell(),
+	                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
+	            IStatus status = new Status(IStatus.ERROR, DatatoolsUiConstants.PLUGIN_ID,
+	                                        DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e); //$NON-NLS-1$
+	            DatatoolsUiConstants.UTIL.log(status);
+        	}
 
             return;
         } finally {
@@ -172,7 +179,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         IConnectionInfoProvider provider = manager.getProvider(connectionProfile);
 
         if (null == provider) {
-            throw new Exception(DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.no.provider.found")); //$NON-NLS-1$
+            throw new Exception(NO_PROFILE_PROVIDER_FOUND_KEY);
         }
 
         provider.setConnectionInfo(mr, connectionProfile);

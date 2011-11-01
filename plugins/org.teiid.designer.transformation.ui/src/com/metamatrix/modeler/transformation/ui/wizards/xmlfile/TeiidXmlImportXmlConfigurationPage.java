@@ -65,12 +65,12 @@ import com.metamatrix.ui.table.CheckBoxEditingSupport;
 import com.metamatrix.ui.table.ComboBoxEditingSupport;
 import com.metamatrix.ui.tree.AbstractTreeContentProvider;
 
-public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implements
+public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage implements
 		UiConstants {
 	// ===========================================================================================================================
 	// Constants
 
-	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportXmlOptionsPage.class);
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlImportXmlConfigurationPage.class);
 
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
@@ -107,8 +107,8 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 	/**
 	 * @since 4.0
 	 */
-	public TeiidMetadataImportXmlOptionsPage(TeiidMetadataImportInfo info) {
-		super(TeiidMetadataImportXmlOptionsPage.class.getSimpleName(), TITLE);
+	public TeiidXmlImportXmlConfigurationPage(TeiidMetadataImportInfo info) {
+		super(TeiidXmlImportXmlConfigurationPage.class.getSimpleName(), TITLE);
 		this.info = info;
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(Images.IMPORT_TEIID_METADATA));
 	}
@@ -327,7 +327,7 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	leftToolbarPanel.setLayout(new GridLayout());
 	  	GridData ltpGD = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-	  	ltpGD.heightHint=190;
+	  	ltpGD.heightHint=150;
 	  	leftToolbarPanel.setLayoutData(ltpGD);
     	
     	Button addButton = new Button(leftToolbarPanel, SWT.PUSH);
@@ -785,7 +785,9 @@ public class TeiidMetadataImportXmlOptionsPage extends AbstractWizardPage implem
 	        table.setHeaderVisible(true);
 	        table.setLinesVisible(true);
 	        table.setLayout(new TableLayout());
-	        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+	    	gd.heightHint = 165;
+	    	table.setLayoutData(gd);
 
 	        this.columnsViewer = new TableViewer(table);
 	        

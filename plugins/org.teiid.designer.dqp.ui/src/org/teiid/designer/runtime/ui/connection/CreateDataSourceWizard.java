@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -38,12 +39,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.ExecutionAdmin;
 import org.teiid.designer.runtime.Server;
+
 import com.metamatrix.core.util.I18nUtil;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -499,7 +502,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
                     IConnectionInfoProvider provider = getProvider(selectedModelResource);
                     if (provider != null) {
                         currentProvider = provider;
-                        props = provider.getConnectionProperties(selectedModelResource);
+                        IConnectionProfile modelCP = provider.getConnectionProfile(selectedModelResource);
+                        props = provider.getTeiidRelatedProperties(modelCP);
                     }
                 } catch (ModelWorkspaceException e) {
                     DqpUiConstants.UTIL.log(e);

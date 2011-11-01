@@ -27,6 +27,10 @@ import com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo
  * 
  */
 public class TeiidMetadataImportInfo implements UiConstants {
+	public static final int FILE_MODE_ODA_FLAT_FILE = 0;
+	public static final int FILE_MODE_TEIID_XML_FILE = 1;
+	public static final int FILE_MODE_TEIID_XML_URL = 2;
+	
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportInfo.class);
 	
     private static String getString( final String id ) {
@@ -100,7 +104,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	private IStatus NO_FILES_STATUS;
 	
-	private boolean isFlatFile = true;
+	private int fileMode;
 	
 	/**
 	 * Basic constructor
@@ -307,7 +311,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * Analyzes this object's data values and sets the current <code>IStatus</code>
 	 */
 	public void validate() {
-		if(isFlatFile ) {
+		if( isFlatFileMode() ) {
 			if( this.fileInfoMap.isEmpty() ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
 				return;
@@ -361,11 +365,23 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	}
 	
 	public boolean isFlatFileMode() {
-		return this.isFlatFile;
+		return fileMode == FILE_MODE_ODA_FLAT_FILE;
 	}
 	
-	public void setFlatFileMode(boolean value) {
-		this.isFlatFile = value;
+	public boolean isXmlLocalFileMode() {
+		return fileMode == FILE_MODE_TEIID_XML_FILE;
+	}
+	
+	public boolean isXmlUrlFileMode() {
+		return fileMode == FILE_MODE_TEIID_XML_URL;
+	}
+	
+	public void setFileMode(int mode) {
+		this.fileMode = mode;
+	}
+	
+	public int getFileMode() {
+		return this.fileMode;
 	}
 	
     /**

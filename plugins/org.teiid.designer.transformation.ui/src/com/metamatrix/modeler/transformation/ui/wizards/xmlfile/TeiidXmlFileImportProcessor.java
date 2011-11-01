@@ -14,7 +14,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.profiles.xmlfile.XmlFileConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.xml.XmlFileConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider;
 
 import com.metamatrix.modeler.core.ModelerCoreException;
 import com.metamatrix.modeler.core.workspace.ModelResource;
@@ -23,6 +24,7 @@ import com.metamatrix.modeler.core.workspace.ModelWorkspaceItem;
 import com.metamatrix.modeler.internal.core.workspace.ModelWorkspaceManager;
 import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.transformation.ui.UiConstants;
+import com.metamatrix.modeler.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportProcessor;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
@@ -89,9 +91,53 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor im
 	protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
     	// Inject the connection profile info into the model
     	if (profile != null) {
-            IConnectionInfoProvider provider = new XmlFileConnectionInfoProvider();
-            provider.setConnectionInfo(sourceModel, profile);
+    		IConnectionInfoProvider provider = null;
+    		if( getInfo().isXmlLocalFileMode() ) {
+            provider = new XmlFileConnectionInfoProvider();
+    		} else if( getInfo().isXmlUrlFileMode() ) {
+    			provider = new XmlUrlConnectionInfoProvider();
+    		}
+    		if( provider != null ) {
+    			provider.setConnectionInfo(sourceModel, profile);
+    		}
         }
 	}
     
+	/**
+	 *  Override method to create the 'invokeHttp' procedure
+	 */
+	@Override
+    protected ModelResource addProcedureToRelationalSourceModel() throws ModelerCoreException {
+		if( getInfo().isXmlLocalFileMode() ) {
+			return super.addProcedureToRelationalSourceModel();
+		}
+		
+		
+    	if( getInfo().getSourceModelLocation() != null && getInfo().getSourceModelName() != null ) {
+    		IPath modelPath = getInfo().getSourceModelLocation().append(getInfo().getSourceModelName());
+    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+    		}
+    		
+    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+            ModelEditor editor = ModelEditorManager.getModelEditorForFile( (IFile)item.getCorrespondingResource(), true);
+            if (editor != null) {
+            	ModelResource mr = editor.getModelResource();
+                boolean isDirty = editor.isDirty();
+                FlatFileRelationalModelFactory factory = new FlatFileRelationalModelFactory();
+                
+                factory.addMissingProcedure(mr, FlatFileRelationalModelFactory.INVOKE_HTTP);
+                
+                mr.save(null, true);
+                
+                if (!isDirty && editor.isDirty()) {
+                    editor.doSave(new NullProgressMonitor());
+                }
+                
+                return mr;
+            }
+    	}
+    	
+    	return null;
+    }
 }

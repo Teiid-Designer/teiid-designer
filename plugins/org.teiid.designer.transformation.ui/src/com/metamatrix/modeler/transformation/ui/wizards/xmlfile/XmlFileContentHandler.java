@@ -26,17 +26,38 @@ public class XmlFileContentHandler extends DefaultHandler implements ContentHand
     }
 
 	@Override
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	public void startElement(String uri, String lName, String qName, Attributes attributes) throws SAXException {
 		if( rootElement ==  null ) {
 			rootElement = new XmlElement(qName);
+	        if (attributes != null)
+	        {
+	            int attributeLength = attributes.getLength();
+	            for (int i = 0; i < attributeLength; i++)
+	            {
+	                String value = attributes.getValue(i);
+	                String localName = attributes.getLocalName(i);
+
+	                rootElement.addChildAttribute(new XmlAttribute(localName, value));
+	            }
+	        }
 			parentElement = rootElement;
 		} else {
 			XmlElement newElement = new XmlElement(qName);
+	        if (attributes != null)
+	        {
+	            int attributeLength = attributes.getLength();
+	            for (int i = 0; i < attributeLength; i++)
+	            {
+	                String value = attributes.getValue(i);
+	                String localName = attributes.getLocalName(i);
+
+	                newElement.addChildAttribute(new XmlAttribute(localName, value));
+	            }
+	        }
 			parentElement.addChildElement(newElement);
 			parentElement = newElement;
 		}
-		super.startElement(uri, localName, qName, attributes);
+		super.startElement(uri, lName, qName, attributes);
 	}
 
 	@Override

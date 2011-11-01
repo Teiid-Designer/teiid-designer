@@ -15,7 +15,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.datatools.connectivity.ui.dse,
  org.eclipse.emf.edit.ui,
- org.eclipse.datatools.help
+ org.eclipse.datatools.help,
+ org.eclipse.datatools.enablement.oda.xml,
+ org.eclipse.datatools.connectivity.oda
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools.ui,

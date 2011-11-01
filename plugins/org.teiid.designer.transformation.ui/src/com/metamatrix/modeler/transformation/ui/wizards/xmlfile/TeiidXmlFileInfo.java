@@ -44,6 +44,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
     public static final String FOR_ORDINALITY = "FOR ORDINALITY"; //$NON-NLS-1$
     public static final String DEFAULT_XQUERY = "/"; //$NON-NLS-1$
+    public static final String GET = "GET"; //$NON-NLS-1$
+    public static final String NULL = "null"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -59,7 +61,6 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
      */
     private int numberOfLinesInFile = 0;
     
-	
     /**
      * An initial xquery root path expression
      * 
@@ -89,6 +90,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	private XmlElement rootNode;
 	
 	private IStatus parsingStatus;
+	
+	private String xmlFileUrl;
+	
+	private boolean isUrl = false;
 
 	/**
 	 * 
@@ -156,6 +161,23 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		validate();
 	}
 	
+	
+	public void setIsUrl(boolean value) {
+		this.isUrl = value;
+	}
+	
+	public boolean isUrl() {
+		return this.isUrl;
+	}
+	
+	public void setXmlFileUrl(String theUrlValue) {
+		this.xmlFileUrl = theUrlValue;
+	}
+	
+	public String getXmlFileUrl() {
+		return this.xmlFileUrl;
+	}
+	
 	/**
 	 * 
 	 * @return rootPath the root path xquery expression
@@ -169,11 +191,6 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	 * @param rootPath
 	 */
 	public void setRootPath(String path) {
-//		String tmpPath = path;
-//		if( path.endsWith("/")) {
-//			tmpPath = tmpPath.substring(0, this.rootPath.length());
-//		}
-
 		this.rootPath = path;
 		
 		// Need to walk through the ColumnInfo objects and have them re-set their paths
@@ -483,6 +500,13 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	## journal    string   PATH   'Article/Journal/Title'
     	##
     	##
+    	##
+    	##  IF URL XML file, use invokeHTTP() method
+    	##
+    	## EXAMPLE:
+    	##
+    	## EXEC PlantWSProcedures.invokeHttp('GET', null, 'http://www.w3schools.com/xml/plant_catalog.xml')) AS f,
+    	
     	*/
     	
     	String alias = "A"; //$NON-NLS-1$
@@ -501,6 +525,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	String string_0 = sb.toString();
     	
     	String string_2 = S_QUOTE + getDataFile().getName() + S_QUOTE;
+    	if( isUrl() ) {
+    		string_2 = S_QUOTE + GET + S_QUOTE + COMMA + SPACE + NULL + COMMA + SPACE + S_QUOTE + getXmlFileUrl() + S_QUOTE;
+    	}
     	
     	sb = new StringBuffer();
     	String xQueryExp = DEFAULT_XQUERY;
@@ -539,22 +566,34 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 
     	String string_4 = sb.toString();
 
-    	// SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-    	String finalSQLString = UiPlugin.Util.getString(
-    			"TeiidXmlFileInfo.xmlTableSqlTemplate", //$NON-NLS-1$
-    			string_0,
-    			relationalModelName,
-    			string_2,
-    			string_3,
-    			string_4,
-    			alias);
+    	String finalSQLString = null;
     	
-//    	finalSQLString = "SELECT \n\ttitle.pmid AS pmid, title.journal AS journal, title.title AS title\n" + 
-//    			"FROM \n\t(EXEC getMeds.getTextFiles('medsamp2011.xml')) AS f," +  
-//    			"XMLTABLE('$d/MedlineCitationSet/MedlineCitation' PASSING " +
-//    			"XMLPARSE(DOCUMENT f.file) AS d " + 
-//    			"COLUMNS pmid biginteger PATH 'PMID', journal string PATH 'Article/Journal/Title', title string PATH 'Article/ArticleTitle') AS title";
-    	
+    	if( isUrl() ) {
+	    	// SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
+	    	finalSQLString = UiPlugin.Util.getString(
+	    			"TeiidXmlFileInfo.xmlInvokeHttpTableSqlTemplate", //$NON-NLS-1$
+	    			string_0,
+	    			relationalModelName,
+	    			string_2,
+	    			string_3,
+	    			string_4,
+	    			alias);
+	    	
+	//    	finalSQLString = "SELECT \n\ttitle.pmid AS pmid, title.journal AS journal, title.title AS title\n" + 
+	//    			"FROM \n\t(EXEC getMeds.getTextFiles('medsamp2011.xml')) AS f," +  
+	//    			"XMLTABLE('$d/MedlineCitationSet/MedlineCitation' PASSING " +
+	//    			"XMLPARSE(DOCUMENT f.file) AS d " + 
+	//    			"COLUMNS pmid biginteger PATH 'PMID', journal string PATH 'Article/Journal/Title', title string PATH 'Article/ArticleTitle') AS title";
+    	} else {
+    		finalSQLString = UiPlugin.Util.getString(
+	    			"TeiidXmlFileInfo.xmlGetTextFilesTableSqlTemplate", //$NON-NLS-1$
+	    			string_0,
+	    			relationalModelName,
+	    			string_2,
+	    			string_3,
+	    			string_4,
+	    			alias);
+    	}
     	return finalSQLString;
     }
     

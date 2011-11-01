@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.metamatrix.metamodels.core.ModelType;
 import com.metamatrix.metamodels.relational.Column;
+import com.metamatrix.metamodels.relational.DirectionKind;
+import com.metamatrix.metamodels.relational.NullableType;
 import com.metamatrix.metamodels.relational.Procedure;
 import com.metamatrix.metamodels.relational.ProcedureParameter;
 import com.metamatrix.metamodels.relational.ProcedureResult;
@@ -41,6 +43,10 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
     public static final String SAVE_FILE = "saveFile"; //$NON-NLS-1$
     public static final String ALL_PROCEDURES = "allProcedures"; //$NON-NLS-1$
+    
+    public static final String INVOKE = "invoke"; //$NON-NLS-1$
+    public static final String INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
+    public static final String ALL_INVOKE_PROCEDURES = "allInvokeProcedures"; //$NON-NLS-1$
     
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
     
@@ -81,28 +87,39 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public boolean addMissingProcedure(ModelResource modelResource, String specificProcedure) throws ModelerCoreException{
     	if( modelResource != null ) {
     		if( specificProcedure.equalsIgnoreCase(ALL_PROCEDURES)) {
-	    		if( !procedureExists(modelResource, GET_FILES ) ) {
+	    		if( !FlatFileRelationalModelFactory.procedureExists(modelResource, GET_FILES ) ) {
 	    			addGetFilesProcedure(modelResource);
 	    		}
-	    		if( !procedureExists(modelResource, GET_TEXT_FILES ) ) {
+	    		if( !FlatFileRelationalModelFactory.procedureExists(modelResource, GET_TEXT_FILES ) ) {
 	    			addGetTextFilesProcedure(modelResource);
 	    		}
-	    		if( !procedureExists(modelResource, SAVE_FILE ) ) {
+	    		if( !FlatFileRelationalModelFactory.procedureExists(modelResource, SAVE_FILE ) ) {
 	    			addSaveFileProcedure(modelResource);
 	    		}
-    		} else if( specificProcedure.equalsIgnoreCase(GET_FILES) && !procedureExists(modelResource, GET_FILES ) ) {
+    		} else if( specificProcedure.equalsIgnoreCase(GET_FILES) && !FlatFileRelationalModelFactory.procedureExists(modelResource, GET_FILES ) ) {
 	    		addGetFilesProcedure(modelResource);
-    		} else if( specificProcedure.equalsIgnoreCase(GET_TEXT_FILES) && !procedureExists(modelResource, GET_TEXT_FILES ) ) {
+    		} else if( specificProcedure.equalsIgnoreCase(GET_TEXT_FILES) && !FlatFileRelationalModelFactory.procedureExists(modelResource, GET_TEXT_FILES ) ) {
 	    		addGetTextFilesProcedure(modelResource);
-    		} else if( specificProcedure.equalsIgnoreCase(SAVE_FILE) && !procedureExists(modelResource, SAVE_FILE ) ) {
+    		} else if( specificProcedure.equalsIgnoreCase(SAVE_FILE) && !FlatFileRelationalModelFactory.procedureExists(modelResource, SAVE_FILE ) ) {
 	    		addSaveFileProcedure(modelResource);
-    		}
+    		} else if( specificProcedure.equalsIgnoreCase(ALL_INVOKE_PROCEDURES)) {
+	    		if( !FlatFileRelationalModelFactory.procedureExists(modelResource, INVOKE ) ) {
+	    			addInvokeProcedure(modelResource);
+	    		}
+	    		if( !FlatFileRelationalModelFactory.procedureExists(modelResource, INVOKE_HTTP ) ) {
+	    			addInvokeHttpProcedure(modelResource);
+	    		}
+    		} else if( specificProcedure.equalsIgnoreCase(INVOKE) && !FlatFileRelationalModelFactory.procedureExists(modelResource, INVOKE ) ) {
+    			addInvokeProcedure(modelResource);
+    		} else if( specificProcedure.equalsIgnoreCase(INVOKE_HTTP) && !FlatFileRelationalModelFactory.procedureExists(modelResource, INVOKE_HTTP ) ) {
+    			addInvokeHttpProcedure(modelResource);
+    		} 
     	}
     	
     	return false;
     }
     
-    private boolean procedureExists(ModelResource modelResource, String procedureName) {
+    public static boolean procedureExists(ModelResource modelResource, String procedureName) {
     	if( modelResource != null ) {
     		try {
     			for( Object obj : modelResource.getAllRootEObjects() ) {
@@ -225,4 +242,108 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     protected EList getModelResourceContents(ModelResource resource ) throws ModelWorkspaceException {
     	return resource.getEmfResource().getContents();
     }
+    
+	private void addInvokeHttpProcedure(ModelResource mr) throws ModelerCoreException {
+		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
+		EObject objectType = datatypeManager.findDatatype("object"); //$NON-NLS-1$
+		
+    	Procedure proc = factory.createProcedure();
+    	proc.setName("invokeHttp"); //$NON-NLS-1$
+    	
+    	ProcedureParameter param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("action"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( stringType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("request"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( objectType != null) {
+    		param.setType(objectType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("endpoint"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( objectType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	if( blobType != null) {
+    		param.setType(blobType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("contentType"); //$NON-NLS-1$
+    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( stringType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	addValue(mr, proc, getModelResourceContents(mr));
+	}
+	
+	private void addInvokeProcedure(ModelResource mr) throws ModelerCoreException {
+		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+		EObject xmlLiteralType = datatypeManager.findDatatype("XMLLiteral"); //$NON-NLS-1$
+		
+    	Procedure proc = factory.createProcedure();
+    	proc.setName("invoke"); //$NON-NLS-1$
+    	ProcedureParameter param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("binding"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( stringType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("action"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( stringType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("request"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( xmlLiteralType != null) {
+    		param.setType(xmlLiteralType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("endpoint"); //$NON-NLS-1$
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( stringType != null) {
+    		param.setType(stringType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( xmlLiteralType != null) {
+    		param.setType(xmlLiteralType);
+    	}
+    	
+    	addValue(mr, proc, getModelResourceContents(mr));
+	}
 }

@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -415,6 +416,18 @@ public final class WidgetUtil implements
                                    final int style) {
         CoreArgCheck.isNotNull(widget);
         return hasState(widget.getStyle(), style);
+    }
+    
+    public static Color getDarkBlueColor() {
+    	return getSystemColor(SWT.COLOR_DARK_BLUE);
+    }
+    
+    public static Color getReadOnlyBackgroundColor() {
+    	return getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
+    }
+    
+    public static Color getSystemColor(int colorId) {
+    	return Display.getCurrent().getSystemColor(colorId);
     }
 
     /**

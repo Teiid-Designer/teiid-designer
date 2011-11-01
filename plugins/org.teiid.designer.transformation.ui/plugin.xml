@@ -292,13 +292,13 @@
          point="org.eclipse.ui.importWizards">
 <!-- Teiid Metadata Import Wizard -->
       <wizard
-            name="%teiidXmlFileImportWizard.name"
+            name="%teiidXmlImportWizard.name"
             icon="icons/full/cview16/import_teiid_metadata.png"
             category="com.metamatrix.modeler.ui"
-            class="com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidMetadataXmlImportWizard"
-            id="teiidXmlFileImportWizard">
+            class="com.metamatrix.modeler.transformation.ui.wizards.xmlfile.TeiidXmlImportWizard"
+            id="teiidXmlImportWizard">
          <description>
-            %teiidXmlFileImportWizard.description
+            %teiidXmlImportWizard.description
          </description>
       </wizard>
   </extension>

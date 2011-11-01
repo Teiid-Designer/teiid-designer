@@ -10,14 +10,15 @@ package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
+import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportSourcePage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import com.metamatrix.modeler.transformation.ui.wizards.file.TeiidMetadataImportWizard;
 import com.metamatrix.ui.internal.util.UiUtil;
 
-public class TeiidMetadataXmlImportWizard extends TeiidMetadataImportWizard {
+public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 
-	public TeiidMetadataXmlImportWizard() {
+	public TeiidXmlImportWizard() {
 		super();
 	}
 	
@@ -25,16 +26,19 @@ public class TeiidMetadataXmlImportWizard extends TeiidMetadataImportWizard {
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
         super.init(workbench, inputSelection);
         
-        getFileInfo().setFlatFileMode(false);
+        getFileInfo().setFileMode(TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE);
 	}
 	
 	@Override
 	public void addPages() {
 		
-		TeiidMetadataImportSourcePage sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
+		TeiidXmlImportOptionsPage optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
+		addPage(optionsPage);
+		
+		TeiidXmlImportSourcePage sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
-        TeiidMetadataImportXmlOptionsPage sqlPage = new TeiidMetadataImportXmlOptionsPage(getFileInfo());
+        TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
         addPage(sqlPage);
         
         TeiidMetadataImportViewModelPage viewModelPage = new TeiidMetadataImportViewModelPage(getFileInfo());
@@ -53,5 +57,9 @@ public class TeiidMetadataXmlImportWizard extends TeiidMetadataImportWizard {
 		}, false);
 		
 		return true;
+	}
+	
+	public void setFileOption(int option) {
+		getFileInfo().setFileMode(option);
 	}
 }

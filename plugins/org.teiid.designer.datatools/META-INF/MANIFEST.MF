@@ -21,6 +21,6 @@ Export-Package: org.teiid.designer.datatools,
  org.teiid.designer.datatools.profiles.ldap,
  org.teiid.designer.datatools.profiles.modeshape,
  org.teiid.designer.datatools.profiles.ws,
- org.teiid.designer.datatools.profiles.xmlfile
+ org.teiid.designer.datatools.profiles.xml
 Bundle-ClassPath: lib/jackson-all-1.6.1.jar,
  .

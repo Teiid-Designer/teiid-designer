@@ -44,6 +44,28 @@
             name="Web Service"/>
    </extension>
    
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.xml.fileurl"
+            name="XML File URL Source"/>
+   </extension>
+   
+      <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="Teiid Importer Connections"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.xml.localfile"
+            name="XML Local File Source"/>
+   </extension>
+
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
 		<category parentCategory="org.eclipse.datatools.connectivity.db.driverCategory"
 			id="org.teiid.designer.datatools.connectivity.driver.modeShapeCategory"
@@ -128,7 +150,16 @@
        name="%xmlFileConnectionInfoProvider"
        point="org.teiid.designer.datatools.ConnectionInfoProvider">
        <ConnectionInfoProvider
-            profile="org.eclipse.datatools.enablement.oda.xml"
-            class="org.teiid.designer.datatools.profiles.xmlfile.XmlFileConnectionInfoProvider"/>
+            profile="org.teiid.designer.datatools.profiles.xml.localfile"
+            class="org.teiid.designer.datatools.profiles.xml.XmlFileConnectionInfoProvider"/>
+   </extension>
+
+   <extension
+       id="org.teiid.designer.datatools.profiles.xmlurl.ConnectionInfoProvider"
+       name="%xmlUrlConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.xml.fileurl"
+            class="org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider"/>
    </extension>
 </plugin>
