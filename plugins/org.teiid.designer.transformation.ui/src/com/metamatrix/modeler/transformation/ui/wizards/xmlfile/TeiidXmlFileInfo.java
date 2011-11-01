@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -37,6 +39,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 	public static final char DOT = '.';
     public static final char COMMA = ',';
     public static final char SPACE = ' ';
+    public static final char L_PAREN = '(';
+    public static final char R_PAREN = ')';
     public static final char S_QUOTE = '\'';
     public static final String AS = "AS"; //$NON-NLS-1$
     public static final String COLUMNS = "COLUMNS"; //$NON-NLS-1$
@@ -46,6 +50,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     public static final String DEFAULT_XQUERY = "/"; //$NON-NLS-1$
     public static final String GET = "GET"; //$NON-NLS-1$
     public static final String NULL = "null"; //$NON-NLS-1$
+    public static final String XMLNAMESPACES = "XMLNAMESPACES";  //$NON-NLS-1$
+    private static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -88,6 +94,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
  	
 	
 	private XmlElement rootNode;
+	
+	private Map<String, String> namespaceMap;
 	
 	private IStatus parsingStatus;
 	
@@ -150,6 +158,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 		setStatus(Status.OK_STATUS);
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidColumnInfo>();
+		this.namespaceMap = new HashMap<String, String>();
 		
 		parsingStatus = parseXmlFile();
 		
@@ -504,8 +513,14 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     	##  IF URL XML file, use invokeHTTP() method
     	##
     	## EXAMPLE:
+    	
+			EXEC SampleSource.getTextFiles('sample.xml')) AS f, 
+				XMLTABLE(XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty), 
+				'/pty:students/student' PASSING XMLPARSE(DOCUMENT f.file) 
+				COLUMNS firstName string PATH '/firstName', middleName string PATH '/middleName', lastName string PATH '/lastName') AS A
     	##
-    	## EXEC PlantWSProcedures.invokeHttp('GET', null, 'http://www.w3schools.com/xml/plant_catalog.xml')) AS f,
+    	##
+    	## XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
     	
     	*/
     	
@@ -529,12 +544,19 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     		string_2 = S_QUOTE + GET + S_QUOTE + COMMA + SPACE + NULL + COMMA + SPACE + S_QUOTE + getXmlFileUrl() + S_QUOTE;
     	}
     	
+    	String namespaceStr = getNamespaceString();
     	sb = new StringBuffer();
+    	
+    	if( namespaceStr != null ) {
+    		sb.append(namespaceStr);
+    	}
+    	
     	String xQueryExp = DEFAULT_XQUERY;
     	if( getRootPath() != null && getRootPath().length() > 0 ) {
     		xQueryExp = getRootPath();
     	}
     	sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
+    	
     	String string_3 = sb.toString();
     	
     	sb = new StringBuffer();
@@ -604,6 +626,35 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
     public IStatus getParsingStatus() {
     	return this.parsingStatus;
     }
+    
+    private String getNamespaceString() {
+    	//
+    	// EXAMPLE:  XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
+    	//
+    	
+    	if( this.namespaceMap.isEmpty() ) {
+    		return null;
+    	}
+    	
+    	StringBuffer sb = new StringBuffer();
+    	
+    	sb.append(XMLNAMESPACES).append(L_PAREN);
+    	int i=0;
+    	for( String prefix : this.namespaceMap.keySet() ) {
+    		if( prefix.equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
+    			continue;
+    		}
+    		if( i > 0 ) {
+    			sb.append(COMMA).append(SPACE);
+    		}
+    		String uri = this.namespaceMap.get(prefix);
+    		sb.append(S_QUOTE).append(uri).append(S_QUOTE).append(SPACE).append(AS).append(SPACE).append(prefix);
+    		i++;
+    	}
+    	sb.append(R_PAREN).append(SPACE).append(COMMA).append(SPACE);
+    	
+    	return sb.toString();
+    }
 
     public IStatus parseXmlFile() {
 		XmlParser xmlParser = new XmlParser();
@@ -622,6 +673,10 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants {
 			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
 			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
 		}
+		
+		this.namespaceMap.clear();
+		this.namespaceMap.putAll(contentHandler.getNamespaceMap());
+		
 		rootNode = contentHandler.getRootElement();
 		if( rootNode == null ) {
 			String message = getString("noRootNodeParsingError"); //$NON-NLS-1$

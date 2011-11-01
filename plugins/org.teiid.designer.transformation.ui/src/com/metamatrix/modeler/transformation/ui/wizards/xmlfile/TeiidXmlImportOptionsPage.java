@@ -61,7 +61,7 @@ public class TeiidXmlImportOptionsPage extends AbstractWizardPage implements
 
         Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
         GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 70;
+        gd.heightHint = 120;
         gd.widthHint = 300;
         descriptionText.setLayoutData(gd);
         descriptionText.setText(getString("descriptionMessage")); //$NON-NLS-1$

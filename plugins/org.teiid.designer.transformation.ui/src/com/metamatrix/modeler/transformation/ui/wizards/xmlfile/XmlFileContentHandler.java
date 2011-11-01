@@ -7,6 +7,9 @@
 */
 package com.metamatrix.modeler.transformation.ui.wizards.xmlfile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -19,10 +22,14 @@ public class XmlFileContentHandler extends DefaultHandler implements ContentHand
     private XmlElement rootElement;
 
     private XmlElement parentElement;
+    
+    private Map<String, String> namespaceMap;
 
     public XmlFileContentHandler()
     {
         super();
+        
+        this.namespaceMap = new HashMap<String, String>();
     }
 
 	@Override
@@ -67,10 +74,29 @@ public class XmlFileContentHandler extends DefaultHandler implements ContentHand
 		
 		super.endElement(uri, localName, qName);
 	}
+	
+	
     
-    public XmlElement getRootElement()
+    @Override
+	public void startPrefixMapping(String prefix, String uri)
+			throws SAXException {
+		if( ! this.namespaceMap.containsKey(prefix) ) {
+			this.namespaceMap.put(prefix, uri);
+		}
+	}
+
+	@Override
+	public void endPrefixMapping(String prefix) throws SAXException {
+		// DO NOTHING
+	}
+
+	public XmlElement getRootElement()
     {
         return rootElement;
     }
+	
+	public Map<String, String> getNamespaceMap() {
+		return this.namespaceMap;
+	}
     
 }
