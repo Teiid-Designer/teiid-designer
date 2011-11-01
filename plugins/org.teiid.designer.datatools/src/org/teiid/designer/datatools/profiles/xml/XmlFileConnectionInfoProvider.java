@@ -16,7 +16,6 @@ import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.DataSourceConnectionConstants;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
-import org.teiid.designer.datatools.profiles.flatfile.IFlatFileProfileConstants;
 
 import com.metamatrix.modeler.core.workspace.ModelResource;
 import com.metamatrix.modeler.core.workspace.ModelWorkspaceException;

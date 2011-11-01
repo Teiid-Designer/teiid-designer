@@ -115,6 +115,18 @@ public class XmlUrlProfileDetailsWizardPage  extends ConnectionProfileDetailsPag
         gd = new GridData(GridData.FILL_HORIZONTAL);
         urlText.setLayoutData(gd);
         
+		// Add widgets to page
+		Group descriptionGroup = WidgetFactory.createGroup(scrolled, UTIL.getString("Common.Description"), GridData.FILL_HORIZONTAL, 3); //$NON-NLS-1$
+
+        Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
+        gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        gd.heightHint = 100;
+        gd.widthHint = 300;
+        descriptionText.setLayoutData(gd);
+        descriptionText.setText(UTIL.getString("XmlUrlProfileDetailsWizardPage.descriptionMessage")); //$NON-NLS-1$
+        descriptionText.setBackground(scrolled.getBackground());
+        descriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
         setAutoConnectOnFinishDefault(false);
