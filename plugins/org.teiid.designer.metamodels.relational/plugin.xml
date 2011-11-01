@@ -195,7 +195,8 @@
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
-            metamodelUri="http://www.metamatrix.com/metamodels/Relational">
+            metamodelUri="http://www.metamatrix.com/metamodels/Relational"
+            metaclassProviderClass="com.metamatrix.metamodels.relational.extension.RelationalExtendableClassnameProvider">
       </definition>
    </extension>
    

@@ -90,7 +90,8 @@
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
-            metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction">
+            metamodelUri="http://www.metamatrix.com/metamodels/MetaMatrixFunction"
+            metaclassProviderClass="com.metamatrix.metamodels.function.extension.SourceFunctionExtendableClassnameProvider">
       </definition>
    </extension>
    

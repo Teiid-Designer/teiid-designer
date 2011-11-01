@@ -10,9 +10,8 @@ package org.teiid.designer.extension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -26,10 +25,10 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.teiid.designer.extension.definition.ExtendableMetaclassNameProvider;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-
 import com.metamatrix.core.PluginUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.LoggingUtil;
@@ -53,6 +52,7 @@ public class ExtensionPlugin extends Plugin {
     }
 
     private ModelExtensionAssistantAggregator assistantAggregator;
+    private Map<String, ExtendableMetaclassNameProvider> metaclassNameProvidersMap;
 
     private ModelExtensionRegistry registry;
 
@@ -64,6 +64,10 @@ public class ExtensionPlugin extends Plugin {
 
     public ModelExtensionRegistry getRegistry() {
         return this.registry;
+    }
+
+    public ExtendableMetaclassNameProvider getMetaclassNameProvider( String metaclassUri ) {
+        return this.metaclassNameProvidersMap.get(metaclassUri);
     }
 
     /**
@@ -119,31 +123,56 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /**
-     * Loads the extension point contributors which indicate the valid extensible metamodel URIs.
-     * 
-     * @return the set of valid extensible URIs (never <code>null</code>)
+     * Loads the extension point contributors which indicate the valid extensible metamodel URIs, plus the extendable classname
+     * provider which correspond to each.
      */
-    private Set<String> loadExtensibleMetamodelUris() {
+    private void loadExtensibleMetamodelUriClassnameMap() {
         final String EXT_PT = PLUGIN_ID + ".extensibleMetamodelProvider"; //$NON-NLS-1$
         final String METAMODEL_URI_ELEMENT = "definition"; //$NON-NLS-1$
         final String METAMODEL_URI_ATTR = "metamodelUri"; //$NON-NLS-1$
+        final String METACLASS_PROVIDER_ATTR = "metaclassProviderClass"; //$NON-NLS-1$
 
-        Set<String> metamodelUris = new HashSet<String>();
+        this.metaclassNameProvidersMap = new HashMap();
         IConfigurationElement[] configElements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_PT);
 
         for (IConfigurationElement configElement : configElements) {
             String sElementName = configElement.getName();
+            final String pluginId = configElement.getNamespaceIdentifier();
 
             if (METAMODEL_URI_ELEMENT.equals(sElementName)) {
                 String metamodelUri = configElement.getAttribute(METAMODEL_URI_ATTR);
 
                 if ((metamodelUri != null) && (metamodelUri.trim().length() != 0)) {
-                    metamodelUris.add(metamodelUri);
+                    // Init the map entry with the metamodelUri
+                    this.metaclassNameProvidersMap.put(metamodelUri, null);
+
+                    // must have an extendable metaclass name provider
+                    Object provider = null;
+
+                    try {
+                        provider = configElement.createExecutableExtension(METACLASS_PROVIDER_ATTR);
+                    } catch (Exception e) {
+                        // attribute CLASS_NAME could be missing or a no-arg constructor in was not found
+                        Util.log(IStatus.ERROR,
+                                 NLS.bind(Messages.problemConstructingMetaclassNameProviderClass,
+                                          ModelExtensionAssistant.class.getSimpleName(),
+                                          pluginId));
+                        continue;
+                    }
+
+                    final Object metaClassnameProvider = provider;
+
+                    if ((metaClassnameProvider != null) && !(metaClassnameProvider instanceof ExtendableMetaclassNameProvider)) {
+                        Util.log(IStatus.ERROR, NLS.bind(Messages.incorrectMetaclassNameProviderClass,
+                                                         metaClassnameProvider.getClass().getName(),
+                                                         pluginId));
+                        continue;
+                    }
+                    // Get the MetamodelDescriptor for the name provider
+                    this.metaclassNameProvidersMap.put(metamodelUri, (ExtendableMetaclassNameProvider)metaClassnameProvider);
                 }
             }
         }
-
-        return metamodelUris;
     }
 
     /*
@@ -257,7 +286,8 @@ public class ExtensionPlugin extends Plugin {
 
         try {
             this.registry = new ModelExtensionRegistry(getMedSchema());
-            this.registry.setMetamodelUris(loadExtensibleMetamodelUris());
+            loadExtensibleMetamodelUriClassnameMap();
+            this.registry.setMetamodelUris(this.metaclassNameProvidersMap.keySet());
             this.assistantAggregator = new ModelExtensionAssistantAggregator(this.registry);
 
             // Load Built-In MEDs into the Registry

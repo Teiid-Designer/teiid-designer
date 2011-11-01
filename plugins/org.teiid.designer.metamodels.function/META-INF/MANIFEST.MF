@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.teiid.core.designer,
  teiid_embedded_query,
  org.eclipse.emf.mapping,
- org.teiid.designer.metamodels.core
+ org.teiid.designer.metamodels.core,
+ org.teiid.designer.extension;bundle-version="7.6.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

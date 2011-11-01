@@ -49,6 +49,8 @@ public class Messages extends NLS {
     public static String unknownPropertyType;
     public static String unknownRegistryQueryType;
     public static String valueDoesNotMatchAnAllowedValue;
+    public static String problemConstructingMetaclassNameProviderClass;
+    public static String incorrectMetaclassNameProviderClass;
 
     public static String allowedValue;
     public static String description;

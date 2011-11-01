@@ -100,7 +100,8 @@
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
-            metamodelUri="http://www.metamatrix.com/metamodels/WebService">
+            metamodelUri="http://www.metamatrix.com/metamodels/WebService"
+            metaclassProviderClass="com.metamatrix.metamodels.webservice.extension.WebServiceExtendableClassnameProvider">
       </definition>
    </extension>
 

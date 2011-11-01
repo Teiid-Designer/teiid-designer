@@ -197,7 +197,8 @@
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
       <definition 
-            metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument">
+            metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument"
+            metaclassProviderClass="com.metamatrix.metamodels.xml.extension.XmlExtendableClassnameProvider">
       </definition>
    </extension>
    

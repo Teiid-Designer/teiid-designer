@@ -203,6 +203,9 @@ public class Messages extends NLS {
     public static String removeMetaclassDialogMsg;
     public static String removePropertyDialogTitle;
     public static String removePropertyDialogMsg;
+    public static String editMetaclassNothingSelected;
+    public static String editMetaclassEditedMetaclassSelected;
+    public static String editMetaclassAlreadyExtendedMetaclassSelected;
     
     public static String addPropertyDialogTitle;
     public static String editPropertyDialogMaskedButtonText;
