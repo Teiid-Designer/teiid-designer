@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -75,6 +76,7 @@ import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
@@ -263,9 +265,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         }
     }
 
-    private void createMed( IFile medFile ) throws Exception {
+    private void createMed() throws Exception {
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
-        this.originalMed = parser.parse(medFile.getContents(), new ModelExtensionAssistantAdapter());
+        this.originalMed = parser.parse(getFile().getContents(), new ModelExtensionAssistantAdapter());
 
         // process parsing errors
         Collection<String> fatals = parser.getFatalErrors();
@@ -274,8 +276,33 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             throw new RuntimeException(fatals.iterator().next());
         }
 
-        updateEditorModelObject();
+        // create markers
         refreshMarkers(parser.getErrors(), parser.getWarnings(), parser.getInfos());
+
+        // unhook listening to current MED being edited
+        if (this.medBeingEdited != null) {
+            this.medBeingEdited.removeListener(this);
+        }
+
+        // copy over to MED being edited
+        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
+        this.medBeingEdited.setDescription(this.originalMed.getDescription());
+        this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
+        this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
+        this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
+        this.medBeingEdited.setVersion(this.originalMed.getVersion());
+
+        // properties
+        for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
+            this.medBeingEdited.addMetaclass(metaclassName);
+
+            for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
+                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
+            }
+        }
+
+        // register to receive property change events
+        this.medBeingEdited.addListener(this);
     }
 
     /**
@@ -290,7 +317,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         assert (input instanceof IFileEditorInput) : "MED Editor input is not a file"; //$NON-NLS-1$
 
         try {
-            createMed(getFile());
+            createMed();
             ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
         } catch (Exception e) {
             throw new PartInitException(Messages.errorOpeningMedEditor, e);
@@ -300,22 +327,28 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private void internalSave( IProgressMonitor progressMonitor ) {
         IEditorInput input = getEditorInput();
 
-        ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
-        String medAsString = writer.writeAsText(this.medBeingEdited);
-        IDocument document = this.documentProvider.getDocument(input);
-        document.set(medAsString);
-
         try {
+            ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
+            String medAsString = writer.writeAsText(this.medBeingEdited);
+            IDocument document = this.documentProvider.getDocument(input);
+            document.set(medAsString);
+
             this.documentProvider.aboutToChange(input);
             this.documentProvider.saveDocument(progressMonitor, input, document, true);
 
-            // copy over data to MED that will be changed by editor
-            updateEditorModelObject();
-        } catch (CoreException e) {
-            IStatus status = e.getStatus();
+            // create new original MED that that will then be copied over to the MED being edited
+            createMed();
+        } catch (Exception e) {
+            IStatus status = null;
+
+            if (!(e instanceof CoreException)) {
+                status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, e.getLocalizedMessage());
+            } else {
+                status = ((CoreException)e).getStatus();
+            }
 
             if ((status == null) || (status.getSeverity() != IStatus.CANCEL)) {
-                ErrorDialog.openError(getShell(), Messages.errorDialogTitle, Messages.medEditorSaveError, e.getStatus());
+                ErrorDialog.openError(getShell(), Messages.errorDialogTitle, Messages.medEditorSaveError, status);
             }
         } finally {
             this.documentProvider.changed(input);
@@ -375,8 +408,16 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
             // save MED in new file
             internalSave(progressMonitor);
-        } catch (CoreException e) {
-            ErrorDialog.openError(getShell(), Messages.errorDialogTitle, Messages.medEditorSaveError, e.getStatus());
+        } catch (Exception e) {
+            IStatus status = null;
+
+            if (!(e instanceof CoreException)) {
+                status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, e.getLocalizedMessage());
+            } else {
+                status = ((CoreException)e).getStatus();
+            }
+
+            ErrorDialog.openError(getShell(), Messages.errorDialogTitle, Messages.medEditorSaveError, status);
         }
     }
 
@@ -638,30 +679,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     /**
      * Updates what is considered the original MED and the MED being edited.
      */
-    protected void updateEditorModelObject() {
-        if (this.medBeingEdited != null) {
-            this.medBeingEdited.removeListener(this);
-            this.originalMed = this.medBeingEdited;
-        }
-
-        this.medBeingEdited = new ModelExtensionDefinition(new ModelExtensionAssistantAdapter());
-        this.medBeingEdited.setDescription(this.originalMed.getDescription());
-        this.medBeingEdited.setMetamodelUri(this.originalMed.getMetamodelUri());
-        this.medBeingEdited.setNamespacePrefix(this.originalMed.getNamespacePrefix());
-        this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
-        this.medBeingEdited.setVersion(this.originalMed.getVersion());
-
-        // properties
-        for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
-            this.medBeingEdited.addMetaclass(metaclassName);
-
-            for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
-                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
-            }
-        }
-
-        // register to receive property change events
-        this.medBeingEdited.addListener(this);
+    protected void updateEditorModelObject() throws Exception {
     }
 
 }

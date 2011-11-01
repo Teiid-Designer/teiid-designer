@@ -274,7 +274,7 @@ public class EditTranslationDialog extends FormDialog {
     }
 
     private void updateMessage( ErrorMessage errorMsg ) {
-        if (CoreStringUtil.isEmpty(errorMsg.getMessage())) {
+        if (!errorMsg.isError()) {
             this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
         } else {
             this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
@@ -285,7 +285,8 @@ public class EditTranslationDialog extends FormDialog {
     private void updateState() {
         boolean enable = false;
 
-        if (CoreStringUtil.isEmpty(this.localeError.getMessage()) && CoreStringUtil.isEmpty(this.translationError.getMessage())) {
+        if (!this.localeError.isError() && !this.translationError.isError()) {
+            // valid
             enable = true;
 
             if (isEditMode()) {
@@ -321,7 +322,7 @@ public class EditTranslationDialog extends FormDialog {
         // validate locale
         this.localeError.setStatus(ModelExtensionDefinitionValidator.validateTranslationLocale(this.locale));
 
-        if (CoreStringUtil.isEmpty(this.localeError.getMessage())) {
+        if (!this.localeError.isError()) {
             assert (this.locale != null) : "locale is null and should not be"; //$NON-NLS-1$
             Translation newTranslation = new Translation(this.locale, this.translation);
             Collection<Translation> temp = new ArrayList<Translation>(this.existingTranslations);

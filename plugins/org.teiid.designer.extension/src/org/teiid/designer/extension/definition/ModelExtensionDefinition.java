@@ -8,6 +8,7 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -18,19 +19,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.HashCodeUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.NamespacePrefixProvider;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionDefinition</code> defines extension properties for metaclasses within a metamodel.
  */
-public class ModelExtensionDefinition implements NamespacePrefixProvider {
+public class ModelExtensionDefinition implements NamespacePrefixProvider, PropertyChangeListener {
 
     /**
      * The model extension assistant (never <code>null</code>).
@@ -64,6 +67,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider {
         this.properties = new HashMap<String, Collection<ModelExtensionPropertyDefinition>>();
         this.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
         this.header = new ModelExtensionDefinitionHeader();
+        this.header.addListener(this);
     }
 
     /**
@@ -306,7 +310,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider {
             return Collections.emptyList();
         }
 
-        return new ArrayList<ModelExtensionPropertyDefinition>(props);
+        return props;
     }
 
     /**
@@ -358,6 +362,25 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider {
                 Util.log(e);
                 this.listeners.remove(listener);
             }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    @Override
+    public void propertyChange( PropertyChangeEvent e ) {
+        if (PropertyName.METAMODEL_URI.toString().equals(e.getPropertyName())) {
+            // delete all metaclasses and properties
+            String[] metaclasses = getExtendedMetaclasses();
+
+            if (metaclasses.length != 0) {
+                this.properties.clear();
+                notifyChangeListeners(PropertyName.METACLASS, metaclasses, null);
+            }
+            
         }
     }
 

@@ -11,6 +11,7 @@ import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.EditorIds.MED_OVERVIEW_PAGE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.COMBO_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
@@ -31,9 +32,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
+import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
+import com.metamatrix.modeler.internal.ui.forms.FormUtil;
 
 public final class OverviewEditorPage extends MedEditorPage {
 
@@ -235,7 +238,27 @@ public final class OverviewEditorPage extends MedEditorPage {
     }
 
     void handleMetamodelUriChanged( String newMetamodelUri ) {
-        getMed().setMetamodelUri(newMetamodelUri);
+        String oldUri = getMed().getMetamodelUri();
+
+        if (CoreStringUtil.valuesAreEqual(newMetamodelUri, oldUri)) {
+            return;
+        }
+
+        boolean doIt = true;
+
+        // changing metamodel will remove all metaclasses and associated properties so get confirmation from user
+        if (!CoreStringUtil.isEmpty(oldUri) && (getMed().getExtendedMetaclasses().length != 0)) {
+            if (!FormUtil.openQuestion(getShell(), Messages.changeMetamodelDialogTitle,
+                                       Activator.getDefault().getImage(MED_EDITOR), Messages.changeMetamodelDialogMsg)) {
+                doIt = false;
+            }
+        }
+
+        if (doIt) {
+            getMed().setMetamodelUri(newMetamodelUri);
+        } else if (!CoreStringUtil.isEmpty(oldUri)) {
+            this.cbxMetamodelUris.setText(oldUri);
+        }
     }
 
     void handleNamespacePrefixChanged( String newNamespacePrefix ) {

@@ -18,11 +18,13 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.EDIT_PROPERTY
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -57,6 +59,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -164,6 +167,7 @@ public class PropertiesEditorPage extends MedEditorPage {
 
             // configure add button
             this.btnAddMetaclass = buttons[0];
+            this.btnAddMetaclass.setEnabled(!CoreStringUtil.isEmpty(getMed().getMetamodelUri()));
             this.btnAddMetaclass.addSelectionListener(new SelectionAdapter() {
 
                 /**
@@ -380,7 +384,7 @@ public class PropertiesEditorPage extends MedEditorPage {
             table.setLinesVisible(true);
             table.setLayoutData(new GridLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 10;
+            ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
             this.propertyError.setControl(table);
 
             this.propertyViewer = new TableViewer(table);
@@ -474,6 +478,9 @@ public class PropertiesEditorPage extends MedEditorPage {
 
             column = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
             configureColumn(column, ColumnIndexes.DEFAULT_VALUE, ColumnHeaders.DEFAULT_VALUE, ColumnToolTips.DEFAULT_VALUE, true);
+
+            column = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
+            configureColumn(column, ColumnIndexes.FIXED_VALUE, ColumnHeaders.FIXED_VALUE, ColumnToolTips.FIXED_VALUE, true);
 
             column = new TableViewerColumn(this.propertyViewer, SWT.LEFT);
             configureColumn(column, ColumnIndexes.ALLOWED_VALUES, ColumnHeaders.ALLOWED_VALUES, ColumnToolTips.ALLOWED_VALUES, true);
@@ -618,6 +625,10 @@ public class PropertiesEditorPage extends MedEditorPage {
             this.btnEditMetaclass.setEnabled(enable);
         }
 
+        if (this.btnAddProperty.getEnabled() != enable) {
+            this.btnAddProperty.setEnabled(enable);
+        }
+
         // alert property viewer the selection changed
         this.propertyViewer.setInput(this);
         WidgetUtil.pack(this.propertyViewer);
@@ -639,6 +650,8 @@ public class PropertiesEditorPage extends MedEditorPage {
             validatePropertyDefinitions();
             this.propertyViewer.refresh();
         }
+
+        updateState();
     }
 
     void handlePropertySelected() {
@@ -702,47 +715,7 @@ public class PropertiesEditorPage extends MedEditorPage {
      */
     @Override
     protected void setResourceReadOnly( boolean readOnly ) {
-        // return if GUI hasn't been constructed yet
-        if (this.btnAddMetaclass == null) {
-            return;
-        }
-
-        if (this.btnAddMetaclass.getEnabled() == readOnly) {
-            this.btnAddMetaclass.setEnabled(!readOnly);
-        }
-
-        if (this.btnAddProperty.getEnabled() == readOnly) {
-            this.btnAddProperty.setEnabled(!readOnly);
-        }
-
-        if (this.btnEditMetaclass.getEnabled() == readOnly) {
-            this.btnEditMetaclass.setEnabled(!readOnly);
-        }
-
-        if (this.btnEditProperty.getEnabled() == readOnly) {
-            this.btnEditProperty.setEnabled(!readOnly);
-        }
-
-        if (this.btnRemoveMetaclass.getEnabled() == readOnly) {
-            this.btnRemoveMetaclass.setEnabled(!readOnly);
-        }
-
-        if (this.btnRemoveProperty.getEnabled() == readOnly) {
-            this.btnRemoveProperty.setEnabled(!readOnly);
-        }
-
-        if (this.metaclassViewer.getTable().getEnabled() == readOnly) {
-            this.metaclassViewer.getTable().setEnabled(!readOnly);
-        }
-
-        if (this.propertyViewer.getTable().getEnabled() == readOnly) {
-            this.propertyViewer.getTable().setEnabled(!readOnly);
-        }
-
-        if (!readOnly) {
-            handleMetaclassSelected();
-            handlePropertySelected();
-        }
+        updateState();
     }
 
     /**
@@ -754,6 +727,50 @@ public class PropertiesEditorPage extends MedEditorPage {
     protected void updateAllMessages() {
         validateMetaclasses();
         validatePropertyDefinitions();
+    }
+
+    private void updateState() {
+        // return if GUI hasn't been constructed yet
+        if (this.btnAddMetaclass == null) {
+            return;
+        }
+
+        boolean enable = !getMedEditor().isReadOnly() && !CoreStringUtil.isEmpty(getMed().getMetamodelUri());
+
+        if (this.btnAddMetaclass.getEnabled() != enable) {
+            this.btnAddMetaclass.setEnabled(enable);
+        }
+
+        if (this.btnAddProperty.getEnabled() != enable) {
+            this.btnAddProperty.setEnabled(enable);
+        }
+
+        if (this.btnEditMetaclass.getEnabled() != enable) {
+            this.btnEditMetaclass.setEnabled(enable);
+        }
+
+        if (this.btnEditProperty.getEnabled() != enable) {
+            this.btnEditProperty.setEnabled(enable);
+        }
+
+        if (this.btnRemoveMetaclass.getEnabled() != enable) {
+            this.btnRemoveMetaclass.setEnabled(enable);
+        }
+
+        if (this.btnRemoveProperty.getEnabled() != enable) {
+            this.btnRemoveProperty.setEnabled(enable);
+        }
+
+        if (this.metaclassViewer.getTable().getEnabled() != enable) {
+            this.metaclassViewer.getTable().setEnabled(enable);
+        }
+
+        if (this.propertyViewer.getTable().getEnabled() != enable) {
+            this.propertyViewer.getTable().setEnabled(enable);
+        }
+
+        handleMetaclassSelected();
+        handlePropertySelected();
     }
 
     private void validateMetaclasses() {
@@ -774,6 +791,7 @@ public class PropertiesEditorPage extends MedEditorPage {
         String DEFAULT_VALUE = Messages.defaultValuePropertyAttributeColumnHeader;
         String DESCRIPTION = Messages.descriptionPropertyAttributeColumnHeader;
         String DISPLAY_NAME = Messages.displayNamePropertyAttributeColumnHeader;
+        String FIXED_VALUE = Messages.fixedValuePropertyAttributeColumnHeader;
         String INDEXED = Messages.indexedPropertyAttributeColumnHeader;
         String MASKED = Messages.maskedPropertyAttributeColumnHeader;
         String MODFIFIABLE = Messages.modifiablePropertyAttributeColumnHeader;
@@ -783,17 +801,18 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     interface ColumnIndexes {
-        int ADVANCED = 4;
-        int ALLOWED_VALUES = 8;
-        int DEFAULT_VALUE = 7;
-        int DESCRIPTION = 10;
-        int DISPLAY_NAME = 9;
-        int INDEXED = 6;
-        int MASKED = 5;
-        int MODIFIABLE = 3;
-        int REQUIRED = 2;
-        int RUNTIME_TYPE = 1;
         int SIMPLE_ID = 0;
+        int RUNTIME_TYPE = 1;
+        int REQUIRED = 2;
+        int MODIFIABLE = 3;
+        int ADVANCED = 4;
+        int MASKED = 5;
+        int INDEXED = 6;
+        int DEFAULT_VALUE = 7;
+        int FIXED_VALUE = 8;
+        int ALLOWED_VALUES = 9;
+        int DISPLAY_NAME = 10;
+        int DESCRIPTION = 11;
     }
 
     interface ColumnToolTips {
@@ -802,6 +821,7 @@ public class PropertiesEditorPage extends MedEditorPage {
         String DEFAULT_VALUE = Messages.defaultValuePropertyAttributeColumnHeaderToolTip;
         String DESCRIPTION = Messages.descriptionPropertyAttributeColumnHeaderToolTip;
         String DISPLAY_NAME = Messages.displayNamePropertyAttributeColumnHeaderToolTip;
+        String FIXED_VALUE = Messages.fixedValuePropertyAttributeColumnHeaderToolTip;
         String INDEXED = Messages.indexedPropertyAttributeColumnHeaderToolTip;
         String MASKED = Messages.maskedPropertyAttributeColumnHeaderToolTip;
         String MODFIFIABLE = Messages.modifiablePropertyAttributeColumnHeaderToolTip;
@@ -860,8 +880,28 @@ public class PropertiesEditorPage extends MedEditorPage {
                 return propDefn.getDefaultValue();
             }
 
+            if (ColumnIndexes.FIXED_VALUE == this.columnIndex) {
+                return propDefn.getFixedValue();
+            }
+
             if (ColumnIndexes.DESCRIPTION == this.columnIndex) {
-                return propDefn.getDescription();
+                String description = propDefn.getDescription();
+
+                if (CoreStringUtil.isEmpty(description)) {
+                    int size = propDefn.getDescriptions().size();
+
+                    if (size == 1) {
+                        return Messages.propertiesPageOneTranslationAvailable;
+                    }
+
+                    if (size != 0) {
+                        return NLS.bind(Messages.propertiesPageManyTranslationsAvailable, size);
+                    }
+
+                    return CoreStringUtil.Constants.EMPTY_STRING;
+                }
+
+                return description;
             }
 
             if (ColumnIndexes.RUNTIME_TYPE == this.columnIndex) {
@@ -869,7 +909,23 @@ public class PropertiesEditorPage extends MedEditorPage {
             }
 
             if (ColumnIndexes.DISPLAY_NAME == this.columnIndex) {
-                return propDefn.getDisplayName();
+                String displayName = propDefn.getDisplayName();
+
+                if (CoreStringUtil.isEmpty(displayName)) {
+                    int size = propDefn.getDisplayNames().size();
+
+                    if (size == 1) {
+                        return Messages.propertiesPageOneTranslationAvailable;
+                    }
+
+                    if (size != 0) {
+                        return NLS.bind(Messages.propertiesPageManyTranslationsAvailable, size);
+                    }
+
+                    return CoreStringUtil.Constants.EMPTY_STRING;
+                }
+
+                return displayName;
             }
 
             if (ColumnIndexes.ALLOWED_VALUES == this.columnIndex) {

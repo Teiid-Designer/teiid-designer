@@ -104,7 +104,12 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         this.fixedValue = fixedValue;
 
         if (!CoreStringUtil.isEmpty(runtimeType)) {
-            this.type = ModelExtensionPropertyDefinition.Utils.convertRuntimeType(runtimeType);
+            try {
+                Type newType = ModelExtensionPropertyDefinition.Utils.convertRuntimeType(runtimeType);
+                setType(newType);
+            } catch (IllegalArgumentException e) {
+                Util.log(e);
+            }
         }
 
         if (!CoreStringUtil.isEmpty(required)) {
@@ -534,7 +539,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
      */
     @Override
     public boolean isModifiable() {
-        return (this.fixedValue == null);
+        return CoreStringUtil.isEmpty(this.fixedValue);
     }
 
     /**
@@ -681,19 +686,20 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
                 if (CoreStringUtil.isEmpty(booleanValues[0]) || CoreStringUtil.isEmpty(booleanValues[1])) {
                     error = true;
                 } else if (!booleanValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
-                        || !booleanValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
+                        && !booleanValues[0].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
                     error = true;
                 } else if (!booleanValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[0].toLowerCase())
-                        || !booleanValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
+                        && !booleanValues[1].toLowerCase().equals(BOOLEAN_ALLOWED_VALUES[1].toLowerCase())) {
                     error = true;
                 }
             }
 
             if (error) {
                 Util.log(IStatus.WARNING, NLS.bind(Messages.invalidBooleanAllowedValue, getId()));
+                newAllowedValues = new HashSet<String>(2);
+                newAllowedValues.add(BOOLEAN_ALLOWED_VALUES[0]);
+                newAllowedValues.add(BOOLEAN_ALLOWED_VALUES[1]);
             }
-
-            return;
         }
 
         boolean changed = false;
@@ -866,6 +872,13 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
             Type oldValue = this.type;
             this.type = newRuntimeType;
             notifyChangeListeners(PropertyName.TYPE, oldValue, this.type);
+
+            if (Type.BOOLEAN == this.type) {
+                Set<String> newAllowedValues = new HashSet<String>(2);
+                newAllowedValues.add(BOOLEAN_ALLOWED_VALUES[0]);
+                newAllowedValues.add(BOOLEAN_ALLOWED_VALUES[1]);
+                setAllowedValues(newAllowedValues);
+            }
         }
     }
 

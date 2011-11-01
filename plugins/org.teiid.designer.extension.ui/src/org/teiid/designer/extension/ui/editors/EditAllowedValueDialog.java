@@ -38,7 +38,6 @@ import org.teiid.designer.extension.ui.Messages;
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
-import com.metamatrix.core.util.StringUtilities;
 
 /**
  * The <code>EditAllowedValueDialog</code> is used to create or edit property definition allowed values.
@@ -221,13 +220,16 @@ final class EditAllowedValueDialog extends FormDialog {
         return (!CoreStringUtil.isEmpty(this.valueBeingEdited));
     }
 
+    /**
+     * Update UI controls.
+     */
     private void updateState() {
-        // check to see if new metaclassName is valid
-        String errorMsg = this.valueError.getMessage();
-        int imageType = IMessageProvider.NONE;
-
-        // update UI controls
-        if (StringUtilities.isEmpty(errorMsg)) {
+        if (this.valueError.isError()) {
+            // allowedValue is not valid
+            if (this.btnOk.isEnabled()) {
+                this.btnOk.setEnabled(false);
+            }
+        } else {
             boolean enable = true;
 
             if (isEditMode()) {
@@ -237,18 +239,20 @@ final class EditAllowedValueDialog extends FormDialog {
             if (this.btnOk.getEnabled() != enable) {
                 this.btnOk.setEnabled(enable);
             }
-
-            errorMsg = Messages.allowedValueDialogMessage;
-        } else {
-            // allowedValue is not valid
-            if (this.btnOk.isEnabled()) {
-                this.btnOk.setEnabled(false);
-            }
-
-            imageType = IMessageProvider.ERROR;
         }
 
-        this.scrolledForm.setMessage(errorMsg, imageType);
+        if (this.valueError.isOk()) {
+            this.scrolledForm.getMessageManager().removeMessage(this.valueError.getKey(), this.valueError.getControl());
+
+            if (!Messages.allowedValueDialogMessage.equals(this.scrolledForm.getMessage())) {
+                // eclipse bug keeps font foreground red after an error when setting to NONE so set to INFO first as workaround
+                this.scrolledForm.setMessage(Messages.allowedValueDialogMessage, IMessageProvider.INFORMATION);
+                this.scrolledForm.setMessage(Messages.allowedValueDialogMessage, IMessageProvider.NONE);
+            }
+        } else {
+            this.scrolledForm.getMessageManager().addMessage(this.valueError.getKey(), this.valueError.getMessage(), null,
+                                                             this.valueError.getMessageType(), this.valueError.getControl());
+        }
     }
 
 }

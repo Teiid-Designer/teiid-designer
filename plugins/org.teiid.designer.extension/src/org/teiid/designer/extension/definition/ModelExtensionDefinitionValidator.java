@@ -287,7 +287,13 @@ public final class ModelExtensionDefinitionValidator {
 
     public static ValidationStatus validatePropertyDefaultValue( String runtimeType,
                                                                  String defaultValue,
-                                                                 String[] allowedValues ) {
+                                                                 String[] allowedValues,
+                                                                 boolean hasFixedValue ) {
+        // empty default value is OK only if there is a fixed value
+        if (hasFixedValue && CoreStringUtil.isEmpty(defaultValue)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
         // only validate if there is a runtime type
         ValidationStatus status = validatePropertyRuntimeType(runtimeType);
 
@@ -320,10 +326,10 @@ public final class ModelExtensionDefinitionValidator {
             status = validatePropertyRuntimeType(runtimeType);
 
             if (!status.isError()) {
-                status = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues);
+                status = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues, !CoreStringUtil.isEmpty(fixedValue));
 
                 if (!status.isError()) {
-                    status = validatePropertyFixedValue(runtimeType, fixedValue);
+                    status = validatePropertyFixedValue(runtimeType, fixedValue, allowedValues, !CoreStringUtil.isEmpty(defaultValue));
 
                     if (!status.isError()) {
                         status = validateTranslations(Messages.propertyDescription, descriptions, true);
@@ -386,7 +392,14 @@ public final class ModelExtensionDefinitionValidator {
     }
 
     public static ValidationStatus validatePropertyFixedValue( String runtimeType,
-                                                               String fixedValue ) {
+                                                               String fixedValue,
+                                                               String[] allowedValues,
+                                                               boolean hasDefaultValue) {
+        // empty fixed value is OK only if there is a default value
+        if (hasDefaultValue && CoreStringUtil.isEmpty(fixedValue)) {
+            return ValidationStatus.OK_STATUS;
+        }
+
         // only validate if there is a runtime type
         ValidationStatus status = validatePropertyRuntimeType(runtimeType);
 
@@ -396,7 +409,7 @@ public final class ModelExtensionDefinitionValidator {
         }
 
         // have a good runtime type
-        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), fixedValue, true, null);
+        String errorMsg = Utils.isValidValue(Utils.convertRuntimeType(runtimeType), fixedValue, true, allowedValues);
 
         if (CoreStringUtil.isEmpty(errorMsg)) {
             return ValidationStatus.OK_STATUS;

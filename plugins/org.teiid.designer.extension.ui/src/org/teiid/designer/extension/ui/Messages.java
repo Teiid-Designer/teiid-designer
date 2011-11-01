@@ -149,6 +149,8 @@ public class Messages extends NLS {
     public static String propertiesPageAddPropertyButtonToolTip;
     public static String propertiesPageEditPropertyButtonToolTip;
     public static String propertiesPageRemovePropertyButtonToolTip;
+    public static String propertiesPageOneTranslationAvailable;
+    public static String propertiesPageManyTranslationsAvailable;
 
     public static String medEditorSourcePageTitle;
     public static String medEditorSourcePageToolTip;
@@ -174,6 +176,7 @@ public class Messages extends NLS {
     public static String defaultValuePropertyAttributeColumnHeader;
     public static String descriptionPropertyAttributeColumnHeader;
     public static String displayNamePropertyAttributeColumnHeader;
+    public static String fixedValuePropertyAttributeColumnHeader;
     public static String indexedPropertyAttributeColumnHeader;
     public static String maskedPropertyAttributeColumnHeader;
     public static String modifiablePropertyAttributeColumnHeader;
@@ -186,6 +189,7 @@ public class Messages extends NLS {
     public static String defaultValuePropertyAttributeColumnHeaderToolTip;
     public static String descriptionPropertyAttributeColumnHeaderToolTip;
     public static String displayNamePropertyAttributeColumnHeaderToolTip;
+    public static String fixedValuePropertyAttributeColumnHeaderToolTip;
     public static String indexedPropertyAttributeColumnHeaderToolTip;
     public static String maskedPropertyAttributeColumnHeaderToolTip;
     public static String modifiablePropertyAttributeColumnHeaderToolTip;
@@ -251,6 +255,8 @@ public class Messages extends NLS {
     public static String removeDescriptionDialogMsg;
     public static String removeDisplayNameDialogTitle;
     public static String removeDisplayNameDialogMsg;
+    public static String changeMetamodelDialogTitle;
+    public static String changeMetamodelDialogMsg;
 
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$

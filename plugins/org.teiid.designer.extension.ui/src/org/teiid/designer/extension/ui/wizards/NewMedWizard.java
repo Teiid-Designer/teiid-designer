@@ -38,11 +38,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
-import org.teiid.designer.core.extension.DefaultModelObjectExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
-import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
-import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImpl;
 import org.teiid.designer.extension.ui.Messages;
 
 import com.metamatrix.core.util.CoreStringUtil;
@@ -151,47 +150,12 @@ public final class NewMedWizard extends AbstractWizard
         }
     }
 
-    /*
-     * Create a Default ModelObjectDefinition, with some preset values to make it a valid Med.
-     * @return a default ModelExtensionDefinition
+    /**
+     * @return a default ModelExtensionDefinition (never <code>null</code>)
      */
     ModelExtensionDefinition createDefaultMed() {
-        // Default MED properties
-        String namespacePrefix = "namespacePrefix"; //$NON-NLS-1$
-        String namespaceUri = "namespaceUri"; //$NON-NLS-1$
-        String metamodelUri = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
-
-        // Create a MED using the DefaultModelObjectExtensionAssistant
-        DefaultModelObjectExtensionAssistant defaultAssistant = new DefaultModelObjectExtensionAssistant(namespacePrefix,
-                                                                                                         namespaceUri,
-                                                                                                         metamodelUri,
-                                                                                                         null,
-                                                                                                         null);
-        ModelExtensionDefinition newMed = defaultAssistant.getModelExtensionDefinition();
-        newMed.setDescription("description for the ModelExtensionDefinition"); //$NON-NLS-1$
-
-        // Create a Dummy Property
-        String propId = "propertyId"; //$NON-NLS-1$
-        String type = "boolean"; //$NON-NLS-1$
-        String required = "false"; //$NON-NLS-1$
-        String advanced = "false"; //$NON-NLS-1$
-        String masked = "false"; //$NON-NLS-1$
-        String index = "false"; //$NON-NLS-1$
-        ModelExtensionPropertyDefinition propDefn = new ModelExtensionPropertyDefinitionImpl(newMed,
-                                                                                             propId,
-                                                                                             type,
-                                                                                             required,
-                                                                                             null,
-                                                                                             null,
-                                                                                             advanced,
-                                                                                             masked,
-                                                                                             index,
-                                                                                             null,
-                                                                                             null,
-                                                                                             null);
-        // Add dummy property to the med, under a dummy metaclass name
-        newMed.addPropertyDefinition("metaclassName", propDefn); //$NON-NLS-1$ 
-
+        ModelExtensionAssistant assistant = new ModelExtensionAssistantAdapter();
+        ModelExtensionDefinition newMed = new ModelExtensionDefinition(assistant);
         return newMed;
     }
 

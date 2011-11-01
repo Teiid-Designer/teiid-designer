@@ -190,7 +190,7 @@ final class EditPropertyDialog extends FormDialog {
     }
 
     private void addMessage( ErrorMessage errorMsg ) {
-        if (CoreStringUtil.isEmpty(errorMsg.getMessage())) {
+        if (errorMsg.isOk()) {
             this.scrolledForm.getMessageManager().removeMessage(errorMsg.getKey(), errorMsg.getControl());
         } else {
             this.scrolledForm.getMessageManager().addMessage(errorMsg.getKey(), errorMsg.getMessage(), null,
@@ -631,8 +631,8 @@ final class EditPropertyDialog extends FormDialog {
         SECTIONS: {
             final Section infoSection = createInfoSection(finalBody, toolkit);
             final Section propertyValueSection = createPropertyValueSection(finalBody, toolkit);
-            final Section descriptionSection = createDescriptionSection(finalBody, toolkit);
             final Section displayNameSection = createDisplayNameSection(finalBody, toolkit);
+            final Section descriptionSection = createDescriptionSection(finalBody, toolkit);
 
             infoSection.descriptionVerticalSpacing = propertyValueSection.getTextClientHeightDifference();
             descriptionSection.descriptionVerticalSpacing = displayNameSection.getTextClientHeightDifference();
@@ -870,6 +870,7 @@ final class EditPropertyDialog extends FormDialog {
             this.btnAllowedValues.setToolTipText(Messages.editPropertyDialogAllowedValuesButtonToolTip);
             this.btnAllowedValues.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
             ((GridData)this.btnAllowedValues.getLayoutData()).horizontalSpan = 2;
+            this.btnAllowedValues.setEnabled(Type.BOOLEAN != this.propDefn.getType());
 
             this.lstAllowedValues = new org.eclipse.swt.widgets.List(middle, SWT.SINGLE | SWT.BORDER);
             this.allowedValuesError.setControl(this.lstAllowedValues);
@@ -974,7 +975,7 @@ final class EditPropertyDialog extends FormDialog {
                 }
             }
 
-            boolean enable = this.btnAllowedValues.getSelection();
+            boolean enable = this.btnAllowedValues.getSelection() && this.btnAllowedValues.getEnabled();
             this.lstAllowedValues.setEnabled(enable);
             this.btnAddValue.setEnabled(enable);
             this.btnEditValue.setEnabled(false);
@@ -1249,6 +1250,13 @@ final class EditPropertyDialog extends FormDialog {
             }
         }
 
+        // if boolean don't allow changes to allowed values
+        enable &= (Type.BOOLEAN != this.propDefn.getType());
+        
+        if (this.btnAllowedValues.getEnabled() != enable) {
+            this.btnAllowedValues.setEnabled(enable);
+        }
+        
         if (this.lstAllowedValues.getEnabled() != enable) {
             this.lstAllowedValues.setEnabled(enable);
         }
@@ -1278,10 +1286,10 @@ final class EditPropertyDialog extends FormDialog {
         String value = this.txtInitialValue.getText();
 
         if (hasFixedValue) {
+            this.propDefn.setDefaultValue(null); // must be done first in order to validate
             this.propDefn.setFixedValue(value);
-            this.propDefn.setDefaultValue(null);
         } else {
-            this.propDefn.setFixedValue(null);
+            this.propDefn.setFixedValue(null); // must be done first in order to validate
             this.propDefn.setDefaultValue(value);
         }
     }
@@ -1294,8 +1302,10 @@ final class EditPropertyDialog extends FormDialog {
         if (hasInitialValue) {
             if (valueIsFixed) {
                 this.propDefn.setFixedValue(value);
+                this.propDefn.setDefaultValue(null);
             } else {
                 this.propDefn.setDefaultValue(value);
+                this.propDefn.setFixedValue(null);
             }
         } else {
             this.propDefn.setDefaultValue(null);
@@ -1312,6 +1322,7 @@ final class EditPropertyDialog extends FormDialog {
 
         validateInitialValue(hasInitialValue, valueIsFixed);
         addMessage(this.initialValueError);
+        updateState();
     }
 
     void handleIndexedChanged( boolean newValue ) {
@@ -1345,6 +1356,32 @@ final class EditPropertyDialog extends FormDialog {
         if (PropertyName.ADVANCED.toString().equals(propName)) {
             validateAdvancedValue();
         } else if (PropertyName.ALLOWED_VALUES.toString().equals(propName)) {
+            // if old or new value is not a string value reload the list (this could happen if type was changed)
+            Object oldValue = e.getOldValue();
+            Object newValue = e.getNewValue();
+
+            if (((newValue != null) && !(newValue instanceof String))
+                    || ((oldValue != null) && !(oldValue instanceof String))) {
+                // should always be a collection but check
+                if (newValue instanceof Collection) {
+                    this.lstAllowedValues.removeAll();
+                    Object[] newValues = ((Collection)newValue).toArray();
+
+                    if (newValues.length != 0) {
+                        for (Object value : newValues) {
+                            // should always be a string but check
+                            if (newValue instanceof Collection) {
+                                this.lstAllowedValues.add((String)value);
+                            }
+                        }
+
+                        if (!this.btnAllowedValues.getSelection()) {
+                            this.btnAllowedValues.setSelection(true);
+                        }
+                    }
+                }
+            }
+
             validateAllowedValues();
         } else if (PropertyName.DEFAULT_VALUE.toString().equals(propName)) {
             validateInitialValue(this.btnInitialValue.getSelection(), false);
@@ -1414,6 +1451,7 @@ final class EditPropertyDialog extends FormDialog {
         try {
             newType = ModelExtensionPropertyDefinition.Utils.convertRuntimeType(newValue);
             this.propDefn.setType(newType);
+            handleHasAllowedValuesSelected();
         } catch (Exception e) {
             UTIL.log(e);
         }
@@ -1493,12 +1531,13 @@ final class EditPropertyDialog extends FormDialog {
             this.allowedValuesError.setMessage(Messages.editPropertyDialogAllowedValueRequiredMsg);
         }
 
-        if (CoreStringUtil.isEmpty(this.allowedValuesError.getMessage())) {
+        if (!this.allowedValuesError.isError()) {
             this.allowedValuesError.setStatus(ModelExtensionDefinitionValidator.validatePropertyAllowedValues(this.propDefn.getRuntimeType(),
                                                                                                               this.propDefn.getAllowedValues()));
         }
 
         addMessage(this.allowedValuesError);
+        validateInitialValue(this.btnInitialValue.getSelection(), this.btnFixedValue.getSelection());
     }
 
     private void validateDescriptions() {
@@ -1525,11 +1564,14 @@ final class EditPropertyDialog extends FormDialog {
         if (shouldHaveInitialValue) {
             if (valueIsFixed) {
                 this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
-                                                                                                              this.propDefn.getFixedValue()));
+                                                                                                              this.propDefn.getFixedValue(),
+                                                                                                              this.propDefn.getAllowedValues(),
+                                                                                                              false));
             } else {
                 this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
                                                                                                                 this.propDefn.getDefaultValue(),
-                                                                                                                this.propDefn.getAllowedValues()));
+                                                                                                                this.propDefn.getAllowedValues(),
+                                                                                                                false));
             }
         } else {
             this.initialValueError.setMessage(null);
