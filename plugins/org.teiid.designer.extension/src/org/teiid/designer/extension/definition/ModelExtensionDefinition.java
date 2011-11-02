@@ -241,7 +241,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
-     * @return the namespace URI (never <code>null</code> or empty)
+     * @return the namespace URI (can be <code>null</code> or empty)
      */
     public String getNamespaceUri() {
         return this.header.getNamespaceUri();

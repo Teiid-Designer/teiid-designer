@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -52,10 +53,18 @@ public final class OverviewEditorPage extends MedEditorPage {
 
     public OverviewEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
+
         this.descriptionError = new ErrorMessage();
+        validateDescription();
+
         this.metamodelUriError = new ErrorMessage();
+        validateMetamodelUri();
+
         this.namespacePrefixError = new ErrorMessage();
+        validateNamespacePrefix();
+
         this.namespaceUriError = new ErrorMessage();
+        validateNamespaceUri();
     }
 
     /**
@@ -98,7 +107,8 @@ public final class OverviewEditorPage extends MedEditorPage {
 
             this.txtNamespacePrefix = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             this.txtNamespacePrefix.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            this.txtNamespacePrefix.setText(getMed().getNamespacePrefix());
+            String namespacePrefix = getMed().getNamespacePrefix();
+            this.txtNamespacePrefix.setText((namespacePrefix == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespacePrefix);
             this.txtNamespacePrefix.addModifyListener(new ModifyListener() {
 
                 /**
@@ -124,7 +134,8 @@ public final class OverviewEditorPage extends MedEditorPage {
             this.txtNamespaceUri = toolkit.createText(finalContainer, CoreStringUtil.Constants.EMPTY_STRING, TEXT_STYLE);
             finalTxtNamespaceUri = this.txtNamespaceUri;
             this.txtNamespaceUri.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            this.txtNamespaceUri.setText(getMed().getNamespaceUri());
+            String namespaceUri = getMed().getNamespaceUri();
+            this.txtNamespaceUri.setText((namespaceUri == null) ? CoreStringUtil.Constants.EMPTY_STRING : namespaceUri);
             this.txtNamespaceUri.addModifyListener(new ModifyListener() {
 
                 /**
@@ -221,6 +232,13 @@ public final class OverviewEditorPage extends MedEditorPage {
             // associate control with error message
             this.descriptionError.setControl(this.txtDescription);
         }
+
+        // clear any initial messages that were created before the control was set
+        IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
+        msgMgr.removeMessage(this.descriptionError.getKey());
+        msgMgr.removeMessage(this.metamodelUriError.getKey());
+        msgMgr.removeMessage(this.namespacePrefixError.getKey());
+        msgMgr.removeMessage(this.namespaceUriError.getKey());
     }
 
     /**

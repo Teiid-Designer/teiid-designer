@@ -47,8 +47,8 @@ public abstract class MedEditorPage extends FormPage {
     @Override
     protected final void createFormContent( IManagedForm managedForm ) {
         createBody(managedForm.getForm().getBody(), managedForm.getToolkit());
-        updateAllMessages();
         setResourceReadOnly(isReadonly());
+        updateAllMessages();
     }
 
     /**
@@ -125,10 +125,19 @@ public abstract class MedEditorPage extends FormPage {
         IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
 
         if (errorMessage.isOk()) {
-            msgMgr.removeMessage(errorMessage.getKey(), errorMessage.getControl());
+            if (errorMessage.getControl() == null) {
+                msgMgr.removeMessage(errorMessage.getKey());
+            } else {
+                msgMgr.removeMessage(errorMessage.getKey(), errorMessage.getControl());
+            }
         } else {
-            msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
-                              errorMessage.getMessageType(), errorMessage.getControl());
+            if (errorMessage.getControl() == null) {
+                msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
+                                  errorMessage.getMessageType());
+            } else {
+                msgMgr.addMessage(errorMessage.getKey(), errorMessage.getMessage(), errorMessage.getData(),
+                                  errorMessage.getMessageType(), errorMessage.getControl());
+            }
         }
     }
 

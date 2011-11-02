@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import com.metamatrix.core.util.CoreArgCheck;
+import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * 
@@ -184,19 +185,25 @@ public class ModelExtensionDefinitionWriter {
         modelExtensionElem.setAttributeNode(attr);
 
         // Metamodel URI
-        attr = document.createAttribute(ExtensionConstants.Attributes.METAMODEL_URI);
-        attr.setValue(med.getMetamodelUri());
-        modelExtensionElem.setAttributeNode(attr);
+        if (!CoreStringUtil.isEmpty(med.getMetamodelUri())) {
+            attr = document.createAttribute(ExtensionConstants.Attributes.METAMODEL_URI);
+            attr.setValue(med.getMetamodelUri());
+            modelExtensionElem.setAttributeNode(attr);
+        }
 
         // Namespace URI
-        attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_URI);
-        attr.setValue(med.getNamespaceUri());
-        modelExtensionElem.setAttributeNode(attr);
+        if (!CoreStringUtil.isEmpty(med.getNamespaceUri())) {
+            attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_URI);
+            attr.setValue(med.getNamespaceUri());
+            modelExtensionElem.setAttributeNode(attr);
+        }
 
         // Namespace Prefix
-        attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_PREFIX);
-        attr.setValue(med.getNamespacePrefix());
-        modelExtensionElem.setAttributeNode(attr);
+        if (!CoreStringUtil.isEmpty(med.getNamespacePrefix())) {
+            attr = document.createAttribute(ExtensionConstants.Attributes.NAMESPACE_PREFIX);
+            attr.setValue(med.getNamespacePrefix());
+            modelExtensionElem.setAttributeNode(attr);
+        }
 
         // Version
         attr = document.createAttribute(ExtensionConstants.Attributes.VERSION);
@@ -280,29 +287,33 @@ public class ModelExtensionDefinitionWriter {
             // Set the Property Element Attributes
             // --------------------------------------
 
-            // Name Attribute
-            String simpleId = propDefn.getSimpleId();
-            attr = document.createAttribute(ExtensionConstants.Attributes.NAME);
-            attr.setValue(simpleId);
-            propertyElem.setAttributeNode(attr);
+            // Simple ID Attribute
+            if (!CoreStringUtil.isEmpty(propDefn.getSimpleId())) {
+                attr = document.createAttribute(ExtensionConstants.Attributes.NAME);
+                attr.setValue(propDefn.getSimpleId());
+                propertyElem.setAttributeNode(attr);
+            }
 
             // Type Attribute
-            String type = propDefn.getRuntimeType();
-            attr = document.createAttribute(ExtensionConstants.Attributes.TYPE);
-            attr.setValue(type);
-            propertyElem.setAttributeNode(attr);
+            if (!CoreStringUtil.isEmpty(propDefn.getRuntimeType())) {
+                attr = document.createAttribute(ExtensionConstants.Attributes.TYPE);
+                attr.setValue(propDefn.getRuntimeType());
+                propertyElem.setAttributeNode(attr);
+            }
 
             // Default Value Attribute
-            String defaultValue = propDefn.getDefaultValue();
-            attr = document.createAttribute(ExtensionConstants.Attributes.DEFAULT_VALUE);
-            attr.setValue(defaultValue);
-            propertyElem.setAttributeNode(attr);
+            if (!CoreStringUtil.isEmpty(propDefn.getDefaultValue())) {
+                attr = document.createAttribute(ExtensionConstants.Attributes.DEFAULT_VALUE);
+                attr.setValue(propDefn.getDefaultValue());
+                propertyElem.setAttributeNode(attr);
+            }
 
             // Fixed Value Attribute
-            String fixedValue = propDefn.getFixedValue();
-            attr = document.createAttribute(ExtensionConstants.Attributes.FIXED_VALUE);
-            attr.setValue(fixedValue);
-            propertyElem.setAttributeNode(attr);
+            if (!CoreStringUtil.isEmpty(propDefn.getFixedValue())) {
+                attr = document.createAttribute(ExtensionConstants.Attributes.FIXED_VALUE);
+                attr.setValue(propDefn.getFixedValue());
+                propertyElem.setAttributeNode(attr);
+            }
 
             // Required Attribute
             boolean isRequired = propDefn.isRequired();

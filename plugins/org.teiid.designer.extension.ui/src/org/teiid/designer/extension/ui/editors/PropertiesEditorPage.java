@@ -18,11 +18,13 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.EDIT_PROPERTY
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -48,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -57,6 +60,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
+
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -85,8 +89,11 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
+ 
         this.metaclassError = new ErrorMessage();
         this.propertyError = new ErrorMessage();
+
+        validateMetaclasses(); // this calls validatePropertyDefinitions();
     }
 
     /**
@@ -131,6 +138,11 @@ public class PropertiesEditorPage extends MedEditorPage {
         // populate UI
         this.metaclassViewer.setInput(this);
         WidgetUtil.pack(this.metaclassViewer);
+
+        // clear any initial messages that were created before the control was set
+        IMessageManager msgMgr = ((ModelExtensionDefinitionEditor)getEditor()).getMessageManager();
+        msgMgr.removeMessage(this.metaclassError.getKey());
+        msgMgr.removeMessage(this.propertyError.getKey());
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
@@ -666,7 +678,10 @@ public class PropertiesEditorPage extends MedEditorPage {
         } else if (PropertyName.NAMESPACE_PREFIX.toString().equals(propName)) {
             // changes to MED namespace prefix affect the property definitions namespace prefix
             validatePropertyDefinitions();
-            this.propertyViewer.refresh();
+
+            if (this.propertyViewer != null) {
+                this.propertyViewer.refresh();
+            }
         }
 
         updateState();
