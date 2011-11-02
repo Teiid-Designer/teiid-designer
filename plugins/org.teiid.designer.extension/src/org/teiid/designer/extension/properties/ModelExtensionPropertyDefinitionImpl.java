@@ -40,10 +40,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
     public static final Type TYPE_DEFAULT = Type.STRING;
 
     private boolean advanced = ADVANCED_DEFAULT;
-    private final Set<String> allowedValues;
+    private Set<String> allowedValues;
     private String defaultValue;
-    private final Set<Translation> descriptions;
-    private final Set<Translation> displayNames;
+    private Set<Translation> descriptions;
+    private Set<Translation> displayNames;
     private String fixedValue;
     private boolean index = INDEX_DEFAULT;
     private CopyOnWriteArrayList<PropertyChangeListener> listeners;
@@ -220,6 +220,42 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
     /**
      * {@inheritDoc}
+     *
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Object clone() {
+        try {
+            ModelExtensionPropertyDefinitionImpl copy = (ModelExtensionPropertyDefinitionImpl)super.clone();
+
+            // no listeners
+            copy.listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+
+            // deep copy of allowed values
+            copy.allowedValues = new HashSet<String>(this.allowedValues);
+
+            // deep copy of descriptions
+            copy.descriptions = new HashSet<Translation>();
+
+            for (Translation description : this.descriptions) {
+                copy.descriptions.add((Translation)description.clone());
+            }
+
+            // deep copy of display names
+            copy.displayNames = new HashSet<Translation>(this.displayNames);
+
+            for (Translation description : this.descriptions) {
+                copy.descriptions.add((Translation)description.clone());
+            }
+
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            throw new Error("should never happen"); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
@@ -243,9 +279,9 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
         // string properties
         if (!CoreStringUtil.valuesAreEqual(getSimpleId(), that.getSimpleId())
-            || !CoreStringUtil.valuesAreEqual(getNamespacePrefix(), that.getNamespacePrefix())
-            || !CoreStringUtil.valuesAreEqual(getFixedValue(), that.getFixedValue())
-            || !CoreStringUtil.valuesAreEqual(getDefaultValue(), that.getDefaultValue())) {
+                || !CoreStringUtil.valuesAreEqual(getNamespacePrefix(), that.getNamespacePrefix())
+                || !CoreStringUtil.valuesAreEqual(getFixedValue(), that.getFixedValue())
+                || !CoreStringUtil.valuesAreEqual(getDefaultValue(), that.getDefaultValue())) {
             return false;
         }
 
@@ -254,7 +290,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         Set<String> thatValues = (getAllowedValues() == null) ? new HashSet<String>()
                                                              : new HashSet<String>(Arrays.asList(that.getAllowedValues()));
 
-        if (thisValues.size() != thatValues.size()) return false;
+        if (thisValues.size() != thatValues.size()) {
+            return false;
+        }
+        
         if (!thisValues.isEmpty() && !thisValues.containsAll(thatValues)) {
             return false;
         }
@@ -263,7 +302,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         Set<Translation> thisDescriptions = getDescriptions();
         Set<Translation> thatDescriptions = that.getDescriptions();
 
-        if (thisDescriptions.size() != thatDescriptions.size()) return false;
+        if (thisDescriptions.size() != thatDescriptions.size()) {
+            return false;
+        }
+        
         if (!thisDescriptions.isEmpty() && !thisDescriptions.containsAll(thatDescriptions)) {
             return false;
         }
@@ -272,7 +314,10 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
         Set<Translation> thisDisplayNames = getDisplayNames();
         Set<Translation> thatDisplayNames = that.getDisplayNames();
 
-        if (thisDisplayNames.size() != thatDisplayNames.size()) return false;
+        if (thisDisplayNames.size() != thatDisplayNames.size()) {
+            return false;
+        }
+        
         if (!thisDisplayNames.isEmpty() && !thisDisplayNames.containsAll(thatDisplayNames)) {
             return false;
         }
@@ -832,6 +877,16 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
             this.masked = newMasked;
             notifyChangeListeners(PropertyName.MASKED, !this.masked, this.masked);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition#setNamespacePrefixProvider(org.teiid.designer.extension.properties.NamespacePrefixProvider)
+     */
+    @Override
+    public void setNamespacePrefixProvider( NamespacePrefixProvider newNamespacePrefixProvider ) {
+        this.namespacePrefixProvider = newNamespacePrefixProvider;
     }
 
     /**

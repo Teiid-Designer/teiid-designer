@@ -292,12 +292,14 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         this.medBeingEdited.setNamespaceUri(this.originalMed.getNamespaceUri());
         this.medBeingEdited.setVersion(this.originalMed.getVersion());
 
-        // properties
+        // clone properties but use a different namespace provider
         for (String metaclassName : this.originalMed.getExtendedMetaclasses()) {
             this.medBeingEdited.addMetaclass(metaclassName);
 
             for (ModelExtensionPropertyDefinition propDefn : this.originalMed.getPropertyDefinitions(metaclassName)) {
-                this.medBeingEdited.addPropertyDefinition(metaclassName, propDefn);
+                ModelExtensionPropertyDefinition copy = (ModelExtensionPropertyDefinition)propDefn.clone();
+                copy.setNamespacePrefixProvider(this.medBeingEdited);
+                this.medBeingEdited.addPropertyDefinition(metaclassName, copy);
             }
         }
 

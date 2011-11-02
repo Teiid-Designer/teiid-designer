@@ -287,13 +287,7 @@ public final class ModelExtensionDefinitionValidator {
 
     public static ValidationStatus validatePropertyDefaultValue( String runtimeType,
                                                                  String defaultValue,
-                                                                 String[] allowedValues,
-                                                                 boolean hasFixedValue ) {
-        // empty default value is OK only if there is a fixed value
-        if (hasFixedValue && CoreStringUtil.isEmpty(defaultValue)) {
-            return ValidationStatus.OK_STATUS;
-        }
-
+                                                                 String[] allowedValues ) {
         // only validate if there is a runtime type
         ValidationStatus status = validatePropertyRuntimeType(runtimeType);
 
@@ -312,37 +306,102 @@ public final class ModelExtensionDefinitionValidator {
         return ValidationStatus.createErrorMessage(errorMsg);
     }
 
+    @SuppressWarnings("unused")
     public static ValidationStatus validatePropertyDefinition( String namespacePrefix,
                                                                String id,
                                                                String runtimeType,
+                                                               boolean requiresDefaultValue,
                                                                String defaultValue,
+                                                               boolean requiresFixedValue,
                                                                String fixedValue,
                                                                Collection<Translation> descriptions,
                                                                Collection<Translation> displayNames,
                                                                String[] allowedValues ) {
-        ValidationStatus status = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
+        // return the first error severity or the next most severity
+        ValidationStatus status = null;
+        ValidationStatus tempStatus = null;
 
-        if (!status.isError()) {
-            status = validatePropertyRuntimeType(runtimeType);
+        NAMESPACE_PREFIX: {
+            status = validateNamespacePrefix(namespacePrefix, Collections.<String> emptyList());
 
-            if (!status.isError()) {
-                status = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues, !CoreStringUtil.isEmpty(fixedValue));
+            if (status.isError()) {
+                return status;
+            }
+        }
 
-                if (!status.isError()) {
-                    status = validatePropertyFixedValue(runtimeType, fixedValue, allowedValues, !CoreStringUtil.isEmpty(defaultValue));
+        RUNTIME_TYPE: {
+            tempStatus = validatePropertyRuntimeType(runtimeType);
 
-                    if (!status.isError()) {
-                        status = validateTranslations(Messages.propertyDescription, descriptions, true);
+            if (tempStatus.isError()) {
+                return tempStatus;
+            }
 
-                        if (!status.isError()) {
-                            status = validateTranslations(Messages.propertyDisplayName, displayNames, true);
+            if (tempStatus.compareTo(status) < 0) {
+                status = tempStatus;
+            }
+        }
 
-                            if (!status.isError()) {
-                                status = validatePropertyAllowedValues(runtimeType, allowedValues);
-                            }
-                        }
-                    }
+        DEFAULT_VALUE: {
+            if (requiresDefaultValue) {
+                tempStatus = validatePropertyDefaultValue(runtimeType, defaultValue, allowedValues);
+
+                if (tempStatus.isError()) {
+                    return tempStatus;
                 }
+
+                if (tempStatus.compareTo(status) < 0) {
+                    status = tempStatus;
+                }
+            }
+        }
+
+        FIXED_VALUE: {
+            if (requiresFixedValue) {
+                tempStatus = validatePropertyFixedValue(runtimeType, fixedValue, allowedValues);
+
+                if (tempStatus.isError()) {
+                    return tempStatus;
+                }
+
+                if (tempStatus.compareTo(status) < 0) {
+                    status = tempStatus;
+                }
+            }
+        }
+
+        DESCRIPTIONS: {
+            tempStatus = validateTranslations(Messages.propertyDescription, descriptions, true);
+
+            if (tempStatus.isError()) {
+                return tempStatus;
+            }
+
+            if (tempStatus.compareTo(status) < 0) {
+                status = tempStatus;
+            }
+        }
+
+        DISPLAY_NAMES: {
+            tempStatus = validateTranslations(Messages.propertyDisplayName, displayNames, true);
+
+            if (tempStatus.isError()) {
+                return tempStatus;
+            }
+
+            if (tempStatus.compareTo(status) < 0) {
+                status = tempStatus;
+            }
+        }
+
+        ALLOWED_VALUES: {
+            tempStatus = validatePropertyAllowedValues(runtimeType, allowedValues);
+
+            if (tempStatus.isError()) {
+                return tempStatus;
+            }
+
+            if (tempStatus.compareTo(status) < 0) {
+                status = tempStatus;
             }
         }
 
@@ -376,7 +435,10 @@ public final class ModelExtensionDefinitionValidator {
                         }
 
                         status = validatePropertyDefinition(propDefn.getNamespacePrefix(), propDefn.getSimpleId(),
-                                                            propDefn.getRuntimeType(), propDefn.getDefaultValue(),
+                                                            propDefn.getRuntimeType(),
+                                                            !CoreStringUtil.isEmpty(propDefn.getDefaultValue()),
+                                                            propDefn.getDefaultValue(),
+                                                            !CoreStringUtil.isEmpty(propDefn.getFixedValue()),
                                                             propDefn.getFixedValue(), propDefn.getDescriptions(),
                                                             propDefn.getDisplayNames(), propDefn.getAllowedValues());
 
@@ -393,13 +455,7 @@ public final class ModelExtensionDefinitionValidator {
 
     public static ValidationStatus validatePropertyFixedValue( String runtimeType,
                                                                String fixedValue,
-                                                               String[] allowedValues,
-                                                               boolean hasDefaultValue) {
-        // empty fixed value is OK only if there is a default value
-        if (hasDefaultValue && CoreStringUtil.isEmpty(fixedValue)) {
-            return ValidationStatus.OK_STATUS;
-        }
-
+                                                               String[] allowedValues ) {
         // only validate if there is a runtime type
         ValidationStatus status = validatePropertyRuntimeType(runtimeType);
 

@@ -207,73 +207,43 @@ public class ModelExtensionDefinitionValidatorTest implements Constants {
 
     @Test
     public void emptyPropertyFixedValueShouldBeValidWhenNoRuntimeType() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(null, CoreStringUtil.Constants.EMPTY_STRING, null,
-                                                                                true).isOk());
-    }
-
-    @Test
-    public void emptyPropertyFixedValueShouldNotBeValidIfThereIsNotADefaultValue() {
-        assertFalse(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(),
-                                                                                 CoreStringUtil.Constants.EMPTY_STRING, null, false)
-                                                     .isOk());
-    }
-
-    @Test
-    public void emptyPropertyFixedValueShouldBeValidIfThereIsADefaultValue() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(),
-                                                                                CoreStringUtil.Constants.EMPTY_STRING, null, true)
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(null, CoreStringUtil.Constants.EMPTY_STRING, null)
                                                     .isOk());
+    }
+
+    @Test
+    public void emptyPropertyFixedValueShouldNotBeValidIfThereIsARuntimeType() {
+        assertFalse(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(),
+                                                                                 CoreStringUtil.Constants.EMPTY_STRING, null)
+                                                     .isOk());
     }
 
     @Test
     public void nullPropertyFixedValueShouldBeValidWhenNoRuntimeType() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(null, null, null, true).isOk());
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(null, null, null).isOk());
     }
 
     @Test
-    public void nullPropertyFixedValueShouldNotBeValidIfThereIsNotADefaultValue() {
-        assertFalse(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(), null, null, false).isOk());
-    }
-
-    @Test
-    public void nullPropertyFixedValueShouldBeValidIfThereIsADefaultValue() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(), null, null, true).isOk());
+    public void nullPropertyFixedValueShouldNotBeValidIfThereIsARuntimeType() {
+        assertFalse(ModelExtensionDefinitionValidator.validatePropertyFixedValue(Type.STRING.toString(), null, null).isOk());
     }
 
     @Test
     public void emptyPropertyDefaultValueShouldBeValidWhenThereIsNoRuntimeType() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(null, CoreStringUtil.Constants.EMPTY_STRING,
-                                                                                  null, true).isOk());
-    }
-
-    @Test
-    public void emptyPropertyDefaultValueShouldNotBeValidWhenThereIsNotAFixedValue() {
-        assertFalse(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(Type.STRING.toString(),
-                                                                                   CoreStringUtil.Constants.EMPTY_STRING, null,
-                                                                                   false).isOk());
-    }
-
-    @Test
-    public void emptyPropertyDefaultValueShouldBeValidWhenThereIsAFixedValue() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(Type.STRING.toString(),
-                                                                                  CoreStringUtil.Constants.EMPTY_STRING, null, true)
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(null, CoreStringUtil.Constants.EMPTY_STRING, null)
                                                     .isOk());
     }
 
     @Test
-    public void nullPropertyDefaultValueShouldBeValidThereIsNoRuntimeType() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(null, null, null, true).isOk());
-    }
-
-    @Test
-    public void nullPropertyDefaultValueShouldNotBeValidWhenThereIsNoFixedValue() {
-        assertFalse(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(Type.STRING.toString(), null, null, false)
+    public void emptyPropertyDefaultValueShouldNotBeValidWhenThereIsARuntimeType() {
+        assertFalse(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(Type.STRING.toString(),
+                                                                                   CoreStringUtil.Constants.EMPTY_STRING, null)
                                                      .isOk());
     }
 
     @Test
-    public void nullPropertyDefaultValueShouldBeValidWhenThereIsAFixedValue() {
-        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(Type.STRING.toString(), null, null, true).isOk());
+    public void nullPropertyDefaultValueShouldBeValidThereIsNoRuntimeType() {
+        assertTrue(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(null, null, null).isOk());
     }
 
     @Test

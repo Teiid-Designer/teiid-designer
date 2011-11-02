@@ -41,6 +41,16 @@ public class Factory implements Constants {
         return locales;
     }
 
+    public static NamespacePrefixProvider createDefaultNamespacePrefixProvider() {
+        return new NamespacePrefixProvider() {
+            
+            @Override
+            public String getNamespacePrefix() {
+                return DEFAULT_NAMESPACE_PREFIX;
+            }
+        };
+    }
+
     public static Set<String> createDefaultStringAllowedValues() {
         Set<String> allowedValues = new HashSet<String>(DEFAULT_STRING_ALLOWED_VALUES.length);
         allowedValues.addAll(Arrays.asList(DEFAULT_STRING_ALLOWED_VALUES));

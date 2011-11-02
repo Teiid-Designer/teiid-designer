@@ -20,11 +20,7 @@ import com.metamatrix.core.util.CoreStringUtil;
 /**
  * A translation related to a specific {@link Locale}.
  */
-public class Translation implements Comparable<Translation>{
-
-    public static Translation copy( Translation source ) {
-        return new Translation(source.getLocale(), source.getTranslation());
-    }
+public class Translation implements Comparable<Translation>, Cloneable {
 
     private Locale locale;
     private String translation;
@@ -34,6 +30,20 @@ public class Translation implements Comparable<Translation>{
         CoreArgCheck.isNotNull(locale, "locale is null"); //$NON-NLS-1$
         this.locale = locale;
         this.translation = translation;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new Error("should never happen"); //$NON-NLS-1$
+        }
     }
 
     /**

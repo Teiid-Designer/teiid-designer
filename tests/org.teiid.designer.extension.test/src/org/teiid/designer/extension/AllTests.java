@@ -13,11 +13,14 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionParserTes
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionTest;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidatorTest;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriterTest;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinitionImplTest;
+import org.teiid.designer.extension.properties.TranslationTest;
 import org.teiid.designer.extension.registry.ModelExtensionRegistryTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ ModelExtensionDefinitionTest.class, ModelExtensionDefinitionParserTest.class,
-        ModelExtensionRegistryTest.class, ModelExtensionDefinitionValidatorTest.class, ModelExtensionDefinitionWriterTest.class })
+        ModelExtensionRegistryTest.class, ModelExtensionDefinitionValidatorTest.class, ModelExtensionDefinitionWriterTest.class,
+        TranslationTest.class, ModelExtensionPropertyDefinitionImplTest.class })
 public class AllTests {
     // nothing to do
 }

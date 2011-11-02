@@ -14,16 +14,18 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Set;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.properties.PropertyDefinition;
 import org.teiid.designer.extension.Messages;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 
 /**
  * A <code>ModelExtensionPropertyDefinition</code> is the property definition of all extension properties.
  */
-public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
+public interface ModelExtensionPropertyDefinition extends Cloneable, PropertyDefinition {
 
     /**
      * The allowed boolean values.
@@ -65,6 +67,11 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
      * @return the allowed values (never <code>null</code> but can be empty)
      */
     Set<String> allowedValues();
+
+    /**
+     * @return a deep copy of this property definition (never <code>null</code>)
+     */
+    Object clone();
 
     /**
      * The collection returned can be manipulated without affecting this property definition.
@@ -170,6 +177,11 @@ public interface ModelExtensionPropertyDefinition extends PropertyDefinition {
      * @param newMasked the new masked value
      */
     void setMasked( boolean newMasked );
+
+    /**
+     * @param newNamespacePrefixProvider the new namespace prefix provider (cannot be <code>null</code>)
+     */
+    void setNamespacePrefixProvider(NamespacePrefixProvider newNamespacePrefixProvider);
 
     /**
      * @param newRequired the new required value

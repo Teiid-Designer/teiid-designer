@@ -649,6 +649,10 @@ public class PropertiesEditorPage extends MedEditorPage {
         } else if (PropertyName.PROPERTY_DEFINITION.toString().equals(propName)) {
             validatePropertyDefinitions();
             this.propertyViewer.refresh();
+        } else if (PropertyName.NAMESPACE_PREFIX.toString().equals(propName)) {
+            // changes to MED namespace prefix affect the property definitions namespace prefix
+            validatePropertyDefinitions();
+            this.propertyViewer.refresh();
         }
 
         updateState();

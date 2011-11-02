@@ -177,13 +177,13 @@ final class EditPropertyDialog extends FormDialog {
 
             if (!this.propDefnBeingEdited.getDescriptions().isEmpty()) {
                 for (Translation description : this.propDefnBeingEdited.getDescriptions()) {
-                    this.propDefn.addDescription(Translation.copy(description));
+                    this.propDefn.addDescription((Translation)description.clone());
                 }
             }
 
             if (!this.propDefnBeingEdited.getDisplayNames().isEmpty()) {
                 for (Translation displayName : this.propDefnBeingEdited.getDisplayNames()) {
-                    this.propDefn.addDisplayName(Translation.copy(displayName));
+                    this.propDefn.addDisplayName((Translation)displayName.clone());
                 }
             }
         }
@@ -1252,11 +1252,11 @@ final class EditPropertyDialog extends FormDialog {
 
         // if boolean don't allow changes to allowed values
         enable &= (Type.BOOLEAN != this.propDefn.getType());
-        
+
         if (this.btnAllowedValues.getEnabled() != enable) {
             this.btnAllowedValues.setEnabled(enable);
         }
-        
+
         if (this.lstAllowedValues.getEnabled() != enable) {
             this.lstAllowedValues.setEnabled(enable);
         }
@@ -1360,8 +1360,7 @@ final class EditPropertyDialog extends FormDialog {
             Object oldValue = e.getOldValue();
             Object newValue = e.getNewValue();
 
-            if (((newValue != null) && !(newValue instanceof String))
-                    || ((oldValue != null) && !(oldValue instanceof String))) {
+            if (((newValue != null) && !(newValue instanceof String)) || ((oldValue != null) && !(oldValue instanceof String))) {
                 // should always be a collection but check
                 if (newValue instanceof Collection) {
                     this.lstAllowedValues.removeAll();
@@ -1565,13 +1564,11 @@ final class EditPropertyDialog extends FormDialog {
             if (valueIsFixed) {
                 this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyFixedValue(this.propDefn.getRuntimeType(),
                                                                                                               this.propDefn.getFixedValue(),
-                                                                                                              this.propDefn.getAllowedValues(),
-                                                                                                              false));
+                                                                                                              this.propDefn.getAllowedValues()));
             } else {
                 this.initialValueError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefaultValue(this.propDefn.getRuntimeType(),
                                                                                                                 this.propDefn.getDefaultValue(),
-                                                                                                                this.propDefn.getAllowedValues(),
-                                                                                                                false));
+                                                                                                                this.propDefn.getAllowedValues()));
             }
         } else {
             this.initialValueError.setMessage(null);
