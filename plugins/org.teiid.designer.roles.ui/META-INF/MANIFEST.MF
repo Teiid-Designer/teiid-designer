@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.ui,
  org.teiid.designer.metamodels.relational,
  org.teiid.designer.transformation,
  org.teiid.designer.metamodels.xml,
- org.teiid.designer.metamodels.webservice
+ org.teiid.designer.metamodels.webservice,
+ org.teiid.designer.metamodels.function
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.roles.ui

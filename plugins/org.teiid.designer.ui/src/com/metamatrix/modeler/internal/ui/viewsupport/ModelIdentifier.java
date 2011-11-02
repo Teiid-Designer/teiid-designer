@@ -563,6 +563,17 @@ public abstract class ModelIdentifier implements UiConstants {
     public static boolean isXmlViewModel( ModelResource modelResource ) {
         return isModel(modelResource, XML_VIEW_MODEL_TYPE, XML_VIEW_MODEL_URI);
     }
+    
+    /**
+     * Indicates if the specified URI is a xml view model.
+     * 
+     * @param theURI the uri string being checked (may not be <code>null</code>)
+     * @return <code>true</code> if a xml view model. <code>false</code> otherwise.
+     * @since 5.0
+     */
+    public static boolean isXmlViewModel( String theURI ) {
+        return XML_VIEW_MODEL_URI.equalsIgnoreCase(theURI);
+    }
 
     /**
      * Indicates if the specified <code>IResource</code> is a web services view model.
@@ -584,6 +595,17 @@ public abstract class ModelIdentifier implements UiConstants {
      */
     public static boolean isWebServicesViewModel( ModelResource modelResource ) {
         return isModel(modelResource, WEB_SERVICES_MODEL_TYPE, WEB_SERVICES_VIEW_MODEL_URI);
+    }
+    
+    /**
+     * Indicates if the specified URI is a web service model.
+     * 
+     * @param theURI the uri string being checked (may not be <code>null</code>)
+     * @return <code>true</code> if a web service model; <code>false</code> otherwise.
+     * @since 5.0
+     */
+    public static boolean isWebServicesViewModel( String theURI ) {
+        return WEB_SERVICES_VIEW_MODEL_URI.equalsIgnoreCase(theURI);
     }
 
     /**
@@ -733,7 +755,7 @@ public abstract class ModelIdentifier implements UiConstants {
     }
 
     /**
-     * Indicates if the specified <code>ModelResource</code> is a function view model.
+     * Indicates if the specified <code>ModelResource</code> is a function model.
      * 
      * @param theResource the resource being checked (may not be <code>null</code>)
      * @return <code>true</code> if a function model; <code>false</code> otherwise.
@@ -741,6 +763,17 @@ public abstract class ModelIdentifier implements UiConstants {
      */
     public static boolean isFunctionModel( ModelResource modelResource ) {
         return isModel(modelResource, null, FUNCTION_MODEL_URI);
+    }
+    
+    /**
+     * Indicates if the specified URI is a function.
+     * 
+     * @param theURI the uri string being checked (may not be <code>null</code>)
+     * @return <code>true</code> if a function model; <code>false</code> otherwise.
+     * @since 5.0
+     */
+    public static boolean isFunctionModelUri( String theURI ) {
+        return FUNCTION_MODEL_URI.equalsIgnoreCase(theURI);
     }
 
     /**

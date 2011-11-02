@@ -27,6 +27,7 @@ import org.teiid.designer.roles.Permission;
 import com.metamatrix.core.util.StringUtilities;
 import com.metamatrix.metamodels.core.ModelAnnotation;
 import com.metamatrix.metamodels.core.ModelType;
+import com.metamatrix.metamodels.function.ScalarFunction;
 import com.metamatrix.metamodels.relational.Catalog;
 import com.metamatrix.metamodels.relational.Column;
 import com.metamatrix.metamodels.relational.Procedure;
@@ -161,7 +162,15 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     @Override
     public Object[] getElements( Object inputElement ) {
         if (resources == null) {
-            resources = (Resource[])((ContainerImpl)inputElement).getResources().toArray();
+        	// Filter out XSD models
+        	List<Resource> allVdbResources = ((ContainerImpl)inputElement).getResources();
+        	List<Resource> filteredResources = new ArrayList<Resource>();
+        	for( Resource res : allVdbResources ) {
+        		if( ! res.getURI().toFileString().toUpperCase().endsWith(".XSD") ) { //$NON-NLS-1$
+        			filteredResources.add(res);
+        		}
+        	}
+            resources = filteredResources.toArray( new Resource[0]); 
         }
 
         reInitializePermissions();
@@ -183,7 +192,8 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 				eObj instanceof ProcedureParameter ||
 				eObj instanceof Interface ||
 				eObj instanceof Operation ||
-				eObj instanceof XmlDocument) {
+				eObj instanceof XmlDocument ||
+				eObj instanceof ScalarFunction) {
                 relObjects.add(eObj);
             }
         }
@@ -229,6 +239,15 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
                 ModelType mType = ma.getModelType();
                 if (ModelType.PHYSICAL_LITERAL == mType) {
                     return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_SOURCE_MODEL_ID);
+                }
+                if( ModelIdentifier.isFunctionModelUri(ma.getPrimaryMetamodelUri())) {
+                	return ModelIdentifier.getImage(ModelIdentifier.FUNCTION_MODEL_ID);
+                }
+                if( ModelIdentifier.isXmlViewModel(ma.getPrimaryMetamodelUri())) {
+                	return ModelIdentifier.getImage(ModelIdentifier.XML_VIEW_MODEL_ID);
+                }
+                if( ModelIdentifier.isWebServicesViewModel(ma.getPrimaryMetamodelUri())) {
+                	return ModelIdentifier.getImage(ModelIdentifier.WEB_SERVICES_VIEW_MODEL_ID);
                 }
                 return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_VIEW_MODEL_ID);
             } catch (ModelerCoreException e) {
