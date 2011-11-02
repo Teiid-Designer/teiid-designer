@@ -29,6 +29,12 @@ public class ServerUtils {
     public static final String MMS_PREFIX = "mms://"; //$NON-NLS-1$
     public static final String COLON = ":"; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
+    
+    public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
+			"<model visible=\"true\" name=\"Foo\" type=\"VIRTUAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
+			"<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
+			"</model>" + //$NON-NLS-1$
+			"</vdb>"; //$NON-NLS-1$ +
 
 
     public ServerUtils getInstance() {

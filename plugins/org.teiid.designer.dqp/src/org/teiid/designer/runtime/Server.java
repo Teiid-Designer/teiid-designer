@@ -10,11 +10,18 @@ package org.teiid.designer.runtime;
 import static com.metamatrix.modeler.dqp.DqpPlugin.PLUGIN_ID;
 import static com.metamatrix.modeler.dqp.DqpPlugin.Util;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminFactory;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.jdbc.TeiidDriver;
 
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.StringUtilities;
@@ -333,6 +340,41 @@ public class Server implements HostProvider {
         }
 
         return Status.OK_STATUS;
+    }
+    
+    public IStatus testJDBCPing(String host, String port, String username, String password) {
+    	Connection teiidJdbcConnection = null;
+		try {
+			
+			Admin adminApi = getAdmin().getAdminApi();
+ 
+			adminApi.deployVDB("ping-vdb.xml", (InputStream)new ByteArrayInputStream(ServerUtils.TEST_VDB.getBytes())); //$NON-NLS-1$
+			try{
+				String url = "jdbc:teiid:ping@mm://"+host+':'+port+";user="+username+";password="+password+';';  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				
+				teiidJdbcConnection = TeiidDriver.getInstance().connect(url, null);
+			   //pass
+			} catch(SQLException ex){
+				String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+	            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+			} finally {
+				adminApi.deleteVDB("ping", 1); //$NON-NLS-1$
+				
+				if( teiidJdbcConnection != null ) {
+					teiidJdbcConnection.close();
+				}
+		        adminApi.close();
+		        this.admin = null;
+			}
+		} catch (AdminException ex) {
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+		} catch (Exception ex) {
+			String msg = Util.getString("serverDeployUndeployProblemPingingTeiidJdbc"); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
+		}
+		
+		return Status.OK_STATUS;
     }
 
     /**

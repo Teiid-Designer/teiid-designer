@@ -883,6 +883,28 @@ public final class ServerPage extends WizardPage implements HostProvider {
                 MessageDialog.openError(getShell(), UTIL.getString("serverPageTestConnectionDialogTitle"), //$NON-NLS-1$
                                         UTIL.getString("serverPageTestConnectionDialogFailureMsg")); //$NON-NLS-1$
             }
+            
+            final boolean[] jdbcSuccess = new boolean[1];
+
+            BusyIndicator.showWhile(null, new Runnable() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see java.lang.Runnable#run()
+                 */
+                @Override
+                public void run() {
+                	jdbcSuccess[0] = server.testJDBCPing(host, jdbcPort, jdbcUsername, jdbcPassword).isOK();
+                }
+            });
+
+            if (jdbcSuccess[0]) {
+                MessageDialog.openInformation(getShell(), UTIL.getString("serverPageTestJdbcConnectionDialogTitle"), //$NON-NLS-1$
+                                              UTIL.getString("serverPageTestJdbcConnectionDialogSuccessMsg")); //$NON-NLS-1$
+            } else {
+                MessageDialog.openError(getShell(), UTIL.getString("serverPageTestJdbcConnectionDialogTitle"), //$NON-NLS-1$
+                                        UTIL.getString("serverPageTestJdbcConnectionDialogFailureMsg")); //$NON-NLS-1$
+            }
         }
     }
 
