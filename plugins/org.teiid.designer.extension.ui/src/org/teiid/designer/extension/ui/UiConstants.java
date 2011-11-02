@@ -24,9 +24,13 @@ public interface UiConstants {
     PluginUtil UTIL = new LoggingUtil(PLUGIN_ID);
 
     interface EditorIds {
-        String MED_EDITOR = "org.teiid.designer.extension.ui.modelDefinitionEditor"; //$NON-NLS-1$
-        String MED_OVERVIEW_PAGE = "org.teiid.designer.extension.ui.overviewPage"; //$NON-NLS-1$
-        String MED_PROPERTIES_PAGE = "org.teiid.designer.extension.ui.propertiesPage"; //$NON-NLS-1$
+        String MED_EDITOR = PLUGIN_ID + ".modelDefinitionEditor"; //$NON-NLS-1$
+        String MED_OVERVIEW_PAGE = PLUGIN_ID + ".overviewPage"; //$NON-NLS-1$
+        String MED_PROPERTIES_PAGE = PLUGIN_ID + ".propertiesPage"; //$NON-NLS-1$
+    }
+    
+    interface ExtensionIds {
+        String PROBLEM_MARKER = PLUGIN_ID + ".medMarker"; //$NON-NLS-1$";
     }
 
     interface ImageIds {
@@ -62,6 +66,6 @@ public interface UiConstants {
     }
 
     interface ViewIds {
-        String REGISTRY_VIEW = "org.teiid.designer.extension.ui.views.modelExtensionRegistryView"; //$NON-NLS-1$
+        String REGISTRY_VIEW = PLUGIN_ID + ".views.modelExtensionRegistryView"; //$NON-NLS-1$
     }
 }

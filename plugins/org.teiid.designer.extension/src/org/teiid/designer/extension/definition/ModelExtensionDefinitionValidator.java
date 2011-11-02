@@ -55,7 +55,7 @@ public final class ModelExtensionDefinitionValidator {
         if (CoreStringUtil.isEmpty(errorMsg)) {
             for (char c : value.toCharArray()) {
                 if (!Character.isLetterOrDigit(c)) {
-                    errorMsg = NLS.bind(Messages.valueContainsSpacesValidationMsg, propertyName);
+                    errorMsg = NLS.bind(Messages.valueContainsSpecialCharactersValidationMsg, propertyName);
                 }
             }
         }

@@ -252,14 +252,14 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
-    private void createMarker( int messageType,
+    private void createMarker( int severity,
                                String message ) {
         Map attributes = new HashMap();
-        attributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+        attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
 
         try {
-            MarkerUtilities.createMarker(getFile(), attributes, Messages.medEditorMarkerType);
+            MarkerUtilities.createMarker(getFile(), attributes, UiConstants.ExtensionIds.PROBLEM_MARKER);
         } catch (CoreException e) {
             UTIL.log(e);
         }
