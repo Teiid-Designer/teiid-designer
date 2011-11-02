@@ -15,6 +15,7 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED
 import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -104,7 +105,7 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
         try {
             fileContents = this.selectedMed.getContents();
         } catch (CoreException e) {
-            UTIL.log(NLS.bind(Messages.medFileGetContentsErrorMsg, this.selectedMed.getName()));
+            UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, this.selectedMed.getName()));
         }
 
         if (fileContents != null) {
@@ -129,7 +130,7 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
                 addExtensionToRegistry(this.selectedMed);
             }
         } catch (Exception e) {
-            UTIL.log(NLS.bind(Messages.medRegistryAddErrorMsg, this.selectedMed.getName()));
+            UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, this.selectedMed.getName()));
         }
     }
 

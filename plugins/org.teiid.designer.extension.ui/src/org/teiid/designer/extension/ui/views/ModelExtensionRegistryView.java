@@ -461,7 +461,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             try {
                 fileContents = mxdFile.getContents();
             } catch (CoreException e) {
-                UTIL.log(NLS.bind(Messages.medFileGetContentsErrorMsg, mxdFile.getName()));
+                UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, mxdFile.getName()));
             }
 
             if (fileContents != null) {
@@ -472,7 +472,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
                     try {
                         UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(mxdFile);
                     } catch (Exception e) {
-                        UTIL.log(NLS.bind(Messages.medRegistryAddErrorMsg, mxdFile.getName()));
+                        UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, mxdFile.getName()));
                         MessageDialog.openInformation(getShell(),
                                                       Messages.registerMedActionFailedTitle,
                                                       Messages.registerMedActionFailedMsg);

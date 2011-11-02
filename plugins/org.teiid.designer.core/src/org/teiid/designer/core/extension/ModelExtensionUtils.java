@@ -593,7 +593,28 @@ public class ModelExtensionUtils {
 
                 // delete annotation
                 ModelResourceContainerFactory.deleteAnnotation(allowedValuesAnnotation);
-                break;
+            }
+            if (PropertyTagKeys.DISPLAY_NAMES.equals(key)) {
+                Annotation displayNamesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
+
+                if (displayNamesAnnotation == null) {
+                    throw new Exception(Util.getString(I18N_PREFIX + "displayNamesAnnotationNotFound", //$NON-NLS-1$
+                                                       propertyDefinitionTag.getKey()));
+                }
+
+                // delete annotation
+                ModelResourceContainerFactory.deleteAnnotation(displayNamesAnnotation);
+            }
+            if (PropertyTagKeys.DESCRIPTIONS.equals(key)) {
+                Annotation descriptionsAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
+
+                if (descriptionsAnnotation == null) {
+                    throw new Exception(Util.getString(I18N_PREFIX + "descriptionsAnnotationNotFound", //$NON-NLS-1$
+                                                       propertyDefinitionTag.getKey()));
+                }
+
+                // delete annotation
+                ModelResourceContainerFactory.deleteAnnotation(descriptionsAnnotation);
             }
         }
 

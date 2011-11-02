@@ -212,7 +212,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 try {
                     fileContents = medFile.getContents();
                 } catch (CoreException e) {
-                    UTIL.log(NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
+                    UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
                 }
 
                 boolean wasAdded = false;
@@ -226,7 +226,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                             UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(medFile);
                             wasAdded = true;
                         } catch (Exception e) {
-                            UTIL.log(NLS.bind(Messages.medRegistryAddErrorMsg, medFile.getName()));
+                            UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, medFile.getName()));
                         }
                     }
                 }
