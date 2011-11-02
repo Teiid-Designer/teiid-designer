@@ -7,8 +7,13 @@
  */
 package org.teiid.designer.extension.ui.actions;
 
+import static com.metamatrix.modeler.ui.UiConstants.Util;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import java.io.InputStream;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -17,6 +22,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
+import org.teiid.designer.extension.ui.UiConstants;
 import com.metamatrix.modeler.ui.UiPlugin;
 
 /**
@@ -24,6 +30,41 @@ import com.metamatrix.modeler.ui.UiPlugin;
  * extension registry.
  */
 public class RegistryDeploymentValidator {
+
+    /**
+     * Determine if the supplied IFile has any outstanding problem markers. If markers are found, dialogs are displayed.
+     * 
+     * @param mxdFile the IFile containing the extension definition
+     * @return 'true' if problems were found, 'false' if not.
+     */
+    public static boolean checkProblemMarkers( IFile mxdFile ) {
+        IMarker[] markers = null;
+        boolean errorOccurred = false;
+
+        try {
+            markers = mxdFile.findMarkers(UiConstants.ExtensionIds.PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
+        } catch (CoreException ex) {
+            Util.log(ex);
+            errorOccurred = true;
+        }
+
+        // Notify user if error getting markers
+        if (errorOccurred) {
+            MessageDialog.openWarning(getShell(),
+                                      Messages.checkMedProblemMarkersErrorTitle,
+                                      Messages.checkMedProblemMarkersErrorMsg);
+            return true;
+        }
+
+        if (markers.length > 0) {
+            MessageDialog.openInformation(getShell(),
+                                          Messages.checkMedProblemMarkersHasErrorsTitle,
+                                          Messages.checkMedProblemMarkersHasErrorsMsg);
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Determine if the supplied File contains a valid and deployable ModelExtensionDefinition. 'valid' meaning that the file

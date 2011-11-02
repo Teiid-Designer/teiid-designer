@@ -72,11 +72,16 @@ public class Messages extends NLS {
     public static String registerMedActionNamespaceUriRegisteredMsg;
     public static String registerMedActionFailedTitle;
     public static String registerMedActionFailedMsg;
+    public static String registerMedActionEditorDirtyTitle;
+    public static String registerMedActionEditorDirtyMsg;
+    public static String checkMedProblemMarkersErrorTitle;
+    public static String checkMedProblemMarkersErrorMsg;
+    public static String checkMedProblemMarkersHasErrorsTitle;
+    public static String checkMedProblemMarkersHasErrorsMsg;
 
     public static String registryViewToolTip;
 
     public static String newMedWizardTitle;
-    public static String newMedWizardPageTitle;
     public static String newMedWizardNameLabel;
     public static String newMedWizardFolderLabel;
     public static String newMedWizardInitialMsg;
@@ -84,6 +89,7 @@ public class Messages extends NLS {
     public static String newMedWizardNotModelProjMsg;
     public static String newMedWizardSelectFolderMsg;
     public static String newMedWizardMedNameErrorMsg;
+    public static String copyMedWizardTitle;
 
     public static String manageModelExtensionDefnsActionTitle;
     public static String manageModelExtensionDefnsActionModelDirtyTitle;
@@ -114,12 +120,12 @@ public class Messages extends NLS {
     public static String currentMedsPageBrowseDialogMsg;
     public static String currentMedsPageAddMedButton;
     public static String currentMedsPageRemoveMedButton;
-    public static String currentMedsPageRegisterMedButton;
+    public static String currentMedsPageSaveMedButton;
     public static String currentMedsPageTableLabel;
     public static String currentMedsPageRemoveDialogTitle;
     public static String currentMedsPageRemoveDialogMsg;
-    public static String currentMedsPageRegisterDialogTitle;
-    public static String currentMedsPageRegisterDialogMsg;
+    // public static String currentMedsPageRegisterDialogTitle;
+    // public static String currentMedsPageRegisterDialogMsg;
 
     public static String availableMedsDialogTitle;
     public static String availableMedsDialogMsg;

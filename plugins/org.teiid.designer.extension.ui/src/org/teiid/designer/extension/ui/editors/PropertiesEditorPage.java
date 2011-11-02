@@ -18,13 +18,11 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.EDIT_PROPERTY
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
-
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -59,7 +57,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -82,6 +79,9 @@ public class PropertiesEditorPage extends MedEditorPage {
 
     private final ErrorMessage metaclassError;
     private final ErrorMessage propertyError;
+
+    private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
+    private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
     public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_PROPERTIES_PAGE, Messages.medEditorPropertiesPageTitle);
@@ -270,7 +270,21 @@ public class PropertiesEditorPage extends MedEditorPage {
                     // nothing to do
                 }
             });
-            this.metaclassViewer.setLabelProvider(new LabelProvider());
+
+            this.metaclassViewer.setLabelProvider(new LabelProvider() {
+                @Override
+                public String getText( Object element ) {
+                    String elemString = element.toString();
+                    // This extracts the name between ".impl." and "Impl" from the metaclass name
+                    if (!CoreStringUtil.isEmpty(elemString)) {
+                        int indx1 = elemString.indexOf(MC_PREFIX);
+                        int indx2 = elemString.indexOf(MC_SUFFIX);
+                        return elemString.substring(indx1 + MC_PREFIX.length(), indx2);
+                    }
+                    return null;
+                }
+            });
+
             this.metaclassViewer.addDoubleClickListener(new IDoubleClickListener() {
 
                 /**

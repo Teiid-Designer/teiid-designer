@@ -12,9 +12,7 @@ import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryAction
 import static org.teiid.designer.extension.ui.Messages.updateMedInRegistryActionToolTip;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.io.InputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,7 +37,6 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
-
 import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.actions.SortableSelectionAction;
 import com.metamatrix.ui.internal.eventsupport.SelectionUtilities;
@@ -95,6 +92,11 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
                 return;
             }
             editor.doSave(new NullProgressMonitor());
+        }
+
+        // If the file has any error markers, user is informed to fix them first
+        if (RegistryDeploymentValidator.checkProblemMarkers(this.selectedMed)) {
+            return;
         }
 
         ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);

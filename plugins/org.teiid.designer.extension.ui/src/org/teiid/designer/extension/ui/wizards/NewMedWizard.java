@@ -9,7 +9,6 @@ package org.teiid.designer.extension.ui.wizards;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,7 +42,6 @@ import org.teiid.designer.extension.definition.ModelExtensionAssistantAdapter;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.core.ModelerCore;
 import com.metamatrix.modeler.core.validation.rules.StringNameValidator;
@@ -78,13 +76,23 @@ public final class NewMedWizard extends AbstractWizard
     private WizardPage pg;
     private Text nameText, folderText;
     private Button btnFolderBrowse;
+    private Button openInEditorCB;
     private ISelectionStatusValidator projectValidator = new ModelProjectSelectionStatusValidator();
+    private String pageTitle;
 
     /**
      * @since 7.6
      */
     public NewMedWizard() {
-        super(UiPlugin.getDefault(), Messages.newMedWizardTitle, null);
+        this(Messages.newMedWizardTitle);
+    }
+
+    /**
+     * @since 7.6
+     */
+    public NewMedWizard( String wizardTitle ) {
+        super(UiPlugin.getDefault(), wizardTitle, null);
+        pageTitle = wizardTitle;
     }
 
     /**
@@ -124,12 +132,12 @@ public final class NewMedWizard extends AbstractWizard
 
                     NewMedWizard.this.folderLocation.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
-                    // open editor
-                    IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-                    IDE.openEditor(page, createdMedFile);
+                    // open editor - if checkbox is selected
+                    if (NewMedWizard.this.openInEditorCB.getSelection()) {
+                        IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
+                        IDE.openEditor(page, createdMedFile);
+                    }
 
-                    // ModelExtensionDefinitionEditor medEditor = getMedEditor(medFile);
-                    
                 } catch (final Exception err) {
                     throw new InvocationTargetException(err);
                 } finally {
@@ -173,7 +181,7 @@ public final class NewMedWizard extends AbstractWizard
 
         if (folderLocation != null && !folderInModelProject()) {
             // Create empty page
-            this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), Messages.newMedWizardPageTitle, null) {
+            this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), this.pageTitle, null) {
 
                 /**
                  * {@inheritDoc}
@@ -189,7 +197,7 @@ public final class NewMedWizard extends AbstractWizard
         } else {
 
             // Create and add page
-            this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), Messages.newMedWizardPageTitle, null) {
+            this.pg = new WizardPage(NewMedWizard.class.getSimpleName(), this.pageTitle, null) {
 
                 /**
                  * {@inheritDoc}
@@ -321,6 +329,12 @@ public final class NewMedWizard extends AbstractWizard
             }
         });
 
+        this.openInEditorCB = WidgetFactory.createCheckBox(pg,
+                                                           "Open in Extension Editor",
+                                                           GridData.GRAB_VERTICAL | GridData.VERTICAL_ALIGN_END,
+                                                           COLUMN_COUNT,
+                                                           Boolean.TRUE);
+
         // set focus to browse button if no folder selected. otherwise set focus to text field
         if (folderLocation == null) {
             btnFolderBrowse.setFocus();
@@ -410,45 +424,4 @@ public final class NewMedWizard extends AbstractWizard
         }
     }
 
-    // /**
-    // * Finds the visible MED Editor for the supplied MED If an editor is NOT open for this med, then null is returned.
-    // *
-    // * @param vdb
-    // * @return the MedEditor
-    // */
-    // public ModelExtensionDefinitionEditor getMedEditor( final IFile med ) {
-    // final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
-    //
-    // if (window != null) {
-    // final IWorkbenchPage page = window.getActivePage();
-    //
-    // if (page != null) {
-    // ModelExtensionDefinitionEditor editor = findEditorPart(page, med);
-    // if (editor != null) {
-    // return editor;
-    // }
-    // }
-    // }
-    // return null;
-    // }
-    //
-    // private ModelExtensionDefinitionEditor findEditorPart( final IWorkbenchPage page,
-    // IFile vdbFile ) {
-    // // look through the open editors and see if there is one available for
-    // // this model file.
-    // final IEditorReference[] editors = page.getEditorReferences();
-    // for (int i = 0; i < editors.length; ++i) {
-    //
-    // final IEditorPart editor = editors[i].getEditor(false);
-    // if (editor instanceof ModelExtensionDefinitionEditor) {
-    // final ModelExtensionDefinitionEditor medEditor = (ModelExtensionDefinitionEditor)editor;
-    // // final IPath editorVdbPath = medEditor.getVdb().getName();
-    // // if (vdbFile.getFullPath().equals(editorVdbPath))
-    // // return medEditor;
-    //
-    // }
-    // }
-    //
-    // return null;
-    // }
 }

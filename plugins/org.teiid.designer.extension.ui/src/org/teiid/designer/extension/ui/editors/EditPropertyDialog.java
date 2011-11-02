@@ -13,12 +13,10 @@ import static org.teiid.designer.extension.ui.UiConstants.Form.SECTION_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.TEXT_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.Form.VIEWER_STYLE;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -69,7 +67,6 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
-
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -79,6 +76,9 @@ import com.metamatrix.ui.internal.util.WidgetUtil;
  * The <code>EditPropertyDialog</code> is used to create or edit a property definition.
  */
 final class EditPropertyDialog extends FormDialog {
+
+    private static final String MC_PREFIX = ".impl."; //$NON-NLS-1$
+    private static final String MC_SUFFIX = "Impl"; //$NON-NLS-1$
 
     private final String metaclassName;
     private final NamespacePrefixProvider namespacePrefixProvider;
@@ -680,7 +680,9 @@ final class EditPropertyDialog extends FormDialog {
         METACLASS: {
             toolkit.createLabel(finalContainer, Messages.metaclassLabel);
 
-            Label label = toolkit.createLabel(finalContainer, this.metaclassName);
+            // Use shortened name on the label
+            String labelStr = getMetaclassShortName(this.metaclassName);
+            Label label = toolkit.createLabel(finalContainer, labelStr);
             label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         }
 
@@ -1051,6 +1053,17 @@ final class EditPropertyDialog extends FormDialog {
         }
 
         return section;
+    }
+
+    private String getMetaclassShortName( String metaclass ) {
+        String elemString = metaclass.toString();
+        // This extracts the name between ".impl." and "Impl" from the metaclass name
+        if (!CoreStringUtil.isEmpty(elemString)) {
+            int indx1 = elemString.indexOf(MC_PREFIX);
+            int indx2 = elemString.indexOf(MC_SUFFIX);
+            return elemString.substring(indx1 + MC_PREFIX.length(), indx2);
+        }
+        return elemString;
     }
 
     ModelExtensionPropertyDefinition getPropertyDefinition() {

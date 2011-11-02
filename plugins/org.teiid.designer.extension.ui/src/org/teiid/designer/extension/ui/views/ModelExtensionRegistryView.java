@@ -10,12 +10,10 @@ package org.teiid.designer.extension.ui.views;
 import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -54,7 +52,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -69,8 +73,8 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
+import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
-
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -384,7 +388,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        NewMedWizard wizard = new NewMedWizard();
+        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle);
         wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
         // Set the selectedMed contents on the wizard
         ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
@@ -435,6 +439,20 @@ public final class ModelExtensionRegistryView extends ViewPart {
         IFile mxdFile = selectWorkspaceMed();
 
         if (mxdFile != null) {
+
+            // If open in editor, and it's dirty, notify user
+            ModelExtensionDefinitionEditor editor = getOpenEditor(mxdFile);
+            if (editor != null && editor.isDirty()) {
+                MessageDialog.openWarning(getShell(),
+                                          Messages.registerMedActionEditorDirtyTitle,
+                                          Messages.registerMedActionEditorDirtyMsg);
+                return;
+            }
+
+            // If the file has any error markers, user is informed to fix them first
+            if (RegistryDeploymentValidator.checkProblemMarkers(mxdFile)) {
+                return;
+            }
 
             // -------------------------------------------------
             // Do some validation checks before registering.
@@ -494,6 +512,42 @@ public final class ModelExtensionRegistryView extends ViewPart {
         // Return selected mxd. If nothing selected, return null
         if (models.length > 0 && models[0] instanceof IFile) return (IFile)models[0];
         return null;
+    }
+
+    /*
+     * Find Open Editor for the currently selected ModelExtensionDefinition
+     * @param selectedMedFile the mxd file to check
+     * @return the currently open editor, null if none open.
+     */
+    private ModelExtensionDefinitionEditor getOpenEditor( IFile selectedMedFile ) {
+        final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();
+        ModelExtensionDefinitionEditor medEditor = null;
+
+        if (window != null) {
+            final IWorkbenchPage page = window.getActivePage();
+
+            if (page != null) {
+                // look through the open editors and see if there is one available for this model file.
+                IEditorReference[] editors = page.getEditorReferences();
+                for (int i = 0; i < editors.length; ++i) {
+
+                    IEditorPart editor = editors[i].getEditor(false);
+                    if (editor != null) {
+                        IEditorInput input = editor.getEditorInput();
+                        if (input instanceof IFileEditorInput) {
+                            if (selectedMedFile != null && selectedMedFile.equals(((IFileEditorInput)input).getFile())) {
+                                // found it;
+                                if (editor instanceof ModelExtensionDefinitionEditor) {
+                                    medEditor = (ModelExtensionDefinitionEditor)editor;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return medEditor;
     }
 
     /** Validator that makes sure the selection containes all WSDL files. */

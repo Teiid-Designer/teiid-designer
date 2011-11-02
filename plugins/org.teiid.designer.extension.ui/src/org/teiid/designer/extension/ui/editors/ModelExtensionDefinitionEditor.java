@@ -10,7 +10,6 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -18,7 +17,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -191,6 +189,19 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 IFile medFile = null;
                 if (editorInput instanceof IFileEditorInput) {
                     medFile = ((IFileEditorInput)editorInput).getFile();
+                }
+
+                // If editor is not saved, inform user to save first.
+                if (isDirty()) {
+                    MessageDialog.openWarning(getShell(),
+                                              Messages.registerMedActionEditorDirtyTitle,
+                                              Messages.registerMedActionEditorDirtyMsg);
+                    return;
+                }
+
+                // If the file has any error markers, user is informed to fix them first
+                if (RegistryDeploymentValidator.checkProblemMarkers(medFile)) {
+                    return;
                 }
 
                 // -------------------------------------------------
