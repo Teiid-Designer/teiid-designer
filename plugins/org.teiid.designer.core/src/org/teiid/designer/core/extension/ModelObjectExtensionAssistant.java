@@ -139,28 +139,31 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     @Override
     public Properties getOverriddenValues( Object modelObject ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
-
-        Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
         Properties props = new Properties();
 
-        if (annotation != null) {
-            EMap<String, String> tags = annotation.getTags();
+        if (supportsMyNamespace(modelObject)) {
+            Annotation annotation = ModelExtensionUtils.getModelObjectAnnotation((EObject)modelObject, false);
 
-            for (String propId : tags.keySet()) {
-                // only get properties of my namespace
-                if (getNamespacePrefix().equals(ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId))) {
-                    try {
-                        String overridenValue = getOverriddenValue(modelObject, propId, tags.get(propId));
+            if (annotation != null) {
+                EMap<String, String> tags = annotation.getTags();
 
-                        if (!CoreStringUtil.isEmpty(overridenValue)) {
-                            props.put(propId, overridenValue);
+                for (String propId : tags.keySet()) {
+                    // only get properties of my namespace
+                    if (getNamespacePrefix().equals(ModelExtensionPropertyDefinition.Utils.getNamespacePrefix(propId))) {
+                        try {
+                            String overridenValue = getOverriddenValue(modelObject, propId, tags.get(propId));
+
+                            if (!CoreStringUtil.isEmpty(overridenValue)) {
+                                props.put(propId, overridenValue);
+                            }
+                        } catch (Exception e) {
+                            Util.log(e);
                         }
-                    } catch (Exception e) {
-                        Util.log(e);
                     }
                 }
             }
         }
+
 
         return props;
     }
@@ -179,7 +182,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
         // if no overridden value then return default value if property definition exists
         if (CoreStringUtil.isEmpty(value)) {
             PropertyDefinition propDefn = getPropertyDefinition(modelObject, propId);
-            return ((propDefn == null)  ? null : propDefn.getDefaultValue());
+            return ((propDefn == null) ? null : propDefn.getDefaultValue());
         }
 
         return value;
@@ -194,19 +197,22 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     @Override
     public Properties getPropertyValues( Object modelObject ) throws Exception {
         CoreArgCheck.isInstanceOf(EObject.class, modelObject);
+        Properties props = new Properties();
 
-        // get properties with overridden values
-        Properties props = getOverriddenValues(modelObject);
+        if (supportsMyNamespace(modelObject)) {
+            // get properties with overridden values
+            props = getOverriddenValues(modelObject);
 
-        // add properties using default value
-        for (ModelExtensionPropertyDefinition propDefn : getModelExtensionDefinition().getPropertyDefinitions(modelObject.getClass()
-                                                                                                                         .getName())) {
-            if (!props.containsKey(propDefn.getId())) {
-                String defaultValue = propDefn.getDefaultValue();
+            // add properties using default value
+            for (ModelExtensionPropertyDefinition propDefn : getModelExtensionDefinition().getPropertyDefinitions(modelObject.getClass()
+                                                                                                                             .getName())) {
+                if (!props.containsKey(propDefn.getId())) {
+                    String defaultValue = propDefn.getDefaultValue();
 
-                // add only if there is a default value
-                if (!CoreStringUtil.isEmpty(defaultValue)) {
-                    props.put(propDefn.getId(), defaultValue);
+                    // add only if there is a default value
+                    if (!CoreStringUtil.isEmpty(defaultValue)) {
+                        props.put(propDefn.getId(), defaultValue);
+                    }
                 }
             }
         }

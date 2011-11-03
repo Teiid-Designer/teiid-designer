@@ -145,7 +145,7 @@ public abstract class ModelExtensionAssistant {
 
     /**
      * Obtains from the model object, the property identifiers and their associated property's overridden value for all extension
-     * properties of registered namespaces. Properties whose current value is not different from the default value will not be
+     * properties of this assistant's namespace. Properties whose current value is not different from the default value will not be
      * returned.
      * 
      * @param modelObject the model object whose extension properties are being requested (cannot be <code>null</code>)
@@ -194,8 +194,8 @@ public abstract class ModelExtensionAssistant {
                                              String propId ) throws Exception;
 
     /**
-     * Obtains from the model object, the property identifiers and current property value for all extension properties of registered
-     * namespaces. Properties whose current value is empty will be set to the default value.
+     * Obtains from the model object, the property identifiers and current property value for all extension properties of this
+     * assistant's namespace. Properties whose current value is empty will be set to the default value.
      * 
      * @param modelObject the model object whose extension properties are being requested (cannot be <code>null</code>)
      * @return the current extension property values for the specified model object (never <code>null</code>)
