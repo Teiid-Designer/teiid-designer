@@ -258,6 +258,16 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		validate();
 	}
 	
+	public TeiidMetadataFileInfo getCheckedFileInfo() {
+		for( TeiidMetadataFileInfo info : getFileInfos()) {
+			if( info.doProcess() ) {
+				return info;
+			}
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @return connectionProfile the <code>IConnectionProfile</code> profile used to define the file location (i.e. folder) of the 

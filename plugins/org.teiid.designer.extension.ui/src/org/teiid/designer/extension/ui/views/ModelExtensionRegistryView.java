@@ -10,6 +10,8 @@ package org.teiid.designer.extension.ui.views;
 import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -189,9 +191,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
         };
         this.registerMedAction.setToolTipText(Messages.registerMedActionToolTip);
-        this.registerMedAction.setImageDescriptor(PlatformUI.getWorkbench()
-                                                            .getSharedImages()
-                                                            .getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
+        this.registerMedAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(REGISTERY_MED_UPDATE_ACTION));
 
         this.unregisterMedAction = new Action(Messages.unregisterMedActionText, SWT.BORDER) {
             /**
@@ -206,9 +206,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         };
         this.unregisterMedAction.setToolTipText(Messages.unregisterMedActionToolTip);
         this.unregisterMedAction.setEnabled(false);
-        this.unregisterMedAction.setImageDescriptor(PlatformUI.getWorkbench()
-                                                              .getSharedImages()
-                                                              .getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+        this.unregisterMedAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(UNREGISTER_MED));
     }
 
     private void createColumns( final Table table ) {

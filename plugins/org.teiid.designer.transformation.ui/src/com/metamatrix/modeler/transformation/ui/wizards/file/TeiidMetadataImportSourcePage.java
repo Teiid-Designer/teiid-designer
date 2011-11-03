@@ -117,7 +117,23 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private static final String EDIT_BUTTON = "Edit..."; //Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 
 	private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
+
+	// PROPERTY VALUES FROM FLAT FILE CP:
+	// 		INCLTYPELINE=NO
+	//		INCLCOLUMNNAME=YES
+	//		HOME=/home/blafond/TestDesignerFolder/FlatFileData/employee-data
+	//		TRAILNULLCOLS=NO
+	//		DELIMTYPE=COMMA
+	//		CHARSET=UTF-8
+	
 	private static final String HOME = "HOME"; //$NON-NLS-1$
+	private static final String INCLTYPELINE = "INCLTYPELINE"; //$NON-NLS-1$
+	private static final String INCLCOLUMNNAME = "INCLCOLUMNNAME"; //$NON-NLS-1$
+	private static final String DELIMTYPE = "DELIMTYPE"; //$NON-NLS-1$
+	private static final String VALUE_NO = "NO";
+	private static final String VALUE_YES = "YES";
+	private static final String VALUE_COMMA = "COMMA";
+	
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String DOT_TXT = ".TXT"; //$NON-NLS-1$
@@ -156,6 +172,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	private Collection<IConnectionProfile> connectionProfiles;
 
 	private TeiidMetadataImportInfo info;
+	
+	final private ConnectionProfileInfo profileInfo = new ConnectionProfileInfo();
 	
     boolean creatingControl = false;
     
@@ -372,6 +390,14 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 									info.setDoProcessXml((File) tableItem.getData(), wasChecked);
 								}
 							}
+							if( wasChecked ) {
+								TeiidMetadataFileInfo fileInfo = info.getCheckedFileInfo();
+								if( fileInfo != null ) {
+									if( profileInfo.columnsInFirstLine ) {
+										fileInfo.setFirstDataRow(1);
+									}
+								}
+							}
 						}
 						processingChecks = false;
 						synchronizeUI();
@@ -469,6 +495,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 					Properties props = profile.getBaseProperties();
 					String home = (String) props.get(HOME);
 					if (home != null) {
+						this.profileInfo.home = home;
 						String location = home;
 						if (location.length() > 60) {
 							int len = location.length();
@@ -477,9 +504,24 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						this.dataFileFolderText.setText(location);
 						this.dataFileFolderText.setToolTipText(home);
 					}
-
 					clearFileListViewer();
 					loadFileListViewer();
+					
+					if( this.info.getFileInfos().isEmpty() ) {
+						// Check for FIRST LINE FOR COLUMNS
+						String firstLineHasColumns = (String) props.get(INCLCOLUMNNAME);
+						if( firstLineHasColumns != null ) {
+							this.profileInfo.columnsInFirstLine = firstLineHasColumns.equalsIgnoreCase(VALUE_YES);
+						}
+						String secondLineDatatypes = (String) props.get(INCLTYPELINE);
+						if( secondLineDatatypes != null ) {
+							this.profileInfo.includeTypeLine = secondLineDatatypes.equalsIgnoreCase(VALUE_YES);
+						}
+						String delimiterType = (String) props.get(INCLTYPELINE);
+						if( delimiterType != null ) {
+							this.profileInfo.delimiterType = delimiterType;
+						}
+					}
 					break;
 				}
 			}
@@ -1111,6 +1153,19 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	}
     	
     	return false;
+    }
+    
+    class ConnectionProfileInfo  {
+    	// 		INCLTYPELINE=NO
+    	//		INCLCOLUMNNAME=YES
+    	//		HOME=/home/blafond/TestDesignerFolder/FlatFileData/employee-data
+    	//		TRAILNULLCOLS=NO
+    	//		DELIMTYPE=COMMA
+    	//		CHARSET=UTF-8
+    	public boolean includeTypeLine = false;
+    	public boolean columnsInFirstLine = false;
+    	public String home;
+    	public String delimiterType = VALUE_COMMA;
     }
 
 	public class CPListener implements IProfileListener {
