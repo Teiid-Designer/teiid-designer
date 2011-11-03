@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns:p="http://org.teiid.modelExtension/2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" namespacePrefix="prefix" namespaceUri="uri" version="1" xsi:schemaLocation="http://org.teiid.modelExtension/2011 modelExtension.xsd" xmlns="http://org.teiid.modelExtension/2011">
+    <p:extendedMetaclass name="com.metamatrix.metamodels.xml.impl.XmlDocumentImpl"/>
+</modelExtension>

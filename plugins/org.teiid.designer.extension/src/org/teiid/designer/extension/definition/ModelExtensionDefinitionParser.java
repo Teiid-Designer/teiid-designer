@@ -169,12 +169,13 @@ public class ModelExtensionDefinitionParser {
         private final Collection<String> warnings;
 
         private String advanced;
+        private StringBuilder allowedValue = new StringBuilder();
         private Set<String> allowedValues = new HashSet<String>();
 
         private final ModelExtensionAssistant assistant;
         private String defaultValue;
         private ModelExtensionDefinition definition;
-        private String description;
+        private StringBuilder description = new StringBuilder();
         private final Stack<String> elements;
         private String fixedValue;
         private String id;
@@ -192,11 +193,11 @@ public class ModelExtensionDefinitionParser {
 
         private Set<Translation> descriptions = new HashSet<Translation>();
         private String currentDescriptionLocale;
-        private String currentDescriptionText;
+        private StringBuilder currentDescriptionText = new StringBuilder();
 
         private Set<Translation> displayNames = new HashSet<Translation>();
         private String currentDisplayNameLocale;
-        private String currentDisplayNameText;
+        private StringBuilder currentDisplayNameText = new StringBuilder();
 
         /**
          * @param assistant the model extension assistant used by the parser (cannot be <code>null</code>)
@@ -227,9 +228,9 @@ public class ModelExtensionDefinitionParser {
             if (ExtensionConstants.Elements.DESCRIPTION.equals(getCurrentElement())) {
                 if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(getPreviousElement())) {
                     // model extension definition is not localized
-                    this.description = value;
+                    this.description.append(value);
                 } else if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
-                    this.currentDescriptionText = value;
+                    this.currentDescriptionText.append(value);
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
@@ -237,14 +238,14 @@ public class ModelExtensionDefinitionParser {
                 }
             } else if (ExtensionConstants.Elements.DISPLAY.equals(getCurrentElement())) {
                 if (ExtensionConstants.Elements.PROPERTY.equals(getPreviousElement())) {
-                    this.currentDisplayNameText = value;
+                    this.currentDisplayNameText.append(value);
                 } else {
                     // should not get here
                     assert false : "Unexpected previous tag of " + getPreviousElement() + " while processing the " //$NON-NLS-1$ //$NON-NLS-2$
                             + ExtensionConstants.Elements.DISPLAY + " tag"; //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(getCurrentElement())) {
-                this.allowedValues.add(value);
+                this.allowedValue.append(value);
             } else {
                 if (DEBUG_MODE) {
                     System.err.println("characters not processed=" + value); //$NON-NLS-1$
@@ -275,11 +276,11 @@ public class ModelExtensionDefinitionParser {
                     }
 
                     Locale locale = I18nUtil.parseLocaleString(this.currentDisplayNameLocale);
-                    this.displayNames.add(new Translation(locale, this.currentDisplayNameText));
+                    this.displayNames.add(new Translation(locale, this.currentDisplayNameText.toString()));
                 }
 
                 this.currentDisplayNameLocale = null;
-                this.currentDisplayNameText = null;
+                this.currentDisplayNameText.setLength(0);
             } else if (ExtensionConstants.Elements.DESCRIPTION.equals(localName)) {
                 if (this.currentDescriptionLocale != null) {
                     if (DEBUG_MODE) {
@@ -288,11 +289,11 @@ public class ModelExtensionDefinitionParser {
                     }
 
                     Locale locale = I18nUtil.parseLocaleString(this.currentDescriptionLocale);
-                    this.descriptions.add(new Translation(locale, this.currentDescriptionText));
+                    this.descriptions.add(new Translation(locale, this.currentDescriptionText.toString()));
                 }
 
                 this.currentDescriptionLocale = null;
-                this.currentDescriptionText = null;
+                this.currentDescriptionText.setLength(0);
             } else if (ExtensionConstants.Elements.PROPERTY.equals(localName)) {
                 savePropertyDefinition();
 
@@ -311,15 +312,16 @@ public class ModelExtensionDefinitionParser {
                 this.advanced = null;
                 this.masked = null;
                 this.index = null;
+                this.allowedValue.setLength(0);
                 this.allowedValues.clear();
                 this.propDefn = null;
                 this.descriptions.clear();
                 this.displayNames.clear();
 
                 this.currentDescriptionLocale = null;
-                this.currentDescriptionText = null;
+                this.currentDescriptionText.setLength(0);
                 this.currentDisplayNameLocale = null;
-                this.currentDisplayNameText = null;
+                this.currentDisplayNameText.setLength(0);
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(localName)) {
                 if (this.metaclassName != null && !this.metaclassName.isEmpty()) {
                     this.definition.addMetaclass(this.metaclassName);
@@ -330,20 +332,23 @@ public class ModelExtensionDefinitionParser {
                 }
 
                 this.metaclassName = null;
-            } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(localName) && !this.allowedValues.isEmpty()) {
+            } else if (ExtensionConstants.Elements.ALLOWED_VALUE.equals(localName)) {
+                this.allowedValues.add(this.allowedValue.toString());
+                this.allowedValue.setLength(0);
+
                 if (DEBUG_MODE) {
                     String DELIM = ", "; //$NON-NLS-1$
                     StringBuilder valuesString = new StringBuilder();
 
-                    for (String allowedValue : this.allowedValues) {
-                        valuesString.append(allowedValue).append(DELIM);
+                    for (String value : this.allowedValues) {
+                        valuesString.append(value).append(DELIM);
                     }
 
                     System.err.println("allowedValues=" + valuesString.subSequence(0, valuesString.length() - DELIM.length())); //$NON-NLS-1$
                 }
             } else if (ExtensionConstants.Elements.MODEL_EXTENSION.equals(localName)) {
                 if (this.definition != null)
-                    this.definition.setDescription(this.description);
+                    this.definition.setDescription(this.description.toString());
 
                 saveModelExtensionDefinitionProperties();
 
@@ -504,7 +509,7 @@ public class ModelExtensionDefinitionParser {
                 this.metamodelUri = attributes.getValue(ExtensionConstants.Attributes.METAMODEL_URI);
                 this.version = attributes.getValue(ExtensionConstants.Attributes.VERSION);
                 this.definition = this.assistant.createModelExtensionDefinition(this.namespacePrefix, this.namespaceUri,
-                                                                                this.metamodelUri, this.description, this.version);
+                                                                                this.metamodelUri, this.description.toString(), this.version);
             } else if (ExtensionConstants.Elements.EXTENDED_METACLASS.equals(getCurrentElement())) {
                 this.metaclassName = attributes.getValue(ExtensionConstants.Attributes.NAME);
             } else if (ExtensionConstants.Elements.PROPERTY.equals(getCurrentElement())) {

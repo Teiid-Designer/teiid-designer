@@ -36,7 +36,7 @@ public interface Constants {
     String COLUMN_METACLASS_NAME = "com.metamatrix.metamodels.relational.impl.ColumnImpl"; //$NON-NLS-1$
     String PROCEDURE_METACLASS_NAME = "com.metamatrix.metamodels.relational.impl.ProcedureImpl"; //$NON-NLS-1$
 
-    String SALESFORCE_MED_FILE_NAME = TESTDATA + File.separatorChar + "salesforce." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
+    String SALESFORCE_MED_FILE_NAME = TESTDATA + File.separatorChar + "salesforce" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String SALESFORCE_MED_PREFIX = "salesforce"; //$NON-NLS-1$
     String SALESFORCE_MED_URI = "org.teiid.designer.extension.salesforce"; //$NON-NLS-1$
     String[] SALESFORCE_MED_METACLASSES = new String[] { TABLE_METACLASS_NAME, COLUMN_METACLASS_NAME };
@@ -44,19 +44,19 @@ public interface Constants {
             "supportsMerge", "supportsQuery", "supportsReplicate", "supportsRetrieve", "supportsSearch" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     String[] SALESFORCE_METACLASS_1_PROP_IDS = new String[] { "custom", "calculated", "defaultedOnCreate", "picklistValues" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    String REST_MED_FILE_NAME = TESTDATA + File.separatorChar + "rest." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
+    String REST_MED_FILE_NAME = TESTDATA + File.separatorChar + "rest" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String REST_MED_PREFIX = "rest"; //$NON-NLS-1$
     String REST_MED_URI = "org.teiid.designer.extension.rest"; //$NON-NLS-1$
     String[] REST_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] REST_METACLASS_0_PROP_IDS = new String[] { "restMethod", "uri" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-    String SOURCE_FUNCTION_MED_FILE_NAME = TESTDATA + File.separatorChar + "sourcefunction." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
+    String SOURCE_FUNCTION_MED_FILE_NAME = TESTDATA + File.separatorChar + "sourcefunction" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String SOURCE_FUNCTION_MED_PREFIX = "sourcefunction"; //$NON-NLS-1$
     String SOURCE_FUNCTION_MED_URI = "org.teiid.designer.extension.sourcefunction"; //$NON-NLS-1$
     String[] SOURCE_FUNCTION_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
     String[] SOURCE_FUNCTION_METACLASS_0_PROP_IDS = new String[] { "deterministic" }; //$NON-NLS-1$
 
-    String DEPRECATED_MED_FILE_NAME = TESTDATA + File.separatorChar + "deprecated." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
+    String DEPRECATED_MED_FILE_NAME = TESTDATA + File.separatorChar + "deprecated" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String DEPRECATED_MED_PREFIX = "ext-custom"; //$NON-NLS-1$
     String DEPRECATED_MED_URI = "org.teiid.designer.extension.deprecated"; //$NON-NLS-1$
     String[] DEPRECATED_MED_METACLASSES = new String[] { PROCEDURE_METACLASS_NAME };
@@ -64,8 +64,10 @@ public interface Constants {
 
     String[] BUILT_IN_MEDS = new String[] { SALESFORCE_MED_FILE_NAME, REST_MED_FILE_NAME, SOURCE_FUNCTION_MED_FILE_NAME,
             DEPRECATED_MED_FILE_NAME };
-    String EMPTY_MED_FILE_NAME = TESTDATA + File.separatorChar + "emptyMed." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
-    String TEMP_MED_FILE_NAME = TESTDATA + File.separatorChar + "tempMed." + ExtensionConstants.MED_EXTENSION; //$NON-NLS-1$
+    String EMPTY_MED_FILE_NAME = TESTDATA + File.separatorChar + "emptyMed" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String MED_WITHOUT_METACLASSES_FILE_NAME = TESTDATA + File.separatorChar + "medWithoutMetaclasses" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String MED_WITHOUT_PROPERTIES_FILE_NAME = TESTDATA + File.separatorChar + "medWithoutProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String TEMP_MED_FILE_NAME = TESTDATA + File.separatorChar + "tempMed" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
 
     String DEFAULT_MED_DESCRIPTION = "This is a MED description"; //$NON-NLS-1$
     String DEFAULT_NAMESPACE_PREFIX = SALESFORCE_MED_PREFIX;

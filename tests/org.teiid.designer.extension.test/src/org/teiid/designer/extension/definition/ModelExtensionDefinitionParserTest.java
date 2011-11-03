@@ -52,4 +52,18 @@ public class ModelExtensionDefinitionParserTest implements Constants {
         assertTrue(!this.parser.getErrors().isEmpty());
     }
 
+    @Test
+    public void shouldParseMedWithoutMetaclassesAndProduceErrors() throws Exception {
+        ModelExtensionDefinition med = parse(MED_WITHOUT_METACLASSES_FILE_NAME, this.parser);
+        assertNotNull(med);
+        assertTrue(!this.parser.getErrors().isEmpty());
+    }
+
+    @Test
+    public void shouldParseMedWithouPropertiesAndProduceErrors() throws Exception {
+        ModelExtensionDefinition med = parse(MED_WITHOUT_PROPERTIES_FILE_NAME, this.parser);
+        assertNotNull(med);
+        assertTrue(!this.parser.getErrors().isEmpty());
+    }
+
 }

@@ -12,7 +12,6 @@ import static org.teiid.designer.extension.ExtensionPlugin.Util;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -287,8 +286,7 @@ public class ModelExtensionPropertyDefinitionImpl implements ModelExtensionPrope
 
         // allowed values
         Set<String> thisValues = allowedValues();
-        Set<String> thatValues = (getAllowedValues() == null) ? new HashSet<String>()
-                                                             : new HashSet<String>(Arrays.asList(that.getAllowedValues()));
+        Set<String> thatValues = that.allowedValues();
 
         if (thisValues.size() != thatValues.size()) {
             return false;
