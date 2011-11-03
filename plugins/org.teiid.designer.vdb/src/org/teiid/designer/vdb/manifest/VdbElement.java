@@ -84,6 +84,9 @@ public class VdbElement implements Serializable {
         for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
             getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
         getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+        if( vdb.getQueryTimeout() > 0 ) {
+        	getProperties().add(new PropertyElement(Vdb.Xml.QUERY_TIMEOUT, Integer.toString(vdb.getQueryTimeout())));
+        }
     }
 
     /**

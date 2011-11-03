@@ -78,6 +78,8 @@ public final class Vdb {
     public static final String FILE_EXTENSION_NO_DOT = "vdb"; //$NON-NLS-1$
 
     private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
+    
+    private static final int DEFAULT_TIMEOUT = 0;
 
     final IFile file;
 
@@ -97,6 +99,7 @@ public final class Vdb {
     private final AtomicReference<String> description = new AtomicReference<String>();
     private final boolean preview;
     private final int version;
+    private int queryTimeout = DEFAULT_TIMEOUT;
 
     /**
      * @param file
@@ -119,6 +122,7 @@ public final class Vdb {
 
         final boolean[] previewable = new boolean[1];
         final int[] vdbVersion = new int[1];
+        final int[] queryTimeout = new int[1];
         OperationUtil.perform(new Unreliable() {
 
             ZipFile archive = null;
@@ -152,6 +156,8 @@ public final class Vdb {
                             final String name = property.getName();
                             if (Xml.PREVIEW.equals(name)) previewable[0] = Boolean.parseBoolean(property.getValue());
                             else assert false;
+                            if (Xml.QUERY_TIMEOUT.equals(name)) queryTimeout[0] = Integer.parseInt(property.getValue());
+                            else assert false;
                         }
                         for (final EntryElement element : manifest.getEntries())
                             entries.add(new VdbEntry(Vdb.this, element, monitor));
@@ -176,6 +182,7 @@ public final class Vdb {
         });
         this.preview = previewable[0];
         this.version = vdbVersion[0];
+        this.queryTimeout = queryTimeout[0];
     }
 
     /**
@@ -392,6 +399,13 @@ public final class Vdb {
     public int getVersion() {
         return version;
     }
+    
+    /**
+     * @return the query timeout value for this VDB
+     */
+    public int getQueryTimeout() {
+        return queryTimeout;
+    }
 
     /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
@@ -545,6 +559,16 @@ public final class Vdb {
         this.modified.set(true);
         notifyChangeListeners(source, propertyName, oldValue, newValue);
     }
+    
+    /**
+     * @param valueInSeconds Sets query time-out to the specified value.
+     */
+    public final void setQueryTimeout( int valueInSeconds ) {
+    	final int oldTimeout = this.queryTimeout;
+    	if( oldTimeout == valueInSeconds ) return;
+    	this.queryTimeout = valueInSeconds;
+    	setModified(this, Event.QUERY_TIMEOUT, oldTimeout, valueInSeconds);
+    }
 
     private final void synchronize( final Collection<VdbEntry> entries,
                                     final IProgressMonitor monitor ) {
@@ -674,6 +698,13 @@ public final class Vdb {
          * 
          */
         public static final String TRANSLATOR_OVERRIDE_REMOVED = "translatorOverrideRemoved"; //$NON-NLS-1$
+        
+        /**
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the query timeout
+         * is changed.
+         * 
+         */
+        public static final String QUERY_TIMEOUT = "queryTimeout"; //$NON-NLS-1$
     }
 
     /**
@@ -684,5 +715,9 @@ public final class Vdb {
         /**
          */
         public static final String PREVIEW = "preview"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String QUERY_TIMEOUT = "query-timeout"; //$NON-NLS-1$
     }
 }

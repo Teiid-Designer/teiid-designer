@@ -70,6 +70,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -79,6 +81,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -161,6 +166,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
+    static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidQueryTimeoutValueTitle"); //$NON-NLS-1$
+    static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidQueryTimeoutValueMessage"); //$NON-NLS-1$
 
     static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
@@ -168,7 +175,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         return VdbUiConstants.Util.getString(id);
     }
 
-    private Vdb vdb;
+    Vdb vdb;
     StyledTextEditor textEditor;
     TableAndToolBar<VdbModelEntry> modelsGroup;
     TableAndToolBar<VdbEntry> otherFilesGroup;
@@ -863,8 +870,44 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     }
 
     private void createDescriptionControl( Composite parent ) {
-        this.textEditor = new StyledTextEditor(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
+    	Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
+    	panel.setLayout(new GridLayout(2, false));
+
+		Group propertiesGroup = WidgetFactory.createGroup(panel, i18n("properties"), SWT.FILL, 1, 2); //$NON-NLS-1$
+		GridData gd_1 = new GridData(GridData.FILL_VERTICAL);
+		gd_1.widthHint = 220;
+		propertiesGroup.setLayoutData(gd_1);
+
+		Label label = new Label(propertiesGroup, SWT.NONE);
+		label.setText(i18n("queryTimeoutLabel")); //$NON-NLS-1$
+
+		final Text queryTimeoutText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+		queryTimeoutText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
+    	queryTimeoutText.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				try {
+					int value = Integer.parseInt(queryTimeoutText.getText());
+					if( value > -1 ) {
+						getVdb().setQueryTimeout(value);
+					}
+				} catch (NumberFormatException ex) {
+					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            VdbEditor.INVALID_INTEGER_INPUT_TITLE,
+                            INVALID_INTEGER_INPUT_MESSAGE);
+					queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
+				}
+				
+			}
+		});
+    	
+    	Group descriptionGroup = WidgetFactory.createGroup(panel, i18n("description"), GridData.FILL_BOTH, 1, 1); //$NON-NLS-1$
+    	
+        this.textEditor = new StyledTextEditor(descriptionGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP);
         final GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.horizontalSpan = 1;
 
         this.textEditor.setLayoutData(gridData);
         this.textEditor.setText(vdb.getDescription());
