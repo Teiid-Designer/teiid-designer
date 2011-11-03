@@ -340,33 +340,9 @@ public class ModelExtensionDefinitionWriter {
             propertyElem.setAttributeNode(attr);
 
             // ----------------------------------------------
-            // Create the Property Element child elements
+            // Create the Property Element child elements - Description, Display, Allowed Values must be processed in that order
+            // since the ordering is enforced by the schema.
             // ----------------------------------------------
-
-            // -------------------------------
-            // Display Name Elements
-            // - can be multiple locales
-            // -------------------------------
-            Collection<Translation> displayNames = propDefn.getDisplayNames();
-            for (Translation displayTranslation : displayNames) {
-                String dnLocale = displayTranslation.getLocale().toString();
-                String dnName = displayTranslation.getTranslation();
-
-                if (dnLocale != null) {
-                    Element displayElement = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DISPLAY);
-                    // Set the displayName text on the element.
-                    Text displayText = document.createTextNode(dnName);
-                    displayElement.appendChild(displayText);
-
-                    // Set the locale attribute on the display element
-                    attr = document.createAttribute(ExtensionConstants.Attributes.LOCALE);
-                    attr.setValue(dnLocale);
-                    displayElement.setAttributeNode(attr);
-
-                    // append display element child to the property element
-                    propertyElem.appendChild(displayElement);
-                }
-            }
 
             // -------------------------------
             // Description Elements
@@ -391,6 +367,31 @@ public class ModelExtensionDefinitionWriter {
 
                     // append description element child to the property element
                     propertyElem.appendChild(descrElement);
+                }
+            }
+
+            // -------------------------------
+            // Display Name Elements
+            // - can be multiple locales
+            // -------------------------------
+            Collection<Translation> displayNames = propDefn.getDisplayNames();
+            for (Translation displayTranslation : displayNames) {
+                String dnLocale = displayTranslation.getLocale().toString();
+                String dnName = displayTranslation.getTranslation();
+
+                if (dnLocale != null) {
+                    Element displayElement = document.createElement(NS_MED_COLON + ExtensionConstants.Elements.DISPLAY);
+                    // Set the displayName text on the element.
+                    Text displayText = document.createTextNode(dnName);
+                    displayElement.appendChild(displayText);
+
+                    // Set the locale attribute on the display element
+                    attr = document.createAttribute(ExtensionConstants.Attributes.LOCALE);
+                    attr.setValue(dnLocale);
+                    displayElement.setAttributeNode(attr);
+
+                    // append display element child to the property element
+                    propertyElem.appendChild(displayElement);
                 }
             }
 
