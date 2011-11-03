@@ -51,6 +51,8 @@ public class Messages extends NLS {
     public static String showRegistryViewActionToolTip;
     public static String unregisterMedActionText;
     public static String unregisterMedActionToolTip;
+    public static String unregisterMedConfirmTitle;
+    public static String unregisterMedConfirmMsg;
     public static String updateMedInRegistryActionText;
     public static String updateMedInRegistryActionToolTip;
     public static String updateMedInRegistryMedDirtyTitle;
@@ -72,6 +74,8 @@ public class Messages extends NLS {
     public static String registerMedActionNamespaceUriRegisteredMsg;
     public static String registerMedActionFailedTitle;
     public static String registerMedActionFailedMsg;
+    public static String registerMedActionSuccessTitle;
+    public static String registerMedActionSuccessMsg;
     public static String registerMedActionEditorDirtyTitle;
     public static String registerMedActionEditorDirtyMsg;
     public static String checkMedProblemMarkersErrorTitle;

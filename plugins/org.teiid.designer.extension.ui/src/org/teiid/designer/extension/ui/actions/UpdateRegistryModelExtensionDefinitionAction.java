@@ -125,12 +125,20 @@ public final class UpdateRegistryModelExtensionDefinitionAction extends Sortable
     }
 
     void internalRun() {
+        boolean wasAdded = true;
         try {
             if (this.selectedMed != null) {
                 addExtensionToRegistry(this.selectedMed);
             }
         } catch (Exception e) {
+            wasAdded = false;
             UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, this.selectedMed.getName()));
+            MessageDialog.openInformation(getShell(), Messages.registerMedActionFailedTitle, Messages.registerMedActionFailedMsg);
+        }
+        if (wasAdded) {
+            MessageDialog.openInformation(getShell(),
+                                          Messages.registerMedActionSuccessTitle,
+                                          Messages.registerMedActionSuccessMsg);
         }
     }
 

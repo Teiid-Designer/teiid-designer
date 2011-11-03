@@ -466,14 +466,21 @@ public final class ModelExtensionRegistryView extends ViewPart {
                 boolean isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
                 // If the URI is not registered, go ahead with registration
                 if (isDeployable) {
+                    boolean success = true;
                     // Add the Extension Definition to the registry
                     try {
                         UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(mxdFile);
                     } catch (Exception e) {
+                        success = false;
                         UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, mxdFile.getName()));
                         MessageDialog.openInformation(getShell(),
                                                       Messages.registerMedActionFailedTitle,
                                                       Messages.registerMedActionFailedMsg);
+                    }
+                    if (success) {
+                        MessageDialog.openInformation(getShell(),
+                                                      Messages.registerMedActionSuccessTitle,
+                                                      Messages.registerMedActionSuccessMsg);
                     }
                 }
             }
@@ -604,7 +611,13 @@ public final class ModelExtensionRegistryView extends ViewPart {
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Unregister MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
-        this.registry.removeDefinition(selectedMed.getNamespacePrefix());
+        // Confirm that user really wants to unregister
+        boolean continueRemove = MessageDialog.openConfirm(getShell(),
+                                                           Messages.unregisterMedConfirmTitle,
+                                                           Messages.unregisterMedConfirmMsg);
+        if (continueRemove) {
+            this.registry.removeDefinition(selectedMed.getNamespacePrefix());
+        }
     }
 
     private void registerGlobalActions( IActionBars actionBars ) {

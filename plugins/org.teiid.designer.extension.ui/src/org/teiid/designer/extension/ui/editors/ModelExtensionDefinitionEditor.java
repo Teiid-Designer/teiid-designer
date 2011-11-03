@@ -215,7 +215,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                     UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
                 }
 
-                boolean wasAdded = false;
+                boolean wasAdded = true;
                 boolean isDeployable = false;
                 if (fileContents != null) {
                     isDeployable = RegistryDeploymentValidator.checkMedDeployable(registry, fileContents);
@@ -224,18 +224,19 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                         // Add the Extension Definition to the registry
                         try {
                             UpdateRegistryModelExtensionDefinitionAction.addExtensionToRegistry(medFile);
-                            wasAdded = true;
                         } catch (Exception e) {
+                            wasAdded = false;
                             UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medRegistryAddErrorMsg, medFile.getName()));
+                            MessageDialog.openInformation(getShell(),
+                                                          Messages.registerMedActionFailedTitle,
+                                                          Messages.registerMedActionFailedMsg);
+                        }
+                        if (wasAdded) {
+                            MessageDialog.openInformation(getShell(),
+                                                          Messages.registerMedActionSuccessTitle,
+                                                          Messages.registerMedActionSuccessMsg);
                         }
                     }
-                }
-
-                // Notify user if the med was deployable, but the registration failed.
-                if (isDeployable && !wasAdded) {
-                    MessageDialog.openInformation(getShell(), Messages.registerMedActionFailedTitle,
-                                                  Messages.registerMedActionFailedMsg);
-                    return;
                 }
             }
         };

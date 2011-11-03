@@ -58,6 +58,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     private List<ModelExtensionDefinition> availableMedsList;
     private List<ModelExtensionDefinition> selectedMedsList;
     private TableViewer tableViewer;
+    private static final String DEPRECATED_MED_NS_URI = "org.teiid.designer.extension.deprecated"; //$NON-NLS-1$
 
     /**
      * Construct an instance of AvailableModelExtensionDefinitionsDialog.
@@ -164,7 +165,9 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
                 // represented -
                 // then add it to the result List
                 if (med.extendsMetamodelUri(selectedMetamodelUri)
-                    && !headerListContains(currentModelHeaders, med.getNamespacePrefix(), med.getVersion())) {
+                    && !headerListContains(currentModelHeaders, med.getNamespacePrefix(), med.getVersion())
+                    && !DEPRECATED_MED_NS_URI.equals(med.getNamespaceUri())) { // TODO: Remove later. Dont allow deprecated MED to
+                                                                               // be added to model.
                     resultList.add(med);
                 }
             }
