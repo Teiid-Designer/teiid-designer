@@ -8,11 +8,13 @@
 package org.teiid.designer.core.extension;
 
 import static com.metamatrix.modeler.core.ModelerCore.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -22,6 +24,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
+
 import com.metamatrix.core.util.CoreArgCheck;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.core.util.I18nUtil;
@@ -324,7 +327,7 @@ public class ModelExtensionUtils {
         for (Object obj : tags.entrySet()) {
             EStringToStringMapEntryImpl entry = (EStringToStringMapEntryImpl)obj;
 
-            if (entry.getValue().equals(value)) {
+            if (entry.getKey().equals(tagId)) {
                 annotation = getModelObjectAnnotation(entry, false);
 
                 if ((annotation == null) && forceCreate) {
@@ -586,35 +589,26 @@ public class ModelExtensionUtils {
             if (PropertyTagKeys.ALLOWED_VALUES.equals(key)) {
                 Annotation allowedValuesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
 
-                if (allowedValuesAnnotation == null) {
-                    throw new Exception(Util.getString(I18N_PREFIX + "allowedValuesAnnotationNotFound", //$NON-NLS-1$
-                                                       propertyDefinitionTag.getKey()));
-                }
-
                 // delete annotation
-                ModelResourceContainerFactory.deleteAnnotation(allowedValuesAnnotation);
+                if (allowedValuesAnnotation != null) {
+                    ModelResourceContainerFactory.deleteAnnotation(allowedValuesAnnotation);
+                }
             }
             if (PropertyTagKeys.DISPLAY_NAMES.equals(key)) {
                 Annotation displayNamesAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
 
-                if (displayNamesAnnotation == null) {
-                    throw new Exception(Util.getString(I18N_PREFIX + "displayNamesAnnotationNotFound", //$NON-NLS-1$
-                                                       propertyDefinitionTag.getKey()));
-                }
-
                 // delete annotation
-                ModelResourceContainerFactory.deleteAnnotation(displayNamesAnnotation);
+                if (displayNamesAnnotation != null) {
+                    ModelResourceContainerFactory.deleteAnnotation(displayNamesAnnotation);
+                }
             }
             if (PropertyTagKeys.DESCRIPTIONS.equals(key)) {
                 Annotation descriptionsAnnotation = getModelObjectAnnotation((EStringToStringMapEntryImpl)object, false);
 
-                if (descriptionsAnnotation == null) {
-                    throw new Exception(Util.getString(I18N_PREFIX + "descriptionsAnnotationNotFound", //$NON-NLS-1$
-                                                       propertyDefinitionTag.getKey()));
-                }
-
                 // delete annotation
-                ModelResourceContainerFactory.deleteAnnotation(descriptionsAnnotation);
+                if (descriptionsAnnotation != null) {
+                    ModelResourceContainerFactory.deleteAnnotation(descriptionsAnnotation);
+                }
             }
         }
 
