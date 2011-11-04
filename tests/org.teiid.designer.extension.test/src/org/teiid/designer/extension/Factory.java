@@ -43,7 +43,7 @@ public class Factory implements Constants {
 
     public static NamespacePrefixProvider createDefaultNamespacePrefixProvider() {
         return new NamespacePrefixProvider() {
-            
+
             @Override
             public String getNamespacePrefix() {
                 return DEFAULT_NAMESPACE_PREFIX;
@@ -101,6 +101,10 @@ public class Factory implements Constants {
         return registry;
     }
 
+    public static MedRegistryListener createRegistryListener() {
+        return new MedRegistryListener();
+    }
+
     public static List<ModelExtensionPropertyDefinition> getTestPropertyDefns( NamespacePrefixProvider prefixProvider ) {
         List<ModelExtensionPropertyDefinition> propertyDefns = new ArrayList<ModelExtensionPropertyDefinition>(3);
 
@@ -115,10 +119,17 @@ public class Factory implements Constants {
         Set<String> allowedValues = new HashSet<String>();
         Set<Translation> descriptions = new HashSet<Translation>();
         Set<Translation> displayNames = new HashSet<Translation>();
-        ModelExtensionPropertyDefinition propDefn1 = new ModelExtensionPropertyDefinitionImpl(prefixProvider, name, type,
-                                                                                              required, defaultValue, fixedValue,
-                                                                                              advanced, masked, index,
-                                                                                              allowedValues, descriptions,
+        ModelExtensionPropertyDefinition propDefn1 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+                                                                                              name,
+                                                                                              type,
+                                                                                              required,
+                                                                                              defaultValue,
+                                                                                              fixedValue,
+                                                                                              advanced,
+                                                                                              masked,
+                                                                                              index,
+                                                                                              allowedValues,
+                                                                                              descriptions,
                                                                                               displayNames);
         name = "testProp2"; //$NON-NLS-1$
         type = "string"; //$NON-NLS-1$
@@ -132,10 +143,17 @@ public class Factory implements Constants {
         displayNames.add(new Translation(Locale.CHINESE, "Chinese DisplayName")); //$NON-NLS-1$
         displayNames.add(new Translation(Locale.JAPANESE, "Japanese DisplayName")); //$NON-NLS-1$
 
-        ModelExtensionPropertyDefinition propDefn2 = new ModelExtensionPropertyDefinitionImpl(prefixProvider, name, type,
-                                                                                              required, defaultValue, fixedValue,
-                                                                                              advanced, masked, index,
-                                                                                              allowedValues, descriptions,
+        ModelExtensionPropertyDefinition propDefn2 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+                                                                                              name,
+                                                                                              type,
+                                                                                              required,
+                                                                                              defaultValue,
+                                                                                              fixedValue,
+                                                                                              advanced,
+                                                                                              masked,
+                                                                                              index,
+                                                                                              allowedValues,
+                                                                                              descriptions,
                                                                                               displayNames);
         name = "testProp3"; //$NON-NLS-1$
         type = "integer"; //$NON-NLS-1$
@@ -152,10 +170,17 @@ public class Factory implements Constants {
         displayNames.add(new Translation(Locale.ENGLISH, "English DisplayName")); //$NON-NLS-1$
         displayNames.add(new Translation(Locale.CHINESE, "Chinese DisplayName")); //$NON-NLS-1$
 
-        ModelExtensionPropertyDefinition propDefn3 = new ModelExtensionPropertyDefinitionImpl(prefixProvider, name, type,
-                                                                                              required, defaultValue, fixedValue,
-                                                                                              advanced, masked, index,
-                                                                                              allowedValues, descriptions,
+        ModelExtensionPropertyDefinition propDefn3 = new ModelExtensionPropertyDefinitionImpl(prefixProvider,
+                                                                                              name,
+                                                                                              type,
+                                                                                              required,
+                                                                                              defaultValue,
+                                                                                              fixedValue,
+                                                                                              advanced,
+                                                                                              masked,
+                                                                                              index,
+                                                                                              allowedValues,
+                                                                                              descriptions,
                                                                                               displayNames);
         propertyDefns.add(propDefn1);
         propertyDefns.add(propDefn2);

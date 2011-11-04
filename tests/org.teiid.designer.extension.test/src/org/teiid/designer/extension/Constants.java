@@ -64,9 +64,15 @@ public interface Constants {
 
     String[] BUILT_IN_MEDS = new String[] { SALESFORCE_MED_FILE_NAME, REST_MED_FILE_NAME, SOURCE_FUNCTION_MED_FILE_NAME,
             DEPRECATED_MED_FILE_NAME };
+    String[] BUILT_IN_MEDS_NAMESPACE_PREFIXES = new String[] { SALESFORCE_MED_PREFIX, REST_MED_PREFIX, SOURCE_FUNCTION_MED_PREFIX,
+            DEPRECATED_MED_PREFIX };
+    String[] BUILT_IN_MEDS_NAMESPACE_URIS = new String[] { SALESFORCE_MED_URI, REST_MED_URI, SOURCE_FUNCTION_MED_URI,
+            DEPRECATED_MED_URI };
     String EMPTY_MED_FILE_NAME = TESTDATA + File.separatorChar + "emptyMed" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
-    String MED_WITHOUT_METACLASSES_FILE_NAME = TESTDATA + File.separatorChar + "medWithoutMetaclasses" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
-    String MED_WITHOUT_PROPERTIES_FILE_NAME = TESTDATA + File.separatorChar + "medWithoutProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String MED_WITHOUT_METACLASSES_FILE_NAME = TESTDATA + File.separatorChar
+            + "medWithoutMetaclasses" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
+    String MED_WITHOUT_PROPERTIES_FILE_NAME = TESTDATA + File.separatorChar
+            + "medWithoutProperties" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
     String TEMP_MED_FILE_NAME = TESTDATA + File.separatorChar + "tempMed" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
 
     String DEFAULT_MED_DESCRIPTION = "This is a MED description"; //$NON-NLS-1$
