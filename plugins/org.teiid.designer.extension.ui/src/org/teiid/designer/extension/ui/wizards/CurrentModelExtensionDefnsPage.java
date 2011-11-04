@@ -9,6 +9,7 @@ package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,6 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -67,6 +70,7 @@ import com.metamatrix.modeler.internal.ui.editors.ModelEditor;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelIdentifier;
 import com.metamatrix.modeler.internal.ui.viewsupport.ModelUtilities;
+import com.metamatrix.modeler.ui.UiPlugin;
 import com.metamatrix.modeler.ui.editors.ModelEditorManager;
 import com.metamatrix.modeler.ui.viewsupport.ModelingResourceFilter;
 import com.metamatrix.ui.internal.InternalUiConstants;
@@ -229,6 +233,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // buttonGridData.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
         browseButton.setLayoutData(buttonGridData);
         browseButton.setText(Messages.currentMedsPageBrowseButton);
+        browseButton.setToolTipText(Messages.currentMedsPageBrowseTooltip);
         browseButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
@@ -628,6 +633,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // Add Med Button
         this.addMedButton = new Button(buttonComposite, SWT.PUSH);
         this.addMedButton.setText(Messages.currentMedsPageAddMedButton);
+        this.addMedButton.setToolTipText(Messages.currentMedsPageAddMedTooltip);
         this.addMedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
@@ -639,6 +645,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // Remove Med Button
         this.removeMedButton = new Button(buttonComposite, SWT.PUSH);
         this.removeMedButton.setText(Messages.currentMedsPageRemoveMedButton);
+        this.removeMedButton.setToolTipText(Messages.currentMedsPageRemoveMedTooltip);
         this.removeMedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
@@ -650,10 +657,11 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // Remove Med Button
         this.saveMedButton = new Button(buttonComposite, SWT.PUSH);
         this.saveMedButton.setText(Messages.currentMedsPageSaveMedButton);
+        this.saveMedButton.setToolTipText(Messages.currentMedsPageSaveMedTooltip);
         this.saveMedButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
-                handleRegisterMed();
+                handleSaveMed();
             }
         });
         this.saveMedButton.setEnabled(false);
@@ -738,16 +746,14 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     }
 
     /*
-     * handler for Register Med Button.  This launches the NewMedWizard, providing the ModelExtensionDefinition which
+     * handler for Save Med Button.  This launches the NewMedWizard, providing the ModelExtensionDefinition which
      * needs to be saved.
      */
-    void handleRegisterMed() {
-        // final IWorkbench workbench = UiPlugin.getDefault().getWorkbench();
-
-        // New ModelExtensionDefinitions Wizard
-        // NewMedWizard newMedWizard = new NewMedWizard();
-        // IStructuredSelection structuredSelection = new StructuredSelection(modelResource.getResource());
-        // newMedWizard.init(workbench, structuredSelection);
+    void handleSaveMed() {
+        NewMedWizard wizard = new NewMedWizard(Messages.copyMedWizardTitle);
+        wizard.init(UiPlugin.getDefault().getCurrentWorkbenchWindow().getWorkbench(), null);
+        // Set the selectedMed contents on the wizard
+        ModelExtensionDefinitionWriter writer = new ModelExtensionDefinitionWriter();
 
         // Get the selected Med Header
         ModelExtensionDefinitionHeader medHeader = this.editManager.getCurrentHeaders().get(this.selectedMedIndex);
@@ -762,34 +768,13 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
         }
 
-        // File schemaFile = null;
-        // InputStream unregisteredMedStream = null;
+        InputStream iStream = writer.writeAsStream(unregisteredMed);
+        wizard.setMedInput(iStream);
 
-        try {
-            // schemaFile = ExtensionPlugin.getInstance().getMedSchema();
-            ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-            medWriter.writeAsStream(unregisteredMed);
-            // unregisteredMedStream = medWriter.writeAsStream(unregisteredMed);
-        } catch (Exception e) {
-            ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
-
-        // newMedWizard.setMedInput(unregisteredMedStream);
-        //
-        // // Launch NewMedWizard, prompts for the location to save the med.
-        // final WizardDialog dialog = new WizardDialog(newMedWizard.getShell(), newMedWizard);
-        // // After OK, get the saved MED and register it
-        // if (dialog.open() == Window.OK) {
-        // IFile createdMed = newMedWizard.getCreatedMedFile();
-        // if (createdMed != null && createdMed.exists()) {
-        // try {
-        // InputStream fileStream = createdMed.getContents();
-        // getRegistry().addDefinition(fileStream, defaultAssistant);
-        // } catch (Exception e) {
-        // ModelerCore.Util.log(IStatus.ERROR, e, e.getMessage());
-        // }
-        // }
-        // }
+        // Open wizard dialog
+        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
+        wizardDialog.setBlockOnOpen(true);
+        wizardDialog.open();
 
         // Deselect the original med
         this.tableViewer.getTable().deselectAll();
