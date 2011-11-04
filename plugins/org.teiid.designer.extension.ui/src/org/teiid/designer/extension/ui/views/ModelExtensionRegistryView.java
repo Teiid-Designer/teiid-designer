@@ -12,10 +12,12 @@ import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -77,6 +79,7 @@ import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefinitionAction;
 import org.teiid.designer.extension.ui.editors.ModelExtensionDefinitionEditor;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
+
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.explorer.ModelExplorerLabelProvider;
 import com.metamatrix.modeler.ui.UiPlugin;
@@ -403,8 +406,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
         // TODO implement handleFindMedReferences
         ModelExtensionDefinition selectedMed = getSelectedMed();
         assert (selectedMed != null) : "Find MED references action should not be enabled if there is no selection"; //$NON-NLS-1$
-
-        MessageDialog.openInformation(null, null, "Find MED references not implemented");
     }
 
     void handleMedSelected() {
@@ -418,7 +419,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             // MED Selected, enabled depending on builtIn for some
         } else {
             this.cloneMedAction.setEnabled(true);
-            this.findMedReferencesAction.setEnabled(true);
+            // this.findMedReferencesAction.setEnabled(true); // TODO uncomment this when action is implemented
             if (selectedMed.isBuiltIn()) {
                 this.unregisterMedAction.setEnabled(false);
             } else {
