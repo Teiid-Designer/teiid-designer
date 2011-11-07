@@ -18,13 +18,11 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.EDIT_PROPERTY
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_METACLASS;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REMOVE_PROPERTY;
-
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -60,7 +58,6 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
-
 import com.metamatrix.core.util.ArrayUtil;
 import com.metamatrix.core.util.CoreStringUtil;
 import com.metamatrix.modeler.internal.ui.forms.FormUtil;
@@ -598,6 +595,7 @@ public class PropertiesEditorPage extends MedEditorPage {
             Collection<ModelExtensionPropertyDefinition> propDefns = getMed().removeMetaclass(selectedMetaclassName);
             String modifiedMetaclassName = dialog.getSelectedMetaclassName();
             getMed().addPropertyDefinitions(modifiedMetaclassName, propDefns);
+            this.metaclassViewer.setSelection(new StructuredSelection(modifiedMetaclassName));
         }
     }
 
