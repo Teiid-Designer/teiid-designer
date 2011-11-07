@@ -170,8 +170,8 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
      * @param propDefns the property definitions being added (cannot be <code>null</code>)
      * @return <code>true</code> if one or more property definitions were added
      */
-    public boolean addPropertyDefinitions( String metaclassName,
-                                           Collection<ModelExtensionPropertyDefinition> propDefns ) {
+    private boolean addPropertyDefinitions( String metaclassName,
+                                            Collection<ModelExtensionPropertyDefinition> propDefns ) {
         CoreArgCheck.isNotNull(propDefns, "propDefns is null"); //$NON-NLS-1$
         boolean added = false;
 
@@ -367,7 +367,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     @Override
@@ -380,7 +380,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
                 this.properties.clear();
                 notifyChangeListeners(PropertyName.METACLASS, metaclasses, null);
             }
-            
+
         }
     }
 
@@ -476,6 +476,25 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
     }
 
     /**
+     * Changes the original metaclass name to the new name and keeps all the property definitions.
+     * 
+     * @param originalMetaclass the name of the metaclass that is being changed (cannot be <code>null</code> or empty)
+     * @param newMetaclass the new name of the metaclass (cannot be <code>null</code> or empty)
+     */
+    public void updateMetaclass( String originalMetaclass,
+                                 String newMetaclass ) {
+        CoreStringUtil.isEmpty(originalMetaclass);
+        CoreStringUtil.isEmpty(newMetaclass);
+        Collection<ModelExtensionPropertyDefinition> propDefns = removeMetaclass(originalMetaclass);
+
+        if ((propDefns == null) || propDefns.isEmpty()) {
+            addMetaclass(newMetaclass);
+        } else {
+            addPropertyDefinitions(newMetaclass, propDefns);
+        }
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -516,7 +535,7 @@ public class ModelExtensionDefinition implements NamespacePrefixProvider, Proper
 
             // If sets are different size, or they are equal size (not empty) but dont contain the same elements - not equal
             if ((metaClassPropertyDefns.size() != otherMetaClassPropertyDefns.size())
-                || (!metaClassPropertyDefns.isEmpty() && !metaClassPropertyDefns.containsAll(otherMetaClassPropertyDefns))) {
+                    || (!metaClassPropertyDefns.isEmpty() && !metaClassPropertyDefns.containsAll(otherMetaClassPropertyDefns))) {
                 areEqual = false;
                 break;
             }

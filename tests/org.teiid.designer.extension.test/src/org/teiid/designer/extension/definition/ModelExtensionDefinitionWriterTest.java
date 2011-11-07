@@ -199,10 +199,9 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
         med.addMetaclass(TABLE_METACLASS_NAME);
 
         // Factory method creates three different property definitions
-        List<ModelExtensionPropertyDefinition> propDefns = Factory.getTestPropertyDefns(med);
-
-        // Add the definitions for BaseTable metaclass
-        med.addPropertyDefinitions(TABLE_METACLASS_NAME, propDefns);
+        for (ModelExtensionPropertyDefinition propDefn : Factory.getTestPropertyDefns(med)) {
+            med.addPropertyDefinition(TABLE_METACLASS_NAME, propDefn);
+        }
 
         // Write it, then read it back into another MED
         ModelExtensionDefinition resultMed = roundTrip(med);
@@ -231,9 +230,14 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
         columnDefns.remove(1);
 
         // Add the definitions for BaseTable metaclass
-        med.addPropertyDefinitions(TABLE_METACLASS_NAME, tableDefns);
+        for (ModelExtensionPropertyDefinition propDefn : tableDefns) {
+            med.addPropertyDefinition(TABLE_METACLASS_NAME, propDefn);
+        }
+
         // Add the definitions for Column metaclass
-        med.addPropertyDefinitions(COLUMN_METACLASS_NAME, columnDefns);
+        for (ModelExtensionPropertyDefinition propDefn : columnDefns) {
+            med.addPropertyDefinition(COLUMN_METACLASS_NAME, propDefn);
+        }
 
         // Write it, then read it back into another MED
         ModelExtensionDefinition resultMed = roundTrip(med);

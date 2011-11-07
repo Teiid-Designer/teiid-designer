@@ -59,13 +59,25 @@ public class ModelExtensionRegistryTest implements Constants {
     }
 
     @Test
-    public void shouldReceiveAddEventWhenAddingMed() throws Exception {
+    public void shouldReceiveEventWhenAddingMed() throws Exception {
         MedRegistryListener l = Factory.createRegistryListener();
         this.registry.addListener(l);
         File defnFile = new File(SALESFORCE_MED_FILE_NAME);
         ModelExtensionDefinition med = this.registry.addDefinition(new FileInputStream(defnFile), this.assistant);
         assertEquals(1, l.getCount());
         assertEquals(med, l.getEvent().getDefinition());
+        assertTrue(l.getEvent().isAdd());
+    }
+
+    @Test
+    public void shouldReceiveEventWhenRemovingMed() throws Exception {
+        MedRegistryListener l = Factory.createRegistryListener();
+        File defnFile = new File(SALESFORCE_MED_FILE_NAME);
+        this.registry.addDefinition(new FileInputStream(defnFile), this.assistant);
+        this.registry.addListener(l);
+        this.registry.removeDefinition(SALESFORCE_MED_PREFIX);
+        assertEquals(1, l.getCount());
+        assertTrue(l.getEvent().isRemove());
     }
 
     @Test

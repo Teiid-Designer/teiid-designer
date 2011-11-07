@@ -10,13 +10,16 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -72,6 +75,8 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.extension.registry.RegistryEvent;
+import org.teiid.designer.extension.registry.RegistryListener;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
@@ -83,7 +88,7 @@ import org.teiid.designer.extension.ui.actions.UpdateRegistryModelExtensionDefin
  * 
  */
 public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IResourceChangeListener,
-        PropertyChangeListener {
+        PropertyChangeListener, RegistryListener {
 
     private boolean dirty = false;
     private boolean readOnly = false;
@@ -97,10 +102,20 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     private MedEditorPage propertiesPage;
     private ScrolledForm scrolledForm;
+    private final Collection<MedEditorPage> pages = new ArrayList<MedEditorPage>(2);
 
     private IAction showRegistryViewAction;
 
     private IAction updateRegisteryAction;
+
+    /**
+     * Allow inner classes access to the <code>MedEditorPage</code>s.
+     * 
+     * @return the <code>MedEditorPage</code>s (never <code>null</code>)
+     */
+    Collection<MedEditorPage> accessMedEditorPages() {
+        return this.pages;
+    }
 
     /**
      * Allow inner classes access to the outer class.
@@ -139,10 +154,12 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
             // add properties editor
             this.propertiesPage = new PropertiesEditorPage(this);
             addPage(0, this.propertiesPage);
+            this.pages.add(this.propertiesPage);
 
             // add overview editor
             this.overviewPage = new OverviewEditorPage(this);
             addPage(0, this.overviewPage);
+            this.pages.add(this.overviewPage);
 
             // set text editor title and initialize header text to first page
             setPageText((getPageCount() - 1), Messages.medEditorSourcePageTitle);
@@ -207,7 +224,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 // -------------------------------------------------
                 // Do some validation checks before registering.
                 // -------------------------------------------------
-                ModelExtensionRegistry registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
+                ModelExtensionRegistry registry = (Platform.isRunning() ? getRegistry() : null);
                 InputStream fileContents = null;
                 try {
                     fileContents = medFile.getContents();
@@ -374,6 +391,17 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
     /**
      * {@inheritDoc}
+     *
+     * @see org.eclipse.ui.forms.editor.SharedHeaderFormEditor#dispose()
+     */
+    @Override
+    public void dispose() {
+        getRegistry().removeListener(this); // unregister to receive registry events
+        super.dispose();
+    }
+
+    /**
+     * {@inheritDoc}
      * 
      * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -477,6 +505,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     /**
+     * @return the registry (never <code>null</code>)
+     */
+    ModelExtensionRegistry getRegistry() {
+        return ExtensionPlugin.getInstance().getRegistry();
+    }
+
+    /**
      * @return the editor's shell (never <code>null</code>)
      */
     Shell getShell() {
@@ -514,6 +549,32 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     @Override
     public boolean isSaveAsAllowed() {
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.extension.registry.RegistryListener#process(org.teiid.designer.extension.registry.RegistryEvent)
+     */
+    @Override
+    public void process( RegistryEvent e ) {
+        // tell each page to refesh their messages
+        getShell().getDisplay().syncExec(new Runnable() {
+            
+            /**
+             * {@inheritDoc}
+             *
+             * @see java.lang.Runnable#run()
+             */
+            @Override
+            public void run() {
+                if (!getShell().isDisposed()) {
+                    for (MedEditorPage medEditorPage : accessMedEditorPages()) {
+                        medEditorPage.updateAllMessages();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -666,8 +727,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     protected void setInput( IEditorInput input ) {
-        // unhook previous document provider if necessary
-        if (getEditorInput() != null) {
+        if (getEditorInput() == null) {
+            getRegistry().addListener(this); // register to receive registry events
+        } else {
+            // unhook previous document provider if necessary
             this.documentProvider.disconnect(getEditorInput());
         }
 
@@ -688,12 +751,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         } else {
             throw new RuntimeException(Messages.medEditorInputNotAFile);
         }
-    }
-
-    /**
-     * Updates what is considered the original MED and the MED being edited.
-     */
-    protected void updateEditorModelObject() throws Exception {
     }
 
 }
