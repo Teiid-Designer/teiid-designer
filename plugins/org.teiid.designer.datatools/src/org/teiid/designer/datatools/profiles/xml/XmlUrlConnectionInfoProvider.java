@@ -46,8 +46,8 @@ public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implemen
         String fileUrl = props.getProperty(IXmlProfileConstants.URL_PROP_ID);
         if( fileUrl != null ) {
 			IPath fullPath = new Path(fileUrl);
-			String directoryUrl = fullPath.removeLastSegments(1).toString();
-        	connectionProps.setProperty(IXmlProfileConstants.WS_ENDPOINT_KEY, directoryUrl);
+			String fileURL = fullPath.toString();
+        	connectionProps.setProperty(IXmlProfileConstants.WS_ENDPOINT_KEY, fileURL);
         }
 
         return connectionProps;
