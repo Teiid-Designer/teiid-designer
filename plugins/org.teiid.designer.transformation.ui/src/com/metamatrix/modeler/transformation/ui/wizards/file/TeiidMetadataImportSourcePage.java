@@ -1084,12 +1084,13 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 	
     private void setSourceHelpMessage() {
     	if( creatingControl ) return;
-    
+    	String proceedureName = "getTextFiles()"; //$NON-NLS-1$
+    	
         if( info.sourceModelExists() ) {
 	    	if(  sourceHasProcedure() ) {
-	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasProcedure", info.getSourceModelName())); //$NON-NLS-1$
+	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasProcedure", info.getSourceModelName(), proceedureName)); //$NON-NLS-1$
 	    	} else {
-	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName())); //$NON-NLS-1$
+	    		this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName(), proceedureName)); //$NON-NLS-1$
 	    	}
         } else {
         	if( info.getSourceModelName() == null ) {
