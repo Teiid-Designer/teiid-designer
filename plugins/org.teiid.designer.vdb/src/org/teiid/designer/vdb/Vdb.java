@@ -154,10 +154,11 @@ public final class Vdb {
                         // VDB properties
                         for (final PropertyElement property : manifest.getProperties()) {
                             final String name = property.getName();
-                            if (Xml.PREVIEW.equals(name)) previewable[0] = Boolean.parseBoolean(property.getValue());
-                            else assert false;
-                            if (Xml.QUERY_TIMEOUT.equals(name)) queryTimeout[0] = Integer.parseInt(property.getValue());
-                            else assert false;
+                            if (Xml.PREVIEW.equals(name)) {
+                            	previewable[0] = Boolean.parseBoolean(property.getValue());
+                            } else if (Xml.QUERY_TIMEOUT.equals(name)) { 
+                            	queryTimeout[0] = Integer.parseInt(property.getValue());
+                            } assert false;
                         }
                         for (final EntryElement element : manifest.getEntries())
                             entries.add(new VdbEntry(Vdb.this, element, monitor));
